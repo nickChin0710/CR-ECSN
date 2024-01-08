@@ -1,0 +1,441 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 109-06-16  V2.00.01  ryan           modify                               -->
+<!-- 110-03-26  V2.00.02  Justin         add OPPO_TIME                        -->
+<!-- 110-05-05  V2.00.03  Ryan           修改備註文字說明 *有票證功能之卡片撤掛後，票證功能無法還原! -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡片強制停用維護 [V.2021-0326-Justin]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript">
+var isUpdate = false;
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+var bin_type = $("input[name=bin_type]").val();
+isUpdate = $(".btAdd").prop("disabled");
+
+wf_excep_show();
+
+$("#id_oppo_reason").change(function(){
+   wf_oppo_Change('1',$(this).val());
+});
+if('${action_code}'=="Q"){
+	dataListOri();
+}
+});
+
+function wf_excep_show() {
+//alert("excep_show");
+
+   var page_type =$('#pageType').val();
+   $('.visa_file').hide();
+   $('.mast_file').hide();
+   $('.jcb_file').hide();
+   if (page_type!=='detl') {
+      return;
+   }
+
+   var ls_bin_type =$('#bin_type').val();
+   if (ls_bin_type=='V') {
+      $('.visa_file').show();
+      if(isUpdate==true){
+    	  $('.visa_file input').prop("disabled",true);
+      	  $('.visa_file select').prop("disabled",true);
+      	  $('input[name=neg_del_date]').prop("disabled",true);
+      	  $("#tcalico_0").attr("onClick","");
+      }
+   }
+   else if (ls_bin_type==='M') {
+      $('.mast_file').show();
+      if(isUpdate==true){
+    	  $('.mast_file input').prop("disabled",true);
+    	  $('.mast_file select').prop("disabled",true);
+    	  $('input[name=neg_del_date]').prop("disabled",true);
+    	  $("#tcalico_0").attr("onClick","");
+      }
+   }
+   else if (ls_bin_type==='J') {
+      $('.jcb_file').show();
+      if(isUpdate==true){
+    	  $('.jcb_file input').prop("disabled",true);
+    	  $('input[name=neg_del_date]').prop("disabled",true);
+    	  $("#tcalico_0").attr("onClick","");
+      }
+   }
+}
+
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />
+  </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"     value="停掛" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button"    value="修改" ${btnDelete_disable} onClick="return top.submitControl('U')" class="btUpdate" />&nbsp;
+      <input type="Button"    value="撤掛" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" />&nbsp;
+   	  
+   </td>   
+</tr>
+</table>
+<div id="queryBlock">
+<!-- <table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="td_title">
+      <input type="Button"  value="outgoing 查詢結果" onClick="return top.submitControl('R2')" class="btOther" >&nbsp;&nbsp;
+   </td>
+   <td nowrap class="td_titl">回覆碼</td>
+   <td nowrap class="td_titl">原因碼</td>
+   <td nowrap class="td_titl">傳送信息</td>
+   <td rowspan="3" class="col_key" >*COMBO卡、VD卡不可由此畫面停掛及撤掛!
+   <br>*票證功能之卡片不可撤掛!
+   <br>*已重製之卡片不可撤掛!</td>
+  </tr> 
+  <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>NEG</b></td>
+   <td align="center"><span class="dsp_text">${neg_resp_code}</span>
+            <input type="hidden" name="neg_resp_code" value="${neg_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${neg_reason_code}</span>
+      <input type="hidden" name="neg_reason_code" value="${neg_reason_code}" />
+   </td>
+   <td>
+      <span class="dsp_text">${neg_call_status}</span>
+      <input type="hidden" name="neg_call_status" value="${neg_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>V/M/J</b></td>
+   <td align="center">
+      <span class="dsp_text">${vmj_resp_code}</span>
+      <input type="hidden" name="vmj_resp_code" value="${vmj_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${vmj_reason_code}</span>
+      <input type="hidden" name="vmj_reason_code" value="${vmj_reason_code}" />
+      <input type="hidden" name="vmj_region" value="${vmj_region}" />
+   </td>
+   <td>
+      <span class="dsp_text">${vmj_call_status}</span>
+      <input type="hidden" name="vmj_call_status" value="${vmj_call_status}" />
+   </td>
+   </tr>
+</table> -->
+</div>
+<hr>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td colspan="5" class="col_key" >
+   <!-- *票證功能之卡片不可撤掛! -->
+      *有票證功能之卡片撤掛後，票證功能無法還原!
+   <br>*已重製之卡片不可撤掛!</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號：
+      <span class="dsp_text">${card_no}</span>
+      <input type="hidden" name="card_no" value="${card_no}">   
+   </td>
+   <td>&nbsp;正/副卡：
+	   <span class="dsp_text">${sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(sup_flag)}</span>
+	   <input type="hidden" name="sup_flag" value="${sup_flag}">  
+   </td>
+   <td>&nbsp;子卡：
+     <span class="dsp_text">${son_card_flag}</span>
+     <input type="hidden" name="son_card_flag" value="${son_card_flag}" />    
+   </td>
+   <td>&nbsp;debit卡：
+     <span class="dsp_text">${debit_flag}</span>
+     <input type="hidden" name="debit_flag" value="${debit_flag}">  
+   </td>
+   <td>&nbsp;團體代號:
+   	<span class="dsp_text">${group_code}.${tt_group_code}</span>
+    <input type="hidden" name="group_code" value="${group_code}" />   
+    <input type="hidden" name="tt_group_code" value="${tt_group_code}">
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;姓名：
+      <span class="dsp_text">${idno_name}</span>
+      <input type="hidden" name="idno_name" value="${idno_name}">
+   </td>	
+  	<td nowrap >&nbsp;身分證ID：
+      <span class="dsp_text">${id_no}</span>
+      <input type="hidden" name="id_no" value="${id_no}">
+   </td>
+   <td nowrap colspan="2">&nbsp;生日：
+      <span class="dsp_date">${bir_date.YMD}</span>
+      <input type="hidden" name="bir_date" value="${bir_date}" />
+   </td>	
+  	<td nowrap >&nbsp;帳戶類別:
+  		<span class="dsp_text">${acct_type}.${tt_acct_type}&nbsp;</span>
+  		<input type="hidden" name="acct_type" value="${acct_type}">
+  		<input type="hidden" name="tt_acct_type" value="${tt_acct_type}">
+   </td>	
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;歸戶ID：
+      <span class="dsp_text">${acct_key}</span>
+      <input type="hidden" name="acct_key" value="${acct_key}" />
+   </td>   
+  	<td nowrap colspan="3">&nbsp;公司統編：
+      <span class="dsp_text">${corp_no}</span>
+      <input type="hidden" name="corp_no" value="${corp_no}" />
+   </td>   
+  	<td nowrap >&nbsp;金融帳號：
+  		<span class="dsp_text">${bank_actno}</span>
+  		<input type="hidden" name="bank_actno" value="${bank_actno}"/>  		
+  	</td>   
+  </tr>
+  <tr>
+  	<td nowrap colspan="5">&nbsp;帳單地址：
+      <span class="dsp_text">${bill_sending_zip}&nbsp;
+      ${bill_sending_addr1}${bill_sending_addr2}${bill_sending_addr3}
+      ${bill_sending_addr4}${bill_sending_addr5}
+      </span>
+      <input type="hidden" name="bill_sending_zip" value="${bill_sending_zip}" />
+      <input type="hidden" name="bill_sending_addr1" value="${bill_sending_addr1}" />
+      <input type="hidden" name="bill_sending_addr2" value="${bill_sending_addr2}" />
+      <input type="hidden" name="bill_sending_addr3" value="${bill_sending_addr3}" />
+      <input type="hidden" name="bill_sending_addr4" value="${bill_sending_addr4}" />
+      <input type="hidden" name="bill_sending_addr5" value="${bill_sending_addr5}" />
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;電話(H)：
+      <span class="dsp_text">${wk_telno_h}</span>
+      <input type="hidden" name="wk_telno_h" value="${wk_telno_h}" />
+   </td>   
+  	<td nowrap colspan="3">&nbsp;電話(O)：
+      <span class="dsp_text">${wk_telno_o}</span>
+      <input type="hidden" name="wk_telno_o" value="${wk_telno_o}" />
+   </td>   
+  	<td nowrap>&nbsp;行動電話：
+      <span class="dsp_text">${cell_phone}</span>
+      <input type="hidden" name="cell_phone" value="${cell_phone}" />
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡片狀態:
+      <span class="dsp_text">${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</span>
+      <input type="hidden" name="current_code" value="${current_code}" />
+   </td>
+   <td colspan="3">&nbsp;附卡張數：
+      <span class="dsp_number">${sup_card_num}</span>
+      <input type="hidden" name="sup_card_num" value="${sup_card_num}">   
+   </td>
+   <td>&nbsp;有效 TPAN：
+      <span class="dsp_number">${tpan_card_num}</span>
+      <input type="hidden" name="tpan_card_num" value="${tpan_card_num}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;停掛日期：
+      <span class="dsp_date">${oppo_date.YMD}</span>
+      <input type="hidden" name="oppo_date" value="${oppo_date}" />
+   </td>    
+   <td nowrap >&nbsp;停掛時間：
+      <span class="dsp_date">${oppo_time.TIME}</span>
+      <input type="hidden" name="oppo_time" value="${oppo_time}" />
+   </td>
+   <td nowrap colspan="2">&nbsp;NEG刪除日期：
+      <input type="text" class="col_date" name="neg_del_date" value="${neg_del_date}"
+       zEdit="date,YYYYMMDD" maxlength=8 size=10 />
+      <script language="JavaScript">
+	      new tcal ({'formname': 'dataForm','controlname': 'neg_del_date'});
+	   </script> 
+   </td>    
+  	<td nowrap>&nbsp;卡片效期:
+      <span class="dsp_date">${new_end_date.YMD}</span>
+      <input type="hidden" name="new_end_date" value="${new_end_date}" />
+      <input type="hidden" name="renew_flag" value="N"  />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;停掛類別：
+      <span class="dsp_text">3.強制停用</span>
+      <input type="hidden" name="oppo_type" value="3" />
+   </td>    
+   <td nowrap colspan="3">&nbsp;停掛原因：
+   <select size="1" name="oppo_reason" id="id_oppo_reason" class="col_ddlb" zRequire="Y">
+      <option value=""></option>
+      ${dddw_oppo_reason}
+   </select>
+<!--
+   &nbsp;Exec-flag=${excep_flag}
+  -->
+   <input type="hidden" id="excep_flag" name="excep_flag" value="${excep_flag}" size="2" />
+
+   </td>    
+   <td nowrap >&nbsp;是否送國際組織:        
+        <label class="dsp_text" id="tt_excep_flag" >${tt_excep_flag}</label>
+        <input type="hidden" name="tt_excep_flag" value="${tt_excep_flag}"> 		
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">&nbsp;停掛備註：
+      <input type="text" class="col_any" name="opp_remark" value="${opp_remark}"
+       zEdit="any,canTW" maxlength="60" size="62" />
+   </td>
+   <td nowrap>&nbsp;票證：
+      <span class="dsp_text">${tt_electronic_code}</span>
+      <input type="hidden" name="tt_electronic_code" value="${tt_electronic_code}" />
+   </td>      
+  </tr>
+</table>
+<br>
+${#PLUGIN:ccam01.vmj_except_file}
+
+</div>
+
+ <input type="hidden"  name="lost_fee_code" value="${lost_fee_code}" />
+ <input type="hidden"  name="acno_p_seqno" value="${acno_p_seqno}" />
+ <input type="hidden"  name="id_p_seqno" value="${id_p_seqno}" />
+ <input type="hidden"  name="corp_p_seqno" value="${corp_p_seqno}" />
+ <input type="hidden" id="bin_type" name="bin_type" value="${bin_type}">
+ <input type="hidden"  name="combo_indicator" value="${combo_indicator}">
+ <input type="hidden"  name="electronic_code" value="${electronic_code}">
+ <input type="hidden"  name="reissue_status" value="${reissue_status}">
+ <input type="hidden"  name="oppost_date" value="${oppost_date}">
+ <input type="hidden"  name="oppost_reason" value="${oppost_reason}">
+ <input type="hidden"  name="reg_bank_no" value="${reg_bank_no}"> 
+  <input type="hidden"  name="datalistori" value="${datalistori}"> 
+ <input type="hidden"  name="datalist" value="${datalist}"> 
+ 
+ <input type="hidden"  name="rowid" value="${rowid}" >
+ <input type="hidden"  name="mod_seqno" value="${mod_seqno}" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  id="pageType"  value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+ var idCode="";
+ 
+ top.refreshButton2('1');
+ top.deleteConfirm_show ="";
+
+ function validateInput() {
+	 
+	$('.visa_file input').prop("disabled",false);
+	$('.visa_file select').prop("disabled",false);
+	$('.mast_file input').prop("disabled",false);
+	$('.mast_file select').prop("disabled",false);
+	$('.jcb_file input').prop("disabled",false);
+	$('input[name=neg_del_date]').prop("disabled",false);  
+
+   if (top.actionCode==='D') {
+      if (confirm("是否執行[卡片撤掛]")==false) {
+         top.deleteConfirm_show ="";
+         return false;
+      }            
+      
+      var ls_combo = document.forms["dataForm"]["combo_indicator"].value;
+      var ls_acct_type = document.forms["dataForm"]["acct_type"].value;
+      
+      if((ls_combo !='N' && ls_combo !='' ) || ls_acct_type =='90'){
+      	if(confirm("金融卡功能停掛後無法恢復，是否確定要執行撤掛")==false){
+      		return false;
+      	}
+      }
+      
+      return true;
+   }
+ 
+   if ( !top.checkFormat() )
+   { return false; }
+       
+   if (top.actionCode==='A') {
+      var li_card_num =parseInt($("input[name=sup_card_num]").val());
+      if (li_card_num==='0' || li_card_num=='') {
+         if (confirm("是否 停用卡片")==false) {
+            return false;
+         } 
+      }
+      else {
+         if (confirm("該卡項下尚有附卡，是否確定要執行停掛")==false) {
+            return false;
+         } 
+      }
+      
+      var ls_combo = document.forms["dataForm"]["combo_indicator"].value;
+      var ls_acct_type = document.forms["dataForm"]["acct_type"].value;
+      
+      if(ls_acct_type !='90'){
+        if((ls_combo !='N' && ls_combo !='' )){
+            if(confirm("該卡有金融卡功能，確認停掛 ?")==false){
+                return false;
+            }	else	{
+                alert("請檢視金融卡功能是否連動掛失");
+            }
+        }
+      }
+      
+      var ls_debit_flag = document.forms["dataForm"]["debit_flag"].value;
+      if(ls_debit_flag =='Y'){
+      	if(confirm("此卡為VISA 金融卡，確認要停掛 ?")==false){
+      		return false ;
+      	}	else	{
+      		alert("請檢視金融卡功能是否連動掛失");
+      	}
+      }
+            
+   }      
+    return true;
+  }
+
+function wf_oppo_Change(ps_id,ps_oppo)
+ {
+   $('#excep_flag').val('');
+   var ls_type =$("input[name=bin_type]").val();
+   var ls_oppo=ps_oppo;
+	
+	
+	idCode = ps_id;
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    //if ( idCode === '1' ) { 
+	//	top.methodName = "wf_ajax_opptype";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_bin_type",ls_type);
+	addJSON("ax_oppo",ls_oppo);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+  
+ function ajaxResponse()
+ {
+	top.respHtml ="ccam2013_detl";
+   top.requHtml ="ccam2013_detl";
+   
+   $('#excep_flag').val(getJSONvalue("excep_flag",0));
+   $('#tt_excep_flag').val(getJSONvalue("tt_excep_flag",0));
+   $('#tt_excep_flag').text(getJSONvalue("tt_excep_flag",0));
+   wf_excep_show();   
+ }     
+
+</script>

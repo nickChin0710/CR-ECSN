@@ -1,0 +1,204 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>商務卡第二次分群處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;覆審批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}"
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="執行(b106)" onClick="return wf_ajax_proc();" class="btProcess" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;分群處理:
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_group_flag" ${ex_group_flag-0} ${default-ex_group_flag} />全部
+         <input type="radio" value="Y" name="ex_group_flag" ${ex_group_flag-Y} />已處理
+         <input type="radio" value="N" name="ex_group_flag" ${ex_group_flag-N} />未處理
+      </span>
+   </td>
+   <td nowrap>&nbsp;參數設定日期:
+      <input type="text" class="col_date" name="ex_group_date" value="${ex_group_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_group_date'});
+	      </script>
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">分群&nbsp;</th>
+    <th nowrap >覆審批號&nbsp;</th>
+    <th nowrap >覆審說明&nbsp;</th>
+    <th nowrap >往來<br>資料年月</th>
+    <th nowrap >第一次分群<br>處理日期</th>
+    <th nowrap >第二次分群<br>參數設定日期</th>
+    <th nowrap >第二次分群<br>處理日期</th>
+    <th nowrap >符合一次<br>分群筆數</th>
+    <th nowrap >符合二次<br>分群筆數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="radio" name="opt" value="${ser_num}" onchange="wf_opt_select(${ser_num});" >
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+   <input type="hidden" name="${#_db_batch_no-}" value="${batch_no}">
+   </td>
+   <td nowrap class="list_ll">${batch_no}
+      <input type="hidden" name="batch_no" value="${batch_no}">
+   </td>
+   <td nowrap class="list_ll">${batch_desc}
+      <input type="hidden" name="batch_desc" value="${batch_desc}">
+   </td>
+   <td nowrap class="list_cc">${data_yymm.YMD}
+      <input type="hidden" name="data_yymm" value="${data_yymm}">
+   </td>
+   <td nowrap class="list_cc">${group_proc_date1.YMD}
+      <input type="hidden" name="group_proc_date1" value="${group_proc_date1}">
+   </td>
+   <td nowrap class="list_cc">${group_date2.YMD}
+      <input type="hidden" name="group_date2" value="${group_date2}">
+   </td>
+   <td nowrap class="list_cc">${group_proc_date2.YMD}
+      <input type="hidden" name="group_proc_date2" value="${group_proc_date2}">
+   </td>
+   <td nowrap class="list_rr">${db_cnt_group1.(999)}
+      <input type="hidden" name="db_cnt_group1" value="${db_cnt_group1}">
+   </td>
+   <td nowrap class="list_rr">${db_cnt_group2.(999)}
+      <input type="hidden" name="db_cnt_group2" value="${db_cnt_group2}">
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  id="conf_flag" name="conf_flag" value="">
+ <input type="hidden" name="db_batch_no" value="" />
+ <input type="hidden" name="db_group_proc_date2" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function wf_ajax_proc() {
+    resetJSON();
+    var ls_batch_no = $("input[name=db_batch_no]").val();
+    var ls_db_group_proc_date2 = $("input[name=db_group_proc_date2]").val();
+    //alert("batch_no="+ls_batch_no);
+    var form_data = "ax_batch_no="+ls_batch_no+"&ax_proc_date="+ls_db_group_proc_date2;
+    set_hideData();
+    var serv_url ="MainControl?HIDE="+top.hideData;
+    $.ajax({
+        url : serv_url,
+        type: 'POST',
+        data : form_data,
+        success: function (response) {
+          decodeJSON(response);
+          ajaxResponse();
+        },
+        error: function (jqXHR, textStatus, errorMessage) {
+           alert("form.submit.error="+errorMessage);
+        }
+    });
+}
+
+function set_hideData() {
+    // top.methodName  = "wf_ajax_confirm"; // 20200102 updated for archit.  change
+    top.actionCode  = "AJAX"
+    top.hideData   = "";
+    top.createHideData();
+}
+function ajaxResponse() {
+    top.respHtml ="rskp1230";
+    top.requHtml ="rskp1230";
+    var ls_conf =getJSONvalue("conf_flag",0);
+    if (ls_conf=='Y1') {
+        var resp =confirm("已執行 第二次分群處理, 是否重新執行");
+         if (resp==false) {
+            return false;
+         }
+       top.deleteConfirm_show ="";
+    }
+    if (ls_conf=='Y2') {
+        var resp =confirm("是否執行 第二次分群處理");
+         if (resp==false) {
+            return false;
+         }
+       top.deleteConfirm_show ="";
+    }
+    if (ls_conf=='Y3') {
+        var resp =confirm("已有資料結案, 是否執行 第二次分群處理");
+         if (resp==false) {
+            return false;
+         }
+       top.deleteConfirm_show ="";
+    }
+    top.submitControl('C');
+}
+
+ function wf_opt_select(parm1) {
+   var ii =parseInt(parm1) - 1;
+   var ls_bb2 =document.getElementsByName("batch_no")[ii].value;
+   var ls_bb3 =document.getElementsByName("group_proc_date2")[ii].value;
+//   alert("BB="+ls_bb3);
+
+   //document.forms['dataForm']['db_batch_no'].value =ls_bb2
+   //document.forms['dataForm']['db_group_proc_date1'].value =ls_bb3
+
+   $('input[name=db_batch_no]').val(ls_bb2);
+   $('input[name=db_group_proc_date2]').val(ls_bb3);
+
+ }
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

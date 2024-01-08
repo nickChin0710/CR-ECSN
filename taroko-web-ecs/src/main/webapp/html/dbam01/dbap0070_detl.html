@@ -1,0 +1,180 @@
+<html>
+<head>
+<title>DeBit卡線上扣款處理作業-109-06-1-V1.00.00-yanghan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="2"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <!-- <input type="Button" value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; -->
+  <input type="Button" value="解圈扣款(電文)" ${btnUpdate_disable} ${pho_update_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+  <input type="Button" value="扣款(電文)" ${btnUpdate_disable} ${pho_update_disable} onClick="return top.submitControl('U1')" class="btUpdate">&nbsp;&nbsp;
+ <!--  <input type="Button" value=" 刪除 " ${btnDelete_disable} ${pho_delete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp; -->
+  <input type="Button" value="查詢上次交易結果" onClick="return top.submitControl('C')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;帳戶帳號：</td>
+    <td nowrap><span class="dsp_text">${acct_type} - ${acct_key}</span></td>
+    <td nowrap>&nbsp;中文姓名：</td>
+    <td nowrap><span class="dsp_text">${ex_cname}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;卡號：</td>
+    <td nowrap colspan="3"><span class="dsp_text">${card_no}</span></td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;交易參考號：</td><td nowrap><span class="dsp_text">${reference_no}</span></td>
+    <td nowrap>&nbsp;科目代碼：</td><td nowrap colspan="3"><span class="dsp_text">${acct_code} ${tt_acct_code}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;入帳日期：</td><td nowrap><span class="dsp_text">${item_post_date.YMD}</span></td>
+    <td nowrap>&nbsp;消費日期：</td><td nowrap><span class="dsp_text">${purchase_date.YMD}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;目前期末餘額：</td><td nowrap><span class="dsp_text">${ex_bef_amt.(999)}</span></td>
+    <td nowrap>&nbsp;扣款後期末金額：</td><td nowrap><span class="dsp_text" id="ex1">${ex_aft_amt.(999)}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;扣款金額：</td>
+    <td nowrap colspan="3">    
+      <span class="dsp_text" >${deduct_amt.(999)}</span>
+      <input type="hidden" name="deduct_amt" value="${deduct_amt}" />
+    </td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="4" >&nbsp;上次解圈扣帳送主機日期時間：
+  		<span class="dsp_text">${last_tx_date.YMD}&nbsp;${last_tx_time.TIME}</span>
+  		<input type="hidden" name="last_tx_date" value="${last_tx_date}" />
+  		<input type="hidden" name="last_tx_time" value="${last_tx_time}" />
+  		&nbsp;金額：
+  		<span class="dsp_text">${last_trans_amt.(999.00)}</span>
+  		<input type="hidden" name="last_trans_amt" value="${last_trans_amt}" />
+  		&nbsp;處理結果：
+  		<span class="dsp_text">${tt_ims_resp}</span>
+  		<input type="hidden" name="last_ims_resp_code" value="${last_ims_resp_code}" />
+  		<input type="hidden" name="tt_ims_resp" value="${tt_ims_resp}" />
+  		&nbsp;電文序號：
+  		<span class="dsp_text">${last_ims_seq_no}</span>
+  		<input type="hidden" name="last_ims_seq_no" value="${last_ims_seq_no}" />
+  	</td>
+  </tr>
+</table>
+
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="dbap0070">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="db_table" value="${db_table}">
+<input type="hidden" name="rowid" value="${rowid}">
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+<input type="hidden" name="tx_seq" value="${tx_seq}"> 
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+<input type="hidden" name="acct_type" value="${acct_type}">
+<input type="hidden" name="acct_key" value="${acct_key}">
+<input type="hidden" name="ex_cname" value="${ex_cname}">
+<input type="hidden" name="card_no" value="${card_no}">
+<input type="hidden" name="reference_no" value="${reference_no}">
+<input type="hidden" name="acct_code" value="${acct_code}">
+<input type="hidden" name="tt_acct_code" value="${tt_acct_code}">
+<input type="hidden" name="post_date" value="${post_date}">
+<input type="hidden" name="item_post_date" value="${item_post_date}">
+<input type="hidden" name="purchase_date" value="${purchase_date}">
+<input type="hidden" name="orginal_amt" value="${orginal_amt}">
+<input type="hidden" name="cr_amt" value="${cr_amt}">
+<input type="hidden" name="bef_amt" value="${bef_amt}">
+<input type="hidden" name="aft_amt" value="${aft_amt}">
+<input type="hidden" name="bef_d_amt" value="${bef_d_amt}">
+<input type="hidden" name="aft_d_amt" value="${aft_d_amt}">
+<input type="hidden" name="acct_no" value="${acct_no}">
+<input type="hidden" name="func_code" value="${func_code}">
+<input type="hidden" name="ex_dcount" value="${ex_dcount}">
+<input type="hidden" name="txn_code" value="${txn_code}">
+<input type="hidden" name="apr_flag" value="${apr_flag}">
+<input type="hidden" name="bill_type" value="${bill_type}">     
+<input type="hidden" name="end_bal" value="${end_bal}">
+<input type="hidden" name="deduct_seq" value="${deduct_seq}">     
+<input type="hidden" name="id_no_code" value="${id_no_code}">
+<input type="hidden" name="id_no" value="${id_no}">
+<input type="hidden" name="corp_no" value="${corp_no}">  
+<input type="hidden" name="bank_actno" value="${bank_actno}">  
+<input type="hidden" name="acct_item_cname" value="${acct_item_cname}">
+<input type="hidden" name="merchant_no" value="${merchant_no}">
+<input type="hidden" name="d_available_bal" value="${d_available_bal}">
+<input type="hidden" name="debt_status" value="${debt_status}">
+<input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+<input type="hidden" name="org_reserve_amt" value="${org_reserve_amt}">
+<input type="hidden" name="reserve_amt" value="${reserve_amt}">
+<input type="hidden" name="debt_status" value="${debt_status}">
+<input type="hidden" name="trans_bad_date" value="${trans_bad_date}">
+<input type="hidden" name="trans_col_date" value="${trans_col_date}">
+<input type="hidden" name="deduct_amt" value="${deduct_amt}">
+<input type="hidden" name="ex_bef_amt" value="${ex_bef_amt}">
+<input type="hidden" id="ex2" name="ex_aft_amt" value="${ex_aft_amt}">
+<input type="hidden" name="ex_bef_d_amt" value="${ex_bef_d_amt}">
+<input type="hidden" name="ex_aft_d_amt" value="${ex_aft_d_amt}">
+<input type="hidden" name="pho_update_disable" value="${pho_update_disable}">
+<input type="hidden" name="pho_delete_disable" value="${pho_delete_disable}">
+<input type="hidden" name="pho_disable" value="${pho_disable}">
+<input type="hidden" name="d_avail_bal" value="${d_avail_bal}">
+<input type="hidden" name="new_end_date" value="${new_end_date}" /> 
+<input type="hidden" name="trace_no" value="${trace_no}" />
+<input type="hidden" name="tx_date" value="${tx_date}" />
+<input type="hidden" name="tx_time" value="${tx_time}" />
+<input type="hidden" name="ref_no" value="${ref_no}" />
+<input type="hidden" name="v_card_no" value="${v_card_no}" />
+<input type="hidden" name="hi_beg_bal" value="${hi_beg_bal}" />
+<input type="hidden" name="card_ref_num" value="${card_ref_num}" />
+<input type="hidden" name="auth_no" value="${auth_no}" />
+<input type="hidden" name="card_acct_idx" value="${card_acct_idx}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="last_ims_amt" value="${last_ims_amt}" />
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.dr_amt.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ function dramt(obj) {
+		var dramt = Number(obj.value);
+		var befamt = Number(document.getElementsByName('end_bal')[0].value);
+		if (dramt < 0||dramt>befamt) {
+			alert("扣款金額必須大於0且小於扣款後期末金額!");
+			return;
+		} else {
+			$("#ex1").text(befamt - dramt);
+			$("#ex2").val(befamt - dramt);
+		}
+
+	}
+
+</script>

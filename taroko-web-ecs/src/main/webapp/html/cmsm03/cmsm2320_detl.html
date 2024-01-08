@@ -1,0 +1,193 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-08-12  V1.00.01  tanwei        新增預借現金密碼解鎖重置次數明細                                             -->
+<!-- 109-08-12  V1.00.02  tanwei        原預借現金密碼錯誤次數重置日期修改                                         -->
+<!-- 109-09-09  v1.00.03  Sunny         修改文字                                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>預借現金密碼解鎖重置次數明細</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript">
+var datalist = "";
+var datalistori = "";
+
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+
+
+});
+
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />
+  </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="解除鎖定" onClick="return top.submitControl('A')" class="btAdd" ${btnAdd_disable}/>&nbsp;
+      <input type="Button" value="刪除解除鎖定" onClick="return top.submitControl('D')" class="btUpdate" ${btnDelete_disable}/>&nbsp;
+   </td>   
+</tr>
+</table>
+<hr>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;卡號：
+   <span class="dsp_text">${card_no}</span>
+   <input type="hidden" name="card_no" value="${card_no}">   
+   </td>
+   <td>&nbsp;正/副卡：
+	   <span class="dsp_text">${sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(sup_flag)}</span>
+	   <input type="hidden" name="sup_flag" value="${sup_flag}">
+	   &nbsp;子卡：
+	   <span class="dsp_text">${son_card_flag}</span>
+	   <input type="hidden" name="son_card_flag" value="${son_card_flag}" />   
+	  <!--  &nbsp;debit卡：
+	   <span class="dsp_text">${debit_flag}</span>
+	   <input type="hidden" name="debit_flag" value="${debit_flag}">   -->
+   </td>
+   <td>&nbsp;團體代號:
+   	<span class="dsp_text">${group_code}.${tt_group_code}</span>
+    <input type="hidden" name="group_code" value="${group_code}" />   
+    <input type="hidden" name="tt_group_code" value="${tt_group_code}">
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;姓名：
+      <span class="dsp_text">${idno_name}</span>
+      <input type="hidden" name="idno_name" value="${idno_name}">
+   </td>	
+  	<td nowrap >&nbsp;身分證ID：
+      <span class="dsp_text">${id_no}</span>
+      <input type="hidden" name="id_no" value="${id_no}">
+      &nbsp;生日：
+      <span class="dsp_date">${bir_date.YMD}</span>
+      <input type="hidden" name="bir_date" value="${bir_date}" />
+   </td>	
+  	<td nowrap >&nbsp;帳戶類別:
+  		<span class="dsp_text">${acct_type}.${tt_acct_type}&nbsp;</span>
+  		<input type="hidden" name="acct_type" value="${acct_type}">
+  		<input type="hidden" name="tt_acct_type" value="${tt_acct_type}">
+   </td>	
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;歸戶ID：
+      <span class="dsp_text">${acct_key}</span>
+      <input type="hidden" name="acct_key" value="${acct_key}" />
+   </td>   
+  	<td nowrap >&nbsp;公司統編：
+      <span class="dsp_text">${corp_no}</span>
+      <input type="hidden" name="corp_no" value="${corp_no}" />
+   </td>   
+  	<td nowrap >&nbsp;預借現金密碼錯誤次數：
+  		<span class="dsp_text">${passwd_err_count}</span>
+  		<input type="hidden" name="passwd_err_count" value="${passwd_err_count}"/>  		
+  	</td>   
+  </tr>
+  <tr>
+  	<td nowrap colspan="3">&nbsp;帳單地址：
+      <span class="dsp_text">${bill_sending_zip}&nbsp;
+      ${bill_sending_addr1}${bill_sending_addr2}${bill_sending_addr3}
+      ${bill_sending_addr4}${bill_sending_addr5}
+      </span>
+      <input type="hidden" name="bill_sending_zip" value="${bill_sending_zip}" />
+      <input type="hidden" name="bill_sending_addr1" value="${bill_sending_addr1}" />
+      <input type="hidden" name="bill_sending_addr2" value="${bill_sending_addr2}" />
+      <input type="hidden" name="bill_sending_addr3" value="${bill_sending_addr3}" />
+      <input type="hidden" name="bill_sending_addr4" value="${bill_sending_addr4}" />
+      <input type="hidden" name="bill_sending_addr5" value="${bill_sending_addr5}" />
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;電話(H)：
+      <span class="dsp_text">${wk_telno_h}</span>
+      <input type="hidden" name="wk_telno_h" value="${wk_telno_h}" />
+   </td>   
+  	<td nowrap >&nbsp;電話(O)：
+      <span class="dsp_text">${wk_telno_o}</span>
+      <input type="hidden" name="wk_telno_o" value="${wk_telno_o}" />
+   </td>   
+  	<td nowrap>&nbsp;行動電話：
+      <span class="dsp_text">${cell_phone}</span>
+      <input type="hidden" name="cell_phone" value="${cell_phone}" />
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡片狀態:
+      <span class="dsp_text">${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</span>
+      <input type="hidden" name="current_code" value="${current_code}" />
+   </td>
+   <td>&nbsp;附卡張數：
+   <span class="dsp_number">${sup_card_num}</span>
+   <input type="hidden" name="sup_card_num" value="${sup_card_num}">   
+   </td>
+   <td nowrap>卡片效期:
+      <span class="dsp_date">${new_end_date.YMD}</span>
+      <input type="hidden" name="new_end_date" value="${new_end_date}" />
+      <input type="hidden" name="renew_flag" value="N"  />
+   </td>
+  </tr>
+</table>
+<br>
+<span style="margin-left:100px;color:red">異動日期  ${MOD_DATE}</span>
+<span style="margin-left:150px;color:red">異動人員 ${MOD_USER}</span>
+<span style="margin-left:200px;color:red">覆核狀態   ${APR_FLAG}</span>
+
+</div>
+
+ <input type="hidden"  name="lost_fee_code" value="${lost_fee_code}" />
+ <input type="hidden"  name="acno_p_seqno" value="${acno_p_seqno}" />
+ <input type="hidden"  name="id_p_seqno" value="${id_p_seqno}" />
+ <input type="hidden"  name="corp_p_seqno" value="${corp_p_seqno}" />
+ <input type="hidden" id="bin_type" name="bin_type" value="${bin_type}">
+ <input type="hidden"  name="combo_indicator" value="${combo_indicator}">
+ <input type="hidden"  name="electronic_code" value="${electronic_code}">
+ <input type="hidden"  name="reissue_status" value="${reissue_status}">
+ <input type="hidden"  name="oppost_date" value="${oppost_date}">
+ <input type="hidden"  name="oppost_reason" value="${oppost_reason}">
+ <input type="hidden"  name="reg_bank_no" value="${reg_bank_no}"> 
+ <input type="hidden"  name="datalistori" value="${datalistori}"> 
+ <input type="hidden"  name="datalist" value="${datalist}">
+ <input type="hidden"  name="passwd_err_count_resetdate" value="${passwd_err_count_resetdate}" >  
+  
+ <input type="hidden"  name="rowid" value="${rowid}" >
+ <input type="hidden"  name="cms_rowid" value="${cms_rowid}" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  id="pageType"  value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+ var idCode="";
+ 
+ top.refreshButton2('1');
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+</script>

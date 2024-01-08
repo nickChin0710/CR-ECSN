@@ -1,0 +1,328 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-08-23  V1.00.01  AndyLiu            Update                           -->
+<!-- 109-01-02  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!-- 110-03-31  V1.00.03  Justin Wu     fix XSS 
+<!-- 111-04-14  V1.00.08  machao     TSC畫面整合                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>悠遊卡卡號設定作業-110-03-31-Justin</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+	<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+</head>
+<script language="JavaScript">
+function wf_add_newrow() {
+    var sel_card_type = document.getElementById("kk_card_type").value;
+    if(sel_card_type==null || sel_card_type==''){
+        alert("新增明細卡種不可空白!!");
+        return false;
+    }
+    var sel_group_code = document.getElementById("kk_group_code").value;
+    if(sel_group_code===null || sel_group_code==''){
+        alert("新增明細團體代號不可空白!!");
+        return false;
+    }
+    var sel_bin_no = document.getElementById("kk_bin_no").value;
+    if(sel_bin_no==null || sel_bin_no==''){
+        alert("新增明細bin_no不可空白!!");
+        return false;
+    }
+    //debugger;計算畫面筆數從標題列起算
+    var ind = document.getElementById('table1').rows.length - 1;
+    var rowNum = document.getElementById('table1').rows.length - 1;
+    var colNum = 0;
+    var fi = 0;
+    //console.log("a:"+ind);
+    var num = '${ser_num}';
+    if (num == '') {
+        ind = document.getElementById('table1').rows.length - 2;
+    }
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) {
+        serNo = "0" + ind;
+    } else {
+        serNo = "" + ind;
+    }
+    fi++;
+    var con = document.createElement('span');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var ip2 = document.createElement('input');
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild(ip2);
+
+    //card_type======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mno = document.createElement('input');
+    mno.setAttribute('class', 'col_text');
+    mno.type = 'text';
+    mno.name = 'card_type';
+    mno.maxLength = 10;
+    mno.size = 10;
+    // mno.value = '';
+    mno.value = sel_card_type;
+    mno.setAttribute('zEdit', 'any');
+    myCell.appendChild(mno);
+
+    //group_code    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mno = document.createElement('input');
+    mno.setAttribute('class', 'col_text');
+    mno.type = 'text';
+    mno.name = 'group_code';
+    mno.maxLength = 4;
+    mno.size = 4;
+    // mno.value = '';
+    mno.value = sel_group_code;
+    mno.setAttribute('zEdit', 'any');
+    myCell.appendChild(mno);
+
+    //tsc_bin_no======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var tsc_bin_no = document.createElement('input');
+    tsc_bin_no.setAttribute('class', 'col_text');
+    tsc_bin_no.type = 'text';
+    tsc_bin_no.name = 'tsc_bin_no';
+    tsc_bin_no.maxLength = 19;
+    tsc_bin_no.size = 16;
+    tsc_bin_no.value = sel_bin_no;
+    myCell.appendChild(tsc_bin_no);
+
+    //err_msg========================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=3>&nbsp;卡種:
+                        <select size="1" name="ex_card_type" class="col_ddlb" vlaue=$ {ex_card_type}>
+                            ${dddw_card_type}
+                        </select>&nbsp;
+                    </td>
+                    <td nowrap colspan=3>
+                        &nbsp;認同集團碼:
+                        <select size="1" name="ex_group_code" class="col_ddlb" vlaue=$ {ex_group_code}>
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td nowrap colspan=3>&nbsp;Bin-no:
+                        <input type="text" class="col_any" name="ex_bin_no" value="${ex_bin_no}" zEdit="any" maxlength="20" size="20" />&nbsp;&nbsp;
+                    </td>
+                    <td nowrap colspan=3>&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th nowrap class="list_th" width="5%">NO</th>
+                    <th nowrap class="list_th">Tsc_bin_no</th>
+                    <th nowrap class="list_th">目前序號</th>
+                </tr>
+                <!-- ${add_html} -->
+                <!-- <input type="hidden" name="add_html" value="${add_html}"> -->
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class='list_cc'>${tdNo}</td>
+                    <td nowrap class='list_cc'>${tdTscBinNo}</td>
+                    <td nowrap class='list_cc'>
+                    	<input type="text" class="col_any tdSeqNoCurrent" name="tdSeqNoCurrent" value="${tdSeqNoCurrent}"
+              			zEdit="any" maxlength="10" size="10" ${btOther_disable} zRequire="Y"/>
+                    	<input type="Button"  value="更改目前序號"  class="btOther tdSeqNoCurrent_button" >&nbsp;&nbsp;
+                    </td>
+                    <input type="hidden" name="tdNo" value="${tdNo}">
+                    <input type="hidden" name="tdTscBinNo" value="${tdTscBinNo}">
+                </tr>    
+                <!-- END DYNAMIC : DETAIL -->  
+            </table>
+            <hr>
+            <!--新增插入明細-->
+            <table id="table2" width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=3>&nbsp;卡種:
+                        <select size="1" name="kk_card_type" id="kk_card_type" class="col_ddlb" vlaue="${kk_card_type}" onChange="itemChange(this.value)">
+                        	<option value="">--</option>
+                            ${dddw_card_type_h}
+                        </select>
+                    </td>
+                    <td id="td1" nowrap colspan=3>
+                        &nbsp;認同集團碼:
+                        <select size="1" name="kk_group_code" id="kk_group_code" class="col_ddlb">
+                        	<option value="">--</option>
+                            ${dddw_group_code_h}
+                        </select>
+                    </td>
+                    <td nowrap colspan=3>&nbsp;Bin-no:
+                        <input type="text" class="col_any" id="kk_bin_no" name="kk_bin_no" value="${kk_bin_no}" zEdit="any" maxlength="20" size="20" />&nbsp;&nbsp;
+                    </td>
+                    <td align="right">
+                        <input type="Button" name="detl_btnAdd" value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+                    </td>
+                </tr>
+            </table>
+            <!--List -->
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="40%">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除</th>
+                    <th nowrap class="list_th">卡種</th>
+                    <th nowrap class="list_th">認同集團碼</th>
+                    <th nowrap class="list_th">Bin-no</th>
+                    <th nowrap class="list_th">Msg</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no">
+                        <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                        <input type="checkbox" name="opt" value="${ser_num}" ${set_opt}/>
+                        <input type="hidden" name="ser_num" value="${ser_num}" />
+                        <input type="hidden" name="rowid" value="${rowid}" />
+                        <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+                    </td>
+                    <td nowrap class="list_cc">${card_type}&nbsp;</td>
+                    <td nowrap class="list_cc">${group_code}&nbsp;</td>
+                    <td nowrap class="list_cc">${tsc_bin_no}&nbsp;</td>
+                    <td nowrap class="list_ll" style="color: red">${err_msg}&nbsp; </td>
+                    <input type="hidden" name="card_type" value="${card_type}">
+                    <input type="hidden" name="group_code" value="${group_code}">
+                    <input type="hidden" name="tsc_bin_no" value="${tsc_bin_no}">
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="mod_pgm" value="tscm0020">
+        <input type="hidden" name="h_card_type" id="h_card_type" value="${dddw_card_type_h}">
+        <input type="hidden" name="h_group_code" id="h_group_code" value="${dddw_group_code_h}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "60";
+
+// document.dataForm.ex_card_type.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0065_detl";
+    }
+    $(".tdSeqNoCurrent").attr("disabled",false);
+    return true;
+}
+
+// function detailScreen(serNum, parm, parm2, parm3) {
+//     top.respLevel = 1;
+//     top.currRows = serNum;
+//     document.dataForm.data_k1.value = parm;
+//     document.dataForm.data_k2.value = parm2;
+//     document.dataForm.data_k3.value = parm3;
+//     top.respHtml = "crdm0065_detl";
+//     top.submitControl('S');
+//     return true;
+// }
+function chkdata() {
+    var seq = 0;
+    var agy = document.dataForm.opt;
+    var ll = agy.length;
+    if (typeof ll === 'undefined') {
+        if (agy.checked) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (agy[i].checked) {
+                seq++;
+            }
+        }
+    }
+}
+
+function itemChange(data_kk) { 
+    // 20200102 updated for archit.  change
+	 top.actionCode = "AJAX";
+	 // top.methodName = "itemChange";
+	 resetJSON();
+	 addJSON("data_kk",data_kk);
+	 processAJAX();
+	 return true; 
+}
+
+function ajaxResponse(){
+	top.respHtml ="tscm0020";
+	top.requHtml ="tscm0020";
+	if(getJSONvalue("dddw_group_code_h2",0)!=null){
+	 	$("#table2 tr #td1 select option").remove();
+	 	$("#table2 tr #td1 select").append(getJSONvalue("dddw_group_code_h2",0));
+	}
+	return false;
+}
+
+$(document).ready(function() {
+    $(".tdSeqNoCurrent_button").click(function() {
+    	var clickNum = $(this).index(".tdSeqNoCurrent_button");
+    	console.log(clickNum);
+    	if (confirm("請確認是否要更改目前序號?") === true) {
+    		$(".tdSeqNoCurrent").eq(clickNum).attr("disabled",false);
+        } 
+    })
+});
+</script>

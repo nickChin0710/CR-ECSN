@@ -1,0 +1,111 @@
+<html>
+
+<head>
+    <title>紅利點數兌換高鐵標準車廂票價差額明細表-112-11-01-V1.00.01-ZuweiSu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=6>&nbsp;查詢年月：
+                        <input type="text" class="col_any" name="ex_yyyymm" value="${ex_yyyymm}" zEdit="date,yyyymm" zRequire ="k" maxlength=6 size=6 />
+                    </td>
+                    <td nowrap colspan=6>&nbsp;正卡人ID:
+                        <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" zEdit="alphanum,upper" maxlength=10 size=10 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=12>&nbsp;
+                        <input type="Button" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+ <table width="60%" border="0" cellspacing="0" cellpadding="6">
+   <tr>
+	   <td nowrap>
+	       本月折抵點數小計:　
+	   </td>
+	   <td nowrap>
+	       ${deduct_bt_month_sum.(999)}
+	   </td>
+	   <td nowrap>本月折扣差價金額小計:
+	   </td>
+	   <td nowrap>${discount_value_month_sum.(999)}
+	   </td>
+   </tr>
+   <tr>
+	   <td nowrap>
+	       本年折抵點數總計:　
+	   </td>
+	   <td nowrap>
+	       ${deduct_bt_year_sum.(999)}
+	   </td>
+	   <td nowrap>本年折扣差價總金額:
+	   </td>
+	   <td nowrap>${discount_value_year_sum.(999)}
+	   </td>
+   </tr>
+ </table>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">全選&nbsp;
+                </th>
+                <th nowrap class="list_th">正卡人ID</th>
+                <th nowrap class="list_th">交易日期</th>
+                <th nowrap class="list_th">折抵總點數</th>
+                <th nowrap class="list_th">折扣差價總額(元)</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no" rowspan="2">
+			        ${SER_NUM}&nbsp;
+			        <input type="hidden" name="rowid" value="${rowid}"/>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${trans_date}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${deduct_bt_sum.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${discount_value_sum.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+        <input type="hidden" id = "select_ct" name="select_ct" value="${select_ct}">
+        
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+
+</script>

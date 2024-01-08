@@ -1,0 +1,146 @@
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-06-13  V1.00.01  jh                                                  -->
+<!-- 109-07-29  V1.00.02  Justin Wu      the maxlength of userid 8 -> 10      -->
+<!-- 109-12-11  V1.00.03  Justin Wu      chg the width of the table to 30%    -->
+<!-- 110-01-20  V1.00.04  Justin Wu      fix a XSS problem                                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>登入系統首頁</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/Taroko.css" type="text/css">
+</head>
+<script src="./js/spin.js"></script>
+<style>
+.zz_data
+{
+   BORDER-RIGHT: #999999 1px solid;
+	BORDER-TOP: #999999 1px solid;
+	BORDER-LEFT: #999999 1px solid;
+	BORDER-BOTTOM: #999999 1px solid;
+   FONT-FAMILY: "Consolas", "Microsoft Sans Serif" , "Arial", "新細明體", "DFKai-SB";
+   FONT-SIZE:  12pt;
+   color:blue;
+	padding-left:4px;
+   text-transform: uppercase; 
+}
+</style>
+<body bgcolor="#FFFFFF" onkeydown="return enterKey(event);">
+<div id="mainPage" > </div>
+
+<br><br><br><br><br>
+<p>
+   <!--
+	<center><img border="0" src="images/issure.png" height=180 width=650 /></center>
+	-->
+	<center><img border="0" src="images/Taiwan_corp.png" />
+   <br>
+   <font size="24" color="red">${test_site}</font>
+   </center>
+</p>
+<form name="loginForm"  method="post" action="">
+<body>
+<center>
+<table border="0" width="30%" id="tableA">
+  <tr>
+     <th width="20%" >使用者 : </th>
+     <td width="30%" class="EditData" >&nbsp;
+        <input type="text" class="field_style" name="LOGIN_USER" value="" size="12" maxlength="10" onKeyup="autoTab(this,PASSWD)";
+            zEdit="alphaNum" zRequire="Y" />
+     </td>
+  </tr>
+  <tr>
+     <th width="20%" >密碼 : </th>
+     <td width="30%" class="EditData" >&nbsp;
+        <input type="password" autocomplete="off" name="PASSWD" class="field_style" size="12" maxlength="10" >
+     </td>
+  </tr>
+</table>
+
+<br>
+<input type="submit" name="LOGIN" style="FONT-SIZE: 14pt; FONT-FAMILY:"標楷體";" value=" 登入 "  onClick="return login()" >&nbsp;&nbsp;
+<font color=red>${LOGIN_MESG}</font>
+</center>
+
+<input type="hidden"  name="test_site"    value="${test_site}" />
+<input type="hidden"  name="DXC_LOGIN"    value="YES" />
+<input type="hidden"  name="HIDE"         value="${HIDE_DATA}" />
+<input type="hidden"  name="BROWSER_TYPE" value="">
+
+</body>
+</form>
+
+<script language="javascript">
+
+ browserType ="";
+ 
+ document.loginForm.LOGIN_USER.focus();
+ getBrowserType();
+ 
+ function login()
+  {
+ 	var target  = document.getElementById("mainPage");  
+    var spinner = new Spinner(opts).spin(target);
+
+ 	  loginUser = document.loginForm.LOGIN_USER.value;
+ 	  document.loginForm.action = "MainControl";
+  }
+
+ function enterKey(event)
+  {
+ 	  if ( event.keyCode != 13 )
+       { return; }
+    login();
+    return true;
+  }
+
+ function autoTab(original,destination)
+  {
+    if ( original.getAttribute && original.value.length == original.getAttribute("maxlength") )
+       { destination.focus(); }
+  }
+
+ function getBrowserType()
+  {
+    var  browserName ="",browserAgent="";
+
+    browserName  = navigator.appName;
+    browserAgent = navigator.userAgent;
+
+    if ( browserName.length >= 8 )
+       {
+         if ( browserName.substring(0,8) == "Netscape" )
+            {
+              if ( browserAgent.indexOf("Firefox") == -1 )
+                 { browserType = "Chrome";  }
+              else
+                 { browserType = "Firefox"; }
+            }
+       }
+
+    if ( browserName.length >= 9 )
+       {
+         if ( browserName.substring(0,9) == "Microsoft" )
+            { browserType = "IE"; }
+       }
+
+    document.loginForm.BROWSER_TYPE.value = browserType;
+    return;
+  }
+
+window.onload = function(){
+  if (window != window.top) {
+    alert("登入逾時或發生異常，請重新登入");
+    top.document.getElementsByName("buttonForm")[0].submit();
+  }
+}
+
+</script>
+
+</body>
+
+</html>
+

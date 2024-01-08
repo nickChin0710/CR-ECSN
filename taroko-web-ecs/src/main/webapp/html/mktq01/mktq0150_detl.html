@@ -1,0 +1,130 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-08-11  V1.00.01     Yang Bo                 Initial                  -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+  <title>企業員工共銷招攬卡數查詢作業_detl</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+  <div id="condBlock">
+    <table width="70%" border="0" cellpadding="0" cellspacing="4" style="margin-bottom:10px;">
+	   <tr>
+		   <td nowrap colspan=3>&nbsp;機構統編:
+		      <select size="1" name="kk_corp_no" class="col_ddlb" >
+		         ${dddw_mkt_office_m}
+		      </select>
+		     </td>
+		     <td nowrap colspan=3>&nbsp;推廣單位統編:
+          		<input type="text" class="col_any" name="kk_promote_dept" value="${kk_promote_dept}" zEdit="alphanum" maxlength=9 size=9 />
+		     </td>
+		     <td nowrap colspan=3>
+		     </td>
+	   </tr>
+      <tr>
+        <td nowrap colspan=3>&nbsp;查詢年月:
+          <input type="text" class="col_number" name="kk_static_month1" value="${kk_static_month1}" zEdit="date,yyyymm" zRequire ="k" maxlength=6 size=6 />
+          --
+          <input type="text" class="col_number" name="kk_static_month2" value="${kk_static_month2}" zEdit="date,yyyymm" zRequire ="k" maxlength=6 size=6 />
+        </td>
+        <td nowrap colspan=3></td>
+        <td nowrap colspan=3>&nbsp;
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+          <input type="Button" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q1'); Show()" class="btQuery">&nbsp;&nbsp;
+          <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+          <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);" />&nbsp;&nbsp;
+        </td>
+      </tr>
+    </table>
+  </div>
+  <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+    <tr>
+      <th nowrap class="list_th" width="5%">No&nbsp;</th>
+      <th nowrap class="list_th">年月</th>
+      <th nowrap class="list_th">推廣單位統編</th>
+      <th nowrap class="list_th">推廣單位名稱</th>
+      <th nowrap class="list_th">推廣企業員工ID</th>
+      <th nowrap class="list_th">發卡卡號</th>
+      <th nowrap class="list_th">持卡人姓名</th>
+      <th nowrap class="list_th">發卡日期</th>
+      <th nowrap class="list_th">團體代號</th>
+      <th nowrap class="list_th">最早消費日</th>
+      <th nowrap class="list_th">最晚消費日</th>
+      <th nowrap class="list_th">本年度累計簽帳金額(已請款)</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr style="cursor:hand">
+      <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+        <input type="hidden" name="SER_NUM" value="${SER_NUM}" />
+      </td>
+      <td nowrap class="list_ll"> ${static_month.YMD}&nbsp;
+        <input type="hidden" name="static_month" value="${static_month}" />
+      </td>
+      <td nowrap class="list_ll"> ${promote_dept}&nbsp;
+        <input type="hidden" name="promote_dept" value="${promote_dept}" />
+      </td>
+      <td nowrap class="list_ll"> ${promote_name}&nbsp;
+        <input type="hidden" name="promote_name" value="${promote_name}" />
+      </td>
+      <td nowrap class="list_ll"> ${introduce_emp_no}
+        <input type="hidden" name="introduce_emp_no" value="${introduce_emp_no}" />
+      </td>
+      <td nowrap class="list_ll"> ${card_no}&nbsp;
+        <input type="hidden" name="card_no" value="${card_no}" />
+      </td>
+      <td nowrap class="list_ll"> ${chi_name}
+        <input type="hidden" name="chi_name" value="${chi_name}" />
+      </td>
+      <td nowrap class="list_ll"> ${issue_date.YMD}
+        <input type="hidden" name="issue_date" value="${issue_date}" />
+      </td>
+      <td nowrap class="list_ll"> ${group_code}&nbsp;
+        <input type="hidden" name="group_code" value="${group_code}" />
+      </td>
+      <td nowrap class="list_ll"> ${first_purchase_date.YMD}&nbsp;
+        <input type="hidden" name="first_purchase_date" value="${first_purchase_date}" />
+      </td>
+      <td nowrap class="list_ll"> ${last_purchase_date.YMD}&nbsp;
+        <input type="hidden" name="last_purchase_date" value="${last_purchase_date}" />
+      </td>
+      <td nowrap class="list_cc"> ${total_signed_amount.(999)}&nbsp;
+        <input type="hidden" name="total_signed_amount" value="${total_signed_amount}" />
+      </td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+  </table>
+
+  <!-- -->
+  <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+  <input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1');
+</script>
+<script language="javascript">
+
+  top.refreshButton2('1');
+  top.pageRows="1000";
+
+  function validateInput()
+  {
+    if ( !top.checkFormat() )
+    { return false; }
+
+    return true;
+  }
+
+</script>

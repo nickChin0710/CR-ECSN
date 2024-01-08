@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>整批匯入利害關係人ID-batch-2023/05/31 Ryan</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;回覆檔來源:
+      <Select name = "ex_file_name">
+        <option value="" >--</option>
+        <option value="ACHR02" ${ex_file_name-ACHR02}>他行ACH_ACHR02</option>
+        <option value="POST0004" ${ex_file_name-POST0004}>郵局_POST0004</option>                  
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+      <input type="Button"   value="整批匯入" onClick="return uploadClick();" class="btQuery" >&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+   </td>   
+  </tr>  
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >明細資料</th>
+    <th nowrap >錯誤原因</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${batch_ser_num}&nbsp;</td>
+    <td nowrap class="list_cc"> ${batch_data}&nbsp;</td>
+    <td nowrap class="list_cc col_key"> ${batch_error_msg}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="upload_file" value="" /> 
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+  function uploadClick() {
+	if (confirm("是否執行 列印匯入?") === false) {
+		  return false;
+	}
+
+    document.dataForm.zz_file_name.value = "";    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";    
+    top.openWindow("",parmHtml,parmName,windowSize);
+    top.requHtml    = "actm0010_batch";
+    top.respHtml    = "actm0010_batch";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ } 
+  
+</script>

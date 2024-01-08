@@ -1,0 +1,223 @@
+<html>
+<!--  
+*****************************************************************************
+*                                                                            *
+*                              MODIFICATION LOG                              *
+*                                                                            *
+* DATE       Version   AUTHOR      DESCRIPTION                               *
+* ---------  --------  ---------- ------------------------------------------ *
+* 111-12-16  V1.00.00  Ryan   program initial                                *
+******************************************************************************
+-->
+<head>
+<title>利率差異化參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script> 
+</head>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <!-- <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" onmouseout="light_img(this);" onmouseover="dark_img(this);">&nbsp; -->
+           <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; 
+           <input type="Button"  value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('S1')" class="btUpdate" >&nbsp;&nbsp;
+      </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<!-- Detail data================================= -->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>產生評分月份:
+            <input type="checkbox"  value="Y" name="mm1" ${mm1-Y} ><span style="color:#FF0000;">01</span>
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm2" ${mm2-Y} >02
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm3" ${mm3-Y} >03
+        </td>
+        <td nowrap>
+            <input type="checkbox"  value="Y" name="mm4" ${mm4-Y} ><span style="color:#FF0000;">04</span>
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm5" ${mm5-Y} >05
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm6" ${mm6-Y} >06
+        </td>
+        <td nowrap>
+            <input type="checkbox"  value="Y" name="mm7" ${mm7-Y} ><span style="color:#FF0000;">07</span>
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm8" ${mm8-Y} >08
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm9" ${mm9-Y} >09
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm10" ${mm10-Y} ><span style="color:#FF0000;">10</span>
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm11" ${mm11-Y} >11
+        </td>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="mm12" ${mm12-Y} >12
+        </td>
+    </tr>
+    <tr>
+    	<td nowrap colspan="12">執行日1-150:
+    		<input type="text" class="col_any" zEdit="number" name="run_day" value="${run_day}"
+      		maxlength="2" size="4"/>
+    	</td>
+    </tr>
+    <tr>
+    	<td nowrap colspan="12">執行日2-167:
+    		<input type="text" class="col_any" zEdit="number" name="run_day2" value="${run_day2}"
+      		maxlength="2" size="4"/>
+    	</td>
+    </tr>
+    <tr>
+    	<td nowrap colspan="12">執行日3-170:
+    		<input type="text" class="col_any" zEdit="number" name="run_day3" value="${run_day3}"
+      		maxlength="2" size="4"/>
+    	</td>
+    </tr>
+    <tr>
+    	<td nowrap colspan="12">動用循環息月數:
+    		<input type="text" class="col_any" zEdit="number" name="use_rcmonth" value="${use_rcmonth}"
+      		maxlength="9" size="9"/>
+    	</td>
+    </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>    
+        	<input type="checkbox" value="Y"  name="acct_type_flag" ${acct_type_flag-Y} >
+            &nbsp;1. 排除帳戶類別&nbsp;
+            <input type="hidden" name="exclude_acct_type" value="${exclude_acct_type}">
+        </td>
+    </tr>
+    <!--List -->
+    <table id='table1' class="sortable"  width="80%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th nowrap class="list_th" width="5%">排除 </th>
+        <th nowrap class="list_th">帳戶類別</th>
+        <th nowrap class="list_th">帳戶類別名稱</th>
+        <th nowrap class="list_th"></th>
+      </tr>
+      <!-- BEGIN DYNAMIC : DETAIL -->
+      <tr id="tr1">
+        <td nowrap class="list_no"> 
+			<input type="checkbox" name="opt" class="check"  value="Y" ${opt_checked}/>
+			<input type="hidden" name="acct_type" value="${acct_type}">
+			<input type="hidden" name="chin_name" value="${chin_name}">
+			<input type="hidden" name="card_indicator" value="${card_indicator}">
+		</td>
+        <td nowrap class="list_ll" >${acct_type}</td>
+        <td nowrap class="list_ll"> ${chin_name}</td>
+        <td nowrap class="list_ll"> ${card_indicator}</td>
+      </tr>
+      <!-- END DYNAMIC : DETAIL -->
+    </table>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+  		<td nowrap >近 n 個月(含)有一次『違約情形』-調升:
+    		<input type="text" class="col_any" zEdit="any" name="penalty_month" value="${penalty_month}"
+      		maxlength="9" size="11"/>
+    	</td>
+    </tr>
+    <tr>
+       	<td nowrap >近 n 個月(含)帳單無『違約情形』-調降:
+    		<input type="text" class="col_any" zEdit="any" name="penalty_month2" value="${penalty_month2}"
+      		maxlength="9" size="11"/>
+    	</td>
+    </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">覆核主管：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${apr_user} </span>
+      <input type="hidden" name="apr_user" value="${apr_user}">   
+   </td>
+   <td nowrap class="td_text" width="20%">覆核日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${apr_date.YMD}</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">   
+   </td>
+  </tr>
+</table>
+</div>
+
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+ top.refreshButton2('0');
+ top.pageRows="999";
+ function validateInput()
+ {
+     if ( !top.checkFormat() )
+         { return false; }
+     if ( top.actionCode == "S1" ) {
+        if(document.dataForm.mm2.checked == true || 
+     		 document.dataForm.mm3.checked == true ||
+     		 document.dataForm.mm5.checked == true ||
+     		 document.dataForm.mm6.checked == true ||
+     		 document.dataForm.mm8.checked == true ||
+     		 document.dataForm.mm9.checked == true ||
+     		 document.dataForm.mm11.checked == true ||
+     		 document.dataForm.mm12.checked == true ){
+     	  if (confirm("執行時間月份非 01,04,07,10; 是否修改?")==false) {
+               return false;
+            }  
+        }
+     }
+     opt_num();
+     return true;
+ }
+ 
+ function opt_num(){
+     var exclude_acct_type = '';
+	 $('.check').each(function (i) {
+		if($(this).prop('checked')){
+			var a =$("input[name=acct_type]").eq(i).val();
+		 	exclude_acct_type +=a ;
+		}
+	 })
+     $("input[name=exclude_acct_type]").val(exclude_acct_type);
+ }
+
+ 
+</script>

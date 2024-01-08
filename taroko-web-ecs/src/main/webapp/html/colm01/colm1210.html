@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>LGD提前強制停用註記維護-pond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;LGD案件號碼：
+      <input type="text" class="col_text" name="exSeqNo" value="${exSeqNo}" 
+        zEdit="alphanum,upper" maxlength="12" size="14" />
+    </td>
+    <td nowrap>&nbsp;身分證ID/統編：
+      <input type="text" class="col_text" name="exIdCorp" value="${exIdCorp}" 
+        zEdit="alphanum,upper" maxlength="10" size="12" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;建檔日期：
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+	  </script>&nbsp;
+    </td>
+    <td nowrap>&nbsp;管道:
+      <span class="col_radio">
+        <input type="radio" value="0" name="exFromType" ${exFromType-0} />全部 
+        <input type="radio" value="1" name="exFromType" ${exFromType-1} ${DEFAULT-exFromType} />人工 
+        <input type="radio" value="2" name="exFromType" ${exFromType-2} />批次
+      </span>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">案件號碼</th>
+    <th nowrap class="list_th">身分證ID/統編</th>
+    <th nowrap class="list_th">管道</th>
+    <th nowrap class="list_th">結案</th>
+    <th nowrap class="list_th">結案日期</th>
+    <th nowrap class="list_th">違約原因</th>
+    <th nowrap class="list_th">最早強停年月</th>
+    <th nowrap class="list_th">報送901日期</th>
+    <th nowrap class="list_th">建檔日期</th>
+    <th nowrap class="list_th">建檔經辦</th>
+    <th nowrap class="list_th">覆核日期</th>
+    <th nowrap class="list_th">違約說明</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${lgd_seqno}','${id_corp_no}','${from_type}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+     <input type="hidden" name="from_type" value="${from_type}">
+   </td>
+   <td nowrap class="list_cc"> ${lgd_seqno}&nbsp;</td>
+   <td nowrap class="list_cc"> ${id_corp_no}&nbsp;</td>
+   <td nowrap class="list_ll"><span style="color:#0000FF;"> ${tt_from_type}&nbsp;</span></td>
+   <td nowrap class="list_cc"><span style="color:#0000FF;"> ${close_flag}&nbsp;</span></td>
+   <td nowrap class="list_cc"> ${close_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${lgd_reason}&nbsp;</td>
+   <td nowrap class="list_cc"> ${lgd_early_ym.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_901_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${lgd_remark}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="colm1210">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ 
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ //top.pageRows="20";
+ 
+ document.dataForm.exDateS.focus();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colm1210_detl"; 
+    }
+    
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "colm1210_detl";
+    top.submitControl('S');
+    return true;
+  }
+ 
+</script>

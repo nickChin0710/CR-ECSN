@@ -1,0 +1,101 @@
+<html>
+<head>
+<title> 107/12/28 V1.00.01 批次作業監控紀錄查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<! query key ***************************************************************>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+     <td nowrap>&nbsp;查詢日期:
+        <input type="text" class="col_date" name="inqu_date" value="${inqu_date}"
+           zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+        <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'inqu_date'});
+        </script>
+     </td>
+      <td nowrap >&nbsp;程式名稱 :
+         <input type="text" class="col_any" name="inqu_prog_name" value="${inqu_prog_name}" zEdit="any" maxlength="10" size="12" >
+     </td>
+
+     <td nowrap>&nbsp;
+        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+        <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+     </td>
+   </tr>
+
+   <tr>
+      <td nowrap >&nbsp;LOG 類別 :
+      <select   size="1"  name="log_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="BATCH" ${log_type-Y} >BATCH&nbsp;</option>
+         <option value="WEB" ${log_type-N} >WEB</option>         
+      </select>
+     </td>
+     <td nowrap>&nbsp;
+        <input type="Button"  value="下載 LOG" onClick="return top.submitControl('DL')" class="btProcess" >&nbsp;&nbsp;
+     </td>
+   </tr>
+ </table>
+</div>
+<hr>
+<! browse ******************************************************************>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th" width="13%">程式名稱</th>
+    <th nowrap class="list_th" width="13%">開始日期</th>
+    <th nowrap class="list_th" width="13%">開始時間</th>
+    <th nowrap class="list_th" width="13%">結束日期</th>
+    <th nowrap class="list_th" width="13%">結束時間</th>
+    <th nowrap class="list_th" width="10%">總執行時間</th>
+    <th nowrap class="list_th" width="10%">狀態碼</th>
+    <th nowrap class="list_th" width="10%">執行訊息</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+    <td nowrap class="list_cc"> ${PROGRAM_NAME}</td>
+    <td nowrap class="list_cc"> ${LOG_START_DATE.YMD}</td>
+    <td nowrap class="list_cc"> ${LOG_START_TIME.TIME}</td>
+    <td nowrap class="list_cc"> ${LOG_END_DATE.YMD}</td>
+    <td nowrap class="list_cc"> ${LOG_END_TIME.TIME}</td>
+    <td nowrap class="list_cc"> ${DURATION_TIME}</td>
+    <td nowrap class="list_cc"> ${STATUS_CODE}</td>
+    <td nowrap class="list_ll"> &nbsp;${MESG_DATA}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<! hidden ******************************************************************>
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<! script1 *****************************************************************>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<! script2 *****************************************************************>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!**************************************************************************>

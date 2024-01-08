@@ -1,0 +1,350 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-02-21  V1.00.01  zuwei           Initial                             -->
+<!-- 111-05-30  V1.00.02  Justin          修正公司統編、繳款方式值消失問題       -->
+<!-- 111-06-24  V1.00.03  Justin          只有呆帳可以修改                     -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>商務-轉催呆及呆帳資料維護作業-detl-111-06-24-V1.00.03-Justin-[只有呆帳可以修改]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" > 
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  			<input type="Button"   value=" 新增 " ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" id="btUpdate" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+<div id="dataBlock">
+<hr>
+<!-- Detail data================================= -->
+<table id="table1" width="80%" class="sortable" border="0" cellspacing="0" cellpadding="2">
+	<tr>
+		<td nowrap colspan="3" class="col_key">&nbsp;帳戶帳號：
+		    <input type="text" class="dsp_text" name="acct_type" value="${acct_type}" size="2" disabled/> - 
+		    <input type="text" class="dsp_text" name="acct_key" value="${acct_key}" size="12" disabled/>
+			<input type="hidden" name="acct_type" value="${acct_type}">
+			<input type="hidden" name="acct_key" value="${acct_key}">
+		    &nbsp;
+		    <input type="text" class="dsp_text" name="db_cname" value="${db_cname}" size="20" disabled/>
+			<input type="hidden" name="db_cname" value="${db_cname}">
+			<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">
+			<input type="hidden" name="corp_act_type" value="${corp_act_type}">
+			<input type="hidden" name="sub_seqnos" value="${sub_seqnos}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap >&nbsp;原始帳戶狀態：
+		    <input type="text" class="dsp_text" name="tt_acct_status" value="${tt_acct_status}" size="20" disabled/>
+			<input type="hidden" name="acct_status" value="${acct_status}">
+			<input type="hidden" name="tt_acct_status" value="${tt_acct_status}">
+		</td>
+		<td nowrap colspan="2">&nbsp;欲轉換類別：
+            <select size="1" name="trans_type" class="col_ddlb" onChange="tran4init()">
+         		<option value="">--</option>
+         		<option value="1" ${trans_type-1} >1.正常</option>
+         		<option value="3" ${trans_type-3} >3.催收</option>
+         		<option value="4" ${trans_type-4} >4.呆帳</option>
+      		</select>
+   		</td>
+	</tr>
+	<tr>
+		<td nowrap ><span class="col_radio">
+		    <input type="checkbox" value="Y" name="no_delinquent_flag" ${no_delinquent_flag-Y} disabled>
+		    <input type="hidden" name="no_delinquent_flag" value="${no_delinquent_flag}">
+		    &nbsp;暫不轉逾放註記
+        </span></td>
+        <td nowrap colspan="2">&nbsp;起迄日期：
+	    	<input type="text" class="dsp_date" name="no_delinquent_s_date" value="${no_delinquent_s_date.YMD}" size="10" disabled/>
+            <input type="hidden" name="no_delinquent_s_date" value="${no_delinquent_s_date}">
+	    	--
+	        <input type="text" class="dsp_date" name="no_delinquent_e_date" value="${no_delinquent_e_date.YMD}" size="10" disabled/>
+            <input type="hidden" name="no_delinquent_e_date" value="${no_delinquent_e_date}">
+   		</td>
+   	</tr>
+   	<tr>
+		<td nowrap ><span class="col_radio">
+		    <input type="checkbox" value="Y" name="no_collection_flag" ${no_collection_flag-Y} disabled>
+		    <input type="hidden" name="no_collection_flag" value="${no_collection_flag}">
+		    &nbsp;暫不轉催收註記
+        </span></td>
+        <td nowrap colspan="2">&nbsp;起迄日期：
+	        <input type="text" class="dsp_date" name="no_collection_s_date" value="${no_collection_s_date.YMD}" size="10" disabled/>
+            <input type="hidden" name="no_collection_s_date" value="${no_collection_s_date}">
+	    	--
+	        <input type="text" class="dsp_date" name="no_collection_e_date" value="${no_collection_e_date.YMD}" size="10" disabled/>
+            <input type="hidden" name="no_collection_e_date" value="${no_collection_e_date}">
+   		</td>
+   	</tr>
+   	<tr>
+		<td nowrap ><span class="col_radio">&nbsp;強停註記：</span>
+            <span class="dsp_text">&nbsp;${tt_stop_status}</span>
+			<input type="hidden" name="stop_status" value="${stop_status}">
+			<input type="hidden" name="tt_stop_status" value="${tt_stop_status}">
+        </td>
+        <td nowrap ><span class="col_radio">&nbsp;欲轉催呆金額：</span>
+            <input type="text" class="dsp_number" name="no_end_bal" value="${no_end_bal.(999)}" size="10" disabled/>
+            <input type="hidden" name="no_end_bal" value="${no_end_bal}">
+        </td>
+        <td nowrap ><span class="col_radio">&nbsp;欠款總額：</span>
+            <input type="text" class="dsp_number" name="no_acct_jrnl_bal" value="${no_acct_jrnl_bal.(999)}" size="10" disabled/>
+            <input type="hidden" name="no_acct_jrnl_bal" value="${no_acct_jrnl_bal}">
+        </td>
+    </tr>
+    <tr>
+		<td nowrap colspan="3"><span class="col_radio">&nbsp;是否有有效卡：&nbsp;
+            <input type="radio" value="Y" name="db_curr" ${db_curr-Y} disabled/>&nbsp;有
+            <input type="radio" value="N" name="db_curr" ${db_curr-N} disabled/>&nbsp;無
+            <input type="hidden" name="db_curr" value="${db_curr}"></span>
+   		</td>
+   	</tr>
+   	<tr>
+        <td nowrap colspan="3">&nbsp;呆帳核准日：
+            <input type="text" class="col_date" name="alw_bad_date" value="${alw_bad_date}"
+         	    zEdit="date,yyyymmdd" maxlength="8" size="10" />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'alw_bad_date'});
+	    	</script>
+	    	　　　　　　　　&nbsp;法律文件確認日期：
+            <input type="text" class="col_date" name="paper_conf_date" value="${paper_conf_date}" 
+                zEdit="date,yyyymmdd" maxlength="8" size="10" />
+            <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'paper_conf_date'});
+	        </script>
+   		</td>
+   	</tr>
+   	<tr>
+		<td nowrap colspan="3">&nbsp;憑証名稱：
+            <input type="text" class="col_any" name="paper_name" value="${paper_name}" 
+                zEdit="any,canTW" maxlength="20" size="22" />&nbsp;&nbsp;
+            <select size="1" name="dddw_paper_name" class="col_ddlb" onChange="select()">
+                ${PtrCertificateList}
+            </select>
+   		</td>
+   	</tr>
+   	<tr>
+        <td nowrap >&nbsp;建立日期：
+            <input type="text" class="dsp_date" name="crt_date" value="${crt_date.YMD}" size="10" disabled/>
+            <input type="hidden" name="crt_date" value="${crt_date}">
+        </td>
+        <td nowrap >&nbsp;時間：
+            <input type="text" class="dsp_date" name="crt_time" value="${crt_time.TIME}" size="10" disabled/>
+            <input type="hidden" name="crt_time" value="${crt_time}">
+        </td>
+        <td nowrap >&nbsp;人員：
+            <input type="text" class="dsp_text" name="crt_user" value="${crt_user}" size="10" disabled/>
+            <input type="hidden" name="crt_user" value="${crt_user}">
+        </td>
+    </tr>
+    <tr>
+        <td nowrap >&nbsp;覆核日期：
+            <input type="text" class="dsp_date" name="apr_date" value="${apr_date.YMD}" size="10" disabled/>
+            <input type="hidden" name="apr_date" value="${apr_date}">
+        </td>
+        <td nowrap >&nbsp;時間：
+            <input type="text" class="dsp_date" name="apr_time" value="${apr_time.TIME}" size="10" disabled/>
+            <input type="hidden" name="apr_time" value="${apr_time}">
+        </td>
+        <td nowrap >&nbsp;人員：
+            <input type="text" class="dsp_text" name="apr_user" value="${apr_user}" size="10" disabled/>
+            <input type="hidden" name="apr_user" value="${apr_user}">
+        </td>
+    </tr>
+</table>
+<div style="text-align: center;width: 80%;">
+公司統編: ${corp_no}&nbsp;&nbsp;&nbsp;繳款方式: ${corp_act_type_desc}&nbsp;&nbsp;&nbsp;總筆數: ${total}
+<input type="hidden" name="corp_no" value="${corp_no}">
+<input type="hidden" name="corp_act_type_desc" value="${corp_act_type_desc}">
+</div>
+<hr>
+<!--List -->
+<!-- 線上轉正常、催收、呆帳戶作業================= -->
+<table id="table_list" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th">帳戶號碼</th>
+        <th nowrap class="list_th">帳戶歸屬ID</th>
+        <th nowrap class="list_th">往來狀態</th>
+        <th nowrap class="list_th">狀態改變日期</th>
+        <th nowrap class="list_th">是否有有效卡</th>
+        <th nowrap class="list_th">欲轉催呆金額</th>
+        <th nowrap class="list_th">欠款總額</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+    	<input type="hidden"  name="a-p_seqno" value="${a-p_seqno}">
+    	<input type="hidden"  name="a-no_end_bal" value="${a-no_end_bal}">
+    	<input type="hidden"  name="a-db_cname" value="${a-db_cname}">
+    	<input type="hidden"  name="a-acct_status" value="${a-acct_status}">
+    	<input type="hidden"  name="a-acno_flag" value="${a-acno_flag}">
+    	<input type="hidden"  name="a-id_p_seqno" value="${a-id_p_seqno}">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_ll"> ${a-acct_type} - ${a-acct_key}&nbsp;</td>
+        <td nowrap class="list_cc"> ${a-id_no}&nbsp;</td>
+        <td nowrap class="list_ll"> ${a-tt_acct_status}&nbsp;</td>
+        <td nowrap class="list_cc"> ${a-status_change_date.YMD}&nbsp;</td>
+        <td nowrap class="list_cc"> ${a-db_curr_desc}&nbsp;</td>
+        <td nowrap class="list_rr"> ${a-no_end_bal.(999)}&nbsp;</td>
+        <td nowrap class="list_rr"> ${a-acct_jrnl_bal.(999)}&nbsp;</td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 動態視窗控制 -->
+<!--div id="disDiv" class="disScreen"></div -->
+<div id="popDiv" class="popup1">
+  <table id="popup2" style="top:-300px; left:30px; width:600px; height:100px;">
+     <tr><td colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+
+     <!--List -->
+<tr><td colspan="2">
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">帳戶號碼</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">帳戶 ID</th>
+    <th nowrap class="list_th">中文姓名</th>
+    <th nowrap class="list_th">卡人生日</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen2('${SER_NUM}','${d-p_seqno}','${d-acct_type}','${d-acct_key}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${d-acct_type} - ${d-acct_key}&nbsp;</td>
+   <td nowrap class="list_ll"> ${d-tt_acct_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${d-id_no} - ${d-id_no_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${d-chi_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${d-birthday.YMD}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</td></tr>     
+  </table>
+</div>
+
+<!-- -->
+<input type="hidden"  name="rowid" value="${rowid}">
+<input type="hidden"  name="MOD_PGM" value="colm0095">
+<input type="hidden"  name="MOD_USER" value="${MOD_USER}">
+<input type="hidden"  name="USERID" value="${userId}">
+<input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+<input type="hidden"  name="HIDE" value="${HIDE_DATA}">
+<input type="hidden"  name="pageType" value="detl">
+<input type="hidden"  name="optname" value="aopt">
+<input type="hidden"  name="p_seqno" value="${p_seqno}">
+<input type="hidden"  name="id_p_seqno" value="${id_p_seqno}">
+<input type="hidden"  name="src_acct_stat" value="${src_acct_stat}">
+<input type="hidden"  name="bad_debt_amt" value="${bad_debt_amt}">
+<input type="hidden"  name="sys_trans_flag" value="${sys_trans_flag}">
+<input type="hidden"  name="queryReadCnt"  value="${queryReadCnt}">
+<input type="hidden"  name="apr_flag"  value="${apr_flag}">
+<input type="hidden"  name="acno_flag"  value="${acno_flag}">
+<input type="hidden" name="data_k1" value="${data_k1}">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<!-- <script language="JavaScript">
+tigra_tables('table_list', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script> -->
+<script language="javascript">
+ top.refreshButton2('1');
+ 
+ var CC = document.dataForm.queryReadCnt.value;
+ if(CC >1){
+ 	top.popupBlock('popDiv');
+ }
+
+ function validateInput() {
+    if ( !top.checkFormat() ) {
+    	return false; 
+    }	
+    return true;
+  }
+ 
+ function detailScreen2(serNum,parm,parm2,parm3) { 
+	 document.dataForm.p_seqno.value = parm;
+	 /* document.dataForm.kk_acct_type.value = parm2;
+	 document.dataForm.kk_acct_key.value = parm3; */
+	 
+	 top.hideBlock('popDiv');
+	 top.submitControl('R');
+	 return true;
+ }
+ 
+ function select(){
+	 var dpn = document.dataForm.dddw_paper_name.value;
+	 if (dpn!='') {
+		 document.dataForm.paper_name.value = dpn;
+	 }
+ }
+ 
+ function tran4init(){
+	 var rid = document.dataForm.rowid.value;
+	 var ttp = document.dataForm.trans_type.value;
+
+     if (rid=='' && ttp =='4') {
+		 // top.submitControl('T');
+	    resetJSON();
+	    autoJSON = false;
+	    top.actionCode = "T";
+	    top.actionCode = "AJAX";
+	    addJSON("action", "A");
+
+	    processAJAX();
+	 }
+	 
+	 initTrans4Ele();
+ }
+ 
+ // ajax響應
+ function ajaxResponse() {
+	 var paper_name = getJSONvalue("paper_name", 0);
+	 var alw_bad_date = getJSONvalue("alw_bad_date", 0);
+	 var paper_conf_date = getJSONvalue("paper_conf_date", 0);
+	 
+	 document.dataForm.paper_name.value = paper_name;
+	 document.dataForm.alw_bad_date.value = alw_bad_date;
+	 document.dataForm.paper_conf_date.value = paper_conf_date;
+ }
+ initTrans4Ele();
+ 
+ // 初始化欲轉換類別=4的頁面元素控制
+ function initTrans4Ele() {
+	 var ttp = document.dataForm.trans_type.value;
+	 var edit = !(ttp == '4');
+     document.getElementById("btUpdate").disabled = edit; // 2022/06/24 Justin
+	 document.dataForm.alw_bad_date.readOnly = edit;
+	 //document.dataForm.alw_bad_date.disabled = edit;
+	 document.dataForm.alw_bad_date.className = edit ? 'dsp_date' : 'col_date';
+	 document.dataForm.paper_conf_date.readOnly = edit;
+	 //document.dataForm.paper_conf_date.disabled = edit;
+	 document.dataForm.paper_conf_date.className = edit ? 'dsp_date' : 'col_date';
+	 document.dataForm.paper_name.readOnly = edit;
+	// document.dataForm.paper_name.disabled = edit;
+	 document.dataForm.paper_name.className = edit ? 'dsp_text' : 'col_any';
+	 document.dataForm.dddw_paper_name.disabled = edit;
+	 document.dataForm.dddw_paper_name.className = edit ? 'dsp_text' : 'col_ddlb';
+	 document.getElementById("tcalico_0").style.display = edit ? "none" : "";
+	 document.getElementById("tcalico_1").style.display = edit ? "none" : "";
+ }
+ 
+</script>

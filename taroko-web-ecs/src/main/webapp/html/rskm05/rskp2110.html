@@ -1,0 +1,224 @@
+<html>
+<head>
+<title>流通卡不良記錄通報匯入處理-190620</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;來源管道:
+      <select   size="1"  name="ex_from_type" class="col_ddlb">         
+         <option value="4" ${ex_from_type-4} >4.人工匯入</option>
+      </select>
+   </td>
+   <td nowrap >&nbsp;通報類別:
+      <select   size="1"  name="ex_annou_type" class="col_ddlb" onChange="wf_set_proc_reason()" >
+         <option value="1" ${ex_annou_type-1} >1.他行強停</option>
+         <option value="2" ${ex_annou_type-2} >2.支票拒往</option>         
+         <option value="6" ${ex_annou_type-6} >6.退票</option>         
+         <option value="9" ${ex_annou_type-9} >9.轉催停用</option>         
+      </select>
+   </td>   
+   <td nowrap>&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+      <input type="Button"  value="執行" ${btnUpdate_disable} onClick="return top.submitControl('A')" class="btAdd" />&nbsp;&nbsp;
+      v23.0828      
+   </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;匯入日期:
+      <input type="text" class="col_date" name="ex_crt_date" value="${ex_crt_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">        
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;
+       <input type="Button"   value="查詢未處理資料" onClick="return top.submitControl('Q2')" class="btQuery" >&nbsp;&nbsp;
+       <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D2')" class="btDelete" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;匯入媒體檔:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any" />
+      <input type="button"  ${btnUpdate_disable} value="..." class="btOther" onclick="return upload_click()" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      <span class="dsp_remark">      
+      1.人工匯入檔為*.TXT檔，layout：ID/統編 X(10) 統編左靠右空白。      
+      <br>2.相同ID或統編及來源管道，於同一日期重覆執行匯入無效。
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock" >
+	<table width="60%" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<td nowrap >&nbsp;筆數:${tl_cnt.(999)}
+				<input type="hidden" name="tl_cnt" value="${tl_cnt}">
+			</td>
+		</tr>
+	</table>
+</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+      匯入
+    </th>
+    <th nowrap >匯入日期&nbsp;</th>
+    <th nowrap >身分證ID&nbsp;</th>
+    <th nowrap >公司統編&nbsp;</th>
+    <th nowrap >來源管道&nbsp;</th>
+    <th nowrap >姓名/公司名稱&nbsp;</th>
+    <th nowrap >匯入檔名&nbsp;</th>
+    <th nowrap >通報類別&nbsp;</th>
+    <th nowrap >停用原因&nbsp;</th>
+    <th nowrap >停用日期&nbsp;</th>
+    <th nowrap >通報銀行&nbsp;</th>
+    <th nowrap >銀行名稱&nbsp;</th>
+    <th nowrap >匯入經辦&nbsp;</th>
+    <th nowrap >停掛碼&nbsp;</th>
+    <th nowrap >ID重覆筆數&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="ok_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+ 	   ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+   </td>
+   <td nowrap class="list_cc">${crt_date.YMD}&nbsp;
+      <input type="hidden" name="crt_date" value="${crt_date}">
+   </td>
+   <td nowrap class="list_cc">${id_no}&nbsp;
+      <input type="hidden" name="id_no" value="${id_no}">
+   </td>
+   <td nowrap class="list_cc">${corp_no}&nbsp;
+      <input type="hidden" name="corp_no" value="${corp_no}">
+   </td>
+   <td nowrap class="list_cc">${tt_from_type}&nbsp;
+      <input type="hidden" name="from_type" value="${from_type}">
+      <input type="hidden" name="tt_from_type" value="${tt_from_type}">
+   </td>
+   <td nowrap class="list_cc">${chi_name}&nbsp;
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+   <td nowrap class="list_cc">${imp_file}&nbsp;
+      <input type="hidden" name="imp_file" value="${imp_file}">
+   </td>
+   <td nowrap class="list_cc">${annou_type}.${tt_annou_type}&nbsp;
+      <input type="hidden" name="annou_type" value="${annou_type}">
+      <input type="hidden" name="tt_annou_type" value="${tt_annou_type}">
+   </td>
+   <td nowrap class="list_cc">${stop_reason}&nbsp;
+      <input type="hidden" name="stop_reason" value="${stop_reason}">
+   </td>
+   <td nowrap class="list_cc">${stop_date.YMD}&nbsp;
+      <input type="hidden" name="stop_date" value="${stop_date}">
+   </td>
+   <td nowrap class="list_cc">${bank_no}&nbsp;
+      <input type="hidden" name="bank_no" value="${bank_no}">
+   </td>
+   <td nowrap class="list_cc">${bank_name}&nbsp;
+      <input type="hidden" name="bank_name" value="${bank_name}">
+   </td>
+   <td nowrap class="list_cc">${crt_user}&nbsp;
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+   <td nowrap class="list_cc">${block_reason4}&nbsp;
+      <input type="hidden" name="block_reason4" value="${block_reason4}">
+   </td>
+   <td nowrap class="list_cc">${id_code_rows}&nbsp;
+      <input type="hidden" name="id_code_rows" value="${id_code_rows}">
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="upload_file" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "A" ) {
+        if(confirm("確認檔案資料是否正確並執行匯入處理")==false) {
+            return false ;
+        }
+        top.respLevel = 1;
+        top.respHtml = "rskp2110_err";
+    }
+    if (top.actionCode =='D2' ) {
+       if (confirm('是否刪除未處理資料')==false) {
+          return false;
+       }
+    }    
+    return true;
+  }
+
+ function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "rskm05";
+    top.javaName    = "Rskp2110";
+    //methodName  = "actionFunction";
+    top.requHtml    = "rskp2110";
+    top.respHtml    = "rskp2110";
+    return true;
+  }
+
+ function wf_uploadAfter() {
+ 	 top.submitControl('Q');
+   return;
+ }
+
+ function wf_set_proc_reason() {
+    var parm = document.dataForm.ex_annou_type.value;
+    if(parm != 'A') {
+        return ;
+    }
+
+    document.dataForm.ex_proc_reason.value = "D1";
+ }
+
+</script>

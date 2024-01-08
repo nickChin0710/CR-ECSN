@@ -1,0 +1,356 @@
+<html>
+<head>
+<title>扣款資料維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />&nbsp;
+  <input type="Button" name="btnInsert"  value="新增(一扣)" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<hr>
+
+<!--TAB Process---------------------------- -->
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')">一扣維護</td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-2')">扣款狀態</td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-3')">帳單資料</td>
+    </tr>
+  </table>
+</div>
+
+<div id="tab-1" class="tabcontent"> 
+<div id="dataBlock">
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">控制流水號：&nbsp;
+		<span class="dsp_text">${ctrl_seqno}</span>
+   </td>
+   <td nowrap class="colKey">卡別：&nbsp;
+		<span class="dsp_text">${bin_type}</span>
+      Debit卡: <span class="dsp_text">${debit_flag}</span>
+   </td>		
+   <td nowrap>總結案：&nbsp;
+      <span class="dsp_text">${#JAVA:ecsfunc.DeCodeRsk.chgbFinalClose(final_close)}</span>
+   </td>
+  </tr>
+  <tr>
+   <td>帳單參考號：&nbsp;
+      <span class="dsp_text">${reference_no}</span>
+   </td>
+   <td nowrap>主階段：&nbsp;<span class="dsp_text">
+      ${chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbChgStage(chg_stage)}</span>
+   </td>
+   <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap width="35%">狀態碼：&nbsp;
+      <span class="dsp_text">${fst_status}
+      ${#JAVA:ecsfunc.DeCodeRsk.chgbSubStage(fst_status)}</span>
+      <input type=hidden name="fst_status" value="${fst_status}" />
+   </td>
+   <td nowrap width="35%">重送註記：&nbsp;
+      <span class="dsp_text">${fst_rebuild_mark}</span>
+      &nbsp;
+      <span class="dsp_date"> ${fst_rebuild_date.YMD} </span>
+      <input type=hidden name="fst_rebuild_mark" value="${fst_rebuild_mark}" />
+      <input type=hidden name="fst_rebuild_date" value="${fst_rebuild_date}" />
+   </td>
+   <td nowrap width="30%">沖銷註記：&nbsp;
+      <span class="dsp_text"> ${fst_reverse_mark}</span>
+   &nbsp;
+      <span class="dsp_date"> ${fst_reverse_date.YMD} </span>
+      <input type=hidden name="fst_reverse_mark" value="${fst_reverse_mark}" />
+      <input type=hidden name="fst_reverse_date" value="${fst_reverse_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>扣款金額(結算)：&nbsp;
+      <input type="text" class="col_number" name="fst_dc_amt" value="${fst_dc_amt}"
+         zRequire="Y" zeditType="dignumber" MaxLength=10 size=12 />
+   </td>
+   <td nowrap>扣款金額：&nbsp;
+      <span class="dsp_number"> ${fst_twd_amt} </span>
+      <input type=hidden name="fst_twd_amt" value="${fst_twd_amt}" />
+   </td>
+   <td nowrap>美金金額：&nbsp;
+      <span class="dsp_number"> ${fst_amount} </span>
+      <input type=hidden name="fst_amount" value="${fst_amount}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>消費金額：&nbsp;
+      <span class="dsp_number"> ${BL_dest_amt.(999)} </span>
+   </td>
+   <td nowrap>結算金額：&nbsp;
+      <span class="dsp_number"> ${BL_dc_dest_amt.(999.00)} </span>
+   </td>
+   <td nowrap>結算幣別：&nbsp;
+      <span class="dsp_text"> ${BL_curr_code} </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>部份：&nbsp;
+    <select name="fst_part_mark" class="col_ddlb">
+      <option value="N" ${fst_part_mark-N}>N</option>
+      <option value="Y" ${fst_part_mark-Y}>Y</option>
+    </select>
+   </td>
+   <td nowrap>理由碼：&nbsp;
+      <input type="text" class="col_text" name="fst_reason_code" value="${fst_reason_code}"
+       maxlength=4 size=6 />
+   </td>
+   <td nowrap>逾期日期：&nbsp;
+      <span class="dsp_date">${fst_expire_date.YMD}</span>
+      <input type=hidden name="fst_expire_date" value="${fst_expire_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>文件註記：&nbsp;
+    <select name="fst_doc_mark" class="col_ddlb">
+      <option value=" " ${fst_doc_mark- }> </option>
+      <option value="1" ${fst_doc_mark-1}>1</option>
+    </select>
+   </td>
+   <td nowrap colspan=2>訊息欄：&nbsp;
+      <input type="text" class="col_any" name="fst_msg" value="${fst_msg}"
+       zRequire="Y" zeditType="any,canTW" maxlength=50 size=54 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>國外扣款案號：&nbsp;
+      <input type="text" class="col_text" name="fst_vcrcase_no" value="${fst_vcrcase_no}"
+       maxlength=12 size=14 />
+   </td>
+   <td nowrap>&nbsp;   </td>
+   <td nowrap>&nbsp;   </td>
+  </tr>
+  <tr>
+   <td nowrap>待傳送日：&nbsp;
+      <span class="dsp_date">${send_date.YMD}</span>
+      <input type=hidden name="send_date" value="${send_date}" />
+   &nbsp;
+      <span class="dsp_text"> ${send_flag} </span>
+      <input type=hidden name="send_flag" value="${send_flag}" />
+   </td>
+   <td nowrap>登錄：&nbsp;
+      <span class="dsp_text"> ${fst_add_user} </span>
+   &nbsp;
+      <span class="dsp_date">${fst_add_date.YMD}</span>
+      <input type=hidden name="fst_add_user" value="${fst_add_user}" />
+      <input type=hidden name="fst_add_date" value="${fst_add_date}" />
+   </td>
+   <td nowrap>覆核：&nbsp;
+      <span class="dsp_text"> ${fst_apr_user} </span>
+   &nbsp;
+      <span class="dsp_date">${fst_apr_date.YMD}</span>
+      <input type=hidden name="fst_apr_user" value="${fst_apr_user}" />
+      <input type=hidden name="fst_apr_date" value="${fst_apr_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>撥款：&nbsp;
+      <span class="dsp_text"> ${fst_disb_yn} </span>
+      <input type=hidden name="fst_disb_yn" value="${fst_disb_yn}" />
+   </td>
+   <td nowrap>撥款金額：&nbsp;
+      <span class="dsp_number"> ${fst_disb_amt.(999)} </span>
+      <input type=hidden name="fst_disb_amt" value="${fst_disb_amt}" />
+   </td>
+   <td nowrap>撥款金額(結算)：&nbsp;
+      <span class="dsp_number"> ${fst_disb_dc_amt.(999)} </span>
+      <input type=hidden name="fst_disb_dc_amt" value="${fst_disb_dc_amt}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>撥款登錄：&nbsp;
+      <span class="dsp_text"> ${fst_disb_add_user} </span>
+   &nbsp;
+      <span class="dsp_date">${fst_disb_add_date.YMD}</span>
+      <input type=hidden name="fst_disb_add_user" value="${fst_disb_add_user}" />
+   </td>
+   <td nowrap>撥款覆核：&nbsp;
+      <span class="dsp_text"> ${fst_disb_apr_user} </span>
+   &nbsp;
+      <span class="dsp_date">${fst_disb_apr_date.YMD}</span>
+      <input type=hidden name="fst_disb_apr_user" value="${fst_disb_apr_user}" />
+      <input type=hidden name="fst_disb_apr_date" value="${fst_disb_apr_date}" />
+   </td>
+   <td>&nbsp;</td>
+  </tr>
+</table>
+
+</div>
+</div>
+
+<!--rskp0010-bill -------------------------------------- -->
+<div id="tab-2" class="tabcontent"> 
+<div id="dataBlock">      
+   
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">控制流水號：&nbsp;
+		<span class="dsp_text">${ctrl_seqno}</span>
+		<input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+   </td>
+   <td nowrap class="colKey">卡別：&nbsp;
+		<span class="dsp_text">${bin_type}</span>
+		<input type="hidden" name="bin_type" value="${bin_type}">
+      Debit卡: <span class="dsp_text">${debit_flag}</span>
+		<input type="hidden" name="debit_flag" value="${debit_flag}">
+   </td>		
+   <td nowrap>總結案：&nbsp;
+      <span class="dsp_text">${#JAVA:ecsfunc.DeCodeRsk.chgbFinalClose(final_close)}</span>
+      <input type=hidden name="final_close" value="${final_close}" />
+   </td>
+  </tr>
+  <tr>
+   <td>帳單參考號：&nbsp;
+      <span class="dsp_text">${reference_no}</span>
+      <input type=hidden name="reference_no" value="${reference_no}" />
+      <input type="hidden" name="reference_seq" value="${reference_seq}" />
+   </td>
+   <td nowrap>主階段：&nbsp;<span class="dsp_text">
+      ${chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbChgStage(chg_stage)}</span>
+      <input type=hidden name="chg_stage" value="${chg_stage}" />
+   </td>
+   <td nowrap>狀態碼：&nbsp;
+      <span class="dsp_text">
+      ${chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbSubStage(sub_stage)}</span>
+      <input type=hidden name="sub_stage" value="${sub_stage}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>結案結果：&nbsp;
+      <span class="dsp_text"> ${clo_result} </span>
+      <input type=hidden name="clo_result" value="${clo_result}" />
+   </td>
+   <td nowrap>結案登錄：&nbsp;
+      <span class="dsp_text"> ${close_add_user} </span>
+      <input type=hidden name="close_add_user" value="${close_add_user}" />
+      &nbsp;
+      <span class="dsp_text"> ${close_add_date.YMD} </span>
+      <input type=hidden name="close_add_date" value="${close_add_date}" />
+   </td>
+   <td nowrap>結案覆核：&nbsp;
+      <span class="dsp_text"> ${close_apr_user} </span>
+      <input type=hidden name="" value="${close_apr_user}" />
+      &nbsp;
+      <span class="dsp_text"> ${close_apr_date.YMD} </span>
+      <input type=hidden name="close_apr_date" value="${close_apr_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>消費卡號：&nbsp;
+      <span class="dsp_text"> ${BL_card_no} </span>
+      <input type=hidden name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap>持卡人姓名：&nbsp;
+      <span class="dsp_text"> ${idno_name} </span>
+      <input type=hidden name="idno_name" value="${idno_name}" />
+   </td>
+   <td nowrap>正卡ID：&nbsp;
+      <span class="dsp_text"> ${major_idno} </span>
+      <input type=hidden name="major_idno" value="${major_idno}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>消費金額：&nbsp;
+      <span class="dsp_number"> ${BL_dest_amt.(999)} </span>
+      <input type=hidden name="dest_amt" value="${dest_amt}" />
+   </td>
+   <td nowrap>結算金額：&nbsp;
+      <span class="dsp_number"> ${BL_dc_dest_amt.(999.00)} </span>
+      <input type=hidden name="dc_dest_amt" value="${dc_dest_amt}" />
+   </td>
+   <td nowrap>結算幣別：&nbsp;
+      <span class="dsp_text"> ${BL_curr_code} </span>
+      <input type=hidden name="curr_code" value="${curr_code}" />
+   </td>
+  </tr>
+ <tr>
+  <td nowrap>&nbsp;原始金額:
+   <span class="dsp_text">${BL_source_amt.(999)}&nbsp;</span>
+   <input type="hidden" name="BL_source_amt" value="${BL_source_amt}">
+  </td>
+  <td nowrap>&nbsp;原始幣別:
+   <span class="dsp_text">${BL_source_curr}&nbsp;</span>
+   <input type="hidden" name="BL_source_curr" value="${BL_source_curr}">
+  </td>
+  <td nowrap>&nbsp;特店國別:
+   <span class="dsp_text">${BL_mcht_country}&nbsp;</span>
+   <input type="hidden" name="BL_mcht_country" value="${BL_mcht_country}">
+  </td>
+ </tr>
+ <tr>
+  <td nowrap>&nbsp;合約編號:
+   <span class="dsp_text">${contract_no}&nbsp;</span>
+   <input type="hidden" name="contract_no" value="${contract_no}">
+  </td>
+  <td nowrap>&nbsp;原始帳單參考號:
+   <span class="dsp_text">${reference_no_ori}&nbsp;</span>
+   <input type="hidden" name="reference_no_ori" value="${reference_no_ori}">
+  </td>
+  <td nowrap>&nbsp;
+  </td>
+ </tr>
+</table>
+</div>
+</div>
+
+<!--rskp0010-bill -------------------------------------- -->
+<div id="tab-3" class="tabcontent"> 
+<div id="queryBlock">      
+ ${#PLUGIN:htmcomm_plugin.bil_bill_data} 
+</div>
+</div>
+
+<input type="hidden" id="hh_txn_code" value="${BL_txn_code}" />
+<input type="hidden" id="hh_mcht_no" value="${BL_mcht_no}" />
+<input type="hidden" name="chgb_action" value="1" />
+
+<!-- -->
+<input type="text" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_PGM" value="rskm0210" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput() {
+  var ls_mcht_no =document.forms["dataForm"]["BL_mcht_no"].value;
+
+   if (ls_mcht_no=='' && (top.actionCode=="A" || top.actionCode=='U')) {
+      if (confirm("扣款/再提示 特店代號不可空白; 是否繼續處理")==false) {
+         return false;
+      }
+   }
+   
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

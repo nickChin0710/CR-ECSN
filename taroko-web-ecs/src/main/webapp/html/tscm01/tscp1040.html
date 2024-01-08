@@ -1,0 +1,155 @@
+<html>
+ 
+<head>
+    <title>悠遊Debit卡餘額轉置通知檔放行作業-110-07-07-V1.00.01-Ryan-[Init]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">    
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=4>&nbsp;悠遊卡卡號:
+                        <input type="text" class="col_text" name="ex_tsc_card_no" value="${ex_tsc_card_no}" zEdit="alphanum" maxlength="20" size="22" />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;信用卡卡號:
+                        <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="alphanum" maxlength="19" size="21" />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;登錄日期:
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date1'
+                        });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;主管覆核:
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="ex_charge" ${ex_charge-0} ${DEFAULT-ex_charge} />全部
+                            <input type="radio" value="1" name="ex_charge" ${ex_charge-1} />未覆核
+                            <input type="radio" value="2" name="ex_charge" ${ex_charge-2} />已覆核
+                        </span>
+                    </td>
+                    <td nowrap colspan=6>&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"  value="執行" onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table width="60%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" value="Y" ${ex_selectAll} onChange="selectAll();">閬&nbsp;</th>
+                <th nowrap class="list_th">悠遊卡號</th>
+                <th nowrap class="list_th">信用卡號</th>
+                <th nowrap class="list_th">事件原由</th>
+                <th nowrap class="list_th">登錄日期</th>
+                <th nowrap class="list_th">傳送日期</th>
+                <th nowrap class="list_th">回傳日期</th>
+                <th nowrap class="list_th">經辦人員</th>
+                <th nowrap class="list_th">覆核人員</th>
+                <th nowrap class="list_th">覆核日期</th>
+                <th nowrap class="list_th">Err Msg</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+                </td>
+                <td nowrap class="list_ll"> ${tsc_card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_emboss_kind}&nbsp; </td>
+                <td nowrap class="list_ll"> ${create_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${balance_date.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${balance_date_rtn.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mod_user}&nbsp; </td>
+                <td nowrap class="list_ll"> ${appr_user}&nbsp; </td>
+                <td nowrap class="list_ll"> ${appr_date}&nbsp; </td>
+                <td nowrap class="list_ll" style="color: red"> ${err_msg}&nbsp; </td>
+                <input type="hidden" name="tsc_card_no" value="${tsc_card_no}">
+                <input type="hidden" name="card_no" value="${card_no}">
+                <input type="hidden" name="db_emboss_kind" value="${db_emboss_kind}">
+                <input type="hidden" name="emboss_kind" value="${emboss_kind}">
+                <input type="hidden" name="create_date" value="${create_date}">
+                <input type="hidden" name="balance_date" value="${balance_date}">
+                <input type="hidden" name="balance_date_rtn" value="${balance_date_rtn}">
+                <input type="hidden" name="appr_user" value="${appr_user}">
+                <input type="hidden" name="appr_date" value="${appr_date}">
+                <input type="hidden" name="mod_user" value="${mod_user}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden"  name="MOD_PGM" value="tscp1040">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+//document.dataForm.ex_tsc_card_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "tscp1040_detl";
+    }
+    return true;
+}
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+    return;
+}
+
+function chkdata() {
+    var seq = 0;
+    var agy = document.dataForm.opt;
+    var ll = agy.length;
+    if (typeof ll === 'undefined') {
+        if (ll != 0) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (ll != 0) {
+                seq++;
+            }
+        }
+    }
+
+    if (seq == 0) {
+        alert("請點選欲放行資料!");
+        return false;
+    }
+    return true;
+}
+</script>

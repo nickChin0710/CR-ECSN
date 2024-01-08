@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>授權回覆碼類別統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_area_type]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_area_type]").filter('[value=A]').prop('checked', true);
+}
+var selected = $("input[name=ex_resp_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_resp_flag]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap colspan="2" class="col_key" >&nbsp;類別：依回覆碼</td>		
+	</tr>
+  <tr>
+   <td nowrap  >&nbsp;日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C"  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+   <tr>      
+      <td nowrap colspan="2" >&nbsp;回覆碼:
+         <input type="text" class="col_text" name="ex_resp_code" value="${ex_resp_code}" maxlength="3" size="5">
+      </td>
+   </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap >&nbsp;合計次數:
+ 			<span class="dsp_text">${tot_cnt.(999)}&nbsp;</span>
+ 			<input type="hidden" name="tot_cnt" value="${tot_cnt}">
+ 		</td>
+ 		<td nowrap >&nbsp;合計金額:
+ 			<span class="dsp_text">${tot_amt.(999)}&nbsp;</span>
+ 			<input type="hidden" name="tot_amt" value="${tot_amt}">
+ 		</td>
+ 	</tr>
+ </table>
+</div>
+ <br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >回覆碼&nbsp;</th>
+    <th nowrap >原因說明&nbsp;</th>
+    <th nowrap >交易日期&nbsp;</th>
+    <th nowrap >次數&nbsp;</th>
+    <th nowrap >總金額&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${resp_code}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_resp_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tx_date.YMD}&nbsp;</td>
+	<td nowrap class="list_rr"> ${tx_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${tx_amt.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+  
+</script>

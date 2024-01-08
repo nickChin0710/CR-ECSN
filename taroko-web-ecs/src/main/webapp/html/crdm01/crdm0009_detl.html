@@ -1,0 +1,356 @@
+<html>
+
+<head>
+    <title>認同集團碼卡樣對照參數維護-detl-V.2018-0905-Andy-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript">
+window.onload = function() {
+    // your page initialization code here
+    // the DOM will be available here
+    checkControl();
+};
+
+function toggle_ic_flag(element) {
+    checkControl();
+}
+
+function checkControl() {
+   // debugger;
+    if (document.getElementsByName("ic_flag")[0].checked) {
+        document.getElementsByName("check_key_expire")[0].disabled = false;
+        document.getElementsByName("key_id")[0].disabled = false;
+        document.getElementsByName("l_offln_lmt")[0].disabled = false;
+        document.getElementsByName("u_offln_lmt")[0].disabled = false;
+    } else {
+        document.getElementsByName("check_key_expire")[0].checked = false;
+        document.getElementsByName("key_id")[0].selectedIndex = 0;
+        document.getElementsByName("l_offln_lmt")[0].value = "";
+        document.getElementsByName("u_offln_lmt")[0].value = "";
+
+        document.getElementsByName("check_key_expire")[0].disabled = true;
+        document.getElementsByName("key_id")[0].disabled = true;
+        document.getElementsByName("l_offln_lmt")[0].disabled = true;
+        document.getElementsByName("u_offln_lmt")[0].disabled = true;
+    }
+}
+</script>
+
+<body background="${water_mark}"> 
+    <form name="dataForm" method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user3}  
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+                    <input type="Button" id="btnQuery" value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">認同集團碼:&nbsp;
+                        <input type="text" class="col_text" name="kk_unit_code" value="${kk_unit_code}" zEdit="alphanum,upper" maxlength="4" size="4" zRequire ="k"/>
+                    </td>
+                    <td nowrap width="50%">卡種：&nbsp;
+                        <select size="1" name="kk_card_type" class="col_ddlb" zRequire ="k">
+                            <option value="">--</option>
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey" colspan=6>認同集團碼:&nbsp;
+                        <span class="dsp_text">${unit_code}</span>
+                        <input type="hidden" name="unit_code" value="${unit_code}" />
+                    </td>
+                    <td nowrap class="colKey" colspan=6>卡種：
+                        <span class="dsp_text">${card_type}</span>
+                        <input type="hidden" name="card_type" value="${card_type}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan=6>卡樣代碼：
+                        <select size="1" name="card_item" value="${card_item}" class="col_ddlb" > 
+                            <option value="" ${card_item} >--</option>
+                            ${dddw_card_item}
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>
+                        <input type="checkbox" value="Y" name="virtual_flag" ${virtual_flag-Y}> 無實體卡註記
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>電子票證註記 :
+                        <select name="electronic_code" class="col_ddlb" onChange="detailElectronic(this.value)" zRequire ="Y" >
+                            <option value="" ${electronic_code- }>--</option>
+                            <option value="00" ${electronic_code-00}>非電子票證</option>
+                            <option value="01" ${electronic_code-01}>悠遊卡</option>
+                            <option value="02" ${electronic_code-02}>一卡通</option>
+                            <option value="03" ${electronic_code-03}>愛金卡icash</option>
+                            <option value="04" ${electronic_code-04}>有錢卡Happy Cash</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="6">一卡通卡片種類 :
+                        <select name="ips_kind" class="col_ddlb" id="ipsKind">
+                            <option value="" ${ips_kind}>--</option>
+                            <option value="1" ${ips_kind-1}>DEBIT卡</option>
+                            <option value="2" ${ips_kind-2}>金融卡</option>
+                            <option value="3" ${ips_kind-3}>GIFT卡</option>
+                            <option value="7" ${ips_kind-7}>信用卡</option>
+                            <option value="9" ${ips_kind-9}>SD卡</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap  colspan=6>愛金卡卡款：
+                        <select name="card_code" value="${card_code}" class="col_ddlb"  id="cardCode">
+                            ${dddw_ich_card_parm}
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>
+                        <input type="checkbox" value="Y" name="ic_flag" ${ic_flag-Y} onchange="toggle_ic_flag(this)"> 晶片卡旗標
+                    </td>                    
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">服務碼 :
+                        <select name="service_code" class="col_ddlb" zRequire ="Y" >
+                            <option value="" >--</option>
+                            <option value="101" ${service_code-101}>101(磁條卡)</option>
+                            <option value="201" ${service_code-201}>201(晶片卡)</option>
+                            <option value="221" ${service_code-221}>221(VD卡)</option>
+                            <option value="701" ${service_code-701}>701(貴賓卡)</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>NCCC卡片種類 :
+                        <select name="ic_kind" class="col_ddlb">
+                            <option value="N" ${ic_kind-N}>N :一般磁條卡</option>
+<!--                            <option value="C" ${ic_kind-C}>C :手機型式之磁條版contactless卡</option>   --> 
+<!--                            <option value="E" ${ic_kind-E}>E :鑰匙圈型式之磁條版contactless卡</option>  -->
+                            <option value="Y" ${ic_kind-Y}>Y :一般晶片卡</option>
+                            <option value="A" ${ic_kind-A}>A :一般片卡型式之contactless卡</option>
+<!--                            <option value="B" ${ic_kind-B}>B :手機型式之晶片版contactless卡</option>   -->
+<!--                            <option value="D" ${ic_kind-D}>D :鑰匙圈型式之晶片版contactless卡</option>  -->
+                        </select>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td nowrap colspan="6" class="col_Key">Service ID:&nbsp;
+                        <input type=text class="col_any" name="service_id" value="${service_id}" 
+                           zEdit="any"  maxlength="10" size="10" /> 
+                    </td>
+                    <td nowrap colspan="6" >Google Pay卡樣代碼:&nbsp;
+                        <input type=text class="col_any" name="issuer_configuration_id" value="${issuer_configuration_id}" 
+                           zEdit="any"  maxlength="10" size="12" /> 
+                    </td>
+                </tr>
+<!--                
+                <tr>                
+                    <td nowrap colspan=6>
+                        <input type="checkbox" value="Y" name="check_key_expire" ${check_key_expire-Y}> 是否檢核晶片卡Issuer Public Key(IPK)
+                    </td>
+                </tr>                
+                <tr>                    
+                    <td nowrap class="colKey" colspan=6>晶片KEY代碼(IPK)：
+                        <select size="1" name="key_id" value="${key_id}" class="col_ddlb">
+                            <option value="" >--</option>
+                            ${dddw_key_id}
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>DERIV_KEY:&nbsp;
+                        <input type=text class="col_number" name="deriv_key" value="${deriv_key}" zeditType="alphanum" maxlength="2" size="2" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>LOWER OFFLINE:&nbsp;
+                        <input type=text class="col_number" name="l_offln_lmt" value="${l_offln_lmt}" zeditType="number" maxlength="10" size="10" />
+                    </td>
+                    <td nowrap colspan=6>UPPER OFFLINE:&nbsp;
+                        <input type=text class="col_number" name="u_offln_lmt" value="${u_offln_lmt}" zeditType="number" maxlength="10" size="10" />
+                    </td>                    
+                </tr>
+-->                
+                <tr>
+                    <td nowrap colspan=4>重製卡\續卡展延效期:&nbsp;
+                        <input type=text class="col_number" name="extn_year" value="${extn_year}" zeditType="number" maxlength="2" size="2" zRequire ="Y" />
+                    </td>
+                    <td nowrap colspan=4>新卡發行年限:&nbsp;
+                        <input type=text class="col_number" name="new_extn_mm" value="${new_extn_mm}" zeditType="number" maxlength="2" size="2" zRequire ="Y" />
+                    </td>
+                    <td nowrap colspan=4>毀損補發展延效期(月):&nbsp;
+                        <input type=text class="col_number" name="reissue_extn_mm" id="reissue_extn_mm" value="${reissue_extn_mm}"  maxlength="2" size="2" zRequire ="Y" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan=4>製卡廠商新製卡：
+                        <select size="1" name="new_vendor" value="${new_vendor}" class="col_ddlb" zRequire ="Y" >
+                            <!-- <option value="${new_vendor}">${new_vendor}</option> -->
+                            <option value="" >--</option>
+                            ${dddw_new_vendor}
+                        </select>
+                    </td>
+                    <td nowrap class="colKey" colspan=4>製卡廠商補發卡：
+                        <select size="1" name="mku_vendor" value="${mku_vendor}" class="col_ddlb" zRequire ="Y" >
+                            <!-- <option value="${mku_vendor}">${mku_vendor}</option> -->
+                            <option value="" >--</option>
+                            ${dddw_mku_vendor}
+                        </select>
+                    </td>
+                    <td nowrap class="colKey" colspan=4>製卡廠商續卡：
+                        <select size="1" name="chg_vendor" value="${chg_vendor}" class="col_ddlb" zRequire ="Y" >
+                           <!--  <option value="${chg_vendor}">${chg_vendor}</option> -->
+                           <option value="" >--</option>
+                            ${dddw_chg_vendor}
+                        </select>
+                    </td>
+                </tr>
+<!--                
+                <tr>
+			       <td nowrap colspan="12">
+			            <spen style="background-color:#00FFCC;color:blue">VISA    Derivation Key    01 - 24</spen><br>
+			            <spen style="background-color:#00FFCC;color:blue">Master  Derivation Key    02</spen><br>
+			            <spen style="background-color:#00FFCC;color:blue">JCB     Derivation Key    01</spen><br>
+			            <spen style="background-color:#FFFF00;color:red">*註：晶片服務碼需配合設定Ptrm0200團代卡樣對照參數表檔維護</spen><br>
+                        <spen style="background-color:#FFFF00;color:red">　　 晶片卡旗標需勾選</spen>
+			       </td>
+                </tr>
+-->                
+            </table>
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>鍵檔日期:
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date.YMD}">
+                    </td>
+                    <td nowrap>鍵檔人員:&nbsp;
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>修改日期:
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="mod_time" value="${mod_time.YMD}">
+                    </td>
+                    <td nowrap>修改人員:&nbsp;
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="mod_user" value="${mod_user}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>主管覆核日期:
+                        <span class="dsp_text">${apr_date.YMD}</span>
+                        <input type="hidden" name="apr_date" value="${apr_date.YMD}">
+                    </td>
+                    <td nowrap>主管覆核人員:&nbsp;
+                        <span class="dsp_text">${apr_user}</span>
+                        <input type="hidden" name="apr_user" value="${apr_user}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="crdm0009">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+var typem =  document.dataForm.electronic_code.value;
+
+if(typem =='02'){
+    $("#ipsKind").attr('disabled',false);
+    $("#ipsKind").attr("zRequire",'Y');
+ }else{
+     $("#ipsKind").attr('disabled',true);
+     $("#ipsKind").removeAttr("zRequire");
+}
+
+if(typem =='03'){
+      $("#cardCode").attr('disabled',false);
+      $("#cardCode").attr("zRequire",'Y');
+}else{
+      $("#cardCode").attr('disabled',true);
+      $("#cardCode").removeAttr("zRequire");
+}
+
+function validateInput() {
+    if (!areAllValNum()){   
+        return false;
+    }
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+
+function areAllValNum(){
+    var ele = document.getElementById("reissue_extn_mm");
+    var val = ele.value;
+    if (top.isNumber(val)){
+        ele.style.background = "pink";
+        return true;
+    }else{
+        alert("毀損補發展延效期(月)須為數字");
+        ele.style.background = "pink";
+        return false;
+    }  
+}
+
+function detailElectronic(type){
+    
+    if(type =='02'){
+        $("#ipsKind").attr('disabled',false);
+        $("#ipsKind").attr("zRequire",'Y');
+     }else{
+    	 $("#ipsKind").attr('disabled',true); 
+    	 $("#ipsKind").removeAttr("zRequire");
+    }
+    
+    if(type =='03'){
+    	  $("#cardCode").attr('disabled',false);
+    	  $("#cardCode").attr("zRequire",'Y');
+    }else{
+    	  $("#cardCode").attr('disabled',true);
+    	  $("#cardCode").removeAttr("zRequire");
+    }
+}
+
+$(document).ready(function(){ 
+	virtualFlagOnChg();
+	 $("input[name=virtual_flag]").change(function(){
+		 virtualFlagOnChg();
+	 });  
+});
+
+function virtualFlagOnChg(){
+	var virtualFlag = $("input[name=virtual_flag]").prop('checked');
+	if(virtualFlag == true){
+		$("select[name=card_item]").val('');
+		$("select[name=card_item]").attr('zRequire','');
+	}else{
+		$("select[name=card_item]").attr('zRequire','Y');
+	}
+}
+
+</script>

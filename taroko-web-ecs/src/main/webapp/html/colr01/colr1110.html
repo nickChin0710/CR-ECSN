@@ -1,0 +1,155 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-09-26  V1.00.01  ryan            Initial                             -->
+<!-- 110-03-31  V1.00.02  Justin Wu     fix XSS                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>前置協商受理申請狀態統計表-pond-V.2021-0331-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="30%" border="0" cellspacing="0" cellpadding="4">
+  		<tr>
+  		<td nowrap>&nbsp;統計日期:
+      		<input type="text" class="col_date" name="ex_stat_date" value="${ex_stat_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+      		<script language="JavaScript">
+			new tcal ({'formname': 'dataForm','controlname': 'ex_stat_date'});
+	  		</script>
+	  	</td>
+  	 	<td nowrap>&nbsp;帳戶狀態:
+      		<select   size="1"  name="ex_acct_sts" class="col_ddlb">
+        		<option value="">--</option>
+        		<option value="1" ${ex_acct_sts-1} >正常(含逾催)</option>
+         		<option value="4" ${ex_acct_sts-4} >呆帳</option>
+      		</select>
+   		</td>
+   		<td nowrap rowspan="2">&nbsp;  
+      		<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+       		<!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+      		<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    	</td>
+  	</tr>
+	<tr>
+		<td nowrap colspan="2">&nbsp;通知月份:
+      		<input type="text" class="col_date" name="ex_stat_ym1" value="${ex_stat_ym1}" 
+        	zEdit="date,yyyymm" maxlength="8" size="8" />
+      		--
+      		<input type="text" class="col_date" name="ex_stat_ym2" value="${ex_stat_ym2}" 
+        	zEdit="date,yyyymm" maxlength="8" size="8" />
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--Sum -->
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">通知月份</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">逾期期數</th>
+    <th nowrap class="list_th">協商筆數</th>
+    <th nowrap class="list_th">欠費總金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;	</td>
+    <td nowrap class="list_ll">${static_month.YMD}&nbsp;</td>
+    <td nowrap class="list_ll">${tt_acct_status}&nbsp;</td>
+    <td nowrap class="list_ll">${wk_mcode}&nbsp;</td>
+    <td nowrap class="list_ll">${liac_id_cnt}&nbsp;</td>
+    <td nowrap class="list_rr">&nbsp;${tot_amt.(999)}</td>
+     <!-- ${tr} 2021-03-31 Justin fix XSS -->
+    <tr style="${trStyle}">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td nowrap class="td_data" align="right">月份小計:</td>
+      <td nowrap class="td_data"><span class="dsp_number">${trGp1Cnt}</span></td>
+      <td nowrap class="td_data" align="right"><span class="dsp_number">${trStrGp1Amt}</span></td>
+    </tr>
+  </tr>
+  
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+  	<td>
+  	</td>
+  	<td>
+  	</td>
+  	<td>
+  	</td>
+  	<td nowrap class="td_data" align="right">
+  	合 計:&nbsp;
+  	</td>
+ 	  <td nowrap class="td_data" >
+		  <span class="dsp_number">${all_cnt}</span> 
+	  </td>
+	  <td nowrap class="td_data" align="right">
+		  <span class="dsp_number">${all_amt.(999)}</span> 
+	  </td>
+  </tr>
+ </table>
+
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="sm_settle_amt"  value="${sm_settle_amt}">
+ <input type="hidden" name="MOD_PGM" value="colr1110">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" id="TTTS" name="TTTS" value="">
+ 
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode == "C" ) {
+    	var filename = document.getElementById('exImportFile').value;
+    	//var filename = document.getElementById("exImportFile").files[0].fileName;
+    	//document.getElementById('TTTS').value = document.getElementById('exImportFile').value;
+    	//alert(filename);
+    	if(filename==""){
+    		
+    		return false;
+    	}
+    }
+    
+    return true;
+  }
+ 
+</script>

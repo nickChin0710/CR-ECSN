@@ -1,0 +1,213 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-05-05  V1.00.00  JustinWu       Initial                              -->
+<!-- 109-08-18  V1.00.01  JustinWu       remove dsp_text class                -->
+<!-- 109-09-09  V1.00.02  JustinWu       add card_no and 主檔修改日期->異動日期 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡人及帳務資料異動報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_chg_table_date_start" id="ex_chg_table_date_start" value="${ex_chg_table_date_start}"  zEdit="date,yyyymmdd" zRequire="Y" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_chg_table_date_start'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_chg_table_date_end" id="ex_chg_table_date_end" value="${ex_chg_table_date_end}" zRequire="Y" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_chg_table_date_end'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;身分證字號:
+      <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" zEdit="idnum" maxlength="19" size="21">
+   </td>
+   <td nowrap >&nbsp;卡片類別:
+      <span class="col_radio">
+         <input type="radio" value="" name="ex_debit_flag"  ${ex_debit_flag} checked />全部
+         <input type="radio" value="N" name="ex_debit_flag" ${ex_debit_flag-N} />信用卡
+         <input type="radio" value="Y" name="ex_debit_flag" ${ex_debit_flag-Y} />VD卡
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;異動主檔:
+      <span>
+        <input type="text" class="col_any" id="ex_chg_table_text" name="ex_chg_table_text" zEdit="any,lower" value="${ex_chg_table_text}">
+        <select size="1" id="ex_chg_table" name="ex_chg_table" class="col_ddlb" onchange="dropDownListChg('ex_chg_table', 'ex_chg_table_text')" >
+              ${dddw_chg_table}
+        </select>
+      </span>
+   </td>
+   <td nowrap >&nbsp;異動欄位:
+      <span>
+        <input type="text" class="col_any" id="ex_chg_column_text" name="ex_chg_column_text" zEdit="any,lower" value="${ex_chg_column_text}">
+        <select size="1" id="ex_chg_column" name="ex_chg_column" class="col_ddlb" onchange="dropDownListChg('ex_chg_column','ex_chg_column_text')">
+              ${dddw_chg_column}
+        </select>
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;異動程式:
+      <span id="ex_mod_pgm_span">
+         <input type="text" class="col_any" name="ex_mod_pgm" id="ex_mod_pgm" value="${ex_mod_pgm}" zEdit="alphanum" MaxLength=20 size=22>
+      </span>&nbsp;
+      <span id="ex_mod_pgm_text" size=22>${ex_mod_pgm}</span>
+      <span>
+      <input type="checkbox" name="ex_etabs_check_flag" id="ex_etabs_check_flag" value="Y" ${ex_etabs_check_flag-Y} onChange="etabsOnchange()">
+      僅顯示ETABS的異動資料
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >異動時間&nbsp;</th>
+    <th nowrap >ID&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >VD註記&nbsp;</th>
+    <th nowrap >異動主檔&nbsp;</th>
+    <th nowrap >異動欄位&nbsp;</th>
+    <th nowrap >異動前內容&nbsp;</th>
+    <th nowrap >異動後內容&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >異動程式&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_time}&nbsp;</td>
+	<td nowrap class="list_ll"> ${id_no}&nbsp;</td>
+  <td nowrap class="list_ll"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${debit_flag}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_table_desc}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_column_desc}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_data_old}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_data}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_user}&nbsp;</td>
+	<td nowrap class="list_ll"> ${mod_pgm}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ window.onload = function(){
+  etabsOnchange();
+ }
+
+ function submitControl(submitCode){
+  if ( !checkChgTableDate()) {
+      return false;
+  }
+
+  top.submitControl(submitCode);
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    return true;
+  }
+
+  function checkChgTableDate(){
+    var formErrArr = [];
+    if (isEmpty(document.getElementById("ex_chg_table_date_start").value)){
+      formErrArr.push("異動日期起日為必輸欄位");
+    } 
+    if (isEmpty(document.getElementById("ex_chg_table_date_end").value)) {
+      formErrArr.push("異動日期迄日為必輸欄位");
+    }
+    if (formErrArr.length != 0) {
+      var errMsg = "";
+      for (var i = 0; i < formErrArr.length; i++) {
+        errMsg = errMsg + formErrArr[i] + "\n";
+      }
+      alert(errMsg);
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  function etabsOnchange(){
+    var modPgm = document.getElementById("ex_mod_pgm");
+    var modPgmSpan = document.getElementById("ex_mod_pgm_span");
+    var modPgmText = document.getElementById("ex_mod_pgm_text");
+
+    if (document.getElementById("ex_etabs_check_flag").checked == true) {
+      modPgm.value = "EtbA001";
+      modPgmText.innerHTML = "EtbA001";
+      modPgmSpan.style.display = "none";
+      modPgmText.style.display = "inline"; 
+    }else{
+      modPgmSpan.style.display = "inline";
+      modPgmText.style.display = "none";
+    }
+  }
+
+  function dropDownListChg(chgId, targerId){
+    var chgEle = document.getElementById(chgId);
+    var targetEle = document.getElementById(targerId);
+
+    if (chgEle.selectedIndex == 0) //若為第一個選項(即--)，則target值設為空
+      targetEle.value = "";
+    else
+      targetEle.value = chgEle.options[chgEle.selectedIndex].value;
+    
+  }
+
+  function isEmpty(value){
+    return value.trim().length == 0;
+  }
+  
+</script>

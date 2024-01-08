@@ -1,0 +1,200 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-03-13  V1.00.00    AndyLiu             Initial                       -->
+<!-- 109-06-24  V1.00.01    tanwei              隱藏字段                       -->
+<!-- 109-06-29  V1.00.02    JustinWu            修改日曆無法使用問題            -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>HCE交易明細查詢</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                	<td nowrap colspan=4>&nbsp;入帳日期：
+                        <input type="text" class="col_date" name="exDateS1" value="${exDateS1}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="k" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE1" value="${exDateE1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE1'
+                        });
+                        </script>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;交易日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8"  />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                        </script>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    </td>
+                </tr>    
+                <tr>    
+                    <td nowrap colspan=12>&nbsp;交易類別:
+                        <input type="radio" value="0" name="ex_trans_type" ${ex_trans_type-0} ${DEFAULT-ex_trans_type} />全部
+                        <input type="radio" value="P" name="ex_trans_type" ${ex_trans_type-P} />消費
+                        <input type="radio" value="R" name="ex_trans_type" ${ex_trans_type-R} />退費
+                        <!-- <input type="radio" value="I" name="ex_trans_type" ${ex_trans_type-I} />分期  -->
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;掃碼類別:
+                        <input type="radio" value="0" name="ex_payment_type" ${ex_payment_type-0} ${DEFAULT-ex_payment_type} />全部
+                        <input type="radio" value="Q" name="ex_payment_type" ${ex_payment_type-Q} >QRCode(Q)&nbsp;
+                        <input type="radio" value="t" name="ex_payment_type" ${ex_payment_type-t} >被掃(t)&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;錢包類別:
+                        <input type="radio" value="0" name="ex_wallet_type" ${ex_wallet_type-0} ${DEFAULT-ex_wallet_type} />全部
+                        <input type="radio" value="H" name="ex_wallet_type" ${ex_wallet_type-H} >TWMP&nbsp;
+                        <input type="radio" value="O" name="ex_wallet_type" ${ex_wallet_type-O} >OEMPAY&nbsp;
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=4>&nbsp;身分證號:
+                        <input type="text" class="col_text" name="ex_id" value="${ex_id}" zEdit="alphanum,upper" maxlength=10 size=10 />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;卡號:
+                        <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength=19 size=19 />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;TPAN卡號:
+                        <input type="text" class="col_any" name="ex_v_card_no" value="${ex_v_card_no}" zEdit="number" maxlength=19 size=19 />
+                    </td>                    
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">交易區間總筆數：&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                    <td nowrap width="200">交易區間總金額：&nbsp;
+                        <span class="dsp_number">${sum_all_amt.(999)}</span>
+                        <input type=hidden name="sum_all_amt" value="${sum_all_amt}" />
+                    </td>
+                    <td nowrap width="200">交易區間總消費金額：&nbsp;
+                        <span class="dsp_number">${sum_05_amt.(999)}</span>
+                        <input type=hidden name="sum_05_amt" value="${sum_05_amt}" />
+                    </td>
+                    <td nowrap width="200">交易區間總退貨金額：&nbsp;
+                        <span class="dsp_number">${sum_06_amt.(999)}</span>
+                        <input type=hidden name="sum_06_amt" value="${sum_06_amt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">交易日期</th>
+                <th nowrap class="list_th">入帳日期</th>
+                <th nowrap class="list_th">身分證號</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">TPAN卡號</th>
+                <th nowrap class="list_th">錢包類別</th>
+                <th nowrap class="list_th">團體代號</th>
+                <th nowrap class="list_th">卡種名稱</th>
+                <th nowrap class="list_th">金額</th>
+                <th nowrap class="list_th">交易類別</th>
+                <th nowrap class="list_th">交易方式</th>
+                <th nowrap class="list_th">特店中文名稱</th>
+                <th nowrap class="list_th">特店城市</th>
+                <th nowrap class="list_th">特店國別</th>
+                
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${purchase_date}&nbsp;</td>
+                <td nowrap class="list_cc"> ${post_date}&nbsp;</td>
+                <td nowrap class="list_ll"> ${id_no}&nbsp;</td>
+                <td nowrap class="list_ll"> ${card_no}&nbsp;</td>
+                <td nowrap class="list_ll"> ${v_card_no}&nbsp;</td>
+                <td nowrap class="list_ll"> ${wallet_type}&nbsp;</td>
+                <td nowrap class="list_cc"> ${group_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${card_type}&nbsp;</td>
+                <td nowrap class="list_rr"> &nbsp;${dest_amt.(999)}</td>
+                <td nowrap class="list_cc"> ${txn_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${payment_type}&nbsp;</td>
+                <td nowrap class="list_ll"> ${mcht_name}&nbsp;</td>
+                <td nowrap class="list_ll"> ${mcht_city}&nbsp;</td>
+                <td nowrap class="list_ll"> ${mcht_country}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="sql_cmd" value="${sql_cmd}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_batch_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "bilq0270_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "bilq0270_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

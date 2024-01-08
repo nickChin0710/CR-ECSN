@@ -1,0 +1,142 @@
+<html>
+<head>
+<title> 109/03/10 V1.00.01 Allen Ho Initial 專案基金匯入外部單位明細檔</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd"   value="啟動FTP接收" onClick="return top.submitControl('procMethod_H005')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">外部單位代碼:&nbsp;
+       <input type="text" class="col_any" name="kk_extern_id" value="${kk_extern_id}"
+              zEdit="any" maxlength="3" size="3" />
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">外部單位代碼:
+       <span class="dsp_text">${extern_id}</span>
+       <input   type="hidden" name="extern_id" value="${extern_id}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>外部單位名稱:&nbsp; 
+       <input type="text" class="col_any" name="extern_name" value="${extern_name}"
+              zEdit="any,canTW" zRequire="Y" maxlength="30" size="30" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>停用註記:&nbsp;
+       <select name="disable_flag" class="col_ddlb"  >
+       <option value="N" ${disable_flag-N} >未停用</option>
+       <option value="Y" ${disable_flag-Y} >已停用</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>匯入參考IP代碼:&nbsp;
+       <select name="in_ref_ip_code" class="col_ddlb" />
+               ${dddw_ref_ip1}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>匯出參考IP代碼:&nbsp;
+       <select name="out_ref_ip_code" class="col_ddlb" />
+               ${dddw_ref_ip2}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>基金代碼:&nbsp; 
+        <input type="Button" class="btOther" name="btnfund" id="btnfund"  value="基金代碼選擇" ${btnfund_disable}
+               onClick="return buttonScreen('2','fund','data_type','1')" >
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護經辦： 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+               - ${comm_crt_user}
+     <input    type="hidden" name="comm_crt_user" value="${comm_crt_user}" />
+     </td>
+     <td  nowrap  >維護日期： 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm4075">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktm4075_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

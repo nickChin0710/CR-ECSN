@@ -1,0 +1,160 @@
+<html>
+<head>
+<title> 110/11/16 V1.00.10 Allen Ho Initial 利息折扣參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+${#PLUGIN:htmcomm_plugin.apr_user}
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;帳戶類別:
+       <select size="1" id="kk_acct_type" name="kk_acct_type" class="col_ddlb"  zRequire="K,C">
+               ${dddw_acct_type2}
+       </select>
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *111*********************************************** -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">帳戶類別:
+       <span class="dsp_text">${acct_type}</span>
+       <input   type="hidden" name="acct_type" value="${acct_type}" />
+              -${comm_acct_type}
+     <input    type="hidden" name="comm_acct_type" value="${comm_acct_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>1.&nbsp; 
+       <input type="text" class="col_number" name="rc_rate" value="${rc_rate}"
+              zEdit="dignumber" maxlength="6" size="6" />
+              折扣後之 RC RATE 判斷參數(一)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>2.&nbsp; 
+       <input type="text" class="col_number" name="rc_rate_limit" value="${rc_rate_limit}"
+              zEdit="dignumber" maxlength="6" size="6" />
+              折扣後之 RC RATE 判斷參數(二)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>3.&nbsp; 
+       <input type="text" class="col_number" name="purch_bal_parm" value="${purch_bal_parm}"
+              zEdit="dignumber" maxlength="11" size="11" />
+              消費本金餘額大於此參數依一般計息方式
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>4.&nbsp; 
+       <input type="text" class="col_number" name="waive_penauty" value="${waive_penauty}"
+              zEdit="dignumber" maxlength="11" size="11" />
+              違約金小於此參數, 違約金清零, 利息保留
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>免息參數設定&nbsp; 
+        <input type="Button" class="btOther" name="btncurr" id="btncurr"  value="雙幣幣別免息參數" ${btncurr_disable}
+               onClick="return buttonScreen('2','curr','','')" >
+         ※目前僅01帳戶發行雙幣卡，其他帳戶不需維護雙幣幣別免息參數 
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="-" cellpadding="4">
+   <tr>
+     <td  nowrap   width="20%">異動日期: 
+       <span class="dsp_date">${mod_time.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_time" value="${mod_time}" 4/>
+     </td>
+     <td  nowrap   width="20%">異動人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+               - ${comm_mod_user}
+     <input4   type="hidden" name="comm_mod_user" value="${comm_mod_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap   width="20%">覆核日期： 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date}" />
+     </td>
+     <td  nowrap   width="20%">覆核人員： 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+               - ${comm_apr_user}
+     <input4   type="hidden" name="comm_apr_user" value="${comm_apr_user}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="cycm0050">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "cycm0050_"+parm2;
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    var acct_type = document.getElementById("kk_acct_type").value;
+    document.dataForm.data_k3.value = acct_type;
+    top.submitControl("R"+parm1);
+
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

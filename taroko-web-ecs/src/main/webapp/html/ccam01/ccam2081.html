@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>預製卡啟用-2021/11/08-ryan
+	     預製卡啟用-2021/11/15-ryan  增加欄位
+        2022/03/01-Justin 增加批次處理功能
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" ${cond_edit} value="${ex_card_no}" maxlength="16" size="18" zEdit="number" zRequire ="k"/>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;
+      <input type="Button"   value="批次啟用" onClick="return enterBatchProcess();" class="btQuery" >&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+   </td>   
+  </tr>  
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >卡號</th>
+    <th nowrap >申請人身分證號碼</th>
+    <th nowrap >金融帳號</th>
+    <th nowrap >團體代號</th>
+    <th nowrap >卡種</th>
+    <th nowrap >有效日期</th>
+    <th nowrap >入主檔日期</th>
+    <th nowrap >註銷旗標</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${batchno}','${recno}','${card_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apply_id}&nbsp;</td>
+	<td nowrap class="list_cc"> ${act_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${group_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${valid_to.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${in_main_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prefab_cancel_flag}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam2081_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+  function enterBatchProcess(){
+    top.respHtml  = "ccam2081_batch";
+    top.submitControl('BB');
+    return true;
+  }
+  
+</script>

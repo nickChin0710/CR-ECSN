@@ -1,0 +1,151 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-15  V1.00.00  Justin Wu      Initial                              -->
+<!-- 109-01-16  V1.00.01  Justin Wu      PP卡 -> 貴賓卡                        -->
+<!-- 112-05-30  V1.00.02  Ryan           PDF改EXCEL                           -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>貴賓卡退卡逾180日停用報表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">       
+                <tr>                    
+                    <td nowrap colspan=4>&nbsp;停卡日期：
+                        <input type="text" class="col_date" name="ex_oppost_date_s" value="${ex_oppost_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_oppost_date_s'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_oppost_date_e" value="${ex_oppost_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_oppost_date_e'
+                        });
+                        </script>&nbsp;                       
+                    </td>
+                    <td nowrap colspan=4>&nbsp;貴賓卡號:
+                        <input type="text" class="col_any" name="ex_pp_card_no"  value="${ex_pp_card_no}"
+                        zEdit="alphanum"/>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;貴賓卡別:
+                        <select size="1" name="ex_vip_kind" class="col_ddlb">
+                            <option value="0">--</option>
+                            <option value="1" ${ex_vip_kind-1}>新貴通</option>
+                            <option value="2" ${ex_vip_kind-2}>龍騰卡</option>
+                        </select>&nbsp;
+                    </td> 
+                    <td nowrap rowspan=2>&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" id="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+<!--                         <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                    	<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                <tr>
+                    <td nowrap colspan=4>&nbsp;退卡日期：
+                        <input type="text" class="col_date" name="ex_return_date_s" value="${ex_return_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_return_date_s'
+                        });
+                        </script>
+                        --
+                    <input type="text" class="col_date" name="ex_return_date_e" value="${ex_return_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_return_date_e'
+                        });
+                        </script>&nbsp;
+                    </td>                 
+                    <td nowrap colspan=4>&nbsp;退卡性質:
+                        <select size="1" name="ex_return_type" class="col_ddlb">
+                            <option value="0">--</option>
+                            <option value="1" ${ex_return_type-1}>新製卡</option>
+                            <option value="2" ${ex_return_type-2}>續卡</option>
+                            <option value="3" ${ex_return_type-3}>毀損重製</option>
+                        </select>&nbsp;
+                    </td> 
+                </tr>      
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">退卡編號</th>
+                <th nowrap class="list_th">掛號條碼</th>
+                <th nowrap class="list_th">貴賓卡別</th>
+                <th nowrap class="list_th">停卡日期</th>
+                <th nowrap class="list_th">貴賓卡號</th>
+                <th nowrap class="list_th">發卡日期</th>
+                <th nowrap class="list_th">ID</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">退卡日期</th>
+                <th nowrap class="list_th">退卡性質</th>
+                <th nowrap class="list_th">退卡原因</th>
+                <th nowrap class="list_th">退卡處理結果</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${return_seqno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${barcode_num} &nbsp;</td>
+                <td nowrap class="list_ll"> ${vip_kind}&nbsp; </td>
+                <td nowrap class="list_ll"> ${oppost_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${pp_card_no}&nbsp;</td>
+                <td nowrap class="list_ll"> ${issue_date}&nbsp;</td>
+                <td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${return_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${return_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${reason_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${proc_status}&nbsp; </td>                      
+                <input type="hidden" name="group_ct" value="${group_ct}">  
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_oppost_date_s.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

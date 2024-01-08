@@ -1,0 +1,151 @@
+<html>
+<head>
+<title> 110/06/24 V1.00.01 Allen Ho Initial 行銷通路活動回饋分析檔</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="10">
+   <tr>
+   <td nowrap>&nbsp;活動代碼：
+      <select size="1" name="ex_active_code" class="col_ddlb" >
+         ${dddw_active_code}
+      </select>
+     </td>
+   <td nowrap>&nbsp;確認狀態:
+      <select  name="ex_apr_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_apr_flag-Y} >Y.已確認</option>
+         <option selected="selected" value="N" ${ex_apr_flag-N} >N.未確認</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;分析日期:
+      <input type="text" class="col_date" 
+          name="ex_crt_date_s" value="${ex_crt_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_crt_date_e" value="${ex_crt_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="10">
+   <tr>
+ </table>
+ <hr>
+ <table width="60%" border="0" cellspacing="0" cellpadding="10">
+   </tr>
+   <tr>
+   <td nowrap>${ex_total_msg1}
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">確認旗標　　　　　　　</th>
+    <th nowrap class="list_th">活動代碼</th>
+    <th nowrap class="list_th">活動序號</th>
+    <th nowrap class="list_th">分析日期</th>
+    <th nowrap class="list_th">紅利筆數</th>
+    <th nowrap class="list_th">現金回饋筆數</th>
+    <th nowrap class="list_th">贈品筆數</th>
+    <th nowrap class="list_th">名單人數</th>
+    <th nowrap class="list_th">確認經辦</th>
+    <th nowrap class="list_th">確認日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td  nowrap class="list_cc"> ${apr_flag}-${comm_apr_flag}</td>
+    <td  nowrap class="list_ll"> ${active_code}-${comm_active_code}</td>
+    <td nowrap class="list_cc"> ${active_seq}</td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+    <td nowrap class="list_rr"> ${bonus_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${fund_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${gift_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${lottery_cnt.(999)}</td>
+    <td nowrap class="list_cc"> ${apr_user}</td>
+    <td nowrap class="list_cc"> ${apr_date}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm0860_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm0860_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->
+

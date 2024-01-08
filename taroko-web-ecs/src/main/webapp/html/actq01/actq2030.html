@@ -1,0 +1,107 @@
+<!-- 
+*****************************************************************************
+*                                                                            *
+*                              MODIFICATION LOG                              *
+*                                                                            *
+* DATE       Version   AUTHOR      DESCRIPTION                               *
+* ---------  --------  ---------- ------------------------------------------ *
+* 106-11-06  V1.00.01  OrisChang  Initial                                    *
+* 110-03-31  V1.00.02  Justin     fix XSS                                    *       
+****************************************************************************** 
+-->
+<html>
+<head>
+<title>消費總額查詢-110-03-31-V1.00.02-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+	<form name="dataForm" method="post" action="">
+		<div id="condBlock">
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>&nbsp;正卡身分證字號：</td>
+					<td nowrap>&nbsp;
+						<input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" zEdit="alphanum,upper" maxlength="10" size="12" /> -
+						<input type="text" class="col_text" name="ex_id_chk" value="${ex_id_chk}" zEdit="number" maxlength="1" size="1" />
+					</td>
+					<td nowrap>&nbsp;中文姓名：</td>
+					<td nowrap>&nbsp; 
+						${dsp_id_cname}
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;卡號：</td>
+					<td nowrap>&nbsp; 
+						<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength="16" size="18" />
+					</td>
+					<td nowrap>&nbsp;查詢期間：</td>
+					<td nowrap>&nbsp;
+						<input type="text" class="col_date" name="ex_s_yyymm" value="${ex_s_yyymm}" zRequire="k" zEdit="date,yyyymm" maxlength="6" size="8" /> --
+						<input type="text" class="col_date" name="ex_e_yyymm" value="${ex_e_yyymm}" zRequire="k" zEdit="date,yyyymm" maxlength="6" size="8" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="4">&nbsp;
+						<input type="Button"   ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+						&nbsp;&nbsp;
+						<input type="Button"   ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+						&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+		</div>
+		${#PLUGIN:htmcomm_plugin.vip_color}
+		<hr>
+		<!-- 明細============================ -->
+		<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<th nowrap class="list_th" width="5%">No&nbsp;</th>
+				<th nowrap class="list_th">帳戶類別</th>
+				<th nowrap class="list_th">消費金額</th>
+			</tr>
+			<!-- BEGIN DYNAMIC : DETAIL -->
+			<tr>
+				<td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+				<td nowrap class="list_cc">${acct_type}</td>
+				<td nowrap class="list_rr">${purchase_amt.(999)}</td>
+			</tr>
+			<!-- END DYNAMIC : DETAIL -->
+			<!-- ${tr} 2021-03-31 Justin fix XSS -->
+			<tr style="${trStyle}">
+				<td nowrap class=list_no>&nbsp;</td>
+				<td nowrap class=list_rr style="color:blue">合計：</td>
+				<td nowrap class=list_rr style="color:blue">${totAmt}</td>
+			</tr>
+		</table>
+		
+		<!--保留功能-->
+			<input type="hidden"  name="data_k1" value="" >
+			<input type="hidden"  name="data_k2" value="" >
+			<input type="hidden"  name="data_k3" value="" >
+			<input type="hidden"  name="data_k4" value="" >
+			<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+			<input type="hidden" name="pageType" value="cond">
+	</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "9999";
+
+document.dataForm.ex_id_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    
+    return true;
+}
+
+
+</script>

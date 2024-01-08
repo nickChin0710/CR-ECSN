@@ -1,0 +1,134 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-02-26  V1.00.00  zuwei          Initial                              -->
+<!-- 109-03-02  V1.00.01  Wilson         新增必輸欄位                                                                                  -->
+<!--**************************************************************************-->
+
+<html>
+<head>
+<title>人工取號-卡號保留作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<!--
+<body background="${water_mark}" >
+-->
+<body style="" bgcolor="#FFFFFF" onkeydown="return top.enterKey(event);"  >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+
+<tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+          <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+       <td nowrap width="50%">卡號：&nbsp;
+              <input type="text" class="col_any" name="card_no" value="${card_no}" zEdit="any" maxlength="16" size="18" zRequire ="C" />
+       </td>
+  </tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap class="colKey" >卡號：
+          <span class="dsp_text">${bin_no}${seqno}</span>
+          <input type="hidden" name="bin_no" value="${bin_no}" >
+          <input type="hidden" name="seqno" value="${seqno}" >
+       </td>
+	   <td nowrap class="colKey" >卡號用途註記：
+            <select name="card_flag" class="col_ddlb" value="${ex_use}" zRequire ="Y">
+                 <option value="1" ${card_flag-1}>一般用</option>
+<!--                   
+                 <option value="2" ${card_flag-2}>緊急替代用</option>
+-->              
+                 <option value="5" ${card_flag-5}>HCE TPAN用</option>
+                 <option value="7" ${card_flag-7}>GOOGLE PAY</option>
+             </select>
+       </td>
+	   
+   </tr>
+   <tr>
+       <td nowrap >團體代號:&nbsp;
+			<select name="group_code" class="col_ddlb" >
+			    ${dddw_groupcode}
+			</select>
+       </td>
+       <td nowrap >卡種:&nbsp;
+            <select name="card_type" class="col_ddlb" >
+                ${dddw_cardtype}
+            </select>
+       </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="2">保留原因:&nbsp;
+			<select name="reason_code" class="col_ddlb" zRequire ="Y">
+			    <option value=""  ${reason_code-}>--</option>
+			    <option value="1" ${reason_code-1}>1:首發指定</option>
+			    <option value="2" ${reason_code-2}>2:長官指定</option>
+			    <option value="3" ${reason_code-3}>3:持卡人指定</option>
+			    <option value="4" ${reason_code-4}>4:緊急替代卡</option>
+			</select>
+       </td>
+   </tr>
+   <tr>
+      <td nowrap>保留日期：&nbsp;
+            <input type=text class="dsp_text" name="reserve_date" value="${reserve_date}"  disabled /> 
+      </td>
+      <td nowrap>保留人員：&nbsp;
+            <input type=text class="dsp_text" name="reserve_id" value="${reserve_id}" disabled/> 
+      </td>
+   </tr>
+   <tr>
+      <td nowrap>修改日期：&nbsp;
+            <input type=text class="dsp_text" name="mod_time" value="${mod_time}"  disabled /> 
+      </td>
+      <td nowrap>修改人員：&nbsp;
+            <input type=text class="dsp_text" name="mod_user" value="${mod_user}"  disabled /> 
+      </td>
+   </tr>
+</table>
+</div>
+
+<input type="hidden" name="use_date" value="${use_date}">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="crdm0050">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+</form>
+</body>
+</html>
+<script language="javascript">
+  top.refreshButton2('1');
+
+// <1>點選修改時判斷若use_date有值，則不可修改，並跳訊息”該卡號已使用，不可修改”
+// <2>點選刪除時判斷若use_date有值，則不可刪除，並跳訊息”該卡號已使用，不可刪除”
+ function validateInput() {
+	var useDate = document.dataForm.use_date;
+
+    if ( !top.checkFormat() ) {
+    	return false; 
+    }
+
+    return true;
+  }
+
+</script>

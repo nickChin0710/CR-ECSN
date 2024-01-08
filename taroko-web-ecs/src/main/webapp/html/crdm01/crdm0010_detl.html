@@ -1,0 +1,157 @@
+<html>
+
+<head>
+    <title>庫存卡片異動維護作業-detl-108-12-31-V1.00.03-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value=" 新增 " ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <!--<input type="Button" name="btnQuery" value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;-->
+                    <!--<input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;-->
+                    <input type="Button"  value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <!-- Detail data================================= -->
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=6 class="colKey">&nbsp;異動編號：
+                        <span class="dsp_text">${warehouse_no}</span>
+                        <input type="hidden" name="warehouse_no" value="${warehouse_no}">
+                    </td>
+                    <td nowrap colspan=6>&nbsp;批號：
+                        <span class="dsp_text">${kk_lot_no}</span>
+                        <input type="hidden" name="lot_no" value="${lot_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=6>
+                        &nbsp;卡樣代碼：
+                        <!-- <select size="1" name="card_item" class="col_ddlb" zRequire="Y" onChange="card_item_change(this.value)"> -->
+                        <select size="1" name="card_item" class="col_ddlb" zRequire="Y" >    
+                            <option value="" ${card_item}>--</option>
+                            ${dddw_card_item}
+                        </select>
+                    </td>
+                    <td nowrap colspan=6 class="colKey">&nbsp;晶片卡(卡樣)：
+                        <span class="dsp_text">${ic_flag}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6 class="colKey">&nbsp;出入庫日期：
+                        <input type="text" class="col_date" name="warehouse_date" value="${warehouse_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="Y" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'warehouse_date' });
+                        </script>
+                    </td>
+                    <td nowrap colspan=12>&nbsp;庫位：
+                        <select size="1" name="place" class="col_ddlb" zRequire ="Y">
+                            <option value="" ${place}>--</option>
+                            ${dddw_place}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=12>&nbsp;庫存種類：
+                        <input type="radio" value="1" name="tns_type" onClick="chang()" ${tns_type-1}>1:入庫
+                        <input type="radio" value="2" name="tns_type" onClick="chang()" ${tns_type-2}>2:出庫 &nbsp;&nbsp;出入庫原因：
+                        <select name="trans_reason1" id="trans_reason1" class="col_ddlb">
+                            <option value="" ${trans_reason1}>--</option>
+                            ${dddw_trans_reason1}
+                        </select>
+                        <select name="trans_reason2" id="trans_reason2" class="col_ddlb">
+                            <option value="" ${trans_reason2}>--</option>
+                            ${dddw_trans_reason2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">&nbsp;出入庫數量：
+                        <input type="text" class="col_number" name="use_total" value="${use_total}" zEdit="number" maxlength="12" size="12" zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="6">&nbsp;單價：
+                        <input type="text" class="col_number" name="item_amt" value="${item_amt}" zEdit="dignumber" maxlength="6" size="6" />&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;鍵檔日期：
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date.YMD}">
+                    </td>
+                    <td nowrap>&nbsp;鍵檔人員：
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;修改日期：
+                        <span class="dsp_text">${mod_time.YMD}</span>
+                        <input type="hidden" name="mod_time" value="${mod_time.YMD}">
+                    </td>
+                    <td nowrap>&nbsp;修改人員：
+                        <span class="dsp_text">${mod_user}</span>
+                        <input type="hidden" name="mod_user" value="${mod_user}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="crdm0010">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="prev_total" value="${prev_total}">
+        <input type="hidden" name="wh_year" value="${wh_year}">
+        <input type="hidden" name="wh_month" value="${wh_month}">
+        <input type="hidden" name="card_type" value="${card_type}">
+        <input type="hidden" name="unit_code" value="${unit_code}">
+        <input type="hidden" name="card_itemc" value="">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.card_item.focus();
+$("#trans_reason1").show();
+$("#trans_reason2").hide();
+chang();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function chang() {
+    var ss = $('input[name*=tns_type]:checked').val();
+    if (ss == "1") {
+        $("#trans_reason1").show();
+        $("#trans_reason2").hide();
+    }
+    if (ss == "2") {
+        $("#trans_reason1").hide();
+        $("#trans_reason2").show();
+    }
+}
+function card_item_change(card_item) {
+    top.submitControl('I');
+}
+</script>

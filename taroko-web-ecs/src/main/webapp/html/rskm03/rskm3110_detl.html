@@ -1,0 +1,356 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-06-20   V1.00.01  JH                                                 -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡號控管記錄維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+<!--
+  <input type="Button" value="發送簡訊" ${btnUpdate_disable} onClick="detailScreenSMS('${card_no}')" class="btUpdate" >&nbsp;&nbsp;
+-->  
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡號：
+      <input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}"
+       maxlength=19 size=20 onChange="cardnoChange('1')" />
+   </td>
+   <td nowrap>&nbsp;管制序號：
+      <input type="text" class="col_number" name="kk_ctfg_seqno" value="${kk_ctfg_seqno}"
+         zEdit="number" MaxLength=9 size=16 />
+   </td>
+  </tr>
+</table>
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡號：
+      <span class="dsp_text"> ${card_no} </span>
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+   <td nowrap>&nbsp;管制序號：
+       <span class="dsp_text"> ${ctfg_seqno} </span>
+      <input type="hidden" name="ctfg_seqno" value="${ctfg_seqno}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;發現來源：
+     <select size=1 name="find_type" class="col_ddlb">
+       ${dddw_find_type}
+     </select>
+   </td>
+   <td nowrap>&nbsp;身分證：
+      <label class="dsp_text" id="id_no" >${id_no}</label>
+      <input type="hidden" name="id_no" value="${id_no}" />
+      <input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+      &nbsp;
+      <label class="dsp_text" id="chi_name" >${chi_name}</label>
+      <input type="hidden" name="chi_name" value="${chi_name}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;管制時間：
+   		<input type="text" class="col_date" name="warn_date" value="${warn_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'warn_date'});
+	      </script>      
+      <input type="text" class="col_date" name="warn_time" value="${warn_time}" zEdit="date,ym" MaxLength=8 size=10 />
+   </td>
+   <td nowrap>&nbsp;管制經辦：
+      <input type="text" class="col_any" name="warn_user" value="${warn_user}" maxlength=10 size=16 zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;解控處理：
+     <select size=1 name="rels_code" class="col_ddlb">
+       ${dddw_rels_code}
+     </select>
+   </td>
+<!--   
+   <td nowrap>
+      <input type="checkbox" value="Y" name="sms_flag" ${sms_flag-Y} />簡訊通知
+   </td>
+-->
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;解控時間：   		
+   		<input type="text" class="col_date" name="rels_date" value="${rels_date}"
+       zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	      new tcal ({'formname': 'dataForm','controlname': 'rels_date'});
+	    </script>            
+      <input type="text" class="col_date" name="rels_time" value="${rels_time}" zEdit="date,ym" MaxLength=8 size=10 />
+   </td>
+   <td nowrap>&nbsp;解控經辦：
+      <input type="text" class="col_any" name="rels_user" value="${rels_user}" maxlength=10 size=16 zEdit="any,canTw" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;最後一期帳款之應繳日：
+      <span class="dsp_date" id="pay_date"> ${pay_date.YMD} </span>
+      <input type="hidden" name="pay_date" value="${pay_date}" />
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2">
+     <input type="checkbox" class="col_ckbox" value="1" name="secnd_flag" ${secnd_flag-1} />移轉二線人員
+      <input type="Button" class="btOther" value="處理紀錄" ${btnUpdate_disable} onClick="return detailScreen('')" >
+   </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" >&nbsp;特殊註記：   
+        <input type="text" class="col_any" id="spec_remark_1" name="spec_remark_1" value="${spec_remark_1}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　
+        <input type="text" class="col_any" id="spec_remark_2" name="spec_remark_2" value="${spec_remark_2}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　
+        <input type="text" class="col_any" id="spec_remark_3" name="spec_remark_3" value="${spec_remark_3}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　
+        <input type="text" class="col_any" id="spec_remark_4" name="spec_remark_4" value="${spec_remark_4}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　
+        <input type="text" class="col_any" id="spec_remark_5" name="spec_remark_5" value="${spec_remark_5}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <input type="hidden" name="spec_remark" value="${spec_remark}" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap colspan="2" >&nbsp;移轉二線日期:
+			<span class="dsp_text">${secnd_date.YMD}</span>
+			<input type="hidden" name="secnd_date" value="${secnd_date}">
+		</td>
+	</tr>
+  <tr>
+   <td nowrap>&nbsp;移交單位：
+     <select size=1 name="trans_unit" class="col_ddlb" onChange="setDate1()" >
+       ${dddw_trans_unit}
+     </select>
+   </td>
+   <td>&nbsp;移交日期：
+   	<input type="text" class="col_date" name="trans_date" value="${trans_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'trans_date'});
+	      </script>          
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;案件類型：
+     <select size=1 name="case_type" class="col_ddlb">
+       ${dddw_case_type}
+     </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;Saving OTB：
+      <input type="text" class="col_number" name="otb_amt" value="${otb_amt}"
+         zEdit="canMinus,number" MaxLength=9 size=16 />
+   </td>
+   <td>&nbsp;額度：   		
+      <input type="text" class="col_number" id="credit_limit" name="credit_limit" value="${credit_limit}"
+         zEdit="alphanum" MaxLength=9 size=16 readonly />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;冒刷筆數：
+      <input type="text" class="col_number" name="attm_cnt" value="${attm_cnt}"
+         zEdit="number" MaxLength=9 size=16 />
+      
+   </td>
+   <td nowrap>&nbsp;冒刷成功金額：
+      <input type="text" class="col_number" name="attm_amt" value="${attm_amt}"
+         zEdit="number" MaxLength=9 size=16 />
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;冒刷成功筆數:
+   		<input type="text" class="col_number" name="fraud_ok_cnt" value="${fraud_ok_cnt}" maxlength="3" size="5" zEdit="number" >
+   <td >
+      <input type="checkbox" class="col_ckbox" value="1" name="close_flag" ${close_flag-1} />結案
+   </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;二線處理備註：
+        <input type="text" class="col_any" name="proc_remark_1" value="${proc_remark_1}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　　　
+        <input type="text" class="col_any" name="proc_remark_2" value="${proc_remark_2}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　　　
+        <input type="text" class="col_any" name="proc_remark_3" value="${proc_remark_3}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　　　
+        <input type="text" class="col_any" name="proc_remark_4" value="${proc_remark_4}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <br>&nbsp;　　　　　　　
+        <input type="text" class="col_any" name="proc_remark_5" value="${proc_remark_5}" maxlength="60" size="114" zEdit="any,canTw" > 
+        <input type="hidden" name="proc_remark" value="${proc_remark}" >
+   </td>
+  </tr>
+</table>
+
+</div>
+
+<br>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+ <input type="hidden"  name="data_k1" value="" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+<input type="hidden" name="sysdate" value="${sysdate}" />
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+ {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+  function detailScreen(parm) { 
+ // document.dataForm.data_k1.value = ls_spec_code;
+  top.respLevel = 2;
+  top.respHtml  = "rskm3110_qury";
+  top.submitControl("R2");  
+  return true;
+  }  
+  
+  function detailScreenSMS(parm) { 
+ 		document.dataForm.data_k1.value = parm;
+  	top.respLevel = 2;
+  	top.respHtml  = "rskm3110_nadd";
+  	top.submitControl("Z");  
+  	return true;
+  }  
+  
+  function cardnoChange(ps1)
+ {
+	var  card_no =document.forms["dataForm"]["kk_card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+   
+/*// 20200102 updated for archit.  change
+   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_cardno";
+   }*/
+
+	resetJSON();
+  addJSON("ajaxCode", "2"); // 20200102 updated for archit.  change
+	addJSON("ax_card_no",card_no);
+	processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+	top.respHtml ="rskm3110_detl";
+   top.requHtml ="rskm3110_detl";
+
+	if  ( idCode === '1' ) {
+      var idno =getJSONvalue("id_no",0);
+      if (idno.length>0) { 
+         document.getElementById("id_no").innerHTML =idno;
+      }
+      
+      var chi_name =getJSONvalue("chi_name",0);
+      if (chi_name.length>0) { 
+         document.getElementById("chi_name").innerHTML =chi_name;
+      }
+      
+      var spec_remark_1 =getJSONvalue("spec_remark_1",0);
+      if (spec_remark_1.length>0) { 
+         document.getElementById("spec_remark_1").innerHTML =spec_remark_1;
+      }
+      
+      var spec_remark_2 =getJSONvalue("spec_remark_2",0);
+      if (spec_remark_2.length>0) { 
+         document.getElementById("spec_remark_2").innerHTML =spec_remark_2;
+      }
+      
+      var spec_remark_3 =getJSONvalue("spec_remark_3",0);
+      if (spec_remark_3.length>0) { 
+         document.getElementById("spec_remark_3").innerHTML =spec_remark_3;
+      }
+      
+      var spec_remark_4 =getJSONvalue("spec_remark_4",0);
+      if (spec_remark_4.length>0) { 
+         document.getElementById("spec_remark_4").innerHTML =spec_remark_4;
+      }
+      
+      var spec_remark_5 =getJSONvalue("spec_remark_5",0);
+      if (spec_remark_5.length>0) { 
+         document.getElementById("spec_remark_5").innerHTML =spec_remark_5;
+      }
+      
+      var pay_date=getJSONvalue("pay_date",0);
+      if (pay_date.length>0) {
+         document.getElementById("pay_date").innerHTML =top.formatDate(pay_date);
+      }
+      
+      var line_of_credit_amt=getJSONvalue("line_of_credit_amt",0);
+      if (line_of_credit_amt.length>0) {
+      	 $("#credit_limit").text(line_of_credit_amt);   
+      	 $("#credit_limit").val(line_of_credit_amt);         	      	 
+      }
+	}
+
+	if ( idCode === '1' )
+	{ return false; }
+ }   
+  
+  function setDate1() {
+  	document.forms["dataForm"]["trans_date"].value = document.forms["dataForm"]["sysdate"].value;
+  }
+  
+</script>

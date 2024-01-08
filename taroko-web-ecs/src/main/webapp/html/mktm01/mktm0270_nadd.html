@@ -1,0 +1,547 @@
+<html>
+<head>
+<title> 109/10/07 V1.00.42 Allen Ho Initial 紅利積點兌換贈品登錄檔維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8;">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>身分證號:&nbsp; 
+       <input type="text" class="col_any" name="redeem_id" value="${redeem_id}"
+              zEdit="any" maxlength="10" size="12"  onChange="columnItemChange('id')"/>
+     </td>
+     <td nowrap>卡　　號:&nbsp; 
+<!--        <input type="text" class="col_any" name="card_no" value="${card_no}" -->
+<!--               zEdit="any" maxlength="19" size="19"  onChange="columnItemChange('3')"/> -->
+       <select name="card_no" id = "option_card_no" class="col_ddlb" onChange="columnItemChange('3')" />
+       		<option value="">--</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="4">商品代碼:&nbsp;
+       <select name="gift_no" class="col_ddlb" onChange="columnItemChange('1')" />
+               ${dddw_gift_no}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="4" >交易序號: 
+       <input      size="10" class="dsp_text" type="text" name="tran_seqno" value="${tran_seqno}" readonly/>
+     </td>
+   </tr>
+   <tr>
+   </tr>
+ </table>
+ <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　　　卡友基本資料　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr>
+   <tr>
+     <td  nowrap  >帳戶類別: 
+       <input      size="2" class="dsp_text" type="text" name="acct_type" value="${acct_type}" readonly/>
+          
+       <input      size="10" zEdit="="any,canTW"" class="dsp_text" type="text" name="acct_type_name" value="${acct_type_name}" readonly/>
+         　身分證號: 
+       <input      zEdit="="any,canTW"" class="dsp_text" type="text" name="id_no" value="${id_no}" readonly/>
+         　VIP: 
+       <input      size="1" class="dsp_text" type="text" name="vip_code" value="${vip_code}" readonly/>
+     </td>
+   </tr>
+   <tr>
+   </tr>
+   <tr>
+   </tr>
+   <tr>
+     <td nowrap>收件人姓名:&nbsp; 
+       <input type="text" class="col_any" name="chi_name" value="${chi_name}"
+              zEdit="any,canTW" maxlength="50" size="50" />
+        <input type="Button" class="btOther" name="btnFunc_5"  value="上次兌換紀錄" ${buFunc5_disable}
+               onClick="return buttonAjaxFunc('5')" >
+        <input type="Button" class="btOther" name="btnFunc_7"  value="卡人主檔資料" ${buFunc7_disable}
+               onClick="return buttonAjaxFunc('7')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>手機號碼:&nbsp; 
+       <input type="text" class="col_any" name="cellar_phone" value="${cellar_phone}"
+              zEdit="any" maxlength="15" size="15" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>電話：(H)&nbsp; 
+       <input type="text" class="col_any" name="home_area_code1" value="${home_area_code1}"
+              zEdit="any,canTW" maxlength="4" size="4" />
+         - 
+       <input type="text" class="col_any" name="home_tel_no1" value="${home_tel_no1}"
+              zEdit="any,canTW" maxlength="10" size="10" />
+         - 
+       <input type="text" class="col_any" name="home_tel_ext1" value="${home_tel_ext1}"
+              zEdit="any,canTW" maxlength="6" size="6" />
+              (O)
+         - 
+       <input type="text" class="col_any" name="office_area_code1" value="${office_area_code1}"
+              zEdit="any,canTW" maxlength="4" size="4" />
+         - 
+       <input type="text" class="col_any" name="office_tel_no1" value="${office_tel_no1}"
+              zEdit="any,canTW" maxlength="10" size="10" />
+         - 
+       <input type="text" class="col_any" name="office_tel_ext1" value="${office_tel_ext1}"
+              zEdit="any,canTW" maxlength="6" size="6" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>收件人地址：&nbsp;
+       <select name="bill_sending_zip" class="col_ddlb" id="ajaxh_bill_sending_zip"  onChange="columnItemChange('2')" />
+               ${dddw_zipcode}
+       </select>
+          
+       <input type="text" class="col_any" name="bill_sending_addr1" value="${bill_sending_addr1}"
+              zEdit="any,canTW" maxlength="10" size="10" />
+              縣市
+          
+       <input type="text" class="col_any" name="bill_sending_addr2" value="${bill_sending_addr2}"
+              zEdit="any,canTW" maxlength="10" size="10" />
+              鄉鎮市區
+          
+       <input type="text" class="col_any" name="bill_sending_addr3" value="${bill_sending_addr3}"
+              zEdit="any,canTW" maxlength="12" size="12" />
+              村里
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　&nbsp; 
+       <input type="text" class="col_any" name="bill_sending_addr4" value="${bill_sending_addr4}"
+              zEdit="any,canTW" maxlength="12" size="12" />
+              鄰
+          
+       <input type="text" class="col_any" name="bill_sending_addr5" value="${bill_sending_addr5}"
+              zEdit="any,canTW" maxlength="56" size="56" />
+     </td>
+   </tr>
+   <tr>
+   </tr>
+ </table>
+ <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　　　　　兌換登錄處理　　　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr>
+   <tr>
+     <td  nowrap  >贈品類別: 
+       <input      size="1" class="dsp_text" type="text" name="gift_type" value="${gift_type}" readonly/>
+          
+       <input      size="10" zEdit="="any,canTW"" class="dsp_text" type="text" name="gift_type_name" value="${gift_type_name}" readonly/>
+         　基金代碼: 
+       <input      size="10" class="dsp_text" type="text" name="fund_code" value="${fund_code}" readonly/>
+          
+       <input      size="10" zEdit="="any,canTW"" class="dsp_text" type="text" name="fund_code_name" value="${fund_code_name}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>兌換數量:&nbsp; 
+       <input type="text" class="col_number" name="exchg_cnt" value="${exchg_cnt}"
+              zEdit="number" maxlength="5" size="5"  onChange="columnItemChange('6')"/>
+              單位
+         　贈品價格: 
+       <input      size="8" class="dsp_text" type="text" name="cash_value" value="${cash_value}" readonly/>
+              元
+         　　代碼： 
+       <input      size="4" class="dsp_text" type="text" name="bonus_type" value="${bonus_type}" readonly/>
+          
+       <input      zEdit="="any,canTW"" class="dsp_text" type="text" name="bonus_type_name" value="${bonus_type_name}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >每單位應扣點數: 
+       <input      size="8" class="dsp_text" type="text" name="exchg_pt" value="${exchg_pt.(999)}" readonly/>
+         自付金額: 
+       <input      size="12" class="dsp_text" type="text" name="exchg_amt" value="${exchg_amt.(999)}" readonly/>
+         累計應扣點數: 
+       <input      size="8" class="dsp_text" type="text" name="total_pt" value="${total_pt.(999)}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >兌換時點數餘額: 
+       <input      size="10" class="dsp_text" type="text" name="end_tran_bp" value="${end_tran_bp.(999)}" readonly/>
+       (<input      size="10" class="dsp_text" type="text" name="end_tran_bp01" value="${end_tran_bp01.(999)}" readonly/>
+       +<input      size="10" class="dsp_text" type="text" name="end_tran_bp90" value="${end_tran_bp90.(999)}" readonly/>
+       )<input type="Button" class="btOther" name="btnFunc_4"  value="紅利查詢" ${buFunc4_disable}
+               onClick="return buttonAjaxFunc('4')" >
+          
+       <input      size="40" zEdit="="any,canTW"" class="dsp_text" type="text" name="diff_pt_msg" value="${diff_pt_msg}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>兌換註記:&nbsp; 
+       <input type="text" class="col_any" name="exchg_mark" value="${exchg_mark}"
+              zEdit="any,canTW" maxlength="40" size="40" />
+     </td>
+   </tr>
+   <tr>
+   </tr>
+ </table>
+ <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　　　航空里程　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr>
+   <tr>
+     <td  nowrap  >航空公司: 
+       <input      size="2" class="dsp_text" type="text" name="air_type" value="${air_type}" readonly/>
+          
+       <input      zEdit="any,canTW" class="dsp_text" type="text" name="air_type_name" value="${air_type_name}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>航空會員編號:&nbsp; 
+       <input type="text" class="col_any" name="cal_dfpno" value="${cal_dfpno}"
+              zEdit="any" maxlength="10" size="10" />
+         身分證號: 
+       <input type="text" class="col_text" name="air_id_no" value="${air_id_no}"
+              zEdit="any,upper" maxlength="10" size="10" />
+         出生日期: 
+       <input type="text" class="col_any" name="air_birthday" value="${air_birthday}"
+              zEdit="any" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>護照名/姓名:&nbsp; 
+       <input type="text" class="col_any" name="passport_name" value="${passport_name}"
+              zEdit="any" maxlength="25" size="25" />
+         護照姓: 
+       <input type="text" class="col_any" name="passport_surname" value="${passport_surname}"
+              zEdit="any" maxlength="10" size="10" />
+              (國泰航空姓與名請分開輸入)
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+<input type="hidden" name="tran_time" value="${tran_time}">
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm0270">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="apr_flag" value="N">
+<input type="hidden" name="deduct_bp01"  value="${deduct_bp01}">
+<input type="hidden" name="deduct_bp90"  value="${deduct_bp90}">
+<input type="hidden" name="option_card_no"  value="${option_card_no}">
+<input type="hidden" name="card_no_val"  value="${card_no_val}">
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_card_no =document.forms["dataForm"]["card_no"].value;
+   var  win_gift_no =document.forms["dataForm"]["gift_no"].value;
+   var  win_exchg_cnt =document.forms["dataForm"]["exchg_cnt"].value;
+   var  win_bill_sending_zip =document.forms["dataForm"]["bill_sending_zip"].value;
+   var  win_tran_seqno =document.forms["dataForm"]["tran_seqno"].value;
+   var  win_redeem_id =document.forms["dataForm"]["redeem_id"].value;
+   idCode = ps1;
+   top.actionCode = "AJAX";
+   var cardNoVal = $("#option_card_no").find("option:selected").val();
+   $("input[name = card_no_val]").val(cardNoVal);
+   if ( idCode == '3' )
+      {
+       //top.methodName = "wf_ajax_func_3";
+       resetJSON();
+       addJSON("ajaxMethod","wfAjaxFunc3");
+       addJSON("ax_win_card_no",win_card_no);
+       addJSON("ax_win_gift_no",win_gift_no);
+       addJSON("ax_win_exchg_cnt",win_exchg_cnt);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+
+   if ( idCode == '1' )
+      {
+       //top.methodName = "wf_ajax_func_1";
+       resetJSON();
+       addJSON("ajaxMethod","wfAjaxFunc1");
+       addJSON("ax_win_gift_no",win_gift_no);
+       addJSON("ax_win_card_no",win_card_no);
+       addJSON("ax_win_exchg_cnt",win_exchg_cnt);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+
+   if ( idCode == '2' )
+      {
+       //top.methodName = "wf_ajax_func_2";
+       resetJSON();
+       addJSON("ajaxMethod","wfAjaxFunc2");
+       addJSON("ax_win_bill_sending_zip",win_bill_sending_zip);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+
+   if ( idCode == '6' )
+      {
+       //top.methodName = "wf_ajax_func_6";
+       resetJSON();
+       addJSON("ajaxMethod","wfAjaxFunc6");
+       addJSON("ax_win_exchg_cnt",win_exchg_cnt);
+       addJSON("ax_win_card_no",win_card_no);
+       addJSON("ax_win_gift_no",win_gift_no);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+   
+   if( idCode == 'id')
+   {
+	   resetJSON();
+	   addJSON("ajaxMethod","wfAjaxRedeemId");
+       addJSON("ax_win_redeem_id",win_redeem_id); 
+   }
+
+   processAJAX();
+ }
+
+
+ function buttonAjaxFunc(ps1)
+  {
+   var  win_card_no =document.forms["dataForm"]["card_no"].value;
+   var  win_gift_no =document.forms["dataForm"]["gift_no"].value;
+   var  win_exchg_cnt =document.forms["dataForm"]["exchg_cnt"].value;
+   var  win_exchg_pt =document.forms["dataForm"]["exchg_pt"].value;
+   var  win_tran_seqno =document.forms["dataForm"]["tran_seqno"].value;
+   var  win_redeem_id =document.forms["dataForm"]["redeem_id"].value;
+
+   idCode = ps1;
+   top.actionCode = "AJAX";
+   if ( idCode == '5' )
+      {
+       //top.methodName = "wf_button_func_5";
+
+       resetJSON();
+       addJSON("ajaxMethod","wfButtonFunc5");
+       addJSON("ax_win_card_no",win_card_no);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+   if ( idCode == '7' )
+      {
+       // top.methodName = "wf_button_func_7";
+
+       resetJSON();
+       addJSON("ajaxMethod","wfButtonFunc7");
+       addJSON("ax_win_card_no",win_card_no);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+   if ( idCode == '4' )
+      {
+       // top.methodName = "wf_button_func_4";
+
+       resetJSON();
+       addJSON("ajaxMethod","wfButtonFunc4");
+       addJSON("ax_win_gift_no",win_gift_no);
+       addJSON("ax_win_card_no",win_card_no);
+       addJSON("ax_win_exchg_cnt",win_exchg_cnt);
+       addJSON("ax_win_exchg_pt",win_exchg_pt);
+       addJSON("ax_win_tran_seqno",win_tran_seqno);
+       addJSON("ax_win_tran_seqno",win_tran_seqno);
+       addJSON("ax_win_redeem_id",win_redeem_id);
+      }
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktm0270_nadd";
+  var len = 0;
+  if (idCode == '3' )
+     {
+       document.dataForm.acct_type.value =getJSONvalue("acct_type",0);
+       document.dataForm.acct_type_name.value =getJSONvalue("acct_type_name",0);
+       document.dataForm.vip_code.value =getJSONvalue("vip_code",0);
+       document.dataForm.id_p_seqno.value =getJSONvalue("id_p_seqno",0);
+       document.dataForm.p_seqno.value =getJSONvalue("p_seqno",0);
+       document.dataForm.gift_type_name.value =getJSONvalue("gift_type_name",0);
+       document.dataForm.fund_code_name.value =getJSONvalue("fund_code_name",0);
+       document.dataForm.end_tran_bp.value =getJSONvalue("end_tran_bp",0);
+       document.dataForm.end_tran_bp01.value =getJSONvalue("end_tran_bp01",0);
+       document.dataForm.end_tran_bp90.value =getJSONvalue("end_tran_bp90",0);
+       document.dataForm.deduct_bp01.value =getJSONvalue("deduct_bp01",0);
+       document.dataForm.deduct_bp90.value =getJSONvalue("deduct_bp90",0);
+       document.dataForm.cash_value.value =getJSONvalue("cash_value",0);
+       document.dataForm.total_pt.value =getJSONvalue("total_pt",0);
+       document.dataForm.diff_pt_msg.value =getJSONvalue("diff_pt_msg",0);
+      document.dataForm.chi_name.value =getJSONvalue("chi_name",0);
+      document.dataForm.cellar_phone.value =getJSONvalue("cellar_phone",0);
+      document.dataForm.home_area_code1.value =getJSONvalue("home_area_code1",0);
+      document.dataForm.home_tel_no1.value =getJSONvalue("home_tel_no1",0);
+      document.dataForm.home_tel_ext1.value =getJSONvalue("home_tel_ext1",0);
+      document.dataForm.office_area_code1.value =getJSONvalue("office_area_code1",0);
+      document.dataForm.office_tel_no1.value =getJSONvalue("office_tel_no1",0);
+      document.dataForm.office_tel_ext1.value =getJSONvalue("office_tel_ext1",0);
+      document.dataForm.bill_sending_zip.value =getJSONvalue("bill_sending_zip",0);
+      document.dataForm.bill_sending_addr1.value =getJSONvalue("bill_sending_addr1",0);
+      document.dataForm.bill_sending_addr2.value =getJSONvalue("bill_sending_addr2",0);
+      document.dataForm.bill_sending_addr3.value =getJSONvalue("bill_sending_addr3",0);
+      document.dataForm.bill_sending_addr4.value =getJSONvalue("bill_sending_addr4",0);
+      document.dataForm.bill_sending_addr5.value =getJSONvalue("bill_sending_addr5",0);
+      document.dataForm.cal_dfpno.value =getJSONvalue("cal_dfpno",0);
+      document.dataForm.air_id_no.value =getJSONvalue("air_id_no",0);
+      document.dataForm.air_birthday.value =getJSONvalue("air_birthday",0);
+      document.dataForm.passport_name.value =getJSONvalue("passport_name",0);
+      document.dataForm.passport_surname.value =getJSONvalue("passport_surname",0);
+      return false;
+     }
+  if (idCode == '1' )
+     {
+       document.dataForm.id_no.value =getJSONvalue("id_no",0);
+       document.dataForm.gift_type.value =getJSONvalue("gift_type",0);
+       document.dataForm.fund_code.value =getJSONvalue("fund_code",0);
+       document.dataForm.cash_value.value =getJSONvalue("cash_value",0);
+       document.dataForm.bonus_type.value =getJSONvalue("bonus_type",0);
+       document.dataForm.bonus_type_name.value =getJSONvalue("bonus_type_name",0);
+       document.dataForm.air_type.value =getJSONvalue("air_type",0);
+       document.dataForm.air_type_name.value =getJSONvalue("air_type_name",0);
+       document.dataForm.gift_type_name.value =getJSONvalue("gift_type_name",0);
+       document.dataForm.fund_code_name.value =getJSONvalue("fund_code_name",0);
+       document.dataForm.exchg_pt.value =getJSONvalue("exchg_pt",0);
+       document.dataForm.exchg_amt.value =getJSONvalue("exchg_amt",0);
+       document.dataForm.total_pt.value =getJSONvalue("total_pt",0);
+       document.dataForm.diff_pt_msg.value =getJSONvalue("diff_pt_msg",0);
+       document.dataForm.end_tran_bp.value =getJSONvalue("end_tran_bp",0);
+       document.dataForm.end_tran_bp01.value =getJSONvalue("end_tran_bp01",0);
+       document.dataForm.end_tran_bp90.value =getJSONvalue("end_tran_bp90",0);
+       document.dataForm.deduct_bp01.value =getJSONvalue("deduct_bp01",0);
+       document.dataForm.deduct_bp90.value =getJSONvalue("deduct_bp90",0);
+      document.dataForm.cal_dfpno.value =getJSONvalue("cal_dfpno",0);
+      document.dataForm.air_id_no.value =getJSONvalue("air_id_no",0);
+      document.dataForm.air_birthday.value =getJSONvalue("air_birthday",0);
+      document.dataForm.passport_name.value =getJSONvalue("passport_name",0);
+      document.dataForm.passport_surname.value =getJSONvalue("passport_surname",0);
+      return false;
+     }
+  if (idCode == '2' )
+     {
+      document.dataForm.bill_sending_addr1.value =getJSONvalue("bill_sending_addr1",0);
+      document.dataForm.bill_sending_addr2.value =getJSONvalue("bill_sending_addr2",0);
+      return false;
+     }
+  if (idCode == '6' )
+     {
+       document.dataForm.exchg_pt.value =getJSONvalue("exchg_pt",0);
+       document.dataForm.exchg_amt.value =getJSONvalue("exchg_amt",0);
+       document.dataForm.total_pt.value =getJSONvalue("total_pt",0);
+       document.dataForm.diff_pt_msg.value =getJSONvalue("diff_pt_msg",0);
+      return false;
+     }
+  if (idCode == '5' )
+     {
+      document.dataForm.chi_name.value =getJSONvalue("chi_name",0);
+      document.dataForm.cellar_phone.value =getJSONvalue("cellar_phone",0);
+      document.dataForm.home_area_code1.value =getJSONvalue("home_area_code1",0);
+      document.dataForm.home_tel_no1.value =getJSONvalue("home_tel_no1",0);
+      document.dataForm.home_tel_ext1.value =getJSONvalue("home_tel_ext1",0);
+      document.dataForm.office_area_code1.value =getJSONvalue("office_area_code1",0);
+      document.dataForm.office_tel_no1.value =getJSONvalue("office_tel_no1",0);
+      document.dataForm.office_tel_ext1.value =getJSONvalue("office_tel_ext1",0);
+      document.dataForm.bill_sending_zip.value =getJSONvalue("bill_sending_zip",0);
+      document.dataForm.bill_sending_addr1.value =getJSONvalue("bill_sending_addr1",0);
+      document.dataForm.bill_sending_addr2.value =getJSONvalue("bill_sending_addr2",0);
+      document.dataForm.bill_sending_addr3.value =getJSONvalue("bill_sending_addr3",0);
+      document.dataForm.bill_sending_addr4.value =getJSONvalue("bill_sending_addr4",0);
+      document.dataForm.bill_sending_addr5.value =getJSONvalue("bill_sending_addr5",0);
+      return false;
+     }
+  if (idCode == '7' )
+     {
+      document.dataForm.chi_name.value =getJSONvalue("chi_name",0);
+      document.dataForm.cellar_phone.value =getJSONvalue("cellar_phone",0);
+      document.dataForm.home_area_code1.value =getJSONvalue("home_area_code1",0);
+      document.dataForm.home_tel_no1.value =getJSONvalue("home_tel_no1",0);
+      document.dataForm.home_tel_ext1.value =getJSONvalue("home_tel_ext1",0);
+      document.dataForm.office_area_code1.value =getJSONvalue("office_area_code1",0);
+      document.dataForm.office_tel_no1.value =getJSONvalue("office_tel_no1",0);
+      document.dataForm.office_tel_ext1.value =getJSONvalue("office_tel_ext1",0);
+      document.dataForm.bill_sending_zip.value =getJSONvalue("bill_sending_zip",0);
+      document.dataForm.bill_sending_addr1.value =getJSONvalue("bill_sending_addr1",0);
+      document.dataForm.bill_sending_addr2.value =getJSONvalue("bill_sending_addr2",0);
+      document.dataForm.bill_sending_addr3.value =getJSONvalue("bill_sending_addr3",0);
+      document.dataForm.bill_sending_addr4.value =getJSONvalue("bill_sending_addr4",0);
+      document.dataForm.bill_sending_addr5.value =getJSONvalue("bill_sending_addr5",0);
+      return false;
+     }
+  if (idCode == '4' )
+     {
+      document.dataForm.end_tran_bp.value =getJSONvalue("end_tran_bp",0);
+      document.dataForm.end_tran_bp01.value =getJSONvalue("end_tran_bp01",0);
+      document.dataForm.end_tran_bp90.value =getJSONvalue("end_tran_bp90",0);
+      document.dataForm.deduct_bp01.value =getJSONvalue("deduct_bp01",0);
+      document.dataForm.deduct_bp90.value =getJSONvalue("deduct_bp90",0);
+      document.dataForm.diff_pt_msg.value =getJSONvalue("diff_pt_msg",0);
+      return false;
+     }
+  if(idCode == 'id')
+	  {
+		$("#option_card_no option").not("option:first").remove();
+	  	if(getJSONvalue("option_card_no",0).length != '' || getJSONvalue("option_card_no",0) == null)
+	  		$("#option_card_no").append(getJSONvalue("option_card_no",0));
+	  }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+ 
+
+ $(document).ready(function(){ 
+	var card_no_val =  $("input[name = card_no_val]").val();
+	$("#option_card_no").append($("input[name = option_card_no]").val());
+	$("#option_card_no [value='" + card_no_val + "']").prop("selected",true);
+	
+ })
+
+ 
+</script>
+<!-- ******************************************************************** -->

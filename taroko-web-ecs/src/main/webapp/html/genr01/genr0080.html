@@ -1,0 +1,104 @@
+<html>
+
+<head>
+    <title>主檔餘額統計表-109-11-18-V1.00.03-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">                
+                <tr>
+                    <td nowrap colspan=6>&nbsp;日期：
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date2'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap>&nbsp;幣別:
+                        <select name="ex_curr" class="col_ddlb">
+                            ${dddw_curr}
+                        </select>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;                        
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>                                          
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table width="20%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="2">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">核帳日期</th>
+                <th nowrap class="list_th">幣別</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${check_date}','${curr_code}','')" style="cursor:hand">
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${check_date}</td>
+                <td nowrap class="list_cc"> ${curr_code}</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="user_id" value="${user_id}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "genr0080_detl";
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "genr0080_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

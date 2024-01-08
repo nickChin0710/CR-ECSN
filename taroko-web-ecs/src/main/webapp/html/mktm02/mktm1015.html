@@ -1,0 +1,109 @@
+<html>
+<head>
+<title> 108/06/25 V1.00.01 RAY Ho Initial 市區停車廠商參數檔</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="2">
+   <tr>
+   <td nowrap>&nbsp;廠商代碼:
+      <input type="text" class="col_any" name="ex_park_vendor" value="${ex_park_vendor}"
+         zeditType="any"  maxlength=10 size=10 />
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">廠商代碼</th>
+    <th nowrap class="list_th">廠商名稱</th>
+    <th nowrap class="list_th">參考IP代碼</th>
+    <th nowrap class="list_th">停車費用<br>生效起日</th>
+    <th nowrap class="list_th">每小時<br>停車費用</th>
+    <th nowrap class="list_th">覆核日期</th>
+    <th nowrap class="list_th">覆核人員</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${park_vendor}</td>
+    <td nowrap class="list_ll"> ${vendor_name}</td>
+    <td nowrap class="list_ll"> ${ref_ip_code}</td>
+    <td nowrap class="list_cc"> ${charge_hr_date.YMD}</td>
+    <td nowrap class="list_rr"> ${charge_hr_amt.(999.00)}</td>
+    <td nowrap class="list_cc"> ${apr_date.YMD}</td>
+    <td nowrap class="list_cc"> ${apr_user}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm1015_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm1015_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

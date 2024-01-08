@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>風險別消費參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+	<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />
+   <input type="Button" class="btQuery"     value="讀取" onClick="return top.submitControl('R')" />&nbsp;&nbsp;
+	<input type="Button" class="btUpdate"   value="存檔" onClick="return top.submitControl('U')" ${btnUpdate_disable} />&nbsp;&nbsp;
+	<input type="Button" class="btProcess"   value="覆核" onClick="return top.submitControl('C')" ${btnApprove_disable} />&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+ 
+ <div id="dataBlock">
+ 	<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+ 		<tr>
+ 			<td nowrap >&nbsp;卡片等級:
+ 				<span class="dsp_text">${kk_card_note}.${#java:ecsfunc.DeCodeCrd.cardNote2(kk_card_note)}</span>
+ 				<input type="hidden" name="kk_card_note" value="${kk_card_note}">
+ 			</td>
+ 			<td nowrap >&nbsp;卡人等級:
+ 				<span class="dsp_text">${kk_risk_level}&nbsp;</span>
+ 				<input type="hidden" name="kk_risk_level" value="${kk_risk_level}">
+ 			</td>
+ 		</tr> 		
+ 	</table>
+ </div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>  	
+    <th > 
+	  <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	刪除
+	  </th>
+	  <th >風險類別&nbsp;</th>
+	  <th >月限額百分比&nbsp;</th>
+	  <th >超額絶對金額&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >月限次&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >次限額百分比&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >日限次&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>	  
+	  <th >異動經辦&nbsp;</th>	  
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" />
+		 	 ${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}" />		
+			<input type="hidden" name="rowid" value="${rowid}" />			
+		</td>
+		<td nowrap class="list_cc">${risk_type}&nbsp;
+			<input type="hidden" name="risk_type" value="${risk_type}">
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_number" name="lmt_amt_month_pct" value="${lmt_amt_month_pct}" maxlength="3" size="5" zEdit="number" >
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_number" name="add_tot_amt" value="${add_tot_amt}" maxlength="9" size="11" zEdit="number" >
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_text" name="rsp_code_1" value="${rsp_code_1}" maxlength="2" size="5" />
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_number" name="lmt_cnt_month" value="${lmt_cnt_month}" maxlength="3" size="5" zEdit="number" >
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_text" name="rsp_code_2" value="${rsp_code_2}" maxlength="2" size="5" />
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_number" name="lmt_amt_time_pct" value="${lmt_amt_time_pct}" maxlength="3" size="5" zEdit="number" >
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_text" name="rsp_code_3" value="${rsp_code_3}" maxlength="2" size="5" />
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_text" name="lmt_cnt_day" value="${lmt_cnt_day}" maxlength="3" size="5" zEdit="number" >
+		</td>
+		<td nowrap class="list_cc">
+			<input type="text" class="col_text" name="rsp_code_4" value="${rsp_code_4}" maxlength="2" size="5" />
+		</td>
+		<td nowrap class="list_cc">${mod_user}
+			<input type="hidden" name="mod_user" value="${mod_user}" />
+		</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+           
+    return true;
+  }
+  
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+   
+</script>

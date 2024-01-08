@@ -1,0 +1,595 @@
+<html>
+<head>
+<title>rskm1012 期中覆審-查詢名單樣板參數維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<div id="dataBlock">
+   ${#PLUGIN:htmcomm_plugin.del_apr_user} 
+</div>
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td class="data_td" nowrap width="40%">&nbsp;查詢批號：
+      <input type="text" class="col_text" name="kk_batch_no" value="${kk_batch_no}"
+			maxlength=10 size=12 />
+   </td>
+   <td class="data_td" nowrap>&nbsp;指定樣板批號：
+     <select size=1 name="db_copy_no" class="col_ddlb">
+       ${dddw_copy_no}
+     </select>
+	  &nbsp;
+		<input type="Button" value=" 樣板複製處理 " ${btnAdd_disable}
+             onclick="return top.submitControl('R1')" class="btAdd_detl" />
+   </td>
+  </tr>
+</table>
+<hr>
+
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey" width="50%" >&nbsp;查詢批號：
+		<span class="dsp_test"> ${batch_no} </span>
+      <input type=hidden name="batch_no" value="${batch_no}" />
+      <input type=hidden name="sample_flag" value="${sample_flag}">
+      &nbsp;
+      <input type="Button" class="btOther" value="參數明細維護" onClick="return detailScreen('01')" />
+      &nbsp;
+   </td>
+   <td nowrap width="50%" >&nbsp;樣板批號：
+      <span class="dsp_text"> ${copy_batch_no} </span>
+      <input type=hidden name="copy_batch_no" value="${copy_batch_no}" />
+      &nbsp;　　　
+      <span class="col_key">主管覆核:&nbsp;${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">     
+      <input type="Button" value="異動處理" ${btnCopy_disable} onClick="return top.submitControl('C6')" class="btUpdate" />&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan=2 >&nbsp;查詢原因：
+      <input type="text" class="col_any" name="trial_reason" value="${trial_reason}"
+       zRequire="Y" zEdit="any,canTW" maxlength=100 size=102 />
+   </td>
+  </tr>
+</table>
+<table  width="90%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;JCIC合約代號：
+     <select size=1 name="jcic_no" class="col_ddlb" zRequire="Y">
+       ${dddw_jcic_no}
+     </select>
+     &nbsp;查詢日期：<span class="dsp_text">${query_date.YMD}</span>
+   		<input type="hidden" name="query_date" value="${query_date}" />
+     &nbsp;批號產生方式:<span class="dsp_text">${tt_regist_type}</span>    
+   		<input type="hidden" name="tt_regist_type" value="${tt_regist_type}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan=2>&nbsp;評分類別：
+     <select size=1 name="score_type" class="col_ddlb">
+       ${dddw_score_type}
+     </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan=2>&nbsp;ACTION 版本號碼：
+     <select size=1 name="action_batch_no" class="col_ddlb" zRequire="Y">
+       ${dddw_trial_action_no}
+     </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan=2>&nbsp;卡片之最早發卡日：
+      <input type="text" class="col_date" name="card_since_s_date" value="${card_since_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'card_since_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="card_since_e_date" value="${card_since_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'card_since_e_date'});
+	      </script>
+	(須配合帳戶類別 或 團代)		
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan=2>
+      <span class="col_radio">
+   <input type="radio" value="N" name="group_code_cond" ${group_code_cond-N} />帳戶類別
+   <input type="radio" value="Y" name="group_code_cond" ${group_code_cond-Y} />團體代號
+      </span>
+      <span style="color: white; background-color: green;">　01.帳戶類別　</span>
+      &nbsp;<span style="color: white; background-color: green;">　02.團體代號　</span>
+		&nbsp;<span class="dsp_text">${wk_01_detl}</span>
+			<input type="hidden" name="wk_01_detl" value="${wk_01_detl}">
+   </td>
+  </tr><tr>
+	<td nowrap width="5%">
+		<input type="checkbox" class="col_ckbox" value="Y" name="payment_rate1_cond" ${payment_rate1_cond-Y} />
+   </td>
+   <td nowrap>
+   	最近一期繳款評等:
+   	<br>
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate01" ${db_payrate01-Y} />=0A &nbsp;
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate02" ${db_payrate02-Y} />=0B &nbsp;
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate03" ${db_payrate03-Y} />=0C &nbsp;
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate04" ${db_payrate04-Y} />=0D &nbsp;
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate05" ${db_payrate05-Y} />=0E &nbsp;
+		<br>
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate06" ${db_payrate06-Y} />=01 &nbsp;
+		<input type="checkbox" class="col_ckbox" value="Y" name="db_payrate07" ${db_payrate07-Y} />>=02 &nbsp;      
+    <input type=hidden name="payment_rate1" value="${payment_rate1}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap width="5%">
+		<input type="checkbox" class="col_ckbox" value="Y" name="all_credit_limit_cond" ${all_credit_limit_cond-Y} />
+   </td>
+   <td nowrap>總歸戶額度：
+      <input type="text" class="col_number" name="all_credit_limit_s" value="${all_credit_limit_s}"
+         zEdit="number" MaxLength=9 size=12 />
+		&nbsp;－&nbsp;
+      <input type="text" class="col_number" name="all_credit_limit_e" value="${all_credit_limit_e}"
+         zEdit="number" MaxLength=9 size=12 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap width="5%">
+		<input type="checkbox" class="col_ckbox" value="Y" name="credit_limit_cond" ${credit_limit_cond-Y} />
+   </td>
+   <td nowrap>帳戶額度：
+      <input type="text" class="col_number" name="credit_limit_s" value="${credit_limit_s}"
+         zEdit="number" MaxLength=9 size=12 />
+		&nbsp;－&nbsp;
+      <input type="text" class="col_number" name="credit_limit_e" value="${credit_limit_e}"
+         zEdit="number" MaxLength=9 size=12 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap width="5%">
+		<input type="checkbox" class="col_ckbox" value="Y" name="class_code_cond" ${class_code_cond-Y} />
+   </td><td nowrap>
+      <span style="color: white; background-color: green;">　03.卡人等級　</span>
+			&nbsp;<span class="dsp_text">${wk_03_detl}&nbsp;</span>
+      <input type="hidden" name="wk_03_detl" value="${wk_03_detl}">
+   </td>
+  </tr>
+  <tr>
+	<td nowrap width="5%">
+		<input type="checkbox" class="col_ckbox" value="Y" name="pd_rating_cond" ${pd_rating_cond-Y} />
+   </td>
+	<td nowrap>
+      <span style="color: white; background-color: green;">　04.PD Rating違約預測評等　</span>      
+      &nbsp;
+      <span class="dsp_text">${wk_04_detl}&nbsp;</span>
+      <input type="hidden" name="wk_04_detl" value="${wk_04_detl}" />
+   </td>
+  </tr>
+  <tr>
+	<td nowrap width="5%">
+    <input type="checkbox" class="col_ckbox" value="Y" name="reg_bank_no_cond" ${reg_bank_no_cond-Y} />
+   </td>
+	<td nowrap>
+		<span style="color: white; background-color: green;">　05.商務卡受理行　</span>&nbsp;&nbsp;
+		&nbsp;
+    <span class="dsp_text">${wk_05_detl}&nbsp;</span>
+    <input type="hidden" name="wk_05_detl" value="${wk_05_detl}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap width="5%">
+   <input type="checkbox" class="col_ckbox" value="Y" name="adj_limit_cond" ${adj_limit_cond-Y} />
+   </td>
+   <td nowrap>調額日期：
+      <input type="text" class="col_date" name="adj_limit_s_date" value="${adj_limit_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_limit_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="adj_limit_e_date" value="${adj_limit_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_limit_e_date'});
+	      </script>
+   &nbsp;有調額代碼：
+		<span style="color: white; background-color: green;">　06.調額代碼　</span>&nbsp;&nbsp;
+		<span class="dsp_text">${wk_06_detl}&nbsp;</span>
+    <input type="hidden" name="wk_06_detl" value="${wk_06_detl}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap width="5%">
+   <input type="checkbox" class="col_ckbox" value="Y" name="risk_group_cond" ${risk_group_cond-Y} />
+   </td>
+   <td nowrap>最近一期之風險族群
+		<span style="color: white; background-color: green;">　07.風險族群　</span>&nbsp;&nbsp;
+		&nbsp;
+    <span class="dsp_text">${wk_07_detl}&nbsp;</span>
+    <input type="hidden" name="wk_07_detl" value="${wk_07_detl}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="rc_avg_rate_cond" ${rc_avg_rate_cond-Y} />
+   </td>
+   <td nowrap>帳戶近
+      <input type="text" class="col_number" name="rc_avg_rate_mm" value="${rc_avg_rate_mm}"
+         zEdit="number" MaxLength=3 size=5 />
+   &nbsp;個月之RC平均使用率 >= 
+      <input type="text" class="col_number" name="rc_avg_rate1" value="${rc_avg_rate1}"
+         zEdit="dignumber" MaxLength=6 size=8 />
+		％&nbsp;
+		或最近一期RC平均使用率>=
+      <input type="text" class="col_number" name="rc_avg_rate2" value="${rc_avg_rate2}"
+         zEdit="number" MaxLength=6 size=8 />
+		％	
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="prepay_cash_cond" ${prepay_cash_cond-Y} />
+   </td>
+   <td nowrap>帳戶近
+      <input type="text" class="col_number" name="prepay_cash_mm" value="${prepay_cash_mm}"
+         zEdit="number" MaxLength=3 size=5 />
+   &nbsp;個月預借現金使用 >=
+      <input type="text" class="col_number" name="prepay_cash_num" value="${prepay_cash_num}"
+         zEdit="number" MaxLength=3 size=5 />
+		次
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="limit_avguse_rate_cond" ${limit_avguse_rate_cond-Y} />
+   </td>
+   <td nowrap>帳戶近
+      <input type="text" class="col_number" name="limit_avguse_rate_mm" value="${limit_avguse_rate_mm}"
+         zEdit="number" MaxLength=3 size=5 />
+   &nbsp;個月之額度平均動用率 >=
+      <input type="text" class="col_number" name="limit_avguse_rate" value="${limit_avguse_rate}"
+         zEdit="number" MaxLength=6 size=10 />
+   ％
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="payment_rate_cond" ${payment_rate_cond-Y} />
+   </td>
+   <td nowrap>帳戶近
+      <input type="text" class="col_number" name="payment_rate_mm" value="${payment_rate_mm}"
+         zEdit="number" MaxLength=3 size=5 />
+   &nbsp;個月有逾期記錄 (M1含以上) >=
+      <input type="text" class="col_number" name="payment_rate_num" value="${payment_rate_num}"
+         zEdit="number" MaxLength=3 size=5 />
+   次
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="no_debt_cond" ${no_debt_cond-Y} />
+   </td>
+   <td nowrap>帳戶近
+      <input type="text" class="col_number" name="no_debt_mm" value="${no_debt_mm}"
+         zEdit="number" MaxLength=3 size=5 />
+   &nbsp;個月無消費且無欠款
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="payment_integ_cond" ${payment_integ_cond-Y} />
+   </td>
+   
+   <td nowrap> 近 1~3 個月繳款評等積分／後 4~6 個月繳款評等積分 < 1 
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="acct_jrnl_bal_cond" ${acct_jrnl_bal_cond-Y} />
+   </td>
+   <td nowrap>
+      <input type="text" class="col_number" name="acct_jrnl_bal_s" value="${acct_jrnl_bal_s}"
+         zEdit="number" MaxLength=9 size=12 />
+   <= 欠款金額=<
+      <input type="text" class="col_number" name="acct_jrnl_bal_e" value="${acct_jrnl_bal_e}"
+         zEdit="number" MaxLength=9 size=12 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="assign_list_cond" ${assign_list_cond-Y} />
+   </td>
+   <td nowrap>指定覆審名單中, 下次名單產生年月 <= 系統年月
+	</td>	
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;</td>
+   <td nowrap class="td_remark"><b>**(任一ID符合條件，則名單中相同原因碼者均須產出)</td></td>	
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="asset_cond" ${asset_cond-Y} />
+   </td>
+   <td nowrap>有無擔保：
+      <span class="col_radio">
+   <input type="radio" value="0" name="asset_ch_flag" ${asset_ch_flag-0} />全體卡戶
+   <input type="radio" value="1" name="asset_ch_flag" ${asset_ch_flag-1} />本國籍卡戶
+   <input type="radio" value="2" name="asset_ch_flag" ${asset_ch_flag-2} />外國籍卡戶
+      </span>
+	&nbsp;
+      <span class="col_radio">
+   <input type="radio" value="0" name="asset_value_flag" ${asset_value_flag-0} />0.全部
+   <input type="radio" value="1" name="asset_value_flag" ${asset_value_flag-1} />1.有擔保
+   <input type="radio" value="2" name="asset_value_flag" ${asset_value_flag-2} />2.無擔保
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="block_reason_cond" ${block_reason_cond-Y} />
+   </td>
+   <td nowrap>
+		<span style="color: white; background-color: green;">　09.指定凍結碼　</span>&nbsp;&nbsp;
+		&nbsp;
+    <span class="dsp_text">${wk_09_detl}&nbsp;</span>
+    <input type="hidden" name="wk_09_detl" value="${wk_09_detl}" />
+   </td>
+  </tr>  
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="has_card_cond" ${has_card_cond-Y} />
+   </td>
+   <td nowrap>是否 持有本行一般流通信用卡：
+      <span class="col_radio">
+   <input type="radio" value="Y" name="has_card_value" ${has_card_value-Y} />有
+   <input type="radio" value="N" name="has_card_value" ${has_card_value-N} />無
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="card_issue_cond" ${card_issue_cond-Y} />
+   </td>
+   <td nowrap>近 <input type="text" class="col_number" name="card_issue_mm" value="${card_issue_mm}"
+         zeditType="number" MaxLength=3 size=5 />
+   &nbsp;個月內有新核發個人卡(非掛失重製、偽卡重製、毀損重製)
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan=2 class="td_remark">
+		註: (上述條件, 至多可填24個月, 且所選帳戶中, 任一帳戶符合即落入篩選名單) 
+	</td>	
+  </tr>
+  <tr>
+   <td nowrap colspan=2 class="td_remark">
+		註: 以上條件為 and 關係 
+	</td>	
+  </tr> 
+</table>
+<hr>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan=2 class="td_title">
+		排除條件：(符合下列任一勾選條件即排除)
+	</td>	
+  </tr>
+  <tr>
+	<td nowrap >
+   <input type="checkbox" class="col_ckbox" value="Y" name="excl_retrial_cond" ${excl_retrial_cond-Y} />
+   </td>
+	<td nowrap>
+      <input type="text" class="col_number" name="excl_retrial_mm" value="${excl_retrial_mm}"
+         zEdit="number" MaxLength=3 size=5 />
+		個月內曾進行覆審作業
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="excl_block_cond" ${excl_block_cond-Y} />
+   </td>
+	<td nowrap>
+		<span style="color: white; background-color: green;">　08.凍結碼　<span>&nbsp;&nbsp;
+    <span class="dsp_text">${wk_08_detl}&nbsp;</span>
+    <input type="hidden" name="wk_08_detl" value="${wk_08_detl}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="excl_asset_cond" ${excl_asset_cond-Y} />
+   </td>
+   <td nowrap>擔保品放款值</td>
+  </tr>
+  <tr>
+   <td nowrap>
+  <input type="checkbox" class="col_ckbox" value="Y" name="excl_m1_cond" ${excl_m1_cond-Y} />
+   </td>
+   <td nowrap>近 
+      <input type="text" class="col_number" name="excl_m1_mm" value="${excl_m1_mm}"
+         zEdit="number" MaxLength=2 size=5 />
+    個月內 M1(含)以上 >= 
+      <input type="text" class="col_number" name="excl_m1_cnt" value="${excl_m1_cnt}"
+         zEdit="number" MaxLength=2 size=5 />
+   次
+	</td>
+  </tr>  
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="excl_0d_cond" ${excl_0d_cond-Y} />
+   </td>
+   <td nowrap>近 
+      <input type="text" class="col_number" name="excl_0d_mm" value="${excl_0d_mm}"
+         zEdit="number" MaxLength=2 size=5 />
+   個月內 0D(含)以上 >= 
+      <input type="text" class="col_number" name="excl_0d_cnt" value="${excl_0d_cnt}"
+         zEdit="number" MaxLength=2 size=5 />
+   次
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="excl_m2_cond" ${excl_m2_cond-Y} />
+   </td>
+   <td nowrap>近 
+      <input type="text" class="col_number" name="excl_m2_mm" value="${excl_m2_mm}"
+         zEdit="number" MaxLength=2 size=5 />
+   個月內 M2(含)以上 >= 
+      <input type="text" class="col_number" name="excl_m2_cnt" value="${excl_m2_cnt}"
+         zEdit="number" MaxLength=2 size=5 />
+	次
+	</td>
+  </tr>  
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="excl_group_code_cond" ${excl_group_code_cond-Y} />
+   </td>
+	<td nowrap>
+	  <span style="color: white; background-color: green;">　10.排除 團體代號　<span>&nbsp;&nbsp;
+    <span class="dsp_text">${wk_10_detl}&nbsp;</span>
+    <input type="hidden" name="wk_10_detl" value="${wk_10_detl}" />
+   </td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="80%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+	<tr>
+   <td nowrap class="td_text" width="20%">產生名單日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${list_crt_date.YMD}</span>
+      <input type="hidden" name="list_crt_date" value="${list_crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生名單筆數：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${list_crt_rows.(999)} </span>
+      <input type="hidden" name="list_crt_rows" value="${list_crt_rows}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">轉入JCIC查詢日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${imp_jcic_date.YMD}</span>
+      <input type="hidden" name="imp_jcic_date" value="${imp_jcic_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">轉入JCIC查詢筆數：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${imp_jcic_rows.(999)} </span>
+      <input type="hidden" name="imp_jcic_rows" value="${imp_jcic_rows}">   
+   </td>
+  </tr>
+   <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">覆核日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${apr_date.YMD}</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">覆核人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${apr_user} </span>
+      <input type="hidden" name="apr_user" value="${apr_user}">   
+   </td>
+  </tr>
+</table>
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${batch_no}" />
+<input type=hidden name="data_k2" value="" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="regist_type" value="${regist_type}">
+<input type="hidden" name="imp_jcic_date" value="${imp_jcic_date}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+// if (1==2 ${to_page_3}) {
+//   detailScreen('01');
+// } 
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+ }
+
+ function detailScreen(parm) { 
+    //top.currRows  = serNum;
+	 if (parm==="01") {
+		top.respHtml  = "rskm1010_01_accttype";
+	 }
+	 else if (parm=="02") {
+		top.respHtml  = "rskm1010_02_groupcode";
+	 }
+	 else if (parm=="03") {
+		top.respHtml  = "rskm1010_03_classcode";
+	 }
+	 else if (parm=="04") {
+		top.respHtml  = "rskm1010_04_pdrate";
+	 }
+	 else if (parm=="05") {
+		top.respHtml  = "rskm1010_05_compbank";
+	 }
+	 else if (parm=="06") {
+		top.respHtml  = "rskm1010_06_adjlmt";
+	 }
+	 else if (parm=="07") {
+		top.respHtml  = "rskm1010_07_risk";
+	 }
+	 else if (parm=="08") {
+		top.respHtml  = "rskm1010_08_block";
+	 }
+	 else if (parm=="09") {
+		top.respHtml  = "rskm1010_09_inblock";
+	 }
+	 else if (parm=="10") {
+		top.respHtml  = "rskm1010_10_exgroup";
+	 }
+
+    top.respLevel = 2;
+	 document.dataForm.data_k2.value = parm;
+    top.submitControl("S2");
+    return true;
+  }  
+
+</script>

@@ -1,0 +1,909 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-01-09  V1.00.01  ryan          Initial                               -->
+<!-- 109-01-06  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>貢獻度成本參數二</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+function wf_addnewrow1(text_data1,text_data2,text_data3){
+	$("#buf").val("0");
+	text_data1 = "";
+	text_data2 = "";
+	text_data3 = "";
+	wf_addnewrow(text_data1,text_data2,text_data3);
+}
+
+function wf_addnewrow(text_data1,text_data2,text_data3){
+	var buf = $("#buf").val();
+	var ex_cost_amt = $("#ex_cost_amt").val();
+	var ex_group_code = $("#ex_group_code").val();
+	var ex_mcht_no = $("#ex_mcht_no").val();
+	var ex_prod_no = $("#ex_prod_no").val();
+	var ex_item_no = $("#ex_item_no").val();
+	var ex_yymm1 = $("#ex_yymm1").val();
+	var ex_yymm2 = $("#ex_yymm2").val();
+	var ls_key_type="";
+	var ls_data1="";
+	var ls_data2="";
+	if(Number(buf)==0){
+	if(ex_item_no.trim()==""){
+		alert("成本項目 不可空白");
+		return;
+	}
+	if(ex_yymm1.trim()==""||ex_yymm2.trim()==""){
+		alert("成本期間 不可空白");
+		return;
+	}
+	if(Number(ex_yymm1.trim())>Number(ex_yymm2.trim())){
+		alert("成本期間 輸入錯誤~");
+		return;
+	}
+	if(Number(ex_cost_amt.trim())<0){
+		alert("成本金額 不可 < 0");
+		return;
+	}
+	}
+	if(ex_item_no=="06"){
+		if(Number(buf)>0){
+			ex_group_code=text_data1;
+		}else{
+				if(ex_group_code.trim()==""){
+				alert("團體代號 不可空白");
+				return;
+				}
+			}	
+		ls_key_type="1";
+		ls_data1 = ex_group_code;
+	}
+	if(ex_item_no=="07"){
+		ls_key_type="0";
+	}
+	if(ex_item_no=="08"){
+		if(Number(buf)>0){
+			ex_mcht_no=text_data1;
+			ex_prod_no=text_data2;
+		}else{
+			if(ex_mcht_no.trim()==""||ex_prod_no.trim()==""){
+				alert("特店代號, 商品~代號 不可空白");
+				return;
+		}
+	}
+	ls_key_type ='4';
+	ls_data1 = ex_mcht_no.trim();
+	ls_data2 = ex_prod_no.trim();
+	}
+	
+	if(ex_item_no=="09"||ex_item_no=="10"||ex_item_no=="11"||ex_item_no=="12"||ex_item_no=="13"){
+		if(Number(buf)>0){
+			ex_mcht_no=text_data1;
+		}else{
+			if(ex_mcht_no.trim()==""){
+				alert("特店代號 不可空白");
+				return;
+			}
+		}
+	ls_key_type ='3';
+	ls_data1 = ex_mcht_no.trim();
+	}
+
+	document.dataForm.data_k1.value = ls_key_type;
+	document.dataForm.data_k2.value = ls_data1;
+	document.dataForm.data_k3.value = ls_data2;
+	document.dataForm.ex_group_code_kk.value = ex_group_code;
+	document.dataForm.ex_item_no_kk.value = ex_item_no;
+	document.dataForm.ex_mcht_no_kk.value = ex_mcht_no;
+	document.dataForm.ex_prod_no_kk.value = ex_prod_no;
+	document.dataForm.ex_yymm1_kk.value = ex_prod_no;
+	document.dataForm.ex_yymm2_kk.value = ex_prod_no;
+	$("#text_data1").val($.trim(text_data1));
+	$("#text_data2").val($.trim(text_data2));
+	$("#text_data3").val($.trim(text_data3));
+	functionCheck();
+}
+
+function wf_addnewrow2(text_data1,text_data2,text_data3){
+	var buf = $("#buf").val();
+	var ex_cost_amt = $("#ex_cost_amt").val();
+	var ex_group_code = $("#ex_group_code").val();
+	var ex_mcht_no = $("#ex_mcht_no").val();
+	var ex_prod_no = $("#ex_prod_no").val();
+	var ex_purch_mm = $("#ex_purch_mm").val();
+	var ex_service_amt = $("#ex_service_amt").val();
+	var exist_cost_months = $("#exist_cost_months").val();
+	var ex_item_no = $("#ex_item_no").val();
+	var ex_tt_item_no = $("#ex_item_no :selected").text();
+	var ex_yymm1 = $("#ex_yymm1").val();
+	var ex_yymm2 = $("#ex_yymm2").val();
+	var sysDate = $("#sysDate").val();
+	var loginUser = $("#loginUser").val();
+	if(Number(buf)>0){
+		if(ex_item_no=="06"){
+			ex_group_code = text_data1;
+			ex_cost_amt = text_data2;
+			ex_purch_mm = text_data3;
+			ex_mcht_no = "";
+			ex_prod_no = "";
+		}
+		if(ex_item_no=="07"){
+			ex_group_code = "";
+			ex_cost_amt = "0";
+			ex_purch_mm = "";
+			ex_mcht_no = "";
+			ex_prod_no = "";
+		}
+		if(ex_item_no=="08"){
+			ex_group_code = "";
+			ex_cost_amt = text_data3;
+			ex_purch_mm = "";
+			ex_mcht_no = text_data1;
+			ex_prod_no = text_data2;
+		}
+		if(ex_item_no=="09"||ex_item_no=="10"||ex_item_no=="11"||ex_item_no=="12"||ex_item_no=="13"){
+			ex_group_code = "";
+			ex_cost_amt = text_data2;
+			ex_purch_mm = text_data3;
+			ex_mcht_no = text_data1;
+			ex_prod_no = "";
+		}
+	}
+	if(ex_yymm1.trim()!=""||ex_yymm2.trim()!=""){
+		var wk_cost_month = ex_yymm1+"--"+ex_yymm2;
+	}else{
+		wk_cost_month ='';
+	}
+	var ind=document.getElementById( 'table1' ).rows.length -1;
+	/*var num = '${ser_num}';
+	if(num==''){
+	    ind=document.getElementById( 'table1' ).rows.length-2;
+	}*/
+	var rowNum=document.getElementById( 'table1' ).rows.length -1;
+	var colNum=0;
+	var fi=0;
+	    colNum=0 
+	    rowNum++;
+	    ind++;
+	    var myRow = document.all.table1.insertRow(rowNum);
+	    myCell = myRow.insertCell(colNum);
+	    myCell.className = "list_no";
+	    myCell.noWrap ="nowrap";
+
+	    var serNo ="";
+	    if ( ind < 10 )
+	        { serNo = "0"+ind; }
+	    else
+	        { serNo = ""+ind;  }
+	    fi++;
+		
+		var con = document.createElement( 'span' );
+	    con.textContent = serNo;
+	    myCell.appendChild( con );
+		
+	    var ip = document.createElement( 'input' );
+	    ip.className = 'col_ckbox';
+	    ip.type = 'checkbox';
+	    ip.name = 'a_opt';
+	    ip.value = serNo;
+	    myCell.appendChild( ip );
+	    
+	    var ip1 = document.createElement( 'input' );
+	    ip1.type = 'hidden';
+	    ip1.name = 'a_ser_num';
+	    ip1.value = serNo;
+	    myCell.appendChild( ip1 );
+
+	    var ip2 = document.createElement( 'input' );
+	    ip2.type = 'hidden';
+	    ip2.name = 'a_rowid';
+	    ip2.value = '';
+	    myCell.appendChild( ip2 );
+	    
+	    var ip3 = document.createElement( 'input' );
+	    ip3.type = 'hidden';
+	    ip3.name = 'a_mod_seqno';
+	    ip3.value = '';
+	    myCell.appendChild( ip3 );
+	    
+	    var ip4 = document.createElement( 'input' );
+	    ip4.type = 'hidden';
+	    ip4.name = 'a_item_no';
+	    ip4.value = ex_item_no;
+	    myCell.appendChild( ip4 );
+	    
+	    var ip5 = document.createElement( 'input' );
+	    ip5.type = 'hidden';
+	    ip5.name = 'a_cost_month';
+	    ip5.value = ex_yymm1;
+	    myCell.appendChild( ip5 );
+	    
+	    var ip5 = document.createElement( 'input' );
+	    ip5.type = 'hidden';
+	    ip5.name = 'a_cost_month2';
+	    ip5.value = ex_yymm2;
+	    myCell.appendChild( ip5 );
+	    
+	    var ip6 = document.createElement( 'input' );
+	    ip6.type = 'hidden';
+	    ip6.name = 'a_input_type';
+	    ip6.value = '';
+	    myCell.appendChild( ip6 );
+	    
+	    var ip7 = document.createElement( 'input' );
+	    ip7.type = 'hidden';
+	    ip7.name = 'a_key_data';
+	    ip7.value = '';
+	    myCell.appendChild( ip7 );
+	    
+	    var ip8 = document.createElement( 'input' );
+	    ip8.type = 'hidden';
+	    ip8.name = 'a_key_type';
+	    ip8.value = '';
+	    myCell.appendChild( ip8 );
+	    
+	    var ip9 = document.createElement( 'input' );
+	    ip9.type = 'hidden';
+	    ip9.name = 'a_mod_time';
+	    ip9.value = '';
+	    myCell.appendChild( ip9 );
+	    
+	    
+	    //======================================
+		colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo1 = document.createElement( 'input' );
+		mo1.setAttribute('class', 'col_any');
+	    mo1.type = 'text';
+	    mo1.name = 'a_tt_item_no';
+		//mo1.size = 8;
+	    mo1.value = ex_tt_item_no;
+	    mo1.setAttribute('zEdit', 'canTW');
+	    mo1.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo1);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo2 = document.createElement( 'input' );
+		mo2.setAttribute('class', 'col_any');
+	    mo2.type = 'text';
+	    mo2.name = 'a_db_group_code';
+		//mo1.size = 8;
+	    mo2.value = ex_group_code;
+	    mo2.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo2);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo3 = document.createElement( 'input' );
+		mo3.setAttribute('class', 'col_any');
+	    mo3.type = 'text';
+	    mo3.name = 'a_db_mcht_no';
+		//mo1.size = 8;
+	    mo3.value = ex_mcht_no;
+	    mo3.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo3);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo4 = document.createElement( 'input' );
+		mo4.setAttribute('class', 'col_any');
+	    mo4.type = 'text';
+	    mo4.name = 'a_db_prod_no';
+		//mo1.size = 8;
+	    mo4.value = ex_prod_no;
+	    mo4.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo4);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo5 = document.createElement( 'input' );
+		mo5.setAttribute('class', 'col_any');
+	    mo5.type = 'text';
+	    mo5.name = 'wk_cost_month';
+		//mo1.size = 8;
+	    mo5.value = wk_cost_month;
+	    mo5.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo5);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo6 = document.createElement( 'input' );
+		mo6.setAttribute('class', 'col_number');
+	    mo6.type = 'text';
+	    mo6.name = 'a_cost_amt';
+		//mo1.size = 8;
+	    mo6.value = ex_cost_amt;
+	    mo6.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo6);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo7 = document.createElement( 'input' );
+		mo7.setAttribute('class', 'col_number');
+	    mo7.type = 'text';
+	    mo7.name = 'a_purch_mm';
+		//mo1.size = 8;
+	    mo7.value = ex_purch_mm;
+	    mo7.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo7);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo8 = document.createElement( 'input' );
+		mo8.setAttribute('class', 'col_number');
+	    mo8.type = 'text';
+	    mo8.name = 'a_service_amt';
+		//mo1.size = 8;
+	    mo8.value = ex_service_amt;
+	    mo8.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo8);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo9 = document.createElement( 'input' );
+		mo9.setAttribute('class', 'col_number');
+	    mo9.type = 'text';
+	    mo9.name = 'a_exist_cost_months';
+		//mo1.size = 8;
+	    mo9.value = exist_cost_months;
+	    mo9.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo9);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo10 = document.createElement( 'input' );
+		mo10.setAttribute('class', 'col_any');
+	    mo10.type = 'text';
+	    mo10.name = 'a_crt_user';
+		//mo1.size = 8;
+	    mo10.value = loginUser;
+	    mo10.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo10);
+	    //======================================
+	    colNum++;
+	    myCell = myRow.insertCell(colNum);
+		myCell.className = "list_td";
+	    
+	    var mo11 = document.createElement( 'input' );
+		mo11.setAttribute('class', 'col_date');
+	    mo11.type = 'text';
+	    mo11.name = 'a_crt_date';
+		//mo1.size = 8;
+	    mo11.value = sysDate;
+	    mo11.setAttribute('readonly', 'readonly');
+	    myCell.appendChild(mo11);
+	    //======================================
+}
+function functionCheck(){ 
+	 top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+	 // top.methodName = "wf_dw1_insert"; // 20200102 updated for archit.  change
+	 resetJSON();
+	 addJSON("data_kk",$("#data_k1").val());
+	 addJSON("data_kk2",$("#data_k2").val());
+	 addJSON("data_kk3",$("#data_k3").val());
+	 addJSON("ex_group_code_kk",$("#ex_group_code_kk").val());
+	 addJSON("ex_item_no_kk",$("#ex_item_no_kk").val());
+	 addJSON("ex_mcht_no_kk",$("#ex_mcht_no_kk").val());
+	 addJSON("ex_prod_no_kk",$("#ex_prod_no_kk").val());
+	 addJSON("ex_yymm1_kk",$("#ex_yymm1_kk").val());
+	 addJSON("ex_yymm2_kk",$("#ex_yymm2_kk").val());
+	 addJSON("text_data1",$("#text_data1").val());
+	 addJSON("text_data2",$("#text_data2").val());
+	 addJSON("text_data3",$("#text_data3").val());
+	 
+	 processAJAX();
+	 return true; 
+}
+
+function ajaxResponse(){
+	top.respHtml ="mktm4210";
+	top.requHtml ="mktm4210";
+	//$("#exist_cost_months").val(getJSONvalue("exist_cost_months",0));
+	var data_check = $("#data_check").val();
+	var data_msg = $("#data_msg").val();
+	var text_data1 = $("#text_data1").val();
+	var text_data2 = $("#text_data2").val();
+	var text_data3 = $("#text_data3").val();
+	//alert(data_check);
+	//return;
+	if(data_check=='Y'){
+		if (confirm("成本參數 已存在待覆核, 是否覆蓋") === false) {
+    		return false;
+		}else{
+			wf_addnewrow2(text_data1,text_data2,text_data3);
+		}
+	}else if(data_check == 'N'){
+			wf_addnewrow2(text_data1,text_data2,text_data3);
+	}else{
+		alert(data_msg);
+		return false;
+	}
+	return false;
+
+}
+
+</script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="40%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;成本項目:
+      		<select   size="1"  name="ex_item_no" id="ex_item_no" class="col_ddlb">
+         		<option value="06" ${ex_item_no-06} >06.肖像授權費</option>
+         		<option value="07" ${ex_item_no-07} >07.帳單費用</option>
+         		<option value="08" ${ex_item_no-08} >08.機場接送</option>  
+         		<option value="09" ${ex_item_no-09} >09.機場停車</option> 
+         		<option value="10" ${ex_item_no-10} >10.龍騰卡貴賓室</option>
+         		<option value="11" ${ex_item_no-11} >11.市區停車</option> 
+         		<option value="12" ${ex_item_no-12} >12.影城優惠</option>  
+         		<option value="13" ${ex_item_no-13} >13.新貴通貴賓室</option>  
+      		</select>
+  	 	</td>
+		<td nowrap colspan="3">&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+        </td> 
+  	</tr>
+  	<tr>
+    	<td nowrap>&nbsp;成本期間:
+      		<input type="text" class="col_date" name="ex_yymm1" id="ex_yymm1" value="${ex_yymm1}"
+         		zeditType="date,ym" MaxLength=6 size=6 />
+      		--   
+      		<input type="text" class="col_date" name="ex_yymm2" id="ex_yymm2" value="${ex_yymm2}"
+         		zeditType="date,ym" MaxLength=6 size=6 />
+   		</td>
+		<td nowrap>&nbsp;成本金額:
+      		<input type="text" class="col_number" name="ex_cost_amt"  id="ex_cost_amt"  value="${ex_cost_amt}"
+         		zeditType="number" MaxLength=13 size=13 />
+       	</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="2">&nbsp;團體代號:
+   			<select size="1" name="ex_group_code"  id="ex_group_code" class="col_ddlb">
+      			${dddw_group_code}
+   			</select>
+   		</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;特店代號:
+      		<input type="text" class="col_any" name="ex_mcht_no" id="ex_mcht_no" value="${ex_mcht_no}"
+         		zeditType="any" MaxLength=30 size=30 />
+       	</td>
+       	<td nowrap>&nbsp;商品代號:
+      		<input type="text" class="col_any" name="ex_prod_no" id="ex_prod_no" value="${ex_prod_no}"
+         		zeditType="any" MaxLength=30 size=30 />
+       	</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;消費月數:
+      		<input type="text" class="col_number" name="ex_purch_mm" id="ex_purch_mm" value="${ex_purch_mm}"
+         		zeditType="number" MaxLength=2  size=2 />
+       	</td>
+       	<td nowrap>&nbsp;每月服務費:
+      		<input type="text" class="col_number" name="ex_service_amt" id="ex_service_amt" value="${ex_service_amt}"
+         		zeditType="number" MaxLength=7 size=7 />
+       	</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<span >&nbsp;(貢獻度之定義，何者計入/不計入)</span>
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+<div class="tab">
+<table>
+    <tr>
+ 		<td class="tablinks tab1" ${tab_active1} onclick="tab_select('aopt');tabControl(event, 'tab-1');tab_active1();">成本參數-待覆核</td>
+       	<td class="tablinks tab2" ${tab_active2} onclick="tab_select('bopt');tabControl(event, 'tab-2');tab_active2();">成本參數-每月成本</td>
+    </tr>
+</table>
+</div>
+<!--List -->
+<!-- 成本參數-待覆核================================ -->
+<!-- <div id="content1" class="tabPage"> -->
+<div id="tab-1" class="tabcontent">
+<input type="Button" name="btnAdd" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+<input type="Button" name="detl_btnAdd" value="單筆輸入" ${btnSelect_disable} onclick="wf_addnewrow1('','','')" class="btAdd_detl" />&nbsp;
+<input id="myfile" type="file" accept="text/plain, text/csv" />
+<input type="Button" class="btAdd_detl" name="btnAccType" value="檔案匯入" id="processList">
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();">刪除&nbsp;</th>
+        <th nowrap class="list_th">成本項目</th>
+        <th nowrap class="list_th">團體代號 </th>
+        <th nowrap class="list_th">特店代號</th>
+        <th nowrap class="list_th">商品代號</th>
+        <th nowrap class="list_th">成本期間</th>
+        <th nowrap class="list_th">成本金額</th>
+        <th nowrap class="list_th">消費月數</th>
+        <th nowrap class="list_th">每月服務費</th>
+        <th nowrap class="list_th">成本期間內<br>已存月數</th>
+        <th nowrap class="list_th">建檔經辦</th>
+        <th nowrap class="list_th">建檔日期</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+
+    <tr id="tr1">
+    	<td nowrap class="list_no" >
+			<span class="dsp_flag">${a-ok_flag}</span>
+				${SER_NUM}
+		  	<input type="checkbox" name="a_opt" value="${ser_num}"/>
+		  	<input type="hidden" name="ser_num" value="${ser_num}"/>
+		  	<input type="hidden" name="a_rowid" value="${a-rowid}"/>
+		  	<input type="hidden" name="a-rowid" value="${a-rowid}"/>
+		  	<input type="hidden" name="a_mod_seqno" value="${a-mod_seqno}"/>
+		  	<input type="hidden" name="a-mod_seqno" value="${a-mod_seqno}"/>
+		  	<input type="hidden" name="a_item_no" value="${a-item_no}"/>
+		  	<input type="hidden" name="a-item_no" value="${a-item_no}"/>
+		  	<input type="hidden" name="a_tt_item_no" value="${a-tt_item_no}"/>
+		  	<input type="hidden" name="a-tt_item_no" value="${a-tt_item_no}"/>
+		  	<input type="hidden" name="a_input_type" value="${a-input_type}"/>
+		  	<input type="hidden" name="a-input_type" value="${a-input_type}"/>
+		  	<input type="hidden" name="a_key_data" value="${a-key_data}"/>
+		  	<input type="hidden" name="a-key_data" value="${a-key_data}"/>
+		  	<input type="hidden" name="a_key_type" value="${a-key_type}"/>
+		  	<input type="hidden" name="a-key_type" value="${a-key_type}"/>
+		  	<input type="hidden" name="a_mod_time" value="${a-mod_time}"/>
+		  	<input type="hidden" name="a-mod_time" value="${a-mod_time}"/>
+		  	<input type="hidden" name="a_db_group_code" value="${a-db_group_code}"/>
+		  	<input type="hidden" name="a-db_group_code" value="${a-db_group_code}"/>
+		  	<input type="hidden" name="a_db_mcht_no" value="${a-db_mcht_no}"/>
+		  	<input type="hidden" name="a-db_mcht_no" value="${a-db_mcht_no}"/>
+		  	<input type="hidden" name="a_db_prod_no" value="${a-db_prod_no}"/>
+		  	<input type="hidden" name="a-db_prod_no" value="${a-db_prod_no}"/>
+		  	<input type="hidden" name="a_cost_month" value="${a-cost_month}"/>
+		  	<input type="hidden" name="a-cost_month" value="${a-cost_month}"/>
+		  	<input type="hidden" name="a_cost_month2" value="${a-cost_month2}"/>
+		  	<input type="hidden" name="a-cost_month2" value="${a-cost_month2}"/>
+		  	<input type="hidden" name="wk_cost_month" value="${wk_cost_month}"/>
+		  	<input type="hidden" name="a_cost_amt" value="${a-cost_amt}"/>
+		  	<input type="hidden" name="a-cost_amt" value="${a-cost_amt}"/>
+		  	<input type="hidden" name="a_purch_mm" value="${a-purch_mm}"/>
+		  	<input type="hidden" name="a-purch_mm" value="${a-purch_mm}"/>
+		  	<input type="hidden" name="a_service_amt" value="${a-service_amt}"/>
+		  	<input type="hidden" name="a-service_amt" value="${a-service_amt}"/>
+		  	<input type="hidden" name="a_exist_cost_months" value="${a-exist_cost_months}"/>
+		  	<input type="hidden" name="a-exist_cost_months" value="${a-exist_cost_months}"/>
+		  	<input type="hidden" name="a_crt_user" value="${a-crt_user}"/>
+		  	<input type="hidden" name="a-crt_user" value="${a-crt_user}"/>
+		  	<input type="hidden" name="a_crt_date" value="${a-crt_date}"/>
+			<input type="hidden" name="a-crt_date" value="${a-crt_date}"/>
+		</td>
+        <td nowrap class="list_ll">${a-tt_item_no}&nbsp;</td>            
+        <td nowrap class="list_ll">${a-db_group_code}&nbsp;</td>
+        <td nowrap class="list_ll">${a-db_mcht_no}&nbsp;</td>
+        <td nowrap class="list_ll">${a-db_prod_no}&nbsp;</td>
+   		<td nowrap class="list_ll">${a-cost_month.YMD}--${a-cost_month2.YMD}&nbsp;</td>
+   		<td nowrap class="list_rr">&nbsp;${a-cost_amt}</td>
+   		<td nowrap class="list_rr">&nbsp;${a-purch_mm}</td>
+   		<td nowrap class="list_rr">&nbsp;${a-service_amt.(999)}</td>
+   		<td nowrap class="list_rr">&nbsp;${a-exist_cost_months}</td>
+   		<td nowrap class="list_ll">${a-crt_user}&nbsp;</td>
+   		<td nowrap class="list_ll">${a-crt_date.YMD}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 成本參數-每月成本================================ -->
+<!-- <div id="content2" class="tabPage"> -->
+<div id="tab-2" class="tabcontent">
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+<input type="Button" name="btnDelete" value="刪除" ${btnUpdate_disable} onClick="return top.submitControl('S3')" class="btDelete" >&nbsp;&nbsp;
+<table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap><input type="checkbox" name="ex_selectAll2" value="Y" onChange="selectAll2();">刪除&nbsp;</th>
+        <th nowrap class="list_th">成本項目</th>
+        <th nowrap class="list_th">團體代號 </th>
+        <th nowrap class="list_th">特店代號</th>
+        <th nowrap class="list_th">商品代號</th>
+        <th nowrap class="list_th">成本年月</th>
+        <th nowrap class="list_th">成本金額</th>
+        <th nowrap class="list_th">消費月數</th>
+        <th nowrap class="list_th">每月服務費</th>
+        <th nowrap class="list_th">建檔經辦</th>
+        <th nowrap class="list_th">建檔日期</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+
+    <tr id="tr2">
+    	<td nowrap class="list_no" >
+			<span class="dsp_flag">${b-ok_flag}</span>
+				${SER_NUM}
+		  	<input type="checkbox" name="b-opt" value="${ser_num}"/>
+		  	<input type="hidden" name="ser_num" value="${ser_num}"/>
+		  	<input type="hidden" name="b-rowid" value="${b-rowid}"/>
+		  	<input type="hidden" name="b-mod_seqno" value="${b-mod_seqno}"/>
+		  	<input type="hidden" name="b-item_no" value="${b-item_no}"/>
+		  	<input type="hidden" name="b-tt_item_no" value="${b-tt_item_no}"/>
+		  	<input type="hidden" name="b-db_group_code" value="${b-db_group_code}"/>
+		  	<input type="hidden" name="b-db_mcht_no" value="${b-db_mcht_no}"/>
+		  	<input type="hidden" name="b-db_prod_no" value="${b-db_prod_no}"/>
+		  	<input type="hidden" name="b-cost_month" value="${b-cost_month}"/>
+		  	<input type="hidden" name="b-cost_amt" value="${b-cost_amt}"/>
+		  	<input type="hidden" name="b-purch_mm" value="${b-purch_mm}"/>
+		  	<input type="hidden" name="b-service_amt" value="${b-service_amt}"/>
+		  	<input type="hidden" name="b-crt_user" value="${b-crt_user}"/>
+		  	<input type="hidden" name="b-crt_date" value="${b-crt_date}"/>
+		  	<input type="hidden" name="b-apr_user" value="${b-apr_user}"/>
+		  	<input type="hidden" name="b-apr_date" value="${b-apr_date}"/>
+		
+		</td>
+        <td nowrap class="list_ll">${b-tt_item_no}&nbsp;</td>            
+        <td nowrap class="list_ll">${b-db_group_code}&nbsp;</td>
+        <td nowrap class="list_ll">${b-db_mcht_no}&nbsp;</td>
+        <td nowrap class="list_ll">${b-db_prod_no}&nbsp;</td>
+		<td nowrap class="list_ll">${b-cost_month.YMD}&nbsp;</td>
+   		<td nowrap class="list_rr">&nbsp;${b-cost_amt}</td>
+   		<td nowrap class="list_rr">&nbsp;${b-purch_mm}</td>
+   		<td nowrap class="list_rr">&nbsp;${b-service_amt.(999)}</td>
+   		<td nowrap class="list_ll">${b-crt_user}&nbsp;</td>
+   		<td nowrap class="list_ll">${b-crt_date.YMD}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<br>
+<input type="hidden"  name="data_k1" id="data_k1" value="" >
+<input type="hidden"  name="data_k2" id="data_k2"  value="" >
+<input type="hidden"  name="data_k3" id="data_k3" value="" >
+<input type="hidden"  name="ex_group_code_kk" id="ex_group_code_kk" value="" >
+<input type="hidden"  name="ex_item_no_kk" id="ex_item_no_kk" value="" >
+<input type="hidden"  name="ex_mcht_no_kk" id="ex_mcht_no_kk" value="" >
+<input type="hidden"  name="ex_prod_no_kk" id="ex_prod_no_kk" value="" >
+<input type="hidden"  name="ex_yymm1_kk" id="ex_yymm1_kk" value="" >
+<input type="hidden"  name="ex_yymm2_kk" id="ex_yymm2_kk" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="MOD_PGM" value="mktm4210">
+<input type="hidden" name="sysDate" id = "sysDate" value="${sysDate}">
+<input type="hidden" name="loginUser" id = "loginUser" value="${loginUser}">
+<input type="hidden" name="exist_cost_months" id = "exist_cost_months" value="${exist_cost_months}">
+<input type="hidden" name="buf" value="${buf}" id="buf"/> 
+<input type="hidden" name="text_data1" value="${text_data1}" id="text_data1"/> 
+<input type="hidden" name="text_data2" value="${text_data2}" id="text_data2"/> 
+<input type="hidden" name="text_data3" value="${text_data3}" id="text_data3"/> 
+<input type="hidden" name="data_check" value="${data_check}" id="data_check"/> 
+<input type="hidden" name="data_msg" value="${data_msg}" id="data_msg"/> 
+<input type="hidden" name="tab_active1" value="${tab_active1}" /> 
+<input type="hidden" name="tab_active2" value="${tab_active2}" /> 
+<input type="hidden" name="tab_active" value="${tab_active}" /> 
+<input type="hidden" name="queryread" value="${queryread}" /> 
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+    tigra_tables('table2', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+document.dataForm.ex_item_no.focus();
+
+var cost_amt = ""
+var group_code = ""
+var mcht_no = ""
+var prod_no = ""
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm4210_detl";
+    }
+
+    if ( top.actionCode == "S3" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	/*if (confirm("是否執行作業?!") === false) {
+            return false;
+        } */
+    }
+
+    return true;
+}
+//全選
+function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].name == "a_opt" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+}
+function selectAll2() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].name == "b-opt" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll2.checked;
+		}
+	}
+	
+	return;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "mktm4210_detl";
+    top.submitControl('S');
+    return true;
+}
+
+
+function tab_select(optname) {
+
+	 document.dataForm.data_k1.value = optname;
+}
+
+ function chkdata() {
+	 var seq = 0;
+	 var agy = $("input[name=b-opt]");
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 if (agy.checked){ seq++; }
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			 if(agy[i].checked){
+				 seq++;
+				 
+			 }
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("請至少勾選一筆資料!");
+		// alert("未選取執行資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ var agy=0; 
+ $(document).ready(function(){
+	 document.getElementById('myfile').onchange = readFile;
+	 $("#ex_service_amt").attr('disabled', true)
+	 $("#ex_purch_mm").attr('disabled', true)
+	 
+	 if($("#ex_item_no").val()=="06"){
+		 $("#ex_service_amt").attr('disabled', true)
+	 }else{
+		 $("#ex_service_amt").attr('disabled', false)
+	 }
+	 if($("#ex_item_no").val()=="12"){
+		 $("#ex_purch_mm").attr('disabled', true)
+	 }else{
+		 $("#ex_purch_mm").attr('disabled', false)
+	 }
+	 $("#ex_item_no").change(function(){
+		 $("input[name=a_opt]").each(function (){
+				 agy++;  
+		 })
+		  $("input[name=b_opt]").each(function (){
+				 agy++;  
+		 })
+		 if(agy > 0){
+			 if (confirm("是否清除資料") === false) {
+		         return false;
+		     }
+			 $("#table1 #tr1").remove();
+			 $("#table2 #tr2").remove();
+			 agy = 0; 
+	 	 }
+		
+		 if($("#ex_item_no").val()=="06"){
+			 $("#ex_service_amt").attr('disabled', true)
+		 }else{
+			 $("#ex_service_amt").attr('disabled', false)
+		 }
+		 if($("#ex_item_no").val()=="12"){
+			 $("#ex_purch_mm").attr('disabled', true)
+		 }else{
+			 $("#ex_purch_mm").attr('disabled', false)
+		 }
+		 if($("#ex_item_no").val()!="12" && $("#ex_item_no").val()!="06"){
+			 $("#ex_service_amt").attr('disabled', true)
+			 $("#ex_purch_mm").attr('disabled', true)
+		 }
+	 });
+
+	 $("#myfile").hide();
+	 $("#processList").click(function() {
+			var ex_yymm1 = $("#ex_yymm1").val();
+			var ex_yymm2 = $("#ex_yymm2").val();
+			if(ex_yymm1.trim()==""||ex_yymm2.trim()==""){
+				alert("成本期間 不可空白");
+				return;
+			}
+			if(Number(ex_yymm1.trim())>Number(ex_yymm2.trim())){
+				alert("成本期間 輸入錯誤~");
+				return;
+			}
+	     $("#myfile").click();
+	 })
+ });
+
+	function readFile() {
+	    file = this.files[0];
+	    var fReader = new FileReader();
+	    var exclude_list_desc = "";
+	    var buf2=""; 
+	    var ex_item_no = $("#ex_item_no").val();
+	    fReader.onload = function(event) {
+	        exclude_list_desc = event.target.result;
+	    var buf = exclude_list_desc.split("\n");
+	    $("#buf").val(buf.length);
+	    if(buf.length==0){
+	    	alert("檔案沒有資料");
+	    	return false;
+	    }
+	    for(var i = 0;i<buf.length;i++){
+	    	if(buf[i]==null||buf[i]==''){
+	    		continue;
+	    	}
+	    	buf2 = buf[i];
+	    	var buf3 = buf2.split(",");
+	    	if($.trim(buf3[0])==null) buf3[0] = ""; 
+	    	if($.trim(buf3[1])==null) buf3[1] = "";
+	    	if($.trim(buf3[2])==null) buf3[2] = "";
+	    	wf_addnewrow($.trim(buf3[0]),$.trim(buf3[1]),$.trim(buf3[2]));
+	    }
+	    };
+	    fReader.readAsText(file);
+	}
+	$(document).ready(function() {
+	})
+	
+	function tab_active1(){
+		$("input[name=tab_active]").val("tab1");
+	}
+	function tab_active2(){
+		$("input[name=tab_active]").val("tab2");
+	}
+</script>

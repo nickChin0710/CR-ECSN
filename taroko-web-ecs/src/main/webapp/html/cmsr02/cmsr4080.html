@@ -1,0 +1,251 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-06-17  V1.00.01    jh                                                -->
+<!-- 109-06-30  V1.00.02    JustinWu     PDF-名條->Excel-名條, pageRows->900, 排除接聽日期->非必填, 到期年月->非必填    -->
+<!-- 109-08-03  V1.00.03    JustinWu     remove 名條、excel、一堆欄位 add 接聽、消費日期的檢核-->
+<!-- 109-08-05  V1.00.04    JustinWu     check date values are not null and two dates are in certain interval when producing PDF-->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>停卡挽留及消費成功明細表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q') " class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg" style="cursor:hand;" onClick="return top.submitControl('PDF') " onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap  >&nbsp;接聽日期:
+      <input type="text" class="col_date" name="ex_rcv_date1" id="ex_rcv_date1" value="${ex_rcv_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_rcv_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_rcv_date2" id="ex_rcv_date2" value="${ex_rcv_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_rcv_date2'});
+	      </script>
+	</td>
+   <td nowrap >&nbsp;案件類別:
+      <select size="1" name="ex_case_type1" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_casetype01}
+      </select>
+      --
+      <select size="1" name="ex_case_type2" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_casetype02}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;值機人員:
+      <input type="text" class="col_any" name="ex_user_id01" value="${ex_user_id01}" maxlength="10" size="12" zEdit="any,canTw">&nbsp;
+      <input type="text" class="col_any" name="ex_user_id02" value="${ex_user_id02}" maxlength="10" size="12" zEdit="any,canTw">&nbsp;
+      <input type="text" class="col_any" name="ex_user_id03" value="${ex_user_id03}" maxlength="10" size="12" zEdit="any,canTw">&nbsp;
+      <input type="text" class="col_any" name="ex_user_id04" value="${ex_user_id04}" maxlength="10" size="12" zEdit="any,canTw">&nbsp;
+      <input type="text" class="col_any" name="ex_user_id05" value="${ex_user_id05}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap  >&nbsp;消費日期:
+      <input type="text" class="col_date" name="ex_pur_date1" id="ex_pur_date1" value="${ex_pur_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_pur_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_pur_date2" id="ex_pur_date2" value="${ex_pur_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_pur_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;單筆消費金額門檻:
+	   <input type="text" class="col_number" name="ex_dest_amt" value="${ex_dest_amt}" maxlength="10" size="12" zEdit="number" >
+	</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;身分證字號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >接聽日期&nbsp;</th>
+    <th nowrap >身分證字號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >案件類別&nbsp;</th>
+    <th nowrap >接聽人員&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >實際<br>消費金額</th>
+    <th nowrap >符合<br>消費金額</th>
+    <th nowrap >是否<br>開卡</th>
+    <th nowrap >卡片<br>狀態</th>
+    <th nowrap >住家電話&nbsp;</th>
+    <th nowrap >行動電話&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;      
+	</td>
+  <td nowrap class="list_cc"> ${case_date}&nbsp;
+     <input type="hidden" name="case_date" value="${case_date}">     
+  </td>
+	<td nowrap class="list_cc"> ${case_idno}&nbsp;
+	   <input type="hidden" name="case_idno" value="${case_idno}">     
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}">     
+	</td>
+	<td nowrap class="list_cc"> ${case_type}&nbsp;
+	   <input type="hidden" name="case_type" value="${case_type}">     
+	</td>
+  <td nowrap class="list_cc"> ${case_user}&nbsp;
+     <input type="hidden" name="case_user" value="${case_user}">     
+  </td>
+	<td nowrap class="list_cc"> ${db_cname}&nbsp;
+	   <input type="hidden" name="db_cname" value="${db_cname}">     
+	</td>
+	<td nowrap class="list_cc"> ${db_sum_dest_amt.(999)}&nbsp;
+	   <input type="hidden" name="db_sum_dest_amt" value="${db_sum_dest_amt}">     
+	</td>
+	<td nowrap class="list_cc"> ${db_sum_set_purchase_amt.(999)}&nbsp;  
+	   <input type="hidden" name="db_sum_set_purchase_amt" value="${db_sum_set_purchase_amt}">     
+	</td>
+	<td nowrap class="list_cc"> ${db_open_card}&nbsp;
+	   <input type="hidden" name="db_open_card" value="${db_open_card}">     
+	</td>
+	<td nowrap class="list_cc"> ${db_current_code}&nbsp;
+	   <input type="hidden" name="db_current_code" value="${db_current_code}">     
+	</td>
+	<td nowrap class="list_cc"> ${db_htelno}&nbsp;
+	   <input type="hidden" name="db_htelno" value="${db_htelno}">     
+	</td>
+	<td nowrap class="list_cc"> ${db_cellno}&nbsp;
+	   <input type="hidden" name="db_cellno" value="${db_cellno}">     
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="900";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode == "Q" || top.actionCode == "PDF") {
+        if (!checkDate()){
+          return false;
+        }
+    }
+
+    return true;
+  }
+
+  function computeDayDiff(date1,date2){
+    date1 = new Date(date1.substring(0,4) + "-" + date1.substring(4,6) + "-" + date1.substring(6,8));
+    date2 = new Date(date2.substring(0,4) + "-" + date2.substring(4,6) + "-" + date2.substring(6,8));
+
+    return (date2 - date1)/(1000*60*60*24);
+
+  }
+
+  function checkDate(){
+
+    var ex_rcv_date1 = document.getElementById("ex_rcv_date1");
+    var ex_rcv_date2 = document.getElementById("ex_rcv_date2");
+
+    if (ex_rcv_date1.value.trim().length == 0) {
+      alert("接聽日期起日：輸入錯誤");
+      return false;
+    }
+    if (ex_rcv_date2.value.trim().length == 0) {
+      alert("接聽日期迄日：輸入錯誤");
+      return false;
+    }
+
+    var dayDiff = computeDayDiff(ex_rcv_date1.value , ex_rcv_date2.value);
+        
+    if (dayDiff < 0) {
+      alert("接聽日期起日必須小於等於迄日");
+      return false;
+    }
+    if (dayDiff > 31) {
+      alert("接聽日期起迄區間限查詢一個月內的資料");
+      return false;
+    }
+
+    //============
+
+    var ex_pur_date1 = document.getElementById("ex_pur_date1");
+    var ex_pur_date2 = document.getElementById("ex_pur_date2");
+
+    if (ex_pur_date1.value.trim().length == 0) {
+      alert("消費日期起日：輸入錯誤");
+      return false;
+    }
+    if (ex_pur_date2.value.trim().length == 0) {
+      alert("消費日期迄日：輸入錯誤");
+      return false;
+    }
+
+    dayDiff = computeDayDiff(ex_pur_date1.value , ex_pur_date2.value);
+
+    if (dayDiff < 0) {
+      alert("消費日期起日必須小於等於迄日");
+      return false;
+    }
+    if (dayDiff > 365) {
+      alert("消費日期起迄區間限查詢一年內的資料");
+      return false;
+    }
+    return true;
+  }
+
+
+</script>

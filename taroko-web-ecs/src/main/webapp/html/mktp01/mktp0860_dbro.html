@@ -1,0 +1,136 @@
+<html>
+<head>
+<title> 110/01/29 V1.00.01 Allen Ho Initial </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+      <input type="Button" name="btnaprv" ${btnUpdate_disable} value="覆核" onClick="return top.submitControl('procMethod_aprv')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button" name="btnunaprv" ${btnUpdate_disable} value="解覆核" onClick="return top.submitControl('procMethod_unaprv')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data1 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <tr>
+     <td nowrap class="td_data"="%">活動代碼： 
+       <span class="dsp_text">${active_code}-${comm_active_code}</span>
+       <input type="hidden" name="active_code" value="${active_code}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">覆核日期： 
+       <span class="dsp_date">${feedback_apr_date.YMD}</span>
+       <input type="hidden" name="feedback_apr_date" value="${feedback_apr_date}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">回饋日期： 
+       <span class="dsp_date">${feedback_date.YMD}</span>
+       <input type="hidden" name="feedback_date" value="${feedback_date}"/>
+   </tr>
+ </table>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">活動<BR>序號</th>
+    <th nowrap class="list_th">紅利筆數<BR>/金額</th>
+    <th nowrap class="list_th">基金筆數<BR>/金額</th>
+    <th nowrap class="list_th">贈品筆數<BR>/金額</th>
+    <th nowrap class="list_th">名單人數</th>
+    <th nowrap class="list_th">確認經辦</th>
+    <th nowrap class="list_th">確認日期</th>
+    <th nowrap class="list_th">登錄群組</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','${active_code}','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${active_seq}</td>
+    <td nowrap class="list_rr"> ${bonus_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${fund_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${gift_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${lottery_cnt.(999)}</td>
+    <td nowrap class="list_cc"> ${apr_user}</td>
+    <td nowrap class="list_cc"> ${apr_date.YMD}</td>
+    <td nowrap class="list_ll"> ${record_group_no}</td>
+  </tr>
+  <tr>
+    <td nowrap class="list_rr"> ${bonus_pnt.(999)}</td>
+    <td nowrap class="list_rr"> ${fund_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${gift_amt.(999.00)}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="ROWID" value="${rowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 2;
+        top.respHtml = "mktp0860_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 2;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktp0860_detl";
+    top.submitControl('T');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->
+
+

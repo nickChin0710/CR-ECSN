@@ -1,0 +1,168 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 109-11-20  V1.00.03  JeffKung       remark memo                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>指定卡片預約分期參數維護-detl-V.2019-1213-Andy-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">活動序號:
+                        <span class="dsp_text">${seq_no}</span>
+                        <input type="hidden" name="seq_no" value="${seq_no}">
+                    </td>
+                    <td nowrap >預約類別: 
+					      <select name="reserve_type" class="col_ddlb">
+					         <option value="1" ${reserve_type-1} >1:稅款(排除綜所稅)</option>
+					         <option value="2" ${reserve_type-2} >2.綜所稅</option>
+					         <option value="3" ${reserve_type-3} >3:學雜費</option>
+					         <option value="4" ${reserve_type-4} >4:保費</option>
+					      </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">活動起迄日:
+                        <input type="text" class="col_date" name="start_date" value="${start_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'start_date' });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="end_date" value="${end_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'end_date' });
+                        </script>&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">金額區間:
+                        <input type="text" class="col_number" name="amt_from" value="${amt_from}" zEdit="dignumber" maxlength="12" size="12" zRequire ="Y" /> --
+                        <input type="text" class="col_number" name="amt_to" value="${amt_to}" zEdit="dignumber" maxlength="12" size="12" zRequire ="Y" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">特店代號:
+                        <input class="field_style" type="text" name="mcht_no" size="15" maxlength="15" value="${mcht_no}">&nbsp;&nbsp;
+                        <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">Mcode ≧&nbsp;
+                        <input type=text class="col_any" name="deny_mx" value="${deny_mx}" zEdit="any" maxlength="4" size="4" />&nbsp;終止預約
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">分12期活動限台幣&nbsp;
+                        <span class="col_radio">
+                             <input type="radio" value="Y" name="twd_limit_flag" ${twd_limit_flag-Y} />Y
+                             <input type="radio" value="N" name="twd_limit_flag" ${twd_limit_flag-N}  ${DEFAULT_CHK} />N
+                        </span>
+                        &nbsp;   <!--(2020-11-20 remarked by JeffKung)參數設定於rptm0030-rpt_m042-->
+                    </td>&nbsp;
+                </tr>
+            </table>
+        </div>
+        <!-- 動態 BLOCK 視窗控制 -->
+        <div id="disDiv" class="disScreen"></div>
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">特店代號：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('mcht_no','merchant_2'); top.hideBlock('popDiv');" class="btConfirm">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0100">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.start_date.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.mcht_no.value;
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("mcht_no", vendorNo);
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    var vendorNo = document.dataForm.mcht_no.value;
+    var vendorList = document.getElementById("merchant_2");
+
+    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+    }
+
+    top.popupBlock('popDiv');
+}
+</script>

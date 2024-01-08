@@ -1,0 +1,100 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-11-24  V1.00.01  sunny          配合卡部要求，將「接聽」改為「受理」  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>話務類別統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;統計期間:
+         <input type="text" class="col_date" name="ex_cms_date_s" value="${ex_cms_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_s'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_cms_date_e" value="${ex_cms_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_e'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="list_rr" colspan="2"><span class="dsp_text">合計:</span></td>
+    <td nowrap class="list_rr"><span class="dsp_text">${sum_db_cnt.(999)}</span></td>
+    <td nowrap class="list_rr"><span class="dsp_text">${sum_no_send.(999)}</span></td>
+    <td nowrap class="list_rr"><span class="dsp_text">${sum_send.(999)}</span></td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >值機人員&nbsp;</th>
+    <th nowrap >受理總通數&nbsp;</th>
+    <th nowrap >未移送案件通數&nbsp;</th>
+    <th nowrap >移送案件通數&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_user}_${usr_cname}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${no_send_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${send_cnt.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

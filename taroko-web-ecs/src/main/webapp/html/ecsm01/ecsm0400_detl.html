@@ -1,0 +1,304 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/11/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title> 109/10/12 V1.00.02 Allen Ho Initial 航空公司 PGP參數維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <!-- Button **************************************************************-->
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td colspan="4">
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+                <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+                <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+                <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+                <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+                <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+    <div id="dataBlock">
+        <!-- Key data2 ************************************************************ -->
+        <table width="90%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>&nbsp;航空公司：
+                    <select size="1"  name="kk_air_type" class="col_ddlb" 2 onChange="columnItemChange('2')">
+                        ${dddw_air_type_b}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;參考IP代碼:
+                    <select size="1"  name="kk_ref_ip_code" class="col_ddlb"  id="ajaxh_ref_ip_code" >
+                        ${dddw_ref_ip_code}
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <!-- Detail data detl *************************************************** -->
+        <table width="90%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap class="colKey">航空公司：
+                    <span class="dsp_text">${air_type}</span>
+                    <input   type="hidden" name="air_type" value="${air_type}" />
+                    -${comm_air_type}
+                    <input    type="hidden" name="comm_air_type" value="${comm_air_type}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="colKey">參考IP代碼:
+                    <span class="dsp_text">${ref_ip_code}</span>
+                    <input   type="hidden" name="ref_ip_code" value="${ref_ip_code}" />
+                    -${comm_ref_ip_code}
+                    <input    type="hidden" name="comm_ref_ip_code" value="${comm_ref_ip_code}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>中文說明:&nbsp;
+                    <input type="text" class="col_any" name="pgp_name" value="${pgp_name}"
+                           zEdit="any,canTW" maxlength="60" size="60" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>
+                    <input type="checkbox" value="Y" name="stop_flag" ${stop_flag-Y} >
+                    停用日期:
+
+                    <input type="text" class="col_date" name="stop_date" value="${stop_date}"
+                           zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'stop_date'});
+                    </script>
+                    停用說明：
+                    <input type="text" class="col_any" name="stop_desc" value="${stop_desc}"
+                           zEdit="any,canTW" maxlength="40" size="40" />
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+        <table  width="90%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap>　　　　　　　　　　　　　　　　　　　　內部KEY及密碼　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+            </tr>
+            <tr>
+                <td nowrap>Public KEY 檔名:&nbsp;
+                    <input type="text" class="col_any" name="public_key_name_i" value="${public_key_name_i}"
+                           zEdit="any" maxlength="30" size="30" />
+                    (本行提供對方轉入用)
+                    <img src="images/uperLoad.gif" onclick="return upload_click('1','pubi')" style="cursor:hand"
+                         type="Button" id="uplpubi" ${uplpubi_disable}  />
+
+                    <span class="dsp_text">${chk_imp_pubi}</span>
+                    <input      zEdit="any,canTW"  type="hidden" name="chk_imp_pubi" value="${chk_imp_pubi}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>Private KEY檔名:&nbsp;
+                    <input type="text" class="col_any" name="private_key_name_i" value="${private_key_name_i}"
+                           zEdit="any" maxlength="30" size="30" />
+                    (本行提供本行轉入用)
+                    <img src="images/uperLoad.gif" onclick="return upload_click('1','prii')" style="cursor:hand"
+                         type="Button" id="uplprii" ${uplprii_disable}  />
+
+                    <span class="dsp_text">${chk_imp_prii}</span>
+                    <input      zEdit="any,canTW"  type="hidden" name="chk_imp_prii" value="${chk_imp_prii}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>密碼　　:&nbsp;
+                    <input type="password" autocomplete="off" class="col_any" name="t_passphase_i" value=""
+                           zEdit="any" maxlength="20" size="20" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>密碼確認:&nbsp;
+                    <input type="password" autocomplete="off" class="col_any" name="t_passphase_i_c" value=""
+                           zEdit="any" maxlength="20" size="20"  onChange="columnItemChange('3')"/>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+        <table  width="90%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap>　　　　　　　　　　　　　　　　　　　　外部KEY　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+            </tr>
+            <tr>
+                <td nowrap>Public KEY 檔名:&nbsp;
+                    <input type="text" class="col_any" name="public_key_name_o" value="${public_key_name_o}"
+                           zEdit="any" maxlength="30" size="30" />
+                    (對方提供本行轉出用)
+                    <img src="images/uperLoad.gif" onclick="return upload_click('1','pubo')" style="cursor:hand"
+                         type="Button" id="uplpubo" ${uplpubo_disable}  />
+
+                    <span class="dsp_text">${chk_imp_pubo}</span>
+                    <input      zEdit="any,canTW"  type="hidden" name="chk_imp_pubo" value="${chk_imp_pubo}" />
+                </td>
+            </tr>
+        </table>
+        <table width="90%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td  nowrap  >鍵檔日期:
+                    <span class="dsp_date">${crt_date.YMD}</span>
+                    <input      size="8"  type="hidden" name="crt_date" value="${crt_date}" />
+                </td>
+                <td  nowrap  >鍵檔人員:
+                    <span class="dsp_text">${crt_user}</span>
+                    <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+                </td>
+            </tr>
+            <tr>
+                <input type="hidden" class="col_any" name="hide_ref_code" value="${hide_ref_code}"
+                       zEdit="any" maxlength="10" size="10" />
+                </td>
+            </tr>
+            <tr>
+                <input type="hidden" class="col_any" name="passphase_i" value="${passphase_i}"
+                       zEdit="any" maxlength="80" size="80" />
+                </td>
+            </tr>
+            <tr>
+                <input type="hidden" class="col_any" name="passphase_i_c" value="${passphase_i_c}"
+                       zEdit="any" maxlength="0" />
+            </tr>
+        </table>
+    </div>
+    <!-- trail ************************************************************** -->
+    <input type="hidden"  name="sys_upload_type" value="" />
+    <input type="hidden"  name="sys_upload_alias" value="" />
+    <input type="hidden"  name="upload_file" value="" />
+    <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+    <input type="hidden" name="hide_ref_code" value="${hide_ref_code}">
+    <input type="hidden" name="passphase_i" value="${passphase_i}">
+    <input type="hidden" name="passphase_i_c" value="${passphase_i_c}">
+    <input type="hidden" name="aud_type" value="${aud_type}">
+    <input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+    <input type="hidden" name="data_k4" value="" >
+    <input type="hidden" name="data_k5" value="" >
+    <input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+    <input type="hidden" name="ROWID" value="${rowid}">
+    <input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+    <input type="hidden" name="MOD_PGM" value="ecsm0400">
+    <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+    <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+    top.refreshButton2('1');
+
+    function validateInput()
+    {
+        if ( !top.checkFormat() )
+        { return false; }
+
+        return true;
+    }
+
+
+    function columnItemChange(ps1)
+    {
+        var  win_air_type =document.forms["dataForm"]["kk_air_type"].value;
+        var  win_t_passphase_i_c =document.forms["dataForm"]["t_passphase_i_c"].value;
+        var  win_t_passphase_i =document.forms["dataForm"]["t_passphase_i"].value;
+
+        idCode = ps1;
+        top.actionCode = "Q";
+        if ( idCode == '2' )
+        {
+            clearListObj(document.getElementById("ajaxh_ref_ip_code"));
+            top.methodName = "wf_ajax_func_2";
+            resetJSON();
+            addJSON("ax_win_air_type",win_air_type);
+        }
+
+        if ( idCode == '3' )
+        {
+            top.methodName = "wf_ajax_func_3";
+            resetJSON();
+            addJSON("ax_win_t_passphase_i_c",win_t_passphase_i_c);
+            addJSON("ax_win_t_passphase_i",win_t_passphase_i);
+        }
+
+        processAJAX();
+    }
+
+    function ajaxResponse()
+    {
+        top.respHtml ="ecsm0400_detl";
+        var len = 0;
+
+        if (idCode == '2' )
+        {
+            var listObj = document.getElementById("ajaxh_ref_ip_code");
+            len = getJSONlength("ajaxj_ref_ip_code");
+            for ( var ii=0; ii<len; ii++)
+                listObj.options.add(new Option(getJSONvalue("ajaxj_ref_ip_code",ii)
+                    +" "+getJSONvalue("ajaxj_ref_name",ii)
+                    ,getJSONvalue("ajaxj_ref_ip_code",ii)));
+            return false;
+        }
+    }
+
+    function clearListObj(listObj)
+    {
+        for( var i = listObj.length - 1; i>=0; i--)
+        { listObj.remove(i);  }
+    }
+
+
+    function upload_click(parm1,parm2)
+    {
+        document.dataForm.zz_file_name.value = "";
+
+        document.dataForm.sys_upload_type.value = parm1;
+        document.dataForm.sys_upload_alias.value = parm2;
+        var parmHtml    = "TarokoUpload";
+        var parmName    = "upload_file,zz_file_name";
+        var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+        top.packageName = "taroko.com";
+        top.javaName    = "TarokoUpload";
+        top.methodName  = "showScreen";
+        top.openWindow("",parmHtml,parmName,windowSize);
+
+        top.packageName = "ecsm01";
+        top.javaName    = "Ecsm0400";
+        top.requHtml    = "ecsm0400_detl";
+        top.respHtml    = "ecsm0400_detl";
+        return true;
+    }
+
+    function wf_uploadAfter()
+    {
+        var ss=document.dataForm.zz_file_name.value.trim();
+        if (ss.length>0)  top.submitControl('UPLOAD2');
+    }
+
+</script>
+<!-- ******************************************************************** -->

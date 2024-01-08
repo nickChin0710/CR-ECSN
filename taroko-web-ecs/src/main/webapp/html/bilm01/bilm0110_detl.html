@@ -1,0 +1,777 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>郵購/分期付款申購書登錄作業-detl-V.2017-0807-yash-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <!-- 動態 BLOCK 視窗控制 -->
+        <!-- <div id="disDiv" class="disScreen"></div> -->
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">特店代號：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('mcht_no','merchant_2'); top.hideBlock('popDiv'); mcht_no_focus();" class="btConfirm">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">申購書編號:&nbsp;
+                        <input type="text" zEdit="any" class="col_any" name="kk_contract_no" value="${kk_contract_no}" maxlength="10" size="10">
+                    </td>
+                    <td nowrap width="50%">申購書序號:&nbsp;
+                        <input type="text" zEdit="number" class="col_number" name="kk_contract_seq_no" value="1" size="3">
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table id='table1' width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">申購書編號:
+                        <span class="dsp_text">${contract_no}</span>
+                        <input type="hidden" name="contract_no" value="${contract_no}">
+                    </td>
+                    <td nowrap class="colKey" colspan="3">申購書序號:&nbsp;
+                        <span class="dsp_text">${contract_seq_no}</span>
+                        <input type="hidden" name="contract_seq_no" value="${contract_seq_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>合約種類:&nbsp;
+                        <span class="col_radio" id="contract_kind">
+                            <input type="radio" value="1" name="contract_kind" ${contract_kind-1} ${DEFAULT_CHK} />分期付款
+                            <input type="radio" value="2" name="contract_kind" ${contract_kind-2} />郵購
+                        </span>
+                    </td>
+                    <td nowrap>使用紅利績點:&nbsp;
+                        <span class="col_radio" id="redeem_kind">
+                            <input type="radio" value="1" name="redeem_kind" ${redeem_kind-1} />是
+                            <input type="radio" value="0" name="redeem_kind" ${redeem_kind-0} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                    </td>
+                    <td nowrap colspan="2">預佔分期額度:&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="Y" name="allocate_flag" ${allocate_flag-Y} />是
+                            <input type="radio" value="N" name="allocate_flag" ${allocate_flag-N} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                </tr>
+                <th colspan="4">訂購資料</th>
+                <tr>
+                    <td nowrap>特店代號:
+                        <input type=text zEdit="any" class="col_any" name="mcht_no" value="${mcht_no}" maxlength="20" size="20" onBlur="itemChange(this.value,'mcht_no')" />
+                        <input type="Button"   value="..." onclick="processVendorCode1()" class="btAdd_detl" />
+                    </td>
+                    <td nowrap>中文名稱:&nbsp;
+                        <span class="dsp_text" id='mcht_chi_name'>${mcht_chi_name}</span>&nbsp;
+                        <input type=hidden name="mcht_chi_name" value="${mcht_chi_name}" />
+                    </td>
+                    <td nowrap colspan="2">貸款旗標:&nbsp;
+                        <span class="dsp_text" id='loan_flag'>${loan_flag} </span>
+                        <input type=hidden name="loan_flag" value="${loan_flag}" maxlength="" size="" />
+                    </td>
+                </tr>
+                <tr id='tr'>
+                    <td nowrap>商品代號:
+                        <select style="width:50%" name="product_no" class="col_ddlb" onChange="itemChange(this.value,'product_no')">
+                            ${dddw_product_no}
+                        </select>
+                    </td>
+                    <td nowrap>商品名稱:&nbsp;
+                        <input type=hidden name="product_name" value="${product_name}" /><span class="dsp_text" id="product_name">${product_name}</span>
+                    </td>
+                    <td nowrap colspan="2">CVV2:&nbsp;
+                        <input type=text zEdit="any" class="col_any" name="cvv2" value="${cvv2}" maxlength="3" size="3" />
+                        &nbsp;&nbsp;
+                        <span class="dsp_text" id='new_it_flag'>${new_it_flag} </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>交易卡號:&nbsp;
+                        <input type=text zEdit="any" class="col_any" name="card_no" value="${card_no}" maxlength="19" size="19" onChange="itemChange(this.value,'card_no')" />
+                    </td>
+                    <td nowrap>歸戶類別:&nbsp;
+                        <input type=hidden name="acct_type" value="${acct_type}" /><span id='acct_type' class="dsp_text">${acct_type}</span>
+                        &nbsp;-<input type=hidden name="acct_key" value="${acct_key}" /><span id='acct_key' class="dsp_text">${acct_key}</span>
+                    </td>
+                    <td nowrap colspan="2">效期:&nbsp;
+                        <input type="text" class="col_date" name="limit_end_date" value="${limit_end_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'limit_end_date'});
+                        </script>&nbsp;&nbsp;<font color="red">引介人員:</font>&nbsp;
+                        <select name="sale_emp_no" class="col_ddlb">
+                            ${dddw_sale_emp_no}
+                        </select>&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>持卡人姓名:&nbsp;
+                        <input type=hidden name="db_name" value="${db_name}" /><span id="db_name" class="dsp_text">${db_name}</span>
+                    </td>
+                    <td nowrap>持卡人ID:&nbsp;
+                        <input type=hidden name="db_id" value="${db_id}" /><span id='db_id' class="dsp_text">${db_id}</span>
+                    </td>
+                    <td nowrap style="color:red" colspan="2">VIP:&nbsp;
+                        <input type=hidden name="vip_code" value="${vip_code}" maxlength="2" size="2" /><span id='vip_code' class="dsp_text">${vip_code}</span>
+                        生日:&nbsp;
+                        <input type=hidden name="birthday" value="${birthday}" /><span id='birthday' class="dsp_text">${birthday}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>第一期過帳日:&nbsp;
+                        <span class="dsp_text">${first_post_date}</span>
+                        <input type=hidden name="first_post_date" value="${first_post_date}" />
+                    </td>
+                    <td nowrap>第二期後過帳日:&nbsp;
+                        <input type=hidden name=post_cycle_dd value="${post_cycle_dd}" size="3" /><span class="dsp_text">${post_cycle_dd}</span>
+                    </td>
+                    <td nowrap colspan="2">消費日:&nbsp;
+                        <input type="text" class="col_date" name="purchase_date" value="${purchase_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'purchase_date'});
+    </script>
+                        帳單週期:&nbsp;
+                        <input type=hidden name="stmt_cycle" value="${stmt_cycle}" maxlength="2" size="2" /><span id="stmt_cycle" class="dsp_text">${stmt_cycle}</span>
+                    </td>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>分期付款目前期數:&nbsp;
+                        <input type=hidden name=install_curr_term value="${install_curr_term}" size="2" /><span class="dsp_text">${install_curr_term}</span>
+                    </td>
+                    </td>
+                    <td nowrap>全部入帳旗標:&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="Y" name="all_post_flag" ${all_post_flag-Y} />是
+                            <input type="radio" value="N" name="all_post_flag" ${all_post_flag-N} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                    <td nowrap colspan="2">強迫一次入帳:
+                        <select size="1" name="forced_post_flag" class="col_ddlb">
+                            <option value="N" ${forced_post_flag-N}>N</option>
+                            <option value="Y" ${forced_post_flag-Y}>Y</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>首尾期旗標:&nbsp;
+                        <select size="1" name="fee_flag" class="col_ddlb">
+                            <option value="F" ${fee_flag-F}>首期</option>
+                            <option value="L" ${fee_flag-L}>尾期</option>
+                        </select>
+                    </td>
+                    <td nowrap>參考號碼:&nbsp;
+                        <input type=hidden name="reference_no" value="${reference_no}" maxlength="10" size="10" /><span class="dsp_text">${reference_no}</span>
+                    </td>
+                    <td nowrap colspan="2">手續費方式:&nbsp;
+                        <input type=hidden name="payment_type" value="${payment_type}" maxlength="1" size="1" /><span class="dsp_text">${payment_type}</span>
+                        批號:&nbsp;
+                        <input type=hidden name="batch_no" value="${batch_no}" maxlength="14" size="14" /><span class="dsp_text">${batch_no}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>來源旗標:&nbsp;
+                        <select size="1" name="cps_flag" class="col_ddlb">
+                            <option value="N" ${cps_flag-N}>自行</option>
+                            <option value="Y" ${cps_flag-Y}>收單</option>
+                            <option value="C" ${cps_flag-C}>NCCC</option>
+                        </select>
+                    </td>
+                    <td nowrap>微縮影編號:&nbsp;
+                        <input type=hidden name="film_no" value="${film_no}" maxlength="23" size="15" /><span class="dsp_text">${film_no}</span>
+                    </td>
+                    <td nowrap style="color:red" colspan="2">授權碼:&nbsp;
+                        <input type=hidden name="auth_code" value="${auth_code}" maxlength="8" size="8" /><span class="dsp_text">${auth_code}</span>
+                        失敗碼:&nbsp;
+                        <input type=hidden name="ccas_resp_code" value="${ccas_resp_code}" maxlength="2" size="2" /><span class="dsp_text">${ccas_resp_code}</span>
+                    </td>
+                </tr>
+                <th colspan="4">商品資料</th>
+                <tr>
+                <tr>
+                    <td nowrap>商品單價:&nbsp;
+                        <input type=text zEdit="dignumber,number" class="col_number" name=tot_amt value="${tot_amt}" maxlength="12" size="12" onChange="tot_amt_check();" />
+                    </td>
+                    <td nowrap>訂購數量:&nbsp;
+                        <input type=text zEdit="number" class="col_number" name=qty value="${qty}" size="3" onChange="refundamtCount();" />
+                        兌換券金額:&nbsp;
+                        <input type=text zEdit="dignumber,number" class="col_number" name=exchange_amt value="${exchange_amt}" maxlength="10" size="10" onChange="refundamtCount()" />
+                    </td>
+                    <td nowrap style="color:red" colspan="2">實付總金額:&nbsp;
+                        <span class="dsp_number" id="refundamt">${refundamt.(999)}</span>
+                        <input type="hidden" name=refundamt value="${refundamt}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>分期付款總期數:&nbsp;
+                        <input type=text zEdit="number" class="col_number" name=install_tot_term value="${install_tot_term}" size="3" onChange="install_tot_term_check(this.value)" />
+                        x 每期金額:&nbsp;
+                        <input type=hidden name=unit_price value="${unit_price}" maxlength="10" size="10" /><span class="dsp_text" id="unit_price">${unit_price}</span>
+                        +
+                    </td>
+                    <td nowrap rowspan="2" style="border:1px red solid;" class="list_cc">&nbsp;&nbsp;折抵金額:
+                        <input type=hidden name=redeem_amt value="${redeem_amt}" maxlength="14" size="14" /><span class="dsp_text" id="redeem_amt">${redeem_amt}</span> &nbsp;&nbsp;+ <br>
+                        折抵點數:&nbsp;<input type=hidden name=redeem_point value="${redeem_point}" size="14" /><span class="dsp_text" id="redeem_point">${redeem_point}</span> &nbsp;
+                        <br>
+                        &nbsp;
+                    </td>
+                    <td nowrap rowspan="2" style="border:1px red solid;" colspan="2">餘數:
+                        <input type=hidden name=first_remd_amt value="${first_remd_amt}" maxlength="12" size="12" /><span class="dsp_text" id="first_remd_amt">${first_remd_amt}</span><br>
+                        尾數:&nbsp;<input type=hidden name=remd_amt value="${remd_amt}" maxlength="12" size="12" /><span class="dsp_text" id="remd_amt">${remd_amt}</span><br>
+                        (餘數放於尾期者)
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>自動出貨旗標:&nbsp;
+                        <span class="col_radio" style="color:red" id="auto_delv_flag">
+                            <input type="radio" value="Y" name="auto_delv_flag" ${auto_delv_flag-Y} ${DEFAULT_CHK} />是
+                            <input type="radio" value="N" name="auto_delv_flag" ${auto_delv_flag-N} />否
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">額外費用:&nbsp;
+                        <input type=text zEdit="dignumber,number" class="col_number" name=extra_fees value="${extra_fees}" maxlength="8" size="8" />
+                        特店手續費:
+                        <input type=hidden name=fees_fix_amt value="${fees_fix_amt}" maxlength="8" size="8" /><span class="dsp_text" id="fees_fix_amt">${fees_fix_amt}</span> +
+                        <input type=hidden name=fees_rate value="${fees_rate}" maxlength="5" size="5" /><span class="dsp_text" id="fees_rate">${fees_rate}</span> %
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">客戶手續費:&nbsp;
+                        <input type=hidden name=clt_fees_amt value="${clt_fees_amt}"><span class="dsp_text" id="clt_fees_amt">${clt_fees_amt}</span>
+                        = 每期金額:&nbsp;
+                        <input type=hidden name=clt_unit_price value="${clt_unit_price}" maxlength="10" size="10" /><span class="dsp_text" id="clt_unit_price">${clt_unit_price}</span>
+                        x 期數:&nbsp;
+                        <input type=hidden name=clt_install_tot_term value="${clt_install_tot_term}" size="2" /><span class="dsp_text" id="clt_install_tot_term">${clt_install_tot_term}</span>
+                        + 餘數:&nbsp;
+                        <input type=hidden name=clt_remd_amt value="${clt_remd_amt}" maxlength="12" size="12" /><span class="dsp_text" id="clt_remd_amt">${clt_remd_amt}</span>
+                        <input type=hidden name="ls_clt_interest_rate" value="${ls_clt_interest_rate}" />
+                        <input type=hidden name="ls_clt_fees_fix_amt" value="${ls_clt_fees_fix_amt}" />
+                    </td>
+                </tr>
+                <th colspan="4">收貨人 資料</th>
+                <tr>
+                    <td nowrap colspan="4">郵遞區號:&nbsp;
+                        <input type=text zEdit="any" class="col_any" name="zip_code" value="${zip_code}" maxlength="5" size="5" />
+                        收貨人地址:&nbsp;<input type=text zEdit="canTW,any" class="col_any" name="receive_address" value="${receive_address}" maxlength="60" size="60" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">收貨人姓名:&nbsp;
+                        <input type=text zEdit="canTW,any" class="col_any" name="receive_name" value="${receive_name}" maxlength="10" size="10" />
+                        收貨人電話一:&nbsp;<input type=text zEdit="any" class="col_any" name="receive_tel" value="${receive_tel}" maxlength="17" size="17" />
+                        電話二:&nbsp;<input type=text zEdit="any" class="col_any" name="receive_tel1" value="${receive_tel1}" maxlength="17" size="17" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">發票抬頭:&nbsp;
+                        <input type=text zEdit="canTW,any" class="col_any" name="voucher_head" value="${voucher_head}" maxlength="30" size="30" />
+                        統一編號:&nbsp;<input type=text zEdit="any" class="col_any" name="uniform_no" value="${uniform_no}" maxlength="10" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td nowrap>主管放行旗標:&nbsp;
+                        <span class="col_radio" style="color:red">
+                            <input type="radio" value="Y" name="apr_flag" ${apr_flag-Y} />是
+                            <input type="radio" value="N" name="apr_flag" ${apr_flag-N} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                    <td nowrap>申購書放行日期:&nbsp;
+                        <input type="text" class="col_date" name="apr_date" value="${apr_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'apr_date'});
+    </script>
+                    </td>
+                </tr>
+                <th colspan="4">出貨情形</th>
+                <tr>
+                    <td nowrap>出貨日期:&nbsp;
+                        <input type=hidden name=delv_date value="${delv_date}" /><span class="dsp_text">${delv_date.YMD}</span>
+                    </td>
+                    <td nowrap>出貨批號:&nbsp;
+                        <input type=hidden name="delv_batch_no" value="${delv_batch_no}" maxlength="10" size="10" /><span class="dsp_text">${delv_batch_no}</span>
+                    </td>
+                    <td nowrap colspan="2">掛號號碼:&nbsp;
+                        <input type=hidden name="register_no" value="${register_no}" maxlength="6" size="6" /><span class="dsp_text">${register_no}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>出貨放行旗標:&nbsp;
+                        <span class="col_radio" style="color:red">
+                            <input type="radio" value="Y" name="delv_confirm_flag" ${delv_confirm_flag-Y} />是
+                            <input type="radio" value="N" name="delv_confirm_flag" ${delv_confirm_flag-N} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                    <td nowrap colspan="2">出貨放行日期:&nbsp;
+                        <input type="text" class="col_date" name="delv_confirm_date" value="${delv_confirm_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'delv_confirm_date'});
+    </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>退貨旗標:&nbsp;
+                        <span class="col_radio" style="color:red">
+                            <input type="radio" value="Y" name="refund_flag" ${refund_flag-Y} />是
+                            <input type="radio" value="N" name="refund_flag" ${refund_flag-N} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                    <td nowrap>退貨放行日期:&nbsp;
+                        <input type="text" class="col_date" name="refund_apr_date" value="${refund_apr_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'refund_apr_date'});
+    </script>
+                    </td>
+                    <td nowrap>退貨數量:&nbsp;
+                        <input type=hidden name="refund_qty" value="${refund_qty}" size="6" /><span class="dsp_text">${refund_qty}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>分期付款倒回期數:&nbsp;
+                        <input type=hidden name="install_back_term" value="${install_back_term}" size="3" /><span class="dsp_text">${install_back_term}</span>
+                    </td>
+                    <td nowrap>倒回期數放行旗標:&nbsp;
+                        <span class="col_radio" style="color:red">
+                            <input type="radio" value="Y" name="install_back_term_flag" ${install_back_term_flag-Y} />是
+                            <input type="radio" value="N" name="install_back_term_flag" ${install_back_term_flag-N} ${DEFAULT_CHK} />否
+                        </span>
+                    </td>
+                    <td nowrap>倒回前卡號:&nbsp;
+                        <input type=hidden name="back_card_no" value="${back_card_no}" maxlength="19" size="19" /><span class="dsp_text">${back_card_no}</span>
+                    </td>
+                </tr>
+            </table>
+           
+            <table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px">
+                <tr>
+                    <td nowrap class="td_text" width="20%">經辦人員：</td>
+                    <td nowrap class="td_data" width="30%">
+                        <span class="dsp_text"> ${mod_user} </span>
+                        <input type="hidden" name="mod_user" value="${mod_user}">
+                    </td>
+                    <td nowrap class="td_text" width="20%">異動日期：</td>
+                    <td nowrap class="td_data" width="30%">
+                        <span class="dsp_date">${mod_date.YMD}</span>
+                        <input type="hidden" name="mod_date" value="${mod_date}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0110">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="against_num" value="${against_num}">
+        <input type="hidden" name="wk_tot_amt" value="${wk_tot_amt}">
+        <input type="hidden" name="db_tot_amount" value="${db_tot_amount}">
+        <input type="hidden" name="install_tot_term_a" value="${install_tot_term_a}">
+        <input type="hidden" name="installment_flag" value="${installment_flag}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function itemChange(val, name) {
+
+	//20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemChange";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("val", val);
+    addJSON("name", name);
+    addJSON("redeem_amt", $("input[name=redeem_amt]").val());
+    addJSON("redeem_kind", $("input[name=redeem_kind]:checked").val());
+    addJSON("delv_confirm_date", $("input[name=delv_confirm_date]").val());
+    addJSON("mcht_no", $("input[name=mcht_no]").val());
+    addJSON("mcht_chi_name", $("input[name=mcht_chi_name]").val());
+    addJSON("install_tot_term", $("input[name=install_tot_term]").val());
+    addJSON("loan_flag", $("input[name=loan_flag]").val());
+    addJSON("card_no", $("input[name=card_no]").val());
+    addJSON("ID_CODE", "1");
+
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    top.respHtml = "bilm0110_detl";
+    top.requHtml = "bilm0110_detl";
+    var name = getJSONvalue("name", 0);
+    console.log("name =" +name);
+
+    if (getJSONvalue("ex", 0) == 'j_mcht_no') {
+        var vendorNo = document.dataForm.mcht_no.value;
+        var vendorList = document.getElementById("merchant_2");
+
+        for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+        var len = getJSONlength("OPTION_TEXT");
+        for (var i = 0; i < len; i++) {
+            vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+            if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+        }
+
+        top.popupBlock('popDiv');
+    }
+
+
+    if (name == 'mcht_no') {
+        if (getJSONvalue("dddw_product_no2", 0) != null) {
+            $("#table1 #tr td select option").remove();
+            $("#table1 #tr td select").append(getJSONvalue("dddw_product_no2", 0));
+            $("input[name=dddw_product_no2]").val(getJSONvalue("dddw_product_no2", 0));
+        }
+
+        //mcht_chi_name
+        $("input[name=mcht_chi_name]").val(getJSONvalue("mcht_chi_name", 0));
+        $("#mcht_chi_name").text(getJSONvalue("mcht_chi_name", 0));
+
+        //db_loan_flag
+        $("input[name=loan_flag]").val(getJSONvalue("loan_flag", 0));
+        $("#loan_flag").text(getJSONvalue("loan_flag", 0));
+
+        //product_name
+        $("input[name=product_name]").val(getJSONvalue("product_name", 0));
+        $("#product_name").text(getJSONvalue("product_name", 0));
+    }
+
+    if (name == 'product_no') {
+        //product_name
+        $("input[name=product_name]").val(getJSONvalue("product_name", 0));
+        $("#product_name").text(getJSONvalue("product_name", 0));
+
+        ////mcht_no
+        //$("select[name=mcht_no]").val(getJSONvalue("mcht_no",0));
+
+        //mcht_chi_name
+        //$("input[name=mcht_chi_name]").val(getJSONvalue("mcht_chi_name",0));
+        //$("#mcht_chi_name").text(getJSONvalue("mcht_chi_name",0));
+
+        //unit_price
+        $("input[name=unit_price]").val(getJSONvalue("unit_price", 0));
+        $("#unit_price").text(getJSONvalue("unit_price", 0));
+
+        //tot_amt
+        $("input[name=tot_amt]").val(getJSONvalue("tot_amt", 0));
+
+        //install_tot_term
+        $("input[name=install_tot_term]").val(getJSONvalue("install_tot_term", 0));
+
+        //auto_delv_flag
+        $("input[name=auto_delv_flag]:checked").val(getJSONvalue("auto_delv_flag", 0));
+
+        //against_num
+        $("input[name=against_num]").val(getJSONvalue("against_num", 0));
+
+        //fees_fix_amt
+        $("input[name=fees_fix_amt]").val(getJSONvalue("fees_fix_amt", 0));
+        $("#fees_fix_amt").text(getJSONvalue("fees_fix_amt", 0));
+
+        //fees_rate
+        $("input[name=fees_rate]").val(getJSONvalue("fees_rate", 0));
+        $("#fees_rate").text(getJSONvalue("fees_rate", 0));
+
+        //extra_fees
+        $("input[name=extra_fees]").val(getJSONvalue("extra_fees", 0));
+
+        //remd_amt
+        $("input[name=remd_amt]").val(getJSONvalue("remd_amt", 0));
+        $("#remd_amt").text(getJSONvalue("remd_amt", 0));
+
+        //first_remd_amt
+        $("input[name=first_remd_amt]").val(getJSONvalue("first_remd_amt", 0));
+        $("#first_remd_amt").text(getJSONvalue("first_remd_amt", 0));
+
+        //wk_tot_amt
+        $("input[name=wk_tot_amt]").val(getJSONvalue("wk_tot_amt", 0));
+
+        //clt_fees_amt
+        $("input[name=clt_fees_amt]").val(getJSONvalue("clt_fees_amt", 0));
+        $("#clt_fees_amt").text(getJSONvalue("clt_fees_amt", 0));
+
+        //clt_unit_price
+        $("input[name=clt_unit_price]").val(getJSONvalue("clt_unit_price", 0));
+        $("#clt_unit_price").text(getJSONvalue("clt_unit_price", 0));
+
+        //clt_install_tot_term
+        $("input[name=clt_install_tot_term]").val(getJSONvalue("clt_install_tot_term", 0));
+        $("#clt_install_tot_term").text(getJSONvalue("clt_install_tot_term", 0));
+
+        //clt_remd_amt
+        $("input[name=clt_remd_amt]").val(getJSONvalue("clt_remd_amt", 0));
+        $("#clt_remd_amt").text(getJSONvalue("clt_remd_amt", 0));
+
+        //redeem_point
+        $("input[name=redeem_point]").val(getJSONvalue("redeem_point", 0));
+        $("#redeem_point").text(getJSONvalue("redeem_point", 0));
+
+        //redeem_amt
+        $("input[name=redeem_amt]").val(getJSONvalue("redeem_amt", 0));
+        $("#redeem_amt").text(getJSONvalue("redeem_amt", 0));
+
+        //exchange_amt
+        $("input[name=exchange_amt]").val(getJSONvalue("exchange_amt", 0));
+
+        //qty
+        $("input[name=qty]").val(getJSONvalue("qty", 0));
+
+        //db_tot_amount
+        $("input[name=db_tot_amount]").val(getJSONvalue("db_tot_amount", 0));
+
+        //contract_kind
+        $("input[name=contract_kind]:checked").val(getJSONvalue("contract_kind", 0));
+
+        //clt_interest_rate
+        $("input[name=ls_clt_interest_rate]").val(getJSONvalue("ls_clt_interest_rate", 0));
+
+        //clt_fees_fix_amt
+        $("input[name=ls_clt_fees_fix_amt]").val(getJSONvalue("ls_clt_fees_fix_amt", 0));
+
+    }
+
+    if (name == 'card_no') {
+
+        $("input[name=acct_type]").val(getJSONvalue("j_acct_type", 0));
+        $("#acct_type").text(getJSONvalue("j_acct_type", 0));
+
+        $("input[name=acct_key]").val(getJSONvalue("j_acct_key", 0));
+        $("#acct_key").text(getJSONvalue("j_acct_key", 0));
+
+        $("input[name=vip_code]").val(getJSONvalue("j_vip_code", 0));
+        $("#vip_code").text(getJSONvalue("j_vip_code", 0));
+
+        $("input[name=birthday]").val(getJSONvalue("j_birthday", 0));
+        $("#birthday").text(getJSONvalue("j_birthday", 0));
+
+        $("input[name=stmt_cycle]").val(getJSONvalue("j_stmt_cycle", 0));
+        $("#stmt_cycle").text(getJSONvalue("j_stmt_cycle", 0));
+
+        $("input[name=db_name]").val(getJSONvalue("j_db_name", 0));
+        $("#db_name").text(getJSONvalue("j_db_name", 0));
+
+        $("input[name=db_id]").val(getJSONvalue("j_db_id", 0));
+        $("#db_id").text(getJSONvalue("j_db_id", 0));
+
+        $("input[name=limit_end_date]").val(getJSONvalue("j_limit_end_date", 0));
+
+        $("input[name=zip_code]").val(getJSONvalue("j_bill_sending_zip", 0));
+        $("input[name=receive_address]").val(getJSONvalue("j_ls_mail_addr", 0));
+        $("input[name=receive_name]").val(getJSONvalue("j_db_r_name", 0));
+        $("input[name=receive_tel]").val(getJSONvalue("j_ls_tel", 0));
+        $("input[name=receive_tel1]").val(getJSONvalue("j_ls_tel1", 0));
+
+
+    }
+     refundamtCount();
+    return false;
+
+
+
+
+}
+
+$(document).ready(function() {
+    // refundamtCount();
+
+})
+
+function refundamtCount() {
+    var qty = $("input[name=qty]").val();
+    var tot_amt = $("input[name=tot_amt]").val();
+    var exchange_amt = $("input[name=exchange_amt]").val();
+    var redeem_amt = $("input[name=redeem_amt]").val();
+    var installmentFlag = $("input[name = installment_flag]").val();
+
+    var refundamt = 0;
+    var install_tot_term = $("input[name=install_tot_term]").val();
+    refundamt = Number(qty) * Number(tot_amt) - Number(exchange_amt) - Number(redeem_amt);
+    $("input[name=refundamt]").val(refundamt);
+    $("#refundamt").text(refundamt);
+    $("input[name=install_tot_term_a]").val(install_tot_term);
+
+    //重新計算客戶手續費
+    var ls_clt_interest_rate = $("input[name=ls_clt_interest_rate]").val();
+    var ls_clt_interest_100 = ls_clt_interest_rate / 100;
+    var ls_clt_fees_fix_amt = $("input[name=ls_clt_fees_fix_amt]").val();
+    var ls_clt_amt = 0;
+    var ls_tot_term = $("input[name=install_tot_term]").val();
+    if(installmentFlag == 'N'){
+        ls_tot_term = '1';
+    }
+    var ls_unit_price = 0;
+    var ls_remd_amt = 0;
+
+
+    ls_clt_amt = (Number(refundamt) * Number(ls_clt_interest_100)) + Number(ls_clt_fees_fix_amt)
+    ls_unit_price = Math.floor(ls_clt_amt / ls_tot_term);
+    ls_remd_amt = Number(ls_clt_amt) - (Number(ls_unit_price) * Number(ls_tot_term));
+
+    $("input[name=clt_fees_amt]").val(ls_clt_amt);
+    $("#clt_fees_amt").text(ls_clt_amt);
+    $("input[name=clt_install_tot_term]").val(ls_tot_term);
+    $("#clt_install_tot_term").text(ls_tot_term);
+    $("input[name=clt_unit_price]").val(ls_unit_price);
+    $("#clt_unit_price").text(ls_unit_price);
+    $("input[name=clt_remd_amt]").val(ls_remd_amt);
+    $("#clt_remd_amt").text(ls_remd_amt);
+
+    unit_priceCount();
+}
+
+function unit_priceCount() {
+    var unit_price = 0;
+    var first_remd_amt = 0;
+    var refundamt = $("input[name=refundamt]").val();
+    var install_tot_term = $("input[name=install_tot_term]").val();
+    var install_tot_term_a = $("input[name=install_tot_term_a]").val();
+
+
+    unit_price = Number(refundamt) / Number(install_tot_term);
+    $("input[name=unit_price]").val(Math.floor(unit_price));
+    $("#unit_price").text(Math.floor(unit_price));
+    first_remd_amt = Number(refundamt) % Number(install_tot_term);
+    $("input[name=first_remd_amt]").val(first_remd_amt);
+    $("#first_remd_amt").text(Math.floor(first_remd_amt));
+}
+
+function install_tot_term_check(val) {
+    var install_tot_term_a = $("input[name=install_tot_term_a]").val();
+
+    if (Number(val) <= 0) {
+        alert("分期付款總期數不可小於等於0");
+        $("input[name=install_tot_term]").val(install_tot_term_a);
+    }
+
+    if (Number(val) > Number(install_tot_term_a)) {
+        alert("不可超過原本分期付款總期數:" + install_tot_term_a);
+        $("input[name=install_tot_term]").val(install_tot_term_a);
+    }
+
+    //重新計算客戶手續費
+    var qty = $("input[name=qty]").val();
+    var tot_amt = $("input[name=tot_amt]").val();
+    var exchange_amt = $("input[name=exchange_amt]").val();
+    var redeem_amt = $("input[name=redeem_amt]").val();
+
+    var refundamt = 0;
+    var install_tot_term = $("input[name=install_tot_term]").val();
+    refundamt = Number(qty) * Number(tot_amt) - Number(exchange_amt) - Number(redeem_amt);
+    var ls_clt_interest_rate = $("input[name=ls_clt_interest_rate]").val();
+    var ls_clt_interest_100 = ls_clt_interest_rate / 100;
+    var ls_clt_fees_fix_amt = $("input[name=ls_clt_fees_fix_amt]").val();
+    var ls_clt_amt = 0;
+    var ls_tot_term = $("input[name=install_tot_term]").val();
+    var ls_unit_price = 0;
+    var ls_remd_amt = 0;
+
+
+    ls_clt_amt = (Number(refundamt) * Number(ls_clt_interest_100)) + Number(ls_clt_fees_fix_amt)
+    ls_unit_price = Math.floor(ls_clt_amt / ls_tot_term);
+    ls_remd_amt = Number(ls_clt_amt) - (Number(ls_unit_price) * Number(ls_tot_term));
+
+    $("input[name=clt_fees_amt]").val(ls_clt_amt);
+    $("#clt_fees_amt").text(ls_clt_amt);
+    $("input[name=clt_install_tot_term]").val(ls_tot_term);
+    $("#clt_install_tot_term").text(ls_tot_term);
+    $("input[name=clt_unit_price]").val(ls_unit_price);
+    $("#clt_unit_price").text(ls_unit_price);
+    $("input[name=clt_remd_amt]").val(ls_remd_amt);
+    $("#clt_remd_amt").text(ls_remd_amt);
+
+
+    unit_priceCount();
+
+}
+
+function tot_amt_check() {
+    var tot_amt = $("input[name=tot_amt]").val();
+    if (Number(tot_amt) < 0) {
+        alert("商品單價不可小於0");
+        return;
+    }
+    refundamtCount();
+}
+
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode1() {
+    var vendorNo = document.dataForm.mcht_no.value;
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("a_mcht_no", vendorNo);
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX
+    //top.methodName = "actionFunction";
+    addJSON("ID_CODE", "0");
+    processAJAX();
+    return true;
+}
+
+function mcht_no_focus() {
+    document.dataForm.mcht_no.focus();
+    document.dataForm.product_no.focus();
+}
+</script>

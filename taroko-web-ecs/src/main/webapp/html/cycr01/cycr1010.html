@@ -1,0 +1,141 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>信用卡差別循環利率統計表-109-05-22-Andy-[Update]
+        -110-06-25-Andy-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user}
+    <div id="condBlock">
+        <!--COND -->
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap colspan="6">&nbsp;報表年月：
+                    <input type="text" class="col_date" name="ex_acct_month" value="${ex_acct_month}" zEdit="date,yyyymm" maxlength="6" size="6" zRequire="k" />
+                </td>
+                <td nowrap colspan="6">&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <!--<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;-->
+                    <!--                         <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                    <input type="Button" name="btnUpdate" value="產生.CSV檔" onClick="return wf_downfile();" class="btUpdate">&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="colKey" colspan="6">&nbsp;減碼利率:
+                    <input type="text" class="col_number" name="ex_int_rate" value="${ex_int_rate}" zEdit="dignumber" maxlength=5 size=7  />
+                </td>
+                <td nowrap colspan="6">&nbsp;報表排序:
+                    <select size="1" name="ex_sort_col" value="${ex_sort_col}" class="col_ddlb">
+                        <option value="RC_FLAG" ${ex_sort_col-RC_FLAG}>本期RC戶註記</option>
+                        <option value="REVOLVE_INT_RATE" ${ex_sort_col-REVOLVE_INT_RATE}>減碼利率</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="12">&nbsp;合計
+                    <br>&nbsp;
+                    總筆數：<span class="dsp_text">${count_all.(999)}</span>&nbsp;
+                    有效卡數：<span class="dsp_text">${sum_active_card_num.(999)}</span>&nbsp;
+                    戶數：<span class="dsp_text">${sum_acno_num.(999)}</span>&nbsp;
+                    上期本金結欠金額：<span class="dsp_text">${sum_last_ttl_amt.(999)}</span>&nbsp;
+                    本期消費金額：<span class="dsp_text">${sum_billed_end_bal.(999)}</span>&nbsp;
+                    本期本金總欠金額：<span class="dsp_text">${sum_ttl_amt.(999)}</span>&nbsp;
+                    <input type="hidden" name="count_all" value="${count_all}">
+                    <input type="hidden" name="sum_active_card_num" value="${sum_active_card_num}">
+                    <input type="hidden" name="sum_acno_num" value="${sum_acno_num}">
+                    <input type="hidden" name="sum_last_ttl_amt" value="${sum_last_ttl_amt}">
+                    <input type="hidden" name="sum_billed_end_bal" value="${sum_billed_end_bal}">
+                    <input type="hidden" name="sum_ttl_amt" value="${sum_ttl_amt}">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!--Sum -->
+    <!--List -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">前期<br>RC戶</th>
+            <th nowrap class="list_th">本期<br>RC戶</th>
+            <th nowrap class="list_th">新卡友</th>
+            <th nowrap class="list_th">減碼利率</th>
+            <th nowrap class="list_th">違約<br>預測</th>
+            <th nowrap class="list_th">Payment<br>rate</th>
+            <th nowrap class="list_th">帳戶狀態</th>
+            <th nowrap class="list_th">有效卡數</th>
+            <th nowrap class="list_th">戶數</th>
+            <th nowrap class="list_th">上期本金<br>結欠金額</th>
+            <th nowrap class="list_th">本期<br>消費金額</th>
+            <th nowrap class="list_th">本期本金<br>總欠金額</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+            <td nowrap class="list_cc"> ${last_rc_flag}&nbsp; </td>
+            <td nowrap class="list_cc"> ${rc_flag}&nbsp;</td>
+            <td nowrap class="list_cc"> ${new_card_holder}&nbsp;</td>
+            <td nowrap class="list_rr"> &nbsp;${revolve_int_rate.(999.000)} </td>
+            <td nowrap class="list_cc"> ${pd_rating}&nbsp;</td>
+            <td nowrap class="list_cc"> ${payment_rate}&nbsp;</td>
+            <td nowrap class="list_cc"> ${db_acct_status}&nbsp;</td>
+            <td nowrap class="list_rr"> ${active_card_num}&nbsp;</td>
+            <td nowrap class="list_rr"> &nbsp;${acno_num.(999)} </td>
+            <td nowrap class="list_rr"> &nbsp;${last_ttl_amt.(999)} </td>
+            <td nowrap class="list_rr"> &nbsp;${billed_end_bal.(999)} </td>
+            <td nowrap class="list_rr"> &nbsp;${ttl_amt.(999)} </td>
+            <input type=hidden name="wk_empty" value="${wk_empty}" />
+            <input type=hidden name="rowid" value="${rowid}" />
+            <input type=hidden name="row_ct" value="${row_ct}" />
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="MOD_PGM" value="cycr1010">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+    <input type="hidden" id="TTTS" name="TTTS" value="">
+
+    <input type="hidden" name="sel_sql" value="${sel_sql}">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows = "20";
+    document.dataForm.ex_acct_month.focus();
+
+    function validateInput() {
+        if (!top.checkFormat()) { return false; }
+
+        return true;
+    }
+
+    function wf_downfile() {
+        top.submitControl('S2');
+        top.spinner.stop();
+        return true;
+    }
+
+</script>

@@ -1,0 +1,128 @@
+<html>
+
+<head>
+  <title>特店風險註記維護-cond-JH231219</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+  <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+  <form name="dataForm" method="post" action="">
+
+    <div id="condBlock">
+      <table width="60%" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+          <td nowrap>&nbsp;收單行：
+            <input type="text" class="col_text" name="ex_acq_bank_id" value="${ex_acq_bank_id}" maxlength="8" size="10" />
+          </td>
+          <td nowrap>&nbsp;特店代碼：
+            <input type="text" class="col_text" name="ex_mcht_no" value="${ex_mcht_no}" maxlength="15" size="17" />
+          </td>
+          <td nowrap>&nbsp;
+            <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+            <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+            <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;管制是否終止：
+            <span class="col_radio">
+         <input type="radio" value="0" name="ex_auth_flag" ${ex_auth_flag-0} ${default-ex_auth_flag} />全部
+         <input type="radio" value="Y" name="ex_auth_flag" ${ex_auth_flag-Y} />終止
+         <input type="radio" value="N" name="ex_auth_flag" ${ex_auth_flag-N} />管制中
+      </span>
+          </td>
+          <td nowrap>&nbsp;MCC code：
+            <input type="text" class="col_text" name="ex_mcc_code" value="${ex_mcc_code}" maxlength="4" size="6">
+          </td>
+          <td nowrap>&nbsp;排除卡號：
+            <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <hr>
+
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th nowrap class="list_th" width="5%">No</th>
+        <th nowrap class="list_th">收單行</th>
+        <th nowrap class="list_th">特店代碼</th>
+        <th nowrap class="list_th">特店名稱</th>
+        <th nowrap class="list_th">MCC CODE</th>
+        <th nowrap class="list_th">本行風險代碼</th>
+        <th nowrap class="list_th">管制期間</th>
+        <th nowrap class="list_th">金額區間</th>
+        <th nowrap class="list_th">額度百分比</th>
+        <th nowrap class="list_th">端末機編號</th>
+        <th nowrap class="list_th">風險係數</th>
+        <th nowrap class="list_th">異動日期</th>
+        <th nowrap class="list_th">異動經辦</th>
+      </tr>
+      <!-- BEGIN DYNAMIC : DETAIL -->
+      <tr onclick="detailScreen('${SER_NUM}','${mcht_no}','${acq_bank_id}','${mcc_code}')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_cc"> ${acq_bank_id}&nbsp;</td>
+        <td nowrap class="list_cc"> ${mcht_no}&nbsp;</td>
+        <td nowrap class="list_ll"> ${mcht_name}&nbsp;</td>
+        <td nowrap class="list_cc"> ${mcc_code}&nbsp;</td>
+        <td nowrap class="list_cc"> ${mcht_risk_code}&nbsp;</td>
+        <td nowrap class="list_cc"> ${risk_start_date.YMD}--${risk_end_date.YMD}&nbsp;</td>
+        <td nowrap class="list_cc"> ${auth_amt_s.(999)}--${auth_amt_e.(999)}&nbsp;</td>
+        <td nowrap class="list_cc"> ${auth_amt_rate.(999.00)}&nbsp;</td>
+        <td nowrap class="list_cc"> ${edc_pos_no1},${edc_pos_no2},${edc_pos_no3}&nbsp;</td>
+        <td nowrap class="list_cc"> ${risk_factor}&nbsp;</td>
+        <td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;</td>
+        <td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+      </tr>
+      <!-- END DYNAMIC : DETAIL -->
+    </table>
+
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+
+  </form>
+</body>
+
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1');
+</script>
+
+<script language="javascript">
+  top.refreshButton2('0');
+  top.pageRows = "20";
+
+
+  function validateInput() {
+    top.allow_spec_char = true;
+    if (!top.checkFormat()) {
+      return false;
+    }
+
+    if (top.actionCode == "X") {
+      top.respLevel = 1;
+      top.respHtml = "ccam3050_detl";
+    }
+
+    return true;
+  }
+
+  function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "ccam3050_detl";
+    top.submitControl('S');
+    return true;
+  }
+</script>

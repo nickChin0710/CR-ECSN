@@ -1,0 +1,229 @@
+<html>
+<head>
+<title>對帳單簡訊覆核作業-V.2017-1226-yash-[Initial]
+					-V.2020-0804-Amber-[Update]
+					-V.2020-0826-Amber-[Update]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap >&nbsp;帳單年月:
+             <input type="text" class="col_date" name="ex_msg_month" value="${ex_msg_month}"
+                 zeditType="any" MaxLength="6" size="6" />
+        </td>
+        <td nowrap colspan="2">&nbsp;帳戶類別:
+		   <select name="ex_acct_type" class="col_ddlb" >
+		     <!--  ${dddw_acct_type}  -->
+	       <option value="">--</option>
+         <option value="01" ${ex_acct_type-01} >01_一般卡</option>
+         <option value="03" ${ex_acct_type-03} >03_商務卡</option>
+         <option value="06" ${ex_acct_type-06} >06_政府網路採購卡</option>
+         <option value="90" ${ex_acct_type-90} >90_Visa 金融卡</option>
+		   </select>
+        </td>
+    </tr>
+    <tr>
+       <td nowrap >&nbsp;簡訊類別:
+          <select  name="ex_msg_type" class="col_ddlb">
+	          <option value="">--</option>
+         		<option value="1" ${ex_msg_type-1} >1.Record04 (訊息項 FOR 簡訊前)</option>
+         		<option value="2" ${ex_msg_type-2} >2.Record05 (訊息項 FOR 簡訊後)</option>
+         		<option value="4" ${ex_msg_type-4} >4.Record04 (訊息項 FOR VD-訊息)</option>
+         		<option value="5" ${ex_msg_type-5} >5.Record06 (訊息項 FOR VD-紅利訊息)</option>
+          </select>
+        </td>
+        <td nowrap>&nbsp;建檔經辦:
+           <select size="1" name="ex_user" class="col_ddlb" >
+              ${dddw_sec_user}
+           </select>
+        </td>
+
+    </tr>
+    <tr>
+	   <td nowrap >&nbsp;建檔日期：
+	      <input type="text" class="col_date" name="ex_acct_date1" value="${ex_acct_date1}"
+	         zeditType="date,ymd" MaxLength=10 size=10 />
+	       <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'ex_acct_date1'});
+		    </script>
+	      --   
+	      <input type="text" class="col_date" name="ex_acct_date2" value="${ex_acct_date2}"
+	         zeditType="date,ymd" MaxLength=10 size=10 />
+	       <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'ex_acct_date2'});
+		    </script>
+	   </td>       
+	   <td nowrap >&nbsp;
+            <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button" name="btnAdd" value="執行" onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+   <!--   <td nowrap>&nbsp;帳務週期:
+		      <select  name="ex_cycle_type" class="col_ddlb">
+		        <option value="">--</option>
+		        <option value="3" ${ex_cycle_type-3} >3</option>
+		        <option value="6" ${ex_cycle_type-6} >6</option>
+		        <option value="9" ${ex_cycle_type-9} >9</option>
+		        <option value="12" ${ex_cycle_type-12} >12</option>
+		        <option value="15" ${ex_cycle_type-18} >15</option>
+		        <option value="18" ${ex_cycle_type-18} >18</option>
+		        <option value="21" ${ex_cycle_type-21} >21</option>
+		        <option value="24" ${ex_cycle_type-24} >24</option>
+		        <option value="27" ${ex_cycle_type-27} >27</option>
+		      </select>
+       </td>  --> 
+    </tr>   
+    <tr>
+       <td nowrap >&nbsp;覆核狀態:
+          <span class="col_radio">
+             <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${DEFAULT_CHK}/>未覆核(覆核)
+             <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核(解除覆核)
+          </span>
+       </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        	<input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">覆核&nbsp;</th>
+        <th nowrap class="list_th">帳單年月</th>
+        <th nowrap class="list_th">帳戶類別</th>
+        <th nowrap class="list_th">簡訊類別</th>
+        <th nowrap class="list_th">列印順序</th>
+   <!-- <th nowrap class="list_th">帳務週期</th> -->
+        <th nowrap class="list_th">覆核</th> 
+        <th nowrap class="list_th">簡訊內容</th>
+        <th nowrap class="list_th">鍵檔人員</th>
+        <th nowrap class="list_th">鍵檔日期</th>
+        <th nowrap class="list_th">錯誤訊息</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+        <td nowrap class="list_no" >
+          <span class="dsp_flag">${ok_flag}</span>
+            ${SER_NUM}
+          <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} ${opt_disabled}/>
+          <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+          <input type="hidden" name="ser_num" value="${ser_num}"/>
+        </td>
+        <td nowrap class="list_cc"> ${msg_month}</td>
+        <td nowrap class="list_cc"> ${acct_type}</td>
+        <td nowrap class="list_cc"> ${msg_type}</td>
+        <td nowrap class="list_cc"> ${msg_code}</td>
+   <!-- <td nowrap class="list_ll"> ${tt_stmt_cycle_parm}</td> -->
+        <td nowrap class="list_ll"> ${tt_apr_flag}&nbsp;</td> 
+        <td nowrap class="list_ll"> ${wk_param}</td>
+        <td nowrap class="list_ll"> ${crt_user} </td>
+        <td nowrap class="list_cc"> ${crt_date.YMD} </td>
+        <td nowrap class="list_ll"> ${ls_errmsg}&nbsp;</td>
+        <input type="hidden" name="msg_month" value="${msg_month}"/>
+        <input type="hidden" name="acct_type" value="${acct_type}"/>
+        <input type="hidden" name="msg_type" value="${msg_type}"/>
+        <input type="hidden" name="msg_code" value="${msg_code}"/>
+        <input type="hidden" name="tt_stmt_cycle_parm" value="${tt_stmt_cycle_parm}"/>
+        <input type="hidden" name="cycle_type" value="${cycle_type}"/>
+        <input type="hidden" name="wk_param" value="${wk_param}"/>
+        <input type="hidden" name="crt_user" value="${crt_user}"/>
+        <input type="hidden" name="crt_date" value="${crt_date.YMD}"/>
+        <input type="hidden" name="mod_user" value="${mod_user}">
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_msg_month.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cycp0015_detl";
+    }
+    if ( top.actionCode == "S2" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if($("input[name=ex_apr_flag][value='N']").prop("checked")==true){
+    		if (confirm("是否執行 覆核作業?!") === false) {
+                return false;
+            } 
+    	}
+    	if($("input[name=ex_apr_flag][value='Y']").prop("checked")==true){
+    		if (confirm("是否執行 解除覆核作業?!") === false) {
+                return false;
+            } 
+    	}
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cycp0015_detl";
+    top.submitControl('S');
+    return true;
+}
+
+function chkdata() {
+	 var agy =0;
+	 $("input[name=opt]").each(function (){
+		 if($(this).prop("checked")==true){
+			 agy++; 
+		 }
+	 })
+	 if(agy == 0){
+		 alert("請勾選資料!");
+		 return false;
+	 }
+	 return true;
+}
+
+//全選
+function selectAll() {
+    var opt_select = document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for (var i = 0; i < aElems.length; i++) {
+        if (aElems[i].type == "checkbox" && aElems[i].disabled == false) {
+            aElems[i].checked = opt_select;
+        }
+    }
+    return;
+}
+
+</script>

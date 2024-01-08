@@ -1,0 +1,153 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-12-20  V1.00.01  Oris Chang     Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>外幣自動扣繳帳號維護-detl</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+    <!--${#PLUGIN:htmcomm_plugin.apr_user}  -->
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+                  	<input type="Button"     value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  					<input type="Button"       value=" 新增 " ${btnAdd_disable}   onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  					<input type="Button"    value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  					<input type="Button"    value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  					<input type="Button"     value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+		<!-- 輸入資料讀取條件  -->
+  			<tr>
+   				<td nowrap width="60%">&nbsp;身份證號:
+     				<input type="text" class="col_text" name="kk_id_no" value="${kk_id_no}"
+      				maxlength="10" size="12" zEdit ="alphanum,upper" zRequire ="k","C"  onchange="getInfo();"/>
+				</td>
+  			</tr>
+		</table>
+		<hr>
+            <!-- Detail data================================= -->
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>身份證號</td>
+					<td nowrap><input type="hidden" name="id_no" value="${id_no}"><span class="dsp_text">${id_no}</span></td>
+					<td nowrap>中文姓名</td>
+					<td nowrap><input type="hidden" name="cname" value="${cname}"><span class="dsp_text">${cname}</span></td>
+				</tr>
+				<tr>
+					<td nowrap>登錄人員</td>
+					<td nowrap><input type="hidden" name="crt_user" value="${crt_user}"><span class="dsp_text">${crt_user}</span></td>
+					<td nowrap>登錄日期</td>
+					<td nowrap><input type="hidden" name="crt_date" value="${crt_date}"><span class="dsp_text">${crt_date.YMD}</span></td>
+				</tr>
+				<tr>
+					<td nowrap>手機號碼</td>
+					<td nowrap><input type="hidden" name="db_cell_phone" value="${db_cell_phone}"><span class="dsp_text">${db_cell_phone}</span></td>
+					<td nowrap>繳款截止日期</td>
+					<td nowrap><input type="hidden" name="db_lastpay_date" value="${db_lastpay_date}"><span class="dsp_text">${db_lastpay_date.YMD}</span></td>
+				</tr>
+			</table>
+			
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>發送條件（請務必勾選）</td>
+					<td nowrap>繳款截止日前</td>
+					<td nowrap>當日</td>
+					<td nowrap>繳款截止日後</td>
+				</tr>
+				<tr>
+					<td nowrap></td>
+					<td nowrap>
+						-3<input type="checkbox" name="lastpay_date_m3" value="Y" ${lastpay_date_m3-Y} />
+						-2<input type="checkbox" name="lastpay_date_m2" value="Y" ${lastpay_date_m2-Y} />
+						-1<input type="checkbox" name="lastpay_date_m1" value="Y" ${lastpay_date_m1-Y} />
+					</td>
+					<td nowrap>
+						0<input type="checkbox" name="lastpay_date_m0" value="Y" ${lastpay_date_m0-Y} />
+					</td>
+					<td nowrap>
+						1<input type="checkbox" name="lastpay_date_p1" value="Y" ${lastpay_date_p1-Y} />
+						2<input type="checkbox" name="lastpay_date_p2" value="Y" ${lastpay_date_p2-Y} />
+						3<input type="checkbox" name="lastpay_date_p3" value="Y" ${lastpay_date_p3-Y} />
+					</td>
+				</tr>
+			</table>
+			<hr>
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>發送起迄年月</td>
+					<td nowrap colspan="3">
+					<input type='text' class='col_date' zeditType="date,yyyymm" name='sms_s_acct_month' maxlength='6' size='8' value='${sms_s_acct_month}' />--
+					<input type='text' class='col_date' zeditType="date,yyyymm" name='sms_e_acct_month' maxlength='6' size='8' value='${sms_e_acct_month}' /></td>
+				</tr>
+				<tr>
+					<td nowrap>暫停發送起迄日期</td>
+					<td nowrap colspan="3">
+					<input type='text' class='col_date' name='stop_s_date' zeditType="date,yyyymmdd" maxlength='8' size='10' value='${stop_s_date}' />
+					<script language="JavaScript">
+						new tcal ({'formname': 'dataForm','controlname': 'stop_s_date'});
+					</script> 
+					--
+					<input type='text' class='col_date' name='stop_e_date' zeditType="date,yyyymmdd"  maxlength='8' size='10' value='${stop_e_date}' />
+					<script language="JavaScript">
+						new tcal ({'formname': 'dataForm','controlname': 'stop_e_date'});
+					</script> 
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>覆核人員</td>
+					<td nowrap><input type="hidden" name="Apr_user" value="${Apr_user}"><span class="dsp_text">${Apr_user}</span></td>
+					<td nowrap>覆核日期</td>
+					<td nowrap><input type="hidden" name="Apr_date" value="${Apr_date}"><span class="dsp_text">${Apr_date}</span></td>
+				</tr>
+			</table>
+		</div>
+        <!-- -->
+        <input type="hidden" name="MOD_PGM" value="actm0410">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="ID_P_SEQNO" value="${ID_P_SEQNO}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="rowid" value="${rowid}">
+ 		<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    return true;
+}
+
+function getInfo() { 
+	top.submitControl('I'); 
+}
+
+</script>

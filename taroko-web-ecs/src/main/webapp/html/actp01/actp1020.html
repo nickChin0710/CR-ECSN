@@ -1,0 +1,209 @@
+<html>
+<head>
+<title>帳務週期更改覆核-V.2018-0822-Alex[Initial]
+V.2023-1228-Simon[Update]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+	
+<!--COND -->
+<table width="50%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;帳務週期更改日期：
+      		<input type="text" class="col_date" name="ex_chg_cycle_date" value="${ex_chg_cycle_date}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_chg_cycle_date'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_chg_cycle_date2" value="${ex_chg_cycle_date2}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_chg_cycle_date2'});
+	    	</script>
+   		</td>
+   		<td nowrap >&nbsp;  
+			<input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+			<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+			<input type="Button" name="btnAdd"   value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;執行人員:
+			<input type="text" class="col_any" zEdit="any" name="ex_crt_id" value="${ex_crt_id}"
+      		maxlength="10" size="10"/>
+		</td>
+		<td nowrap>&nbsp;覆核狀況:
+      		<span class="col_radio" onChange="ex_optcode_change()">
+         		<input type="radio" value="0" name="ex_optcode" ${ex_optcode-0} ${DEFAULT-ex_optcode} />未覆核
+         		<input type="radio" value="1" name="ex_optcode" ${ex_optcode-1} />已覆核
+      		</span>
+   		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th nowrap class="list_th" width="5%">
+			<input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue"><span class="ex_selectAll">覆核</span>&nbsp;</th>
+		<th nowrap class="list_th">身分證字號<br>/統編</th>
+		<th nowrap class="list_th">中文姓名<br>/公司名稱</th>
+		<th nowrap class="list_th">最後關<br>帳年月</th>
+		<th nowrap class="list_th">原帳務週期</th>
+		<th nowrap class="list_th">新帳務週期</th>
+		<th nowrap class="list_th">下次關帳日</th>
+		<th nowrap class="list_th">最後計<br>息日期</th>
+		<th nowrap class="list_th">最近半年<br>更改次數</th>
+		<th nowrap class="list_th">最差M Code</th>
+		<th nowrap class="list_th">建立日期</th>
+		<th nowrap class="list_th">建立人員</th>
+		<th nowrap class="list_th">帳務週期<br>更改日期</th>
+</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+	<tr>
+		<td nowrap class="list_no" rowspan="2">
+			<span class="col_key">${ok_flag}</span>
+			<input type="checkbox" name="opt" class="check"  value="${ser_num}" ${opt_disabled} />
+			${SER_NUM}&nbsp;
+      <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+			<input type="hidden" name="rowid" value="${rowid}">
+			<input type="hidden" name="ser_num" value="${ser_num}">
+			<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+			<input type="hidden" name="acct_key" value="${acct_key}">
+			<input type="hidden" name="db_chi_name" value="${db_chi_name}">
+			<input type="hidden" name="last_cycle_month" value="${last_cycle_month}">
+			<input type="hidden" name="new_cycle_month" value="${new_cycle_month}">
+			<input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+			<input type="hidden" name="new_stmt_cycle" value="${new_stmt_cycle}">
+			<input type="hidden" name="db_next_close_date" value="${db_next_close_date}">
+			<input type="hidden" name="last_interest_date" value="${last_interest_date}">
+			<input type="hidden" name="db_chg_times" value="${db_chg_times}">
+			<input type="hidden" name="m_code" value="${m_code}">
+			<input type="hidden" name="Crt_date" value="${Crt_date}">
+			<input type="hidden" name="Crt_user" value="${Crt_user}">
+			<input type="hidden" name="chg_cycle_date" value="${chg_cycle_date}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap class="list_ll">${acct_key}&nbsp;</td>
+		<td nowrap class="list_ll">${db_chi_name}&nbsp;</td>
+		<td nowrap class="list_ll">${last_cycle_month.YMD}&nbsp;
+		<td nowrap class="list_ll">${stmt_cycle}&nbsp;</td>
+		<td nowrap class="list_ll">${new_stmt_cycle}&nbsp;</td>
+		<td nowrap class="list_ll">${db_next_close_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${last_interest_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${db_chg_times}&nbsp;</td>
+		<td nowrap class="list_ll">${m_code}&nbsp;</td>
+		<td nowrap class="list_ll">${Crt_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${Crt_user}&nbsp;</td>
+		<td nowrap class="list_ll">${chg_cycle_date.YMD}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="actp1020">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ ex_optcode_change();
+ function validateInput()
+  {
+	var ex_optcode = $("input[name=ex_optcode]:checked").val();
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "actp1020_detl"; 
+    }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	}
+    	
+   	 if(ex_optcode=='0'){
+   		if (confirm("是否執行覆核作業?") === false) {
+            return false;
+        } 
+   	 }else{
+    	if (confirm("是否執行解覆核作業?") === false) {
+            return false;
+        } 
+   	 }
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "actp1020_detl";
+    top.submitControl('S');
+    return true;
+  }
+//全選
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+ }
+ 
+ function chkdata() {
+	 var agy =0;
+	 $("input[name=opt]").each(function (){
+		 if($(this).prop("checked")==true){
+			 agy++; 
+		 }
+	 })
+	 if(agy == 0){
+		 alert("未選取覆核資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ function ex_optcode_change(){
+	 var ex_optcode = $("input[name=ex_optcode]:checked").val();
+	 if(ex_optcode=='0'){
+		 $(".ex_selectAll").text("覆核");
+	 }else{
+		 $(".ex_selectAll").text("解覆核");
+	 }
+ }
+
+</script>

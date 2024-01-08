@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>期中覆審ACTION參數維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;ACTION 版本號碼:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" >
+   </td>
+   <td nowrap  >&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock" >	
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap >&nbsp;最近覆核日期:
+ 			<span class="dsp_text">${ex_apr_date.YMD}&nbsp;</span>
+ 			<input type="hidden" name="ex_apr_date" value="${ex_apr_date}"> 			
+ 		</td>
+ 		<td nowrap >&nbsp;覆核筆數:
+ 			<span class="dsp_text">${ex_apr_rows.(999)}&nbsp;</span>
+ 			<input type="hidden" name="ex_apr_rows" value="${ex_apr_rows}"> 			
+ 		</td>
+ 		<td nowrap >&nbsp;未覆核筆數:
+ 			<span class="dsp_text">${ex_un_apr_rows.(999)}&nbsp;</span>
+ 			<input type="hidden" name="ex_un_apr_rows" value="${ex_un_apr_rows}"> 			
+ 		</td>
+ 		<td nowrap class="td_remark" >&nbsp;**新額度=原額度 X 降額比例</td> 		 			 		
+ </table>	
+</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap  width="5%">No&nbsp;</th>
+    <th nowrap >ACTION<br>版本號碼</th>
+    <th nowrap >版本說明&nbsp;</th>
+    <th nowrap >風險<br>族群</th>
+    <th nowrap >Action Code&nbsp;</th>
+    <th nowrap >降額<br>比率</th>
+    <th nowrap >降額<br>原因碼</th>
+    <th nowrap >簡訊<br>降額</th>
+    <th nowrap >凍結<br>碼[4]</th>
+    <th nowrap >凍結<br>碼[5]</th>
+    <th nowrap >戶特指&nbsp;</th>
+    <th nowrap >延遲<br>執行天數</th>
+    <th nowrap >延遲<br>簡訊</th>
+    <th nowrap >LOAN<br>覆審決策</th>
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >建檔經辦&nbsp;</th>
+    <th nowrap >覆核日期&nbsp;</th>
+    <th nowrap >覆核主管&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${batch_no}','${risk_group}','')" style="cursor:hand">
+	 <td nowrap class="list_no"> ${ser_num}&nbsp;</td>  
+   <td nowrap class="list_cc"> ${batch_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${action_desc}&nbsp;</td>
+   <td nowrap class="list_cc"> ${risk_group}&nbsp;</td>
+   <td nowrap class="list_ll"> ${action_code}.${#JAVA:ecsfunc.DeCodeRsk.trialAction(action_code)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${adj_limit_rate}&nbsp;</td>
+   <td nowrap class="list_cc"> ${adj_limit_reason}&nbsp;</td>
+   <td nowrap class="list_cc"> ${msg_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${block_reason4}&nbsp;</td>
+   <td nowrap class="list_cc"> ${block_reason5}&nbsp;</td>
+   <td nowrap class="list_cc"> ${spec_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${delay_action_day}&nbsp;</td>
+   <td nowrap class="list_cc"> ${delay_msg_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${loan_flag}.${tt_loan_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm1040_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm1040_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

@@ -1,0 +1,128 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-11-08  V1.00.01  Ryan       Initial                                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+     <td nowrap>&nbsp;類型:
+       <span class="col_radio">
+         <input type="radio" value="0" name="ex_card_flag" ${ex_card_flag-0} ${DEFAULT_CHK}/>全部
+         <input type="radio" value="1" name="ex_card_flag" ${ex_card_flag-1} />個人
+         <input type="radio" value="2" name="ex_card_flag" ${ex_card_flag-2} />公司
+       </span>
+     </td>
+     <td nowrap>&nbsp;身份證字號/統編:
+  	  <input type="text" class="col_any" name="ex_id_corp_no" value="${ex_id_corp_no}"
+         zEdit="any"  maxlength=11 size=13 />
+     </td>
+     <td nowrap >&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>	
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">類型</th>
+    <th nowrap class="list_th">身分證字號/統編</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">委外公司</th>
+    <th nowrap class="list_th">委外日期</th>
+    <th nowrap class="list_th">委外數</th>
+    <th nowrap class="list_th">撤退件日期</th>
+    <th nowrap class="list_th">異動經辦</th>
+    <th nowrap class="list_th">異動日期</th>
+    <th nowrap class="list_th">覆核主管</th>
+    <th nowrap class="list_th">覆核日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${id_corp_p_seqno}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+    </td>
+    <td nowrap class="list_ll"> ${card_flag}.${comm_card_flag}</td>
+    <td nowrap class="list_ll"> ${id_corp_no}</td>
+    <td nowrap class="list_ll"> ${chi_name}</td>
+    <td nowrap class="list_ll"> ${os_cmp_no}.${os_cmp_name}</td>
+    <td nowrap class="list_ll"> ${os_date.YMD}</td>
+    <td nowrap class="list_ll"> ${hand_type}</td>
+    <td nowrap class="list_ll"> ${back_date.YMD}</td>
+    <td nowrap class="list_ll"> ${mod_user}</td>
+    <td nowrap class="list_ll"> ${mod_date.YMD}</td>
+    <td nowrap class="list_ll"> ${apr_user}</td>
+    <td nowrap class="list_ll"> ${apr_date.YMD}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="ROWID" value="${rowid}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+ <input type="hidden" name="data_k6" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colm6200_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "colm6200_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

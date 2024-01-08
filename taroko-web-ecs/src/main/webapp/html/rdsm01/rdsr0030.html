@@ -1,0 +1,143 @@
+<html>
+<head>
+<title>道路救援會員明細表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;類別:
+   		<select   size="1"  name="ex_type" class="col_ddlb">
+         <option value="F" ${ex_type-F} >F.免費</option>         
+      </select>
+	 </td>
+	 <td nowrap >&nbsp;目前狀況:
+   		<select   size="1"  name="ex_status" class="col_ddlb">
+         <option value="">全部</option>         
+         <option value="1" ${ex_status-1} >新增車號</option>         
+         <option value="2" ${ex_status-2} >變更車號</option>
+         <option value="0" ${ex_status-0} >停用</option>
+         <option value="3" ${ex_status-3} >取消車號</option>
+         <option value="4" ${ex_status-4} >未啟用</option>
+      </select>
+	 </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;團體代號:
+  		<select size="1" name="ex_groupcode" class="col_ddlb" >
+  			<option value="">--</option>
+      	${d_dddw_groupcode}
+   		</select>
+		</td>
+		<td nowrap  >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+	</tr>
+ </table>
+</div>
+<hr>
+ <div id="dataBlock" >
+ 	<table id="table0" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 		<tr>
+ 			<td nowrap >&nbsp;總計:
+ 				<span class="dsp_text">${tl_cnt.(999)}&nbsp;</span>
+ 				<input type="hidden" name="tl_cnt" value="${tl_cnt}">
+ 			</td>
+ 			<td nowrap >&nbsp;啟用:
+ 				<span class="dsp_text">${tl_status1.(999)}&nbsp;</span>
+ 				<input type="hidden" name="tl_status1" value="${tl_status1}">
+ 			</td>
+ 			<td nowrap >&nbsp;變更車號:
+ 				<span class="dsp_text">${tl_status2.(999)}&nbsp;</span>
+ 				<input type="hidden" name="tl_status2" value="${tl_status2}">
+ 			</td>
+ 			<td nowrap >&nbsp;停用:
+ 				<span class="dsp_text">${tl_status0.(999)}&nbsp;</span>
+ 				<input type="hidden" name="tl_status0" value="${tl_status0}">
+ 			</td>
+ 		</tr>
+ 	</table>
+ </div>
+ <br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >身分證號碼&nbsp;</th>
+    <th nowrap >團體代號&nbsp;</th>
+    <th nowrap >車號&nbsp;</th>
+    <th nowrap >車主姓名&nbsp;</th>
+    <th nowrap >目前狀態&nbsp;</th>
+    <th nowrap >道路救援<br>有效期限</th>
+    <th nowrap >櫃員代號&nbsp;</th>
+    <th nowrap >異動者&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${group_code}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rm_carno}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rm_carmanname}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${tt_rm_status}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rm_validdate.YMD}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${mod_time}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

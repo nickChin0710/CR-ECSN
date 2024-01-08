@@ -1,0 +1,209 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>悠遊卡拒絕授權名單線上維護_detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=secu_code]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=secu_code]").filter('[value=1]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; 
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;信用卡卡號
+      <input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}" maxlength="19" size="21" zEdit="number" onChange="cardChange('1')" >      
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;信用卡卡號:
+      <span class="dsp_text">${card_no}&nbsp;</span>
+      <input type="hidden" name="card_no" value="${card_no}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;悠遊卡卡號:
+   		<label class="dsp_text" id="db_tsc_card_no" >${db_tsc_card_no}</label>
+	  	<input type="hidden" name="db_tsc_card_no" value="${db_tsc_card_no}">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;悠遊卡狀態:
+   	  <label class="dsp_text" id="db_curr_code" >${db_curr_code}</label>
+	  	<input type="hidden" name="db_curr_code" value="${db_curr_code}">      
+   </td>
+   <td nowrap >&nbsp;悠遊卡效期:
+   		<label class="dsp_text" id="db_end_date" >${db_end_date}</label>
+	  	<input type="hidden" name="db_end_date" value="${db_end_date}">            
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2" >&nbsp;傳送類別:
+      <span class="col_radio">
+         <input type="radio" value="1" name="secu_code" ${secu_code-1} />拒絕代行
+         <input type="radio" value="2" name="secu_code" ${secu_code-2} />鎖卡
+         <input type="radio" value="3" name="secu_code" ${secu_code-3} />取消拒絕代行
+         <input type="radio" value="4" name="secu_code" ${secu_code-4} />取消鎖卡
+      </span>
+   </tr>
+</tr>
+<tr>
+   <td nowrap colspan="2" >&nbsp;拒絕代行說明:
+      <input type="text" class="col_any" name="risk_remark" value="${risk_remark}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2" >&nbsp;傳送時間:
+      <span class="dsp_text">${send_date.YMD}&nbsp;</span>
+      <input type="hidden" name="send_date" value="${send_date}">
+   </td>
+</tr>
+
+      
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="tscm2240">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+<!-- -->
+<input type="hidden" name="db_tsc57" value="${db_tsc57}">
+<input type="hidden" name="db_tsc04" value="${db_tsc04}">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+    function cardChange(ps1)
+ {
+ 	var  kk_card_no =document.forms["dataForm"]["kk_card_no"].value.toUpperCase();	
+ 	var  card_no =document.forms["dataForm"]["card_no"].value.toUpperCase();	
+	if ( kk_card_no === '' || card_no !='') {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+
+/*   // 20200102 updated for archit.  change
+   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_key";
+   }*/
+
+	resetJSON();
+	addJSON("ax_card_no",kk_card_no);	
+	processAJAX();
+ }
+ 
+   function ajaxResponse()
+ {
+	 top.respHtml ="tscm2240_detl";
+   top.requHtml ="tscm2240_detl";
+
+	if  ( idCode === '1') {
+      var db_tsc_card_no =getJSONvalue("db_tsc_card_no",0);
+      if (db_tsc_card_no.length>0) { 
+      	$("#db_tsc_card_no").text(db_tsc_card_no);   
+      	$("#db_tsc_card_no").val(db_tsc_card_no);   
+      }      
+      
+      var db_curr_code =getJSONvalue("db_curr_code",0);
+      var tt_curr_code =getJSONvalue("tt_curr_code",0);
+      if (db_curr_code.length>0) { 
+      	$("#db_curr_code").text(tt_curr_code);   
+      	$("#db_curr_code").val(db_curr_code);   
+      }      
+      
+      var db_end_date =getJSONvalue("db_end_date",0);
+      if (db_end_date.length>0) { 
+      	$("#db_end_date").text(db_end_date);   
+      	$("#db_end_date").val(db_end_date);   
+      } 
+            
+	}
+      
+	if ( idCode === '1')
+	{ return false; }
+ }
+ 
+</script>

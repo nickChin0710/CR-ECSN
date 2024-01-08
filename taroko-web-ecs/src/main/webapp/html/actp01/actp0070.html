@@ -1,0 +1,304 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-03-27  V1.00.01  ryan           Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>同業代收款檔作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="50%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;代收款行庫:
+   			<select  name="ex_bankid" class="col_ddlb" onChange="itemchange(this.value)">
+         		<option value="700" ${ex_bankid-700}>700 郵局</option>
+         		<option value="711" ${ex_bankid-711}>711 7-11</option>
+         		<option value="712" ${ex_bankid-712}>712  全家</option>
+         		<option value="714" ${ex_bankid-714}>714  萊爾富</option>
+         		<option value="715" ${ex_bankid-715}>715 OK(來來)</option>
+         		<option value="716" ${ex_bankid-716}>716 7-11_行動帳單</option>
+      		</select>
+      		<span class="dsp_text" id="ex_file">${ex_file}</span>
+      		<input type="hidden" name="ex_file" value="${ex_file}">
+   		</td>
+   		<td>
+   			<span class="dsp_text" id="ex_media_name">${ex_media_name}</span>
+      		<input type="hidden" name="ex_media_name" value="${ex_media_name}">
+   		</td>
+   		<td rowspan="3">
+   			<input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+			<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+			<input type="Button" name="btnAdd"   value="執行程式" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   		</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;上傳檔案:
+			<!-- <input type="text" class="col_any" id="ex_fromfile" name="ex_fromfile" value="${ex_fromfile}"
+         	zeditType="any" size=60 readonly="readonly"/> -->
+         	<span class="dsp_text">${ex_fromfile}</span>
+      		<input type="hidden" name="ex_fromfile" value="${ex_fromfile}">
+		</td>
+		<td>
+			<input type="button" name="btn_file_upload_A" value="資料上傳(FTP)" class="btOther" onclick="return upload_click()">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap >&nbsp;存放位置:
+			<!-- <input type="text" class="col_any" name="ex_serverpath" value="${ex_serverpath}"
+         	zeditType="any" size=60 /> -->
+         	<span class="dsp_text">${ex_serverpath}</span>
+      		<input type="hidden" name="ex_serverpath" value="${ex_serverpath}">
+		</td>
+		<td>
+			<span class="dsp_text">ActB003</span>
+      		<input type="hidden" name="ex_bpgm" value="ActB003">
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th nowrap class="list_th" width="5%">處理&nbsp;</th>
+		<th nowrap class="list_th">營業日</th>
+		<th nowrap class="list_th">序號</th>
+		<th nowrap class="list_th">檔案名稱</th>
+		<th nowrap class="list_th">處理碼</th>
+		<th nowrap class="list_th">處理日期</th>
+		<th nowrap class="list_th">處理時間</th>
+		<th nowrap class="list_th">上傳</th>
+		<th nowrap class="list_th">傳輸日期</th>
+		<th nowrap class="list_th">傳輸時間</th>
+		<th nowrap class="list_th">總筆數</th>
+		<th nowrap class="list_th">備註</th>
+	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+	<tr>
+		<td nowrap class="list_no" rowspan="2">
+			<span class="col_key">${ok_flag}</span>
+			<input type="checkbox" name="opt" class="check"  value="${ser_num}" />
+			${SER_NUM}&nbsp;
+			<input type="hidden" name="rowid" value="${rowid}">
+			<input type="hidden" name="ser_num" value="${ser_num}">
+			<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+			<input type="hidden" name="business_date" value="${business_date}">
+			<input type="hidden" name="seq_no" value="${seq_no}">
+			<input type="hidden" name="external_name" value="${external_name}">
+			<input type="hidden" name="in_file_flag" value="${in_file_flag}">
+			<input type="hidden" name="proc_date" value="${proc_date}">
+			<input type="hidden" name="proc_time" value="${proc_time}">
+			<input type="hidden" name="in_media_flag" value="${in_media_flag}">
+			<input type="hidden" name="trans_date" value="${trans_date}">
+			<input type="hidden" name="trans_time" value="${trans_time}">
+			<input type="hidden" name="total_rec" value="${total_rec}">
+			<input type="hidden" name="pgm_memo" value="${pgm_memo}">
+			<input type="hidden" name="media_name" value="${media_name}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap class="list_ll">${business_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${seq_no}&nbsp;</td>
+		<td nowrap class="list_ll">${external_name}&nbsp;
+		<td nowrap class="list_ll">${in_file_flag}&nbsp;</td>
+		<td nowrap class="list_ll">${proc_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${proc_time.TIME}&nbsp;</td>
+		<td nowrap class="list_ll">${in_media_flag}&nbsp;</td>
+		<td nowrap class="list_ll">${trans_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${trans_time.TIME}&nbsp;</td>
+		<td nowrap class="list_ll">${total_rec}&nbsp;</td>
+		<td nowrap class="list_ll">${pgm_memo}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+<table width="70%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4"> 
+    <tr>
+        <td nowrap width="60%">Process Message:&nbsp;
+          <br>
+          <textarea rows=5 cols=70 name="proc_mesg">${proc_mesg}</textarea>
+        </td>
+    </tr>           
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="actp0070">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="upload_file" value="" /> 
+<input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" readonly />
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_bankid.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "actp0070_detl"; 
+    }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行批次作業?") === false) {
+            return false;
+        } 
+    }
+    
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "actp0070_detl";
+    top.submitControl('S');
+    return true;
+  }
+//全選
+ /*function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+ }*/
+ 
+ function chkdata() {
+	 var seq = 0;
+	 var agy = $("input[name=opt]");
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 if (agy.checked){ seq++; }
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			 if(agy[i].checked){
+				 seq++;
+				 
+			 }
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("未選取資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+
+ $("#myfile").hide();
+ $(document).ready(function() {
+	 $("#processopen").click(function(){
+		  $("#myfile").click();
+	  }) 
+ })
+	
+	ftpbtn($("select[name=ex_bankid]").val());
+
+	function itemchange(val){
+		ftpbtn(val);
+		top.submitControl('S2');
+	}
+	
+	function ftpbtn(val){
+		if(val=='700'){
+			$(".btOther").prop("disabled",false);
+			$(".btOther").css("background-color","");
+		}else{
+			$(".btOther").prop("disabled",true);
+			$(".btOther").css("background-color","#AAAAAA");
+		}
+		switch(val){
+		case "700":
+			$("input[name=ex_media_name]").val("POST001I");
+			$("#ex_media_name").text("POST001I");
+			break;
+		case "711":
+			$("input[name=ex_media_name]").val("POST711I");
+			$("#ex_media_name").text("POST711I");
+			break;
+		case "712":
+			$("input[name=ex_media_name]").val("POST712I");
+			$("#ex_media_name").text("POST712I");
+			break;
+		case "714":
+			$("input[name=ex_media_name]").val("POST714I");
+			$("#ex_media_name").text("POST714I");
+			break;
+		case "715":
+			$("input[name=ex_media_name]").val("POST715I");
+			$("#ex_media_name").text("POST715I");
+			break;
+		case "716":
+			$("input[name=ex_media_name]").val("POST716I");
+			$("#ex_media_name").text("POST716I");
+			break;
+		}
+		 
+	}
+
+	 function upload_click(parm) {
+		  
+		    document.dataForm.zz_file_name.value = "";
+		    document.dataForm.data_k1.value = parm;
+		    
+		    var parmHtml    = "TarokoUpload";
+		    var parmName    = "upload_file,zz_file_name";
+		    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+		    top.packageName = "taroko.com";
+		    top.javaName    = "TarokoUpload";
+		    top.methodName  = "showScreen";
+		    top.openWindow("",parmHtml,parmName,windowSize);
+
+		    top.packageName = "actp01";
+		    top.javaName    = "Actp0070";
+		    top.requHtml    = "actp0070";
+		    top.respHtml    = "actp0070";
+		    return true;
+		  }
+		  
+		 function wf_uploadAfter() {
+		    var ss=document.dataForm.zz_file_name.value.trim();
+		    if (ss.length>0) {
+		      top.submitControl('UPLOAD');
+		    }
+		 }  
+
+</script>

@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>風險分類維護[risk_type]-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_type]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_type]").filter('[value=CTFG]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;
+   		<span class="col_radio">
+         <input type="radio" value="CTFG" name="ex_type" ${ex_type-CTFG} />偽冒預警
+         <input type="radio" value="CTFI" name="ex_type" ${ex_type-CTFI} />偽冒調查
+         <input type="radio" value="CTFC" name="ex_type" ${ex_type-CTFC} />爭議款
+      </span>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">資料類別&nbsp;</th>
+    <th nowrap class="list_th">鍵值&nbsp;</th>
+    <th nowrap class="list_th">說明&nbsp;</th>
+    <th nowrap class="list_th">歸屬部門&nbsp;</th>
+    <th nowrap class="list_th">長度&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${wf_parm}','${wf_key}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wf_parm}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wf_key}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wf_desc}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wf_value5}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wf_value6}&nbsp;</td>    
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+// document.dataForm.ex_risk_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }   
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm3150_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>風險別消費參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+  ${#PLUGIN:htmcomm_plugin.del_apr_user}	　　　　　　　　
+	<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+   <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" />&nbsp;&nbsp;   
+	<input type="Button"   value="異動處理" onClick="return top.submitControl('C')" class="btAdd" />&nbsp;&nbsp;
+	<input type="Button"    value="刪除" onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+</div>
+<hr>
+ 
+ <div id="dataBlock">
+ 	<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+ 		<tr>
+ 			<td nowrap >&nbsp;卡片等級:
+ 				<span class="dsp_text">${card_note}.${#java:ecsfunc.DeCodeCrd.cardNote2(card_note)}&nbsp;</span>
+ 				<input type="hidden" name="card_note" value="${card_note}" />
+ 			</td>
+ 			<td nowrap >&nbsp;風險類別:
+ 				<span class="dsp_text">${risk_type}.${tt_risk_type}&nbsp;</span>
+ 				<input type="hidden" name="risk_type" value="${risk_type}" />
+ 				<input type="hidden" name="tt_risk_type" value="${tt_risk_type}" />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td nowrap colspan="2" >&nbsp;尚未覆核筆數:
+ 				<span class="dsp_text">${temp_cnt.(999)}</span>
+ 				<input type="hidden" name="temp_cnt" value="${temp_cnt}">
+ 			</td>
+ 		</tr>
+ 	</table>
+ </div>
+ <br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>  	
+    <th > 
+	 		<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	異動
+	  </th>
+	  <th >卡人等級&nbsp;</th>
+	  <th >月限額百分比&nbsp;</th>
+	  <th >超額絶對金額&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >月限次&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >次限額百分比&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >日限次&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>	  
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" />
+		 	 ${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}" />	
+			<input type="hidden" name="rowid" value="${rowid}" />		
+		</td>
+		<td nowrap class="list_cc">${risk_level}&nbsp;
+			<input type="hidden" name="risk_level" value="${risk_level}">
+		</td>
+		<td nowrap class="list_cc">${lmt_amt_month_pct}&nbsp;
+			<input type="hidden" name="lmt_amt_month_pct" value="${lmt_amt_month_pct}">
+		</td>
+		<td nowrap class="list_cc">${add_tot_amt}&nbsp;
+			<input type="hidden" name="add_tot_amt" value="${add_tot_amt}">
+		</td>
+		<td nowrap class="list_cc">${rsp_code_1}&nbsp;
+			<input type="hidden" name="rsp_code_1" value="${rsp_code_1}">
+		</td>
+		<td nowrap class="list_cc">${lmt_cnt_month}&nbsp;
+			<input type="hidden" name="lmt_cnt_month" value="${lmt_cnt_month}">
+		</td>
+		<td nowrap class="list_cc">${rsp_code_2}&nbsp;
+			<input type="hidden" name="rsp_code_2" value="${rsp_code_2}">
+		</td>
+		<td nowrap class="list_cc">${lmt_amt_time_pct}&nbsp;
+			<input type="hidden" name="lmt_amt_time_pct" value="${lmt_amt_time_pct}">
+		</td>
+		<td nowrap class="list_cc">${rsp_code_3}&nbsp;
+			<input type="hidden" name="rsp_code_3" value="${rsp_code_3}">
+		</td>
+		<td nowrap class="list_cc">${lmt_cnt_day}&nbsp;
+			<input type="hidden" name="lmt_cnt_day" value="${lmt_cnt_day}">
+		</td>
+		<td nowrap class="list_cc">${rsp_code_4}&nbsp;
+			<input type="hidden" name="rsp_code_4" value="${rsp_code_4}">
+		</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if (top.actionCode=='C') {        	
+    	var li_temp_cnt = Number(document.forms["dataForm"]["temp_cnt"].value);
+    	if(li_temp_cnt >0){
+	    	if (confirm("尚有待覆核筆數,是否覆蓋 ?")==false) {
+            	return false ;
+         	}
+    	}
+    }
+            
+    return true;
+  }
+  
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+   
+</script>

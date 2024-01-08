@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>信用卡線上額度異動會簽單-jh190619</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;流水編號:
+   		<input type="text" class="col_text" name="ex_seq_no" value="${ex_seq_no}" maxlength="12" size="14" zEdit="number" >
+   	</td>
+   	<td nowrap >&nbsp;
+   		 <span class="col_radio">
+         <input type="radio" value="0" name="ex_close_flag" ${ex_close_flag-0} ${DEFAULT-ex_close_flag} />全部
+         <input type="radio" value="N" name="ex_close_flag" ${ex_close_flag-N} />未結案
+         <input type="radio" value="Y" name="ex_close_flag" ${ex_close_flag-Y} />已結案
+      </span>
+		</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;卡號:
+  		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" >
+  	</td>
+  	<td nowrap >&nbsp;持卡人ID:
+  		<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+  	</td>
+  	<td nowrap >&nbsp;
+  		<input type="checkbox" name="ex_fast_flag" value="Y" ${ex_fast_flag-Y}>急件
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+        <script language="JavaScript">
+	       new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	  	  </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+        <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+		</td>
+		<td nowrap >&nbsp;值機人員:
+			<input type="text" class="col_any" name="ex_tel_user" value="${ex_tel_user}" maxlength="10" size="12" zEdit="any,canTw" >
+		</td>
+	</tr>
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >流水編號&nbsp;</th>
+    <th nowrap >客戶來電時間&nbsp;</th>
+    <th nowrap >持卡人ID&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >已列印&nbsp;</th>
+    <th nowrap >結案&nbsp;</th>
+    <th nowrap >急件&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >值機人員&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${seq_no}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${seq_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${tel_date.YMD}&nbsp;${tel_time.TIME}</td>
+	 <td nowrap class="list_cc"> ${wk_idno}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${print_flag}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${close_flag}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${fast_flag}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${tel_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm0930_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm0930_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

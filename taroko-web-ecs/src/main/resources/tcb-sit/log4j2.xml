@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+  <Properties>
+    <Property name="baseDir">/waslog/EcsWeb</Property>
+    <Property name="logFileName">Taroko_Log4j</Property>
+    <Property name="PDPAFileName">PDPA</Property>
+    <Property name="deleteFileDay">90d</Property>
+  </Properties>
+  <Appenders>
+
+    <RollingFile name="normallogger" fileName="${baseDir}/${logFileName}.log"
+       filePattern="${baseDir}/${logFileName}.log.%d{yyyy-MM-dd}.gz">
+      <PatternLayout>
+        <Pattern>%d{yy/MM/dd HH:mm:ss} %p %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <!-- <SizeBasedTriggeringPolicy size="10 KB"/> -->
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${baseDir}" maxDepth="1">
+          <IfFileName glob="${logFileName}*.gz" />
+          <IfLastModified age="${deleteFileDay}" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+
+    <RollingFile name="pdpalogger" fileName="${baseDir}/${PDPAFileName}.log"
+       filePattern="${baseDir}/${PDPAFileName}.log.%d{yyyy-MM-dd}.gz">
+      <PatternLayout>
+        <Pattern>%d{yy/MM/dd HH:mm:ss} %p %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <!-- <SizeBasedTriggeringPolicy size="10 KB"/> -->
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${baseDir}" maxDepth="1">
+          <IfFileName glob="${PDPAFileName}*.gz" />
+          <IfLastModified age="${deleteFileDay}" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+
+  </Appenders>
+  <Loggers>
+    <Logger name="normallogger" level="debug" additivity="false">
+      <AppenderRef ref="normallogger"/>
+    </Logger>
+    <Logger name="pdpalogger" level="debug" additivity="false">
+      <AppenderRef ref="pdpalogger"/>
+    </Logger>
+    <Root level="debug">
+      
+    </Root>
+  </Loggers>
+</Configuration>

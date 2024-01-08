@@ -1,0 +1,292 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-06-13  V1.00.01  jh                                                  -->
+<!-- 109-02-12  V1.00.02  JustinWu       fix selectAll bugs                   -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>法人相關資料維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_mod_date1" value="${ex_mod_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_mod_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_mod_date2" value="${ex_mod_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_mod_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>   
+   <td nowrap colspan="2" >&nbsp;異動經辦:
+      <input type="text" class="col_any" name="ex_mod_user" value="${ex_mod_user}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">基本資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">帳戶資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-3')">關係人</td>
+    </tr>
+  </table>
+</div>
+
+<!-----------基本資料-------------->
+<div id="tab-1" class="tabcontent">
+   <input type="Button"  value="覆核" onClick="return wf_submitcontrol('C1')" class="btConfirm" >&nbsp;&nbsp; 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+   <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll1" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+    <th nowrap >統一編號&nbsp;</th>
+    <th nowrap >公司名稱&nbsp;</th>
+    <th nowrap >修改者&nbsp;</th>
+    <th nowrap >修改日期&nbsp;</th>
+    <th nowrap >修改時間&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt1" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />	
+	<input type="hidden" name="A.corp_p_seqno" value="${A.corp_p_seqno}">
+	</td>
+   <td nowrap class="list_cc">${A.corp_no}&nbsp;
+      <input type="hidden" name="A.corp_no" value="${A.corp_no}">
+   </td>
+   <td nowrap class="list_cc">${A.chi_name}&nbsp;
+      <input type="hidden" name="A.chi_name" value="${A.chi_name}">
+   </td>
+   <td nowrap class="list_cc">${A.mod_user}&nbsp;
+      <input type="hidden" name="A.mod_user" value="${A.mod_user}">
+   </td>
+   <td nowrap class="list_cc">${A.mod_date.YMD}&nbsp;
+      <input type="hidden" name="A.mod_date" value="${A.mod_date}">
+   </td>
+   <td nowrap class="list_cc">${A.mod_time2.TIME}&nbsp;
+      <input type="hidden" name="A.mod_time2" value="${A.mod_time2}">
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------帳戶資料-------------->
+<div id="tab-2" class="tabcontent" >
+   <input type="Button"  value="覆核" onClick="return wf_submitcontrol('C2')" class="btConfirm" >&nbsp;&nbsp;  
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll2" value="Y" onClick="selectAll2();" >
+    覆核
+	 </th>
+    <th nowrap colspan="2" >帳戶&nbsp;</th>
+    <th nowrap >修改者&nbsp;</th>
+    <th nowrap >修改日期&nbsp;</th>
+    <th nowrap >修改時間&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt2" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />	
+	<input type="hidden" name="B.acno_p_seqno" value="${B.acno_p_seqno}">
+	</td>
+   <td nowrap class="list_cc"> ${B.acct_type}&nbsp;
+      <input type="hidden" name="B.acct_type" value="${B.acct_type}">   
+   </td>
+	<td nowrap class="list_cc"> ${B.acct_key}&nbsp;
+	   <input type="hidden" name="B.acct_key" value="${B.acct_key}">   
+	</td>
+	<td nowrap class="list_cc"> ${B.mod_user}&nbsp;
+	   <input type="hidden" name="B.mod_user" value="${B.mod_user}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mod_date.YMD}&nbsp;
+	   <input type="hidden" name="B.mod_date" value="${B.mod_date}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mod_time.TIME}&nbsp;
+	   <input type="hidden" name="B.mod_time" value="${B.mod_time}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+<!-----------關係人-------------->
+<div id="tab-3" class="tabcontent" >
+   <input type="Button"  value="覆核" onClick="return top.submitControl('C3')" class="btConfirm" >&nbsp;&nbsp;  
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll3" value="Y" onClick="selectAll3();" >
+    覆核
+	 </th>
+    <th nowrap >統編</th>
+    <th nowrap >類別</th>
+    <th nowrap >身分證字號/證照號碼/統編</th>
+    <th nowrap >中文名</th>
+    <th nowrap >英文名</th>
+    <th nowrap >生日(西元年YYYYMMDD)</th>
+    <th nowrap >國籍</th>
+    <th nowrap >異動別</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${C.ok_flag}</span>
+	<input type="checkbox" name="opt3" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />		
+    <input type="hidden" name="C.rowid" value="${C.rowid}">
+    <input type="hidden" name="C.corp_no" value="${C.corp_no}">
+    <input type="hidden" name="C.rela_type" value="${C.rela_type}">
+    <input type="hidden" name="C.tt_rela_type" value="${C.tt_rela_type}">
+    <input type="hidden" name="C.id_no" value="${C.id_no}">
+    <input type="hidden" name="C.chi_name" value="${C.chi_name}">
+    <input type="hidden" name="C.eng_name" value="${C.eng_name}">
+    <input type="hidden" name="C.birthday" value="${C.birthday}">
+    <input type="hidden" name="C.cntry_code" value="${C.cntry_code}">
+    <input type="hidden" name="C.mod_type" value="${C.mod_type}">
+   </td>
+   <td nowrap class="list_cc" >${C.corp_no}</td>
+   <td nowrap class="list_cc" >${C.tt_rela_type}</td>
+   <td nowrap class="list_cc" >${C.id_no}</td>
+   <td nowrap class="list_cc" >${C.chi_name}</td>   
+   <td nowrap class="list_cc" >${C.eng_name}</td>    
+   <td nowrap class="list_cc" >${C.birthday.YMD}</td>    
+   <td nowrap class="list_cc" >${C.cntry_code}</td>    
+   <td nowrap class="list_cc" >${C.mod_type}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ 
+</div>
+
+
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');	
+    tigra_tables('table3');	
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+ function wf_submitcontrol(parm1) {
+   if (parm1==='C1') {
+      top.respLevel = 1;     
+      top.respHtml  = "cmsp2020_corp";
+      top.submitControl('C1');
+   }
+   
+   if (parm1==='C2') {
+      top.respLevel = 1;
+      top.respHtml  = "cmsp2020_acno";
+      top.submitControl('C2');
+   }
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+           
+    return true;
+  }
+  
+  function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll1.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+		   if (aElements[i].name==='opt1') {
+		      aElements[i].checked = opt_select;
+		   }
+		}
+    }
+
+    return;
+ }
+ 
+ function selectAll2() {
+	 var opt_select =document.dataForm.ex_selectAll2.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+		   if (aElements[i].name==='opt2') {
+		      aElements[i].checked = opt_select;
+		   }
+		}
+    }
+
+    return;
+ }
+
+  function selectAll3() {
+   var opt_select =document.dataForm.ex_selectAll3.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+    if  ( aElements[i].type == "checkbox" ) {
+       if (aElements[i].name==='opt3') {
+          aElements[i].checked = opt_select;
+       }
+    }
+    }
+
+    return;
+ }
+  
+  
+  
+</script>

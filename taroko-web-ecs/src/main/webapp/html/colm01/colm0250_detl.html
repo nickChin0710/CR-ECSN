@@ -1,0 +1,415 @@
+<html>
+<head>
+<title>送 JCIC KK4 資料登錄作業-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="4"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" name="btnAdd"     value="KK4 產生處理" ${btnAdd_disable}    onClick="return top.submitControl('KK4')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;帳戶帳號：
+      <select size="1" name="kk_acct_type" class="col_ddlb">
+        ${PtrAcctTypeList}
+      </select>
+      <input type="text" class="col_text" name="kk_acct_key" value="${kk_acct_key}"
+        zEdit="alphanum,upper" maxlength="11" size="13"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap width="50%">&nbsp;帳務年月：
+      <input type="text" class="col_text" name="kk_acct_month" value="${kk_acct_month}"
+        zEdit="date,yyyymm" maxlength="6" size="8">
+    </td>
+    <td nowrap width="50%">&nbsp;
+<!--
+      <span id="span1">KK4產生月數：
+        <input type="text" class="col_text" name="db_proc_mm" value="${db_proc_mm}" ${btnAdd_disable}
+            zEdit="number" maxlength="2" size="4" />
+      </span>
+-->
+    </td>
+  </tr>
+</table>
+<hr>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap width="50%" class="col_key">&nbsp;帳戶帳號：
+      <input type="text" class="dsp_text" name="acct_type" value="${acct_type}" size="2" disabled/> - 
+      <input type="text" class="dsp_text" name="acct_key" value="${acct_key}" size="12" disabled/>
+      <input type="hidden" name="acct_type" value="${acct_type}">
+      <input type="hidden" name="acct_key" value="${acct_key}">
+    </td>
+    <td nowrap width="50%">&nbsp;覆核日期：
+      <input type="text" class="dsp_date" name="apr_date" value="${apr_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="col_key">&nbsp;帳務年月：
+      <input type="text" class="dsp_date" name="acct_month" value="${acct_month.YMD}" size="10" disabled/>
+      <input type="hidden" name="acct_month" value="${acct_month}">
+    </td>
+    <td nowrap >&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;處理說明：
+      <input type="text" class="dsp_text" name="proc_desc" value="${proc_desc}" size="40" disabled/>
+      <input type="hidden" name="proc_desc" value="${proc_desc}">
+    </td>
+  </tr>
+<!--
+  <tr>
+    <td nowrap style="color:#880000" colspan="2">&nbsp;【備註】&nbsp;&nbsp;&nbsp;1. JCIC僅提供查詢最近一次關帳日往前推12個月資料<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. KK4產生月數欄指帳務年月往前推N個月
+    </td>
+  </tr>
+-->
+</table>
+<hr>
+
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;交易代碼 [2]:
+      <span class="col_radio">
+<!--
+         <input type="radio" value="A" name="sub_log_type" ${sub_log_type-A} />A.新增
+-->
+         <input type="radio" value="C" name="sub_log_type" ${sub_log_type-C} />C.異動
+         <input type="radio" value="D" name="sub_log_type" ${sub_log_type-D} />D.刪除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;結帳日 [5]:
+      <input type="text" class="col_date" name="stmt_cycle_date" value="${stmt_cycle_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'stmt_cycle_date'});
+	  </script>&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;繳款截止日 [6]:
+      <input type="text" class="col_date" name="stmt_last_payday" value="${stmt_last_payday}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'stmt_last_payday'});
+	  </script>&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;IDN/BAN [7]:
+      &nbsp;ID. <input type="text" class="col_text" name="id_no" value="${id_no}" readOnly
+          zEdit="alphanum,upper" maxlength="10" size="10"/>
+      &nbsp;統編. <input type="text" class="col_text" name="corp_no" value="${corp_no}" 
+          zEdit="alphanum,upper" maxlength="8" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;信用卡別名稱 [8]:
+      <input type="text" class="col_text" name="bin_type" value="${bin_type}" 
+          zEdit="any" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;帳單別註記 [9]:
+      <input type="text" class="col_text" name="bill_type_flag" value="${bill_type_flag}" 
+          zEdit="alphanum,upper" maxlength="2" size="4"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;資料報送理由碼[10.1]:
+      <select size="1" name="report_reason" class="col_ddlb">
+        ${PtrSysIdtabList}
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;永久信用額度 [11]:
+      <input type="text" class="col_number" name="line_of_credit_amt" value="${line_of_credit_amt}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;臨調信用額度 [12]:
+      <input type="text" class="col_number" name="temp_of_credit_amt" value="${temp_of_credit_amt}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;預借現金額度 [13]:
+      &nbsp;<input type="text" class="col_number" name="cashadv_limit" value="${cashadv_limit}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期應付帳款金額 [14]:
+      <input type="text" class="col_number" name="stmt_this_ttl_amt" value="${stmt_this_ttl_amt}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期最低應繳金額 [15]:
+      <input type="text" class="col_number" name="stmt_mp" value="${stmt_mp}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期消費金額 [16]:
+      &nbsp;BL. <input type="text" class="col_number" name="billed_end_bal_bl" value="${billed_end_bal_bl}" 
+          zEdit="canMinus,number" maxlength="9" size="9"/>
+      &nbsp;IT. <input type="text" class="col_number" name="billed_end_bal_it" value="${billed_end_bal_it}" 
+          zEdit="canMinus,number" maxlength="9" size="9"/>
+      &nbsp;ID. <input type="text" class="col_number" name="billed_end_bal_id" value="${billed_end_bal_id}" 
+          zEdit="canMinus,number" maxlength="9" size="9"/>
+      &nbsp;OT. <input type="text" class="col_number" name="billed_end_bal_ot" value="${billed_end_bal_ot}" 
+          zEdit="canMinus,number" maxlength="9" size="9"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期預借現金金額 [17]:
+      <input type="text" class="col_number" name="billed_end_bal_ca" value="${billed_end_bal_ca}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期餘額代償金額 [18]:
+      <input type="text" class="col_number" name="billed_end_bal_ao" value="${billed_end_bal_ao}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期應繳循環信用利息金額 [19]:
+      <input type="text" class="col_number" name="bill_interest" value="${bill_interest}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期其他費用金額 [20]:
+      &nbsp;AF. <input type="text" class="col_number" name="billed_end_bal_af" value="${billed_end_bal_af}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+      &nbsp;LF. <input type="text" class="col_number" name="billed_end_bal_lf" value="${billed_end_bal_lf}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+      &nbsp;PF. <input type="text" class="col_number" name="billed_end_bal_pf" value="${billed_end_bal_pf}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+      &nbsp;PN. <input type="text" class="col_number" name="billed_end_bal_pn" value="${billed_end_bal_pn}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;本期調整金額 [21]:
+      <input type="text" class="col_number" name="stmt_adjust_amt" value="${stmt_adjust_amt}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;未到期分期償還代墊消費款金額 [22]:
+      <input type="text" class="col_number" name="unpost_inst_fee" value="${unpost_inst_fee}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;未到期分期償還預借現金金額 [23]:
+      <input type="text" class="col_number" name="unpost_card_fee" value="${unpost_card_fee}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;上期應付帳款金額 [25]:
+      <input type="text" class="col_number" name="stmt_last_ttl" value="${stmt_last_ttl}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;上期繳款金額 [26]:
+      <input type="text" class="col_number" name="stmt_payment_amt" value="${stmt_payment_amt}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;循環信用餘額 [27]:
+      <input type="text" class="col_number" name="ttl_amt_bal" value="${ttl_amt_bal}" 
+          zEdit="canMinus,number" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;上期繳款之繳款狀態代號(金額) [28]:
+      <input type="text" class="col_text" name="payment_amt_rate" value="${payment_amt_rate}" 
+          zEdit="alphanum,upper" maxlength="1" size="4"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;上期繳款之繳款狀態代號(時間) [29]:
+      <input type="text" class="col_text" name="payment_time_rate" value="${payment_time_rate}" 
+          zEdit="alphanum,upper" maxlength="1" size="4"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;債權狀態註記 [30]:
+      <input type="text" class="col_text" name="jcic_acct_status" value="${jcic_acct_status}" 
+          zEdit="alphanum,upper" maxlength="1" size="4"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;轉銷呆帳日 [31]:
+      <input type="text" class="col_date" name="status_change_date" value="${status_change_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'status_change_date'});
+	  </script>&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;債權結案註記 [33]:
+      <input type="text" class="col_text" name="jcic_acct_status_flag" value="${jcic_acct_status_flag}" 
+          zEdit="alphanum,upper" maxlength="1" size="4"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;不良債權清償日期 [34]:
+      <input type="text" class="col_date" name="debt_close_date" value="${debt_close_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'debt_close_date'});
+	  </script>&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;被併購或債權轉讓之年月 [35]:
+      <input type="text" class="col_date" name="sale_date" value="${sale_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'sale_date'});
+	  </script>&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;被併購或債權轉讓後之新債權人 BAN [36]:
+      <input type="text" class="col_text" name="npl_corp_no" value="${npl_corp_no}" 
+          zEdit="alphanum,upper" maxlength="8" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;債權轉讓案號 [37]:
+      <input type="text" class="col_text" name="jcic_remark" value="${jcic_remark}" 
+          zEdit="alphanum,upper" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;處理日期：
+      <input type="text" class="dsp_text" name="proc_date" value="${proc_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="proc_date" value="${proc_date}">
+    </td>
+    <td nowrap >&nbsp;處理旗標：
+      <input type="text" class="dsp_text" name="proc_flag" value="${proc_flag}" size="10" disabled/>
+      <input type="hidden" name="proc_flag" value="${proc_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;建檔經辦：
+      <input type="text" class="dsp_text" name="crt_user" value="${crt_user}" size="10" disabled/>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+    </td>
+    <td nowrap >&nbsp;建檔日期：
+      <input type="text" class="dsp_text" name="crt_date" value="${crt_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+    </td>
+  </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colm0250">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+<input type="hidden" name="apr_flag" value="${apr_flag}">
+<input type="hidden" name="needSign" value="${needSign}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ if (document.dataForm.btnAdd.disabled == true) {
+	 document.getElementById("span1").style.display = "none";
+ }else{
+	 document.getElementById("span1").style.display = "";
+ }
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode == "U" || top.actionCode == "D" ) {
+    	if ( document.dataForm.apr_flag.value == "Y" ) {
+    		if (confirm("主管已覆核, 是否異動資料?") === false) {
+                return false;
+            }
+    	}
+    	
+    	if ( top.actionCode == "U" ) {
+		
+    	//if ("|A|C|D".indexOf(document.dataForm.sub_log_type.value) < 0 ) { //IE不能用zzz
+    	var seq = 0;
+    	var slt = document.getElementsByName("sub_log_type");
+    	for(var i = 0; i < slt.length; i++) {
+    		if(slt[i].checked) {
+    			seq++;
+    		}
+    	}
+    	if(seq == 0){
+    		alert("顯示錯誤訊息:【須指定 交易代碼】");
+    		return false;
+    	}
+
+    	//檢查【資料報送理由碼(report_reaso)】
+    	if ( document.dataForm.report_reason.value == "11" ) {
+    		if (confirm("資料報送理由碼為[本行作業疏失], 是否存檔?") === false) {
+                return false;
+            }
+    	}
+    	}
+    	
+    	//是否進行主管覆核
+    	if (confirm("是否請主管覆核?") === false) {
+    		document.dataForm.needSign.value = "N";
+    	} else {
+    		document.dataForm.needSign.value = "Y";
+        }
+
+    }
+
+    return true;
+  }
+ 
+</script>

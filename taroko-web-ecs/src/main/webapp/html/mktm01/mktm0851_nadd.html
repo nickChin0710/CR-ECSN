@@ -1,0 +1,113 @@
+<html>
+<head>
+<title> 112/03/01 V1.00.01 machao Initial 活動群組代碼維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"      value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="70%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>活動群組代碼：&nbsp; 
+       <input type="text" class="col_any" name="active_group_id" value="${active_group_id}"
+              zEdit="alphanum" maxlength="10" size="10" />
+     </td>
+   </tr>
+ </table>
+ <table width="70%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>活動群組名稱：&nbsp; 
+       <input type="text" class="col_any" name="active_group_desc" value="${active_group_desc}"
+              zEdit="any,canTW" zRequire="Y" maxlength="60" size="60" />
+   </tr>
+   <tr>
+     <td nowrap>群組月累積最低消費金額：&nbsp; 
+       <input type="text" class="col_any" name="sum_amt" value="${sum_amt}"
+              zEdit="any,canTW" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>回饋類別：&nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="radio" class="col_radio" name="feedback_type" value="1" ${feedback_type-1} ${DEFAULT_CHK} />擇優回饋
+         <input type="radio" class="col_radio" name="feedback_type" value="2" ${feedback_type-2} />回饋上限總金額
+         <input type="text" class="col_any" name="limit_amt" value="${limit_amt}"
+                zEdit="any,canTW" maxlength="10" size="12" />
+         <input type="radio" class="col_radio" name="feedback_type" value="3" ${feedback_type-3} />擇一回饋
+     </td>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm0851">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+ {
+   if ( !top.checkFormat() )
+      { return false; }
+
+   return true;
+ }
+
+ function feedbackTypeChk(){
+		var feedbackTypechk = $("input[name=feedback_type]:checked").val();
+		if ( feedbackTypechk === '1' || feedbackTypechk === '3') {
+				$("input[name=limit_amt]").val("");
+				$("input[name=limit_amt]").prop("disabled", true);
+				$("input[name=limit_amt]").css("background-color", "lightgray");
+			} else {
+				$("input[name=limit_amt]").prop("disabled", false);
+				$("input[name=limit_amt]").css("background-color", "");
+			}
+		}
+
+		$(document).ready(function() {
+			$("input[name=feedback_type]").change(function() {
+				feedbackTypeChk();
+			})
+			feedbackTypeChk();
+		});
+</script>
+<!-- ******************************************************************** -->

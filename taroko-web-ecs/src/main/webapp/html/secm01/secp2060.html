@@ -1,0 +1,233 @@
+<html>
+<head>
+<title>群組(子系統+使用者層級)權限設定-V20191224</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+	 <td nowrap >&nbsp;查詢資料:
+      <span class="col_radio">
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${DEFAULT-ex_apr_flag} />未覆核
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+      </span>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="修改權限" onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg" style="cursor:hand;" onClick="top.submitControl('XLS');" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+	 <td nowrap >&nbsp;子系統名稱:
+      <select size="1" name="ex_group_id" class="col_ddlb" zRequire="C">
+         ${dddw_group_id}
+      </select>
+   </td>
+   <td nowrap >&nbsp;使用者層級:
+      <select size="1" name="ex_user_level" class="col_ddlb" zRequire="C">
+         ${dddw_user_level}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;匯入媒體檔:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any,canTw" />
+      <input type="button" value="..." class="btOther" onclick="return upload_click()">
+      <input type="Button" value="資料匯入" onClick="return wf_import('C2')" class="btProcess" >&nbsp;
+      <input type="checkbox" class="col_ckbox" name="ex_all_level" value="Y" ${ex_all_level} />不檢核層級
+   </td>
+  </tr>
+  <tr>
+	 <td nowrap >&nbsp;複製到 子系統名稱:
+      <select size="1" name="ex_copy_group_id" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_copy_group_id}
+      </select>
+   </td>
+   <td nowrap >&nbsp;複製到 使用者層級:
+      <select size="1" name="ex_copy_user_level" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_copy_user_level}
+      </select>
+      <input type="Button" name="btnProc2" value="複製資料" onClick="return wf_import('C3')" class="btProcess" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <div id="dataBlock">
+ 	<table border="0" cellspacing="0" cellpadding="4">
+ 		<tr>
+    	<td nowrap class="list_cc" >&nbsp;子系統代碼:&nbsp;
+         <input type="text" class="dsp_text" name="kk_group_id" value="${kk_group_id}" readonly size="12" />
+  		<td nowrap class="list_cc" >&nbsp;使用者層級:&nbsp;
+         <input type="text" class="dsp_text" name="kk_user_level" value="${kk_user_level}" readonly size="12" />
+  		</td>
+  		<td nowrap class="list_cc" >&nbsp;查詢資料:&nbsp;
+    	<span class="dsp_text">${tt_apr_flag}</span>&nbsp;
+      	<input type="hidden" name="tt_apr_flag" value="${tt_apr_flag}" />
+      	<input type="hidden" name="kk_apr_flag" value="${kk_apr_flag}" />
+  		</td>
+  	</tr>
+    <tr>
+      <td nowrap class="td_remark" colspan="3">&nbsp;**修改: off時表示刪除</td>
+    </tr>
+ 	</table>
+ </div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	修改&nbsp;
+    </th>
+    <th nowrap >程式代碼&nbsp;</th>
+    <th nowrap >作業說明&nbsp;</th>
+    <th nowrap >
+    	<input type="checkbox" name="ex_selectQuery" value="Y" onClick="selectQuery();" >查詢&nbsp;
+    </th>
+    <th nowrap >
+    	<input type="checkbox" name="ex_selectUpdate" value="Y" onClick="selectUpdate();" >維護&nbsp;
+    </th>
+    <th nowrap >
+    	<input type="checkbox" name="ex_selectApprove" value="Y" onClick="selectApprove();" >線上覆核&nbsp;
+   	</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> &nbsp;
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+       ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	</td>
+   <td nowrap class="list_cc">${wf_winid}&nbsp;
+      <input type="hidden" name="wf_winid" value="${wf_winid}" />
+   </td>
+   <td nowrap class="list_ll">${wf_name}&nbsp;
+      <input type="hidden" name="wf_name" value="${wf_name}" />
+   </td>
+   <td nowrap class="list_cc">
+      <input type="checkbox" name="aut_query" value="${ser_num}" ${query_on} />
+   </td>
+   <td nowrap class="list_cc">
+   		<span style="display:${disp_update}">
+   		<input type="checkbox" name="aut_update" value="${ser_num}" ${update_on}  >
+   		</span>
+      <input type="hidden" name="disp_update" value="${disp_update}" />
+      <input type="hidden" name="wf_update" value="${wf_update}" />
+   </td>
+   <td nowrap class="list_cc">
+   		<span style="display:${disp_approve}">
+   	  <input type="checkbox" name="aut_approve" value="${ser_num}" ${appr_on} />
+   		</span>
+      <input type="hidden" name="disp_approve" value="${disp_approve}" />
+      <input type="hidden" name="wf_approve" value="${wf_approve}" />
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="upload_file" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="data" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode=='UPLOAD') {
+    	if (confirm("是否上傳子系統權限")==false) {
+    		 return false;
+    	}
+    }
+
+    return true;
+  }
+
+ function selectQuery() {
+	 var opt_select =document.dataForm.ex_selectQuery.checked;
+   var aElems = document.getElementsByName("aut_query");
+    for ( var i=0;  i < aElems.length; i++ ) {
+      if  ( aElems[i].type == "checkbox") {
+        aElems[i].checked = opt_select;
+      }
+    }
+    return;
+ }
+
+ function selectUpdate() {
+	 var opt_select =document.dataForm.ex_selectUpdate.checked;
+   var aElems = document.getElementsByName("aut_update");
+   var wf_upd = document.getElementsByName("wf_update");
+    for ( var i=0;  i < aElems.length; i++ ) {
+      if ( aElems[i].type == "checkbox" && wf_upd[i].value=="Y") {
+        aElems[i].checked = opt_select;
+      }
+    }
+    return;
+ }
+
+  function selectApprove() {
+	  var opt_select =document.dataForm.ex_selectApprove.checked;
+    var aElems = document.getElementsByName("aut_approve");
+    var wf_apr = document.getElementsByName("wf_approve");
+    for ( var i=0;  i < aElems.length; i++ ) {
+      if  ( aElems[i].type == "checkbox" && wf_apr[i].value=="Y") {
+        aElems[i].checked = opt_select;
+      }
+    }
+    return;
+ }
+
+   function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    document.dataForm.kk_group_id.value =document.dataForm.ex_group_id.value;
+    document.dataForm.kk_user_level.value =document.dataForm.ex_user_level.value;
+
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "secm01";
+    top.javaName    = "Secp2060";
+    top.requHtml    = "secp2060";
+    top.respHtml    = "secp2060";
+    return true;
+  }
+
+ function wf_uploadAfter() {
+   return;
+ }
+ function wf_import(par1) {
+   top.submitControl(par1);
+   top.spinner.stop();
+ }
+
+</script>

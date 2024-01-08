@@ -1,0 +1,164 @@
+<html>
+<head>
+<title> 109/09/25 V1.00.02 Allen Ho Initial IBON商品資料維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>活動代碼選擇:&nbsp;
+       <select name="prog_code1" class="col_ddlb" onChange="columnItemChange('2')" />
+               ${dddw_prog_code}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >活動代碼: 
+       <input      size="8" class="dsp_text" type="text" name="prog_code" value="${prog_code}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >兌換期間: 
+       <input      size="8" class="dsp_text" type="text" name="prog_s_date" value="${prog_s_date}" readonly/>
+         ~ 
+       <input      size="8" class="dsp_text" type="text" name="prog_e_date" value="${prog_e_date}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>商品代號:&nbsp; 
+       <input type="text" class="col_any" name="gift_no" value="${gift_no}"
+              zEdit="any" maxlength="8" size="8" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>上架有效期間:&nbsp; 
+       <input type="text" class="col_date" name="gift_s_date" value="${gift_s_date}"
+              zEdit="date,yyyymmdd" zRequire="Y" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'gift_s_date'});
+      </script>
+         ~ 
+       <input type="text" class="col_date" name="gift_e_date" value="${gift_e_date}"
+              zEdit="date,yyyymmdd" zRequire="Y" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'gift_e_date'});
+      </script>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">商品分類:&nbsp; 
+       <input type="text" class="col_any" name="gift_typeno" value="${gift_typeno}"
+              zEdit="any,canTW" maxlength="40" size="40" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">商品名稱:&nbsp; 
+       <input type="text" class="col_any" name="gift_name" value="${gift_name}"
+              zEdit="any,canTW" zRequire="Y" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">商品零售價:&nbsp; 
+       <input type="text" class="col_number" name="prd_price" value="${prd_price}"
+              zEdit="dignumber" maxlength="9" size="9" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">兌換點數:&nbsp; 
+       <input type="text" class="col_number" name="exchange_pnt" value="${exchange_pnt}"
+              zEdit="number" maxlength="8" size="8" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm3120">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_prog_code1 =document.forms["dataForm"]["prog_code1"].value;
+   var  win_prog_code =document.forms["dataForm"]["prog_code"].value;
+   var  win_prog_s_date =document.forms["dataForm"]["prog_s_date"].value;
+
+   idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode == '2' )
+      {
+       top.methodName = "wf_ajax_func_2";
+       resetJSON();
+       addJSON("ax_win_prog_code1",win_prog_code1);
+       addJSON("ax_win_prog_code",win_prog_code);
+       addJSON("ax_win_prog_s_date",win_prog_s_date);
+      }
+
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktm3120_nadd";
+
+  if (idCode == '2' )
+     {
+       document.dataForm.prog_code.value =getJSONvalue("prog_code",0);
+       document.dataForm.prog_s_date.value =getJSONvalue("prog_s_date",0);
+       document.dataForm.prog_e_date.value =getJSONvalue("prog_e_date",0);
+      document.dataForm.gift_s_date.value =getJSONvalue("gift_s_date",0);
+      document.dataForm.gift_e_date.value =getJSONvalue("gift_e_date",0);
+      return false;
+     }
+ }
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>商務卡戶覆審統計資料查詢-190621</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;公司統編:
+      <input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}"
+       maxlength="8" size="10" />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;資料月份:
+      <input type="text" class="col_text" name="ex_data_ym1" value="${ex_data_ym1}" maxlength="6" size="8" zEdit="date,yyyymm">&nbsp;
+      --
+      <input type="text" class="col_text" name="ex_data_ym2" value="${ex_data_ym2}" maxlength="6" size="8" zEdit="date,yyyymm">&nbsp;
+   </td>
+   <td nowrap>&nbsp;覆審日期:
+      <input type="text" class="col_date" name="ex_close_date1" value="${ex_close_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_close_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_close_date2" value="${ex_close_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_close_date2'});
+	      </script>
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;分群(1/2):
+      <input type="text" class="col_text" name="ex_risk_group1" value="${ex_risk_group1}" maxlength="2" size="5">&nbsp;
+      <input type="text" class="col_text" name="ex_risk_group2" value="${ex_risk_group2}" maxlength="2" size="5">&nbsp;
+   </td>
+   <td nowrap>&nbsp;覆審批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;Action Code:
+      <select size="1" name="ex_action_code" class="col_ddlb" >
+            <option value="">--</option>
+          ${dddw_action_code}
+      </select>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >公司統編_名稱&nbsp;</th>
+    <th nowrap >資料年月&nbsp;</th>
+    <th nowrap >覆審批號&nbsp;</th>
+    <th nowrap >負責人 ID&nbsp;</th>
+    <th nowrap >負責人姓名&nbsp;</th>
+    <th nowrap >分群一&nbsp;</th>
+    <th nowrap >分群二&nbsp;</th>
+    <th nowrap >JCIC資料&nbsp;</th>
+    <th nowrap >Action Code&nbsp;</th>
+    <th nowrap >覆審日期&nbsp;</th>
+    <th nowrap >結案日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${data_yymm}','${batch_no}','${corp_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_ll"> ${wk_corp_no_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${data_yymm.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${batch_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${charge_idno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${charge_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${risk_group1}&nbsp;</td>
+	<td nowrap class="list_cc"> ${risk_group2}&nbsp;</td>
+	<td nowrap class="list_cc"> ${jcic_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${action_code}.${#JAVA:ecsfunc.DeCodeRsk.trialAction(action_code)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${close_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${close_apr_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskq1210_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>

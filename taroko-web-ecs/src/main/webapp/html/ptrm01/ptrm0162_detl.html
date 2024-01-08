@@ -1,0 +1,700 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-10-12  V1.00.00  tanwei     添加繳費稅相關字段                                                                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>交易平台參數維護-detl-V.2020-0109-zuwei-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+    <script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+    <script language="JavaScript" src="js/jquery-ui.min.js"></script>
+</head>
+<script language="JavaScript">
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel();top.submitControl('Q')" ; alt="回上層" ;>&nbsp;
+                    <!-- <input type="Button" id="btnQuery" value="讀取" onClick="return top.submitControl('R')" class="btQuery" disabled>&nbsp;&nbsp; -->
+                    <input type="Button" id="btnAdd" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button" id="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" id="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="disDiv" class="disScreen"></div>
+        <div id="dataBlock">
+            <!-- 輸入資料讀取條件  -->
+            <!-- <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="50%">交易平台種類：&nbsp;
+                        <input type="text" class="col_text" name="platform_kind" value="${platform_kind}" zEdit="alphanum,upper" maxlength=4 size=5 />
+                        <select size="1" name="dd_bill_type" id="dd_bill_type" class="col_ddlb" onchange="sel_bill_type()">
+                            <option value="">--</option>
+                            ${dddw_bill_type}
+                        </select>
+                    </td>
+                    <td nowrap>&nbsp;中文説明:
+                        <input type="text" class="col_any" name="platform_desc" value="${platform_desc}" zEdit="any" maxlength=40 size=2 />
+                    </td>
+                </tr>
+            </table> -->
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">交易平台種類：
+                        <span class="dsp_text">${platform_kind}</span>
+                        <input type="text" class="col_any" name="platform_kind" value="${platform_kind}" zEdit="alphanum" maxlength="2" size="10" zRequire="Y">
+                    </td>
+                    <td nowrap class="colKey">中文説明：
+                        <span class="dsp_text">${platform_desc}</span>
+                        <input type="text" class="col_any" name="platform_desc" value="${platform_desc}" zEdit="any,canTW" maxlength="25" size="26"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>客制特店代碼:&nbsp;
+                        <input type="text" class="col_any" name="cust_mcht_no" value="${cust_mcht_no}" zEdit="alphanum" maxlength="20" size="20" zRequire="Y" />
+                        <!-- 
+                        <input type="button" class="btAdd_detl" id="btn_cust_mcht_no" value="..." onclick="queryCustMchtNo()" />
+                        -->
+        <!-- 客制特店代碼查詢 -->
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">特店代號：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('cust_mcht_no','merchant_2'); top.hideBlock('popDiv');" class="btConfirm">
+                    </td>
+                </tr>
+            </table>
+        </div>
+                    </td>
+                    <td nowrap>帳單來源:&nbsp;
+                        <select size="1" name="bill_type" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            ${dddw_bill_type}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">
+                        <input type="Button" class="btAdd" id="btn_f" value="財金請款資料參數設定" onClick="selectTab('F')">
+                        <input type="Button" class="btAdd" id="btn_p" value="公共事業" onClick="selectTab('P')">
+                        <input type="Button" class="btAdd" id="btn_i" value="壽險" onClick="selectTab('I')">
+                    </td>
+                </tr>
+                <tr id="financePanel">
+                	<td nowrap colspan="2">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-left: 0px;padding-right: 0px; margin-left: 0px;">
+            	<tr>
+            		<td nowrap colspan="2">
+            	財金請款資料參數項目
+            		</td>
+            	</tr>
+                <tr>
+                    <td nowrap class="colKey" width="25%">
+                    	<input type="checkbox" name="fee_attribute_flag" value="Y" onchange="feeAttributeFlagChange()" ${fee_attribute_flag-Y} />
+                    	交易處理費屬性
+                    </td>
+                    <td nowrap class="colKey">
+                    	屬性值
+                    	<input type="text" class="col_any" name="fee_attribute1" value="${fee_attribute1}" zEdit="alpha" maxlength="1" size="4" />
+                        <input type="checkbox" name="merchant_no1_flag" value="Y" onchange="feeAttributeFlagChange()" ${merchant_no1_flag-Y} />
+                    	特店代號&nbsp;&nbsp;
+                        <input type="radio" name="mh1_data_fit_flag" value="Y" ${mh1_data_fit_flag-Y} />
+                    	指定
+                        <input type="radio" name="mh1_data_fit_flag" value="N" ${mh1_data_fit_flag-N} />
+                    	排除&nbsp;&nbsp;
+                        <input type=button class="btAdd" id="btn_merchant_no1" value="特店代號前二碼" onclick="selectMerchantNoValue('mh1_data_value')" />
+                    	<input type=text class="col_any" id="mh1_data_value" name="mh1_data_value" value="${mh1_data_value}" readonly />
+                    	<br>
+                    	或
+                    	<br>
+                    	屬性值
+                    	<input type="text" class="col_any" name="fee_attribute2" value="${fee_attribute2}" zEdit="alpha" maxlength="1" size="4" />
+                        <input type="checkbox" name="merchant_no2_flag" value="Y" onchange="feeAttributeFlagChange()" ${merchant_no2_flag-Y} />
+                    	特店代號&nbsp;&nbsp;
+                        <input type="radio" name="mh2_data_fit_flag" value="Y" ${mh2_data_fit_flag-Y} />
+                    	指定
+                        <input type="radio" name="mh2_data_fit_flag" value="N" ${mh2_data_fit_flag-N} />
+                    	排除&nbsp;&nbsp;
+                        <input type=button class="btAdd" id="btn_merchant_no2" value="特店代號前二碼" onclick="selectMerchantNoValue('mh2_data_value')" />
+                    	<input type=text class="col_any" id="mh2_data_value" name="mh2_data_value" value="${mh2_data_value}" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    	<input type="checkbox" name="mcc_code_flag" value="Y" ${mcc_code_flag-Y} />
+                    	&nbsp;MCC Code
+                    </td>
+                    <td align="left">
+                    	值：
+                        <input type=text class="col_any" name="mcc_code" value="${mcc_code}" zeditType="alphanum" maxlength="4" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    	<input type="checkbox" name="terminal_id_flag" value="Y" ${terminal_id_flag-Y} onchange="terminalFlagChange()" />
+                    	&nbsp;端末機代號
+                    	<input type="hidden" name="terminal_data_type" value="${terminal_data_type}" />
+                    </td>
+                    <td align="right">
+                        <input type=button class="btAdd" id="btn_terminal_data_value" value="端末機代號（8碼）" onclick="selectTerminalValue()" />
+                    	<input type=text name="ter_data_value" value="${ter_data_value}" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    	<input type="checkbox" name="reimb_code_flag" value="Y" ${reimb_code_flag-Y} onchange="reimbCodeFlagChange()" />
+                    	&nbsp;繳費稅交易
+                    	<input type="hidden" name="reimb_code_type" value="${reimb_code_type}" />
+                    </td>
+                    <td align="right">財金交易代碼(6305) 
+                        <input type=button class="btAdd" id="btn_reimb_code_value" value="繳費稅種類代碼（2碼）" onclick="selectReimbCodeValue()" />
+                    	<input type=text name="tax_data_value" value="${tax_data_value}" readonly />
+                    </td>
+                </tr>
+            </table>
+                	</td>
+                </tr>
+                <tr id="publicPanel">
+		        	<td nowrap colspan="2">
+		            <table border="0" width="100%" style="padding-left: 0px;padding-right: 0px; margin-left: 0px;">
+		            	<tr>
+		            		<td>
+		            	公共事業參數項目
+		            		</td>
+		            	</tr>
+		            	<tr>
+		            		<td>
+		            	委托代繳項目：
+		            	<input type=text class="col_any" name="publ_item" value="${publ_item}" zeditType="any" maxlength="2" size="4" />
+		            	<input type=hidden name="publ_item_flag" value="${publ_item_flag}" />
+		            		</td>
+		            	</tr>
+		            </table>
+		            </td>
+		        </tr>
+		        <tr id="insurancePanel">
+		        	<td nowrap colspan="2">
+		            <table border="0" width="100%" style="padding-left: 0px;padding-right: 0px; margin-left: 0px;">
+		            	<tr>
+		            		<td>
+		            	壽險參數項目
+		            		</td>
+		            	</tr>
+		            	<tr>
+		            		<td>
+		            	端末機代號部分比對：
+		            	<input type=text name="ins_data_value" value="${ins_data_value}" zeditType="any" maxlength="16" size="20" />
+		            	(最長16碼)
+		            		</td>
+		            	</tr>
+		            </table>
+		        	</td>
+		        </tr>
+		        <tr>
+		        	<td>
+		        	&nbsp;產生日期: 
+                    <input type=text class="col_text" name="crt_date" value="${crt_date}" readonly />
+		        	</td>
+		        	<td>
+		        	&nbsp;產生人員: 
+                    <input type=text class="col_text" name="crt_user" value="${crt_user}" readonly />
+		        	</td>
+		        </tr>
+		        <tr>
+		        	<td>
+		        	&nbsp;異動日期:
+		            <input type="text" class="col_text" name="mod_time" value="${mod_time}" readonly />
+		        	</td>
+		        	<td>
+		        	&nbsp;異動人員:
+                    <input type=text class="col_text" name="mod_user" value="${mod_user}" readonly />
+		        	</td>
+		        </tr>
+            </table>
+        </div>
+        <!-- 特店代號前二碼選擇框 -->
+        <div id="merchantnoDialog">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;前二碼:
+                        <input type=text class="col_text" id="ex_merchant_no_value" value="" zeditType="number" maxlength="2" size="10" />
+                    </td>
+                    <td align="right">
+                        <input type="Button" id="btnAdd" value="新增" onclick="addMerchantNo();" class="btAdd_detl" />
+                        <input type="hidden" id="tmp_merchant_no_value" />
+                    </td>
+                <tr>
+            </table>
+            <table id="table_merchantno" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">特店代號前二碼</th>
+                </tr>
+            </table>
+        </div>
+        <!-- 端末機代號選擇框 -->
+        <div id="termianlValueDialog">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;端末機代號:
+                        <input type=text class="col_text" id="ex_ter_data_value" value="" zeditType="number" maxlength="8" size="10" />
+                    </td>
+                    <td align="right">
+                        <input type="Button" id="btnAddTerValue" value="新增" onclick="addTerminalValue();" class="btAdd_detl" />
+                        <input type="hidden" id="tmp_ter_data_value" />
+                    </td>
+                <tr>
+            </table>
+            <table id="table_terminalvalue" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">端末機代號</th>
+                </tr>
+            </table>
+        </div>
+        <!--繳稅種類代碼選擇框 -->
+        <div id="taxValueDialog">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;繳稅種類代碼:
+                        <input type=text class="col_text" id="ex_tax_data_value" value="" zeditType="number" maxlength="2" size="10" />
+                    </td>
+                    <td align="right">
+                        <input type="Button" id="btnAddTaxValue" value="新增" onclick="addTaxValue();" class="btAdd_detl" />
+                        <input type="hidden" id="tmp_tax_data_value" />
+                    </td>
+                <tr>
+            </table>
+            <table id="table_taxvalue" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">繳稅種類代碼</th>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="ptrm0162">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <!-- F:財金請款,P:公共事業,I:壽險 -->
+        <input type="hidden" name="platform_tab" value="${platform_tab}">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+//var optionFlag = "N";
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+// 查詢客制特店代碼-ajax方式
+function queryCustMchtNo() {
+	var value = document.dataForm.cust_mcht_no.value;
+	if (typeof(value) == "undefined" || !value) {
+		value = "";
+	}
+    resetJSON();
+    autoJSON = false;
+    top.actionCode = "AJAX";
+    addJSON("action", "query_cust_mcht_no");
+    addJSON("cust_mcht_no", value);
+
+    processAJAX();
+    return true;
+}
+
+//查詢客制特店代碼-ajax響應
+function ajaxResponse() {
+    var custMchtNo = document.dataForm.cust_mcht_no.value;
+    var custMchtNoList = document.getElementById("merchant_2");
+
+    for (var i = custMchtNoList.length - 1; i >= 0; i--) { 
+    	custMchtNoList.remove(i); 
+    }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+    	custMchtNoList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (custMchtNoList.options[i].value == custMchtNo && custMchtNo.length > 0) { 
+        	custMchtNoList.options[i].selected = true; 
+        }
+    }
+
+    top.popupBlock('popDiv');
+}
+
+//<!-- F:財金請款,P:公共事業,I:壽險 -->
+function initTab() {
+	var tab = document.dataForm.platform_tab.value;
+  	if (typeof(tab) == "undefined" || !tab) {
+  		tab = '';
+  	  	document.getElementById("btn_f").disabled=true;
+  	  	document.getElementById("btn_p").disabled=true;
+  	  	document.getElementById("btn_i").disabled=true;
+  	}
+  	
+  	selectTab(tab);
+  	
+  	if (tab == 'I') {
+  	  	document.getElementById("btn_f").disabled=true;
+  	  	document.getElementById("btn_p").disabled=true;
+    } else if (tab == 'P') {
+  	  	document.getElementById("btn_p").className='btAdd_detl';
+  	  	document.getElementById("btn_f").disabled=true;
+  	  	document.getElementById("btn_i").disabled=true;
+    } else if (tab == 'F') {
+  	  	document.getElementById("btn_f").className='btAdd_detl';
+  	  	document.getElementById("btn_p").disabled=true;
+  	  	document.getElementById("btn_i").disabled=true;
+    }
+  	
+  	if (tab != '') {
+  		document.dataForm.platform_kind.readonly = true;
+  	}
+}
+
+// 財金公共事業壽險按鈕事件處理
+// <!-- F:財金請款,P:公共事業,I:壽險 -->
+function selectTab(tab) {
+   	document.dataForm.platform_tab.value = tab;
+  	document.getElementById("financePanel").style.display="none";
+  	document.getElementById("publicPanel").style.display="none";
+  	document.getElementById("insurancePanel").style.display="none";
+  	document.getElementById("btn_f").className='btAdd';
+  	document.getElementById("btn_p").className='btAdd';
+  	document.getElementById("btn_i").className='btAdd';
+    if (tab == 'I') {
+  	  	document.getElementById("btn_i").className='btAdd_detl';
+    	document.getElementById("insurancePanel").style.display="";
+    } else if (tab == 'P') {
+  	  	document.getElementById("btn_p").className='btAdd_detl';
+    	document.getElementById("publicPanel").style.display="";
+    } else if (tab == 'F') {
+  	  	document.getElementById("btn_f").className='btAdd_detl';
+    	document.getElementById("financePanel").style.display="";
+    }
+}
+
+// 交易處理費屬性勾選變更事件
+function feeAttributeFlagChange() {
+	var checked = document.dataForm.fee_attribute_flag.checked;
+	var checked1 = document.dataForm.merchant_no1_flag.checked;
+	var checked2 = document.dataForm.merchant_no2_flag.checked;
+	var attribute1 = document.dataForm.fee_attribute1.value;
+	var attribute2 = document.dataForm.fee_attribute2.value;
+	if (checked) {
+		if (checked1) {
+			if (trim(attribute1) == '') {
+				alert("請先輸入“屬性值”");
+				document.dataForm.merchant_no1_flag.checked = false;
+				return;
+			}
+		}
+		if (checked2) {
+			if (trim(attribute2) == '') {
+				alert("請先輸入“屬性值”");
+				document.dataForm.merchant_no2_flag.checked = false;
+				return;
+			}
+		}
+	} else if (checked1 || checked2) {
+		alert("請先輸入勾選“交易處理費屬性”");
+		document.dataForm.merchant_no1_flag.checked = false;
+		document.dataForm.merchant_no2_flag.checked = false;
+		return;
+	}
+	document.getElementById("btn_merchant_no1").disabled = !checked1;
+	document.getElementById("btn_merchant_no2").disabled = !checked2;
+}
+
+//端末機代號變更事件
+function terminalFlagChange() {
+	var checked = document.dataForm.terminal_id_flag.checked;
+	document.getElementById("btn_terminal_data_value").disabled = !checked;
+}
+
+//繳費稅代號變更事件
+function reimbCodeFlagChange() {
+	var checked = document.dataForm.reimb_code_flag.checked;
+	document.getElementById("btn_reimb_code_value").disabled = !checked;
+}
+
+// 輸入特店代號前二碼
+var merchantNoValueEle = null;
+function selectMerchantNoValue(ename) {
+	merchantNoValueEle = document.getElementById(ename);
+	var value = merchantNoValueEle.value;
+	if (typeof(value) == "undefined" || !value) {
+		value = "";
+	}
+	initTable(document.getElementById("table_merchantno"), value);
+	$("#merchantnoDialog").dialog("open");
+}
+
+// 新增一條前二碼
+function addMerchantNo() {
+    var val = trim(document.getElementById("ex_merchant_no_value").value);
+
+    if (val.length != 2) {
+        alert("前二碼請輸入兩碼");
+        return;
+    }
+
+    addRow(document.getElementById("table_merchantno"), val);
+    document.getElementById("ex_merchant_no_value").value = "";
+}
+
+//輸入端末機代號
+var terDataValueEle = document.dataForm.ter_data_value;
+function selectTerminalValue() {
+	var value = terDataValueEle.value;
+	if (typeof(value) == "undefined" || !value) {
+		value = "";
+	}
+	initTable(document.getElementById("table_terminalvalue"), value);
+	$("#termianlValueDialog").dialog("open");
+}
+
+//新增一條端末機代號
+function addTerminalValue() {
+	var val = trim(document.getElementById("ex_ter_data_value").value);
+	
+	if (val.length != 8) {
+	    alert("端末機代號請輸入捌碼");
+	    return;
+	}
+
+	addRow(document.getElementById("table_terminalvalue"), val);
+	document.getElementById("ex_ter_data_value").value = "";
+}
+
+//輸入繳稅種類代碼
+var taxDataValueEle = document.dataForm.tax_data_value;
+function selectReimbCodeValue() {
+	var value = taxDataValueEle.value;
+	if (typeof(value) == "undefined" || !value) {
+		value = "";
+	}
+	initTable(document.getElementById("table_taxvalue"), value);
+	$("#taxValueDialog").dialog("open");
+}
+
+//新增一條繳稅種類代碼
+function addTaxValue() {
+	var val = trim(document.getElementById("ex_tax_data_value").value);
+	
+	if (val.length != 2) {
+	    alert("繳稅種類代號請輸入2碼");
+	    return;
+	}
+
+	addRow(document.getElementById("table_taxvalue"), val);
+	document.getElementById("ex_tax_data_value").value = "";
+}
+
+//初始化表格
+function initTable(etable, value) {
+	while (etable.rows.length > 1) {
+		etable.deleteRow(1);
+	}
+	if (typeof(value) == "undefined" || !value || value == '') {
+		return;
+	}
+	var codes = value.split("、");
+	for (i = 0; i < codes.length; i++) {
+		if (codes[i] == '') {
+			continue;
+		}
+		addRow(etable, codes[i]);
+	}
+}
+
+/**
+ * 在table中新增一筆資料
+ */
+function addRow(elmtTable, dat) {
+    var ind = elmtTable.rows.length;
+    var colNum = 0;
+    
+    // 檢查重複值
+    for (var x = 1; x < elmtTable.rows.length; x++) {
+    	var val = elmtTable.rows[x].cells[1].getElementsByTagName("input")[0].value;
+        if (val == dat) {
+        	return;
+        }
+    }
+
+    var myRow = elmtTable.insertRow(ind);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) { 
+    	serNo = "0" + ind; 
+    } else { 
+    	serNo = "" + ind; 
+    }
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var ipSpan = document.createElement('span');
+    ipSpan.setAttribute('class', 'dsp_text');
+    ipSpan.textContent = dat;
+    myCell.appendChild(ipSpan);
+
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'blocks';
+    ip3.value = dat;
+    myCell.appendChild(ip3);
+}
+
+// 獲取添加的前二碼或端末機代號
+function getTableValue(elmtTable) {
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    var data = '';
+
+    for (var x = 1; x < rowCount; x++) {
+    	var checked = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+    	// 過濾掉勾選刪除的記錄
+    	if (checked) {
+    		continue;
+    	}
+        var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+        data = data + "、" + dat;
+    }
+    
+    if (data.length > 0) {
+    	return data.substring(1);
+    } else {
+    	return "";
+    }
+}
+
+$(document).ready(function() {
+	// 初始化tab
+	initTab();
+	// 初始化按鈕
+	feeAttributeFlagChange();
+	// 端末機代號按鈕
+	terminalFlagChange();
+	// 繳稅種類代碼按鈕
+	reimbCodeFlagChange();
+	// 初始化對話框
+    $("#merchantnoDialog").dialog({
+        title: '特店代號前二碼',
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        height: 400,
+        width: 300,
+        buttons: {
+            "確定": function() {
+            	var v = getTableValue(document.getElementById("table_merchantno"));
+            	merchantNoValueEle.value = v;
+                $(this).dialog("close");
+            },
+            "取消": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    $("#termianlValueDialog").dialog({
+        title: '端末機代碼',
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        height: 400,
+        width: 300,
+        buttons: {
+            "確定": function() {
+            	var v = getTableValue(document.all.table_terminalvalue);
+            	terDataValueEle.value = v;
+                $(this).dialog("close");
+            },
+            "取消": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    $("#taxValueDialog").dialog({
+        title: '繳稅種類代碼',
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        height: 400,
+        width: 300,
+        buttons: {
+            "確定": function() {
+            	var v = getTableValue(document.all.table_taxvalue);
+            	taxDataValueEle.value = v;
+                $(this).dialog("close");
+            },
+            "取消": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+});
+
+
+function trim(value) {
+    return value.replace(/^\s+|\s+$/g, "");
+}
+</script>

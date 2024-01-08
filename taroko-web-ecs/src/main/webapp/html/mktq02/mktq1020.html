@@ -1,0 +1,204 @@
+<html>
+<head>
+<title> 108/11/18 V1.00.01 Allen Ho Initial 市區停車手KEY資料查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="16">
+   <tr>
+   <td nowrap>&nbsp;廠商代碼:
+      <select size="1" name="ex_park_vendor" class="col_ddlb" >
+         ${dddw_park_vendow}
+      </select>
+   扣點[/加檔]處理
+      <select  name="ex_proc_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="N" ${ex_proc_flag-N} >未處理</option>
+         <option value="Y" ${ex_proc_flag-Y} >已處理</option>
+         <option value="3" ${ex_proc_flag-3} >已處理(扣點)</option>
+         <option value="4" ${ex_proc_flag-4} >已處理(加檔)</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;檔案類型:
+      <select  name="ex_pass_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_pass_type-1} >自動過卡</option>
+         <option value="2" ${ex_pass_type-2} >手KEYIN</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;停車日期:
+      <input type="text" class="col_date" 
+          name="ex_park_date_s_s" value="${ex_park_date_s_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_s_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_park_date_s_e" value="${ex_park_date_s_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_s_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;審核結果:
+      <select  name="ex_verify_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_verify_flag-1} >正常交易</option>
+         <option value="2" ${ex_verify_flag-2} >本行吸收</option>
+         <option value="3" ${ex_verify_flag-3} >廠商吸收</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;身分證號：
+      <input type="text" class="col_any" 
+          name="ex_id_no" value="${ex_id_no}"
+         zeditType="any,upper"  maxlength=11 size=11 />
+      ${ex_chi_name}
+      <input  type="hidden" name="ex_chi_name" value="${ex_chi_name}" />
+   卡號:
+      <input type="text" class="col_any" 
+          name="ex_card_no" value="${ex_card_no}"
+         zeditType="any"  maxlength=19 size=19 />
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">廠商代碼</th>
+    <th nowrap class="list_th">身分證號</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">入場日期</th>
+    <th nowrap class="list_th">出場日期</th>
+    <th nowrap class="list_th">停車<BR>時數</th>
+    <th nowrap class="list_th">免費<BR>時數</th>
+    <th nowrap class="list_th">自費<BR>時數</th>
+    <th nowrap class="list_th">兌換<BR>時數</th>
+    <th nowrap class="list_th">扣抵<br>紅利點數</th>
+    <th nowrap class="list_th">實際扣抵<br>紅利點數</th>
+    <th nowrap class="list_th">加檔金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="ser_num" value="${ser_num}"/>
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${park_vendor}
+        <input type="hidden" name="park_vendor" value="${park_vendor}" />
+    </td>
+    <td nowrap class="list_cc"> ${id_no}${comm_id_no}
+        <input type="hidden" name="id_no" value="${id_no}" />
+        <input type="hidden" name="comm_id_no" value="${comm_id_no}" />
+    </td>
+    <td nowrap class="list_cc"> ${card_no}
+        <input type="hidden" name="card_no" value="${card_no}" />
+    </td>
+    <td nowrap class="list_cc"> ${park_date_s.YMD}
+        <input type="hidden" name="park_date_s" value="${park_date_s.YMD}" />
+    </td>
+    <td nowrap class="list_cc"> ${park_date_e.YMD}
+        <input type="hidden" name="park_date_e" value="${park_date_e.YMD}" />
+    </td>
+    <td nowrap class="list_rr"> ${park_hr}
+        <input type="hidden" name="park_hr" value="${park_hr}" />
+    </td>
+    <td nowrap class="list_rr"> ${free_hr}
+        <input type="hidden" name="free_hr" value="${free_hr}" />
+    </td>
+    <td nowrap class="list_rr"> ${selfee_hr}
+        <input type="hidden" name="selfee_hr" value="${selfee_hr}" />
+    </td>
+    <td nowrap class="list_rr"> ${use_bonus_hr}
+        <input type="hidden" name="use_bonus_hr" value="${use_bonus_hr}" />
+    </td>
+    <td nowrap class="list_rr"> ${use_point.(999)}
+        <input type="hidden" name="use_point" value="${use_point.(999)}" />
+    </td>
+    <td nowrap class="list_rr"> ${act_use_point.(999)}
+        <input type="hidden" name="act_use_point" value="${act_use_point.(999)}" />
+    </td>
+    <td nowrap class="list_rr"> ${act_charge_amt.(999)}
+        <input type="hidden" name="act_charge_amt" value="${act_charge_amt.(999)}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno}
+        <input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${tran_seqno}
+        <input type="hidden" name="tran_seqno" value="${tran_seqno}" />
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktq1020_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq1020_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

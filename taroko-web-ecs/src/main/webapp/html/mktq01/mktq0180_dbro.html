@@ -1,0 +1,119 @@
+<html>
+<head>
+<title> 108/01/29 V1.00.01 RAY Ho Initial </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data1 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <tr>
+     <td nowrap class="td_data"="%">活動代號: 
+       <span class="dsp_text">${active_code}-${comm_active_code}</span>
+       <input type="hidden" name="active_code" value="${active_code}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">卡號： 
+       <span class="dsp_text">${card_no}</span>
+       <input type="hidden" name="card_no" value="${card_no}"/>
+   </tr>
+ </table>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">退貨日期</th>
+    <th nowrap class="list_th">參考序號</th>
+    <th nowrap class="list_th">收單行代號</th>
+    <th nowrap class="list_th">特店代號</th>
+    <th nowrap class="list_th">帳務科目</th>
+    <th nowrap class="list_th">退貨金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','${active_code}','${card_no}','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${purchase_date.YMD}</td>
+    <td nowrap class="list_cc"> ${reference_no}</td>
+    <td nowrap class="list_cc"> ${acq_member_id}</td>
+    <td nowrap class="list_cc"> ${mcht_no}</td>
+    <td nowrap class="list_ll"> ${acct_code}-${comm_acct_code}</td>
+    <td nowrap class="list_rr"> ${dest_amt}</td>
+    <td nowrap style="visibility:hidden;"> ${active_code}</td>
+    <td nowrap style="visibility:hidden;"> ${card_no}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="ROWID" value="${rowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 2;
+        top.respHtml = "mktq0180_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 2;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq0180_detl";
+    top.submitControl('T');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,192 @@
+<html>
+<head>
+<title>當期自動扣繳餘額調整-106-11-06-V1.00.01-Alex</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+	                <td nowrap>&nbsp;帳戶帳號:
+	                    <select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+	                    <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 />
+	                </td>
+	                <td nowrap>&nbsp;雙幣幣別:
+	                    <select size="1" name="ex_curr_code" class="col_ddlb">
+	                    	<option value="">--</option>
+	                    	${dddw_curr_code}
+	                   	</select>
+	                </td>
+				      </tr>
+              <tr>
+                 <td nowrap colspan="2" >
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="執行" onClick="return top.submitControl('U')" class="btUpdate">
+          				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<span nowrap height="40">  
+						<input type="Button" name="btnSelAll" ${btnSelAll_disable} value="全選" onClick="selectAll();" >&nbsp;
+								</span> 
+                 </td>
+<!--
+					       <td nowrap width="30">
+						<input type="Button" name="btnSelAll" ${btnSelAll_disable} value="全選" onClick="selectAll();" >&nbsp;
+	               </td>
+-->
+              </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+<!-- 
+            <tr style="cursor:hand"> 
+	            <td> 
+		            <table border="1" cellspacing="0" cellpadding="4"> 
+--> 
+						<tr> 
+<!--					<th nowrap style="color:blue;" width="70"><b>放行</b></th>    --> 
+    					<th nowrap style="color:blue;background:whitesmoke;" width="70"><b>放行</b></th>   
+							<th nowrap class="list_th" width="150">帳戶帳號</th> 
+							<th nowrap class="list_th" width="80">雙幣幣別</th> 
+							<th nowrap class="list_th" width="120">姓名/公司名稱</th> 
+							<th nowrap class="list_th" width="80">帳戶狀態</th> 
+							<th nowrap class="list_th" width="40">週期</th> 
+							<th nowrap class="list_th" width="80">關帳年月</th> 
+							<th nowrap class="list_th" width="100">自動扣繳餘額</th> 
+							<th nowrap class="list_th" width="100">最低應繳款餘額</th> 
+							<th nowrap class="list_th" width="100">自動扣繳期初金額</th> 
+							<th nowrap class="list_th" width="100">目前欠款總餘額</th> 
+							<th nowrap class="list_th" width="80">異動經辦</th> 
+						</tr> 
+             <!-- BEGIN DYNAMIC : DETAIL -->
+						<tr> 
+							<td nowrap width="70" class="list_ll">
+								<span class="dsp_flag">${ok_flag}</span>
+								<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} /> ${ser_num}
+                <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+								<input type="hidden" name="ser_num" value="${ser_num}" /> 
+								<input type="hidden" name="rowid" value="${rowid}" /> 
+        						<input type="hidden" name="p_seqno" value="${p_seqno}">
+							</td> 
+							<td nowrap class="td_data" width="150"> 
+								<span class=""> ${acct_type}-${acct_key}</span> 
+								<input type="hidden" name="acct_type" value="${acct_type}"> 
+								<input type="hidden" name="acct_key" value="${acct_key}"> 
+							</td> 
+							<td nowrap class="td_data" width="80"> 
+								<font color="#FF00FF"> ${#JAVA:ecsfunc.DeCodePtr.currCode(curr_code)}</font> 
+								<input type="hidden" name="curr_code" value="${curr_code}"> 								
+							</td> 
+							<td nowrap class="td_data" width="100"> 
+								<span class=""> ${chi_name} </span> 
+								<input type="hidden" name="chi_name" value="${chi_name}"> 
+							</td> 
+							<td nowrap class="td_data" width="80"> 
+								<span class=""> ${acct_status} </span> 
+								<input type="hidden" name="acct_status" value="${acct_status}"> 
+							</td> 
+							<td nowrap class="td_data" width="40"> 
+								<span class=""> ${stmt_cycle} </span> 
+								<input type="hidden" name="stmt_cycle" value="${stmt_cycle}"> 
+							</td> 
+							<td nowrap class="td_data" width="80"> 
+								<span class=""> ${this_acct_month} </span> 
+								<input type="hidden" name="this_acct_month" value="${this_acct_month}"> 
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class=""> ${dc_autopay_bal.(999.00)} </span> 
+								<input type="hidden" name="dc_autopay_bal" value="${dc_autopay_bal}"> 
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class=""> ${dc_min_pay_bal.(999.00)} </span> 
+								<input type="hidden" name="dc_min_pay_bal" value="${dc_min_pay_bal}"> 
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class=""> ${dc_autopay_beg_amt.(999.00)} </span> 
+								<input type="hidden" name="dc_autopay_beg_amt" value="${dc_autopay_beg_amt}"> 
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class=""> ${dc_acct_jrnl_bal.(999.00)} </span> 
+								<input type="hidden" name="dc_acct_jrnl_bal" value="${dc_acct_jrnl_bal}"> 
+							</td> 
+							<td nowrap class="td_data"  align="center" width="80"> 
+								<span class="" > ${update_user} </span> 
+								<input type="hidden" name="update_user" value="${update_user}"> 
+							</td> 
+						</tr>
+						<tr>
+							<td nowrap colspan="7" align="right">
+								<b><font color="8B008B"> 調整後金額: </font> </b>
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class="dsp_text"> ${dc_autopay_bal_a.(999.00)} </span> 
+								<input type="hidden" name="dc_autopay_bal_a" value="${dc_autopay_bal_a}"> 
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class="dsp_text"> ${dc_min_pay_bal_a.(999.00)} </span> 
+								<input type="hidden" name="dc_min_pay_bal_a" value="${dc_min_pay_bal_a}"> 
+							</td> 
+							<td nowrap class="td_data" width="150" align="right"> 
+								<span class="dsp_text"> ${dc_autopay_beg_amt_a.(999.00)} </span> 
+								<input type="hidden" name="dc_autopay_beg_amt_a" value="${dc_autopay_beg_amt_a}"> 
+								<input type="hidden" name="dc_acct_jrnl_bal_a" value="${dc_acct_jrnl_bal_a}"> 
+							</td> 
+						</tr> 
+            <!-- END DYNAMIC : DETAIL -->
+<!--
+            		</table> 
+		            <hr> 
+            	</td> 
+            </tr> 
+-->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="ex_selectAll" value="0">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+//document.dataForm.ex_risk_type.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    
+    return true;
+}
+
+function selectAll() {
+	var chkflag = document.dataForm.ex_selectAll.value=="0"? true:false;
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			if ( aElements[i].name == "opt" ) {
+				aElements[i].checked = chkflag;					
+			}
+		}
+	}
+	document.dataForm.ex_selectAll.value = document.dataForm.ex_selectAll.value=="0"? "1":"0";
+}
+
+</script>

@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>扣款作業結案維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />&nbsp;
+  <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="結案" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" />&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="取消結案" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btDelete" />&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">控制流水號：&nbsp;
+		<span class="dsp_text">${CB_ctrl_seqno}</span>
+		<input type="hidden" name="CB_ctrl_seqno" value="${CB_ctrl_seqno}">
+   </td>
+   <td nowrap class="colKey">卡別：&nbsp;
+		<span class="dsp_text">${CB_bin_type}</span>
+		<input type="hidden" name="CB_bin_type" value="${CB_bin_type}">
+      &nbsp;Debit:<span class="dsp_text">${CB_debit_flag}</span>
+		<input type="hidden" name="CB_debit_flag" value="${CB_debit_flag}">
+   </td>
+   <td nowrap>總結案：&nbsp;
+      <span class="dsp_text">${#JAVA:ecsfunc.DeCodeRsk.chgbFinalClose(CB_final_close)}</span>
+      <input type=hidden name="CB_final_close" value="${CB_final_close}" />
+   </td>
+  </tr>
+  <tr>
+   <td>帳單流水號：&nbsp;
+      <span class="dsp_text">${CB_reference_no}-${CB_reference_seq}</span>
+      <input type=hidden name="CB_reference_no" value="${CB_reference_no}" />
+      <input type=hidden name="CB_reference_seq" value="${CB_reference_seq}" />
+   </td>
+   <td nowrap>主階段：&nbsp;<span class="dsp_text">
+      ${CB_chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbChgStage(CB_chg_stage)}</span>
+      <input type=hidden name="CB_chg_stage" value="${CB_chg_stage}" />
+   </td>
+   <td nowrap>狀態碼：&nbsp;
+      <span class="dsp_text">
+      ${CB_chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbSubStage(CB_sub_stage)}</span>
+      <input type=hidden name="CB_sub_stage" value="${CB_sub_stage}" />
+   </td>
+  </tr>
+  <tr>
+      <td nowrap colspan="1">&nbsp;結案結果:
+         <select size="1" name="CB_clo_result" class="col_ddlb" >
+              ${dddw_clo_result}
+         </select>
+      </td>
+      <td nowrap>&nbsp;結案理由:
+         <input type="text" class="col_text" name="wk_close_reason" value="${wk_close_reason}" maxlength="4" size="6" />
+      </td>
+      <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap>結案登錄：&nbsp;
+      <span class="dsp_text"> ${CB_close_add_user} </span>
+      <input type=hidden name="CB_close_add_user" value="${CB_close_add_user}" />
+      &nbsp;
+      <span class="dsp_text"> ${CB_close_add_date.YMD} </span>
+      <input type=hidden name="CB_close_add_date" value="${CB_close_add_date}" />
+   </td>
+   <td nowrap>結案覆核：&nbsp;
+      <span class="dsp_text"> ${CB_close_apr_user} </span>
+      <input type=hidden name="" value="${CB_close_apr_user}" />
+      &nbsp;
+      <span class="dsp_text"> ${CB_close_apr_date.YMD} </span>
+      <input type=hidden name="CB_close_apr_date" value="${CB_close_apr_date}" />
+   </td>
+   <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap>消費卡號：&nbsp;
+      <span class="dsp_text"> ${CB_card_no} </span>
+      <input type=hidden name="CB_card_no" value="${CB_card_no}" />
+   </td>
+   <td nowrap>持卡人姓名：&nbsp;
+      <span class="dsp_text"> ${idno_name} </span>
+      <input type=hidden name="idno_name" value="${idno_name}" />
+   </td>
+   <td nowrap>正卡ID：&nbsp;
+      <span class="dsp_text"> ${major_idno} </span>
+      <input type=hidden name="major_idno" value="${major_idno}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>消費金額：&nbsp;
+      <span class="dsp_number"> ${BL_dest_amt.(999)} </span>
+      <input type=hidden name="BL_dest_amt" value="${BL_dest_amt}" />
+   </td>
+   <td nowrap>結算金額：&nbsp;
+      <span class="dsp_number"> ${BL_dc_dest_amt.(999.00)} </span>
+      <input type=hidden name="BL_dc_dest_amt" value="${BL_dc_dest_amt}" />
+   </td>
+   <td nowrap>結算幣別：&nbsp;
+      <span class="dsp_text"> ${BL_curr_code} </span>
+      <input type=hidden name="BL_curr_code" value="${BL_curr_code}" />
+   </td>
+  </tr>
+ <tr>
+  <td nowrap>&nbsp;原始金額:
+   <span class="dsp_text">${BL_source_amt.(999)}&nbsp;</span>
+   <input type="hidden" name="BL_source_amt" value="${BL_source_amt}">
+  </td>
+  <td nowrap>&nbsp;原始幣別:
+   <span class="dsp_text">${BL_source_curr}&nbsp;</span>
+   <input type="hidden" name="BL_source_curr" value="${BL_source_curr}">
+  </td>
+  <td nowrap>&nbsp;特店國別:
+   <span class="dsp_text">${BL_mcht_country}&nbsp;</span>
+   <input type="hidden" name="BL_mcht_country" value="${BL_mcht_country}">
+  </td>
+ </tr>
+</table>
+</div>
+
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks"onclick="tabControl(event,'tab-1')">帳單資料</td>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event,'tab-2')">一扣</td>
+       <td class="tablinks" onclick="tabControl(event,'tab-3')">再提示</td>
+       <td class="tablinks" onclick="tabControl(event,'tab-4')">二扣</td>
+    </tr>
+  </table>
+</div>
+<div id="tab-1" class="tabcontent">
+<div id="queryBlock">      
+ ${#PLUGIN:htmcomm_plugin.bil_bill_data} 
+</div>
+</div>
+<div id="tab-2" class="tabcontent">
+<div id="queryBlock">
+ ${#PLUGIN:rskm01.rsk_chgback_fst} 
+</div>
+</div>
+
+<div id="tab-3" class="tabcontent">
+<div id="queryBlock">      
+ ${#PLUGIN:rskm01.rsk_chgback_rep} 
+</div>
+</div>
+
+<div id="tab-4" class="tabcontent">
+<div id="queryBlock">      
+ ${#PLUGIN:rskm01.rsk_chgback_sec} 
+</div>
+</div>
+
+<input type="hidden" name="CB_ROWID" value="${CB_rowid}">
+<input type="hidden" name="CB_MOD_SEQNO" value="${CB_mod_seqno}">
+<input type="hidden" name="MOD_PGM" value="rskm0220">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+   if (top.actionCode==='U2') {
+      return confirm('是否執行 [結案取消]');
+   }
+   return true;
+  }
+
+</script>

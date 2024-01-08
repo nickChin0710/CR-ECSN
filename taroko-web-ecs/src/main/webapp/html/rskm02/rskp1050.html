@@ -1,0 +1,297 @@
+<html>
+<head>
+<title>期中覆審查詢暨人工作業-主管覆核-jh-190619</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;查詢日期:
+      <input type="text" class="col_date" name="ex_query_date1" value="${ex_query_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_query_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_query_date2" value="${ex_query_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_query_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;查詢批號:
+	   <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" >
+	</td>
+   <td nowrap rowspan="4" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="明細" onClick="return wf_submitcontrol()" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="批次覆核" onClick="return wf_proccontrol()" class="btAdd" >&nbsp;&nbsp;  
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;    
+   </td>  
+   <td nowrap rowspan="4" >
+   	<textarea cols="30" rows="10" name="ex_remark1" value="${ex_remark1}" readOnly /></textarea>   	
+   </td>
+   <td nowrap rowspan="4" >
+   	<textarea cols="30" rows="10" name="ex_remark2" value="${ex_remark2}" readOnly /></textarea>   	
+   </td>    
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;覆審日期:
+      <input type="text" class="col_date" name="ex_trial_date1" value="${ex_trial_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_trial_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_trial_date2" value="${ex_trial_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_trial_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;身分證ID:
+	   <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+	</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;Action Code:
+      <select size="1" name="ex_action_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_trial_action}
+      </select>
+   </td>
+   <td nowrap >&nbsp;覆審經辦:
+      <input type="text" class="col_text" name="ex_trial_user" value="${ex_trial_user}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;風險族群:
+      <select size="1" name="ex_risk_group" class="col_ddlb" >
+      <option value="">--</option>         
+         ${dddw_risk_group}
+      <option value="Z9">Z9</option>
+      </select>
+   </td>    	
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+    <th nowrap >持卡人ID&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >查詢日期&nbsp;</th>
+    <th nowrap >風險<br>族群</th>    
+    <th nowrap >Action Code&nbsp;</th>
+    <th nowrap >覆審備註&nbsp;</th>
+    <th nowrap >凍結碼[4]&nbsp;</th>
+    <th nowrap >凍結碼[5]&nbsp;</th>
+    <th nowrap >戶特指&nbsp;</th>
+    <th nowrap >覆審日期&nbsp;</th>
+    <th nowrap >覆審經辦&nbsp;</th>
+    <th nowrap >覆審<br>狀態</th>
+    <th nowrap >持商<br>務卡</th>
+    <th nowrap >有擔<br>保品</th>
+    <th nowrap >特殊<br>名單</th>
+    <th nowrap >RC轉<br>LOAN</th>
+    <th nowrap >指定<br>覆審</th>
+    <th nowrap >頂級<br>卡戶</th>
+    <th nowrap >信用卡<br>近1M遲繳</th>
+    <th nowrap >信用卡<br>近6M遲繳次</th>
+    <th nowrap >授信<br>逾期</th>
+    <th nowrap >6M無擔<br>延遲次</th>
+    <th nowrap >6M有擔<br>延遲次</th>
+    <th nowrap >無擔負債</th>
+    <th nowrap >本行RC</th>
+    <th nowrap >DBR</th>
+    <th nowrap >覆核結果</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="batch_no" value="${batch_no}" />
+   	<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+	</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;
+      <input type="hidden" name="id_no" value="${id_no}" />
+	</td>
+	<td nowrap class="list_cc"> ${chi_name}&nbsp;
+      <input type="hidden" name="chi_name" value="${chi_name}" />
+	</td>
+	<td nowrap class="list_cc"> ${query_date.YMD}&nbsp;
+      <input type="hidden" name="query_date" value="${query_date}" />
+	</td>
+	<td nowrap class="list_cc"> ${risk_group}&nbsp;
+      <input type="hidden" name="risk_group" value="${risk_group}" />
+	</td>	
+	<td nowrap class="list_ll"> ${tt_action_code}&nbsp;
+      <input type="hidden" name="action_code" value="${action_code}" />
+      <input type="hidden" name="tt_action_code" value="${tt_action_code}" />
+   </td>
+	<td nowrap class="list_ll">
+   	<a href="#" onclick="showRemark('${ser_num}')" style="cursor:hand">${trial_remark_30}</a>
+		<input type="hidden" name="trial_remark_30" value="${trial_remark_30}">
+		<input type="hidden" name="trial_remark" value="${trial_remark}">
+		<input type="hidden" name="trial_remark_60" value="${trial_remark_60}">
+   </td>
+	<td nowrap class="list_cc"> ${block_reason}&nbsp;
+      <input type="hidden" name="block_reason" value="${block_reason}">
+	</td>
+	<td nowrap class="list_cc"> ${block_reason5}&nbsp;
+      <input type="hidden" name="block_reason5" value="${block_reason5}">
+	</td>
+	<td nowrap class="list_cc"> ${spec_status}&nbsp;
+      <input type="hidden" name="spec_status" value="${spec_status}">
+	</td>
+	<td nowrap class="list_cc"> ${trial_date.YMD}&nbsp;
+      <input type="hidden" name="trial_date" value="${trial_date}">
+	</td>
+	<td nowrap class="list_cc"> ${trial_user}&nbsp;
+      <input type="hidden" name="trial_user" value="${trial_user}">
+	</td>
+	<td nowrap class="list_cc"> ${close_flag}${tt_close_flag}&nbsp;
+      <input type="hidden" name="close_flag" value="${close_flag}">
+      <input type="hidden" name="tt_close_flag" value="${tt_close_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${ecs045}&nbsp;
+      <input type="hidden" name="ecs045" value="${ecs045}">
+	</td>
+	<td nowrap class="list_cc"> ${ecs046}${tt_ecs046}&nbsp;
+      <input type="hidden" name="ecs046" value="${ecs046}">
+      <input type="hidden" name="tt_ecs046" value="${tt_ecs046}">
+	</td>
+	<td nowrap class="list_cc"> ${ecs047}&nbsp;
+      <input type="hidden" name="ecs047" value="${ecs047}">
+	</td>
+	<td nowrap class="list_cc"> ${ecs044}&nbsp;
+      <input type="hidden" name="ecs044" value="${ecs044}">
+	</td>
+	<td nowrap class="list_cc"> ${assign_list_flag}&nbsp;
+      <input type="hidden" name="assign_list_flag" value="${assign_list_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${card_note_i}&nbsp;
+      <input type="hidden" name="card_note_i" value="${card_note_i}">
+	</td>
+	<td nowrap class="list_cc"> ${jcic012_01}&nbsp;
+      <input type="hidden" name="jcic012_01" value="${jcic012_01}">
+	</td>
+	<td nowrap class="list_cc"> ${jcic012_03}&nbsp;
+      <input type="hidden" name="jcic012_03" value="${jcic012_03}">
+	</td>
+	<td nowrap class="list_cc"> ${jcic019}&nbsp;
+      <input type="hidden" name="jcic019" value="${jcic019}">
+	</td>
+	<td nowrap class="list_cc"> ${jcic023_01}&nbsp;
+      <input type="hidden" name="jcic023_01" value="${jcic023_01}">
+	</td>
+	<td nowrap class="list_cc"> ${jcic023_02}&nbsp;
+      <input type="hidden" name="jcic023_02" value="${jcic023_02}">
+	</td>
+	<td nowrap class="list_rr"> ${jcic039.(999)}&nbsp;
+      <input type="hidden" name="jcic039" value="${jcic039}">
+	</td>
+	<td nowrap class="list_rr"> ${ecs034.(999)}&nbsp;
+      <input type="hidden" name="ecs034" value="${ecs034}">
+	</td>
+	<td nowrap class="list_rr"> ${jcic040.(999)}&nbsp;
+      <input type="hidden" name="jcic040" value="${jcic040}">
+	</td>
+	<td nowrap class="list_rr"><span class="ok_flag">${err_msg}</span>&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+  function wf_submitcontrol() {   
+      top.respLevel = 1;          
+      top.respHtml  = "rskp1050_detl";           
+      top.submitControl('C1');     
+ }
+  
+  function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox"  ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+  function wf_proccontrol() {           
+    if (confirm("是否執行 期中覆審 覆核作業")==false) {
+         return false;
+    } 
+    top.submitControl('C');     
+ }
+ 
+   function showRemark(parm) { 
+  	var ii = parm-1;
+  	var ls_remark = document.getElementsByName("trial_remark")[ii].value; 
+  	var ls_remark2 = document.getElementsByName("trial_remark_60")[ii].value; 
+  	var tt = '';
+  	var tt2 = '';
+  	while(ls_remark.length >0){
+  		 if (ls_remark.length<=15) {
+  		 	tt +=ls_remark+"\n";
+  		  break;
+  		}
+  		
+   		tt +=ls_remark.substr(0,15)+"\n";
+ 		  ls_remark =ls_remark.substr(15);	
+  	}
+  	
+  	while(ls_remark2.length >0){
+  		 if (ls_remark2.length<=15) {
+  		 	tt2 +=ls_remark2+"\n";
+  		  break;
+  		}
+  		
+   		tt2 +=ls_remark2.substr(0,15)+"\n";
+ 		  ls_remark2 =ls_remark2.substr(15);	
+  	}
+  	
+  	document.forms["dataForm"]["ex_remark1"].value = tt;
+    document.forms["dataForm"]["ex_remark2"].value = tt2;
+  } 
+
+</script>

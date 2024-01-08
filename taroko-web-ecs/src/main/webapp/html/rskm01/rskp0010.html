@@ -1,0 +1,263 @@
+<html>
+<head>
+<title>消費帳單查詢及處理(列問交)-jh-210810</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         ${dddw_acct_type}
+      </select>
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" >
+   </td>
+   <td nowrap>&nbsp;帳單:
+      <input type="radio" name="ex_bill" value="1" ${ex_bill-1} ${default-ex_bill} />&nbsp;歷史
+      <input type="radio" name="ex_bill" value="2" ${ex_bill-2} />&nbsp;當期
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" zEdit="number" />
+   </td>
+   <td nowrap>&nbsp;關帳年月:
+      <input type="text" class="col_date" name="ex_acct_month" value="${ex_acct_month}" zEdit="date,yyyymm" maxlength="6" size="8" />
+      <input type="hidden" name="ex_acct_status" value="${ex_acct_status}">
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnPrbl" value="問交" ${btnUpdate_disable} onClick="buttonAction('S1')" class="btOther2" >&nbsp;&nbsp;
+      <input type="Button" name="btnRept" value="調單" ${btnUpdate_disable} onClick="return buttonAction('S2')" class="btOther2" >&nbsp;&nbsp;
+      <input type="Button" name="btnPrbl2" value="整批列問交" ${btnUpdate_disable} onClick="return buttonAction('C1')" class="btOther2" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;姓名/公司名稱:
+      <span class="dsp_text">${ex_chi_name}</span>
+      <input type="hidden" name="ex_chi_name" value="${ex_chi_name}">
+   </td>
+   <td nowrap>&nbsp;結算幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_dc_curr_code_tw}
+      </select>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnChgb" value="扣款" ${btnUpdate_disable} onClick="return buttonAction('S3')" class="btOther2" >&nbsp;&nbsp;
+      <input type="Button" name="btnChgb2" value="整批扣款" ${btnUpdate_disable} onClick="return buttonAction('C3')" class="btOther2" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;TPAN:
+      <input type="text" class="col_text" name="ex_vcard_no" value="${ex_vcard_no}" maxlength="19" size="21" >
+   </td>
+   <td nowrap>&nbsp;申購書編號:
+      <input type="text" class="col_text" name="ex_contr_no" value="${ex_contr_no}" maxlength="10" size="12" >
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnComp" value="預備依從" ${btnUpdate_disable} onClick="return buttonAction('S4')" class="btOther2" >&nbsp;&nbsp;
+      <input type="Button" name="btnArbit" value="預備仲裁" ${btnUpdate_disable} onClick="return buttonAction('S5')" class="btOther2" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+ ${#PLUGIN:htmcomm_plugin.vip_color}
+<hr>
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="td_title" width="100">&nbsp;</td>
+    <td nowrap class="td_title">&nbsp;筆數: <span class="dsp_number">${wk_tot_cnt.(999)}</span>
+      <input type="hidden" name="wk_tot_cnt" value="${wk_tot_cnt}" />
+    </td>
+    <td nowrap class="td_title">&nbsp;總金額: <span class="dsp_number">${wk_tot_amt.(999)}</span>
+    <input type="hidden" name="wk_tot_amt" value="${wk_tot_amt}" />
+    </td>
+    <td nowrap class="td_title" width="100">&nbsp;</td>
+</tr>
+</table>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="unsortable" width="5%">處理</th>
+    <th nowrap class="unsortable">入帳日</th>
+    <th nowrap class="unsortable">墊款日</th>
+    <th nowrap class="unsortable">消費日</th>
+    <th nowrap class="unsortable">起息日</th>
+    <th nowrap class="unsortable">消費卡號</th>
+    <th nowrap class="unsortable">原幣金額</th>
+    <th nowrap class="unsortable">台幣金額</th>
+    <th nowrap class="unsortable">結算<br>幣別</th>
+    <th nowrap class="unsortable">結算金額</th>
+    <th nowrap class="unsortable">特店名稱</th>
+    <th nowrap class="unsortable">城市</th>
+    <th nowrap class="unsortable">授權碼</th>
+    <th nowrap class="unsortable">TC</th>
+    <th nowrap class="unsortable">控制<br>流水號</th>
+    <th nowrap class="unsortable">調<br>單</th>
+    <th nowrap class="unsortable">扣<br>款</th>
+    <th nowrap class="unsortable">問交<br>特交</th>
+    <th nowrap class="unsortable">預備<br>依從</th>
+    <th nowrap class="unsortable">預備<br>仲裁</th>
+    <th nowrap class="unsortable">卡<br>別</th>
+    <th nowrap class="unsortable">帳單<br>參考號碼</th>
+    <th nowrap class="unsortable">申請書編號</th>
+    <th nowrap class="unsortable">繳款方式</th>
+    <th nowrap class="unsortable">持卡人<br>負擔金額</th>
+    <th nowrap class="unsortable">搬帳<br>註記</th>
+    <th nowrap class="unsortable">TPAN</th>    
+    <th nowrap class="unsortable">Ori<br>Reference No</th>
+    <th nowrap class="unsortable">目前<br>期數</th>
+  </tr> 
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="reference_no" value="${reference_no}" />
+      <input type="hidden" name="reference_no_ori" value="${reference_no_ori}" />
+      <input type="hidden" name="rsk_ctrl_seqno" value="${rsk_ctrl_seqno}" />
+      <input type="hidden" name="sign_flag" value="${sign_flag}" />
+      <img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${reference_no}','','');" style="cursor:hand">
+   </td>
+  <td nowrap class="list_cc">${acct_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc">${wk_post_date}&nbsp;</td>
+   <td nowrap class="list_cc">${purchase_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc">${interest_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc">${card_no}&nbsp;
+    <input type="hidden" name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap class="list_rr">${source_amt.(999.00)}&nbsp;</td>
+   <td nowrap class="list_rr">${dest_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_cc">${curr_code}&nbsp;</td>
+   <td nowrap class="list_rr">${dc_dest_amt.(999.00)}&nbsp;
+    <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}" />
+   </td>
+   <td nowrap class="list_ll">${mcht_name}&nbsp;</td>
+   <td nowrap class="list_cc">${mcht_city}&nbsp;</td>
+   <td nowrap class="list_cc">${auth_code}&nbsp;</td>
+   <td nowrap class="list_cc">${txn_code}&nbsp;</td>
+   <td nowrap class="list_cc">${rsk_ctrl_seqno}&nbsp;</td>
+   <td nowrap class="list_cc">${rept_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${chgb_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${prbl_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${compl_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${arbit_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${bin_type}&nbsp;</td>
+   <td nowrap class="list_cc">${reference_no}&nbsp;</td>
+   <td nowrap class="list_cc">${contract_no}&nbsp;</td>
+   <td nowrap class="list_cc">${payment_type}.${tt_payment_type}&nbsp;</td>
+   <td nowrap class="list_cc">${cash_pay_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_cc">${merge_flag}&nbsp;</td>
+   <td nowrap class="list_cc">${v_card_no}&nbsp;</td>   
+  <td nowrap class="list_cc">${reference_no_ori}&nbsp;</td>
+  <td nowrap class="list_cc">${install_curr_term}&nbsp;
+      <input type="hidden" name="install_curr_term" value="${install_curr_term}" />
+</td>
+</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/sortable.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+//  if (top.pageRows.length==0 || parseInt(top.pageRows)==0) {
+//    top.pageRows="20";
+//  }
+
+ function validateInput()
+ {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function buttonAction(action) {
+    if (action==='S1') {
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010_prbl";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S2') {
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010_rept";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S3') {
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010_chgb";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S4') { //預備依從
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010_compl";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S5') { //預備仲裁
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010_arbit";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='C1') { //整批列問交
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010";
+      top.respHtml  = "rskp0010_prbl_2";
+      top.submitControl('C1');
+      return true;
+    }
+    else if (action==='C3') { //整批扣款
+      top.respLevel = 1;
+      top.respHtml  = "rskp0010_chgb_2";
+      top.submitControl('C3');
+      return true;
+    }
+    else {
+      alert("action is not Assign Html, action="+action);
+      return false;
+    }
+
+ }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskp0010_bill";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>

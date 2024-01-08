@@ -1,0 +1,281 @@
+<html>
+<head>
+<title>每月應轉催收但未轉催收報表-pond-V.2018-0103-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<!-- ${#PLUGIN:htmcomm_plugin.apr_user} -->
+<div id="condBlock">
+<!--COND -->
+<table width="30%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+  	 	<td nowrap>&nbsp;項目選擇:
+      		<select   size="1"  name="ex_fail_flag" class="col_ddlb">
+        		<option value="">全部顯示</option>
+        		<option value="1" ${ex_fail_flag-1} >例外處理</option>
+         		<option value="2" ${ex_fail_flag-2} >尚未停卡</option>
+         		<option value="3" ${ex_fail_flag-3} >暫不轉催</option>
+         		<option value="4" ${ex_fail_flag-4} >債務清理條例</option>
+         		<option value="5" ${ex_fail_flag-5} >分期還款</option>
+      		</select>
+   		</td>
+   		<td nowrap>&nbsp;分期Flag:
+      		<select   size="1"  name="ex_stage_flag" class="col_ddlb">
+        		<option value="">全部</option>
+        		<option value="NW" ${ex_stage_flag-NW} >NW</option>
+         		<option value="00" ${ex_stage_flag-00} >00</option>
+         		<option value="01" ${ex_stage_flag-01} >01</option>
+         		<option value="02" ${ex_stage_flag-02} >02以上</option>
+         		<option value="NE" ${ex_stage_flag-NE} >NE(債協)</option>
+         		<option value="NF" ${ex_stage_flag-NF} >NF(前協)</option>
+         		<option value="NK" ${ex_stage_flag-NK} >NK(更生)</option>
+         		<option value="NO" ${ex_stage_flag-NO} >NO(清算)</option>
+         		<option value="NG" ${ex_stage_flag-NG} >NG(前調)</option>
+      		</select>
+   		</td>
+   		<td nowrap rowspan="4">&nbsp;  
+      		<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+       		<!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+      		<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="detailScreen();" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+      		<!-- <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+    	</td>
+  	</tr>
+  	<tr>
+  		<td nowrap>&nbsp;身分證ID:
+			<input type="text" class="col_any" zEdit="alphanum" name="ex_idno" value="${ex_idno}"
+      		maxlength="10" size="12"/>
+		</td>
+		<td nowrap>&nbsp;結欠本金>=:
+			<input type="text" class="col_number" zEdit="number" name="ex_end_bal" value="${ex_end_bal}"
+      		maxlength="15" size="15"/>
+		</td>
+  	</tr>
+  	<tr>
+  	 	<td nowrap>&nbsp;協商狀態:
+      		<select   size="1"  name="ex_liab_comp_status" class="col_ddlb">
+      			<option value="">--</option>
+        		<option value="A1" ${ex_liab_comp_status-A1} >1.停催</option>
+         		<option value="A2" ${ex_liab_comp_status-A2} >2.復催</option>
+         		<option value="A3" ${ex_liab_comp_status-A3} >3.協商成功</option>
+         		<option value="B1" ${ex_liab_comp_status-B1} >1.受理申請</option>
+         		<option value="B2" ${ex_liab_comp_status-B2} >2.停催通知</option>
+         		<option value="B3" ${ex_liab_comp_status-B3} >3.簽約完成</option>
+         		<option value="B4" ${ex_liab_comp_status-B4} >4.結案/復催</option>
+         		<option value="R" ${ex_liab_comp_status-R} >更生</option>
+         		<option value="L" ${ex_liab_comp_status-L} >清算</option>
+      		</select>
+   		</td>
+   		<td nowrap>&nbsp;Mcode:
+      		<select   size="1"  name="ex_mcode" class="col_ddlb">
+      			<option value="">--</option>
+        		<option value="1" ${ex_mcode-1} >1</option>
+         		<option value="2" ${ex_mcode-2} >2</option>
+         		<option value="3" ${ex_mcode-3} >3</option>
+         		<option value="4" ${ex_mcode-4} >4</option>
+         		<option value="5" ${ex_mcode-5} >5</option>
+         		<option value="6" ${ex_mcode-6} >6</option>
+         		<option value="7" ${ex_mcode-7} >7</option>
+         		<option value="8" ${ex_mcode-8} >8</option>
+         		<option value="9" ${ex_mcode-9} >9</option>
+         		<option value="10" ${ex_mcode-10} >10</option>
+         		<option value="11" ${ex_mcode-11} >11</option>
+         		<option value="12" ${ex_mcode-12} >12</option>
+         		<option value="13" ${ex_mcode-13} >12+</option>
+      		</select>
+   		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap colspan=2>&nbsp;最近一次繳款日<=:
+      		<input type="text" class="col_date" name="ex_last_pay_date" value="${ex_last_pay_date}"
+         	zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_last_pay_date'});
+	    	</script>
+	    </td>  
+  	</tr>
+</table>
+</div>
+<hr>
+<div class="tab">
+<table>
+    <tr>
+ 		<td class="tablinks tab_a" ${tab_active1} onclick="tabControl(event, 'tab-1');">每月應轉催收但未轉催收報表</td>
+       	<td class="tablinks tab_b" ${tab_active2} onclick="tabControl(event, 'tab-2');">每日應轉逾放但未轉逾放報表</td>
+    </tr>
+</table>
+</div>
+<!--Sum -->
+<!--List -->
+<!-- 每月應轉催收但未轉催收報表================================ -->
+<!-- <div id="content1" class="tabPage"> -->
+<div id="tab-1" class="tabcontent">
+<table width="50%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">ID/統編</th>
+        <th nowrap class="list_th">姓名/名稱</th>
+        <th nowrap class="list_th">產品別</th>
+        <th nowrap class="list_th">帳齡</th>
+        <th nowrap class="list_th">繳款評等1</th>
+        <th nowrap class="list_th">協商狀態</th>
+        <th nowrap class="list_th">欠款總額</th>
+        <th nowrap class="list_th">結欠本金</th>
+        <th nowrap class="list_th">狀態</th>
+        <th nowrap class="list_th">未轉催原因</th>
+        <th nowrap class="list_th">資料日期</th>
+        <th nowrap class="list_th">分期期標</th>
+        <th nowrap class="list_th">最近繳款日</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr >
+      	<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+        <td nowrap class="list_ll">${a-id_no}&nbsp;</td>
+        <td nowrap class="list_ll">${a-chi_name}&nbsp;</td>
+        <td nowrap class="list_ll">${a-acct_type}&nbsp;
+        <td nowrap class="list_ll">${a-mcode}&nbsp;</td>
+        <td nowrap class="list_ll">${a-payment_rate1}&nbsp;</td>
+        <td nowrap class="list_ll">${a-tt_liab_comp_status}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${a-acct_jrnl_bal.(999)}</td>
+        <td nowrap class="list_rr">&nbsp;${a-end_bal.(999)}</td>
+        <td nowrap class="list_ll">${a-tt_acct_status}&nbsp;</td>
+        <td nowrap class="list_ll">${a-tt_err_type}&nbsp;</td>
+        <td nowrap class="list_ll">${a-crt_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${a-pay_by_stage_flag}&nbsp;</td>
+        <td nowrap class="list_ll">${a-last_pay_date.YMD}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+	<tr>
+		<td colspan="6"></td>
+    	<td nowrap >&nbsp;累計筆數:
+      		<span class="dsp_number">${a-count_all}</span>
+		</td>
+		<td nowrap align="right">&nbsp;累計金額:
+      		<span class="dsp_number">${a-sum_acct_jrnl_bal.(999)}</span>
+		</td>
+		<td nowrap align="right">&nbsp;
+      		<span class="dsp_number">${a-sum_end_bal.(999)}</span>
+		</td>
+    </tr>
+</table>
+</div>
+
+<!-- 每日應轉逾放但未轉逾放報表================================ -->
+<!-- <div id="content2" class="tabPage"> -->
+<div id="tab-2" class="tabcontent">
+<table width="50%" id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+     	<th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">ID/統編</th>
+        <th nowrap class="list_th">姓名/名稱</th>
+        <th nowrap class="list_th">產品別</th>
+        <th nowrap class="list_th">帳齡</th>
+        <th nowrap class="list_th">繳款評等1</th>
+        <th nowrap class="list_th">協商狀態</th>
+        <th nowrap class="list_th">欠款總額</th>
+        <th nowrap class="list_th">結欠本金</th>
+        <th nowrap class="list_th">狀態</th>
+        <th nowrap class="list_th">未轉餘原因</th>
+        <th nowrap class="list_th">資料日期</th>
+        <th nowrap class="list_th">分期期標</th>
+        <th nowrap class="list_th">最近繳款日</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+      	<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+   		<td nowrap class="list_ll">${b-id_no}&nbsp;</td>
+        <td nowrap class="list_ll">${b-chi_name}&nbsp;</td>
+        <td nowrap class="list_ll">${b-acct_type}&nbsp;
+        <td nowrap class="list_ll">${b-mcode}&nbsp;</td>
+        <td nowrap class="list_ll">${b-payment_rate1}&nbsp;</td>
+        <td nowrap class="list_ll">${b-tt_liab_comp_status}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${b-acct_jrnl_bal.(999)}</td>
+        <td nowrap class="list_rr">&nbsp;${b-end_bal.(999)}</td>
+        <td nowrap class="list_ll">${b-tt_acct_status}&nbsp;</td>
+        <td nowrap class="list_ll">${b-tt_err_type}&nbsp;</td>
+        <td nowrap class="list_ll">${b-crt_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${b-pay_by_stage_flag}&nbsp;</td>
+        <td nowrap class="list_ll">${b-last_pay_date.YMD}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+	<tr>
+		<td colspan="6"></td>
+    	<td nowrap >&nbsp;累計筆數:
+      		<span class="dsp_number">${b-count_all}</span>
+		</td>
+		<td nowrap align="right">&nbsp;累計金額:
+      		<span class="dsp_number">${b-sum_acct_jrnl_bal.(999)}</span>
+		</td>
+		<td nowrap align="right">&nbsp;
+      		<span class="dsp_number">${b-sum_end_bal.(999)}</span>
+		</td>
+    </tr>
+</table>
+</div>
+
+    
+ <input type="hidden"  name="data_k1" value="${data_k1}" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="sm_settle_amt"  value="${sm_settle_amt}">
+ <input type="hidden" name="MOD_PGM" value="colr0030">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" id="TTTS" name="TTTS" value="">
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="99999";
+ var tab = "";
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode == "C" ) {
+    	var filename = document.getElementById('exImportFile').value;
+    	//var filename = document.getElementById("exImportFile").files[0].fileName;
+    	//document.getElementById('TTTS').value = document.getElementById('exImportFile').value;
+    	//alert(filename);
+    	if(filename==""){
+    		
+    		return false;
+    	}
+    }
+    
+    return true;
+  }
+
+ $(document).ready(function() {
+	 $(".tab_a").click(function(){
+		 tab = "a";
+		 $("input[name = data_k1]").val(tab);
+	 });
+	 $(".tab_b").click(function(){
+		 tab = "b";
+		 $("input[name = data_k1]").val(tab);
+	 });
+ });
+ 
+ function detailScreen() { 
+		//document.dataForm.data_k1.value = tab;
+	    top.submitControl('PDF');
+
+	    return true;
+	}
+</script>

@@ -1,0 +1,185 @@
+<html>
+<head>
+<title>LGD(902)債務層級結束日報送資料查詢-pond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!-- <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp; -->
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;ID/統編：
+      <input type="text" class="col_text" name="exIdCorpNo" value="${exIdCorpNo}" 
+        zEdit="alphanum,upper,idnum" maxlength="10" size="10" />
+    </td>
+    <td nowrap>&nbsp;結案原因：
+      <select size="1" name="exCloseReason" class="col_ddlb">
+         <option value="">--</option>
+         <option value="A1" ${exCloseReason-A1} >A1.借戶治癒</option>
+         <option value="A2" ${exCloseReason-A2} >A2.協議後正常還款</option>
+         <option value="B2" ${exCloseReason-B2} >B2.其他違約滿兩年,回收無望案件</option>
+      </select>
+    </td>
+  </tr>  
+  <tr>
+    <td nowrap>&nbsp;報送：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exSendFlag" ${exSendFlag-0} ${DEFAULT-exSendFlag} />全部
+         <input type="radio" value="Y" name="exSendFlag" ${exSendFlag-Y} />已報送
+         <input type="radio" value="N" name="exSendFlag" ${exSendFlag-N} />未報送
+      </span>
+    </td>
+    <td nowrap>&nbsp;報送年月：
+      <input type="text" class="col_date" name="exSendYm" value="${exSendYm}" 
+        zEdit="date,yymm" maxlength="6" size="8" />
+    </td>
+  </tr>
+  
+  <tr>
+    <td nowrap>&nbsp;建檔日期：
+      <input type="text" class="col_date" name="exCrtDate1" value="${exCrtDate1}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exCrtDate1'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exCrtDate2" value="${exCrtDate2}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exCrtDate2'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;交易代碼：
+      <select size="1" name="exAudCode" class="col_ddlb">
+         <option value="">--</option>
+         <option value="A" ${exAudCode-A} >A.新增</option>
+         <option value="C" ${exAudCode-C} >C.修改</option>
+         <option value="D" ${exAudCode-D} >D.刪除</option>
+      </select>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">LGD 序號</th>
+    <th nowrap class="list_th">ID/統編</th>
+    <th nowrap class="list_th">交易<br>代碼</th>
+    <th nowrap class="list_th">報送年月</th>
+    <th nowrap class="list_th">最早<br>違約年月</th>
+    <th nowrap class="list_th">最早違約<br>暴險金額</th>
+    <th nowrap class="list_th">列入<br>逾放年月</th>
+    <th nowrap class="list_th">列入逾放日<br>暴險金額</th>
+    <th nowrap class="list_th">轉催收<br>年月</th>
+    <th nowrap class="list_th">轉催收<br>暴險金額</th>
+    <th nowrap class="list_th">回收金額<br>借款人自償</th>
+    <th nowrap class="list_th">回收金額<br>保證人他償</th>
+    <th nowrap class="list_th">回收金額<br>其他</th>
+    <th nowrap class="list_th">成本與費用<br>金額</th>
+    <th nowrap class="list_th">回收與成本<br>費用年月</th>
+    <th nowrap class="list_th">利率</th>
+    <th nowrap class="list_th">有其他<br>保證人</th>
+    <th nowrap class="list_th">結束日<br>報送型態</th>
+    <th nowrap class="list_th">媒體<br>報送日期</th>
+    <th nowrap class="list_th">建檔<br>管道</th>
+    <th nowrap class="list_th">建檔經辦</th>
+    <th nowrap class="list_th">建檔日期</th>
+  </tr>
+
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <!-- <tr onclick="detailScreen('${SER_NUM}','${tsc_card_no}','','')" style="cursor:hand">-->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+	</td>
+   <td nowrap class="list_ll"> ${lgd_seqno} </td>
+   <td nowrap class="list_cc"> ${id_corp_no} </td>
+   <td nowrap class="list_cc"><span style="color:#0000FF;"> ${tt_aud_code} </span></td>
+   <td nowrap class="list_cc"> ${send_ym.YMD} </td>
+   <td nowrap class="list_cc"> ${early_ym.YMD} </td>
+   <td nowrap class="list_rr"> ${risk_amt} </td>
+   <td nowrap class="list_cc"> ${overdue_ym.YMD} </td>
+   <td nowrap class="list_rr"> ${overdue_amt} </td>
+   <td nowrap class="list_cc"> ${coll_ym.YMD} </td>
+   <td nowrap class="list_rr"> ${coll_amt} </td>
+   <td nowrap class="list_rr"> ${recv_self_amt} </td>
+   <td nowrap class="list_rr"> ${recv_rela_amt} </td>
+   <td nowrap class="list_rr"> ${recv_oth_amt} </td>
+   <td nowrap class="list_rr"> ${costs_amt} </td>
+   <td nowrap class="list_cc"> ${costs_ym.YMD} </td>
+   <td nowrap class="list_rr"> ${revol_rate.(999.00)} </td>
+   <td nowrap class="list_cc"> ${card_rela_type} </td>
+   <td nowrap class="list_ll"> ${close_reason}.${tt_close_reason} </td>
+   <td nowrap class="list_cc"> ${send_date.YMD} </td>
+   <td nowrap class="list_cc"><span style="color:#0000FF;"> ${tt_from_type} </span></td>
+   <td nowrap class="list_cc"> ${crt_user} </td>
+   <td nowrap class="list_cc"> ${crt_date.YMD} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.exIdCorpNo.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colq1230_detl_notuse"; 
+    }
+    
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "colq1230_detl_notuse";
+    top.submitControl('S');
+    return true;
+  }
+ 
+</script>

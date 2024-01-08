@@ -1,0 +1,409 @@
+<html>
+
+<head>
+    <title>法人歷史資料查詢 V.106-12-06-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css"> ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2">&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">&nbsp;法人統編:
+                        <input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}" zEdit="number" maxlength="8" size="8" />
+                        <input type="text" class="col_number" name="ex_corp_no_code" value="${ex_corp_no_code}" zEdit="number" maxlength="1" size="1" />
+                    </td>
+                    <td nowrap colspan="1">&nbsp;負責人是否異動:
+                        <select size="1" name="ex_charge" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="Y" ${ex_charge-Y}>Y</option>
+                            <option value="N" ${ex_charge-N}>N</option>
+                        </select>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;起訖日期:
+                        <input type="text" class="col_date" name="ex_beg_date" value="${ex_beg_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'ex_beg_date' });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_end_date" value="${ex_end_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'ex_end_date' });
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div class="tab">
+            <table>
+                <tr>
+                    <td class="tablinks" id="tab_active" onclick="tab_select('aopt'); tabControl(event, 'tab-1')">法人資料</td>
+                    <td class="tablinks" onclick="tab_select('bopt'); tabControl(event, 'tab-2')">卡片資料</td>
+                    <td class="tablinks" onclick="tab_select('copt'); tabControl(event, 'tab-3')">帳務資料一</td>
+                    <td class="tablinks" onclick="tab_select('eopt'); tabControl(event, 'tab-4')">帳務資料二</td>
+                    <td class="tablinks" onclick="tab_select('fopt'); tabControl(event, 'tab-5')">帳務資料三</td>
+                    <td class="tablinks" onclick="tab_select('gopt'); tabControl(event, 'tab-6')">帳務資料四</td>
+                </tr>
+            </table>
+        </div>
+        <!--法人資料================================ -->
+        <!-- <div id="content1" class="tabPage"> -->
+        <div id="tab-1" class="tabcontent">
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="2">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                    <th nowrap class="list_th">異動日期</th>
+                    <th nowrap class="list_th">異動人員</th>
+                    <th nowrap class="list_th">異動碼</th>
+                    <th nowrap class="list_th">統一編號</th>
+                    <th nowrap class="list_th">中文簡稱</th>
+                    <th nowrap class="list_th">擔保品放款值</th>
+                    <th nowrap class="list_th">負責人ID</th>
+                    <th nowrap class="list_th">負責人姓名</th>
+                    <th nowrap class="list_th">負責人ID(異動前)</th>
+                    <th nowrap class="list_th">負責人(異動前)</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${a-wk_mod_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-mod_user}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-mod_audcode}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-corp_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-abbr_name}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${a-asset_value}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-charge_id}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-charge_name}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-charge_id_prev}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-charge_name_prev}&nbsp; </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!--卡片資料================================ -->
+        <!-- <div id="content2" class="tabPage"> -->
+        <div id="tab-2" class="tabcontent">
+            <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="2">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                    <th nowrap class="list_th">異動時間</th>
+                    <th nowrap class="list_th">異動人員</th>
+                    <th nowrap class="list_th">卡號</th>
+                    <th nowrap class="list_th">正/附卡</th>
+                    <th nowrap class="list_th">卡片狀態</th>
+                    <th nowrap class="list_th">子卡旗標</th>
+                    <th nowrap class="list_th">子卡額度</th>
+                    <th nowrap class="list_th">子卡分期付款額度</th>
+                    <th nowrap class="list_th">統一編號</th>
+                    <th nowrap class="list_th">卡種</th>
+                    <th nowrap class="list_th">團代</th>
+                    <th nowrap class="list_th">來源代號</th>
+                    <th nowrap class="list_th">英文姓名</th>
+                    <th nowrap class="list_th">正卡ID號碼</th>
+                    <th nowrap class="list_th">正卡卡號</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${b-mod_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-mod_user}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-card_no}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${b-sup_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-current_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-son_card_flag}&nbsp; </td>
+                    <td nowrap class="list_rr"> &nbsp;${b-indiv_crd_lmt.(999)} </td>
+                    <td nowrap class="list_rr"> &nbsp;${b-indi_inst_lmt.(999)} </td>
+                    <td nowrap class="list_ll"> ${b-corp_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-card_type}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-group_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-source_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-eng_name}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-major_id_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-major_card_no}&nbsp; </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!--帳務資料一================================ -->
+        <!-- <div id="content3" class="tabPage"> -->
+        <div id="tab-3" class="tabcontent">
+            <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="2">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                    <th nowrap class="list_th">異動時間</th>
+                    <th nowrap class="list_th">異動人員</th>
+                    <th nowrap class="list_th">異動碼</th>
+                    <th nowrap class="list_th">帳別</th>
+                    <th nowrap class="list_th">帳戶帳號</th>
+                    <th nowrap class="list_th">風險行</th>
+                    <th nowrap class="list_th">等級</th>
+                    <th nowrap class="list_th">VIP</th>
+                    <th nowrap class="list_th">通訊地址</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${c-mod_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-mod_user}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-mod_audcode}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-acct_type}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${c-acct_key}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-risk_bank_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-class_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-vip_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${c-wk_mail_addr}&nbsp; </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!--帳務資料二================================ -->
+        <!-- <div id="content5" class="tabPage"> -->
+        <div id="tab-4" class="tabcontent">
+            <table id="table4" class="sortable" border="0" cellspacing="0" cellpadding="2">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                    <th nowrap class="list_th">異動時間</th>
+                    <th nowrap class="list_th">異動人員</th>
+                    <th nowrap class="list_th">異動碼</th>
+                    <th nowrap class="list_th">類別</th>
+                    <th nowrap class="list_th">帳戶帳號</th>
+                    <th nowrap class="list_th">法人統編</th>
+                    <th nowrap class="list_th">帳戶自動扣繳</th>
+                    <th nowrap class="list_th">自動扣繳ID</th>
+                    <th nowrap class="list_th">自動扣繳碼</th>
+                    <th nowrap class="list_th">自動扣繳比率</th>
+                    <th nowrap class="list_th">自動扣繳固定金額</th>
+                    <th nowrap class="list_th">MP百分比</th>
+                    <th nowrap class="list_th">允用RC碼</th>
+                    <th nowrap class="list_th">帳戶身分證號</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${d-mod_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-mod_user}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-mod_audcode}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-acct_type}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${d-acct_key}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${d-wk_corp_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-wk_autopay_act_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-wk_autopay_id}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-autopay_indicator}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-autopay_rate}&nbsp; </td>
+                    <td nowrap class="list_rr"> &nbsp;${d-autopay_fix_amt.(999)} </td>
+                    <td nowrap class="list_ll"> ${d-min_pay_rate}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-rc_use_indicator}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${d-wk_acct_holder_id}&nbsp; </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!--帳務資料三================================ -->
+        <!-- <div id="content6" class="tabPage"> -->
+        <div id="tab-5" class="tabcontent">
+            <table id="table5" class="sortable" border="0" cellspacing="0" cellpadding="2">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                    <th nowrap class="list_th">異動時間</th>
+                    <th nowrap class="list_th">異動程式</th>
+                    <th nowrap class="list_th">異動人員</th>
+                    <th nowrap class="list_th">異動碼</th>
+                    <th nowrap class="list_th">帳戶類別</th>
+                    <th nowrap class="list_th">帳戶號碼</th>
+                    <th nowrap class="list_th">法人
+                        <br>統一編號</th>
+                    <th nowrap class="list_th">帳戶
+                        <br>歸屬ID</th>
+                    <th nowrap class="list_th">最低應繳
+                        <br>款餘額</th>
+                    <th nowrap class="list_th">M Code</th>
+                    <th nowrap class="list_th">循環信用
+                        <br>利率加減指示碼</th>
+                    <th nowrap class="list_th">循環信用
+                        <br>利率加減利率</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${e-mod_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-mod_pgm}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-mod_user}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-mod_audcode}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${e-acct_type}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${e-acct_key}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-wk_corp_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-acct_holder_id}&nbsp; </td>
+                    <td nowrap class="list_rr"> &nbsp;${e-min_pay_bal.(999)} </td>
+                    <td nowrap class="list_ll"> ${e-m_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-revolve_int_sign}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${e-revolve_int_rate}&nbsp; </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!-- 帳務資料四================================ -->
+        <!-- <div id="content7" class="tabPage"> -->
+        <div id="tab-6" class="tabcontent">
+            <table id="table6" class="sortable" border="0" cellspacing="0" cellpadding="2">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                    <th nowrap class="list_th">異動時間</th>
+                    <th nowrap class="list_th">異動使用者</th>
+                    <th nowrap class="list_th">異動程式</th>
+                    <th nowrap class="list_th">覆核日期</th>
+                    <th nowrap class="list_th">帳戶類別</th>
+                    <th nowrap class="list_th">帳戶號碼</th>
+                    <th nowrap class="list_th">法人
+                        <br>統一編號</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等1</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等2</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等3</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等4</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等5</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等6</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等7</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等8</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等9</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等10</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等11</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等12</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等13</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等14</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等15</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等16</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等17</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等18</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等19</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等20</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等21</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等22</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等23</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等24</th>
+                    <th nowrap class="list_th">帳戶繳款
+                        <br>評等25</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${g-mod_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-mod_user}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-mod_pgm}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-acct_date.YMD}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${g-acct_type}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${g-acct_key}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-corp_no}-${g-corp_no_code}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate1}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate2}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate3}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate4}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate5}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate6}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate7}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate8}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate9}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate10}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate11}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate12}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate13}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate14}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate15}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate16}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate17}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate18}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate19}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate20}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate21}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate22}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate23}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate24}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${g-payment_rate25}&nbsp; </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="ex_id_p_seqno" value="${ex_id_p_seqno}">
+        <input type="hidden" name="ex_p_seqno" value="${ex_p_seqno}">
+        <input type="hidden" name="ex_major_id_p_seqno" value="${ex_major_id_p_seqno}">
+        <input type="hidden" name="ex_major_id" value="${ex_major_id}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//  tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+tigra_tables('table2');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_corp_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function detailDw_query(parm, parm2) {
+
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml = "crdq0140_q";
+    top.submitControl("S1");
+    return true;
+
+}
+
+
+
+function tab_select(optname) {
+
+    document.dataForm.data_k1.value = optname;
+}
+</script>

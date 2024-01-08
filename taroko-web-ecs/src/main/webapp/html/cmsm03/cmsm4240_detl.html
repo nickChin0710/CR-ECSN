@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>權益行業別歸類參數維護-jh230705</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp; 
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+<!-- 輸入資料讀取條件  -->
+    <td nowrap>&nbsp;MCC類別:
+      <input type="text" class="col_text" name="kk_mcc_group" value="${kk_mcc_group}" maxlength="5" size="7" zEdit="alphanum,upper" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;MCC類別:
+        <span class="dsp_text">${mcc_group}</span>
+        <input type="hidden" name="mcc_group" value="${mcc_group}">
+    </td>    
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;MCC說明:
+        <input type="text" class="col_any" name="group_desc" value="${group_desc}" maxlength="60" size="80" zEdit="any,canTw" >
+    </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;Mcc Code:
+      <input type="text" class="col_text" id="ex_mcc_code" name="ex_mcc_code" value="${ex_mcc_code}" maxlength="4" size="6" zEdit="alphanum,upper" >
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="Button" ${btnUpdate_disable} id="detl_btnAdd" value="新增明細" class="btOther" onClick="wf_save()" />            
+      <input type="Button" ${btnUpdate_disable} id="detl_btnDel" value="刪除明細" class="btOther" onClick="return top.submitControl('D2')" >&nbsp;&nbsp;
+      <input type="Button" id="detl_btnRead" value="查詢明細" class="btOther" onClick="return top.submitControl('R2')" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;匯入媒體檔:
+       <input type="text" class="dsp_text" readonly name="zz_file_name" value="${zz_file_name}" size="50" zEdit="any" />
+       <input type="button" id="btn_file_upload" value="..." class="btOther" onclick="return upload_click()">&nbsp;&nbsp;
+       <input type="Button" ${btnUpdate_disable} id="detl_btnImp" value="資料匯入" class="btOther" onClick="return top.submitControl('C2')" >
+      </td>
+  </tr> 
+ </table>
+</div>
+<hr>
+
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap  width="10%">刪除</th>   
+    <th nowrap >MCC CODE</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+	 <td nowrap class="list_no">
+        <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+    	${SER_NUM}
+	 	<input type="hidden" name="ser_num" value="${ser_num}">	
+	 </td>     
+     <td nowrap class="list_cc"> ${mcc_code}&nbsp;
+   	    <input type="hidden" name="mcc_code" value="${mcc_code}">	
+     </td>   
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="upload_file" value="" />
+<!-- -->
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="9999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode =='C2') {
+      if (confirm('會取代原有資料, 是否執行資料匯入')==false) { return false; }
+    }   
+
+    return true;
+  }
+ 
+  function wf_save() {
+     	
+ 	var ls_data_code =$("#ex_mcc_code").val();
+	
+	if(ls_data_code==''){
+		alert("Mcc Code 不可空白");
+		return ;
+	}
+	top.submitControl('U2')
+	$("#ex_mcc_code").val('');
+ }
+
+ function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+//    top.packageName = "cmsm03";
+    top.javaName    = "Cmsm4240";    
+    top.requHtml    = "cmsm4240_detl";
+    top.respHtml    = "cmsm4240_detl";
+    return true;
+  }
+  
+ function wf_uploadAfter() { 	 
+   return;
+ }  
+</script>

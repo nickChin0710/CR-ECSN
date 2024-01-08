@@ -1,0 +1,574 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-12-25  V1.00.01                                                      -->
+<!-- 109-02-12  V1.00.02  JustinWu       add new columns and some methods     -->
+<!-- 109-02-25  V1.00.03  JustinWu       境外公司戶->境外公司JCIC統編           -->
+<!-- 109-05-29  V1.00.04  JustinWu       charge_id and charge_name are required -->
+<!-- 109-07-01  V1.00.05  tanwei         刪減關係人欄位                        -->
+<!-- 110-01-06  V1.00.06  JustinWu       updated for XSS                      -->
+<!-- 110-08-23  V1.00.07  JustinWu       chi_name, abbr_name: half width -> full width -->
+<!-- 110-09-08  V1.00.08  Sunny Ts       charge_name: half width -> full width -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>法人相關資料維護-CORP-Justin-110-09-08</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" id="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" id="btnDelete"  value="取消修改" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" id="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="6" class="td_titl">主管覆核</td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;統一編號:
+      <span class="dsp_text">${corp_no}&nbsp;</span>
+      <input type="hidden" name="corp_no" value="${corp_no}">
+   </td>
+   <td nowrap colspan="2">&nbsp;商務繳款種類:
+      <span class="col_radio">
+         <input type="radio" value="1" name="corp_act_type" ${corp_act_type-1} disabled>總繳
+         <input type="radio" value="2" name="corp_act_type" ${corp_act_type-2} disabled>個繳
+         <input type="hidden" name="corp_act_type" value="${corp_act_type}">
+      </span>
+   </td>
+   <td nowrap colspan="2">&nbsp;最早往來日期:
+      <span class="dsp_text">${card_since.YMD}</span>
+      <input type="hidden" name="card_since" value="${card_since}">
+   </td>
+ </tr>
+ <tr>
+   <td colspan="3" nowrap >
+    &nbsp;<span style="${mod_empoly_type}">法人行業分類:</span>
+      <select size="1"  name="empoly_type" class="col_ddlb" zRequire="Y"  >
+         <option value="">--</option>
+         <option value="1" ${empoly_type-1}>法人卡－民營</option>
+         <option value="2" ${empoly_type-2}>法人卡－公營</option>
+         <option value="3" ${empoly_type-3}>法人卡－政府</option>
+         <option value="4" ${empoly_type-4}>法人卡－金融</option>
+         <option value="5" ${empoly_type-5}>法人卡－其他</option>
+      </select>
+   </td>
+   <td nowrap colspan="3">&nbsp;境外公司JCIC統編:
+      <input type="text" class="col_any" name="obu_id" value="${obu_id}" maxlength="11" size="13">
+   </td>
+</tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;中文名稱:
+      <input type="text" class="col_any" name="chi_name" value="${chi_name}" maxlength="40" size="42" zEdit="any,canTw" style="${mod_chi_name}" onchange="top.convertInputToFullWidth(this)">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;中文簡稱:
+      <input type="text" class="col_any" name="abbr_name" value="${abbr_name}" maxlength="20" size="22" zEdit="any,canTw" style="${mod_abbr_name}" onchange="top.convertInputToFullWidth(this)">
+   </td>
+   <td nowrap colspan="2">&nbsp;強制註記:
+      <span class="dsp_text">${force_flag}&nbsp;</span>
+      <input type="hidden" name="force_flag" value="${force_flag}">
+   </td>
+   <td nowrap colspan="2">&nbsp;機關代碼:
+      <input type="text" class="col_text" name="organ_id" value="${organ_id}" maxlength="10" size="12" style="${mod_organ_id}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;英文名稱:
+      <input type="text" class="col_any" name="eng_name" value="${eng_name}" maxlength="25" size="27" style="${mod_eng_name}" zEdit="any">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;資本額:
+      <input type="text" class="col_number" name="capital" value="${capital}" maxlength="15" size="17" zEdit="number" style="${mod_capital}" >
+   </td>
+   <td nowrap colspan="3">&nbsp;
+        <span>客戶是否為其他特殊行業別:</span>
+        <select name="spec_busi_code" class="col_ddlb" style="${mod_spec_busi_code}" >
+            <option value="">--</option>
+            <option value="01" ${spec_busi_code-01} >軍火業</option>
+            <option value="02" ${spec_busi_code-02} >虛擬貨幣業務</option>
+            <option value="03" ${spec_busi_code-03} >空殼公司</option>
+            <option value="99" ${spec_busi_code-99} >非以上特殊行業別</option>
+        </select>	  
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;凸字第四行:
+      <input type="text" class="col_text" name="emboss_data" value="${emboss_data}" maxlength="20" size="22" style="${mod_emboss_data}" >
+   </td>
+</td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;設立日期:
+      <input type="text" class="col_date" name="setup_date" value="${setup_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 style="${mod_setup_date}"  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'setup_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;行業別:
+      <select size="1" name="business_code" class="col_ddlb" style="${mod_business_code}">
+         ${dddw_business_code}
+      </select>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;負責人ID:
+      <input type="text" class="col_text" name="charge_id" value="${charge_id}" maxlength="20" size="22" style="${mod_charge_id}" zRequire="Y">
+   </td>
+   <td nowrap colspan="3">&nbsp;負責人姓名:
+      <input type="text" class="col_any" name="charge_name" value="${charge_name}" maxlength="30" size="32" zEdit="any,canTw" zRequire="Y" style="${mod_charge_name}" onchange="top.convertInputToFullWidth(this)">
+   </td>
+</tr>
+<tr>
+    <td nowrap colspan="3" >&nbsp;負責人國籍:
+        <input type="text" class="col_text" name="charge_cntry_code" value="${charge_cntry_code}" maxlength="2" size="5" zEdit="alphanum,upper" style="${mod_charge_cntry_code}" >
+    </td>
+    <td nowrap colspan="3" >&nbsp;負責人英文姓名:
+        <input type="text" class="col_text" name="charge_eng_name" value="${charge_eng_name}" maxlength="30" size="32" zEdit="alphanum" style="${mod_charge_eng_name}" >
+    </td>
+<tr>
+   <td nowrap colspan="3">&nbsp;負責人電話:
+      <input type="text" class="col_text" name="charge_tel_zone" value="${charge_tel_zone}" maxlength="4" size="6" zEdit="number" style="${mod_charge_tel_zone}" >
+      &nbsp;
+      <input type="text" class="col_text" name="charge_tel_no" value="${charge_tel_no}" maxlength="10" size="12" zEdit="number" style="${mod_charge_tel_no}" >
+      &nbsp;
+      <input type="text" class="col_text" name="charge_tel_ext" value="${charge_tel_ext}" maxlength="6" size="8" zEdit="number" style="${mod_charge_tel_ext}" >      
+   </td>
+   <td nowrap colspan="3" >&nbsp;負責人生日(民國年):
+      <input type="text" class="col_text" name="charge_birthday" value="${charge_birthday}" maxlength="8" size="10" zEdit="number" style="${mod_charge_birthday}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6" >&nbsp;註冊地/公司登記地國別代碼:
+      <input type="text" class="col_text" name="reg_country_code" value="${reg_country_code}" maxlength="2" size="5" zEdit="alphanum,upper" style="${mod_reg_country_code}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;公司登記地址:
+      <br><br>&nbsp;
+      <select size="1" name="reg_zip" id="reg_zip" class="col_ddlb" style="${mod_reg_zip}" onChange="zipChange('1')">
+         ${dddw_reg_zip}
+      </select>
+      <input type="text" class="col_any" name="reg_zip2" value="${reg_zip2}" maxlength="3" size="6" zEdit="Number" style="${mod_reg_zip2}" >
+      &nbsp;
+      <span class="dsp_text" id="reg_addr1_text" style="${mod_reg_addr1}">${reg_addr1}</span>
+      <input type="hidden" name="reg_addr1" id="reg_addr1" value="${reg_addr1}" maxlength="10" size="12" zRequire="Y" >
+      縣市
+      <span class="dsp_text" id="reg_addr2_text" style="${mod_reg_addr2}">${reg_addr2}</span>
+      <input type="hidden" name="reg_addr2" id="reg_addr2" value="${reg_addr2}" maxlength="10" size="12" zRequire="Y" >
+      鄉鎮市區
+      <input type="text" class="col_any" name="reg_addr3" id="reg_addr3" value="${reg_addr3}" maxlength="12" size="14" zEdit="any,canTw" style="${mod_reg_addr3}" >
+      村里
+      <br><br>&nbsp;
+      <input type="text" class="col_any" name="reg_addr4" id="reg_addr4" value="${reg_addr4}" maxlength="12" size="14" zEdit="any,canTw" style="${mod_reg_addr4}" >
+      鄰
+      <input type="text" class="col_any" name="reg_addr5" id="reg_addr5" value="${reg_addr5}" maxlength="56" size="58" zEdit="any,canTw" style="${mod_reg_addr5}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;公司通訊地址:
+    <input type="checkbox" name="copy_reg_addr" id="copy_reg_addr"  onClick="copyRegAddr();">同公司登記地址
+    <span id="comm_span">
+      <br><br>&nbsp;
+      <select size="1" name="comm_zip" id="comm_zip" class="col_ddlb" style="${mod_comm_zip}" onChange="zipChange('2')" >
+         ${dddw_comm_zip}
+      </select>
+      <input type="text" class="col_any" name="comm_zip2" value="${comm_zip2}" maxlength="3" size="6" zEdit="Number" style="${mod_comm_zip2}" >
+      &nbsp;
+      <span class="dsp_text" id="comm_addr1_text" style="${mod_comm_addr1}">${comm_addr1}</span>
+      <input type="hidden" name="comm_addr1" id="comm_addr1" value="${comm_addr1}" maxlength="10" size="12" zRequire="Y" >
+      縣市
+      <span class="dsp_text" id="comm_addr2_text" style="${mod_comm_addr2}">${comm_addr2}</span>
+      <input type="hidden" name="comm_addr2" id="comm_addr2" value="${comm_addr2}" maxlength="10" size="12" >
+      鄉鎮市區
+      <input type="text" class="col_any" name="comm_addr3" id="comm_addr3" value="${comm_addr3}" maxlength="12" size="14" zEdit="any,canTw" style="${mod_comm_addr3}">
+      村里
+      <br><br>&nbsp;
+      <input type="text" class="col_any" name="comm_addr4" id="comm_addr4" value="${comm_addr4}" maxlength="12" size="14" zEdit="any,canTw" style="${mod_comm_addr4}">
+      鄰
+      <input type="text" class="col_any" name="comm_addr5" id="comm_addr5" value="${comm_addr5}" maxlength="56" size="58" zEdit="any,canTw" style="${mod_comm_addr5}">
+    </span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;公司電話&nbsp;1.
+      <input type="text" class="col_text" name="corp_tel_zone1" value="${corp_tel_zone1}" maxlength="4" size="6" zEdit="number" style="${mod_corp_tel_zone1}" >
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_no1" value="${corp_tel_no1}" maxlength="10" size="12" zEdit="number" style="${mod_corp_tel_no1}" >
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_ext1" value="${corp_tel_ext1}" maxlength="6" size="8" zEdit="number" style="${mod_corp_tel_ext1}" >
+   </td>
+   <td nowrap colspan="3">&nbsp;2.
+      <input type="text" class="col_text" name="corp_tel_zone2" value="${corp_tel_zone2}" maxlength="4" size="6" zEdit="number" style="${mod_corp_tel_zone2}">
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_no2" value="${corp_tel_no2}" maxlength="10" size="12" zEdit="number" style="${mod_corp_tel_no2}">
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_ext2" value="${corp_tel_ext2}" maxlength="6" size="8" zEdit="number" style="${mod_corp_tel_ext2}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;E_MAIL1:
+      <input type="text" class="col_any" name="e_mail_addr" value="${e_mail_addr}" maxlength="50" size="52" zEdit="any" style="${mod_e_mail_addr}" >
+      <span class="col_key">(主要E_MAIL請先填這欄)</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;E_MAIL2:
+      <input type="text" class="col_any" name="e_mail_addr2" value="${e_mail_addr2}" maxlength="50" size="52" zEdit="any" style="${mod_e_mail_addr2}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;E_MAIL3:
+      <input type="text" class="col_any" name="e_mail_addr3" value="${e_mail_addr3}" maxlength="50" size="52" zEdit="any" style="${mod_e_mail_addr3}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;E_MAIL最後異動管道:
+      <span class="dsp_text">${e_mail_from_mark}&nbsp;</span>
+      <input type="hidden" name="e_mail_from_mark" value="${e_mail_from_mark}">
+   </td>
+   <td nowrap colspan="3">&nbsp;E_MAIL最後異動日期:
+      <span class="dsp_text">${e_mail_chg_date.YMD}&nbsp;</span>
+      <input type="hidden" name="e_mail_chg_date" value="${e_mail_chg_date}">
+   </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+        <span style="${mod_incorporated_type}">組織型態:</span>
+        <select name="incorporated_type" class="col_ddlb" >
+            <option value="">--</option>
+            <option value="1" ${incorporated_type-1} >1.自然人</option>
+            <option value="2" ${incorporated_type-2} >2.政府機關</option>
+            <option value="3" ${incorporated_type-3} >3.營利組織(公營事業單位)</option>
+            <option value="4" ${incorporated_type-4} >4.營利組織(上市櫃公司/公開發行公司)</option>
+            <option value="5" ${incorporated_type-5} >5.營利組織(非公開發行公司)</option>
+            <option value="6" ${incorporated_type-6} >6.非營利組織(慈善團體之社團法人、基金會、宗教組織)</option>
+            <option value="7" ${incorporated_type-7} >7.非營利組織(非為慈善團體之社團法人、基金會、宗教組織)</option>
+            <option value="8" ${incorporated_type-8} >8.特殊目的實體(股東為信託合約者)</option>
+        </select>	          
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+      <span style="${mod_issues_bearer_shares_ind}">可發行無記名股票:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="issues_bearer_shares_ind" ${issues_bearer_shares_ind-Y} />Y
+         <input type="radio" value="N" name="issues_bearer_shares_ind" ${issues_bearer_shares_ind-N} />N
+      </span>
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+      <span style="${mod_complex_structure}">股權架構相對其業務性質過度複雜的法人:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="complex_structure" ${complex_structure-Y} />Y
+         <input type="radio" value="N" name="complex_structure" ${complex_structure-N} />N
+      </span>
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+      <span style="${mod_shareholder_trust}">股東為信託合約者:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="shareholder_trust" ${shareholder_trust-Y} />Y
+         <input type="radio" value="N" name="shareholder_trust" ${shareholder_trust-N} />N
+      </span>
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+      <span style="${mod_asig_rel_flag}">委託授權開戶/建立業務關係:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="asig_rel_flag" ${asig_rel_flag-Y} />Y
+         <input type="radio" value="N" name="asig_rel_flag" ${asig_rel_flag-N} />N
+      </span>
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+        <span style="${mod_ubo_flag}">是否需辨識實質受益人:</span>
+        <select name="ubo_flag" class="col_ddlb" >
+            <option value="">--</option>
+            <option value="1" ${ubo_flag-1} >Y: (1) 直接、間接持有法人股份或資本超過25%者，即為具控制權之最終自然人。</option>
+            <option value="2" ${ubo_flag-2} >Y: (2) 目前未具持有法人股份或資本超過25%具控制權之自然人者，但有透過其他方式對法人行使控制權之最終自然人。</option>
+            <option value="3" ${ubo_flag-3} >Y: (3) 擔任高階管理職位之自然人。</option>
+            <option value="N" ${ubo_flag-N} >N: 請選擇不需確認之身份別。</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+        <span style="${mod_non_ubo_type}">不需確認之身份別:</span>
+        <select name="non_ubo_type" class="col_ddlb" >
+            <option value="">--</option>
+            <option value="1" ${non_ubo_type-1} >1.我國政府機關</option>
+            <option value="2" ${non_ubo_type-2} >2.我國公營事業機構</option>
+            <option value="3" ${non_ubo_type-3} >3.外國政府機關</option>
+            <option value="4" ${non_ubo_type-4} >4.我國公開發行公司或其子公司</option>
+            <option value="5" ${non_ubo_type-5} >5.於國外掛牌並依掛牌所在地規定，應揭露其主要股東之股票上市、上櫃公司及其子公司</option>
+            <option value="6" ${non_ubo_type-6} >6.受我國監理之金融機構及其管理之投資工具</option>
+            <option value="7" ${non_ubo_type-7} >7.設立於境外，且受FATF所定防制洗錢及打擊資恐標準一致之金融機構，及該金融機構管理之投資工具</option>
+            <option value="8" ${non_ubo_type-8} >8.我國政府機關管理之基金</option>
+            <option value="9" ${non_ubo_type-9} >9.員工持股信託、員工福利儲蓄信託</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+        <span style="${mod_risk_level}">洗錢防制風險等級:</span>
+        <select name="risk_level" class="col_ddlb" >
+            <option value="">--</option>
+            <option value="H" ${risk_level-H} >高</option>
+            <option value="M" ${risk_level-M} >中</option>            
+            <option value="L" ${risk_level-L} >低</option>            
+        </select>
+        &nbsp;&nbsp;&nbsp;
+        <span style="${mod_risk_level_date}">評估日期:</span>        
+        <input type="text" class="col_date" name="risk_level_date" value="${risk_level_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 style="${mod_risk_level_date}"  />
+        <script language="JavaScript">
+	       new tcal ({'formname': 'dataForm','controlname': 'risk_level_date'});
+	    </script>
+    </td>
+</tr>
+</table>
+<br>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap colspan="6" class="td_titl">不需覆核資料</td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6" class="td_title">授權人查詢一
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;姓名:
+         <input type="text" class="col_any" name="asig_inq1_cname" value="${asig_inq1_cname}" maxlength="20" size="22" zEdit="any,canTw">
+      </td>
+      <td nowrap colspan="3">&nbsp;身分證字號:
+         <input type="text" class="col_text" name="asig_inq1_idno" value="${asig_inq1_idno}" maxlength="10" size="12" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;電話:
+         <input type="text" class="col_any" name="asig_inq1_telno" value="${asig_inq1_telno}" maxlength="20" size="22" zEdit="any">
+      </td>
+      <td nowrap colspan="2" >&nbsp;
+         <input type="checkbox" name="asig_inq1_acct" value="Y" ${asig_inq1_acct-Y}>&nbsp;帳務
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="asig_inq1_card" value="Y" ${asig_inq1_card-Y}>&nbsp;卡片
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="asig_inq1_limit" value="Y" ${asig_inq1_limit-Y}>&nbsp;額度
+      </td>
+      <td nowrap colspan="2" >&nbsp;核身密碼:
+         <input type="text" class="col_text" name="asig_inq1_chk_data" value="${asig_inq1_chk_data}" maxlength="10" size="12" >
+      </td> 
+   </tr>
+   <tr>
+      <td nowrap colspan="6" class="td_title">授權人查詢二
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;姓名:
+         <input type="text" class="col_any" name="asig_inq2_cname" value="${asig_inq2_cname}" maxlength="20" size="22" zEdit="any,canTw">
+      </td>
+      <td nowrap colspan="3">&nbsp;身分證字號:
+         <input type="text" class="col_text" name="asig_inq2_idno" value="${asig_inq2_idno}" maxlength="10" size="12" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;電話:
+         <input type="text" class="col_any" name="asig_inq2_telno" value="${asig_inq2_telno}" maxlength="20" size="22" zEdit="any">
+      </td>
+      <td nowrap colspan="2" >&nbsp;
+         <input type="checkbox" name="asig_inq2_acct" value="Y" ${asig_inq2_acct-Y}>&nbsp;帳務
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="asig_inq2_card" value="Y" ${asig_inq2_card-Y}>&nbsp;卡片
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="asig_inq2_limit" value="Y" ${asig_inq2_limit-Y}>&nbsp;額度
+      </td>
+      <td nowrap colspan="2" >&nbsp;核身密碼:
+         <input type="text" class="col_text" name="asig_inq2_chk_data" value="${asig_inq2_chk_data}" maxlength="10" size="12" >
+      </td> 
+   </tr>
+   <tr>
+      <td nowrap colspan="6" class="td_title">授權人查詢三
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;姓名:
+         <input type="text" class="col_any" name="asig_inq3_cname" value="${asig_inq3_cname}" maxlength="20" size="22" zEdit="any,canTw">
+      </td>
+      <td nowrap colspan="3">&nbsp;身分證字號:
+         <input type="text" class="col_text" name="asig_inq3_idno" value="${asig_inq3_idno}" maxlength="10" size="12" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;電話:
+         <input type="text" class="col_any" name="asig_inq3_telno" value="${asig_inq3_telno}" maxlength="20" size="22" zEdit="any">
+      </td>
+      <td nowrap colspan="2" >&nbsp;
+         <input type="checkbox" name="asig_inq3_acct" value="Y" ${asig_inq3_acct-Y}>&nbsp;帳務
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="asig_inq3_card" value="Y" ${asig_inq3_card-Y}>&nbsp;卡片
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="asig_inq3_limit" value="Y" ${asig_inq3_limit-Y}>&nbsp;額度
+      </td>
+      <td nowrap colspan="2" >&nbsp;核身密碼:
+         <input type="text" class="col_text" name="asig_inq3_chk_data" value="${asig_inq3_chk_data}" maxlength="10" size="12" >
+      </td> 
+   </tr>
+</table>
+</div>
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+ var isCopyRegAddrChecked = false;
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if (top.actionCode == "U" ) {
+      if (document.getElementById("reg_zip").value.trim().length == 0 ||
+        document.getElementById("reg_addr5").value.trim().length == 0 ){
+        alert("公司登記地址不可空白");
+        return false;
+      }
+      if (document.getElementById("comm_zip").value.trim().length == 0 ||
+        document.getElementById("comm_addr5").value.trim().length == 0) {
+        alert("公司通訊地址不可空白");
+        return false;
+      }
+      //if isCopyRegAddrChecked is ture, copy reg_addr to comm_addr
+      if(isCopyRegAddrChecked){
+        isCopyRegAddrChecked = false;
+        copyRegAddr();
+      }
+      if ( !top.checkFormat() ){ 
+        return false; 
+      }
+    }
+    return true;
+  }
+
+ function copyRegAddr(){
+   var comm_arr = ["comm_zip", "comm_addr1", "comm_addr2", "comm_addr3", "comm_addr4", "comm_addr5"];
+   var reg_arr = ["reg_zip", "reg_addr1","reg_addr2","reg_addr3", "reg_addr4", "reg_addr5"];
+   var comm_span = document.getElementById("comm_span");
+
+   if(isCopyRegAddrChecked){
+      comm_span.style.display = "inline";
+      isCopyRegAddrChecked = false;
+   }else{
+      for (var i = 0; i < comm_arr.length; i++) {
+         comm_ele = document.getElementById(comm_arr[i]);
+         comm_ele.value = document.getElementById(reg_arr[i]).value;
+      }
+      comm_span.style.display = "none";
+      isCopyRegAddrChecked = true;
+   }
+  }
+  
+ function zipChange(idCode)
+ {
+  var zip_code;
+  if(idCode === '1'){
+    zip_code =document.forms["dataForm"]["reg_zip"].value.toUpperCase();
+    if ( zip_code === '') {
+      $("#reg_addr1_text").text("");   
+      $("#reg_addr1").val("");  
+      $("#reg_addr2_text").text("");   
+      $("#reg_addr2").val("");  
+      return false
+    }
+  }else
+  if(idCode === '2'){
+    zip_code =document.forms["dataForm"]["comm_zip"].value.toUpperCase(); 
+    if ( zip_code === '') {
+      $("#comm_addr1_text").text("");   
+      $("#comm_addr1").val(""); 
+      $("#comm_addr2_text").text("");   
+      $("#comm_addr2").val("");  
+      return false;
+    }
+  }
+
+  top.actionCode = "AJAX";
+
+	resetJSON();
+  addJSON("idCode",idCode);  
+	addJSON("ax_zip_code",zip_code);	
+	processAJAX();
+ } 
+ 
+    function ajaxResponse()
+ {
+	 top.respHtml ="cmsm2020_corp";
+   top.requHtml ="cmsm2020_corp";
+   var addr1 =getJSONvalue("addr1",0);
+   var addr2 =getJSONvalue("addr2",0);
+   var idCode=getJSONvalue("idCode",0);
+   if  ( idCode === '1') {
+      if (addr1.length>0) { 
+         $("#reg_addr1").text(addr1);   
+         $("#reg_addr1").val(addr1);
+         $("#reg_addr1_text").text(addr1);
+      }       
+      if (addr2.length>0) { 
+         $("#reg_addr2").text(addr2);   
+         $("#reg_addr2").val(addr2);
+         $("#reg_addr2_text").text(addr2);   
+      }                
+    }
+    if  ( idCode === '2') {
+      if (addr1.length>0) { 
+        $("#comm_addr1").text(addr1);   
+        $("#comm_addr1").val(addr1);
+        $("#comm_addr1_text").text(addr1);  
+      }            
+      if (addr2.length>0) { 
+        $("#comm_addr2").text(addr2);   
+        $("#comm_addr2").val(addr2);
+        $("#comm_addr2_text").text(addr2);   
+      }                 
+    }
+  if (isCopyRegAddrChecked) {
+    isCopyRegAddrChecked = false;
+    copyRegAddr();
+  }
+}
+ 
+</script>

@@ -1,0 +1,130 @@
+<html>
+<head>
+<title>卡戶/卡片基本資料查詢(特殊事項)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+
+<body bgcolor="#FFFFFF">
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >
+  <input type="Button"  name="btnUpdate"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+   <td nowrap colspan="5" >
+      <input type="Button" id="detl_btnAdd" value="新增明細" 
+                class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}      
+   </td>
+  </tr>
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">&nbsp;注意事項 </th>
+    <th nowrap class="list_cc">&nbsp;保留日期 </th>
+    <th nowrap class="list_cc">&nbsp;建檔日期 </th>
+    <th nowrap class="list_cc">&nbsp;建檔經辦 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">      
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="crt_date" value="${crt_date}">
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+      <input type="hidden" name="rowid" value="${rowid}">
+      <input type="hidden" name="old_data" value="${old_data}">
+    </td>
+    <td nowrap class="list_ll" >
+      <input type="text" class="col_any" name="id_note" value="${id_note}" maxlength="60" size="62" zEdit="any,canTw" >  
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_text" name="close_date" value="${close_date}" maxlength="8" size="10" zEdit="date,yyyymmdd" >
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${crt_date.YMD}</td>
+    <td nowrap class="list_cc" >&nbsp;${crt_user}</td>
+      
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="" />
+<input type=hidden name="data_k2" value="" />
+
+<!-- -->
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="id_no" value="${id_no}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1'); 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+   return true;
+ }
+ 
+ $("#detl_btnAdd").click(function(){
+
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='crt_date' />"
+      +"<input type='hidden' value='' name='crt_user' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"<input type='hidden' value='' name='old_data' />"
+      +"</td>"
+      +"<td nowrap class='list_ll'>"
+      +"<input type='text' class='col_any' name='id_note' value='' maxlength='60' size='62' zEdit='any,canTw' > "
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='text' class='col_text' name='close_date' value='' maxlength='8' size='10' zEdit='date,yyyymmdd'> "
+      +"</td>"
+      +"<td nowrap class='list_cc' >&nbsp;"
+      +"</td>"
+      +"<td nowrap class='list_cc' >&nbsp;"
+      +"</td>"
+      +"</tr>"
+   );
+  
+  });
+
+</script>

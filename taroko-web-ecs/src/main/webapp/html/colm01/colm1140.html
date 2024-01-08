@@ -1,0 +1,680 @@
+
+<html>
+
+<head>
+<title>更生/清算瀏覽畫面 20220725</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+<div id="condBlock">
+<div id="apr_user" Style="display:none">
+${#PLUGIN:htmcomm_plugin.apr_user}
+</div>
+<div id="a">
+</div>
+<!--COND -->
+
+<table id="table3" width="40%" border="0" cellspacing="0" cellpadding="4" >
+    <tr>
+        <td nowrap colspan="3">&nbsp;
+            <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+            <!--input type="Button"  value="匯入Z60"  class="btOther" onclick="return upload_click()">&nbsp;&nbsp;-->
+        </td>
+    </tr>
+    <tr>
+    	<td nowrap>&nbsp;身分證 ID:
+            <input type=text class="col_text" name="ex_id" value="${ex_id}" zeditType="alphanum,upper" maxlength="10" size="12" />
+        </td>
+        <td nowrap colspan="2">&nbsp;中文姓名:
+        	<span class="dsp_text">${ex_chi_name}</span>
+            <input type=hidden name="ex_chi_name" value="${ex_chi_name}" />
+        </td>
+	</tr>
+	<tr>
+    	<td nowrap>&nbsp;收件日期:
+    		<input type="text" class="col_date" name="ex_recv_date1" value="${ex_recv_date1}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="10" />
+        	<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_recv_date1'});
+	  		</script>
+	  		--
+	  		<input type="text" class="col_date" name="ex_recv_date2" value="${ex_recv_date2}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="10" />
+        	<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_recv_date2'});
+	  		</script>
+    	</td>
+    	 <td nowrap colspan="2">&nbsp;收件日期(年/月):
+        	<input type="text" class="col_date" name="ex_recv_yymm1" value="${ex_recv_yymm1}" 
+        	zEdit="date,yymm" maxlength="6" size="8" />
+        	--
+        	<input type="text" class="col_date" name="ex_recv_yymm2" value="${ex_recv_yymm2}" 
+        	zEdit="date,yymm" maxlength="6" size="8" />
+        </td>
+    </tr>
+    <tr>
+        <td nowrap>&nbsp;歸檔編號:
+            <input type=text class="col_any" zEdit="any" name="ex_liad_doc_no" value="${ex_liad_doc_no}"  maxlength="10" size="12" />
+        </td>
+        <td nowrap>&nbsp;更生進度:
+   			<select size="1" name="ex_renew_status" id="ex_renew_status" class="col_ddlb" >
+      			<option value="">--</option>
+      			${ColLiabIdtabList}
+   			</select>
+   			<select size="1" name="ex_renew_status2" id="ex_renew_status2" class="col_ddlb" style="display:none">
+      			${ColLiabIdtabList2}
+   			</select>
+   		</td>
+   		<td nowrap>&nbsp;清算免責:
+     		<span class="col_radio">
+     			<input type="radio" value="0" name="ex_judic_avoid_flag" ${ex_judic_avoid_flag-0} ${DEFAULT-ex_judic_avoid_flag} />全部
+         		<input type="radio" value="Y" name="ex_judic_avoid_flag" ${ex_judic_avoid_flag-Y} />Y
+         		<input type="radio" value="N" name="ex_judic_avoid_flag" ${ex_judic_avoid_flag-N} />N
+      		</span>
+   		</td>
+    </tr>
+    <tr>
+        <td nowrap colspan="3">&nbsp;Z60 匯入檔名:
+      		<span class="dsp_text">${ex_file}</span>
+			<input type="hidden"   name="ex_file" value="${ex_file}">
+		</td>
+    </tr>
+    <tr>
+        <td nowrap colspan="3">&nbsp;匯入處理說明:
+        	<span class="dsp_text">${ex_imp_proc}</span>
+			<input type="hidden"   name="ex_imp_proc" value="${ex_imp_proc}">
+        </td>
+    </tr>
+</table>
+</div>
+<hr>
+<div class="tab">
+<table>
+    <tr>
+ 		<td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1');aprUser('a');">Z60基本資料</td>
+       	<td class="tablinks" onclick="tabControl(event, 'tab-2');aprUser('b');">更生資料</td>
+       	<td class="tablinks" onclick="tabControl(event, 'tab-3');aprUser('c');">清算資料</td>
+       	<td class="tablinks" onclick="tabControl(event, 'tab-4');aprUser('d');">更生認可</td>
+       	<td class="tablinks" onclick="tabControl(event, 'tab-5');aprUser('e');">統一收付</td>
+       <!-- 	<td class="tablinks" ${tab_active_f} onclick="tabControl(event, 'tab-6');aprUser('f');">法院公文</td> -->
+    </tr>
+</table>
+</div>
+<!--List -->
+<!-- Z60基本資料================================ -->
+<!-- <div id="content1" class="tabPage"> -->
+<div id="tab-1" class="tabcontent">
+<input type="Button"  value="新增 Z60基本資料" onClick="return top.submitControl('X1')" class="btAdd">&nbsp;&nbsp;
+<table width="50%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">收件日期</th>
+        <th nowrap class="list_th">身分證字號</th>
+        <th nowrap class="list_th">姓名</th>
+        <th nowrap class="list_th">更生公文</th>
+        <th nowrap class="list_th">清算公文</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr >
+      	<td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp; </td>
+    </tr>
+      <tr class = "tr_a" ondblclick="detailScreen_a('${SER_NUM}','${a-liad_doc_no}','','','','')" 
+    	onclick="click_a('${SER_NUM}','','','','','')" style="cursor:hand">
+        <td nowrap class="list_ll">${a-recv_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${a-id_no}&nbsp;</td>
+        <td nowrap class="list_ll">${a-chi_name}&nbsp;
+        <td nowrap class="list_ll">${a-renew_flag}&nbsp;</td>
+        <td nowrap class="list_ll">${a-liqui_flag}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 更生公文頁籤================================ -->
+<!-- <div id="content2" class="tabPage"> -->
+<div id="tab-2" class="tabcontent">
+<input type="Button" value="新增 更生資料" onClick="return top.submitControl('X2')" class="btAdd">&nbsp;&nbsp;
+<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" id = "PDF1" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;(列印簽呈)
+<table width="50%" id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">檔案編號</th>
+        <th nowrap class="list_th">身分證字號</th>
+        <th nowrap class="list_th">姓名</th>
+        <th nowrap class="list_th">收件日期</th>
+        <th nowrap class="list_th">發文字號</th>
+        <th nowrap class="list_th">更生進度</th>
+        <th nowrap class="list_th">更生認可編號</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+      	<td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp; 
+      		<input type="hidden" name="b_liad_doc_no"  value="${b-liad_doc_no}">
+      	</td>
+    </tr>
+    <tr class = "tr_b" ondblclick="detailScreen_b('${SER_NUM}','${b-liad_doc_no}','','','','')" 
+    	onclick="click_b('${SER_NUM}','${b-liad_doc_no}','','','','')" style="cursor:hand">
+        <td nowrap class="list_ll">${b-liad_doc_no}&nbsp;</td>
+        <td nowrap class="list_ll">${b-id_no}&nbsp;</td>
+        <td nowrap class="list_ll">${b-chi_name}&nbsp;
+        <td nowrap class="list_ll">${b-recv_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${b-case_letter}&nbsp;</td>
+        <td nowrap class="list_ll">${b-tt_renew_status}&nbsp;</td>
+        <td nowrap class="list_ll">${b-renew_accetp_no}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 清算公文頁籤================================ -->
+<!-- <div id="content3" class="tabPage"> -->
+<div id="tab-3" class="tabcontent">
+<input type="Button" value="新增 清算資料" onClick="return top.submitControl('X3')" class="btAdd">&nbsp;&nbsp;
+<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" id = "PDF2" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;(列印簽呈)
+<table width="50%" id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">檔案編號</th>
+        <th nowrap class="list_th">身分證字號</th>
+        <th nowrap class="list_th">姓名</th>
+        <th nowrap class="list_th">收件日期</th>
+        <th nowrap class="list_th">發文字號</th>
+        <th nowrap class="list_th">清算進度</th>
+        <th nowrap class="list_th">清算免責編號</th>
+
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+   	<tr>
+      	<td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp; 
+      		<input type="hidden" name="c_liad_doc_no"  value="${c-liad_doc_no}">
+      	</td>
+    </tr>
+    <tr class = "tr_c" ondblclick="detailScreen_c('${SER_NUM}','${c-liad_doc_no}','','','','')" 
+    	onclick="click_c('${SER_NUM}','${c-liad_doc_no}','','','','')" style="cursor:hand">
+        <td nowrap class="list_ll">${c-liad_doc_no}&nbsp;</td>
+        <td nowrap class="list_ll">${c-id_no}&nbsp;</td>
+        <td nowrap class="list_ll">${c-chi_name}&nbsp;</td>
+        <td nowrap class="list_ll">${c-recv_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${c-case_letter}&nbsp;</td>
+        <td nowrap class="list_ll">${c-tt_liqu_status}&nbsp;</td>
+        <td nowrap class="list_ll">${c-judic_avoid_no}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 更生認可================================ -->
+<!-- <div id="content4" class="tabPage"> -->
+<div id="tab-4" class="tabcontent">
+<table width="50%" id="table4" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">身分證字號</th>
+        <th nowrap class="list_th">姓名</th>
+        <th nowrap class="list_th">發文字號</th>
+        <th nowrap class="list_th">法院裁定/確定日</th>
+        <th nowrap class="list_th">原始債權金</th>
+        <th nowrap class="list_th">裁定應繳金</th>
+        <th nowrap class="list_th">累積繳款金</th>
+        <th nowrap class="list_th">更生認可檔案編號</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+   	<tr>
+      	<td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp; </td>
+    </tr>
+    <tr class = "tr_d" ondblclick="detailScreen_d('${SER_NUM}','${d-id_p_seqno}','${d-case_letter}','${d-db_id_no}','${d-db_recv_date}','${d-db_renew_status}','${d-db_org_debt_amt}','${d-db_chi_name}','${d-db_court_status}','${d-db_liad_doc_no}')" 
+    	onclick="click_d('${SER_NUM}','','','','','')" style="cursor:hand">
+        <td nowrap class="list_ll">${d-db_id_no}&nbsp;</td>
+        <td nowrap class="list_ll">${d-db_chi_name}&nbsp;
+        <td nowrap class="list_ll">${d-case_letter}&nbsp;</td>
+        <td nowrap class="list_ll">${d-db_judic_date.YMD}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${d-db_org_debt_amt.(999)}</td>
+        <td nowrap class="list_rr">&nbsp;${d-db_payoff_amt.(999)}</td>
+        <td nowrap class="list_rr">&nbsp;${d-db_act_tot_amt.(999)}</td>
+        <td nowrap class="list_ll">${d-db_renew_accetp_no}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 統一收付頁籤================================ -->
+<!-- <div id="content5" class="tabPage"> -->
+<div id="tab-5" class="tabcontent">
+<input type="Button" value="本行統一收付結案" onClick="return top.submitControl('X5')" class="btAdd">&nbsp;&nbsp;
+<table width="50%" id="table5" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+        <th nowrap class="list_th">身分證<br>字號</th>
+        <th nowrap class="list_th">中文姓名</th>
+        <th nowrap class="list_th">JCIC<br>通知日期</th>
+        <th nowrap class="list_th">受理機構<br>代號_名稱</th>
+        <th nowrap class="list_th">申請日期</th>
+        <th nowrap class="list_th">最近一期<br>繳款日期</th>
+        <th nowrap class="list_th">最近一期<br>繳款金額</th>
+        <th nowrap class="list_th">是否正<br>常還款</th> 
+        <th nowrap class="list_th">回報債<br>權金額</th> 
+        <th nowrap class="list_th">參予分<br>配金額</th> 
+        <th nowrap class="list_th">不參予<br>分配金額</th> 
+        <th nowrap class="list_th">備註</th> 
+        <th nowrap class="list_th">是否回報</th>
+        <th nowrap class="list_th">回報處<br>理日期</th>
+        <th nowrap class="list_th">債權回報<br>覆核主管</th>
+        <th nowrap class="list_th">結案原因</th>
+        <th nowrap class="list_th">結案備註</th>
+        <th nowrap class="list_th">結案日期</th>
+        <th nowrap class="list_th">結案覆<br>核主管</th>
+        <th nowrap class="list_th">結案回報<br>處理日期</th>
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr class = "tr_e1">
+      	<td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp; </td>
+    </tr>
+    <tr class = "tr_e" ondblclick="detailScreen_e('${SER_NUM}','${e-id_no}','${e-case_letter}','','','')" 
+    	onclick="click_e('${SER_NUM}','${e-id_no}','${e-case_letter}','','','')" style="cursor:hand">
+        <td nowrap class="list_ll">${e-id_no}&nbsp;</td>
+        <td nowrap class="list_ll" style="display:none">${e-case_letter}&nbsp;</td>
+        <td nowrap class="list_ll">${e-idno_name}&nbsp;</td>
+        <td nowrap class="list_ll">${e-recv_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${e-apply_bank_no}_${e-bank_name}&nbsp;</td>
+        <td nowrap class="list_ll">${e-coll_apply_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${e-last_pay_date.YMD}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${e-last_pay_amt.(999)}</td>
+        <td nowrap class="list_ll">${e-pay_normal_flag_2}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${e-debt_amt2.(999)}</td>
+       	<td nowrap class="list_rr">&nbsp;${e-alloc_debt_amt.(999)}</td>
+        <td nowrap class="list_rr">&nbsp;${e-unalloc_debt_amt.(999)}</td>
+        <td nowrap class="list_ll">${e-coll_remark}&nbsp;</td>
+        <td nowrap class="list_ll">${e-send_flag_571}&nbsp;</td>
+        <td nowrap class="list_ll">${e-proc_date_571.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${e-apr_user}&nbsp;</td>
+        <td nowrap class="list_ll">${e-close_reason}&nbsp;</td>
+        <td nowrap class="list_ll">${e-close_remark}&nbsp;</td>
+        <td nowrap class="list_ll">${e-close_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${e-close_apr_user}&nbsp;</td>
+        <td nowrap class="list_ll">${e-close_proc_date.YMD}&nbsp;</td>     
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 法院公文================================ -->
+<!-- <div id="content6" class="tabPage"> -->
+<div id="tab-6" class="tabcontent">
+<input type="Button"  value="新增法院公文" onClick="return top.submitControl('X6')" class="btAdd">&nbsp;&nbsp;
+<table width="50%" id="table6" class="sortable" border="0" cellspacing="0" cellpadding="4">
+
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr class = "tr_f1" ondblclick="detailScreen_f('${SER_NUM}','${f-liad_doc_no}','','','','')" 
+    	onclick="click_f('${SER_NUM}','','','','','')" style="cursor:hand">
+      	<td nowrap class="list_no" rowspan="8"> ${SER_NUM}&nbsp;</td>
+      	<td nowrap class="list_th" rowspan="2" style="background-color:#55AA00">身分證字號&nbsp;</td>
+      	<td nowrap class="list_ll" rowspan="2">${f-db_id_no}&nbsp;
+      	<td nowrap class="list_th" rowspan="2" style="background-color:#55AA00">姓名&nbsp;</td>
+      	<td nowrap class="list_ll" rowspan="2">${f-chi_Name}&nbsp;</td>
+    </tr>
+    <tr>
+    </tr>
+    <tr class = "tr_f2" ondblclick="detailScreen_f('${SER_NUM}','${f-liad_doc_no}','','','','')" 
+    	onclick="click_f('${SER_NUM}','','','','','')" style="cursor:hand">
+      	<td nowrap class="list_no" rowspan="2" >單位收文文號&nbsp; </td>
+      	<td nowrap class="list_ll" rowspan="2">${f-unit_doc_no}&nbsp;</td>
+      	<td nowrap class="list_no" rowspan="2" >收文日期&nbsp;</td>
+      	<td nowrap class="list_ll" rowspan="2">${f-recv_date.YMD}&nbsp;</td>
+    </tr>
+    <tr>
+    </tr>
+    <tr class = "tr_f3" ondblclick="detailScreen_f('${SER_NUM}','${f-liad_doc_no}','','','','')" 
+    	onclick="click_f('${SER_NUM}','','','','','')" style="cursor:hand">
+      	<td nowrap class="list_no" rowspan="2" >主旨概要&nbsp; </td>
+		<td nowrap class="list_ll" rowspan="2" colspan="3">${f-key_note}&nbsp;</td>
+    </tr>
+    <tr>
+    </tr>
+    <tr class = "tr_f4" ondblclick="detailScreen_f('${SER_NUM}','${f-liad_doc_no}','','','','')" 
+    	onclick="click_f('${SER_NUM}','','','','','')" style="cursor:hand">
+      	<td nowrap class="list_no" rowspan="2" style="color:red">法院函號&nbsp; </td>
+      	<td nowrap class="list_ll" rowspan="2">${f-case_letter_desc}&nbsp;</td>
+      	<td nowrap class="list_no" rowspan="2" >發文日期&nbsp;</td>
+      	<td nowrap class="list_ll" rowspan="2">${f-case_date.YMD}&nbsp;</td>
+    </tr>
+    <tr>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+<input type="hidden" name="wp_temp"value="${wp_temp}">
+<input type="hidden" name="data_k1" id="data_k1" value="">
+<input type="hidden" name="data_k2" id="data_k2" value="">
+<input type="hidden" name="data_k3" id="data_k3" value="">
+<input type="hidden" name="data_k4" id="data_k4" value="">
+<input type="hidden" name="data_kkpdf" id="data_kkpdf" value="">
+<input type="hidden" name="data_k_id_no" id="data_k_id_no" value="">
+<input type="hidden" name="data_k_db_recv_date" id="data_k_db_recv_date" value="">
+<input type="hidden" name="data_k_db_renew_status" id="data_k_db_renew_status" value="">
+<input type="hidden" name="data_k_db_org_debt_amt" id="data_k_db_org_debt_amt" value="">
+<input type="hidden" name="data_k_db_chi_name" id="data_k_db_chi_name" value="">
+<input type="hidden" name="data_k_db_court_status" id="data_k_db_court_status" value="">
+<input type="hidden" name="data_k_db_liad_doc_no" id="data_k_db_liad_doc_no" value="">
+<input type="hidden" name="MOD_PGM" value="colm1140">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="cond">
+<input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" readonly />
+<input type="hidden"  name="upload_file" value="" />
+<input type="hidden"  name="tab_active" value="${tab_active}" />
+<input type="hidden"  name="tab_active_a" value="${tab_active_a}" />
+<input type="hidden"  name="tab_active_b" value="${tab_active_b}" />
+<input type="hidden"  name="tab_active_c" value="${tab_active_c}" />
+<input type="hidden"  name="tab_active_d" value="${tab_active_d}" />
+<input type="hidden"  name="tab_active_e" value="${tab_active_e}" />
+<input type="hidden"  name="tab_active_f" value="${tab_active_f}" />
+
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows="999";
+var data_b = ''; 
+var data_c = ''; 
+document.dataForm.ex_id.focus();
+document.dataForm.ex_id.checked=true;
+//selectAll();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    
+    if (top.actionCode == "X1") {
+        top.respLevel = 1;
+        top.respHtml = "colm1150_detl";
+    }
+    if (top.actionCode == "X2") {
+        top.respLevel = 1;
+        top.respHtml = "colm1160_detl";
+    }
+    if (top.actionCode == "X3") {
+        top.respLevel = 1;
+        top.respHtml = "colm1170_detl";
+    }
+    if (top.actionCode == "X4") {
+        top.respLevel = 1;
+        top.respHtml = "colm1180_detl";
+    }
+    if (top.actionCode == "X5") {
+        top.respLevel = 1;
+        var data_k3 = $("#data_k3").val();
+        var data_k4 = $("#data_k4").val();
+        var eq = $(".tr_e").length;
+        var id_no = "";
+        var case_letter ="";
+        for(i=0;i<eq;i++){
+           if($(".tr_e").eq(i).css("background-color")=="rgb(204, 238, 255)"){
+        	    id_no = $(".tr_e").eq(i).find("td").eq(0).text();
+                case_letter = $(".tr_e").eq(i).find("td").eq(1).text(); 
+           }
+        }  
+        if(data_k3==''&&data_k4==''){
+        	document.dataForm.data_k1.value = id_no.trim();
+            document.dataForm.data_k2.value = case_letter.trim();
+        }else{
+        	document.dataForm.data_k1.value = data_k3;
+        	document.dataForm.data_k2.value = data_k4;
+        }
+        top.respHtml = "colm1192_detl";
+        top.submitControl('S5_1');
+    }
+    if (top.actionCode == "X6") {
+        top.respLevel = 1;
+        top.respHtml = "colm1196_detl";
+    }
+    return true;
+}
+function click_a(serNum, parm, parm2, parm3) {
+    top.currRows = serNum;
+    //data_b = parm;
+    $(".tr_a").css("background-color","");
+    $(".tr_a").css("color","");
+    $(".tr_a").eq(serNum-1).css("background-color","#CCEEFF");
+   // $(".tr_a").eq(serNum-1).css("color","#FFFFFF");
+    return true;
+}
+
+function click_b(serNum, parm, parm2, parm3) {
+    top.currRows = serNum;
+    data_b = parm;
+    $(".tr_b").css("background-color","");
+    $(".tr_b").css("color","");
+    $(".tr_b").eq(serNum-1).css("background-color","#CCEEFF");
+   // $(".tr_b").eq(serNum-1).css("color","#FFFFFF");
+    return true;
+}
+function click_c(serNum, parm, parm2, parm3) {
+    top.currRows = serNum;
+    data_c = parm;
+    $(".tr_c").css("background-color","");
+    $(".tr_c").css("color","");
+    $(".tr_c").eq(serNum-1).css("background-color","#CCEEFF");
+   // $(".tr_c").eq(serNum-1).css("color","#FFFFFF");
+    return true;
+}
+
+function click_d(serNum, parm, parm2, parm3) {
+    top.currRows = serNum;
+    $(".tr_d").css("background-color","");
+    $(".tr_d").css("color","");
+    $(".tr_d").eq(serNum-1).css("background-color","#CCEEFF");
+  //  $(".tr_d").eq(serNum-1).css("color","#FFFFFF");
+    return true;
+}
+
+function click_e(serNum, parm, parm2, parm3) {
+    top.currRows = serNum;
+    document.dataForm.data_k3.value = parm;
+    document.dataForm.data_k4.value = parm2;
+    $(".tr_e").css("background-color","");
+    $(".tr_e").css("color","");
+    $(".tr_e").eq(serNum-1).css("background-color","#CCEEFF");
+   // $(".tr_e").eq(serNum-1).css("color","#FFFFFF");
+    return true;
+}
+
+function click_f(serNum, parm, parm2, parm3) {
+    top.currRows = serNum;
+    $(".tr_f1").css("background-color","");
+	$(".tr_f1").css("color","");
+	$(".tr_f2").css("background-color","");
+	$(".tr_f2").css("color","");
+	$(".tr_f3").css("background-color","");
+	$(".tr_f3").css("color","");
+	$(".tr_f4").css("background-color","");
+	$(".tr_f4").css("color","");
+    $(".tr_f1").eq(serNum-1).css("background-color","#CCEEFF");
+	//$(".tr_f1").eq(serNum-1).css("color","#FFFFFF");
+	$(".tr_f2").eq(serNum-1).css("background-color","#CCEEFF");
+	//$(".tr_f2").eq(serNum-1).css("color","#FFFFFF");
+	$(".tr_f3").eq(serNum-1).css("background-color","#CCEEFF");
+	//$(".tr_f3").eq(serNum-1).css("color","#FFFFFF");
+	$(".tr_f4").eq(serNum-1).css("background-color","#CCEEFF");
+	//$(".tr_f4").eq(serNum-1).css("color","#FFFFFF");
+    return true;
+}
+
+$(document).ready(function(){
+	document.getElementById("apr_user").style.display = "none";
+	
+	$(".tr_a").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_a").eq(0).css("color","#FFFFFF");
+	$(".tr_b").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_b").eq(0).css("color","#FFFFFF");
+	$(".tr_c").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_c").eq(0).css("color","#FFFFFF");
+	$(".tr_d").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_d").eq(0).css("color","#FFFFFF");
+	$(".tr_e").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_e").eq(0).css("color","#FFFFFF");
+	$(".tr_f1").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_f1").eq(0).css("color","#FFFFFF");
+	$(".tr_f2").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_f2").eq(0).css("color","#FFFFFF");
+	$(".tr_f3").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_f3").eq(0).css("color","#FFFFFF");
+	$(".tr_f4").eq(0).css("background-color","#CCEEFF");
+	//$(".tr_f4").eq(0).css("color","#FFFFFF");
+	$("#PDF1").click(function(){
+		document.dataForm.data_k1.value = data_b;
+		document.dataForm.data_kkpdf.value = 'b';
+		top.submitControl('PDF');
+	});
+	$("#PDF2").click(function(){
+		document.dataForm.data_k1.value = data_c;
+		document.dataForm.data_kkpdf.value = 'c';
+		top.submitControl('PDF');
+	});
+	});
+
+function detailScreen_a(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+	top.respHtml = "colm1150_detl";
+    top.submitControl('S1');
+    return true;
+}
+
+function detailScreen_b(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+	top.respHtml = "colm1160_detl";
+    top.submitControl('S2');
+    return true;
+}
+
+function detailScreen_c(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+	top.respHtml = "colm1170_detl";
+    top.submitControl('S3');
+    return true;
+}
+
+function detailScreen_d(serNum, parm, parm2, parm3,parm4,parm5,parm6,parm7,parm8,parm9) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k_id_no.value = parm3;
+    document.dataForm.data_k_db_recv_date.value = parm4;
+    document.dataForm.data_k_db_renew_status.value = parm5;
+    document.dataForm.data_k_db_org_debt_amt.value = parm6;
+    document.dataForm.data_k_db_chi_name.value = parm7;
+    document.dataForm.data_k_db_court_status.value = parm8;
+    document.dataForm.data_k_db_liad_doc_no.value = parm9;
+	top.respHtml = "colm1180_detl";
+    top.submitControl('S4');
+    return true;
+}
+
+function detailScreen_e(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm;
+    document.dataForm.data_k4.value = parm2;
+	top.respHtml = "colm1190_detl";
+    top.submitControl('S5');
+    return true;
+}
+
+function detailScreen_f(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+	top.respHtml = "colm1196_detl";
+    top.submitControl('S6');
+    return true;
+}
+function aprUser(value){
+	switch(value){
+	case 'a':
+		$("input[name=tab_active]").val("a");
+		document.getElementById("apr_user").style.display = "none";
+		document.getElementById("ex_renew_status2").style.display = "none";
+		document.getElementById("ex_renew_status").style.display = "";
+		break;
+	case 'b':
+		$("input[name=tab_active]").val("b");
+		document.getElementById("apr_user").style.display = "";
+		document.getElementById("ex_renew_status2").style.display = "none";
+		document.getElementById("ex_renew_status").style.display = "";
+		break;
+	case 'c':
+		$("input[name=tab_active]").val("c");
+		document.getElementById("apr_user").style.display = "";
+		document.getElementById("ex_renew_status2").style.display = "none";
+		document.getElementById("ex_renew_status").style.display = "";
+		break;
+	case 'd':
+		$("input[name=tab_active]").val("d");
+		document.getElementById("apr_user").style.display = "none";
+		document.getElementById("ex_renew_status").style.display = "none";
+		document.getElementById("ex_renew_status2").style.display = "";
+		break;
+	case 'e':
+		$("input[name=tab_active]").val("e");
+		document.getElementById("apr_user").style.display = "none";
+		document.getElementById("ex_renew_status2").style.display = "none";
+		document.getElementById("ex_renew_status").style.display = "";
+		break;
+	case 'f':
+		$("input[name=tab_active]").val("f");
+		document.getElementById("apr_user").style.display = "none";
+		document.getElementById("ex_renew_status2").style.display = "none";
+		document.getElementById("ex_renew_status").style.display = "";
+		break;
+	}
+}
+
+function upload_click()
+{
+
+ document.dataForm.zz_file_name.value = "";
+ //document.dataForm.data_k1.value = parm;
+ var parmHtml    = "TarokoUpload";
+ var parmName    = "upload_file,zz_file_name";
+ var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+ top.packageName = "taroko.com";
+ top.javaName    = "TarokoUpload";
+ top.methodName  = "showScreen";
+ top.openWindow("",parmHtml,parmName,windowSize);
+ top.packageName = "colm01";
+ top.javaName    = "Colm1140";
+ top.requHtml    = "colm1140";
+ top.respHtml    = "colm1140";
+ return true;
+}
+
+function wf_uploadAfter()
+{
+ var ss=document.dataForm.zz_file_name.value.trim();
+ if (ss.length>0)  top.submitControl('UPLOAD');
+}
+
+</script>

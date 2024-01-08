@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>新貴通/龍騰卡請款資料維護-jh-190614</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;使用日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />       
+      <script language="JavaScript">
+	      new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	    </script>
+	    --
+	    <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	      new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	    </script>
+	 </td>
+	 <td nowrap >&nbsp;卡別:
+	 		<select   size="1"  name="ex_bin_type" class="col_ddlb">
+         <option value="">--</option>         
+         <option value="V" ${ex_bin_type-V} >VISA卡</option>
+         <option value="M" ${ex_bin_type-M} >MAST卡</option>
+         <option value="J" ${ex_bin_type-J} >JCB卡</option>         
+      </select>
+	 </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;貴賓卡號:
+   		<input type="text" class="col_text" name="ex_ppcard_no" value="${ex_ppcard_no}" maxlength="19" size="21" zEdit="number" >
+   </td>
+   <td nowrap >&nbsp;身分證ID:
+   		<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength=" maxlength="10" size="12" zEdit="alphanum,upper" >
+   </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;貴賓卡:
+        <select size="1" name="ex_vip_kind" class="col_ddlb">
+            <option value="1" ${ex_vip_kind-1} >1_新貴通卡</option>
+            <option value="2" ${ex_vip_kind-2} >2_龍騰卡</option>
+        </select>
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >貴賓卡&nbsp;</th>
+    <th nowrap >貴賓卡號&nbsp;</th>
+    <th nowrap >使用日期&nbsp;</th>
+    <th nowrap >卡友<br>使用次數</th>
+    <th nowrap >同行旅客<br>使用次數</th>
+    <th nowrap >卡友<br>免費次數</th>
+    <th nowrap >資料來源&nbsp;</th>
+    <th nowrap >交易卡號&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >建檔經辦&nbsp;</th>
+    <th nowrap >ISO Conty&nbsp;</th>
+    <th nowrap >City&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+   		<input type="hidden" name="rowid" value="${rowid}" />	
+   </td>
+	 <td nowrap class="list_cc"> ${vip_kind}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${pp_card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${visit_date.YMD}&nbsp;</td>
+	 <td nowrap class="list_rr"> ${ch_visits.(999)}&nbsp;</td>
+	 <td nowrap class="list_rr"> ${guests_count.(999)}&nbsp;</td>
+	 <td nowrap class="list_rr"> ${free_use_cnt.(999)}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${from_type}.${tt_from_type}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${mcht_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${iso_conty}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${city}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cmsm3140_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm3140_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

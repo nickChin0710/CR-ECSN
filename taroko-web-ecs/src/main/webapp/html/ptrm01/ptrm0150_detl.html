@@ -1,0 +1,217 @@
+<html>
+<head>
+<title>帳務科目參數維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=interest_method]:checked");
+if (selected.length == 0) {
+   $("input:radio[name=interest_method]").filter('[value=Y]').prop('checked', true);
+}
+
+var selected = $("input[name=part_rev]:checked");
+if (selected.length == 0) {
+   $("input:radio[name=part_rev]").filter('[value=Y]').prop('checked', true);
+}
+
+var selected = $("input[name=revolve]:checked");
+if (selected.length == 0) {
+   $("input:radio[name=revolve]").filter('[value=Y]').prop('checked', true);
+}
+
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<div id="dataBlock">
+${#PLUGIN:htmcomm_plugin.apr_user}
+</div>
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;科目代號：
+      <input type="text" class="col_text" name="kk_acct_code" value="${kk_acct_code}"  zEdit="alphanum,upper" size="5" maxlength="2" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;科目代號:
+       <span class="dsp_text"> ${acct_code} </span>
+      <input type="hidden" name="acct_code" value="${acct_code}">
+   </td>
+   <td nowrap >&nbsp;科目分類:
+      <select   size="1"  name="acct_code_flag" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${acct_code_flag-1} >1.一般本金</option>
+         <option value="2" ${acct_code_flag-2} >2.爭議款</option>
+         <option value="3" ${acct_code_flag-3} >3.催收款</option>
+         <option value="4" ${acct_code_flag-4} >4.呆帳</option>
+         <option value="5" ${acct_code_flag-5} >5.利息</option>
+         <option value="6" ${acct_code_flag-6} >6.費用</option>
+      </select>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;中文簡稱:
+      <input type="text" class="col_any" name="chi_short_name" value="${chi_short_name}" maxlength="20" size="22" zEdit="any,canTw">
+   </td>
+   <td nowrap >&nbsp;中文全稱：
+      <input type="text" class="col_any" name="chi_long_name" value="${chi_long_name}" maxlength="40" size="42" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;英文簡稱:
+      <input type="text" class="col_any" name="eng_short_name" value="${eng_short_name}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+    <td nowrap >&nbsp;英文全稱：
+      <input type="text" class="col_any" name="eng_long_name" value="${eng_long_name}" maxlength="20" size="22" zEdit="alphanum,upper">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;科目沖銷順序-正常：
+      <input type="text" class="col_text" name="item_order_normal" value="${item_order_normal}" maxlength="2" size="5" zEdit="alphanum,upper" zRequire="Y">
+   </td>
+   <td nowrap >&nbsp;科目沖銷類別-正常：
+      <input type="text" class="col_text" name="item_class_normal" value="${item_class_normal}" maxlength="2" size="5" zEdit="alphanum,upper" zRequire="Y">
+   </td>
+  </tr>   
+  <tr>
+   <td nowrap >&nbsp;科目沖銷順序-退貨：
+      <input type="text" class="col_text" name="item_order_refund" value="${item_order_refund}" maxlength="2" size="5" zEdit="alphanum,upper" zRequire="Y">
+   </td>
+   <td nowrap >&nbsp;科目沖銷類別-退貨：
+      <input type="text" class="col_text" name="item_class_refund" value="${item_class_refund}" maxlength="2" size="5" zEdit="alphanum,upper" zRequire="Y">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;科目沖銷順序- BACK DATE：
+      <input type="text" class="col_text" name="item_order_back_date" value="${item_order_back_date}" maxlength="2" size="5" zEdit="alphanum,upper" zRequire="Y">
+   </td>
+   <td nowrap >&nbsp;科目沖銷類別- BACK DATE：
+      <input type="text" class="col_text" name="item_class_back_date" value="${item_class_back_date}" maxlength="2" size="5" zEdit="alphanum,upper" zRequire="Y">
+   </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;是否計息:
+      <span class="col_radio">
+         <input type="radio" value="Y" name="interest_method" ${interest_method-Y}  />Y
+         <input type="radio" value="N" name="interest_method" ${interest_method-N} />N
+      </span>
+   </td>
+    <td nowrap>&nbsp;利率代碼:
+      <select   size="1"  name="inter_rate_code" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${inter_rate_code-1} >1</option>
+         <option value="2" ${inter_rate_code-2} >2</option>
+         <option value="3" ${inter_rate_code-3} >3</option>
+         <option value="4" ${inter_rate_code-4} >4</option>
+         <option value="5" ${inter_rate_code-5} >5</option>
+         <option value="6" ${inter_rate_code-6} >6</option>
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;部份沖銷:   	
+   	<span class="col_radio">
+         <input type="radio" value="Y" name="part_rev" ${part_rev-Y}  />Y
+         <input type="radio" value="N" name="part_rev" ${part_rev-N} />N
+    </span>      
+   </td>
+   <td nowrap>&nbsp;利率代碼2:
+      <select   size="1"  name="inter_rate_code2" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${inter_rate_code2-1} >1</option>
+         <option value="2" ${inter_rate_code2-2} >2</option>
+         <option value="3" ${inter_rate_code2-3} >3</option>
+         <option value="4" ${inter_rate_code2-4} >4</option>
+         <option value="5" ${inter_rate_code2-5} >5</option>
+         <option value="6" ${inter_rate_code2-6} >6</option>
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;是否全額列入MP:
+      <span class="col_radio">
+         <input type="radio" value="Y" name="revolve" ${revolve-Y}  />Y
+         <input type="radio" value="N" name="revolve" ${revolve-N} />N
+      </span>
+      全額列入MP為Y之科目一律優先銷帳(AI除外)
+   </td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ptrm0150">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

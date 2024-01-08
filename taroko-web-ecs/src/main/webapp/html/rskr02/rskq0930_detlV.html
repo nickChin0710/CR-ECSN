@@ -1,0 +1,213 @@
+<html>
+<head>
+<title>DebitCard 臨時額度異動簽單-190621</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">	
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />  
+ </td>
+</tr>
+</table>
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+		<td nowrap colspan="3" >&nbsp;流水編號:
+			<span class="dsp_text">${seq_no}&nbsp;</span>
+			<input type="hidden" name="seq_no" value="${seq_no}" />
+			(自動編號)
+		</td>	
+ </tr>
+ <tr>
+ <tr>
+ 		<td nowrap >&nbsp;值機人員: 		
+ 			<span class="dsp_text">${tel_user}&nbsp;</span>
+			<input type="hidden" name="tel_user" value="${tel_user}">
+ 		</td>
+ 		<td nowrap >&nbsp;客戶來電時間:
+ 			<span class="dsp_text">${tel_date.YMD}&nbsp;${tel_time.TIME}</span>
+        <input type="hidden" name="tel_date" value="${tel_date}">
+	  		<input type="hidden" name="tel_time" value="${tel_time}">
+	  </td>
+	  <td nowrap >&nbsp;
+	  	<input type="checkbox" onClick="wf_apr_user()" name="apr_flag" value="Y" ${apr_flag-Y} disabled >檢查人員&nbsp;
+	  	<span class="dsp_text">${apr_user}</span>
+	  </td>
+ </tr>	  	
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap >&nbsp;持卡人ID:
+			<span class="dsp_text">${id_no}</span>
+		</td>
+		<td nowrap >&nbsp;卡號:
+			<span class="dsp_text">${card_no}</span>
+		</td>
+		<td nowrap >&nbsp;持卡人姓名:
+			<span class="dsp_text">${chi_name}</span>
+		</td>
+		<td nowrap >&nbsp;
+			<input type="checkbox" id="print_flag_v" name="print_flag" value="Y" ${print_flag-Y} disabled > 已列印
+		</td>
+	</tr>
+</table>
+${#PLUGIN:rskr02.rskq0930_detlV_plugin}
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+<!-- -->
+<input type="hidden" name="user_name" value="${user_name}" />
+<input type="hidden" name="user_no" value="${user_no}" />
+<input type="hidden" name="h_mail" value="${h_mail}" />
+
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+<input type="hidden" name="dd_cnt" value="99" />
+<input type="hidden" name="mm_cnt" value="999" />
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+		
+		if (top.actionCode=='L') {
+			if(confirm("確定要清除 !!")==false){
+				return false;
+			}
+		}
+		
+    return true;
+  }
+ 
+ function intChange1(){
+ 	 var  li_time_lmt =Number(document.forms["dataForm"]["time_lmt"].value);
+ 	 var  li_time_pcnt =Number(document.forms["dataForm"]["time_pcnt"].value);
+ 	 var  li_time_amt = 0 ; 	 
+ 	 li_time_amt = li_time_lmt * li_time_pcnt / 100 ;
+ 	 $("#wk_time_amt").val(li_time_amt);  	  	 
+ }
+ 
+ function intChange2(){
+ 	 var  li_dd_lmt =Number(document.forms["dataForm"]["dd_lmt"].value);
+ 	 var  li_dd_pcnt =Number(document.forms["dataForm"]["dd_pcnt"].value);
+ 	 var  li_dd_amt = 0 ; 	 
+ 	 li_dd_amt = li_dd_lmt * li_dd_pcnt / 100 ;
+ 	 $("#wk_dd_amt").val(li_dd_amt);  	  	 
+ }
+ 
+ function intChange3(){
+ 	 var  li_mm_lmt =Number(document.forms["dataForm"]["mm_lmt"].value);
+ 	 var  li_mm_pcnt =Number(document.forms["dataForm"]["mm_pcnt"].value);
+ 	 var  li_mm_amt = 0 ; 	 
+ 	 li_mm_amt = li_mm_lmt * li_mm_pcnt / 100 ;
+ 	 $("#wk_mm_amt").val(li_mm_amt);  	  	 
+ }
+ 
+ function intChange4(){
+ 	 var  li_dd_cnt =Number(document.forms["dataForm"]["dd_cnt"].value);
+ 	 var  li_dd_cnt_pcnt =Number(document.forms["dataForm"]["dd_cnt_pcnt"].value);
+ 	 var  wk_dd_cnt = 0 ; 	 
+ 	 wk_dd_cnt = li_dd_cnt * li_dd_cnt_pcnt / 100 ;
+ 	 
+ 	 $("#wk_dd_cnt").val(Math.ceil(wk_dd_cnt));  	  	 
+ }
+ 
+ function intChange5(){
+ 	 var  li_mm_cnt =Number(document.forms["dataForm"]["mm_cnt"].value);
+ 	 var  li_mm_cnt_pcnt =Number(document.forms["dataForm"]["mm_cnt_pcnt"].value);
+ 	 var  wk_mm_cnt = 0 ; 	 
+ 	 wk_mm_cnt = li_mm_cnt * li_mm_cnt_pcnt / 100 ;
+ 	 $("#wk_mm_cnt").val(Math.ceil(wk_mm_cnt));  	  	 
+ }
+ 
+  function wf_apr_user() {
+  	
+ 		var ls_apr_flag = document.dataForm.apr_flag.checked;
+ 		 	 		
+ 		if(ls_apr_flag == false){
+ 			return ;
+ 		}
+ 		
+ 		var ls_user_name = document.forms["dataForm"]["user_name"].value;
+ 		$("#apr_user").val(ls_user_name);
+ }
+ 
+ function wf_pdf(){ 	
+ 	$("#print_flag_v").prop("checked",true);
+ 	top.submitControl('PDF');
+}
+ 
+  function wf_user_no() {
+ 		var ls_audit_flag = document.dataForm.db_user_id_flag.checked;
+ 		
+ 		if(ls_audit_flag == false){
+ 			$("#user_id").val("");
+ 			return ;
+ 		}
+ 		
+ 		var ls_user_no = document.forms["dataForm"]["user_no"].value;
+ 		$("#user_id").val(ls_user_no);
+ }
+ 
+ function wf_mail() {
+ 	  
+ 		var ls_email_flag = document.dataForm.email_flag.checked;
+ 		
+ 		if(ls_email_flag == false){
+ 			$("#email_addr").val("");
+ 			return ;
+ 		}
+ 		
+ 		var ls_mail_addr = document.forms["dataForm"]["h_mail"].value;
+ 		$("#email_addr").val(ls_mail_addr);
+ }
+ 
+</script>

@@ -1,0 +1,248 @@
+<html>
+<head>
+<title> 109/03/09 V1.00.01 Allen Ho Initial IBON專案卡友可兌贈品資料維護　</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnUpdate"  value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">資料序號：
+       <span class="dsp_text">${txn_seqno}</span>
+       <input   type="hidden" name="txn_seqno" value="${txn_seqno}" />
+     </td>
+     <td  nowrap  >放行狀態: 
+       <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+       <input       type="hidden" name="aud_type" value="${aud_type}" />
+       <input    type="hidden" name="commfunc_aud_type" value="${commfunc_aud_type}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>群組代號：&nbsp;
+       <select name="group_type" class="col_ddlb" onChange="columnItemChange('1')"  >
+       <option value=" ">--</option>
+       <option value="1" ${group_type-1} >1.限信用卡兌換(限01、05、06)</option>
+       <option value="2" ${group_type-2} >2.限VD卡兌換(限90)</option>
+       <option value="3" ${group_type-3} >3.全部任一卡片兌換(01、05、06、90)</option>
+       <option value="4" ${group_type-4} >4.限特定卡號兌換</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >活動代碼: 
+       <input      size="8" class="dsp_text" type="text" name="prog_code" value="${prog_code}" readonly/>
+         兌換期間: 
+       <input      size="8" class="dsp_text" type="text" name="prog_s_date" value="${prog_s_date}" readonly/>
+         ~ 
+       <input      size="8" class="dsp_text" type="text" name="prog_e_date" value="${prog_e_date}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>贈品代碼:&nbsp;
+       <select name="gift_no" class="col_ddlb" id="ajaxh_gift_no"  />
+               ${dddw_gift_no}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>身分證號：&nbsp; 
+       <input type="text" class="col_text" name="id_no" value="${id_no}"
+              zEdit="any,upper" maxlength="10" size="10"  onChange="columnItemChange('1')"/>
+         　 
+       <input      zEdit="any,canTW" class="dsp_text" type="text" name="chi_name" value="${chi_name}" readonly/>
+          
+       <input type="hidden" class="col_any" name="p_seqno" value="${p_seqno}"
+              zEdit="any" maxlength="10" size="10" />
+          
+       <input type="hidden" class="col_any" name="id_p_seqno" value="${id_p_seqno}"
+              zEdit="any" maxlength="10" size="10" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>卡　　號：&nbsp; 
+       <input type="text" class="col_any" name="card_no" value="${card_no}"
+              zEdit="any" maxlength="19" size="19"  onChange="columnItemChange('1')"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>調整異動數量：&nbsp; 
+       <input type="text" class="col_number" name="gift_cnt" value="${gift_cnt}"
+              zEdit="minusNum" maxlength="8" size="8" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護日期： 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+     <td  nowrap  >維護經辦： 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+               - ${comm_crt_user}
+     <input    type="hidden" name="comm_crt_user" value="${comm_crt_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核日期： 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+     </td>
+     <td  nowrap  >覆核人員： 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+               - ${comm_apr_user}
+     <input    type="hidden" name="comm_apr_user" value="${comm_apr_user}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm0810">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_group_type =document.forms["dataForm"]["group_type"].value;
+   var  win_prog_code1 =document.forms["dataForm"]["prog_code1"].value;
+   var  win_id_no =document.forms["dataForm"]["id_no"].value.toUpperCase();
+   var  win_card_no =document.forms["dataForm"]["card_no"].value;
+
+   idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode == '1' )
+      {
+       top.methodName = "wf_ajax_func_1";
+       resetJSON();
+       addJSON("ax_win_group_type",win_group_type);
+       addJSON("ax_win_id_no",win_id_no);
+       addJSON("ax_win_card_no",win_card_no);
+      }
+
+   if ( idCode == '2' )
+      {
+       clearListObj(document.getElementById("ajaxh_gift_no"));
+       top.methodName = "wf_ajax_func_2";
+       resetJSON();
+       addJSON("ax_win_prog_code1",win_prog_code1);
+      }
+
+   processAJAX();
+ }
+
+
+ function buttonAjaxFunc(ps1)
+  {
+   var  win_group_type =document.forms["dataForm"]["group_type"].value;
+   var  win_prog_code =document.forms["dataForm"]["prog_code"].value;
+   var  win_prog_s_date =document.forms["dataForm"]["prog_s_date"].value;
+   var  win_id_no =document.forms["dataForm"]["id_no"].value;
+   var  win_card_no =document.forms["dataForm"]["card_no"].value;
+
+   idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode == '4' )
+      {
+       top.methodName = "wf_button_func_4";
+
+       resetJSON();
+       addJSON("ax_win_group_type",win_group_type);
+       addJSON("ax_win_prog_code",win_prog_code);
+       addJSON("ax_win_prog_s_date",win_prog_s_date);
+       addJSON("ax_win_id_no",win_id_no);
+       addJSON("ax_win_card_no",win_card_no);
+      }
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktm0810_detl";
+  var len = 0;
+
+  if (idCode == '1' )
+     {
+       document.dataForm.chi_name.value =getJSONvalue("chi_name",0);
+       document.dataForm.chi_name.value =getJSONvalue("chi_name",0);
+      return false;
+     }
+  if (idCode == '2' )
+     {
+       document.dataForm.prog_code.value =getJSONvalue("prog_code",0);
+       document.dataForm.prog_s_date.value =getJSONvalue("prog_s_date",0);
+       document.dataForm.prog_e_date.value =getJSONvalue("prog_e_date",0);
+      var listObj = document.getElementById("ajaxh_gift_no");
+      len = getJSONlength("ajaxj_gift_no");
+      for ( var ii=0; ii<len; ii++)
+          listObj.options.add(new Option(getJSONvalue("ajaxj_gift_no",ii)
+                                        +" "+getJSONvalue("ajaxj_gift_name",ii)
+                                        ,getJSONvalue("ajaxj_gift_no",ii)));
+      return false;
+     }
+  if (idCode == '4' )
+     {
+      document.dataForm.tot_gift_cnt.value =getJSONvalue("tot_gift_cnt",0);
+      document.dataForm.rem_gift_cnt.value =getJSONvalue("rem_gift_cnt",0);
+      return false;
+     }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+
+</script>
+<!-- ******************************************************************** -->

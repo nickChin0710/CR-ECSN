@@ -1,0 +1,233 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-12  V1.00.01  Allen Ho      Initial                               -->
+<!-- 109-01-06  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>高鐵車廂請款明細檔維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">交易流水號:
+       <span class="dsp_text">${serial_no}</span>
+       <input  type="hidden" name="serial_no" value="${serial_no}" />
+     </td>
+     <td  nowrap  >放行狀態: 
+       <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+       <input       type="hidden" name="aud_type" value="${aud_type}" />
+       <input  type="hidden" name="commfunc_aud_type" value="${commfunc_aud_type}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>交易日期:&nbsp; 
+       <input type="text" class="col_date" name="trans_date" value="${trans_date}"
+              zEdit="date,yyyymmdd" zRequire="Y" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'trans_date'});
+      </script>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>交易時間:&nbsp; 
+       <input type="text" class="col_any" name="trans_time" value="${trans_time}"
+              zEdit="any" maxlength="6" size="6" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>信用卡號:&nbsp; 
+       <input type="text" class="col_any" name="card_no" value="${card_no}"
+              zEdit="any" maxlength="16" size="16"  onChange="columnItemChange('2')"/>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >帳戶類別: 
+       <input      size="2" class="dsp_text" type="text" name="acct_type" value="${acct_type}" readonly/>
+          
+       <input      class="dsp_text" type="text" name="acct_key" value="${acct_key}" readonly/>
+          
+       <input      zEdit="="any,canTW"" class="dsp_text" type="text" name="chi_name" value="${chi_name}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>授權碼:&nbsp; 
+       <input type="text" class="col_any" name="authentication_code" value="${authentication_code}"
+              zEdit="any" maxlength="6" size="6" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >原始交易卡號: 
+       <span class="dsp_text">${pay_cardid}</span>
+       <input      size="16"  type="hidden" name="pay_cardid" value="${pay_cardid}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >車票金額: 
+       <span class="dsp_date">${trans_amount.(999)}</span>
+       <input      size="15"  type="hidden" name="trans_amount" value="${trans_amount.(999)}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >交易類別: 
+       <span class="dsp_text">${trans_type}</span>
+       <input      size="1"  type="hidden" name="trans_type" value="${trans_type}" />
+              ${comm_trans_type}
+     <input  type="hidden" name="comm_trans_type" value="${comm_trans_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >團代: 
+       <span class="dsp_text">${group_code}</span>
+       <input      size="4"  type="hidden" name="group_code" value="${group_code}" />
+               - ${comm_group_code}
+     <input  type="hidden" name="comm_group_code" value="${comm_group_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >卡類: 
+       <span class="dsp_text">${card_mode}</span>
+       <input      size="1"  type="hidden" name="card_mode" value="${card_mode}" />
+               - ${comm_card_mode}
+     <input  type="hidden" name="comm_card_mode" value="${comm_card_mode}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >處理日期: 
+       <span class="dsp_text">${proc_date}</span>
+       <input      size="8"  type="hidden" name="proc_date" value="${proc_date}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >處理結果: 
+       <span class="dsp_text">${proc_flag}</span>
+       <input      size="1"  type="hidden" name="proc_flag" value="${proc_flag}" />
+               - ${comm_proc_flag}
+     <input  type="hidden" name="comm_proc_flag" value="${comm_proc_flag}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >錯誤代碼: 
+       <span class="dsp_text">${error_code}</span>
+       <input      size="2"  type="hidden" name="error_code" value="${error_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >錯誤說明: 
+       <span class="dsp_text">${error_desc}</span>
+       <input      size="60" zEdit="any,canTW"  type="hidden" name="error_desc" value="${error_desc}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護經辦: 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+     <td  nowrap  >維護日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+     <td  nowrap  >覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm3200">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_card_no =document.forms["dataForm"]["card_no"].value;
+
+   idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+/*   if ( idCode == '2' )
+      {*/
+       // top.methodName = "wf_ajax_func_2"; // 20200102 updated for archit.  change
+   resetJSON();
+   addJSON("ax_win_card_no",win_card_no);
+      // }
+
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktm3200_detl";
+
+  if (idCode == '2' )
+     {
+       document.dataForm.acct_type.value =getJSONvalue("acct_type",0);
+       document.dataForm.acct_key.value =getJSONvalue("acct_key",0);
+       document.dataForm.chi_name.value =getJSONvalue("chi_name",0);
+      return false;
+     }
+ }
+</script>
+<!-- ******************************************************************** -->

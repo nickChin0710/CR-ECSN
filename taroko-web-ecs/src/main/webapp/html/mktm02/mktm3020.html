@@ -1,0 +1,126 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--  110/12/28    V1.00.00   Machao     全體員工年招攬卡年度總目標參數檔維護                 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>首页</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;年度:
+      <input type="text" class="col_date" name="ex_acct_year" value="${ex_acct_year}" maxlength="10" size="12" />
+   </input>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;
+   		<span class="col_radio">
+         主管覆核：
+         <input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT-ex_apr_flag} />全部
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+      </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" />&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4"> 
+    <tr>
+            <th nowrap >No&nbsp;</th>
+            <th nowrap >年度&nbsp;</th>
+            <th nowrap >年度總目標卡數&nbsp;</th>
+            <th nowrap >分行目標卡數&nbsp;</th>
+            <th nowrap >員工目標卡數&nbsp;</th>
+            <th nowrap >已覆核&nbsp;</th>
+        </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+          <tr onclick="detailScreen('${SER_NUM}','${rowid}','${acct_year}','${apr_flag}')" style="cursor:hand">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="ser_num" value="${ser_num}" />
+                <input type="hidden" name="rowid" value="${rowid}">
+            </td>
+            <td nowrap class="list_cc"> ${acct_year}&nbsp;
+                <input type="hidden" name="acct_year" value="${acct_year}">
+            </td>
+            <td nowrap class="list_ll"> ${target_card_cnt}&nbsp;
+                <input type="hidden" name="target_card_cnt" value="${target_card_cnt}">
+            </td>
+            <td nowrap class="list_cc"> ${branch_cnt}&nbsp;
+                <input type="hidden" name="branch_cnt" value="${branch_cnt}">
+            </td>
+            <td nowrap class="list_cc"> ${employee_cnt}&nbsp;
+                <input type="hidden" name="employee_cnt" value="${employee_cnt}">
+            </td>
+            <td nowrap class="list_cc"> ${apr_flag}&nbsp;
+                <input type="hidden" name="apr_flag" value="${apr_flag}">
+            </td>
+        </tr>
+
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm3020_detl";
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum, row_id, acct_year, apr_flag) {
+     top.respLevel = 1;
+     top.currRows  = serNum;
+     document.dataForm.data_k1.value = row_id;
+     document.dataForm.data_k2.value = acct_year;
+     document.dataForm.data_k3.value = apr_flag;
+     top.respHtml  = "mktm3020_detl";
+     top.submitControl('S');
+     return true;
+ }
+
+</script>

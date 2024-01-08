@@ -1,0 +1,276 @@
+<html>
+<head>
+<title>XXXXX-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.del_apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;審核類別:
+      <select size="1" name="kk_trial_type" class="col_ddlb" >
+         <option value="">--</option>
+         ${d_dddw_trial_type}
+      </select>
+      &nbsp;&nbsp;
+      <span class="col_radio">                
+        <input type="radio" value="Y" name="kk_apr_flag" ${kk_apr_flag-Y} ${DEFAULT-kk_apr_flag} />已覆核&nbsp;
+        <input type="radio" value="N" name="kk_apr_flag" ${kk_apr_flag-N} />未覆核&nbsp;
+      </span>
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;評分條件代碼:
+      <span class="dsp_text">${cond_code}</span>
+      <input type="hidden" name="cond_code" value="${cond_code}">
+   </td>
+   <td nowrap>&nbsp;明細已覆核筆數:
+      <span class="dsp_text">${apr_cnt_Y.(999)}</span>
+      <input type="hidden" name="apr_cnt_Y" value="${apr_cnt_Y}" >
+      &nbsp;
+      明細未覆核筆數:
+      <span class="col_key">${apr_cnt_N.(999)}</span>
+      <input type="hidden" name="apr_cnt_N" value="${apr_cnt_N}" >
+   </td>
+ </tr>
+ <tr>
+    <td nowrap colspan="2">&nbsp;條件代碼說明:
+      <span class="dsp_text">${cond_desc}</span>
+      <input type="hidden" name="cond_desc" value="${cond_desc}">
+   </td>
+ </tr>
+ <tr>
+    <td nowrap colspan="2">&nbsp;條件附加說明:
+      <input type="text" class="col_any" name="cond_seq_desc" value="${cond_seq_desc}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;統計資料來源:
+      <span class="dsp_text">${data_from}.${tt_data_from}</span>
+      <input type="hidden" name="data_from" value="${data_from}">
+    </td>
+    <td nowrap >&nbsp;資料型態:
+      <span class="dsp_text">${ls_data_type}${tt_data_type}&nbsp;</span>
+      <input type="hidden" name="ls_data_type" value="${ls_data_type}">
+      <input type="hidden" name="tt_data_type" value="${tt_data_type}">
+    </td>
+ </tr>
+ <tr>
+    <td nowrap colspan="2" >&nbsp;數值輸入說明:
+      <input type="text" class="col_any" name="data_desc" value="${data_desc}" maxlength="60" size="62" zEdit="any,canTw">
+   </td>
+ </tr>
+</table>
+
+<br>
+
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;條件序號:
+      <input type="text" class="col_number" id="ex_cond_data_seq" value="${ex_cond_data_seq}" maxlength="3" size="5" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;審核類別:
+      <select size="1" name="ex_trial_type" id="ex_trial_type" class="col_ddlb" >
+         <option value="">--</option>
+         ${d_dddw_idtab4}
+      </select>
+   </td>
+   <td nowrap>&nbsp;Color：
+      <select size="1"  name="ex_dsp_color" id="ex_dsp_color" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="0,0,0" style="background-color:rgb(0,0,0);">Black</option>
+         <option value="128,128,128" style="background-color:rgb(128,128,128);">DarkGray</option>
+         <option value="255,0,0" style="background-color:rgb(255,0,0);">Red</option>
+         <option value="128,0,0" style="background-color:rgb(128,0,0);">DarkRed</option>
+         <option value="0,255,0" style="background-color:rgb(0,255,0);">Green</option>
+         <option value="0,128,0" style="background-color:rgb(0,128,0);">DarkGreen</option>
+         <option value="0,0,255" style="background-color:rgb(0,0,255);">Blue</option>
+         <option value="0,0,128" style="background-color:rgb(0,0,128);">DarkBlue</option>
+         <option value="255,255,0" style="background-color:rgb(255,255,0);">Yellow</option>
+         <option value="128,128,0" style="background-color:rgb(128,128,0);">Brown</option>
+      </select>
+   </td>
+   <td nowrap class="list_rr" >&nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細"
+                 class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num} &nbsp;
+      <input type="hidden" name="ind_num" value="${ind_num}" >
+   </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">主管覆核 </th>
+    <th nowrap class="list_cc">條件序號 </th>
+    <th nowrap class="list_cc">審核類別 </th>
+    <th nowrap class="list_ll">資料代碼說明 </th>
+    <th nowrap class="list_cc">評分分數 </th>
+    <th nowrap class="list_cc" colspan="2">顯示顏色 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="cond_data_seq" value="${cond_data_seq}">
+      <input type="hidden" name="trial_type" value="${trial_type}">
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+      <input type="hidden" name="tt_trial_type" value="${tt_trial_type}">
+      <input type="hidden" name="cond_code" value="${cond_code}">
+      <input type="hidden" name="data_type" value="${data_type}">
+      <input type="hidden" name="dsp_color" value="${dsp_color}">
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${apr_flag} </td>
+    <td nowrap class="list_cc" >&nbsp;${cond_data_seq} </td>
+    <td nowrap class="list_cc" >&nbsp;${tt_trial_type} </td>
+    <td nowrap class="list_ll" >
+      <input type="text" class="col_any" name="cond_data_desc" value="${cond_data_desc}" zEdit="any,canTw" maxlength="40" size="42">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="data_score" value="${data_score}" zEdit="canMinus,dignumber" maxlength="13" size="15">
+   </td>
+   <td nowrap class="list_cc" colspan="2" style="background-color:rgb(${dsp_color})" >&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap class="list_no" colspan="3">&nbsp;</td>
+   <td nowrap class="list_ll" colspan="2">文字:
+      <input type="text" class="col_any" name="data_char1" value="${data_char1}" zEdit="any,canTw" maxlength="20" size="22">
+      --
+      <input type="text" class="col_any" name="data_char2" value="${data_char2}" zEdit="any,canTw" maxlength="20" size="22">
+   </td>
+   <td nowrap class="list_ll" colspan="3">數字:
+      <input type="text" class="col_number" name="data_num1" value="${data_num1}" zEdit="number" maxlength="17" size="19">
+      --
+      <input type="text" class="col_number" name="data_num2" value="${data_num2}" zEdit="number" maxlength="17" size="19">
+   </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+$("#detl_btnAdd").click(function(){
+	var li_cond_data_seq =$("#ex_cond_data_seq").val();
+	var ls_trial_type =$("#ex_trial_type").val();
+	var ls_tt_trial_type =$("#ex_trial_type option:selected").text();
+   var ls_dsp_color =$("#ex_dsp_color").val();
+  if(isNaN(li_cond_data_seq)==true || li_cond_data_seq.trim()==''){
+      alert("條件序號:只可輸入數字, 不可空白！")
+      return;
+   }
+
+  rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+   	$("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='N' name='apr_flag' />"
+      +"<input type='hidden' value='"+li_cond_data_seq+"' name='cond_data_seq' />"
+      +"<input type='hidden' value='"+ls_trial_type+"' name='trial_type' />"
+      +"<input type='hidden' value='"+ls_tt_trial_type+"' name='tt_trial_type' />"
+      +"<input type='hidden' value='"+ls_dsp_color+"' name='dsp_color' />"
+      +"<input type='hidden' value='' name='cond_code' />"
+      +"<input type='hidden' value='' name='data_type' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>&nbsp;N"
+      +"<td nowrap class='list_cc'>"+li_cond_data_seq
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_tt_trial_type
+      +"</td>"
+      +"<td nowrap class='list_ll'>"
+      +"<input type='text' class='col_any' name='cond_data_desc' value='' maxlength='40' size='42' zEdit='any,canTw' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='text' class='col_number' name='data_score' value='' maxlength='13' size='15'  zEdit='dignumber' />"
+      +"</td>"
+      +"<td nowrap class='list_cc' colspan='2' style='background-color:rgb("+ls_dsp_color+")' >&nbsp;"
+      +"</td>"
+      +"</tr>"
+      +"<tr>"
+      +"<td nowrap class='list_no' colspan='2'>&nbsp;</td>"
+      +"<td nowrap class='list_ll' colspan='2'>文字:"
+      +"<input type='text' class='col_any' name='data_char1'  value='' maxlength='20' size='22' zEdit='any,canTw' />"
+      +"--"
+      +"<input type='text' class='col_any' name='data_char2'  value='' maxlength='20' size='22' zEdit='any,canTw' />"
+      +"</td>"
+      +"<td nowrap class='list_ll' colspan='3'>數值:"
+      +"<input type='text' class='col_number' name='data_num1'  value='' maxlength='17' size='19' zEdit='number' />"
+      +"--"
+      +"<input type='text' class='col_number' name='data_num2'  value='' maxlength='17' size='19' zEdit='number' />"
+      +"</td>"
+      +"</tr>"
+   );
+    //-clear-
+   $("#ex_cond_data_seq").val('');
+   $("#ex_trial_type").val('');
+   });
+
+</script>

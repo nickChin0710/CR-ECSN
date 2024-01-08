@@ -1,0 +1,119 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-01-05  V1.00.02    JustinWu    updated for XSS                       -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>循環信用利率對照表維護-110-01-05-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;信評等級：
+          <select size="1" name="ex_credit_rating" class="col_ddlb">
+                <option value="0" ${ex_credit_rating-0} >--</option>
+                <option value="01" ${ex_credit_rating-01} >1.01</option>
+                <option value="02" ${ex_credit_rating-02} >2.02</option>
+                <option value="03" ${ex_credit_rating-03} >3.03</option>
+                <option value="04" ${ex_credit_rating-04} >4.04</option>
+                <option value="05" ${ex_credit_rating-05} >5.05</option>
+                <option value="06" ${ex_credit_rating-06} >6.06</option>
+                <option value="07" ${ex_credit_rating-07} >7.07</option>
+                <option value="08" ${ex_credit_rating-08} >8.08</option>
+                <option value="D" ${ex_credit_rating-D} >9.D</option>           
+            </select> 
+   </td>
+     <td nowrap colspan="2">&nbsp;持卡年限：
+            <select size="1" name="ex_holding_period" class="col_ddlb">
+                <option value="0" ${ex_holding_period-0} >--</option>
+                <option value="&gt=N" ${ex_holding_period-&gt=N} >1.&gt=N</option>
+                <option value="&ltN" ${ex_holding_period-&ltN} >2.&ltN</option>
+                <option value="X" ${ex_holding_period-X} >3.X</option>
+            </select> 
+        </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">信評等級&nbsp;</th>
+    <th nowrap class="list_th">持卡年限 N=5&nbsp;</th>
+    <th nowrap class="list_th">級數&nbsp;</th>
+    <th nowrap class="list_th">年利率 %&nbsp;</th>
+    <th nowrap class="list_th">日利率 /10000&nbsp;</th>   
+    <th nowrap class="list_th">日利率-減碼 /10000&nbsp;</th> 
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${credit_rating}','${holding_period}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${credit_rating}&nbsp;</td>
+   <td nowrap class="list_cc"> ${holding_period}&nbsp;</td>
+   <td nowrap class="list_cc"> ${rating}&nbsp;</td>
+   <td nowrap class="list_cc"> ${rcrate_year}&nbsp;</td>
+   <td nowrap class="list_cc"> ${rcrate_day_plus}&nbsp;</td> 
+   <td nowrap class="list_cc"> ${rcrate_day}&nbsp;</td> 
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0010_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0010_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

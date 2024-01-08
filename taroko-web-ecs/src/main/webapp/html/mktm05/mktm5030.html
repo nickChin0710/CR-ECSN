@@ -1,0 +1,273 @@
+<html>
+<head>
+<title>行銷DS招攬每卡換算點數參數維護 V20191213</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>     
+  <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+  <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;    
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>  	
+  	<td nowrap colspan="2" >&nbsp;全新卡友天數: <span class="dsp_key">未申請本行正卡</span>
+  		<!-- <input type="text" class="col_number" name="new_card_days" value="${new_card_days}" maxlength="3" size="5" zEdit="number" > -->
+  		<span class="dsp_remark">(同時核卡時，取高點數為第一卡。才會使用下面對照表去取得點數。)</span>
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;加辦正卡點數:
+  		<input type="text" class="col_number" name="add_card_point" value="${add_card_point}" maxlength="5" size="7" zEdit="dignumber" >
+  		<span class="dsp_remark">(同一卡友最多可以加辦)</span>
+  	</td>
+  	<td nowrap >&nbsp;附卡點數:
+  		<input type="text" class="col_number" name="sup_card_point" value="${sup_card_point}" maxlength="5" size="7" zEdit="dignumber" >
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2">&nbsp;最多可辦N張正卡(含原本的正卡):
+  		<input type="text" class="col_number" name="add_card_max" value="${add_card_max}" maxlength="3" size="5" zEdit="number" >
+  	</td>
+  	<!-- <td nowrap >&nbsp;附卡加贈最多卡數:
+  		<input type="text" class="col_number" name="sup_card_max" value="${sup_card_max}" maxlength="3" size="5" zEdit="number" >
+  	</td> -->
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;正卡比對不到點數:
+  		<input type="text" class="col_number" name="no_match_point" value="${no_match_point}" maxlength="5" size="7" zEdit="dignumber" >
+  		<span class="dsp_remark">(全新卡第一張卡)</span>
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;覆核日期:
+  		<span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+  		<input type="hidden" name="apr_date" value="${apr_date}">
+  	</td>
+  	<td nowrap >&nbsp;覆核人員:
+  		<span class="dsp_text">${apr_user}&nbsp;</span>
+  		<input type="hidden" name="apr_user" value="${apr_user}">
+  	</td>
+  </tr>
+</table>
+</div>
+ <br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap class="list_ll" colspan="8" >&nbsp; 			
+ 			團體代號：
+      <select size=1 id="ex_group_code" class="col_ddlb">
+      	<option value="">--</option>
+       ${dddw_group_code}
+     	</select>&nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" ${btnUpdate_disable} />
+        &nbsp;IND_NUM=${ind_num} 
+      <input type="hidden" name="ind_num" value="${ind_num}">
+      </td>
+    </tr>
+    <tr>
+      <td nowrap class="list_ll" colspan="8">&nbsp;
+    	地點代號:
+ 			<input type="text" class="col_text" id="ex_place" name="ex_place" value="${ex_place}" maxlength="10" size="12" zEdit="alphanum,upper" >
+ 			地點代號說明:
+ 			<input type="text" class="col_any" id="ex_remark" name="ex_remark" value="${ex_remark}" maxlength="30" size="32" zEdit="any,canTw" >
+ 	<!--		<input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" ${btnUpdate_disable} />
+      &nbsp;IND_NUM=${ind_num} 
+      <input type="hidden" name="ind_num" value="${ind_num}"> -->   
+    </td>        
+ 	</tr> 	
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 		<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	刪除
+	 	</th>
+    <th nowrap >團體代號&nbsp;</th>
+    <th nowrap >地點&nbsp;</th>
+    <th nowrap >地點說明&nbsp;</th>    
+    <th nowrap >點數&nbsp;</th>    
+    <th nowrap >備註&nbsp;</th>    
+    <th nowrap >維護日期&nbsp;</th>       
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+		 	 ${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}" />						
+			<input type="hidden" name="data_code1" value="${data_code1}" />						
+			<input type="hidden" name="data_code2" value="${data_code2}" />						
+			<input type="hidden" name="data_remark2" value="${data_remark2}" />						
+			<input type="hidden" name="mod_date" value="${mod_date}" />						
+			<input type="hidden" name="promote_type" value="${promote_type}" />	
+			<input type="hidden" name="data_code12" value="${data_code12}"/>
+	 </td>
+	 <td nowrap class="list_cc">&nbsp;${data_code1}</td>
+	 <td nowrap class="list_cc">&nbsp;${data_code2}</td>
+	 <td nowrap class="list_ll">&nbsp;${data_remark2}</td>
+	 <td nowrap class="list_rr"> 
+	 		<input type="text" class="col_number" name="add_point1" value="${add_point1}" maxlength="5" size="7" zEdit="dignumber" >	 			
+	 </td>	 
+	 <td nowrap class="list_ll">
+	 		<input type="text" class="col_any" name="data_remark1" value="${data_remark1}" maxlength="60" size="62" zEdit="any,canTw" >
+	 </td>
+	 <td nowrap class="list_cc">&nbsp;${mod_date.YMD}</td>
+	 
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="param_type" value="1">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="mktm5030">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="valid_date" value="00000000">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+	
+	function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+  $("#detl_btnAdd").click(function(){	  	
+  	var ls_data_code1 =$("#ex_group_code").val();		
+		var ls_data_code2 = $("#ex_place").val().toUpperCase();
+		var ls_remark_1 = $("#ex_remark").val();
+		var ls_promote_type = "";
+		
+		if(ls_data_code1 =='' && ls_data_code2 ==''){
+			alert("團體代號 , 地點 不可同時空白");
+			return;
+		}
+  	
+  	if(ls_data_code1 !='' && ls_data_code2 !='' ){
+  		ls_promote_type = "01";  		
+  	}	else if (ls_data_code1 !=''){
+  		ls_promote_type = "02";
+  	}	else if (ls_data_code2 !=''){
+  		ls_promote_type = "03";
+  	}
+  	  	  	  	
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+		 	 
+	 	$("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"       
+      +"<input type='hidden' value='"+ls_data_code1+"' name='data_code1' />" 
+      +"<input type='hidden' value='"+ls_data_code2+"' name='data_code2' />" 
+      +"<input type='hidden' value='"+ls_remark_1+"' name='data_remark2' />" 
+      +"<input type='hidden' value='"+ls_promote_type+"' name='promote_type' />" 
+      +"<input type='hidden' value='"+ls_data_code1+ls_data_code2+"' name='data_code12' />" 
+      +"</td>"     
+      +"<td nowrap class='list_cc'>"+ls_data_code1      
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code2    
+      +"</td>"
+      +"<td nowrap class='list_ll'>"+ls_remark_1      
+      +"</td>"
+      +"<td nowrap class='list_rr' >"
+      +"<input type='text' class='col_number' name='add_point1' value='' maxlength='5' size='7' zEdit='dignumber' "
+      +"</td>"
+      +"<td nowrap class='list_ll' >"
+      +"<input type='text' class='col_any' name='data_remark1' value='' maxlength='60' size='62' zEdit='any,canTw' "
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"</td>"      
+      +"</tr>"
+   );
+	    
+	$("#ex_group_code").val('');
+	$("#ex_place").val('');
+	$("#ex_remark").val('');
+   
+  });  
+  
+  
+</script>

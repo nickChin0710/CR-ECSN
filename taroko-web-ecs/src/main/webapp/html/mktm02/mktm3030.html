@@ -1,0 +1,147 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--  110/09/17  V1.00.00   Yang Bo                   initial                 -->
+<!--  112/03/20  V1.00.01   Yang Bo           add approval feature            -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>員工招攬信用卡消費回饋獎勵金參數維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user}
+    <div id="condBlock">
+        <!-- query key *************************************************************-->
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >&nbsp;專案代碼:
+                    <input type="text" class="col_date" name="ex_proj_code" value="${ex_proj_code}" maxlength="10" size="12" />
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+                    <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+                    <input type="Button"  value="覆核" onClick="return top.submitControl('C1')" class="btProcess" />&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >&nbsp;專案日期:
+                    <input type="text" class="col_date" name="ex_proj_date1" value="${ex_proj_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'ex_proj_date1'});
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="ex_proj_date2" value="${ex_proj_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'ex_proj_date2'});
+                    </script>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!-- browse ************************************************************** -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+            <th nowrap width="10%">
+                <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+                覆核
+            </th>
+            <th nowrap >專案代碼&nbsp;</th>
+            <th nowrap >專案說明&nbsp;</th>
+            <th nowrap >專案狀態&nbsp;</th>
+            <th nowrap >消費金額累積方式&nbsp;</th>
+            <th nowrap >專案起始日&nbsp;</th>
+            <th nowrap >專案截止日&nbsp;</th>
+            <th nowrap >已覆核&nbsp;</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no">
+                <span class="dsp_flag">${ok_flag}</span>
+                <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="ser_num" value="${ser_num}" />
+                <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+                <input type="hidden" name="rowid" value="${rowid}">
+                <img src="images/btnQuery.gif" width="20" height="15"  onclick="detailScreen('${SER_NUM}','${rowid}','${proj_code}','${apr_flag}')" style="cursor:hand">
+            </td>
+            <td nowrap class="list_cc"> ${proj_code}&nbsp;
+                <input type="hidden" name="proj_code" value="${proj_code}">
+            </td>
+            <td nowrap class="list_ll"> ${proj_desc}&nbsp;
+                <input type="hidden" name="proj_desc" value="${proj_desc}">
+            </td>
+            <td nowrap class="list_cc"> ${active_status}&nbsp;
+                <input type="hidden" name="active_status" value="${active_status}">
+            </td>
+            <td nowrap class="list_cc"> ${consume_type}&nbsp;
+                <input type="hidden" name="consume_type" value="${consume_type}">
+            </td>
+            <td nowrap class="list_cc"> ${apply_date_s.YMD}&nbsp;
+                <input type="hidden" name="apply_date_s" value="${apply_date_s}">
+            </td>
+            <td nowrap class="list_cc"> ${apply_date_e.YMD}&nbsp;
+                <input type="hidden" name="apply_date_e" value="${apply_date_e}">
+            </td>
+            <td nowrap class="list_cc"> ${apr_flag}&nbsp;
+                <input type="hidden" name="apr_flag" value="${apr_flag}">
+            </td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <!-- hidden ************************************************************** -->
+    <input type="hidden"  name="data_k1" value="" />
+    <input type="hidden"  name="data_k2" value="" />
+    <input type="hidden"  name="data_k3" value="" />
+    <input type="hidden"  name="mod_pgm" value="Mktm3030" />
+    <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+    <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<!-- script2 ************************************************************* -->
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows="20";
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+
+        if (top.actionCode === "X") {
+            top.respLevel = 1;
+            top.respHtml = "mktm3030_detl";
+        }
+        return true;
+    }
+
+    function detailScreen(serNum, row_id, proj_code, apr_flag) {
+        top.respLevel = 1;
+        top.currRows  = serNum;
+        document.dataForm.data_k1.value = row_id;
+        document.dataForm.data_k2.value = proj_code;
+        document.dataForm.data_k3.value = apr_flag;
+        top.respHtml  = "mktm3030_detl";
+        top.submitControl('S');
+        return true;
+    }
+</script>
+<!-- ******************************************************************** -->

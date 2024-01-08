@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>DS主管名單及代號設定維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證字號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+   </td>
+   <td nowrap  >&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />      
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	       </script>
+	      --
+	    <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	       </script>
+	    &nbsp;
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button"  value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;DS員編:
+  		<input type="text" class="col_text" name="ex_mangr_id" value="${ex_mangr_id}" maxlength="10" size="12" zEdit="alphanum,upper" >
+  	</td>
+  	<td nowrap >&nbsp;業務姓名:
+  		<input type="text" class="col_any" name="ex_mangr_name" value="${ex_mangr_name}" maxlength="10" size="12" zEdit="any,canTw" >
+  	</td>
+  	<td nowrap >&nbsp;
+  		<span class="col_radio">
+  			 <input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT-ex_apr_flag} />全部
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+      </span>
+		</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 		<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	覆核
+	 </th>	 
+	 <th nowrap >DS業務主管代號&nbsp;</th>
+	 <th nowrap >業務主管姓名&nbsp;</th>	 
+	 <th nowrap >身分證字號&nbsp;</th>
+	 <th nowrap >維護人員&nbsp;</th>
+	 <th nowrap >維護日期&nbsp;</th>
+	 <th nowrap >覆核人員&nbsp;</th>
+	 <th nowrap >覆核日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+		<span class="dsp_flag">${ok_flag}</span>
+		<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+	 	 ${SER_NUM}&nbsp;
+		<input type="hidden" name="ser_num" value="${ser_num}" />		
+		<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${mangr_id}','${apr_flag}','');" style="cursor:hand">	
+		<input type="hidden" name="apr_flag" value="${apr_flag}">
+	 </td>
+	 <td nowrap class="list_cc">${mangr_id}&nbsp;
+	 	<input type="hidden" name="mangr_id" value="${mangr_id}">
+	 </td>
+	 <td nowrap class="list_cc">${mangr_cname}&nbsp;
+	 	<input type="hidden" name="mangr_cname" value="${mangr_cname}">
+	 </td>	 
+	 <td nowrap class="list_cc">${id_no}&nbsp;
+	 	<input type="hidden" name="id_no" value="${id_no}">
+	 </td>
+	 <td nowrap class="list_cc">${mod_user}&nbsp;
+	 	<input type="hidden" name="mod_user" value="${mod_user}">
+	 </td>
+	 <td nowrap class="list_cc">${mod_date.YMD}&nbsp;
+	 	<input type="hidden" name="mod_date" value="${mod_date}">
+	 </td>
+	 <td nowrap class="list_cc">${apr_user}&nbsp;
+	 	<input type="hidden" name="apr_user" value="${apr_user}">
+	 </td>
+	 <td nowrap class="list_cc">${apr_date.YMD}&nbsp;
+	 	<input type="hidden" name="apr_date" value="${apr_date}">
+	 </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm5010_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "mktm5010_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+  function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

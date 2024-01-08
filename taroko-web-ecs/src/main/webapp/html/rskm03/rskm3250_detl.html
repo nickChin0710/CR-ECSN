@@ -1,0 +1,221 @@
+<html>
+<head>
+<title>偽冒爭議款案件分派維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;案件流水號:
+      <input type="text" class="col_text" name="kk_case_no" value="${kk_case_no}" maxlength="15" size="17" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;案件流水號:
+      <span class="dsp_text">${case_no}&nbsp;</span>
+      <input type="hidden" name="case_no" value="${case_no}">
+   </td>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="card_no" value="${card_no}" maxlength="19" size="21" zRequire="Y" onChange="cardnoChange('1')" >
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;持卡人姓名:      
+      <input type="text" class="col_text" id="idno_name"  name="db_idno_name" value="${db_idno_name}" disabled >
+      
+   </td>
+   <td nowrap >&nbsp;正卡 ID:
+      <input type="text" class="col_text" name="idno" id="id_idno" value="${idno}" maxlength="10" size="12" zRequire="Y" onChange="idnoChange('2')"  >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;分派日期:      
+      <input type="text" class="col_date" name="assign_date" value="${assign_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'assign_date'});
+	      </script>	      
+	</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;處理經辦:
+      <select size="1" name="proc_user" class="col_ddlb" >
+      	<option value="">--</option>
+            ${dddw_rskid_desc2}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;案件來源:
+      <input type=text class="col_any" id="source_type" name="source_type" value="${source_type}" 
+            zeditType="any,canTW" maxlength="60" size="60" /> 
+      <input type="Button" class="btOther" id="btn_adjcommt" value="..." onClick="wf_adj_comment()">
+   </td>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >  
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<div id="dlg_adj_comment">
+    <table border="0">
+        <tr><td>&nbsp;Source:
+         <select size="1" id="ddlb_source_type" name="ddlb_source_type" class="col_ddlb" >
+            ${d_dddw_idtab3}
+         </select>
+        </td><tr>
+    </table>
+</div>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+<input type="hidden" name="selectflag" value="${selectflag}" />
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ $(document).ready(function () {
+     $("#dlg_adj_comment").dialog({
+         title:'Source select',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         //height: 200,
+         //width: 300,
+         buttons: {
+             "確定": function() {               
+                 $("#source_type").val($('#ddlb_source_type').val()); 
+                 $(this).dialog("close");
+             },
+             "取消": function () {
+                 $(this).dialog("close");
+             }
+         }
+     });
+
+ });
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+  function wf_adj_comment() {
+	 $("#dlg_adj_comment").dialog("open");
+ }
+  
+   function cardnoChange(ps1)
+ {
+	var  card_no =document.forms["dataForm"]["card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+	idCode = ps1;
+  top.actionCode = "AJAX";
+/*  // 2020/01/02 updated for archit.  change
+   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_cardno";
+   }*/
+
+	resetJSON();
+	addJSON("ax_card_no",card_no);
+  addJSON("idCode",idCode);
+	processAJAX();
+ }
+
+function idnoChange(ps1)
+ {
+   
+	var  id_no =document.forms["dataForm"]["idno"].value;
+	if ( id_no === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX";
+/*  // 2020/01/02 updated for archit.  change
+   if ( idCode === '2' ) { 
+		top.methodName = "wf_ajax_idno";
+   }*/
+
+	resetJSON();
+	addJSON("ax_id_no",id_no);
+  addJSON("idCode",idCode);
+	processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+	top.respHtml ="rskm3250_detl";
+   top.requHtml ="rskm3250_detl";
+
+	if  ( idCode === '1' ) {
+      var idno =getJSONvalue("id_no",0);
+      if (idno.length>0) { 
+         $("#id_idno").val(idno); 
+      }
+      var db_idno_name=getJSONvalue("db_idno_name",0);
+      if (db_idno_name.length>0) {
+         $("#idno_name").val(db_idno_name); 
+      }
+	}	
+	
+	if  ( idCode === '2' ) {      
+      var db_idno_name=getJSONvalue("db_idno_name",0);
+      if (db_idno_name.length>0) {
+         $("#idno_name").val(db_idno_name); 
+      }
+	}
+
+	if ( idCode === '2' || idCode === '1' )
+	{ return false; }
+ }    
+  
+</script>

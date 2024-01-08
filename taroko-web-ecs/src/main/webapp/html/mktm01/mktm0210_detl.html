@@ -1,0 +1,558 @@
+<head>
+    <title>消費回饋聯名機構參數維護-detl-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <!-- Button **************************************************************-->
+            <tr>
+                <td width="80">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')"  class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value="修改" ${btnUpdate_disable}  onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"  value="刪除" ${btnDelete_disable} ${d_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <!-- Key data************************************************************ -->
+            <table width="80%" border="" cellspacing="" cellpadding="">
+                <tr>
+                    <td nowrap>&nbsp;團體代號:
+                        <select style="width:50%" name="kk_group_code" ${kk_group_code} class="col_ddlb" onChange="chang1(this.value);">
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data********************************************************* -->
+            <table width="80%" border="" cellspacing="" cellpadding="">
+                <tr>
+                    <td nowrap colspan="12">
+                        &nbsp;團體代號:&nbsp;
+                        <span class="dsp_text" id="group_code">${group_code}</span>
+                        &nbsp;覆核註記:&nbsp;${apr_flag}&nbsp;
+                        &nbsp;日期:&nbsp;${apr_date}&nbsp;
+                        &nbsp;放行狀態:&nbsp;${app_flag}&nbsp;
+                        <input type="hidden" name="group_code" value="${group_code}" />
+                        <input type="hidden" name="apr_flag" value="${apr_flag}" />
+                        <input type="hidden" name="apr_date" value="${apr_date}" />
+                        <input type="hidden" name="app_flag" value="${app_flag}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan="12">&nbsp;說明:
+                        <input type="text" class="col_any" name="description" value="${description}" zEdit="any,canTW" maxlength=30 size=30 zRequire ="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">回饋方式:
+                        <br>
+                        &nbsp;<input type="radio" value="1" name="reward_type" ${reward_type-1} ${DEFAULT_CHK} onChange="chang();"/>按消費總金額
+                        &nbsp;&nbsp;<input type="Button" class="btOther"  value="排除特店群組設定" onClick="return mcht_group_out()">${mchtout_cnt}
+                        &nbsp;&nbsp;<input type="Button" class="btOther"  value="排除特店代號設定" onClick="return mcht_out()">
+                        &nbsp;&nbsp;<img src="images/uperLoad.gif" onclick="return upload_click('2')" style="cursor: hand;margin-bottom: -7px;" />
+                        <br>
+                        &nbsp;<input type="radio" value="2" name="reward_type" ${reward_type-2} onChange="chang();"/>依店內/店外消費金額
+                        &nbsp;&nbsp;<input type="Button" class="btOther"  value="店内特店群組設定" onClick="return mcht_group()">${mcht_group_cnt}
+                        &nbsp;&nbsp;<input type="Button" class="btOther"  value="POS終端機代碼設定" onClick="return mcht_POS_in()">
+                        <br>
+                        &nbsp;<input type="radio" value="0" name="reward_type" ${reward_type-0} onChange="chang();"/>不產生
+                        &nbsp;
+                        <br>
+                        <hr>
+                        &nbsp;&nbsp;&nbsp;&nbsp;回饋比例計算方式:
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="1" name="present_type" ${present_type-1} ${DEFAULT_CHK} />條件式
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="2" name="present_type" ${present_type-2} />級距式 
+                        <br>
+                        <!-- &nbsp;&nbsp;&nbsp;&nbsp;<input type="Button" class="btOther"  value="排除特店群組設定" onClick="return mcht_group_out()"> -->
+                    </td>
+                    <td nowrap colspan="6">消費金額累積條件:&nbsp;
+                        <br>
+                        &nbsp;<input type="checkbox" value="1" name="item_ename_bl" id="item_ename_bl"  ${item_ename_bl-1} />&nbsp; 簽帳款
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="1" name="item_ename_bl_in" id="item_ename_bl_in" disabled="disabled" ${item_ename_bl_in-1}>&nbsp; 店內
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="1" name="item_ename_bl_out" id="item_ename_bl_out" disabled="disabled" ${item_ename_bl_out-1}>&nbsp; 店外
+                        <br>
+                        &nbsp;<input type="checkbox" value="1" name="item_ename_ca"  ${item_ename_ca-1}>&nbsp; 預借現金
+                        <br>
+                        &nbsp;<input type="checkbox" value="1" name="item_ename_id"  ${item_ename_id-1}>&nbsp; 代收款
+                        <br>
+                        &nbsp;<input type="checkbox" value="1" name="item_ename_ao"  ${item_ename_ao-1}>&nbsp; 餘額代償
+                        <br>
+                        &nbsp;<input type="checkbox" value="1" name="item_ename_it"  id="item_ename_it" ${item_ename_it-1} >&nbsp; 分期付款
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="1" name="item_ename_it_in" id="item_ename_it_in" disabled="disabled" ${item_ename_bl_in-1}>&nbsp; 店內
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="1" name="item_ename_it_out" id="item_ename_it_out" disabled="disabled" ${item_ename_bl_out-1}>&nbsp; 店外
+                        <br>
+                        &nbsp;<input type="checkbox" value="1" name="item_ename_ot" ${item_ename_ot-1}>&nbsp; 其他應收款
+                        <br>
+                        <br>
+                        <br>
+                    </td>
+                </tr>               
+                <tr>
+                    <td nowrap colspan="12">消費計算方式:&nbsp;
+                        <input type="radio" value="0" name="purch_date_type" ${purch_date_type-0} checked="checked" />依關帳年月&nbsp;&nbsp;
+                        <input type="radio" value="1" name="purch_date_type" ${purch_date_type-1} />&nbsp;依消費日，每月
+                        <input type="text" class="col_number" name="run_time_dd" value="${run_time_dd}" zEdit="number" maxlength="2" size="2" />&nbsp;日執行
+                    </td>
+                </tr>
+            </table>
+            <table width="80%" border="" cellspacing="" cellpadding="">
+                <tr>
+                    <td nowrap colspan="12">&nbsp;1.按消費總金額,扣除例外金額:
+                        <input type="text" class="col_number" name="base_amt_1" value="${base_amt_1}" zEdit="number" maxlength="12" size="12" /> 元後按下列比率提撥回饋金額
+                    </td>
+                </tr>
+                <tr>
+                    <th nowrap colspan="3" class="list_th">區間編號</th>
+                    <th nowrap colspan="3" class="list_th">消費總金額累積的區間範圍</th>
+                    <th nowrap colspan="3" class="list_th">回饋比例一</th>
+                    <th nowrap colspan="3" class="list_th">回饋比例二</th>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">一</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="purch_amt_s_a1" value="${purch_amt_s_a1}" zEdit="number" maxlength="12" size="12" />萬元~
+                        <input type="text" class="col_number" name="purch_amt_e_a1" value="${purch_amt_e_a1}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a1" value="${rate_a1.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a12" value="${rate_a12.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">二</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="purch_amt_s_a2" value="${purch_amt_s_a2}" zEdit="number" maxlength="12" size="12" />萬元~
+                        <input type="text" class="col_number" name="purch_amt_e_a2" value="${purch_amt_e_a2}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a2" value="${rate_a2.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a22" value="${rate_a22.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">三</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="purch_amt_s_a3" value="${purch_amt_s_a3}" zEdit="number" maxlength="12" size="12" />萬元~
+                        <input type="text" class="col_number" name="purch_amt_e_a3" value="${purch_amt_e_a3}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a3" value="${rate_a3.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a32" value="${rate_a32.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">四</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="purch_amt_s_a4" value="${purch_amt_s_a4}" zEdit="number" maxlength="12" size="12" />萬元~
+                        <input type="text" class="col_number" name="purch_amt_e_a4" value="${purch_amt_e_a4}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a4" value="${rate_a4.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a42" value="${rate_a42.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">五</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="purch_amt_s_a5" value="${purch_amt_s_a5}" zEdit="number" maxlength="12" size="12" />萬元~
+                        <input type="text" class="col_number" name="purch_amt_e_a5" value="${purch_amt_e_a5}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a5" value="${rate_a5.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="rate_a52" value="${rate_a52.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+            </table>
+            <table width="80%" border="" cellspacing="" cellpadding="">
+                <tr>
+                    <td nowrap colspan="12">&nbsp;2.將消費總金額依店內/外消費,按下例比率提撥回饋金額：</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">&nbsp;&nbsp;a. 店內回饋比率：                        
+                        <!-- <input type="Button" class="btOther" name="btn_mchtout" value="店內特店代號" onClick="return mcht_in()">
+                        <img src="images/uperLoad.gif" onclick="return upload_click('1')" style="cursor:hand" /> -->
+                    </td>
+                </tr>
+                <tr>
+                    <th nowrap colspan="3" class="list_th">區間編號</th>
+                    <th nowrap colspan="3" class="list_th">消費總金額累積的區間範圍</th>
+                    <th nowrap colspan="3" class="list_th">回饋比例一</th>
+                    <th nowrap colspan="3" class="list_th">回饋比例二</th>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">一</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_amt_s_1" value="${int_amt_s_1}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="int_amt_e_1" value="${int_amt_e_1}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_1" value="${int_rate_1.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_12" value="${int_rate_12.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">二</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_amt_s_2" value="${int_amt_s_2}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="int_amt_e_2" value="${int_amt_e_2}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_2" value="${int_rate_2.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_22" value="${int_rate_22.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">三</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_amt_s_3" value="${int_amt_s_3}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="int_amt_e_3" value="${int_amt_e_3}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_3" value="${int_rate_3.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_32" value="${int_rate_32.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">四</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_amt_s_4" value="${int_amt_s_4}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="int_amt_e_4" value="${int_amt_e_4}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_4" value="${int_rate_4.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_42" value="${int_rate_42.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">五</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_amt_s_5" value="${int_amt_s_5}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="int_amt_e_5" value="${int_amt_e_5}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_5" value="${int_rate_5.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="int_rate_52" value="${int_rate_52.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">&nbsp;&nbsp;b. 店外回饋比率：</td>
+                </tr>
+                <tr>
+                    <th nowrap colspan="3" class="list_th">區間編號</th>
+                    <th nowrap colspan="3" class="list_th">消費總金額累積的區間範圍</th>
+                    <th nowrap colspan="3" class="list_th">回饋比例一</th>
+                    <th nowrap colspan="3" class="list_th">回饋比例二</th>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">一</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_amt_s_1" value="${out_amt_s_1}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="out_amt_e_1" value="${out_amt_e_1}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_1" value="${out_rate_1.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_12" value="${out_rate_12.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">二</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_amt_s_2" value="${out_amt_s_2}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="out_amt_e_2" value="${out_amt_e_2}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_2" value="${out_rate_2.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_22" value="${out_rate_22.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">三</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_amt_s_3" value="${out_amt_s_3}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="out_amt_e_3" value="${out_amt_e_3}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_3" value="${out_rate_3.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_32" value="${out_rate_32.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">四</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_amt_s_4" value="${out_amt_s_4}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="out_amt_e_4" value="${out_amt_e_4}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_4" value="${out_rate_4.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_42" value="${out_rate_42.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3" align="center">五</td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_amt_s_5" value="${out_amt_s_5}" zEdit="number" maxlength="12" size="12" />萬元 ~
+                        <input type="text" class="col_number" name="out_amt_e_5" value="${out_amt_e_5}" zEdit="number" maxlength="12" size="12" />萬元(含)
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_5" value="${out_rate_5.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="col_number" name="out_rate_52" value="${out_rate_52.(999.000)}" onchange="checkPercent(this)" zEdit="dignumber" maxlength="12" size="12" />%
+                    </td>
+                </tr>
+            </table>
+            <!-- trail ************************************************************** -->
+            <input type="hidden" name="rowid" value="${rowid}">  
+            <input type="hidden" name="h_item_ename_bl" value="${item_ename_bl}">            
+            <input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+            <input type="hidden" id="program_code" name="program_code" value="${program_code}">
+            <input type="hidden" name="MOD_PGM" value="mktm0210">
+            <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+            <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+            <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+            <input type="hidden" name="pageType" value="detl">
+            <input type="hidden" name="data_k1" value="">
+            <input type="hidden" name="data_k2" value="">
+            <input type="hidden" name="data_k3" value="">
+            <input type="hidden" name="data_m1" value="">
+            <input type="hidden" name="data_n1" value="">
+            <input type="text" class="dsp_text" name="zz_file_name" value="" zEdit="any,canTw" readonly />
+            <input type="hidden" name="upload_file" value="" />
+            <input type="hidden" id="conf_1" name="conf_1"  value="${conf_1}">
+            <input type="hidden" id="conf_2" name="conf_2"  value="${conf_2}">
+    </form>
+    <div id="disDiv" class="disScreen"></div>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+chang();
+//数据重复插入确定
+checkOverride();
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    var actionCode = top.actionCode;
+    if (actionCode == 'R1' || actionCode == 'R2' 
+    		|| actionCode == 'R3' || actionCode == 'R_POS') {
+    	return true;
+    }
+    
+    if(top.actionCode=='U' && "${apr_flag}"=="Y"){
+    	if(confirm("資料已存在.是否要異動")==true){
+    		 $("#conf_2").val("Y");
+   		}else{
+   			return;
+   		}
+    }
+    return true;
+}
+
+function checkOverride(){
+	var conf1 = $("#conf_1").val();
+	var conf2 = $("#conf_2").val();
+	if(conf1=="true" && top.actionCode=="A"){
+		var ok = confirm("覆核資料已存在!!確定要新增");
+    	if(ok){
+    		$("#conf_2").val("Y");
+    	}else{
+    		$("#conf_2").val("N");
+    	}
+		top.submitControl('A');
+    }
+}
+
+
+function mcht_out(){
+    var pg_code = $("#program_code").val();
+    top.respLevel = 2;
+    document.dataForm.data_m1.value = pg_code;
+    top.respHtml = "mktm0210_mchtout";
+    top.submitControl('R3');
+    return true;
+}
+function mcht_in(){
+    var pg_code = $("#program_code").val();
+    top.respLevel = 2;
+    document.dataForm.data_n1.value = pg_code;
+    top.respHtml = "mktm0210_mchtin";
+    top.submitControl('R2');
+    return true;
+}
+function mcht_group_out(){
+    var pg_code = $("#program_code").val();
+    top.respLevel = 2;
+    document.dataForm.data_m1.value = pg_code;
+    top.respHtml = "mktm0210_mcht_group_out";
+    top.submitControl('R1');
+    return true;
+}
+function mcht_group(){
+    var group_code = $("#group_code").val();
+    top.respLevel = 2;
+    document.dataForm.data_n1.value = group_code;
+    top.respHtml = "mktm0210_mcht_group";
+    top.submitControl('R2');
+    return true;
+}
+function mcht_POS_in(){
+    var group_code = $("#group_code").val();
+    top.respLevel = 2;
+    document.dataForm.data_n1.value = group_code;
+    top.respHtml = "mktm0210_mcht_POS_in";
+    top.submitControl('R_POS');
+    return true;
+}
+
+function chang() {
+    var ss = $('input[name*=reward_type]:checked').val();
+	$('input[value=\"POS終端機代碼設定\"]')[0].disabled = ss == "2" ? false : true
+    if(ss == "1"){
+        document.getElementById('item_ename_bl_in').disabled = true;
+        document.getElementById('item_ename_bl_out').disabled = true;
+        document.getElementById('item_ename_it_in').disabled = true; 
+        document.getElementById('item_ename_it_out').disabled = true;
+        document.getElementById('item_ename_bl_in').checked = false;
+        document.getElementById('item_ename_bl_out').checked = false;
+        document.getElementById('item_ename_it_in').checked = false;
+        document.getElementById('item_ename_it_out').checked = false;   
+    }
+    if(ss == "2"){
+        document.getElementById('item_ename_bl_in').disabled = false;
+        document.getElementById('item_ename_bl_out').disabled = false;
+        document.getElementById('item_ename_it_in').disabled = false; 
+        document.getElementById('item_ename_it_out').disabled = false;
+    }
+    if(ss == "0"){
+        document.getElementById('item_ename_bl_in').disabled = true;
+        document.getElementById('item_ename_bl_out').disabled = true;
+        document.getElementById('item_ename_it_in').disabled = true; 
+        document.getElementById('item_ename_it_out').disabled = true;
+        document.getElementById('item_ename_bl_in').checked = false;
+        document.getElementById('item_ename_bl_out').checked = false;
+        document.getElementById('item_ename_it_in').checked = false;
+        document.getElementById('item_ename_it_out').checked = false;        
+    }          
+}
+
+function chang1(group_code) {
+    var ss =  $('input[name*=MOD_PGM]').val();
+    ss += '_'+group_code;
+    $('input[name*=description]').val(group_code);
+    $('input[name*=group_code]').val(group_code);
+    $("#group_code").text(group_code);
+    $('input[name*=program_code]').val(ss);
+}
+
+function upload_click(parm1) {
+    document.dataForm.zz_file_name.value = "";
+    document.dataForm.data_k1.value = parm1;
+    var parmHtml = "TarokoUpload";
+    var parmName = "upload_file,zz_file_name";
+    var windowSize = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName = "TarokoUpload";
+    top.methodName = "showScreen";
+    top.openWindow("", parmHtml, parmName, windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "mktm01";
+    top.javaName = "Mktm0210";
+    //methodName  = "actionFunction";
+    top.requHtml = "mktm0210_detl";
+    top.respHtml = "mktm0210_detl";
+    return true;
+}
+
+function wf_uploadAfter() {
+    var ss = document.dataForm.zz_file_name.value.trim();
+    if (ss.length > 0) {
+        top.submitControl('UPLOAD');
+    }
+}   
+
+// check 回饋比例 2 scale
+function checkPercent(e) {
+	var percent = e.value;
+	if (percent.length == 0) {
+		e.value = "0.00";
+		return;
+	}
+	var regPos = /^\d{0,}(\.\d{0,})?$/; //非负浮点数
+	if (!regPos.test(percent)) {
+		//e.value = "0.00";
+		alert("回饋比例必須為有效數字");
+		percent = percent.replace(/[^\d\.]/g, '');
+		if (isNaN(parseFloat(percent))) {
+			percent = "0.000";
+		}
+		e.value = percent;
+		e.focus();
+		return;
+	}
+	if (isNaN(parseFloat(percent)) || percent == '.') {
+		percent = "0.000";
+		e.value = percent;
+		return;
+	}
+	var pos = percent.indexOf(".");
+	var n = pos > -1 ? percent.substring(0, pos) : percent;
+	var d = pos > -1 ? percent.substring(pos+1) : "";
+	if (n.length > 4 || d.length > 3) {
+		alert("回饋比例整數不超過3位,小數只能輸入2位小數");
+		if (n.length > 4) {
+			n = n.substring(n.length - 4);
+		}
+		if (d.length > 3) {
+			d = d.substring(0, 3);
+		}
+		percent = n+"."+d;
+		e.value = parseFloat(percent);
+		e.focus();
+		return;
+	}
+}
+</script>

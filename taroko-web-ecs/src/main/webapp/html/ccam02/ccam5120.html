@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>REGION CODE 維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap> 卡別：
+      <select name="ex_bin_type" class="col_ddlb">
+      <option value="  ">  </option>
+      <option value="NCCC" ${ex_bin_type-NCCC} >NCCC</option>
+　    <option value="VISA" ${ex_bin_type-VISA} >VISA</option>
+　    <option value="MAST" ${ex_bin_type-MAST} >MAST</option>
+　    <option value="JCB" ${ex_bin_type-JCB} >JCB</option>
+   </td>
+   <td nowrap> Region 代碼：
+      <input type="text" class="col_text" name="ex_regn_code" value="${ex_regn_code}" maxlength="1" size="5" zEdit="alphanum,upper">
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th" >卡別&nbsp;</th>
+    <th nowrap class="list_th" >Region代碼&nbsp;</th>
+    <th nowrap class="list_th" >說明&nbsp;</th>
+    <th nowrap class="list_th" >異動日期&nbsp;</th>
+    <th nowrap class="list_th" >異動經辦&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${bin_type}','${regn_code}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+   <td nowrap class="list_cc"> ${bin_type}&nbsp;
+   <td nowrap class="list_cc"> ${regn_code}&nbsp;
+   <td nowrap class="list_ll"> ${regn_desc}&nbsp;
+   <td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;
+   <td nowrap class="list_cc"> ${mod_user}&nbsp;
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_bin_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5120_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5120_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

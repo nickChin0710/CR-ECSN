@@ -1,0 +1,114 @@
+<html>
+<head>
+<title>自動授權免開卡參數維護[authparm_active]-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>資料來源：
+      <select name="ex_data_source" class="col_ddlb">
+      <option value="">--</option>
+      <option value="A" ${ex_data_source-A} >A.IN HOUSE</option>
+      <option value="C" ${ex_data_source-C} >C.NCCC</option>
+      </select>
+   </td>
+   <td nowrap>&nbsp;MCC Code：
+      <input type="text" class="col_text" name="ex_mcc_code" value="${ex_mcc_code}"
+       maxlength=4 size=6 />
+   </td>
+   <td nowrap>&nbsp;</td>
+   <tr>
+   <td nowrap>收單行代號：
+      <input type="text" class="col_text" name="ex_acq_id" value="${ex_acq_id}" maxlength="15" size="17" zEdit="number">
+   </td>
+   <td nowrap>特店代號：
+      <input type="text" class="col_text" name="ex_mcht_no" value="${ex_mcht_no}" maxlength="15" size="17" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >資料來源</th>
+    <th nowrap >MCC Code</th>
+    <th nowrap >收單行代號</th>
+    <th nowrap >特店代號</th>
+    <th nowrap >產生日期</th>
+    <th nowrap >產生人員</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${data_source}','${mcc_code}','${acq_id}','${mcht_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${data_source}.${tt_data_source}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mcc_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acq_id}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mcht_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+ <input type="hidden"  name="data_k4" value="" />
+
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5370_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "ccam5370_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

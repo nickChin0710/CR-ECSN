@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>VISADeBit催收消費連續扣款失敗表-pond-V.2018-0706-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<style>
+.number{
+	color:blue;
+}
+</style>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+		 <td nowrap>&nbsp;扣款日期：
+      		<input type="text" class="col_date" name="ex_crdate_s" value="${ex_crdate_s}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crdate_s'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_crdate_e" value="${ex_crdate_e}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crdate_e'});
+	    	</script>
+   		</td>
+		<td nowrap>&nbsp;ID:
+			<input type="text" class="col_any" zEdit="any" name="ex_id" value="${ex_id}"
+      		maxlength="10" size="12" />
+		</td>
+		<td nowrap>&nbsp;金融卡帳號:
+			<input type="text" class="col_any" zEdit="any" name="ex_accno" value="${ex_accno}"
+      		maxlength="16" size="18"/>
+		</td>
+    </tr>
+    <tr>
+    	<td nowrap>&nbsp;消費卡號:<!--test card 4213330015682855 -->
+			<input type="text" class="col_any" zEdit="any" name="ex_cardno" value="${ex_cardno}"
+      		maxlength="19" size="21" />
+		</td>
+		<td nowrap>&nbsp;處理狀況:
+      		<span class="col_radio">
+         		<input type="radio" value="0" name="ex_deduct_type" ${ex_deduct_type-0} ${DEFAULT-ex_deduct_type} />全部
+         		<input type="radio" value="1" name="ex_deduct_type" ${ex_deduct_type-1} />成功
+         		<input type="radio" value="2" name="ex_deduct_type" ${ex_deduct_type-2} />逾放
+         		<input type="radio" value="3" name="ex_deduct_type" ${ex_deduct_type-3} />催收
+         		<input type="radio" value="4" name="ex_deduct_type" ${ex_deduct_type-4} />呆帳
+      		</span>
+   		</td>
+   		<td nowrap >&nbsp;  
+      		<input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+      		<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    	</td>
+    </tr>
+</table>
+</div>
+<hr>
+
+<!--Sum -->
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No</th>
+    	<th nowrap class="list_th">ID</th>
+    	<th nowrap class="list_th">中文姓名</th>
+    	<th nowrap class="list_th">扣款帳號</th>
+    	<th nowrap class="list_th">消費卡號</th>
+    	<th nowrap class="list_th">消費請款日</th>
+    	<th nowrap class="list_th">原始消費金額</th>
+    	<th nowrap class="list_th">扣款後剩餘欠款</th>
+    	<th nowrap class="list_th">目前處理狀況</th>
+    	<th nowrap class="list_th">轉催‧呆日期</th>
+    	<th nowrap class="list_th">公司電話</th>
+    	<th nowrap class="list_th">住家電話</th>
+    	<th nowrap class="list_th">手機</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr>
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+   		<td nowrap class="list_ll"> ${acct_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${item_post_date.YMD}&nbsp; </td>
+  		<td nowrap class="list_rr"> &nbsp;${beg_bal.(999)}</td>
+   		<td nowrap class="list_rr"> &nbsp;${end_bal.(999)} </td>
+   		<td nowrap class="list_ll"> ${tt_debt_status}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${db_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${db_oficeaddr}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${db_homeaddr}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${cellar_phone}&nbsp; </td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+	<tr>
+		<td colspan="5"></td>
+   		<td class="list_rr" >合計:</td>
+   		<td nowrap class="list_rr" >
+   		 	<span class="number">${tol_beg_bal.(999)}</span> 
+		  	<input type=hidden name="tol_beg_bal" value="${tol_beg_bal}" />
+   		</td>
+   		<td nowrap class="list_rr" >
+   		 	<span class="number">${tol_end_bal.(999)}</span> 
+		  	<input type=hidden name="tol_end_bal" value="${tol_end_bal}" />
+   		</td>
+	</tr>
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="dbar0050">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" id="TTTS" name="TTTS" value="">
+
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ document.dataForm.ex_crdate_s.focus();
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+  /*  if (top.actionCode == "PDF") {
+        if (!chkdata()) {
+            return false;
+        }
+    }*/
+    return true;
+  }
+
+</script>

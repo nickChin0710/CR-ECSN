@@ -1,0 +1,204 @@
+<html>
+<head>
+<title> 110/07/02 V1.00.18 Allen Ho Initial 各項作業凍結碼參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td class="td_text" width="100">覆核主管: </td>
+   <td class="td_data" width="150">
+     <input type="text" class="col_text" name="zz_apr_user" value="${zz_apr_user}"
+            size="12" maxlength="10" />
+   </td>
+   <td class="td_text" width="100">覆核密碼: </td>
+   <td class="td_data" width="150">
+     <input type="password" autocomplete="off" class="col_text" name="zz_apr_passwd" value=""
+            size="12" maxlength="10" />
+   </td>
+ </tr>
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>資料類別&nbsp;
+       <select   size="1" id="kk_wf_type" name="kk_wf_type" class="col_ddlb"  zRequire="Y" >
+         <option value="act_n002" ${kk_wf_type-act_n002} >不上傳AFS凍結碼參數</option>
+         <option value="cyc_a452" ${kk_wf_type-cyc_a452} >卡片凍結碼免年費參數</option>
+       </select>
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *111*********************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">資料類別
+       <span class="dsp_text">${wf_type}</span>
+       <input   type="hidden" name="wf_type" value="${wf_type}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   </tr>
+ </table>
+</div>
+<div id="dataBlock">
+<!-- Key button data3 ********************************************************* -->
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">凍結碼:&nbsp;
+       <input type="text" class="col_any" id="sel_wf_id" name="sel_wf_id" value="${sel_wf_id}"
+              zEdit="any,upper" maxlength="2" size="2" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap  width="50%">備註說明:&nbsp;
+       <input type="text" class="col_any" id="sel_wf_desc" name="sel_wf_desc" value="${sel_wf_desc}"
+              zEdit="any,canTW" maxlength="50" size="50" />
+     </td>
+     <td align="right">${ex_total_cnt}
+       <input type="Button" name="detl_btnAdd" value="新增明細" ${newDetail_disable}
+             id="wf_addrow"  class="btAdd_detl" />
+     </td>
+   </tr>
+ </table>
+<! browsButton ****************************************************************>
+ <table id="table1" width="50%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">凍結碼</th>
+    <th nowrap class="list_th">備註說明</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : BUTTON2 -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+      <span class="dsp_text">${wf_id}</span>
+      <input type="hidden" name="wf_id" value="${wf_id}" >
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${wf_desc}</span>
+      <input type="hidden" name="wf_desc" value="${wf_desc}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#wf_addrow").click(function(){
+
+   var ex_wf_id = $("#sel_wf_id").val().toUpperCase(); 
+   var ex_wf_desc = $("#sel_wf_desc").val(); 
+
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+        { serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_wf_id
+      +"<input type='hidden' value='"+ex_wf_id+"' name='wf_id'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_wf_desc
+      +"<input type='hidden' value='"+ex_wf_desc+"' name='wf_desc'/>"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_wf_id").val('');
+   $("#ex_wf_desc").val('');
+  });
+
+});
+</script>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="cycm0190">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "cycm0190_"+parm2;
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    var wf_type = document.getElementById("kk_wf_type").value;
+    document.dataForm.data_k3.value = wf_type;
+    top.submitControl("R"+parm1);
+
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

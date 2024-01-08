@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>信用卡線上額度異動會簽單</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=charge_level]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=charge_level]").filter('[value=1]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<div id="dataBlock" >
+	${#PLUGIN:htmcomm_plugin.apr_user}
+</div>
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>	
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>  
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="12">&nbsp;流水編號:
+			<span class="dsp_text" >${seq_no}&nbsp;(自動編號)</span>
+			<input type="hidden" name="seq_no" value="${seq_no}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4" >&nbsp;值機人員:
+			<span class="dsp_text">${tel_user}&nbsp;</span>
+			<input type="hidden" name="tel_user" value="${tel_user}">
+		</td>
+		<td nowrap colspan="4" >&nbsp;客戶來電時間			
+        <span class="dsp_text">${tel_date.YMD}&nbsp;${tel_time.TIME}</span>
+        <input type="hidden" name="tel_date" value="${tel_date}">
+	  		<input type="hidden" name="tel_time" value="${tel_time}">
+	  </td>
+	  <td nowrap colspan="4" >&nbsp;
+	  	<input type="checkbox" onClick="wf_apr_user()"  name="apr_flag" value="Y" ${apr_flag-Y}>檢查人員 &nbsp;
+	  	<input type="text" class="col_any" id="apr_user" name="apr_user" value="${apr_user}" maxlength="20" size="22" zEdit="any,canTw" >
+	  </td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3" >&nbsp;持卡人ID:
+			<span class="dsp_text">${id_no}&nbsp;</span>
+			<input type="hidden" name="id_no" value="${id_no}">
+		</td>
+		<td nowrap colspan="3" >&nbsp;卡號:
+			<select size="1" name="card_no" class="col_ddlb" zRequire="Y" >
+				<option value="">--</option>
+   		   ${dddw_card_no}
+	    </select>
+		</td>
+		<td nowrap colspan="3" >&nbsp;持卡人姓名:
+			<span class="dsp_text">${chi_name}&nbsp;</span>
+			<input type="hidden" name="chi_name" value="${chi_name}">
+		</td>
+		<td nowrap colspan="3" >&nbsp;
+			<input type="checkbox" id="print_flag_v" name="print_flag" value="Y" ${print_flag-Y}>已列印
+		</td>
+	</tr>
+</table>
+${#PLUGIN:rskm02.rskm0930_detl_plugin}
+</div>
+<br>
+
+
+<!-- -->
+
+<input type="hidden" name="user_name" value="${user_name}">
+<input type="hidden" name="user_no" value="${user_no}">
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+<input type="hidden" name="student" value="${student}">
+<input type="hidden" name="nation" value="${nation}">
+<input type="hidden" name="asset_value" value="${asset_value}">
+
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ccam2120">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+		
+    return true;
+  }
+ 
+ function wf_pdf(){ 	
+ 	$("#print_flag_v").prop("checked",true);
+ 	top.submitControl('PDF');
+}
+ 
+ function wf_amt_change(){
+ 		var  li_acno_amt1 = Number(document.forms["dataForm"]["acno_amt1"].value);
+ 		var  li_acno_amt2 = Number(document.forms["dataForm"]["acno_amt2"].value);
+ 		var  li_acno_add_amt = li_acno_amt2 - li_acno_amt1 ;
+ 		
+ 		$("#acno_add_amt").val(li_acno_add_amt);
+ 		
+ }
+ 
+ function wf_apr_user() {
+ 		var ls_apr_flag = document.dataForm.apr_flag.checked;
+ 		
+ 		if(ls_apr_flag == false){
+ 			return ;
+ 		}
+ 		
+ 		var ls_user_name = document.forms["dataForm"]["user_name"].value;
+ 		$("#apr_user").val(ls_user_name);
+ }
+ 
+ function wf_user_no() {
+ 		var ls_audit_flag = document.dataForm.audit_flag.checked;
+ 		
+ 		if(ls_audit_flag == false){
+ 			$("#audit_user").val("");
+ 			return ;
+ 		}
+ 		
+ 		var ls_user_no = document.forms["dataForm"]["user_no"].value;
+ 		$("#audit_user").val(ls_user_no);
+ }
+ 
+</script>

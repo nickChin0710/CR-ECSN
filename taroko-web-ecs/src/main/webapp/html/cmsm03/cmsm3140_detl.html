@@ -1,0 +1,267 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 109-09-04  V1.00.03  tanwei         添加select默認的動態選擇                                                    -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>新貴通/龍騰卡請款資料維護-190614-jh</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;貴賓卡號:
+    	<input type="text" class="col_text" id="kk_pp_card_no" name="kk_pp_card_no" value="${kk_pp_card_no}" maxlength="19" size="21" zEdit="number" onChange="ppCardChange('1')" >
+    </td>
+    <td nowrap >&nbsp;貴賓卡:
+        <select size="1" name="kk_vip_kind" id="vip_kind" class="col_ddlb">
+            <option value="1" ${kk_vip_kind-1} >1_新貴通卡</option>
+            <option value="2" ${kk_vip_kind-2} >2_龍騰卡</option>
+        </select>
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="3" >&nbsp;建檔日期:
+			<span class="dsp_text" >${crt_date.YMD}&nbsp;</span>
+			<input type="hidden" name="crt_date" value="${crt_date}">
+		</td>
+		<td nowrap colspan="3" >&nbsp;匯入序號:
+			<span class="dsp_text" >${data_seqno}&nbsp;</span>
+			<input type="hidden" name="data_seqno" value="${data_seqno}">
+		</td>
+ </tr>
+ <tr>
+        <td nowrap colspan="6" >&nbsp;貴賓卡:
+            <span class="dsp_text" >${vip_kind}&nbsp;</span>
+            <input type="hidden" name="vip_kind" value="${vip_kind}">
+        </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="3" >&nbsp;貴賓卡卡號:
+ 			<span class="dsp_text" >${pp_card_no}&nbsp;</span>
+ 			<input type="hidden" name="pp_card_no" value="${pp_card_no}">
+ 		</td>
+ 		<td nowrap colspan="3" >&nbsp;卡別:
+ 			<label class="dsp_text" id="bin_type" >${bin_type}</label>
+ 			<input type="hidden" name="bin_type" value="${bin_type}">
+ 		</td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="3" >&nbsp;使用日期:
+ 	 		<input type="text" class="col_date" name="visit_date" value="${visit_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />       
+      <script language="JavaScript">
+	      new tcal ({'formname': 'dataForm','controlname': 'visit_date'});
+	    </script>
+ 	 </td>
+ 	 <td nowrap colspan="3" >&nbsp;來源:
+ 	 		<span class="dsp_text">${from_type}.${tt_from_type}&nbsp;</span>
+ 	 		<input type="hidden" name="from_type" value="${from_type}">
+ 	 		<input type="hidden" name="tt_from_type" value="${tt_from_type}">
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;Conty:
+ 	 		<input type="text" class="col_text" name="iso_conty" value="${iso_conty}" maxlength="20" size="22" zEdit="alphanum" >
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;Conty:
+ 	 		<input type="text" class="col_text" name="use_city" value="${use_city}" maxlength="30" size="32" zEdit="alphanum" >
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="2" >&nbsp;使用次數:
+ 	 	  <input type="text" class="col_number" name="ch_visits" value="${ch_visits}" maxlength="3" size="5" zEdit="number" zRequire="Y" onChange="Math_Count()" >
+ 	 </td>
+ 	 <td nowrap colspan="2" >&nbsp;免費次數:
+ 	 		<input type="text" class="col_number" name="free_use_cnt" value="${free_use_cnt}" maxlength="3" size="5" zEdit="number" onChange="Math_Count()" >
+ 	 </td>
+ 	 <td nowrap colspan="2" >&nbsp;單價(本人):
+ 	 		<label class="dsp_text" id="ch_cost_amt" >${ch_cost_amt.(999)}</label>
+ 	 		<input type="hidden" name="ch_cost_amt" value="${ch_cost_amt}">
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="2" >&nbsp;攜帶人數:
+ 	 	 <input type="text" class="col_number" name="guests_count" value="${guests_count}" maxlength="3" size="5" zEdit="number" onChange="Math_Count()" >
+ 	 </td>
+ 	 <td nowrap colspan="2" >&nbsp;</td>
+ 	 <td nowrap colspan="2" >&nbsp;單價(同行):
+ 	 		<label class="dsp_text" id="guest_cost_amt" >${guest_cost_amt.(999)}</label>
+ 	 		<input type="hidden" name="guest_cost_amt" value="${guest_cost_amt}">
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="2" >&nbsp;自費金額:(本人):
+ 	 		<label class="dsp_text" id="wk_ch_amt" >${wk_ch_amt.(999)}</label> 	 		
+ 	 		<input type="hidden" name="wk_ch_amt" value="${wk_ch_amt}">
+ 	 </td>
+ 	 <td nowrap colspan="2" >&nbsp;(同行):
+ 	 		<label class="dsp_text" id="wk_guest_amt" >${wk_guest_amt.(999)}</label>
+ 	 		<input type="hidden" name="wk_guest_amt" value="${wk_guest_amt}">
+ 	 </td>
+ 	 <td nowrap colspan="2" >&nbsp;(合計):
+ 	 		<label class="dsp_text" id="wk_tot_amt" >${wk_tot_amt.(999)}</label>
+ 	 		<input type="hidden" name="wk_tot_amt" value="${wk_tot_amt}">
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;交易卡號:
+ 	 		<label class="dsp_text" id="card_no" >${card_no}</label>
+ 	 		<input type="hidden" name="card_no" value="${card_no}">
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;身分證ID:
+ 	 		<label class="dsp_text" id="id_no" >${id_no}</label>
+ 	 		<input type="hidden" name="id_no" value="${id_no}">
+ 	 		<label class="dsp_text" id="chi_name" >${chi_name}</label>
+ 	 		<input type="hidden" name="chi_name" value="${chi_name}"> 	 		
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;特店代號:
+ 	 		<span class="dsp_text">4889754660&nbsp;貴賓卡-機場貴賓室</span>
+ 	 		<input type="hidden" name="mcht_no" value="4889754660">
+ 	 		<input type="hidden" name="wk_mcht_name" value="貴賓卡-機場貴賓室">
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;備註:
+ 	 		<input type="text" class="col_any" name="user_remark" value="${user_remark}" maxlength="60" size="62" zEdit="any,canTw" >
+ 	 </td>
+ </tr>
+ <tr>
+ 	 <td nowrap colspan="6" >&nbsp;建檔經辦:
+ 	 		<span class="dsp_text">${crt_user}&nbsp;</span>
+ 	 		<input type="hidden" name="crt_user" value="${crt_user}">
+ 	 </td>
+ </tr>
+</table>
+</div>
+
+<input type="hidden" id="eng_name" name="eng_name" value="${eng_name}">
+<!-- -->
+<input type="hidden" name="rowid" value="${rowid}">
+<input type="hidden" name="id_p_seqno" id="idPSeqno" value="">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ function ppCardChange(ps1)
+ {
+	var  pp_card_no =document.forms["dataForm"]["kk_pp_card_no"].value;	
+	var  ls_rowid =document.forms["dataForm"]["rowid"].value;	
+	if ( pp_card_no === '' || ls_rowid !='') {	   
+		return false;
+	}
+	idCode = ps1;
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    //if ( idCode === '1' ) { 
+	//	top.methodName = "wf_ajax_winid";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_winid",pp_card_no);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+  
+ function ajaxResponse()
+ {
+   top.respHtml ="cmsm3140_detl";
+   top.requHtml ="cmsm3140_detl";
+   
+	if  ( idCode === '1' ) {
+		var vipKid = getJSONvalue("vip_kind",0);
+		var osel=document.getElementById("vip_kind"); //得到select的ID
+		var opts=osel.getElementsByTagName("option");//得到数组option
+		
+		if(vipKid == 1){
+			opts[0].selected=true;
+		}
+        if(vipKid == 2){
+        	opts[1].selected=true;
+		}
+		document.getElementById("bin_type").innerHTML =getJSONvalue("bin_type",0);
+		document.getElementById("id_no").innerHTML =getJSONvalue("id_no",0);
+		document.getElementById("idPSeqno").innerHTML =getJSONvalue("id_p_seqno",0);
+		document.getElementById("eng_name").innerHTML =getJSONvalue("eng_name",0);
+		document.getElementById("ch_cost_amt").innerHTML =getJSONvalue("ch_cost_amt",0);
+		document.getElementById("guest_cost_amt").innerHTML =getJSONvalue("guest_cost_amt",0);
+		document.getElementById("chi_name").innerHTML =getJSONvalue("chi_name",0);
+		document.getElementById("card_no").innerHTML =getJSONvalue("card_no",0);
+	}
+
+	if ( idCode === '1' )
+	{ return false; }
+ } 
+
+ function Math_Count()
+ {
+ 		var  li_ch_visits = Number(document.forms["dataForm"]["ch_visits"].value);	
+ 		var  li_free_use_cnt = Number(document.forms["dataForm"]["free_use_cnt"].value);	
+ 		var  li_ch_cost_amt = Number(document.forms["dataForm"]["ch_cost_amt"].value);	
+ 		var  li_guests_count = Number(document.forms["dataForm"]["guests_count"].value);	
+ 		var  li_guest_cost_amt = Number(document.forms["dataForm"]["guest_cost_amt"].value);	
+ 		var  li_ch_amt = 0;
+ 		var  li_guest_amt = 0;
+ 		var	 li_tot_amt = 0;
+ 		
+ 		li_ch_amt = (li_ch_visits - li_free_use_cnt) * li_ch_cost_amt ;
+ 		li_guest_amt = li_guests_count * li_guest_cost_amt ;
+ 		li_tot_amt = li_ch_amt + li_guest_amt ;
+ 		
+ 		document.getElementById("wk_ch_amt").innerHTML =li_ch_amt;
+ 		document.getElementById("wk_guest_amt").innerHTML =li_guest_amt;
+ 		document.getElementById("wk_tot_amt").innerHTML =li_tot_amt;
+ }
+</script>

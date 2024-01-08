@@ -1,0 +1,194 @@
+<html>
+<head>
+<title> 108/02/12 V1.00.01 RAY Ho Initial 檔案傳輸紀錄檔維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=ie11">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+ ${#PLUGIN:htmcomm_plugin.apr_user3}  
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>交易序號&nbsp; 
+       <input type="text" class="col_any" name="trans_seqno" value="${trans_seqno}"
+              zEdit="any" maxlength="10" size="10" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>檔案名稱:&nbsp; 
+       <input type="text" class="col_any" name="file_name" value="${file_name}"
+              zEdit="any" maxlength="120" size="120" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>檔案日期&nbsp; 
+       <input type="text" class="col_date" name="file_date" value="${file_date}"
+              zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'file_date'});
+      </script>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>傳檔回應碼:&nbsp; 
+       <input type="text" class="col_any" name="trans_resp_code" value="${trans_resp_code}"
+              zEdit="any" maxlength="2" size="2" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>處理註記:&nbsp; 
+       <input type="text" class="col_any" name="proc_code" value="${proc_code}"
+              zEdit="any" maxlength="1" size="1" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>群組代號:&nbsp; 
+       <input type="text" class="col_any" name="group_id" value="${group_id}"
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>來源管道:&nbsp; 
+       <input type="text" class="col_any" name="source_from" value="${source_from}"
+              zEdit="any,canTW" maxlength="20" size="20" />
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >產生日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input     size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+     <td  nowrap  >產生時間: 
+       <span class="dsp_text">${crt_time}</span>
+       <input     size="8"  type="hidden" name="crt_time" value="${crt_time}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >ftp主機代碼: 
+       <span class="dsp_text">${ref_ip_code}</span>
+       <input     size="20"  type="hidden" name="ref_ip_code" value="${ref_ip_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >FTP類型: 
+       <span class="dsp_text">${ftp_type}</span>
+       <input     size="8"  type="hidden" name="ftp_type" value="${ftp_type}" />
+     </td>
+     <td  nowrap  >傳輸檔案歸類: 
+       <span class="dsp_text">${system_id}</span>
+       <input     size="20"  type="hidden" name="system_id" value="${system_id}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >傳輸檔案數: 
+       <span class="dsp_text">${trans_total_cnt}</span>
+       <input     size="10"  type="hidden" name="trans_total_cnt" value="${trans_total_cnt}" />
+     </td>
+     <td  nowrap  >傳輸序號: 
+       <span class="dsp_text">${trans_seq}</span>
+       <input     size="8"  type="hidden" name="trans_seq" value="${trans_seq}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >傳輸時檔案大小: 
+       <span class="dsp_text">${trans_size}</span>
+       <input     size="13"  type="hidden" name="trans_size" value="${trans_size}" />
+     </td>
+     <td  nowrap  >本地檔案大小: 
+       <span class="dsp_text">${local_size}</span>
+       <input     size="13"  type="hidden" name="local_size" value="${local_size}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >遠端檔案位置: 
+       <span class="dsp_text">${remote_addr}</span>
+       <input     size="20"  type="hidden" name="remote_addr" value="${remote_addr}" />
+     </td>
+     <td  nowrap  >傳輸模式: 
+       <span class="dsp_text">${trans_mode}</span>
+       <input     size="60"  type="hidden" name="trans_mode" value="${trans_mode}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >傳輸內容: 
+       <span class="dsp_text">${trans_data}</span>
+       <input     size="360"  type="hidden" name="trans_data" value="${trans_data}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >傳輸說明: 
+       <span class="dsp_text">${trans_desc}</span>
+       <input     size="120"  type="hidden" name="trans_desc" value="${trans_desc}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >處理說明: 
+       <span class="dsp_text">${proc_desc}</span>
+       <input     size="120"  type="hidden" name="proc_desc" value="${proc_desc}" />
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >異動日期: 
+       <span class="dsp_date">${mod_time.YMD}</span>
+       <input     size="10"  type="hidden" name="mod_time" value="${mod_time}" 4/>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="ecsm0210">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

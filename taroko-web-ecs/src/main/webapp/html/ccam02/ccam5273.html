@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>消費簡訊門檻參數設定</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;優先序:
+      <input type="text" class="col_text" name="ex_sms_priority" value="${ex_sms_priority}" maxlength="2" size="5" zEdit="number" />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">        
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	  </script>
+	  --
+	  <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	  </script>
+	</td>	
+    <td nowrap >&nbsp;適用地區:
+        <select name="ex_area_type" class="col_ddlb">           
+            <option value="">--</option>
+            <option value="1" ${ex_area_type-1} >1.國外</option>
+            <option value="2" ${ex_area_type-2} >2.國內</option>
+            <option value="3" ${ex_area_type-3} >3.國內外</option>
+        </select>
+    </td>
+  </tr>  
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >優先序&nbsp;</th>    
+    <th nowrap >簡訊代號&nbsp;</th>
+    <th nowrap >簡訊說明&nbsp;</th>
+    <th nowrap >指定名單&nbsp;</th>
+    <th nowrap >適用地區&nbsp;</th>    
+    <th nowrap >是否檢核<br>國別</th>
+    <th nowrap >是否檢核<br>幣別</th>
+    <th nowrap >是否檢核<br>BIN</th>
+    <th nowrap >是否檢核<br>團代</th>
+    <th nowrap >是否檢核<br>特店</th>
+    <th nowrap >是否檢核<br>MCC CODE</th>
+    <th nowrap >是否檢核<br>POS ENTRY MODE</th>
+    <th nowrap >是否檢核<br>交易類別</th>
+    <th nowrap >是否檢核<br>回覆碼</th>
+    <th nowrap >是否檢核<br>金額</th>
+    <th nowrap >是否檢核<br>近X日累積交易筆數</th>
+    <th nowrap >是否檢核<br>近X小時累積交易筆數</th>
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >建檔人員&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${sms_priority}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${sms_priority}&nbsp;</td>
+   <td nowrap class="list_cc"> ${msg_id}&nbsp;</td>
+   <td nowrap class="list_ll"> ${sms_remark}&nbsp;</td>
+   <td nowrap class="list_cc"> ${spec_list}&nbsp;</td>
+   <td nowrap class="list_cc"> ${area_type}.${tt_area_type}&nbsp;</td>   
+   <td nowrap class="list_cc"> ${cond_country}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_curr}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_bin}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_group}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_mcht}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_mcc}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_pos}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_trans_type}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_resp_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_amt}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_cnt1}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_cnt2}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>   
+   <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>   
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5273_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5273_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

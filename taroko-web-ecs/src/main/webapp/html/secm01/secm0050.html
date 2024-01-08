@@ -1,0 +1,116 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-11-28  V1.00.01    jh                                                -->
+<!-- 109-09-18  V1.00.02    JustinWu      disable 新增                        -->
+<!-- 111-06-16  V1.00.03    ryan          銀行單位 ==>  分行代號                                                           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>使用者資料維護-Justin-200918</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;使用者代號：
+      <input type="text" class="col_text" name="ex_usr_id" value="${ex_usr_id}"
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" disabled>&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>使用者代號&nbsp;</th>
+    <th nowrap>姓名&nbsp;</th>
+    <th nowrap>員工代號&nbsp;</th>
+    <th nowrap>科組代號&nbsp;</th>
+    <th nowrap>類別&nbsp;</th>
+    <th nowrap>使用者層級&nbsp;</th>
+    <th nowrap>歸屬群組(子系統)&nbsp;</th>
+    <th nowrap>最近登入日期&nbsp;</th>
+    <th nowrap>最近登入時間&nbsp;</th>
+    <!--<th nowrap>銀行單位</th> -->
+    <th nowrap>分行代號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${usr_id}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_id}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_cname}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_empno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_deptno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_level}&nbsp;</td>
+	<td nowrap class="list_ll"> ${usr_group}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_indate.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${usr_intime.TIME}&nbsp;</td>
+	<td nowrap class="list_cc"> ${bank_unitno}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "secm0050_detl";
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "secm0050_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>

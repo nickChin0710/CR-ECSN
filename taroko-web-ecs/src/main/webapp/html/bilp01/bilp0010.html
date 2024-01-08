@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>帳單請款覆核作業-V.2017-0731-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap colspan="2">&nbsp;日期：
+		  <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+			zEdit="date,yyyymmdd" maxlength="8" size="8" />
+		  <script language="JavaScript">
+			new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+		  </script>
+		  --
+		  <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+			zEdit="date,yyyymmdd" maxlength="8" size="8" />
+		  <script language="JavaScript">
+			new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+		  </script>
+        </td>
+        <td nowrap >&nbsp;是否已放行:
+          <span class="col_radio">
+             <input type="radio" value="Y" name="ex_confirm_flag_p" ${ex_confirm_flag_p-Y} />已放行
+             <input type="radio" value="N" name="ex_confirm_flag_p" ${ex_confirm_flag_p-N} ${DEFAULT-ex_confirm_flag_p}/>未放行
+          </span>
+         </td>
+	</tr>
+    <tr>
+        <td nowrap>&nbsp;請款單位:
+            <select  name="ex_batch_unit" class="col_ddlb" >
+                ${dddw_batch_unit}
+            </select>
+        </td>
+		<td nowrap>&nbsp;序號:
+            <input type="text" class="col_text" name="ex_batch_seq" value="${ex_batch_seq}" 
+			   zEdit="number" maxlength="3" size="3" />
+        </td>
+        <td nowrap>&nbsp;
+            <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"   value="執行" onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+            <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">放行&nbsp;
+        </th>
+        <th nowrap class="list_th">請款日期</th>
+        <th nowrap class="list_th">請款單位</th>
+		<th nowrap class="list_th">批號</th>
+		<th nowrap class="list_th">總筆數</th>
+		<th nowrap class="list_th">總金額</th>
+        <th nowrap class="list_th">經辦</th>
+        <th nowrap class="list_th">入帳日期</th>
+        <th nowrap class="list_th">需要放行否</th>
+        <th nowrap class="list_th">放行註記</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+        <td nowrap class="list_no">
+		  <span class="dsp_flag">${ok_flag}</span>
+			${SER_NUM}
+		  <input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled}/>
+		  <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+		  <input type="hidden" name="ser_num" value="${ser_num}"/>
+		  <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+		</td>
+        <td nowrap class="list_ll"> ${batch_date.YMD}</td>
+		<td nowrap class="list_ll"> ${batch_unit}</td>
+		<td nowrap class="list_ll"> ${batch_no}</td>
+		<td nowrap class="list_rr"> ${tot_record}</td>
+		<td nowrap class="list_rr"> ${tot_amt}</td>
+		<td nowrap class="list_ll"> ${mod_user}</td>
+		<td nowrap class="list_ll"> ${this_close_date.YMD}</td>
+		<td nowrap class="list_ll"> ${confirm_flag}</td>
+		<td nowrap class="list_ll"> ${confirm_flag_p}</td>
+		<input type="hidden"  name="batch_date"  value="${batch_date.YMD}">
+		<input type="hidden"  name="batch_unit"  value="${batch_unit}">
+		<input type="hidden"  name="batch_no"  value="${batch_no}">
+		<input type="hidden"  name="tot_record"  value="${tot_record}">
+		<input type="hidden"  name="tot_amt"  value="${tot_amt}">
+		<input type="hidden"  name="mod_user"  value="${mod_user}">
+		<input type="hidden"  name="this_close_date"  value="${this_close_date.YMD}">
+		<input type="hidden"  name="confirm_flag"  value="${confirm_flag}">
+		<input type="hidden"  name="confirm_flag_p"  value="${confirm_flag_p}">
+        <input type="hidden"  name="stmt_cycle"  value="${stmt_cycle}">
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="MOD_PGM" value="bilp0010">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.exDateS.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "bilp0010_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "bilp0010_detl";
+    top.submitControl('S');
+    return true;
+}
+
+//全選
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox" && aElements[i].disabled == false) {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+</script>

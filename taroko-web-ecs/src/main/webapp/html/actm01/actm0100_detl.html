@@ -1,0 +1,251 @@
+<html> 
+
+<head>
+    <title>溢付款提領作業-detl-106-12-20-V1.00.00-OrisChang-[Initial]
+    -109-09-03-V1.00.01-Andy-[Update]
+    -112-07-04-V1.00.02-Simon-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ; onmouseout="top.light_img(this);" ; onmouseover="top.dark_img(this);">&nbsp;
+                    <!-- <input type="Button" name="btnQuery" value=" 讀取 " ${btnQuery_disable} onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnAdd" value=" 新增 " ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp; -->
+                    <input type="Button" name="btnUpdate" value=" 修改 " ${btnUpdate_disable} ${set_btn} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value=" 刪除 " ${btnDelete_disable} ${set_btn} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;                    
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap>&nbsp;帳戶帳號：</td>
+                    <td nowrap colspan="3">
+                        <select size="1" name="kk_acct_type" class="col_ddlb" ${kk_acct_type_attr}>
+                            ${dddw_acct_type}
+                        </select> -
+                        <input type="text" class="col_text" name="kk_acct_key" value="${kk_acct_key}" ${kk_acct_key_attr} maxlength=11 size=13 />
+                    </td>
+                    <td nowrap rowspan="2">
+                        <span class="dsp_text" style="color:red; font-weight:bold;">${mod_type}</span>			
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;卡號：</td>
+                    <td nowrap>
+                        <input type="text" class="col_number" name="kk_card_no" value="${kk_card_no}" ${kk_card_no_attr} maxlength=16 size=20 /></td>
+                    <td nowrap>&nbsp;結算幣別：</td>
+                    <td nowrap>
+                        <select size="1" name="kk_curr_code" class="col_ddlb" ${kk_curr_code_attr}>
+                            ${dddw_curr_code}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="col_key" width="25%">帳戶帳號：</td>
+                    <td nowrap colspan="3"><span class="col_text">${acct_type} - ${acct_key}</span>
+                        <input type="hidden" name="acct_type" value="${acct_type}">
+                        <input type="hidden" name="acct_key" value="${acct_key}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="col_key">卡號：</td>
+                    <td nowrap width="25%"><span class="col_text">${card_no}</span>
+                        <input type="hidden" name="card_no" value="${card_no}">
+                    </td>
+                    <td nowrap width="25%">帳戶姓名/名稱：</td>
+                    <td nowrap width="25%"><span class="dsp_text">${db_name}</span>
+                        <input type="hidden" name="db_name" value="${db_name}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="col_key">結算幣別：</td>
+                    <td nowrap><span class="dsp_text">${curr_code}</span>
+                        <input type="hidden" name="curr_code" value="${curr_code}">
+                    </td>
+                    <td nowrap>已調整次數：</td>
+                    <td nowrap><span class="dsp_text">${ex_dcount}</span>
+                        <input type="hidden" name="ex_dcount" value="${ex_dcount}">
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="25%">溢付款總額：</td>
+                    <td nowrap width="25%"><span class="dsp_text">${wk_tot_bef_amt.(999.00)}</span><input type="hidden" name="wk_tot_bef_amt" value="${wk_tot_bef_amt}"></td>
+                    <td nowrap width="25%">調整後總額：</td>
+                    <td nowrap width="25%"><span class="dsp_text" id="wk_tot_aft_amt">${wk_tot_aft_amt.(999.00)}</span><input type="hidden" name="wk_tot_aft_amt" value="${wk_tot_aft_amt}"></td>
+                </tr>
+                <tr>
+                    <td nowrap>可提領溢付款餘額：</td>
+                    <td nowrap><span class="dsp_text">${dc_bef_amt.(999.00)}</span><input type="hidden" name="dc_bef_amt" value="${dc_bef_amt}"></td>
+                    <td nowrap>調整後餘額：</td>
+                    <td nowrap><span class="dsp_text" id="dc_aft_amt">${dc_aft_amt.(999.00)}</span><input type="hidden" name="dc_aft_amt" value="${dc_aft_amt}"></td>
+                </tr>
+            </table>
+            <hr>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;</td>
+                    <td nowrap width="30%" align="center"><span style="color:blue; font-weight:bold;">&nbsp;(結算幣別)&nbsp;</span></td>
+                    <td nowrap width="30%" align="center"><span style="color:blue; font-weight:bold;">&nbsp;(台　幣)&nbsp;</span></td>
+                </tr>
+                <tr>
+                    <td nowrap>提領金額</td>
+                    <td nowrap><input type="text" class="col_number" name="dc_dr_amt" value="${dc_dr_amt}" zEdit="dignumber" maxlength=12 size=14 onChange="amtChange(this.value)" zRequire="Y" /></td>                    
+            <!--    <td nowrap><input type="text" class="col_number" name="dr_amt" value="${dr_amt}" ${dr_amt_addr} zEdit="number" maxlength=12 size=14 /></td> -->
+                    <td nowrap align="center"><span class="dsp_text" id="new_dr_amt">${new_dr_amt.(999)}</span>
+                        <input type="hidden" name="new_dr_amt" value="${new_dr_amt}">
+                        <input type="hidden" name="dr_amt" value="${dr_amt}"></td>
+                </tr>
+                <tr>
+                  <td nowrap>提領方式</td>
+                  <td nowrap colspan="2">
+                    <span class="col_radio">
+                      <input type="radio" value="1" name="cash_type" ${cash_type-1} />
+                    </span>
+                    <span class="dsp_text">
+                      轉入本行帳號
+                      <input type="text" class="col_any" name="ctype1_acct_no" 
+                      value="${ctype1_acct_no}" zEdit="any,canTW" maxlength=16 size=18 />
+                      (系統隔日出帳)
+                    </span><br>
+                    <span class="col_radio">
+                      <input type="radio" value="2" name="cash_type" ${cash_type-2} />
+                    </span>
+                    <span class="dsp_text">
+                      轉入本行帳號
+                      <input type="text" class="col_any" name="ctype2_acct_no" 
+                      value="${ctype2_acct_no}" zEdit="any,canTW" maxlength=16 size=18 />
+                      (當日自行出帳)
+                    </span><br>
+                    <span class="col_radio">
+                      <input type="radio" value="3" name="cash_type" ${cash_type-3} />
+                    </span>
+                    <span class="dsp_text">
+                      匯至他行帳號&nbsp;銀行代碼
+                      <input type="text" class="col_any" name="ctype3_bank_no" 
+                      value="${ctype3_bank_no}" zEdit="any,canTW" maxlength=3 size=5 />
+                      &nbsp;帳號
+                      <input type="text" class="col_any" name="ctype3_acct_no" 
+                      value="${ctype3_acct_no}" zEdit="any,canTW" maxlength=16 size=18 />
+                    </span><br>
+                    <span class="col_radio">
+                      <input type="radio" value="4" name="cash_type" ${cash_type-4} />
+                    </span>
+                    <span class="dsp_text">
+                      其他
+                      <input type="text" class="col_any" name="ctype4_comment" 
+                      value="${ctype4_comment}" zEdit="any,canTW" maxlength=40 size=42 />
+                    </span>
+                  </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="MOD_PGM" value="actm0100">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="rowid" value="${rowid}">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" name="cr_amt" value="${cr_amt}">
+        <input type="hidden" name="bef_amt" value="${bef_amt}">
+        <input type="hidden" name="aft_amt" value="${aft_amt}">
+        <input type="hidden" name="bef_d_amt" value="${bef_d_amt}">
+        <input type="hidden" name="aft_d_amt" value="${aft_d_amt}">
+        <input type="hidden" name="dc_cr_amt" value="${dc_cr_amt}">
+        <input type="hidden" name="dc_bef_d_amt" value="${dc_bef_d_amt}">
+        <input type="hidden" name="dc_aft_d_amt" value="${dc_aft_d_amt}">
+        <input type="hidden" name="kp_acct_type" value="${kp_acct_type}">
+        <input type="hidden" name="kp_acct_key" value="${kp_acct_key}">
+        <input type="hidden" name="kp_card_no" value="${kp_card_no}">
+        <input type="hidden" name="kp_curr_code" value="${kp_curr_code}">
+        <input type="hidden" name="adjust_type" value="${adjust_type}">
+        <input type="hidden" name="keep_dc_aft_amt" value="${keep_dc_aft_amt}">
+        <input type="hidden" name="keep_dc_dr_amt" value="${keep_dc_dr_amt}">
+        <input type="hidden" name="exchange_rate" value="${exchange_rate}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_acct_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    return true;
+}
+
+function amtChange(val) {    
+    if (val == '') {
+        //alert("此數值需大於等於0");
+        $('#new_dr_amt').text(format_with_regex(0));
+        document.dataForm.new_dr_amt.value = 0;
+        return false;
+    }
+
+    //document.dataForm.new_dr_amt.value=val;
+    
+    var exchange_rate = document.dataForm.exchange_rate.value;
+    //alert("exchange_rate :"+exchange_rate);
+    var amt_dc_src = val;
+    var amt_dc2tw = Number(amt_dc_src) * Number(exchange_rate);
+    amt_dc2tw = Math.round(amt_dc2tw);
+    //alert("amt_dc2tw :"+amt_dc2tw);
+    document.dataForm.dr_amt.value = amt_dc2tw;
+    $('#new_dr_amt').text(format_with_regex(amt_dc2tw));
+    $('input[name=new_dr_amt]').val(amt_dc2tw);
+
+    var keep_dc_aft_amt = document.dataForm.keep_dc_aft_amt.value;
+    var keep_dc_dr_amt = document.dataForm.keep_dc_dr_amt.value;
+    //alert("keep_dc_dr_amt :"+keep_dc_dr_amt);
+
+    var dc_aft_amt =  Number(keep_dc_aft_amt) + Number(keep_dc_dr_amt) -  Number(amt_dc_src);
+    dc_aft_amt = Math.round(dc_aft_amt * 100) / 100;
+
+    // alert("dc_aft_amt :"+dc_aft_amt);
+    $('#dc_aft_amt').text(dc_aft_amt);
+    $('input[name=dc_aft_amt]').val(dc_aft_amt);
+    
+    var dc_aft_d_amt = document.dataForm.dc_bef_d_amt.value;
+    // alert("dc_aft_d_amt :"+dc_aft_d_amt);
+    $('input[name=dc_aft_d_amt]').val(dc_aft_d_amt);
+
+    var wk_tot_aft_amt = Number(dc_aft_amt) + Number(dc_aft_d_amt);
+    wk_tot_aft_amt = Math.round(wk_tot_aft_amt * 100) / 100;
+    // alert("wk_tot_aft_amt :"+wk_tot_aft_amt);
+    $('#wk_tot_aft_amt').text(wk_tot_aft_amt);
+    $('input[name*=wk_tot_aft_amt]').val(wk_tot_aft_amt);
+
+
+    return true;
+}
+//前端數值==>千分位字串
+function format_with_regex(number) {
+    var reg = /\d{1,3}(?=(\d{3})+$)/g;
+    return (number + '').replace(reg, '$&,');
+}
+</script>

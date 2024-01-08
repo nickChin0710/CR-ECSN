@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>人工標準分錄維護-V.2017-0413-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table  id="table2" width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+       <td nowrap>分錄代碼：&nbsp;       
+             <select  name="ex_std_vouch_cd" class="col_ddlb">
+                   ${dddw_ex_std_cd}
+             </select>
+       </td>
+       <td nowrap width="50%">標準分錄說明：&nbsp;          
+        <input type="text" class="col_any" name="ex_std_vouch_desc" value="${ex_std_vouch_desc}" 
+         zEdit="canTW" maxlength="30" size="30" />
+       </td>
+        <td nowrap>&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th">分錄代碼</th>
+        <th nowrap class="list_th">標準分錄說明</th>
+        <th nowrap class="list_th">幣別</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr onclick="detailScreen('${SER_NUM}','${std_vouch_cd}','${std_vouch_desc}','${curr}')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_cc"> ${std_vouch_cd}</td>
+        <td nowrap class="list_ll"> ${std_vouch_desc}</td>
+        <td nowrap class="list_cc"> ${curr}</td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="dddw_curr2" id="dddw_curr2" value="${dddw_curr2}" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_std_vouch_cd.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "genm0100_detl";
+    }
+ 
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "genm0100_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>
+

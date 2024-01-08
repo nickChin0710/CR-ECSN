@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <title>Debit Card重製/續卡彙總報表-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=12>&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=12>&nbsp;放行前後:                        
+                        <input type="radio" value="0" name="ex_apr" ${ex_apr-0}${DEFAULT-ex_apr} />放行前
+                        <input type="radio" value="1" name="ex_apr" ${ex_apr-1} />放行後
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;送製卡來源:
+                        <br>
+                        <input type="radio" value="3" name="ex_emboss_source" ${ex_emboss_source-3} />整批續卡
+                        <br>
+                        <input type="radio" value="4" name="ex_emboss_source" ${ex_emboss_source-4} />線上續卡 &nbsp;&nbsp;提前續卡註記:
+                        <select size="1" name="ex_change_reason" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" ${ex_change_reason-1}>系統續卡</option>
+                            <option value="2" ${ex_change_reason-2}>提前續卡</option>
+                            <option value="3" ${ex_change_reason-3}>人工續卡</option>
+                        </select>
+                        <br>
+                        <input type="radio" value="5" name="ex_emboss_source" ${ex_emboss_source-5}${DEFAULT-ex_emboss_source} />重製卡 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重製卡原因:
+                        <select size="1" name="ex_emboss_reason" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" ${ex_emboss_reason-1}>掛失</option>
+                            <option value="2" ${ex_emboss_reason-2}>損毀</option>
+                            <option value="3" ${ex_emboss_reason-3}>偽卡</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>                        
+                        &nbsp;批&nbsp;&nbsp;&nbsp;&nbsp;號:
+                        <input type="text" class="col_any" name="ex_batchno" value="${ex_batchno}" zEdit="alphanum" maxlength=10 size="10"> 
+                        <br>
+                        &nbsp;排&nbsp;&nbsp;&nbsp;&nbsp;序:
+                        <select size="1" name="ex_order" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" ${ex_order-1}>ID</option>
+                            <option value="2" ${ex_order-2}>卡號</option>
+                            <option value="3" ${ex_order-3}>重製說明</option>
+                            <option value="4" ${ex_order-4}>登錄人員</option>
+                        </select>
+                        <br>
+                        &nbsp;存&nbsp;戶&nbsp;別:
+                        <input type="radio" value="0" name="ex_digital_flag" ${ex_digital_flag-0} ${DEFAULT-ex_digital_flag}>全部 
+                        <input type="radio" value="N" name="ex_digital_flag" ${ex_digital_flag-N}>一般存款帳戶
+                        <input type="radio" value="Y" name="ex_digital_flag" ${ex_digital_flag-Y}>數位存款帳戶
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">覆核</th>
+                <th nowrap class="list_th">風險行</th>
+                <th nowrap class="list_th">存戶別</th>
+                <th nowrap class="list_th">新卡號</th>
+                <th nowrap class="list_th">身分證號碼</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">新效期</th>
+                <th nowrap class="list_th">英文姓名</th>
+                <th nowrap class="list_th">來源</th>
+                <th nowrap class="list_th">製卡原因</th>
+                <th nowrap class="list_th">製卡說明</th>
+                <th nowrap class="list_th">代收分行</th>
+                <th nowrap class="list_th">備註訊息</th>
+                <th nowrap class="list_th">登錄人員</th>
+                <th nowrap class="list_th">處理日期</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${wk_batchno} </td>
+                <td nowrap class="list_ll"> ${db_confirm_flag} </td>
+                <td nowrap class="list_ll"> ${risk_bank_no} </td>
+                <td nowrap class="list_ll"> ${db_digital_flag} </td>
+                <td nowrap class="list_ll"> ${card_no} </td>
+                <td nowrap class="list_ll"> ${wk_apply_id} </td>
+                <td nowrap class="list_ll"> ${chi_name} </td>
+                <td nowrap class="list_ll"> ${valid_to} </td>
+                <td nowrap class="list_ll"> ${eng_name} </td>
+                <td nowrap class="list_ll"> ${emboss_source} </td>
+                <td nowrap class="list_ll"> ${db_emboss_reason} </td>
+                <td nowrap class="list_ll"> ${db_reissue_code} </td>
+                <td nowrap class="list_ll"> ${receipt_branch} </td>
+                <td nowrap class="list_ll"> ${receipt_remark} </td>
+                <td nowrap class="list_ll"> ${crt_user} </td>                
+                <td nowrap class="list_ll"> ${crt_date} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "15";
+document.dataForm.ex_batchno.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

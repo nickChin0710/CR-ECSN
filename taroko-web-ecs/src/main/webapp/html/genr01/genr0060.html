@@ -1,0 +1,113 @@
+<html>
+
+<head>
+    <title>MEMO3(資料)查詢與列印-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <td nowrap>&nbsp;日期：
+                    <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                    <script language="JavaScript">
+                    new tcal({
+                        'formname': 'dataForm',
+                        'controlname': 'exDateS'
+                    });
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                    <script language="JavaScript">
+                    new tcal({
+                        'formname': 'dataForm',
+                        'controlname': 'exDateE'
+                    });
+                    </script>
+                </td>
+                <tr>
+                    <td nowrap colspan=2>&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">日期</th>
+                <th nowrap class="list_th">套號</th>
+                <th nowrap class="list_th">分行別</th>
+                <th nowrap class="list_th">業務別</th>
+                <th nowrap class="list_th">部門別</th>
+                <th nowrap class="list_th">幣別</th>
+                <th nowrap class="list_th">借/貸</th>
+                <th nowrap class="list_th">金額</th>
+                <th nowrap class="list_th">摘要三</th>
+                <th nowrap class="list_th">沖消狀況</th>
+                <th nowrap class="list_th">沖銷套號</th>
+                <th nowrap class="list_th">經辦人員</th>
+                <th nowrap class="list_th">科子細目</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${tx_date} </td>
+                <td nowrap class="list_ll"> ${refno} </td>
+                <td nowrap class="list_ll"> ${brno} </td>
+                <td nowrap class="list_ll"> ${dept} </td>
+                <td nowrap class="list_ll"> ${depno} </td>
+                <td nowrap class="list_ll"> ${curr_chi_name} </td>
+                <td nowrap class="list_ll"> ${dbcr} </td>
+                <td nowrap class="list_ll"> ${amt} </td>
+                <td nowrap class="list_ll"> ${memo3} </td>
+                <td nowrap class="list_ll"> ${post_status} </td>
+                <td nowrap class="list_ll"> ${post_refno} </td>
+                <td nowrap class="list_ll"> ${crt_user} </td>
+                <td nowrap class="list_ll"> ${ac_no} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.exDateS.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

@@ -1,0 +1,270 @@
+<html>
+<head>
+<title>問題交易流程表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;新增登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+      <input type="Button" name="btnUpdate"  value="列印完確認" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+      <input type="Button" name="btnPDF1" value="列印流程表" onClick="top.submitControl('PDF');" class="btConfirm" >&nbsp;
+      <input type="Button" name="btnPDF2" value="列印問交信函" onClick="top.submitControl('PDF2');" class="btConfirm" >&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;卡號:
+   		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" zEdit="number" >
+      &nbsp;Debit卡:
+      <span class="col_radio">
+         <input type="radio" value="N" name="ex_debit" ${ex_debit-N} ${default-ex_debit} />N
+         <input type="radio" value="Y" name="ex_debit" ${ex_debit-Y} />Y
+      </span>
+   	</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;查詢類別:
+      <select   size="1"  name="ex_type" class="col_ddlb">
+         <option value="0" ${ex_type-0} >0.全部</option>
+         <option value="1" ${ex_type-1} >1.問交/特交/不合格</option>
+         <option value="2" ${ex_type-2} >2.調單</option>
+         <option value="3" ${ex_type-3} >3.扣款</option>
+      </select>
+   </td>
+   <td nowrap >
+   		&nbsp;卡別:
+      <select   size="1"  name="ex_bin_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="J" ${ex_bin_type-J} >J</option>
+         <option value="M" ${ex_bin_type-M} >M</option>
+         <option value="V" ${ex_bin_type-V} >V</option>
+      </select>
+   		&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="1" name="ex_print" ${ex_print-1} ${default-ex_print} />未列印
+         <input type="radio" value="2" name="ex_print" ${ex_print-2} />已列印
+         <input type="radio" value="0" name="ex_print" ${ex_print-0} />全部
+      </span>
+   </td>
+   </tr>
+   <tr>
+    <td nowrap >&nbsp;聯絡人員:
+        <input type="text" class="col_any" name="ex_tel_user" value="${ex_tel_user}" maxlength="10" size="12" zEdit="any,canTw" >
+        &nbsp;分機:
+        <input type="text" class="col_any" name="ex_tel_no" value="${ex_tel_no}" maxlength="4" size="6" zEdit="number" >
+    </td>
+    <td nowrap >&nbsp;TPAN:
+      <input type="text" class="col_text" name="ex_v_card_no" value="${ex_v_card_no}" maxlength="19" size="21" >
+   </td>
+   </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%">
+   	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+       列印<br>　&nbsp;&nbsp;選項
+	 </th>
+    <th nowrap >列印<br>過否</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >卡<br>別</th>
+    <th nowrap >Debit卡&nbsp;</th>
+    <th nowrap >消費卡號&nbsp;</th>
+    <th nowrap >帳務年月&nbsp;</th>
+    <th nowrap >入帳日期&nbsp;</th>
+    <th nowrap >問交<br>新增日</th>
+    <th nowrap >理由碼&nbsp;</th>
+    <th nowrap >扣款<br>新增日</th>
+    <th nowrap >調單<br>新增日</th>
+    <th nowrap >付款方式&nbsp;</th>
+    <th nowrap >帳戶<br>類別</th>
+    <th nowrap >授權碼&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >微縮影編號&nbsp;</th>
+    <th nowrap >交易碼&nbsp;</th>
+    <th nowrap >原始金額&nbsp;</th>
+    <th nowrap >幣別&nbsp;</th>
+    <th nowrap >目的地金額&nbsp;</th>
+    <th nowrap >清算金額&nbsp;</th>
+    <th nowrap >處理日期&nbsp;</th>
+    <th nowrap >清算會員ID&nbsp;</th>
+    <th nowrap >進入<br>模式</th>
+    <th nowrap >特店中文名稱&nbsp;</th>
+    <th nowrap >特店英文名稱&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >特店城市&nbsp;</th>
+    <th nowrap >特店<br>業別</th>
+    <th nowrap >特店<br>國別</th>
+    <th nowrap >特店<br>州別</th>
+    <th nowrap >參考號碼&nbsp;</th>
+    <th nowrap >問交<br>類別</th>
+    <th nowrap >TPAN</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="contract_no" value="${contract_no}">
+   	<input type="hidden" name="install_curr_term" value="${install_curr_term}">
+   	<input type="hidden" name="contract_amt" value="${contract_amt}">
+   	<input type="hidden" name="curr_code" value="${curr_code}">
+	</td>
+   <td nowrap class="list_cc"> ${print_flag}&nbsp;
+      <input type="hidden" name="print_flag" value="${print_flag}">
+   </td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+   </td>
+   <td nowrap class="list_cc"> ${bin_type}&nbsp;
+      <input type="hidden" name="bin_type" value="${bin_type}">
+   </td>
+   <td nowrap class="list_cc"> ${debit_flag}&nbsp;
+      <input type="hidden" name="debit_flag" value="${debit_flag}">
+   </td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+   <td nowrap class="list_cc"> ${acct_month.YMD}&nbsp;
+      <input type="hidden" name="acct_month" value="${acct_month}">
+   </td>
+   <td nowrap class="list_cc"> ${post_date.YMD}&nbsp;
+      <input type="hidden" name="post_date" value="${post_date}">
+   </td>
+   <td nowrap class="list_cc"> ${prbl_add_date.YMD}&nbsp;
+      <input type="hidden" name="prbl_add_date" value="${prbl_add_date}">
+   </td>
+   <td nowrap class="list_cc"> ${prbl_reason_code}&nbsp;
+      <input type="hidden" name="prbl_reason_code" value="${prbl_reason_code}">
+   </td>
+   <td nowrap class="list_cc"> ${chgb_add_date.YMD}&nbsp;
+      <input type="hidden" name="chgb_add_date" value="${chgb_add_date}">
+   </td>
+   <td nowrap class="list_cc"> ${rept_add_date.YMD}&nbsp;
+      <input type="hidden" name="rept_add_date" value="${rept_add_date}">
+   </td>
+   <td nowrap class="list_cc"> ${payment_type}&nbsp;
+      <input type="hidden" name="payment_type" value="${payment_type}">
+   </td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp;
+      <input type="hidden" name="acct_type" value="${acct_type}">
+   </td>
+   <td nowrap class="list_cc"> ${auth_code}&nbsp;
+      <input type="hidden" name="auth_code" value="${auth_code}">
+   </td>
+   <td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;
+      <input type="hidden" name="purchase_date" value="${purchase_date}">
+   </td>
+   <td nowrap class="list_cc"> ${film_no}&nbsp;
+      <input type="hidden" name="film_no" value="${film_no}">
+   </td>
+   <td nowrap class="list_cc"> ${txn_code}&nbsp;
+      <input type="hidden" name="txn_code" value="${txn_code}">
+   </td>
+   <td nowrap class="list_rr"> ${source_amt.(999.00)}&nbsp;
+      <input type="hidden" name="source_amt" value="${source_amt}">
+   </td>
+   <td nowrap class="list_cc"> ${source_curr}&nbsp;
+      <input type="hidden" name="source_curr" value="${source_curr}">
+   </td>
+   <td nowrap class="list_rr"> ${dest_amt.(999)}&nbsp;
+      <input type="hidden" name="dest_amt" value="${dest_amt}">
+   </td>
+   <td nowrap class="list_rr"> ${settl_amt.(999)}&nbsp;
+      <input type="hidden" name="settl_amt" value="${settl_amt}">
+   </td>
+   <td nowrap class="list_cc"> ${process_date.YMD}&nbsp;
+      <input type="hidden" name="process_date" value="${process_date}">
+   </td>
+   <td nowrap class="list_cc"> ${acq_member_id}&nbsp;
+      <input type="hidden" name="acq_member_id" value="${acq_member_id}">
+   </td>
+   <td nowrap class="list_cc"> ${pos_entry_mode}&nbsp;
+      <input type="hidden" name="pos_entry_mode" value="${pos_entry_mode}">
+   </td>
+   <td nowrap class="list_ll"> ${mcht_chi_name}&nbsp;
+      <input type="hidden" name="mcht_chi_name" value="${mcht_chi_name}">
+   </td>
+   <td nowrap class="list_ll"> ${mcht_eng_name}&nbsp;
+      <input type="hidden" name="mcht_eng_name" value="${mcht_eng_name}">
+   </td>
+   <td nowrap class="list_cc"> ${mcht_no}&nbsp;
+      <input type="hidden" name="mcht_no" value="${mcht_no}">
+   </td>
+   <td nowrap class="list_cc"> ${mcht_city}&nbsp;
+      <input type="hidden" name="mcht_city" value="${mcht_city}">
+   </td>
+   <td nowrap class="list_cc"> ${mcht_category}&nbsp;
+      <input type="hidden" name="mcht_category" value="${mcht_category}">
+   </td>
+   <td nowrap class="list_cc"> ${mcht_country}&nbsp;
+      <input type="hidden" name="mcht_country" value="${mcht_country}">
+   </td>
+   <td nowrap class="list_cc"> ${mcht_state}&nbsp;
+      <input type="hidden" name="mcht_state" value="${mcht_state}">
+   </td>
+   <td nowrap class="list_cc"> ${reference_no}&nbsp;
+      <input type="hidden" name="reference_no" value="${reference_no}">
+   </td>
+   <td nowrap class="list_cc"> ${prbl_mark}&nbsp;
+      <input type="hidden" name="prbl_mark" value="${prbl_mark}">
+   </td>
+   <td nowrap class="list_cc"> ${v_card_no}&nbsp;
+      <input type="hidden" name="v_card_no" value="${v_card_no}">
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="50";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

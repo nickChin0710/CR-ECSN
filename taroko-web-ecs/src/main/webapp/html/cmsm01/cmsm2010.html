@@ -1,0 +1,240 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-08-20  V1.00.1    Sunny Ts       修改姓名欄位的size maxlength:50 size:92 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人相關資料維護-20210820</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+
+$('.tbl_idno').hide();
+$('.tbl_acno').hide();
+$('.tbl_card').hide();
+if (page_type=='idno') {
+   $('.tbl_idno').show();
+}
+else if (page_type=='acno') {
+   $('.tbl_acno').show();
+}
+else if (page_type=='card') {
+   $('.tbl_card').show();
+}
+});
+
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12">
+   </td>
+      <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;        
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;中文姓名:
+      <input type="text" class="col_any" name="ex_id_name" value="${ex_id_name}" maxlength="50" size="92" zEdit="any,canTw">
+   </td>
+ </table>
+</div>
+<hr>
+<table>
+<tr><td>
+<input type="Button"  value="卡人主檔" onClick="return top.submitControl('Q1')" class="${bt_class1}" >&nbsp;&nbsp;
+<input type="Button"  value="帳戶主檔" onClick="return top.submitControl('Q2')" class="${bt_class2}" >&nbsp;&nbsp;
+<input type="Button"  value="卡片主檔" onClick="return top.submitControl('Q3')" class="${bt_class3}" >&nbsp;&nbsp;
+</td></tr>
+</table>
+
+<!-----------卡片主檔-------------->
+ <table id="tbl_idno" class="tbl_idno" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+    <th nowrap >身分證號碼&nbsp;</th>
+    <th nowrap >中文姓名&nbsp;</th>
+    <th nowrap >英文姓名&nbsp;</th>
+    <th nowrap >出生日期&nbsp;</th>
+    <th nowrap >性別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenA('${SER_NUM}','${A.id_p_seqno}','${A.risk_type}','${A.debit_flag}','${A.id_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;
+	<input type="hidden" name="A.id_p_seqno" value="${A.id_p_seqno}" />
+	<input type="hidden" name="A.debit_flag" value="${A.debit_flag}" />
+   </td>
+   <td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCrd.debitFlag(A.debit_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.id_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.chi_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.db_ename}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.birthday.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.sex}.${#JAVA:ecsfunc.DeCodeCrd.idnoSex(A.sex)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-----------卡人主檔-------------->
+ <table id="tbl_acno" class="tbl_acno" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+    <th nowrap colspan="2" >帳號&nbsp;</th>
+    <th nowrap >卡人(法人)名稱&nbsp;</th>
+    <th nowrap >產品類別&nbsp;</th>
+    <th nowrap >金融帳號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenB('${SER_NUM}','${B.acno_p_seqno}','${B.id_p_seqno}','${B.debit_flag}','${B.card_indicator}','${A.corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;
+	<input type="hidden" name="B.acno_p_seqno" value="${B.acno_p_seqno}" />
+	<input type="hidden" name="B.id_p_seqno" value="${B.id_p_seqno}" />
+	<input type="hidden" name="B.debit_flag" value="${B.debit_flag}" />
+	<input type="hidden" name="B.card_indicator" value="${B.card_indicator}" />
+   </td>
+   <td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCrd.debitFlag(B.debit_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.acct_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.db_acno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.card_indicator}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.acct_no}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-----------帳戶主檔-------------->
+ <table id="tbl_card" class="tbl_card" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+    <th nowrap colspan="2" >帳戶帳號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >狀態&nbsp;</th>
+    <th nowrap >卡種&nbsp;</th>
+    <th nowrap >團體代號&nbsp;</th>
+    <th nowrap >停用原因&nbsp;</th>
+    <th nowrap >幣別&nbsp;</th>
+    <th nowrap >核卡日期&nbsp;</th>
+    <th nowrap >停用日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenC('${SER_NUM}','${C.card_no}','${C.id_p_seqno}','${C.debit_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;
+      <input type="hidden" name="C.card_no" value="${C.card_no}" />
+      <input type="hidden" name="C.id_p_seqno" value="${C.id_p_seqno}" />
+      <input type="hidden" name="C.debit_flag" value="${C.debit_flag}" />
+   </td>
+   <td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCrd.debitFlag(C.debit_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.acct_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(C.current_code)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.card_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.group_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.oppost_reason}.${C.tt_oppost_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.curr_code}${C.tt_curr_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.issue_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.oppost_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+  <input type="hidden"  name="data_k5" value="" >
+  <input type="hidden"  name="idnos"  value="" >
+ <input type="hidden"  name="acct_key" value="${b.acct_key}" >
+ <input type="hidden"  name="bt_class2" value="${bt_class2}" >
+ <input type="hidden"  name="bt_class3" value="${bt_class3}" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  id="pageType" name="pageType"  value="${pageType}">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('tbl_idno');
+	tigra_tables('tbl_acno');
+	tigra_tables('tbl_card');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+  function detailScreenA(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.idnos.value = parm4;
+    if(parm3=='Y'){
+      top.respHtml  = "cmsm2010_dbidno";
+   }  else if (parm3=='N'){
+      top.respHtml  = "cmsm2010_idno";  
+   }    
+    top.submitControl('S');
+    return true;
+  }
+  
+  function detailScreenB(serNum,parm,parm2,parm3,parm4,parm5) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    if(parm3=='Y'){
+      top.respHtml  = "cmsm2010_dbacno";
+   }  else if (parm3=='N'){
+      top.respHtml  = "cmsm2010_acno";
+   }
+    
+    top.submitControl('S1');
+    return true;
+  }
+  
+  function detailScreenC(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    if(parm3=='Y'){
+      top.respHtml  = "cmsm2010_dbcard";
+   }  else if (parm3=='N'){
+      top.respHtml  = "cmsm2010_card";
+   }    
+    top.submitControl('S2');
+    return true;
+  }
+  
+</script>

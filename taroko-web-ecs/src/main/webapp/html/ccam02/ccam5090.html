@@ -1,0 +1,118 @@
+<html>
+<head>
+<title>回覆碼維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;回覆碼：
+      <input type="text" class="col_text" name="ex_resp_code" value="${ex_resp_code}"
+       maxlength=2 size=5 />
+      &nbsp;P-39：
+      <input type="text" class="col_text" name="ex_p39" value="${ex_p39}"
+       maxlength=2 size=5 /> 
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;說明:
+  		<input type="text" class="col_any" name="ex_remark" value="${ex_remark}" maxlength="50" size="55" zEdit="any,canTw" >
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >回覆碼</th>
+    <th nowrap >說明</th>    
+    <th nowrap >P-38</th>
+    <th nowrap >FISC<br>P-39</th>
+    <th nowrap >Visa<br>P-39</th>
+    <th nowrap >Master<br>P-39</th>
+    <th nowrap >JCB<br>P-39</th>
+    <th nowrap >不當代行報表</th>
+    <th nowrap >失敗原因類別統計表</th>
+    <th nowrap >產生日期</th>
+    <th nowrap >產生經辦</th>
+    <th nowrap >異動日期</th>
+    <th nowrap >異動經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${resp_code}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM} </td>
+   <td nowrap class="list_cc"> ${resp_code} </td>
+   <td nowrap class="list_ll"> ${resp_remark} </td>   
+   <td nowrap class="list_cc"> ${nccc_p38} </td>
+   <td nowrap class="list_cc"> ${nccc_p39} </td>
+   <td nowrap class="list_cc"> ${visa_p39} </td>
+   <td nowrap class="list_cc"> ${mast_p39} </td>
+   <td nowrap class="list_cc"> ${jcb_p39} </td>
+   <td nowrap class="list_cc"> ${abnorm_flag} </td>
+   <td nowrap class="list_cc"> ${resp_status} </td>
+   <td nowrap class="list_cc"> ${crt_date.YMD} </td>
+   <td nowrap class="list_cc"> ${crt_user} </td>
+   <td nowrap class="list_cc"> ${mod_date.YMD} </td>
+   <td nowrap class="list_cc"> ${mod_user} </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5090_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5090_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

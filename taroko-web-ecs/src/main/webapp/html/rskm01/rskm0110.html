@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>調單作業維護-jh-190618</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" 
+         maxlength="10" size="12" >
+   </td>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12">
+   </td>
+   <td nowrap colspan=2>&nbsp;消費年月:
+      <input type="text" class="col_text" name="ex_acct_month" value="${ex_acct_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+   </td>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡別&nbsp;</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >狀態</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >Debit卡&nbsp;</th>
+    <th nowrap >消費日&nbsp;</th>
+    <th nowrap >消費金額&nbsp;</th>
+    <th nowrap >消費特店&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+    <th nowrap >理由碼&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >登錄經辦&nbsp;</th>
+    <th nowrap >帳單參考號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${reference_no}','${reference_seq}','${ctrl_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+   </td>
+	<td nowrap class="list_cc"> ${bin_type}&nbsp;
+      <input type="hidden" name="bin_type" value="${bin_type}" />
+      </td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}-${rept_seqno}&nbsp;
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" />
+      <input type="hidden" name="rept_seqno" value="${rept_seqno}" />
+      </td>
+	<td nowrap class="list_cc"> ${rept_status}&nbsp;
+      <input type="hidden" name="rept_status" value="${rept_status}" />
+      </td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}" />
+      </td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;
+      <input type="hidden" name="debit_flag" value="${debit_flag}" /></td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;
+      <input type="hidden" name="purchase_date" value="${purchase_date}" /></td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999)}&nbsp;
+      <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}" /></td>
+	<td nowrap class="list_ll"> ${mcht_name}&nbsp;
+      <input type="hidden" name="mcht_chi_name" value="${mcht_chi_name}" /></td>
+	<td nowrap class="list_cc"> ${rept_type}.${#JAVA:ecsfunc.DeCodeRsk.reptType(rept_type)}&nbsp;
+      <input type="hidden" name="rept_type" value="${rept_type}" /></td>
+	<td nowrap class="list_cc"> ${reason_code}&nbsp;
+      <input type="hidden" name="reason_code" value="${reason_code}" /></td>
+	<td nowrap class="list_cc"> ${add_date.YMD}&nbsp;
+      <input type="hidden" name="add_date" value="${add_date}" /></td>
+	<td nowrap class="list_cc"> ${add_user}&nbsp;
+      <input type="hidden" name="add_user" value="${add_user}" /></td>
+	<td nowrap class="list_cc"> ${reference_no}&nbsp;
+      <input type="hidden" name="reference_no" value="${reference_no}" /></td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm0110_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

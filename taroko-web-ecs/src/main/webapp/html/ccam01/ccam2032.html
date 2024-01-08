@@ -1,0 +1,134 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-12-15  V1.00.02    Justin        chg the type of zz_file_name to hidden -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>一般(卡片)特殊指示維護-批次 V20201215</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;匯入日期:
+      <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+        </script>
+        --
+        <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+        </script>
+  </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   ${btnUpdate_disable} value="上傳" onClick="return upload_click();" class="btQuery" >&nbsp;&nbsp;
+   </td>   
+   <td nowrap >
+      <span class="col_key">&nbsp;資料匯入格式：卡號,特指代碼,檢視部門,刪除日期(空白則至卡效期)
+        <br>&nbsp;EX：4363878600000001,W8,DP,20190101
+        <br>&nbsp;&nbsp;&nbsp;　4363878600000001,W8,DP,
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >匯入日期&nbsp;</th>
+    <th nowrap >匯入時間&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >VMJ&nbsp;</th>
+    <th nowrap >特指原因&nbsp;</th>
+    <th nowrap >檢視部門&nbsp;</th>
+    <th nowrap >刪除日期&nbsp;</th>
+    <th nowrap >Outgoing<br>國際組織碼</th>
+    <th nowrap >OUTGOINT<br>NEG原因碼</th>
+    <th nowrap >VMJ回覆碼&nbsp;</th>
+    <th nowrap >NEG回覆碼&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+  <td nowrap class="list_cc"> ${chg_date.YMD}&nbsp;</td>
+  <td nowrap class="list_cc"> ${chg_time.TIME}&nbsp;</td>
+  <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+  <td nowrap class="list_cc"> ${bin_type}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_status}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_dept_no}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_del_date.YMD}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_outgo_reason}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_neg_reason}&nbsp;</td>
+  <td nowrap class="list_cc"> ${vm_resp_code}&nbsp;</td>
+  <td nowrap class="list_cc"> ${neg_resp_code}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <input type="hidden"  name="upload_file" value="" /> 
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+   function upload_click() {
+    document.dataForm.zz_file_name.value = "";    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";    
+    top.openWindow("",parmHtml,parmName,windowSize);
+    top.requHtml    = "ccam2032";
+    top.respHtml    = "ccam2032";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ }  
+  
+</script>

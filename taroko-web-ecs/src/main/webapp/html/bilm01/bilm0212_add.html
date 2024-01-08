@@ -1,0 +1,320 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>線上加檔登錄作業-detl-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;              
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">登錄批號：&nbsp;
+                        <input type=text class="col_text" name="kk_key" value="${kk_key}" zRequire="Y" zeditType="number" maxlength="4" size="4" />
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="12">錯誤代碼：&nbsp;
+                        <span class="dsp_text">${error_code}</span>
+                        <span class="dsp_text" style="color:8608FB">&nbsp;&nbsp;&nbsp;&nbsp;錯誤代碼說明：
+                           &nbsp;1:ID Error&nbsp;2:統編 Error&nbsp;3:金額 Error&nbsp;4:卡號 Error&nbsp;5:帳戶 Error
+                        </span>  
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">加檔卡號：&nbsp;
+                        <input type=text class="col_any" name="card_no" value="${card_no}" zRequire="Y" zeditType="any" maxlength="19" size="21" onChange="detailCardNo(this.value)" />
+                        <input type="hidden" name="card_no" value="${card_no}">
+                        <span style="background-color:#FFFF33" class="dsp_text2" id="card_desp"/>  
+                    </td>
+                    <td nowrap colspan="6">帳戶類別：&nbsp;
+                        <select name="acct_type" id="acct_type" class="col_ddlb">
+                            ${dddw_acct_type}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">正卡身分證字號：&nbsp;
+                        <!-- <input type=text class="col_text" name="id_no" id="id_no" value="${id_no}" zRequire="Y" zEdit="alphanum,upper" maxlength="10" size="12" onChange="detailIdName(this.value)" disabled="true"/>
+                        <input type="hidden" name="id_no" value="${id_no}">
+                        <input type=text class="col_any" name="id_no_code" id="id_no_code" value="${id_no_code}" zRequire="Y" zeditType="any" maxlength="1" size="1" onChange="detailIdCode(this.value)" disabled="true"/> -->
+                        <span class="dsp_text" name="id_no" id="id_no">${id_no}</span>
+                        <span class="dsp_text" name="id_no_code" id="id_no_code">${id_no_code}</span>
+                        <input type="hidden" name="id_no" value="${id_no}">
+                        <input type="hidden" name="id_no_code" value="${id_no_code}">
+                    </td>
+                    <td nowrap colspan="6">帳戶狀態：&nbsp;
+                        <span class="dsp_text" id="jdb_status">${db_status}</span>
+                        <input type="hidden" name="db_status" value="${db_status}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">結清戶：&nbsp;
+                        <span class="dsp_text" id="jdb_end">${db_end}</span>
+                        <input type="hidden" name="db_end" value="${db_end}">
+                    </td>
+                    <td nowrap colspan="6">中文姓名：&nbsp;
+                        <span class="dsp_text" name="chi_name" id="chi_name">${chi_name}</span>
+                        <input type="hidden" name="chi_name" value="${chi_name}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">法人統編：&nbsp;
+                        <input type=text class="col_any" name="corp_no" value="${corp_no}" zeditType="any" maxlength="10" size="12" onChange="detailCorpNo(this.value)"/>
+                        <span style="background-color:#FFFF33" class="dsp_text2" id="corp_desp"/>
+                    </td>
+                    <td nowrap colspan="6">公司簡稱：&nbsp;
+                        <span class="dsp_text" id="jcompany_name">${company_name}</span>
+                        <input type="hidden" name="company_name" value="${company_name}">                        
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">加檔項目：&nbsp;
+                        <select name="txn_code" id="txn_code" class="col_ddlb" zRequire ="Y">
+                            ${dddw_add_item}
+                        </select>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">結算幣別：&nbsp;
+                        <select name="curr_code" id="curr_code" class="col_ddlb" onChange="detailCurrCode(this.value)">
+                            ${dddw_curr_code}
+                        </select>
+                    </td>
+                    <td nowrap colspan="4">結算金額：&nbsp;
+                        <input type=text class="col_number" name="dc_destination_amt" value="${dc_destination_amt}" zedit="number" maxlength="12" size="12" onChange="detailAmt(this.value)" zRequire ="Y"/>
+                    </td>
+                    <td nowrap colspan="4">金額(台幣)：&nbsp;
+                        <span class="dsp_number" id= "jdest_amt" >${dest_amt.(999)}</span>
+                        <input type="hidden" name="dest_amt" value="${dest_amt}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">消費日期：&nbsp;
+                        <input type="text" class="col_date" name="purchase_date" value="${purchase_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" onChange="detailPdate(this.value)" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'purchase_date'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap colspan="6">帳上餘額(結算幣別)：&nbsp;
+                        <span class="dsp_number" id="jdc_acct_jrnl_bal">${dc_acct_jrnl_bal.(999)}</span>
+                        <input type="hidden" name="dc_acct_jrnl_bal" value="${dc_acct_jrnl_bal}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">對帳單文字：&nbsp;
+                        <input type=text class="col_any" name="bill_desc" value="${bill_desc}" zeditType="any,canTW" maxlength="30" size="32" onChange="detailBill_desc(this.value)"/>
+                    </td>
+                </tr>
+                <input type="hidden" name="bill_type" value="${bill_type}">
+            </table>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="6">覆核人員：&nbsp;
+                        <span class="dsp_text">${apr_user}</span>
+                        <input type="hidden" name="apr_user" value="${apr_user}">
+                    </td>
+                    <td nowrap colspan="6">登錄人員：&nbsp;
+                        <span class="dsp_text">${mod_user}</span>
+                        <input type="hidden" name="mod_user" value="${mod_user}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0212">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+        <input type="hidden" id="p_seqno" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">
+        <input type="hidden" name="apr_user" value="${apr_user}">
+        <input type="hidden" name="apr_date" value="${apr_date}">
+        <input type="hidden" name="bill_type" value="${bill_type}">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+top.refreshButton2('1');
+
+//document.dataForm.kk_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function detailIdName(id_no) {
+    var acct_type1 = document.getElementById("acct_type").value;
+    var id_no_code1 = document.getElementById("id_no_code").value;
+    var curr_code = document.getElementById("curr_code").value;
+    idCode = "1";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "idName");
+    addJSON("id_no", id_no);
+    addJSON("id_no_code", id_no_code1);
+    addJSON("acct_type", acct_type1);
+    addJSON("curr_code", curr_code);
+    processAJAX();
+    return true;
+}
+
+function detailIdCode(id_no_code) {
+    var acct_type1 = document.getElementById("acct_type").value;
+    var id_no = document.getElementById("id_no").value;
+    var curr_code = document.getElementById("curr_code").value;
+    idCode = "2";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "id_no_code");
+    addJSON("id_no", id_no);
+    addJSON("id_no_code", id_no_code);
+    addJSON("acct_type", acct_type1);
+    addJSON("curr_code", curr_code);
+    processAJAX();
+    return true;
+}
+
+function detailCardNo(card_no) {
+    var curr_code = document.getElementById("curr_code").value;
+    var acct_type = document.getElementById("acct_type").value;
+    idCode = "3";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "detailCardNo");
+    addJSON("card_no", card_no);
+    addJSON("curr_code", curr_code);
+    addJSON("acct_type", acct_type);
+    processAJAX();
+    return true;
+}
+
+function detailCorpNo(corp_no) {    
+    idCode = "4";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "CorpDesp");
+    addJSON("corp_no", corp_no);
+    processAJAX();
+    return true;
+}
+function detailPdate(purchase_date){
+    idCode = "5";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "detailPdate");
+    addJSON("purchase_date", purchase_date);
+    processAJAX();
+    return true;
+}
+function detailBill_desc(bill_desc){
+    var add_item = document.getElementById("txn_code").value;
+    idCode = "6";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "detailBill_desc");
+    addJSON("add_item", add_item);
+    addJSON("bill_desc", bill_desc);
+    processAJAX();
+    return true;
+}
+function detailCurrCode(curr_code){
+    var p_seqno = document.getElementById("p_seqno").value;
+    idCode = "7";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "detailCurrCode");
+    addJSON("curr_code", curr_code);
+    addJSON("p_seqno", p_seqno);
+    processAJAX();
+    return true;
+}
+function detailAmt(dc_destination_amt){
+    var curr_code = document.getElementById("curr_code").value;
+    idCode = "6";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "detailAmt");
+    addJSON("dc_destination_amt", dc_destination_amt);
+    addJSON("curr_code", curr_code);
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    top.respHtml = "bilm0212_detl";
+    top.respHtml = "bilm0212_add";
+    top.requHtml = "bilm0212_detl";
+    top.requHtml = "bilm0212_add";
+    //$("input[name=id_name]").val(getJSONvalue("id_name",0));
+  if(idCode == "1"){
+    // $("#jid_name").text(getJSONvalue("id_name",0));
+    // $("#jdb_status").text(getJSONvalue("jdb_status",0));
+    // $("#jdb_end").text(getJSONvalue("jdb_end",0));
+    // $("#jdc_acct_jrnl_bal").text(getJSONvalue("jdc_acct_jrnl_bal",0));
+  }
+  if(idCode == "3"){
+    $("#jcompany_name").text(getJSONvalue("jcompany_name",0));
+  }    
+}
+</script>

@@ -1,0 +1,207 @@
+<html>
+<head>
+<title>覆審查詢資料統計處理-jh190715</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;查詢批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" >
+   </td>
+   </td>
+   <td nowrap >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;傳送JCIC日期:
+      <input type="text" class="col_date" name="ex_send_date1" value="${ex_send_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_send_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_send_date2" value="${ex_send_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_send_date2'});
+	      </script>
+	</td>
+   <td nowrap colspan="2">&nbsp;處理項目:
+      <select   size="1"  name="ex_callbatch" class="col_ddlb">
+         <option value="b110" ${ex_callbatch-b110} ${default_sel} >全部(b110)</option>
+         <option value="b008" ${ex_callbatch-b008} >本行資料統計(b008)</option>
+         <option value="b003" ${ex_callbatch-b003} >JCIC資料統計(b003)</option>
+         <option value="b013" ${ex_callbatch-b013} >評分評等(b013)</option>
+         <option value="b004" ${ex_callbatch-b004} >設定風險族群(b004)</option>
+      </select>
+      <input type="Button" value="批次處理" onClick="return wf_callbatch('C')" class="btProcess" >&nbsp;&nbsp;
+   </td>   
+</tr>
+<tr>
+	<td nowrap >&nbsp;JCIC 回覆日期:
+      <input type="text" class="col_date" name="ex_resp_date1" value="${ex_resp_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_resp_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_resp_date2" value="${ex_resp_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_resp_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;</td>
+</tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >查詢批號&nbsp;</th>
+    <th nowrap >送JCIC日期&nbsp;</th>
+    <th nowrap >送 JCIC 檔名&nbsp;</th>
+    <th nowrap >JCIC 回覆日期&nbsp;</th>
+    <th nowrap >JCIC 統計日期&nbsp;</th>
+    <th nowrap >JCIC 回覆檔名&nbsp;</th>
+    <th nowrap >未結案筆數&nbsp;</th>
+    <th nowrap >本行統計日期&nbsp;</th>
+    <th nowrap >風險分群日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+       <input type="radio" name="opt" value="${ser_num}" ${opt_on} onchange="wf_opt_select(${ser_num});" >
+ 	    ${SER_NUM}&nbsp;
+       <input type="hidden" name="ser_num" value="${ser_num}" />
+   </td>
+	<td nowrap class="list_cc"> ${trial_batch_no}&nbsp;
+	   <input type="hidden" name="trial_batch_no" value="${trial_batch_no}">
+	</td>
+	<td nowrap class="list_cc"> ${send_date.YMD}&nbsp;
+	   <input type="hidden" name="send_date" value="${send_date}">
+	</td>
+	<td nowrap class="list_cc"> ${send_file}&nbsp;
+	   <input type="hidden" name="send_file" value="${send_file}">
+	</td>
+	<td nowrap class="list_cc"> ${resp_date.YMD}&nbsp;
+	   <input type="hidden" name="resp_date" value="${resp_date}">
+	</td>
+	<td nowrap class="list_cc"> ${trial_proc_date.YMD}&nbsp;
+	   <input type="hidden" name="trial_proc_date" value="${trial_proc_date}">
+	</td>
+	<td nowrap class="list_cc"> ${resp_file}&nbsp;
+	   <input type="hidden" name="resp_file" value="${resp_file}">
+	</td>
+	<td nowrap class="list_cc"> ${db_unclose_cnt}&nbsp;
+	   <input type="hidden" name="db_unclose_cnt" value="${db_unclose_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${db_ecs_date.YMD}&nbsp;
+	   <input type="hidden" name="db_ecs_date" value="${db_ecs_date}">
+	</td>
+	<td nowrap class="list_cc"> ${db_group_date.YMD}&nbsp;
+	   <input type="hidden" name="db_group_date" value="${db_group_date}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <input type="hidden"  name="db_batch_no" value="" size=10 />
+ <input type="hidden" name="conf_flag1" value="" />
+ <input type="hidden" name="conf_flag2" value="" />
+ <input type="hidden" name="conf_flag3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+  function wf_opt_select(parm1) {
+   var ii =parseInt(parm1);
+   var ls_bb2 =document.getElementsByName("trial_batch_no")[ii].value;
+   document.forms['dataForm']['db_batch_no'].value =ls_bb2
+ }
+
+ if (1==2 ${conf_mesg1}) {
+  var resp  = confirm("查詢資料媒體未全部回覆匯入, 是否執行");
+  if ( resp == true ) {
+     document.dataForm.conf_flag1.value="Y";
+     top.submitControl('C');
+  }
+  else {
+     alert("no run.....");
+  }
+ }
+
+ if (1==2 ${conf_mesg2}) {
+  var resp  = confirm("已執行 JCIC 之資料統計分析處理, 是否重新執行");
+  if ( resp == true ) {
+     document.dataForm.conf_flag2.value="Y";
+     top.submitControl('C');
+  }
+  else {
+     alert("no run.....");
+  }
+ }
+
+ if (1==2 ${conf_mesg3}) {
+  var resp  = confirm("是否執行 JCIC 之資料統計分析處理");
+  if ( resp == true ) {
+     document.dataForm.conf_flag3.value="Y";
+     top.submitControl('C');
+  }
+  else {
+     alert("no run.....");
+  }
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode=='C1') {
+       if (confirm("是否執行 本行資料統計處理")==false) {
+         return false;
+       }
+    }
+
+    if (top.actionCode=='C2') {
+       if (confirm("是否執行 風險族群評估處理")==false) {
+         return false;
+       }
+    }
+
+    return true;
+  }
+ function wf_callbatch(par) {
+   if (confirm('是否執行批次處理')==false) {
+      return false;
+   }
+   top.submitControl(par);
+   return true;
+ }
+
+</script>

@@ -1,0 +1,332 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 112-05-16  V1.00.03  Wilson         mark 貴賓卡卡別                                                                      -->
+<!-- 112-06-14  V1.00.04  Wilson         apply_credit_card_no改成card_no        -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>新貴通/龍騰卡申請作業-2019-1224</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var ls_mail_type = document.dataForm.mail_type.value;
+if(ls_mail_type != 4){
+    document.getElementById("mail_branch").disabled =true;
+}   else if(ls_mail_type ==4){
+    document.getElementById("mail_branch").disabled =false;
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<!--  ${#PLUGIN:htmcomm_plugin.apr_user} --> 
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="檢核申請條件" onClick="return top.submitControl('R1')" class="btProcess" >&nbsp;&nbsp;
+  <input type="Button"   value="檢核使用條件" onClick="return top.submitControl('R2')" class="btProcess" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;申請編號:
+      <input type="text" class="col_text" name="kk_apply_no" value="${kk_apply_no}" maxlength="10" size="12">
+   </td>
+   <td nowrap >&nbsp;貴賓卡:
+        <select size="1" id="kk_vip_kind" name="kk_vip_kind" class="col_ddlb" onChange="vipKindChange()" >
+            <option value="1" ${kk_vip_kind-1} >1_新貴通</option>
+            <option value="2" ${kk_vip_kind-2} >2_龍騰卡</option>
+      </select>
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="3" >&nbsp;申請編號:
+      <span class="dsp_text">${apply_no}&nbsp;</span>
+      <input type="hidden" name="apply_no" value="${apply_no}">
+   </td>
+   <td nowrap colspan="3" >&nbsp;申請日期:
+      <span class="dsp_text">${apply_date.YMD}&nbsp;</span>
+      <input type="hidden" name="apply_date" value="${apply_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3" >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="id_no" value="${id_no}" maxlength="10" size="12" zRequire="Y" onChange="idnoChange('1')" ${off_text} >
+      <input type="hidden" id="id_p_seqno" name="id_p_seqno" value="${id_p_seqno}" />
+   </td>
+   <td nowrap colspan="3" >&nbsp;姓名:
+      <input type="text" class="dsp_text" id="chi_name" name="chi_name" value="${chi_name}" readonly >
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3" >&nbsp;英文姓名:
+      <input type="text" class="col_text" name="eng_name" value="${eng_name}" maxlength="25" size="27" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;
+      <span class="col_radio" >
+         <input type="radio" value="1" id="sex" name="sex" ${sex-1} ${default-sex} disabled  />男
+         <input type="radio" value="2" id="sex" name="sex" ${sex-2} disabled  />女
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;卡種:
+      <input type="text" class="dsp_text" name="reg_card_type" value="${reg_card_type}" maxlength="2" size="4" readonly >
+   </td>
+<!--   
+   <td nowrap colspan="2" >&nbsp;貴賓卡卡別:
+      <input type="text" class="dsp_text" name="tt_bin_type" value="${tt_bin_type}" maxlength="10" size="12" readonly >
+   </td>
+-->   
+   <td nowrap colspan="2" >&nbsp;貴賓卡:
+      <input type="text" class="dsp_text" id="vip_kind" name="vip_kind" value="${vip_kind}" maxlength="7" size="7" readonly >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;團體代號:
+      <input type="text" class="dsp_text" name="reg_group_code" value="${reg_group_code}" maxlength="4" size="6" readonly  >
+   </td>
+      <td nowrap colspan="3" >&nbsp;申請信用卡號:
+      <input type="text" class="dsp_text" name="card_no" value="${card_no}" maxlength="16" size="18" readonly  >
+   </td>
+  </tr>
+  <tr>
+     <td nowrap colspan="3" >&nbsp;寄件別:
+      <select   size="1" name="mail_type" class="col_ddlb" onChange="addr()"  >
+         <option value="1" ${mail_type-1} >普掛</option>
+         <option value="2" ${mail_type-2} >限掛</option>
+         <option value="3" ${mail_type-3} >自取</option>
+         <option value="4" ${mail_type-4} >分行</option>
+      </select>
+   </td>
+   <td nowrap colspan="3" >&nbsp;寄件分行:
+      <select size="1" id="mail_branch" name="mail_branch" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_branch}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="6" >&nbsp;申請備註:
+      <input type="text" class="col_any" name="user_remark" value="${user_remark}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="6" >&nbsp;寄送地址：
+      <select size="1" id="zip_code" name="zip_code" class="col_ddlb" onChange="zipChange()" >
+         <option value="">--</option>
+         ${d_dddw_zipcode}
+      </select>
+      <input type="hidden"  id="mail_addr1" name="mail_addr1" value="${mail_addr1}" >
+      <input type="hidden"  id="mail_addr2" name="mail_addr2" value="${mail_addr2}" >
+      <input type="text" class="col_any" id="mail_addr3" name="mail_addr3" value="${mail_addr3}" maxlength="12" size="14" zEdit="any,canTw" />
+      村里
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="6" >&nbsp;　　　　　
+      <input type="text" class="col_any" id="mail_addr4" name="mail_addr4" value="${mail_addr4}" maxlength="12" size="14" zEdit="any,canTw">
+      鄰
+      <input type="text" class="col_any" id="mail_addr5" name="mail_addr5" value="${mail_addr5}" maxlength="56" size="58" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;製卡處理:
+      <span class="dsp_text">${proc_flag}&nbsp;</span>
+      <input type="hidden" name="proc_flag" value="${proc_flag}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;製卡處理日期:
+      <span class="dsp_text">${proc_date.YMD}&nbsp;</span>
+      <input type="hidden" name="proc_date" value="${proc_date}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;貴賓卡卡號:
+      <span class="dsp_text">${pp_card_no}&nbsp;</span>
+      <input type="hidden" name="pp_card_no" value="${pp_card_no}">
+   </td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">建檔日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}&nbsp;${crt_time.TIME}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+      <input type="hidden" name="crt_time" value="${crt_time}">
+   </td>
+   <td nowrap class="td_text" width="20%">建檔人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">覆核日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${apr_date.YMD}</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+   </td>
+   <td nowrap class="td_text" width="20%">覆核主管：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${apr_user} </span>
+      <input type="hidden" name="apr_user" value="${apr_user}">
+   </td>
+  </tr>
+</table>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+<input type="hidden" name="bin_type" value="${bin_type}" />
+<input type="hidden" name="apr_yn" value="${apr_yn}" />
+<input type="hidden" id="db_sex" name="db_sex" value="${db_sex}" />
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "R1" ) {
+        top.respLevel = 2;
+        top.respHtml = "cmsm3120_card";
+    }
+
+    if ( top.actionCode == "R2" ) {
+        top.respLevel = 2;
+        top.respHtml = "cmsm3120_use";
+    }
+
+    return true;
+  }
+
+ function addr()
+ {
+   var  mail_type =document.forms["dataForm"]["mail_type"].value;
+   if(mail_type == '4'){
+      $("#mail_branch").val('');
+      document.getElementById("mail_branch").disabled =false;
+   } else {
+      document.getElementById("mail_branch").disabled =true;
+   }
+
+   if(mail_type === '' || mail_type ==='' || mail_type =='3' || mail_type =='4'){
+      $("#zip_code").val('');
+      $("#mail_addr1").val('');
+      $("#mail_addr2").val('');
+      $("#mail_addr3").val('');
+      $("#mail_addr4").val('');
+      $("#mail_addr5").val('');
+   }
+   
+   
+ }
+
+ function zipChange()
+ {
+ 	var ls_ar = new Array();
+ 	var ls_zip =$("#zip_code").val();
+ 	var ls_desc =$("#zip_code option:selected").text();
+ 	var ls_addr1 = "";
+ 	var ls_addr2 = "";
+ 	ls_ar = ls_desc.split(" ");
+ 	ls_addr1 = ls_ar[1];
+ 	ls_addr2 = ls_ar[2];
+ 	$("#mail_addr1").val(ls_addr1);
+ 	$("#mail_addr2").val(ls_addr2);
+ }
+
+ function idnoChange(ps1)
+ {
+	var  id_no =document.forms["dataForm"]["id_no"].value.toUpperCase();
+	if ( id_no === '' ) {
+		return false;
+	}
+	idCode = ps1;
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    //if ( idCode === '1' ) {
+	//	top.methodName = "wf_ajax_id_no";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_id_no",id_no);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+ 
+ function vipKindChange() {
+	var vipKind =$("#kk_vip_kind").val();
+	if (vipKind==1) {
+		$("#vip_kind").val("1_新貴通");
+	} else if (vipKind==2) {
+		$("#vip_kind").val("2_龍騰卡");
+	}
+    
+ }
+
+ function ajaxResponse()
+ {
+	top.respHtml ="cmsm3120_detl";
+   top.requHtml ="cmsm3120_detl";
+
+	if  ( idCode === '1' ) {
+      var id_p_seqno =getJSONvalue("id_p_seqno",0);
+      if (id_p_seqno.length>0) {
+         $("#id_p_seqno").val(id_p_seqno);
+      }
+      var chi_name=getJSONvalue("chi_name",0);
+      if (chi_name.length>0) {
+         $("#chi_name").val(chi_name);
+      }
+      var sex=getJSONvalue("sex",0);
+      if (sex.length>0) {
+         $("#sex").val(sex);
+      }
+      var db_sex=getJSONvalue("db_sex",0);
+      if (db_sex.length>0) {
+         $("#db_sex").val(db_sex);
+      }
+	}
+	if (idCode === '1' )
+	{ return false; }
+ }
+</script>

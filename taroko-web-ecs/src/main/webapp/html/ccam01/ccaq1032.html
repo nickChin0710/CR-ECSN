@@ -1,0 +1,335 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-01-06  V1.00.02    Justin              updated for XSS               -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡戶交易記錄查詢[w_auth_txlog]-cond-110-01-06-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellpadding="0">
+  <tr>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="EX_CARD_NO" value="${ex_card_no}"
+			zEdit="alphanum,upper" size="20" maxlength="16" />
+   </td>
+   <td nowrap >&nbsp;交易日期:
+      <input type="text" class="col_date" name="EX_TX_DATE1" value="${EX_TX_DATE1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'EX_TX_DATE1'});
+	      </script>
+      &nbsp;--&nbsp;
+      <input type="text" class="col_date" name="EX_TX_DATE2" value="${EX_TX_DATE2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'EX_TX_DATE2'});
+	      </script>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="交易紀錄" onClick="wf_cnt()" class="btQuery" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;身份證ID:
+      <input type="text" class="col_text" name="EX_IDNO" value="${ex_idno}"
+			zEdit="alphanum,upper" size="10" maxlength="10" />
+   </td>
+   <td nowrap>&nbsp;交易時間:
+      <input type="text" class="col_date" name="EX_TX_TIME1" value="${ex_tx_time1}"
+			zEdit="number" MaxLength="6" size="6" />
+		&nbsp;--&nbsp;
+      <input type="text" class="col_date" name="EX_TX_TIME2" value="${ex_tx_time2}"
+			zEdit="number" MaxLength="6" size="6" />
+			&nbsp;
+	    <input type="checkbox" name="ex_same" value="Y" ${ex_same-Y}>重覆交易
+	    &nbsp;
+	    <input type="checkbox" name="ex_no_tw" value="Y" ${ex_no_tw-Y}>排除國家TW&nbsp;
+   </td>
+   <td nowrap>&nbsp;交易類別:
+      <select name="ex_trans_code" class="col_ddlb">
+         <option value="">--</option>
+		 ${dddw_trans_code}
+      </select>
+      <!-- <input type="checkbox" value="Y" name="EX_CHK_01" ${ex_chk_01-Y}>人工授權&nbsp;
+      <input type="checkbox" value="Y" id="ex_chk_02" name="EX_CHK_02" ${ex_chk_02-Y} onClick="wf_chk_02()" >自動授權&nbsp; -->
+      <input type="checkbox" value="Y" name="EX_CHK_VIP" ${ex_chk_vip-Y}>VIP&nbsp;
+      <!--<input type="checkbox" value="Y" name="EX_CHK_HCE" ${ex_chk_hce-Y}>行動支付&nbsp;-->
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;MCC Code:
+      <input type="text" class="col_text" name="EX_MCC_CODE" value="${ex_mcc_code}"
+         zEdit="alphanum,upper" size="6" maxlength="4" />
+      &nbsp;排除MCC:
+      <input type="text" class="col_text" name="ex_excl_mcc1" value="${ex_excl_mcc1}"
+         zEdit="alphanum,upper" size="6" maxlength="4" />
+      <input type="text" class="col_text" name="ex_excl_mcc2" value="${ex_excl_mcc2}"
+         zEdit="alphanum,upper" size="6" maxlength="4" />
+      <input type="text" class="col_text" name="ex_excl_mcc3" value="${ex_excl_mcc3}"
+         zEdit="alphanum,upper" size="6" maxlength="4" />
+   </td>
+   <td nowrap>&nbsp;消費金額:
+      <input type="text" class="col_number" name="EX_AMT1" value="${ex_amt1}" zEdit="number" MaxLength="10" size="12" />
+   &nbsp;--&nbsp;
+      <input type="text" class="col_number" name="EX_AMT2" value="${ex_amt2}" zEdit="number" MaxLength="10" size="12" />
+   </td>
+   <td nowrap rowspan="5">
+   <table id='tbl_authunit'>
+   <tr><td>
+      <input type="checkbox" value="Y" name="EX_CHK_03" ${ex_chk_03-Y}>VISA代行
+   </td><td>
+      <input type="checkbox" value="Y" name="EX_CHK_04" ${ex_chk_04-Y}>MASTER代行
+   </td></tr>
+   <tr><td>
+      <input type="checkbox" value="Y" name="EX_CHK_05" ${ex_chk_05-Y}>FISC代行
+   </td><td>
+      <input type="checkbox" value="Y" name="EX_CHK_06" ${ex_chk_06-Y}>收單代行   
+   </td></tr>
+   <tr><td>
+      <input type="checkbox" value="Y" name="EX_CHK_08" ${ex_chk_08-Y}>JCB代行
+   </td><td>
+      &nbsp;
+   </td></tr>
+   <tr><td>
+      <input type="checkbox" value="Y" name="EX_CHK_NCCC" ${ex_chk_nccc-Y}>NCCC小額代行
+   </td><td>      
+   </td></tr>
+   <tr><td>
+      <input type="checkbox" value="Y" name="EX_CHK_TSCC" ${ex_chk_tscc-Y}>悠遊卡代行
+   </td><td>
+      <input type="checkbox" value="Y" name="EX_CHK_fback" ${ex_chk_fback-Y}>FALLBACK
+   </td></tr>
+   <tr><td>
+      <input type="checkbox" value="Y" name="EX_CHK_ipass" ${ex_chk_ipass-Y}>一卡通代行
+   </td><td>
+      <input type="checkbox" value="Y" name="EX_CHK_ich" ${ex_chk_ich-Y}>愛金卡代行
+   </td></tr>
+</table>
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;Entry Mode 類別&nbsp;
+   	  <select size="1" name="ex_entry_type" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_entry_type}
+      </select>
+   	  &nbsp;Entry Mode &nbsp;
+   	  <select size="1" name="ex_entry_mode" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_entry_mode}
+      </select>
+      &nbsp;ECI:
+      <input type="text" class="col_text" name="ex_eci" value="${ex_eci}" zEdit="alphanum,upper" size="3" maxlength="3" />
+      &nbsp;UCAF:
+      <input type="text" class="col_text" name="ex_ucaf" value="${ex_ucaf}" zEdit="alphanum,upper" size="3" maxlength="3" />
+   </td>
+   <td nowrap>&nbsp;特店代碼 &nbsp;
+      <input type="text" class="col_text" name="EX_MCHT_NO" value="${ex_mcht_no}"
+			zEdit="any,upper" MaxLength="15" size="15" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;收單行:
+      <input type="text" class="col_text" name="EX_STAND_IN" value="${ex_stand_in}"
+			zEdit="alphanum,upper" size="11" maxlength="11" />
+   </td>
+   <td nowrap>&nbsp;回覆碼:
+   	  <input type="text" class="col_text" name="ex_iso_resp_code" value="${ex_iso_resp_code}"
+			zEdit="alphanum,upper" MaxLength="2" size="3" />
+      <input type="text" class="col_text" name="ex_auth_status" value="${ex_auth_status}"
+			zEdit="alphanum,upper" MaxLength="2" size="3" />
+      &nbsp;主機回覆碼:
+      <input type="text" class="col_text" name="ex_ibm_resp1" value="${ex_ibm_resp1}"
+			zEdit="alphanum,upper" MaxLength="4" size="6" />			
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;消費國家
+      <input type="text" class="col_text" name="ex_country" value="${ex_country}"
+			zEdit="alphanum,upper" size="3" maxlength="3" />
+   </td>
+   <td nowrap>&nbsp;USER:
+      <input type="text" class="col_text" name="ex_auth_user" value="${ex_auth_user}"
+			zEdit="alphanum,upper" MaxLength="10" size="10" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;卡人等級
+      <input type="text" class="col_text" name="ex_class_code" value="${ex_class_code}"
+			zEdit="alphanum,upper" MaxLength="2" size="2" />
+   &nbsp;、當時總累／標準額度 >
+      <input type="text" class="col_number" name="ex_curr_rate" value="${ex_curr_rate}"
+			zEdit="“dignumber" MaxLength="6" size="6" />
+   &nbsp;％、標準額度 >
+      <input type="text" class="col_number" name="ex_std_amt" value="${ex_std_amt}"
+			zEdit="number" MaxLength="7" size="7" />
+   &nbsp;萬
+   &nbsp;<input type="checkbox" value="Y" name="ex_emp_bank" ${ex_emp_bank-Y}>行員 &nbsp;   
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock">
+	<table width="80%" border="0" cellpadding="0">
+		<tr>
+			<td nowrap >&nbsp;總交易筆數:
+				<span class="dsp_text">${tl_tx_cnt.(999)}</span>
+				<input type="hidden" name="tl_tx_cnt" value="${tl_tx_cnt}">
+			</td>
+			<td nowrap >&nbsp;重覆交易筆數:
+				<span class="dsp_text">${tl_same.(999)}</span>
+				<input type="hidden" name="tl_same" value="${tl_same}">
+				筆&nbsp;
+				(已扣除第一筆交易)
+			</td>
+		</tr>
+	</table>
+</div>
+<br>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0">
+ <tr>
+    <th nowrap width="5%">No.</th>
+    <th nowrap>卡號 </th>
+    <th nowrap>有效日期 </th>
+    <th nowrap>消費日期_時間 </th>
+    <th nowrap>特店代碼 </th>
+    <th nowrap>特店名稱 </th>
+    <th nowrap>MCC </th>
+    <th nowrap>Entry Mode類別 </th>
+    <th nowrap>交易類別</th>
+    <th nowrap>台幣金額 </th>
+    <th nowrap>國家 </th>
+    <th nowrap>幣別 </th>
+    <th nowrap>回覆碼 </th>
+    <th nowrap>授權碼 </th>
+    <th nowrap>授權人員 </th>
+    <th nowrap>VIP </th>
+    <th nowrap>姓名 </th>
+    <th nowrap>收單行 </th>
+    <th nowrap>等級 </th>
+    <th nowrap>授權單位 </th>
+    <th nowrap>狀況說明 </th>
+    <th nowrap>當時OTB </th>
+    <th nowrap>當時額度 </th>
+    <th nowrap>標準額度 </th>
+    <th nowrap>FALLBACK</th>
+    <th nowrap>ECI</th>
+    <th nowrap>UCAF </th>
+    <th nowrap>授權留言 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr bgcolor="${wk_color}"  >
+    <td nowrap class="list_no"><span class="col_key">${wk_same}</span>&nbsp;${SER_NUM}&nbsp;
+    	<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${card_no}','${tx_date}','${tx_time}','${auth_no}','${trace_no}','${auth_seqno}')" style="cursor:hand">
+    	<input type="hidden" name="trace_no" value="${trace_no}" >
+    </td>
+    <td nowrap class="list_cc" style="${bk_color}" >
+    	<span style="${font_color}"> ${card_no}</span>
+    </td>
+    <td nowrap class="list_cc"> ${eff_date_end.YMD}</td>
+    <td nowrap class="list_cc"> ${tx_date.YMD}&nbsp;${tx_time.TIME}</td>
+    <td nowrap class="list_cc">${mcht_no}</td>
+    <td nowrap class="list_ll"> ${mcht_chi_name}</td>
+    <td nowrap class="list_cc"> ${mcc_code}</td>
+    <td nowrap class="list_cc"> ${pos_mode_1_2}_${db_entry_mode_type}</td>
+    <td nowrap class="list_cc"> ${tt_trans_code}</td>
+    <td nowrap class="list_rr"><span style="${color_nt}"> ${nt_amt.(999)} </span></td>
+    <td nowrap class="list_cc"> ${consume_country}</td>
+    <td nowrap class="list_cc"> ${tx_currency}</td>
+    <td nowrap class="list_cc"> ${iso_resp_code}-${auth_status_code}-${iso_adj_code}</td>
+    <td nowrap class="list_cc"> ${auth_no}</td>
+    <td nowrap class="list_cc"> ${auth_user}</td>
+    <td nowrap class="list_cc"> ${vip_code}</td>
+    <td nowrap class="list_cc"> ${db_idno_name}</td>
+    <td nowrap class="list_cc"> ${stand_in}</td>
+    <td nowrap class="list_cc"> ${class_code}</td>
+    <td nowrap class="list_cc"> ${tt_auth_unit}</td>
+    <td nowrap class="list_cc"> ${logic_del}.${tt_logic_del}</td>
+    <td nowrap class="list_rr"><span style="${color_otb}"> ${curr_otb_amt.(999)}</span></td>
+    <td nowrap class="list_cc"> ${curr_tot_lmt_amt.(999)}</td>
+    <td nowrap class="list_cc"> ${curr_tot_std_amt.(999)}</td>
+    <td nowrap class="list_cc"> ${fallback}</td>
+    <td nowrap class="list_cc"> ${ec_flag}</td>
+    <td nowrap class="list_cc"> ${ucaf}</td>
+    <td nowrap class="list_cc"> ${auth_remark}</td>
+    </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  </table>
+
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+ <input type="hidden"  name="data_k4" value="" />
+ <input type="hidden"  name="data_k5" value="" />
+ <input type="hidden"  name="data_k6" value="" />
+ <input type="hidden"  name="is_same" value="${is_same}" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ var ex_chk02 =document.getElementById('ex_chk_02');
+ document.getElementById('tbl_authunit').disabled =ex_chk02.checked;
+
+ function wf_chk_02() {
+    var ex_chk02 =document.getElementById('ex_chk_02');
+    document.getElementById('tbl_authunit').disabled =ex_chk02.checked;
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5,parm6) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    document.dataForm.data_k6.value = parm6;
+    top.respHtml  = "ccaq1032_detl";
+    top.submitControl('S');
+    return true;
+ }
+
+ function wf_cnt() {
+    top.respLevel = 1;
+    top.respHtml  = "ccaq1032_detl2";
+    top.submitControl('S2');
+    return true;
+ }
+
+</script>

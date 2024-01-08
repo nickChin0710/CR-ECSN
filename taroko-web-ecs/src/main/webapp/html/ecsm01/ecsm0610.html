@@ -1,0 +1,157 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-09-07  V1.00.01  Justin         Initial                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>批次排程及執行結果查詢 110-09-07 V1.00.01</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+    <td colspan="3" nowrap>&nbsp;批次日期:
+      <input type="text" class="col_date" name="ex_batch_date_s" value="${ex_batch_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_batch_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" name="ex_batch_date_e" value="${ex_batch_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_batch_date_e'});
+      </script>
+    </td>
+   </tr>
+   <tr>
+    <td nowrap>&nbsp;shell 代碼:
+      <select size="1" name="ex_shell_id" class="col_ddlb">
+         ${dddw_shell_id}
+      </select>
+    </td>
+    <td nowrap>&nbsp;程式代碼:
+      <select size="1" name="ex_pgm_id" id="ex_pgm_id" class="col_ddlb" >
+         ${dddw_pgm_id}
+      </select>
+    </td>
+    <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">批次日期</th>
+    <th nowrap class="list_th">shell代碼</th>
+    <th nowrap class="list_th">程式代碼</th>
+    <th nowrap class="list_th">程式說明</th>
+    <th nowrap class="list_th">執行順序</th>
+    <th nowrap class="list_th">暫停碼</th>
+    <th nowrap class="list_th">執行結果碼</th>
+    <th nowrap class="list_th">執行結果說明</th>
+    <th nowrap class="list_th">執行起迄日期時間</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${batch_date.YMD}</td>
+    <td nowrap class="list_cc"> ${shell_id}</td>
+    <td nowrap class="list_cc"> ${pgm_id}</td>
+    <td nowrap class="list_ll"> ${pgm_desc}</td>
+    <td nowrap class="list_cc"> ${priority_level}</td>
+    <td nowrap class="list_ll"> ${wait_flag}</td>
+    <td nowrap class="list_cc"> ${proc_flag}</td>
+    <td nowrap class="list_ll"> ${proc_desc}</td>
+    <td nowrap class="list_cc"> ${execute_date_s.YMD} ${execute_time_s.TIME} ~ ${execute_date_e.YMD} ${execute_time_e.TIME}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<!-- script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput(){
+    if ( !top.checkFormat() ){ 
+      return false; 
+    }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ecsm0610_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5){
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ecsm0610_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+// function shellIdChange(target){
+
+//   top.actionCode = "AJAX";
+//   top.methodName = "wfAjaxKey"; // "wf_ajax_key";
+
+//   resetJSON();
+//   addJSON("ex_shell_id", target.value);
+//   processAJAX();
+// }
+
+// function ajaxResponse(){
+//    // top.respHtml ="cmsm2010_idno";
+//    // top.requHtml ="cmsm2010_idno";
+
+//    var ajax_dddw_pgm_id = getJSONvalue("ajax_dddw_pgm_id",0);
+
+//    document.getElementById("ex_pgm_id").innerHTML = ajax_dddw_pgm_id;              
+
+// }
+
+</script>
+<!-- ******************************************************************** -->

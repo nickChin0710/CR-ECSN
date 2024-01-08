@@ -1,0 +1,241 @@
+<html>
+
+<head>
+    <title>產生月訊名條檔-107-03-19-V1.00.01-AndyLiu-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+    <script language="JavaScript" src="js/jquery-ui.min.js"></script>
+</head>
+<style>
+font {
+    color: red;
+}
+</style>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+                    <input type="Button"  value=" 篩選 " onClick="return top.submitControl('R1')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button"  value="匯出雍興檔" onClick="return top.submitControl('XLS')" class="btDelete">&nbsp;&nbsp;                    
+                   <!--  <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap colspan="2">&nbsp;批號:
+                        <!-- <input type="text" class="col_any" name="kk_batchno" value="${kk_batchno}" maxlength="10" size="10" zRequire="k" /> -->
+                        <span class="dsp_text">${kk_batchno}</span>
+                        <input type="hidden" name="kk_batchno" value="${kk_batchno}">
+                    </td>
+                    <td nowrap colspan="2">&nbsp;性別:
+                        <input type="radio" value="0" name="ex_sex" ${ex_sex-0} ${DEFAULT_CHK} />全部
+                        <input type="radio" value="1" name="ex_sex" ${ex_sex-1} />男
+                        <input type="radio" value="2" name="ex_sex" ${ex_sex-2} />女
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;年齡:
+                        <input type="radio" value="0" name="ex_age_limit" ${ex_age_limit-0} ${DEFAULT_CHK} onclick="chang()"/>全部
+                        <input type="radio" value="1" name="ex_age_limit" ${ex_age_limit-1} onclick="chang()"/>限制
+                        <input type="text" class="col_number" zEdit="number" id="ex_age1" name="ex_age1" value="${ex_age1}" size="2" disabled ="disabled" style="background-color:#EDEDED;"/>&nbsp;--&nbsp;
+                        <input type="text" class="col_number" zEdit="number" id="ex_age2" name="ex_age2" value="${ex_age2}" size="2" disabled ="disabled" style="background-color:#EDEDED;"/>
+                    </td>
+                    <td nowrap colspan="2">&nbsp;郵遞區號:
+                        <input type="radio" value="0" name="ex_zip_code" ${ex_zip_code-0} ${DEFAULT_CHK} onclick="select_zip_code()"/>全部
+                        <input type="radio" value="1" name="ex_zip_code" ${ex_zip_code-1} onclick="select_zip_code()"/>指定
+                        <input type="radio" value="2" name="ex_zip_code" ${ex_zip_code-2} onclick="select_zip_code()"/>排除
+                        <input id="myfile" type="file"  accept="text/plain, text/csv, application/vnd.ms-excel" />
+                        <input type="Button" class="btAdd_detl"  value="郵遞區號匯入" id="processList" >
+                        <font>${errmsg7}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="exclude_list_desc" name="exclude_list_desc" value="${exclude_list_desc}" MaxLength=125 size="80" class="dsp_text" readonly>
+                        <input type="hidden" id="exclude_list" name="exclude_list" value="${exclude_list}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;金普卡註記
+                        <input type="radio" value="0" name="ex_card_rank" ${ex_card_rank-0} ${DEFAULT_CHK} />全部
+                        <input type="radio" value="1" name="ex_card_rank" ${ex_card_rank-1} />頂級卡
+                        <input type="radio" value="2" name="ex_card_rank" ${ex_card_rank-2} />卓越卡
+                        <input type="radio" value="3" name="ex_card_rank" ${ex_card_rank-3} />白金卡
+                        <input type="radio" value="4" name="ex_card_rank" ${ex_card_rank-4} />金卡
+                        <input type="radio" value="5" name="ex_card_rank" ${ex_card_rank-5} />普卡
+                    </td>
+                    <td nowrap colspan="2">&nbsp;寄送數:
+                        <input type="text" class="col_number" zEdit="number" name="ex_send_number" value="${ex_send_number}" size="5" />正卡人
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;信用額度 >=
+                        <input type="text" class="col_number" zEdit="number" name="ex_credit_amt" value="${ex_credit_amt}" size="12" />(仟元)
+                    </td>
+                    <td nowrap colspan="2">
+                        <input type="checkbox" value="Y" name="ex_id_index" ${ex_id_index-Y}>&nbsp;以ID為索引,排除重複身份卡友,僅留該卡友最優等的資料
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <table>
+            <tr>
+                <td nowrap class="td_data" colspan="2">批號總筆數:&nbsp;
+                    <span class="dsp_number">${row_ct.(999)}</span>
+                    <input type="hidden" name="${row_ct}" value="${row_ct}">
+                </td>
+            </tr>
+            <tr>    
+                <td nowrap class="td_data" colspan="2">篩選後筆數:&nbsp;
+                    <span class="dsp_number" style="color: red">${select_ct.(999)}</span>
+                </td>
+            </tr>
+        </table>         
+        <input type="hidden" name="MOD_PGM" value="mktp0020">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="data_k4" value="">
+        <input type="hidden" name="us_sql" value="${us_sql}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    return true;
+}
+chang();
+select_zip_code();
+/**
+ * 出始化table
+ */
+function init_table(elmtTable, elmtDesc) {
+    //debugger;
+    var datas = elmtDesc.value.split(',');
+    var nLen = 0;
+    if (elmtDesc.value != "")
+        nLen = 1;
+    var nRows = elmtTable.rows.length;
+    if (nRows == nLen + 1)
+        return;
+    clear_table(elmtTable, true);
+    for (i = 0; i < datas.length; i++) {
+        add_table(elmtTable, datas[i]);
+    }
+}
+
+window.onload = function() {
+    document.getElementById('myfile').onchange = readFile;
+};
+
+function readFile() {
+    file = this.files[0];
+    var fReader = new FileReader();
+    var exclude_list_desc = "";
+    var buf = "";
+    fReader.onload = function(event) {
+        exclude_list_desc = event.target.result;
+        buf = exclude_list_desc.replace(/\r/g, ",");
+        document.getElementById('exclude_list_desc').value = buf;
+        document.getElementById('exclude_list').value = buf;
+    };
+    fReader.readAsText(file);
+}
+
+function trim(value) {
+    return value.replace(/^\s+|\s+$/g, "");
+}
+
+/**
+ * 將table的資料組成字串，資料間用逗號分隔
+ */
+function fill_desc(elmtTable, elmtDesc, hElmtDesc) {
+    //debugger;
+    clear_table(elmtTable, false);
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    elmtDesc.value = "";
+
+    for (var x = 1; x < rowCount; x++) {
+        var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+        if (elmtDesc.value == "")
+            elmtDesc.value = dat;
+        else
+            elmtDesc.value = elmtDesc.value + "," + dat;
+    }
+    hElmtDesc.value = elmtDesc.value;
+}
+
+$("#myfile").hide();
+$("#processList").click(function() {
+    $("#myfile").click();
+})
+
+// var ex_zip_code = $("input[name = ex_zip_code]:checked").val();
+// if(ex_zip_code=='1' || ex_zip_code=='2'){
+//     $("input[name=processList]").prop("disabled",false);
+//     $("input[name=exclude_list_desc]").show();
+// }else{
+//     $("input[name=processList]").prop("disabled",true);
+//     $("input[name=exclude_list_desc]").hide();
+// }
+// $(".ex_zip_code").change(function(){
+//     var ex_zip_code = $("input[name = ex_zip_code]:checked").val();
+//     alert(ex_zip_code);
+//     if(ex_zip_code=='1' || ex_zip_code=='2'){
+//         $("input[name=processList]").prop("disabled",false);
+//         $("input[name=exclude_list_desc]").show();
+//     }else{
+//         $("input[name=processList]").prop("disabled",true);
+//         $("input[name=exclude_list_desc]").hide();
+// }})
+function select_zip_code(){
+    var ss = $('input[name*=ex_zip_code]:checked').val();
+    // if (ss == "0"){
+    //     document.getElementById('processList').disabled = true;
+    //     document.getElementById("exclude_list_desc").style.visibility = "hidden";     
+    // }else{
+    //     document.getElementById('processList').disabled = false;
+    //     document.getElementById("exclude_list_desc").style.visibility = "visible";       
+    // }
+    if(ss=='0'){
+        document.getElementById('processList').disabled = true;
+        $("#exclude_list_desc").hide();               
+    } else {
+        document.getElementById('processList').disabled = false;
+        $("#exclude_list_desc").show();
+    }    
+
+}
+function chang() {
+    var ss = $('input[name*=ex_age_limit]:checked').val();
+    if(ss=='0'){
+        document.getElementById('ex_age1').disabled = true;
+        document.getElementById('ex_age2').disabled = true;
+        document.getElementById('ex_age1').style.backgroundColor = "#EDEDED";
+        document.getElementById('ex_age2').style.backgroundColor = "#EDEDED"; 
+        document.getElementById("ex_age1").value = "";
+        document.getElementById("ex_age2").value = "";          
+    } else {
+        document.getElementById('ex_age1').disabled = false;
+        document.getElementById('ex_age2').disabled = false;
+        document.getElementById('ex_age1').style.backgroundColor = "#FFFFFF";
+        document.getElementById('ex_age2').style.backgroundColor = "#FFFFFF";  
+    } 
+
+}    
+</script>

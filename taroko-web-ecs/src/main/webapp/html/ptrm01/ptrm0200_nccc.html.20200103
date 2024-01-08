@@ -1,0 +1,222 @@
+
+<html>
+<head>
+<title>團代卡樣對照參數表檔維護NCCC-detl-V.2017-0504-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0;
+var fi=0;
+
+function wf_addrow()
+{
+    var sel_unit_code_element = document.getElementById("sel_unit_code");
+    
+    if (sel_unit_code_element.selectedIndex == 0)
+        return;
+        
+    		
+    var val_unit_code = sel_unit_code_element.options[sel_unit_code_element.selectedIndex].value;
+	var val_card_type = document.getElementById("sel_card_type").value;
+    var val_card_item = val_unit_code+val_card_type;
+    
+    var num = '${ser_num}';
+    if(num==''){
+        ind=document.getElementById( 'table1' ).rows.length-2;
+    }
+	
+    colNum=0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+    
+    
+
+    var serNo ="";
+    
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    
+    fi++;
+    
+    
+    var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+    
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    var ip2 = document.createElement( 'input' );
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild( ip2 );
+    /////////////////////////////////////////////
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var no1 = document.createElement( 'span' );
+    no1.setAttribute('class', 'dsp_text');
+    no1.textContent = serNo;
+    myCell.appendChild( no1 );
+    
+    var no2 = document.createElement( 'input' );
+    no2.type = 'hidden';
+    no2.name = 'seqno';
+    no2.value = serNo;
+    myCell.appendChild( no2 );
+
+
+
+    /////////////////////////////////////////////    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mcht = document.createElement( 'span' );
+    mcht.setAttribute('class', 'dsp_text');
+    mcht.textContent = val_unit_code;
+    myCell.appendChild( mcht );
+    
+    var hmcht = document.createElement( 'input' );
+    hmcht.type = 'hidden';
+    hmcht.name = 'unit_code';
+    hmcht.value = val_unit_code;
+    myCell.appendChild( hmcht );
+    
+    
+    
+	//////////////////////////////////////////////////////////////	
+	colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mcht = document.createElement( 'span' );
+    mcht.setAttribute('class', 'dsp_text');
+    mcht.textContent = val_card_item;
+    myCell.appendChild( mcht );
+    
+    var hmcht = document.createElement( 'input' );
+    hmcht.type = 'hidden';
+    hmcht.name = 'card_item';
+    hmcht.value = val_card_item;
+    myCell.appendChild( hmcht );
+
+
+}
+</script>
+
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+  <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">團體代號：
+      <span class="dsp_text">${group_code}</span>
+      <input type=hidden name="group_code" value="${group_code}" />
+   </td>
+   <td nowrap class="col_key">卡種：
+      <span class="dsp_text">${card_type}</span>
+      <input id="sel_card_type" type=hidden name="card_type" value="${card_type}" />
+     </td>
+  </tr>
+</table>
+<hr>
+<table  border="0" width="60%">
+    <tr><td>&nbsp;認同集團碼:
+            <select id="sel_unit_code" name="sel_unit_code" class="col_ddlb">
+                ${dddw_nccc_card}
+            </select>
+        </td>
+        <td align="right">
+        <input type="Button"  value="新增明細" 
+                 onclick="wf_addrow();" class="btAdd_detl" />
+    </td><tr>
+</table>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">序號</th>
+    <th nowrap class="list_th">認同集團碼</th>
+    <th nowrap class="list_th">卡樣代碼</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+          <span class="dsp_text">${seqno}</span>
+          <input type="hidden" name="seqno" value="${seqno}" >
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+         <span class="dsp_text">${unit_code}</span>
+          <input type="hidden" name="unit_code" value="${unit_code}" >
+    </td>
+	<td nowrap class="list_td" >&nbsp;
+         <span class="dsp_text">${card_item}</span>
+          <input type="hidden" name="card_item" value="${card_item}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ptrm0200">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="nccc">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+ top.refreshButton2('2');
+
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+ }
+</script>

@@ -1,0 +1,145 @@
+<html>
+
+<head>
+    <title>DM/月訊/抽獎名單-名條列印-107-0109-V1.00.01-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="8">列印類別:
+                        <br> &nbsp;
+                        <input type="radio" value="1" name="ex_type_code" ${ex_type_code-1} ${DEFAULT-ex_type_code} onClick="chang(this.value)"/>1.DM &nbsp;&nbsp;
+                        <span class="dsp_text" id="db_print" style="display:none">篩選份數:${db_print}</span>
+                        <br> &nbsp;
+                        <input type="radio" value="2" name="ex_type_code" ${ex_type_code-2} onClick="chang(this.value)"/>2.月訊 
+                        &nbsp; &nbsp;
+                        月訊組別:
+                        <select size="1" name="ex_db_montype" id ="ex_db_montype" value="${ex_db_montype}" class="col_ddlb" disabled ="disabled">
+                            <option value="0" ${ex_db_montype-0}>0</option>
+                            <option value="A" ${ex_db_montype-A}>A</option>
+                            <option value="B" ${ex_db_montype-B}>B</option>
+                            <option value="C" ${ex_db_montype-C}>C</option>
+                            <option value="D" ${ex_db_montype-D}>D</option>
+                            <option value="E" ${ex_db_montype-E}>E</option>
+                            <option value="F" ${ex_db_montype-F}>F</option>
+                            <option value="G" ${ex_db_montype-G}>G</option>
+                        </select>
+                        <br> &nbsp;
+                        <input type="radio" value="3" name="ex_type_code" ${ex_type_code-3} onClick="chang(this.value)"/>3.抽獎
+                        &nbsp;&nbsp;&nbsp;
+                        抽獎獎項:
+                        <input type="text" class="col_text" name="ex_db_prize1" id="ex_db_prize1" value="${ex_db_prize1}" zEdit="alphanum" maxlength="2" size="2" disabled ="disabled"/> --
+                        <input type="text" class="col_text" name="ex_db_prize2" id="ex_db_prize2" value="${ex_db_prize2}" zEdit="alphanum" maxlength="2" size="2" disabled ="disabled"/> &nbsp;&nbsp; 
+                        抽獎日期：
+                        <input type="text" class="col_date" name="ex_db_prize_date" id="ex_db_prize_date" value="${ex_db_prize_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" disabled ="disabled"/>
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_db_prize_date'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap colspan="4">&nbsp;
+                        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!--<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;-->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan="6">&nbsp;批號:
+                        <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" zEdit="alphanum" maxlength=10 size=10 zRequire ="k"/>
+                    </td>
+                    <td nowrap class="colKey" colspan="6">&nbsp;活動說明:
+                        <input type="text" class="col_text" name="ex_db_desc" value="${ex_db_desc}" zEdit="any,canTW" maxlength=100 size=20 />
+                    </td>                    
+                </tr>                
+            </table>
+        </div>
+        <hr>
+        <!--Sum -->
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">郵遞區號</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">地址1</th>                  
+                <th nowrap class="list_th">地址2</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">性別</th>
+                <th nowrap class="list_th">身分證號前7碼</th>              
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+                <td nowrap class="list_ll"> ${zip_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${wk_batchno}&nbsp;</td>
+                <td nowrap class="list_ll"> ${wk_addr1}&nbsp;</td>
+                <td nowrap class="list_ll"> ${address_5}&nbsp;</td>
+                <td nowrap class="list_ll"> ${name}&nbsp;</td>
+                <td nowrap class="list_ll"> ${sex}&nbsp;</td>
+                <td nowrap class="list_ll"> ${wk_id}&nbsp;</td>
+                <input type=hidden name="batch_no" value="${batch_no}" />
+                <input type=hidden name="type_code" value="${type_code}" />
+                <input type=hidden name="sex" value="${sex}" />
+                <input type=hidden name="db_description" value="${db_description}" />
+                <input type=hidden name="id_no" value="${id_no}" />
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="mktr4110">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" id="TTTS" name="TTTS" value="">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+//document.dataForm.type_code.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    return true;
+}
+
+function chang(bb) {
+    if(bb == "1"){
+        document.getElementById('ex_db_montype').disabled = true;
+        document.getElementById('ex_db_prize1').disabled = true;
+        document.getElementById('ex_db_prize2').disabled = true; 
+        document.getElementById('ex_db_prize_date').disabled = true;
+    }
+    if(bb == "2"){
+        document.getElementById('ex_db_montype').disabled = false;
+        document.getElementById('ex_db_prize1').disabled = true;
+        document.getElementById('ex_db_prize2').disabled = true; 
+        document.getElementById('ex_db_prize_date').disabled = true;
+    }
+    if(bb == "3"){
+        document.getElementById('ex_db_montype').disabled = true;
+        document.getElementById('ex_db_prize1').disabled = false;
+        document.getElementById('ex_db_prize2').disabled = false; 
+        document.getElementById('ex_db_prize_date').disabled = false;
+    }    
+}
+</script>

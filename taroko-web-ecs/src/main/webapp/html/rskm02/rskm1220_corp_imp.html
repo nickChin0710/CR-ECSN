@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>rskm1220-02-商務卡族群參數設定維護-corp_imp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body bgcolor="#FFFFFF">
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="wf_return_data()"; alt="回上層";>&nbsp;&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;  
+  <img src="images/uperLoad.gif" onclick="return upload_click()" style="cursor:hand" />
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">族群代號：
+		<span class="dsp_text"> ${risk_group} </span>
+      <input type=hidden name="risk_group" value="${risk_group}">
+   </td>
+   <td nowrap class="colKey">明細類別：
+		<span class="dsp_text"> 02.公司統編 </span>
+      <input type=hidden name="data_type" value="02">
+      <input type="hidden" name="type_desc" value="公司統編">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      <span class="col_key">主管覆核:&nbsp;${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>  
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >公司統編：
+      <input type="text" class="col_text" id="ex_block" name="ex_block" value="${ex_block}" maxlength="8" size="10">
+     &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" ${btnUpdate_disable} class="btUpdate" onClick="wf_save()" />      
+      <input type="Button" value="刪除明細" ${btnUpdate_disable} onClick="return top.submitControl('D2')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" class="td_remark">
+   	備註：人工匯入檔為*.TXT檔，layout：ID(8)，如：12345678
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">公司統編 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_corp_imp">
+<input type="hidden"  name="upload_file" value="" /> 
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" />
+
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+   return true;
+  }
+ 
+   function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "rskm02";
+    top.javaName    = "Rskm1220";
+    //methodName  = "actionFunction";
+    top.requHtml    = "rskm1220_corp_imp";
+    top.respHtml    = "rskm1220_corp_imp";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ } 
+ 
+ function wf_return_data() { 	 
+ 	 top.upperLevel();
+ 	 top.submitControl("S3"); 	 
+ }
+ 
+ function wf_save() { 		
+ 		var ls_data_code =$("#ex_block").val();
+ 		
+ 		if(ls_data_code==''){
+			alert("公司統編 不可空白");
+			return ;
+		}
+ 		 		
+ 		top.submitControl('U2')
+ 		$("#ex_block").val('');
+ }
+ 
+</script>

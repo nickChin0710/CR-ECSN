@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>卡友權益資格參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;權益代碼:
+      <select size="1" name="ex_item_no" class="col_ddlb" >
+      	<option value="">--</option>
+       ${dddw_item_no}
+      </select>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" />&nbsp;&nbsp;
+      <input type="Button"   value="覆核" onClick="return top.submitControl('C1')" class="btProcess" />&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;專案狀態:
+   		<span class="col_radio">
+         <input type="radio" value="0" name="ex_active_status" ${ex_active_status-0} ${default-ex_active_status} />全部
+         <input type="radio" value="Y" name="ex_active_status" ${ex_active_status-Y} />有效
+         <input type="radio" value="N" name="ex_active_status" ${ex_active_status-N} />取消
+      </span>
+   </td>
+   <td nowrap >&nbsp;
+   		<span class="col_radio">
+         <input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT-ex_apr_flag} />全部
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	覆核
+   	</th>
+   	<th nowrap >覆核&nbsp;</th>
+   	<th nowrap >權益代碼&nbsp;</th>
+   	<th nowrap >專案代碼&nbsp;</th>
+   	<th nowrap >專案狀態&nbsp;</th>
+   	<th nowrap >專案說明&nbsp;</th>
+   	<th nowrap >異動日期&nbsp;</th>
+   	<th nowrap >異動經辦&nbsp;</th>
+   	<th nowrap >覆核日期&nbsp;</th>
+   	<th nowrap >覆核主管&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+  	<td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+		 	 ${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}" />
+			<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+			<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${item_no}','${proj_code}','${apr_flag}');" style="cursor:hand">
+		</td>
+   <td nowrap class="list_cc"> ${apr_flag}&nbsp;
+   		<input type="hidden" name="apr_flag" value="${apr_flag}">
+	 </td>
+	 <td nowrap class="list_ll"> ${item_no}&nbsp;${tt_item_no}
+   		<input type="hidden" name="item_no" value="${item_no}">
+   		<input type="hidden" name="tt_item_no" value="${tt_item_no}">
+	 </td>
+	 <td nowrap class="list_cc"> ${proj_code}&nbsp;
+   		<input type="hidden" name="proj_code" value="${proj_code}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tt_active_status}&nbsp;
+   		<input type="hidden" name="active_status" value="${active_status}">
+   		<input type="hidden" name="tt_active_status" value="${tt_active_status}">
+	 </td>
+	 <td nowrap class="list_ll"> ${proj_desc}&nbsp;
+   		<input type="hidden" name="proj_desc" value="${proj_desc}">
+	 </td>
+	 <td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;
+   		<input type="hidden" name="mod_date" value="${mod_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${mod_user}&nbsp;
+   		<input type="hidden" name="mod_user" value="${mod_user}">
+	 </td>
+	 <td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;
+   		<input type="hidden" name="apr_date" value="${apr_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${apr_user}&nbsp;
+   		<input type="hidden" name="apr_user" value="${apr_user}">
+	 </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cmsm4210_detl";
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm4210_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>

@@ -1,0 +1,134 @@
+<html>
+<head>
+<title>調單結案清單</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;結案登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" />&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_seqno" value="${ex_seqno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;結算幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_curr_code}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;結算登錄經辦:
+      <input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw" >
+   </td>
+   <td nowrap >&nbsp;交易類別:
+     <select   size="1"  name="ex_mark" class="col_ddlb">
+      <option value="0" ${ex_mark-0} >全部調單</option>
+      <option value="Q" ${ex_mark-Q} >問題交易</option>
+      <option value="S" ${ex_mark-S} >特殊交易</option>
+      <option value="E" ${ex_mark-E} >不合格帳單</option>
+     </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;Debit卡:
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_debit_flag" ${ex_debit_flag-0} ${default-ex_debit_flag} />全部
+         <input type="radio" value="Y" name="ex_debit_flag" ${ex_debit_flag-Y} />是
+         <input type="radio" value="N" name="ex_debit_flag" ${ex_debit_flag-N} />否
+      </span>
+   </td>
+   <td nowrap >
+      <span class="col_radio">
+         <input type="radio" value="1" name="ex_apr_flag" ${ex_apr_flag-1} ${default-ex_apr_flag} />已覆核
+         <input type="radio" value="2" name="ex_apr_flag" ${ex_apr_flag-2} />未覆核
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%" >No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >消費日&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >結算金額&nbsp;</th>
+    <th nowrap >調單日&nbsp;</th>
+    <th nowrap >理由碼&nbsp;</th>
+    <th nowrap >調單流水號&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+    <th nowrap >調單結果&nbsp;</th>
+    <th nowrap >實際到單日&nbsp;</th>
+    <th nowrap >登錄經辦&nbsp;</th>
+    <th nowrap >覆核日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${add_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rept_type}.${#JAVA:ecsfunc.DeCodeRsk.reptType(rept_type)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${proc_result}.${#JAVA:ecsfunc.DeCodeRsk.reptProcResult(proc_result)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${recv_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${add_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${close_apr_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

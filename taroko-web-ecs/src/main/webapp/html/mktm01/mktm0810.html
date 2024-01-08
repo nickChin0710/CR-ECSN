@@ -1,0 +1,157 @@
+<html>
+<head>
+<title> 109/03/09 V1.00.01 Allen Ho Initial IBON專案卡友可兌贈品資料維護　</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="12">
+   <tr>
+   <td nowrap>&nbsp;活動代號:
+      <select size="1" name="ex_prog_code" class="col_ddlb" >
+         ${dddw_prog_code}
+      </select>
+     </td>
+   <td nowrap>&nbsp;維護經辦:
+      <input type="text" class="col_any" 
+          name="ex_crt_user" value="${ex_crt_user}"
+         zeditType="any"  maxlength=10 size=10 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;身分證號:
+      <input type="text" class="col_text" 
+          name="ex_id_no" value="${ex_id_no}"
+         zeditType="any,upper"  maxlength=10 size=10 />
+   卡號:
+      <input type="text" class="col_any" 
+          name="ex_card_no" value="${ex_card_no}"
+         zeditType="any"  maxlength=19 size=19 />
+     </td>
+     <td nowrap >主管覆核:&nbsp;
+       <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} checked  />(全部:不含新增)
+       <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;群組代號:
+      <select  name="ex_group_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_group_type-1} >1.限信用卡兌換(限01,05,06)</option>
+         <option value="2" ${ex_group_type-2} >2.限VD卡兌換(限90)</option>
+         <option value="3" ${ex_group_type-3} >3.全部任一卡片兌換(01,05,06,90)</option>
+         <option value="4" ${ex_group_type-4} >4.限特定卡號兌換</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="新增" onclick="modifyScreen('${SER_NUM}','','','','')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">資料序號</th>
+    <th nowrap class="list_th">身分證號</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">群組代號</th>
+    <th nowrap class="list_th">商品代號</th>
+    <th nowrap class="list_th">活動代號</th>
+    <th nowrap class="list_th">活動日期起</th>
+    <th nowrap class="list_th">可兌數量</th>
+    <th nowrap class="list_th">維護經辦</th>
+    <th nowrap class="list_th">維護日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+       <span class="dsp_flag">${ok_flag}</span> 
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${txn_seqno}</td>
+    <td nowrap class="list_cc"> ${id_no}</td>
+    <td nowrap class="list_ll"> ${card_no}</td>
+    <td  nowrap class="list_ll"> ${group_type}-${comm_group_type}</td>
+    <td  nowrap class="list_ll"> ${gift_no}-${comm_gift_no}</td>
+    <td  nowrap class="list_ll"> ${prog_code}-${comm_prog_code}</td>
+    <td nowrap class="list_cc"> ${prog_s_date.YMD}</td>
+    <td nowrap class="list_cc"> ${gift_cnt}</td>
+    <td  nowrap class="list_ll"> ${crt_user}-${comm_crt_user}</td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+ <input type="hidden"  name="data_apr_flag" value="${ex_apr_flag}" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm0810_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function modifyScreen(serNum,parm,parm2,parm3,parm4)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "mktm0810_nadd";
+    top.submitControl('I');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

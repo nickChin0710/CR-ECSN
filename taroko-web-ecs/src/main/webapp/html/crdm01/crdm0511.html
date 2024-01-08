@@ -1,0 +1,105 @@
+<html>
+<head>
+<title>變更身分證號-V.2018-0306-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;身分證號字號:&nbsp;
+            <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}"
+            zEdit="alphanum,upper" maxlength=11 size=13  />
+        </td>
+        <td nowrap>&nbsp;身分證號字號(舊):&nbsp;
+            <input type="text" class="col_text" name="ex_old_id_no" value="${ex_old_id_no}"
+            zEdit="alphanum,upper" maxlength=11 size=13 />
+        </td>
+        <td nowrap>&nbsp;
+            <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%" rowspan="2">No&nbsp;</th>
+        <th nowrap class="list_th" rowspan="2">流水號碼</th>
+        <th nowrap class="list_th" colspan="2">卡人檔(目前)</th>
+        <th nowrap class="list_th" colspan="4">身分證變更紀錄</th>
+        <th nowrap class="list_th" rowspan="2">姓名</th>
+        <th nowrap class="list_th" rowspan="2">出生年月日</th>
+    </tr>
+    <tr>
+        <th nowrap class="list_th">身分證字號</th>
+        <th nowrap class="list_th">序號</th>
+        <th nowrap class="list_th">身分證字號(新)</th>
+        <th nowrap class="list_th">序號(新)</th>
+        <th nowrap class="list_th">身分證字號(舊)</th>
+        <th nowrap class="list_th">序號(舊)</th>        
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr onclick="detailScreen('${SER_NUM}','${id_p_seqno}','','')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_cc"> ${id_p_seqno}</td>
+        <td nowrap class="list_cc"> ${id_no}</td>
+        <td nowrap class="list_cc"> ${id_no_code}</td>
+        <td nowrap class="list_cc"> ${new_id_no}</td>
+        <td nowrap class="list_cc"> ${new_id_no_code}</td>
+        <td nowrap class="list_cc"> ${old_id_no}</td>
+        <td nowrap class="list_cc"> ${old_id_no_code}</td>
+        <td nowrap class="list_cc"> ${chi_name}</td>
+        <td nowrap class="list_cc"> ${birthday}</td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "crdm0511_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "crdm0511_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>VD加圈egov手續費維護 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+   		<td nowrap >&nbsp;MCC CODE:
+	  		<input type="text" class="col_any" name="ex_mcc_code" value="${ex_mcc_code}" zEdit="any" maxlength=4 size=6 />
+		</td>
+		<td nowrap >&nbsp;端末機號:
+	  		<input type="text" class="col_any" name="ex_mcc_link_id" value="${ex_mcc_link_id}" zEdit="any" maxlength=8 size=10 />
+		</td>
+   		<td nowrap>&nbsp;  
+      		<input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   		</td>   
+  	</tr>
+</table>
+</div>
+<hr>
+
+ <table id="table1" width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    <th nowrap class="list_th">No</th>
+    <th nowrap class="list_th">MCC CODE</th>
+    <th nowrap class="list_th">端末機號</th>
+    <th nowrap class="list_th">說明</th>
+    <th nowrap class="list_th">手續費收取<br>最低金額</th>
+    <th nowrap class="list_th">手續費收取<br>最高金額</th>
+    <th nowrap class="list_th">交易手續費</th>
+    <th nowrap class="list_th">交易收取百分比</th>
+    <th nowrap class="list_th">產生日期</th>
+    <th nowrap class="list_th">產生人員</th>
+    <th nowrap class="list_th">異動日期</th>
+    <th nowrap class="list_th">異動人員</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${mcc_code}','${mcc_link_id}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}</td>
+   <td nowrap class="list_cc"> ${mcc_code}</td>
+   <td nowrap class="list_cc"> ${mcc_link_id}</td>
+   <td nowrap class="list_ll"> ${mcc_remark}</td>
+   <td nowrap class="list_cc"> ${int_min_amt}</td>
+   <td nowrap class="list_cc"> ${int_max_amt}</td>
+   <td nowrap class="list_cc"> ${int_fix_amt}</td>
+   <td nowrap class="list_cc"> ${int_percent}</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+   <td nowrap class="list_cc"> ${crt_user}</td>
+   <td nowrap class="list_cc"> ${mod_date.YMD}</td>
+   <td nowrap class="list_cc"> ${mod_user}</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5030_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5030_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

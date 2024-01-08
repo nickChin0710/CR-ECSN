@@ -1,0 +1,134 @@
+<html>
+<head>
+<title>DeBit帳務明細D檔調整作業-107-08-31-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;帳戶帳號：
+      <select size="1" name="exAcctType" class="col_ddlb">${DbpAcctTypeList}</select>
+      <input type="text" class="col_text" name="exAcctKey" value="${exAcctKey}" maxlength="11" size="13" zRequire ="k"/>
+    </td>
+    <td nowrap>
+      <span class="col_radio">
+	  <input type="checkbox" value="Y" name="exAcitem01" ${exAcitem01-Y}>&nbsp;費用類&nbsp;&nbsp;&nbsp;
+	  <input type="checkbox" value="Y" name="exAcitem04" ${exAcitem04-Y}>&nbsp;簽帳款類&nbsp;
+	  </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;消費日期：
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;中文姓名：&nbsp;${exCname}
+      <input type="hidden" name="exCname" value="${exCname}"/>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">入帳日</th>
+    <th nowrap class="list_th">消費日期</th>
+    <th nowrap class="list_th">交易參考號</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">帳號</th>
+    <th nowrap class="list_th">金融帳號</th>
+    <th nowrap class="list_th">期初餘額</th>
+    <th nowrap class="list_th">期末餘額</th>
+    <th nowrap class="list_th">可D數餘額</th>
+    <th nowrap class="list_th">科目代號</th>
+    <th nowrap class="list_th">科目名稱</th>
+    <th nowrap class="list_th">帳單類別</th>
+    <th nowrap class="list_th">交易代碼</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${reference_no}','${db_table}','${rowid}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${item_post_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${reference_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${card_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${acct_type}-${acct_key}&nbsp;</td>
+   <td nowrap class="list_ll"> ${acct_no}&nbsp;</td>
+   <td nowrap class="list_rr"> ${beg_bal.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${end_bal.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${d_avail_bal.(999)}&nbsp;</td>
+   <td nowrap class="list_ll"> ${acct_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_acct_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${bill_type}&nbsp;</td>
+   <td nowrap class="list_ll"> ${txn_code}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ document.dataForm.exAcctKey.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "dbam0030_detl";
+    top.submitControl('S');
+    return true;
+ }
+ 
+</script>

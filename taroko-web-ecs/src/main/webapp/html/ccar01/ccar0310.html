@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>未銷帳/額度內各項調整異動記錄表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;臨調日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>   
+   <td nowrap >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" />
+   </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;臨調人員:
+        <input type="text" class="col_any" name="ex_user_id" value="${ex_user_id}" maxlength="10" size="12" zEdit="any,canTw">
+      </td>
+      <td nowrap >&nbsp;臨調原因:
+         <select size="1" name="ex_adj_reason" class="col_ddlb" >
+            <option value="">--</option>
+            ${dddw_adj_reason}
+         </select>
+      </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >金控利害<br>關係人</th>
+    <th nowrap >原額度&nbsp;</th>
+    <th nowrap >一般調整<br>後額度</th>
+    <th nowrap >分期調整<br>後額度</th>
+    <th nowrap >臨調日期起迄&nbsp;</th>
+    <th nowrap >原因&nbsp;</th>
+    <th nowrap >臨調備註&nbsp;</th>
+    <th nowrap >適用地&nbsp;</th>
+    <th nowrap >調整經辦&nbsp;</th>
+    <th nowrap >調整日期&nbsp;</th>
+    <th nowrap >ECS<br>回傳%&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_acct_key}&nbsp;</td>
+    <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acno_cname}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rela_flag}&nbsp;</td>
+	<td nowrap class="list_rr"> ${lmt_tot_consume.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${tot_amt_month.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${adj_inst_pct.(999)}&nbsp;</td>	
+	<td nowrap class="list_cc"> ${wk_adj_eff_date}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tt_adj_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${adj_remark}&nbsp;</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCcas.areaType(adj_area)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${adj_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${adj_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ecs_adj_rate}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

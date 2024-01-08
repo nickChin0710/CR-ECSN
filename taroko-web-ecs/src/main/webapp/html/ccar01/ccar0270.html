@@ -1,0 +1,190 @@
+<html>
+<head>
+<title>傳送NEG失敗報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+
+$('.table1').hide();
+$('.table2').hide();
+
+
+if (page_type=='table1') {
+   $('.table1').show();
+}
+else if (page_type=='table2') {
+   $('.table2').show();
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;傳送日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C"  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+   <td nowrap >&nbsp;指示人員:
+      <input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;特指碼:
+         <input type="text" class="col_text" name="ex_spec_status" value="${ex_spec_status}" maxlength="2" size="5" >
+      </td>
+      <td nowrap >&nbsp;停掛原因:
+         <input type="text" class="col_text" name="ex_oppo_reason" value="${ex_oppo_reason}" maxlength="2" size="5" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;傳送類別:
+         <span class="col_radio">
+            <input type="radio" value="1" name="ex_type" ${ex_type-1} ${default-ex_type} />停掛
+            <input type="radio" value="2" name="ex_type" ${ex_type-2} />特指
+         </span>
+      </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="list_no">&nbsp;</td>
+    <td nowrap class="list_cc">&nbsp;總計:</td>
+    <td nowrap class="list_rr">&nbsp;${db_cnt.(999)}筆
+    	<input type="hidden" name="db_cnt" value="${db_cnt}">	
+   	</td>
+    <td nowrap class="list_cc" colspan="9" >&nbsp;</td>
+    <th nowrap class="list_cc" colspan="2">&nbsp;回覆碼&nbsp;</th>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >修改日期&nbsp;</th>
+    <th nowrap colspan="2" >停掛原因&nbsp;</th>
+    <th nowrap >Debit&nbsp;</th>
+    <th nowrap >指示人員&nbsp;</th>
+    <th nowrap >NEG碼&nbsp;</th>
+    <th nowrap >國際組織碼&nbsp;</th>
+    <th nowrap >刪除&nbsp;</th>
+    <th nowrap >刪除日期&nbsp;</th>
+    <th nowrap >NCCC/IBM&nbsp;</th>
+    <th nowrap >國際組織&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_type}.${#JAVA:ecsfunc.DeCodeCcas.onusOpptype(oppo_type)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_status}&nbsp;</td>
+    <td nowrap class="list_cc"> ${debit_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mst_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${vis_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${neg_resp_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${visa_resp_code}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!---------------------------------------------------------------------------------------------------> 
+ <table id="table2" class="table2" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+    <td nowrap class="list_no">&nbsp;</td>
+    <td nowrap class="list_cc">&nbsp;總計:</td>
+    <td nowrap class="list_rr">&nbsp;${db_cnt.(999)}筆
+    <td nowrap class="list_cc" colspan="8" >&nbsp;</td>
+    <th nowrap colspan="2">&nbsp;回覆碼&nbsp;</th>
+   </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >修改日期&nbsp;</th>
+    <th nowrap >特指原因&nbsp;</th>
+    <th nowrap >指示人員&nbsp;</th>
+    <th nowrap >NEG碼&nbsp;</th>
+    <th nowrap >國際組織碼&nbsp;</th>
+    <th nowrap >VIP金額&nbsp;</th>
+    <th nowrap >刪除&nbsp;</th>
+    <th nowrap >刪除日期&nbsp;</th>
+    <th nowrap >NCCC/IBM&nbsp;</th>
+    <th nowrap >國際組織&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_spec_status}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${spec_neg_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${spec_outgo_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${spec_mst_vip_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_neg_rsp_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_vm_rsp_code}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  id="pageType" name="pageType"  value="${pageType}" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

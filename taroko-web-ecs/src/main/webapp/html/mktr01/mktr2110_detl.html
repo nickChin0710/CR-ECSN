@@ -1,0 +1,133 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-1-4  V1.00.01     馬超         新增功能: mktr2110各營業單位招攬信用卡月報表                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>各營業單位招攬信用卡月報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+      
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <!-- Button **************************************************************-->
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td colspan="4">
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;
+                <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDFDETL');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+            </td>
+        </tr>
+        <tr>
+                <td nowrap>&nbsp;查詢年月：
+                    <input type="text" class="col_date" name="ex_acct_month" value="${ex_acct_month}"
+                           zeditType="date,yyyymm" maxlength=20 size=20 />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               					帳戶類別：
+                    <input type="text" class="col_any" name="ex_acct_type" value="${ex_acct_type}"
+                            zEdit="any,canTW" maxlength=15 size=15 />
+                </td>
+        </tr>
+        <tr>
+                <td nowrap>&nbsp;分行代號：
+                    <input type="text" class="col_date" name="ex_branch_s" value="${ex_branch_s}"
+                            maxlength=10 size=10 />
+                -
+                    <input type="text" class="col_date" name="ex_branch_e" value="${ex_branch_s}"
+                            maxlength=10 size=10 />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 行員代碼：
+                    <input type="text" class="col_date" name="ex_introduce_emp_no" value="${ex_introduce_emp_no}"
+                           maxlength=15 size=15 />
+                </td>
+        </tr>
+    </table>
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+    <tr>
+        <th nowrap class="list_th" colspan="20" style="text-align: center;">新增卡數指首次發卡(非補/換/續卡)</th>
+    </tr>
+    <tr>
+        <th nowrap class="list_th" rowspan="2" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th" rowspan="2">受理行</th>
+        <th nowrap class="list_th" rowspan="2">行員代碼</th>
+        <th nowrap class="list_th" colspan="4">當月新增卡數</th>
+        <th nowrap class="list_th" colspan="4">當年度累積卡數</th>
+        <th nowrap class="list_th" colspan="4">近一年度累積卡數</th>
+        <th nowrap class="list_th" rowspan="2">本月消費總金額</th>
+        <th nowrap class="list_th" rowspan="2">近一年度消費總金額</th>
+    </tr>
+    <tr>
+        <th nowrap class="list_th">已開卡</th>
+        <th nowrap class="list_th">未開卡</th>
+        <th nowrap class="list_th">停卡</th>
+        <th nowrap class="list_th">合計</th>
+        <th nowrap class="list_th">已開卡</th>
+        <th nowrap class="list_th">未開卡</th>
+        <th nowrap class="list_th">停卡</th>
+        <th nowrap class="list_th">合計</th>
+        <th nowrap class="list_th">已開卡</th>
+        <th nowrap class="list_th">未開卡</th>
+        <th nowrap class="list_th">停卡</th>
+        <th nowrap class="list_th">合計</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr style="cursor:hand">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="rowid" value="${rowid}"/>
+            </td>
+            <td nowrap class="list_cc"> ${tt_branch}</td>
+            <td nowrap class="list_cc"> ${introduce_emp_no}</td>
+            <td nowrap class="list_ll"> ${m_act_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${m_noact_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${m_stop_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${m_sum_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_act_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_noact_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_stop_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_sum_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_act_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_noact_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_stop_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_sum_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${sum_fees.(999)}</td>
+            <td nowrap class="list_rr"> ${sum_year_fees.(999)}</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+</table>
+<!-- hidden ************************************************************** -->
+    <input type="hidden" name="WPROWID" value="${wprowid}">
+    <input type="hidden" name="control_tab_name" value="${control_tab_name}">
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="data_k4" value="">
+    <input type="hidden" name="data_k5" value="">
+
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

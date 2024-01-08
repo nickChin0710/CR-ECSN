@@ -1,0 +1,170 @@
+<html>
+<head>
+<title>再提示整批登錄維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+  <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap colspan="2">控制流水號:
+         <span class="dsp_text">${ctrl_seqno}</span>
+         <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+      </td>
+      <td nowrap colspan="2">卡別:
+         <span class="dsp_text">${bin_type}</span>
+         <input type="hidden" name="bin_type" value="${bin_type}">
+      &nbsp;debit卡:<span class="dsp_text">${debit_flag}</span>
+         <input type="hidden" name="debit_flag" value="${debit_flag}">
+      </td>
+      <td nowrap colspan="2">帳單流水號:
+         <span class="dsp_text">${reference_no}-${reference_seq}</span>
+         <input type="hidden" name="reference_no" value="${reference_no}" />
+         <input type="hidden" name="reference_seq" value="${reference_seq}" />
+      </td>
+ </tr>
+  <tr>
+      <td nowrap colspan="2">卡號:
+         <span class="dsp_text">${card_no}</span>
+         <input type="hidden" name="card_no" value="${card_no}">
+      </td>
+      <td nowrap colspan="2">扣款階段:
+         <span class="dsp_text">${chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbChgStage(chg_stage)}</span>
+         <input type="hidden" name="chg_stage" value="${chg_stage}" />
+      </td>
+      <td nowrap colspan="2">扣款狀態:
+         <span class="dsp_text">${sub_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbSubStage(sub_stage)}</span>
+         <input type="hidden" name="sub_stage" value="${sub_stage}" />
+      </td>
+ </tr>
+ <tr>
+      <td nowrap colspan="2">再提示日期:
+         <input type="text" class="col_date" name="repsent_date" value="${repsent_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'repsent_date'});
+	      </script>
+      </td>
+      <td nowrap colspan="2">再提示狀態:
+         <span class="dsp_text">${rep_status}</span>
+         <input type="hidden" name="rep_status" value="${rep_status}">
+      </td>
+      <td nowrap colspan="2">總結案:
+         <span class="dsp_text">${final_close}</span>
+         <input type="hidden" name="final_close" value="${final_close}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap colspan="2">再提示結算金額:
+         <input type="text" class="col_number" name="rep_dc_amt" value="${rep_dc_amt}"
+         zEdit="dignumber" MaxLength=10 size=12  />
+      </td>
+      <td nowrap colspan="2">扣款金額:
+         <span class="dsp_text">${fst_dc_amt.(999.00)}</span>
+         <input type="hidden" name="fst_dc_amt" value="${fst_dc_amt}">
+      </td>
+      <td nowrap colspan="2">差額:
+         <span class="dsp_text">${wk_diff_amt.(999.00)}</span>
+         <input type="hidden" name="wk_diff_amt" value="${wk_diff_amt}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap colspan="2">結算幣別:
+         <span class="dsp_text">${curr_code}</span>
+         <input type="hidden" name="curr_code" value="${curr_code}">
+      </td>
+      <td nowrap colspan="4">再提示金額:(TWD) 
+         <span class="dsp_text">${rep_amt_twd.(999)}</span>
+         <input type="hidden" name="rep_amt_twd" value="${rep_amt_twd}">
+      &nbsp;(USD): <span class="dsp_text">${rep_amt.(999.00)}</span>
+         <input type="hidden" name="rep_amt" value="${rep_amt}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap colspan="2">沖銷借方科目:
+         <input type="text" class="col_text" name="rep_ac_no" value="${rep_ac_no}" maxlength="8" size="10">
+      </td>
+      <td nowrap colspan="2">沖銷銷帳鍵值:
+         <input type="text" class="col_any" name="rep_glmemo3" value="${rep_glmemo3}" maxlength="20" size="22" zEdit="any,canTw">
+      </td>
+      <td nowrap colspan="2">微縮影編號:
+         <span class="dsp_text">${film_no}</span>
+         <input type="hidden" name="film_no" value="${film_no}">
+      </td>      
+ </tr>
+ <tr>
+      <td nowrap colspan="2">撥款結算金額:
+         <span class="dsp_text">${fst_disb_dc_amt.(999)}</span>
+         <input type="hidden" name="fst_disb_dc_amt" value="${fst_disb_dc_amt}">
+      </td>
+      <td nowrap colspan="4">消費金額:(結算)
+         <span class="dsp_text">${dc_dest_amt.(999)}</span>
+         <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}">
+      &nbsp;(TWD):
+      	 <span class="dsp_text">${dest_amt.(999.00)}</span>
+         <input type="hidden" name="dest_amt" value="${dest_amt}">
+         
+      </td>      
+ </tr>
+ <tr>
+      <td nowrap colspan="2">登錄經辦:
+         <span class="dsp_text">${rep_add_user}</span>
+         <input type="hidden" name="rep_add_user" value="${rep_add_user}">
+      </td>
+      <td nowrap colspan="2">登錄日期:
+         <span class="dsp_text">${rep_add_date.YMD}</span>
+         <input type="hidden" name="rep_add_date" value="${rep_add_date}">
+      </td>
+      <td nowrap colspan="2">覆核日期:
+         <span class="dsp_text">${rep_apr_date.YMD}</span>
+         <input type="hidden" name="rep_apr_date" value="${rep_apr_date}">
+      </td>      
+ </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="MOD_PGM" value="rskm0240">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+<input type="hidden" name="fst_glmemo3" value="${fst_glmemo3}">
+<input type="hidden" name="fst_disb_apr_date" value="${fst_disb_apr_date}">
+<input type="hidden" name="fst_ac_no" value="${fst_ac_no}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

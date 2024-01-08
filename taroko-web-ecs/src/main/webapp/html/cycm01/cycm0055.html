@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>免收違約金參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶類別:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_acct_type}
+      </select>
+   </td>
+   <td nowrap>&nbsp;幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_curr_code}
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >帳戶類別</th>
+    <th nowrap >幣別</th>
+    <th nowrap >消費本金<br>小於此參數<br>免收違約金、免息</th>
+    <th nowrap >總應繳款<br>小於此參數<br>免收違約金、免息</th>
+    <th nowrap >最低應繳款<br>之<br>最小金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${acct_type}','${curr_code}','')" style="cursor:hand">  	
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+    <td nowrap class="list_cc"> ${acct_type}&nbsp;</td>
+    <td nowrap class="list_cc"> ${curr_code}.${tt_curr_code}&nbsp;</td>
+    <td nowrap class="list_rr"> ${purch_bal_wave.(999.00)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${total_bal.(999.00)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${min_payment.(999.00)}&nbsp;</td>	
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cycm0055_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cycm0055_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

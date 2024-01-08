@@ -1,0 +1,713 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 109-07-23  V1.00.03  Justin Wu      add a calendar and 簽核註記           -->
+<!-- 109-07-24  V1.00.04  Justin Wu      remove 員工代號                       -->
+<!-- 111-11-24  V1.00.05  sunny          配合卡部要求，將「接聽」改為「受理」,，並預設停在受理內容的頁籤  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>cmsm6020-案件移送入口畫面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<!-- 
+<script>
+$(document).ready(function () {
+
+})
+</script>
+ -->
+
+<body background="${water_mark}">
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層">&nbsp;
+<!--
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"   value="補寄資料" ${btnAdd_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnChg" value="改址" ${btnAdd_disable} onClick="detailScreen('${maj_idno}','${card_no}','${debit_flag}')" class="btUpdate" >&nbsp;&nbsp;
+-->
+  <input type="Button"      value="存檔" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+<hr>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡號：
+      <span class="dsp_text">${card_no}</span>
+      <input type="hidden" name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap>&nbsp;正卡ID：<span class="dsp_text">${maj_idno}</span>
+      <input type="hidden" name="maj_idno" value="${maj_idno}" />
+   </td>
+   <td nowrap>&nbsp;Debit卡：
+      <span class="dsp_text"> ${debit_flag} </span>
+      <input type=hidden name="debit_flag" value="${debit_flag}" />
+	   <span class="col_radio"  >
+        <input type="radio" value="0" name="sup_flag" ${sup_flag-0} disabled />正卡
+        <input type="radio" value="1" name="sup_flag" ${sup_flag-1} disabled />附卡
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;帳單地址：
+      <span class="dsp_text"> ${bill_addr} </span>
+      <input type=hidden name="bill_addr" value="${bill_addr}" />
+   </td>
+   <td nowrap>&nbsp;聯絡電話：
+      <span class="dsp_text"> ${maj_telno} </span>
+      <input type=hidden name="wk_telno" value="${wk_telno}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;受理日期：
+      <span class="dsp_date"> ${case_date.YMD} </span>
+      <input type=hidden name="case_date" value="${case_date}" />
+   </td>
+   <td nowrap>&nbsp;受理序號：
+      <span class="dsp_number"> ${case_seqno} </span>
+      <input type=hidden name="case_seqno" value="${case_seqno}" />
+   </td>
+   <td nowrap>&nbsp;受理人員：
+      <span class="dsp_text"> ${case_user} </span>
+      <input type=hidden name="case_user" value="${case_user}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡號：
+      <span class="dsp_text">${card_no}</span>
+      <input type="hidden" name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap>&nbsp;正卡ID：
+      <span class="dsp_text">${case_idno}</span>
+      <input type="hidden" name="case_idno" value="${case_idno}"/>
+   </td>   
+   <td nowrap>&nbsp;紅利點數：
+      <span class="dsp_number"> ${ex_bonus.(999)} </span>
+      <input type=hidden name="ex_bonus" value="${ex_bonus}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;正卡姓名：
+      <span class="dsp_text"> ${maj_chi_name} </span>
+      <input type=hidden name="major_cname" value="${major_cname}" />
+   </td>   
+   <td nowrap>&nbsp;自動扣繳帳號：
+      <span class="dsp_text"> ${ex_auto_acctno} </span>
+      <input type=hidden name="ex_auto_acctno" value="${ex_auto_acctno}" />
+      &nbsp;
+      自動扣繳所屬銀行：
+      <span class="dsp_text">${autopay_bank_name}</span>
+      <input type="hidden" name="autopay_bank_name" value="${autopay_bank_name}" />
+   </td>
+   <td nowrap>&nbsp;有效正附卡數：
+      <span class="dsp_number"> ${ex_valid_cards} </span>
+      <input type=hidden name="ex_valid_cards" value="${ex_valid_cards}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;繳款代號：
+      <span class="dsp_text">${ex_acno_payno} </span>
+      <input type=hidden name="ex_acno_payno" value="${ex_acno_payno}" />
+   </td>
+   <td nowrap>&nbsp;信用額度：
+      <span class="dsp_number"> ${ex_credit_limit.(999)} </span>
+      <input type=hidden name="ex_credit_limit" value="${ex_credit_limit}" />
+   </td>
+   <td nowrap>&nbsp;帳單週期：
+      <span class="dsp_text"> ${ex_stmt_cycle} </span>
+      <input type=hidden name="ex_stmt_cycle" value="${ex_stmt_cycle}" />
+      &nbsp;自動分期:
+      <span class="dsp_text">${auto_installment}</span>
+      <input type="hidden" name="auto_installment" value="${auto_installment}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;本期應繳總金額：
+      <span class="dsp_number"> ${ex_ttl_amt.(999)} </span>
+      <input type=hidden name="ex_ttl_amt" value="${ex_ttl_amt}" />
+   </td>
+   <td nowrap>&nbsp;本月應繳MP：
+      <span class="dsp_number"> ${ex_min_pay.(999)} </span>
+      <input type=hidden name="ex_min_pay" value="${ex_min_pay}" />
+   </td>
+   <td nowrap>&nbsp;帳單寄送方式:紙本:<span class="dsp_text">${stat_send_paper}</span>&nbsp;網路:<span class="dsp_text">${stat_send_internet}</span>
+   		<input type="hidden" name="stat_send_paper" value="${stat_send_paper}">
+   		<input type="hidden" name="stat_send_internet" value="${stat_send_internet}">
+   </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="3" >&nbsp;E-Mail:
+        <span class="dsp_text">${e_mail_addr}&nbsp;</span>
+        <input type="hidden" name="e_mail_addr" value="${e_mail_addr}">
+    </td>
+  </tr>
+</table>
+</div>
+
+<hr>
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks" ${a_click_3} onclick="wf_click('3');  return tabControl(event, 'tab-3')">受理記錄</td>
+       <td class="tablinks" id="tab_active" ${a_click_1} onclick="wf_click('1');  return tabControl(event, 'tab-1')">受理內容</td>
+       <td class="tablinks" ${a_click_2} onclick="wf_click('2');  return tabControl(event, 'tab-2')">補寄資料</td>
+    </tr>
+  </table>
+</div>
+<div id="tab-1" class="tabcontent">
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="3">&nbsp;案件類別：
+     <select size=1 id="case_type" id="case_type" name="case_type" class="col_ddlb" onchange="return wf_ajax_casetype('1');">
+       <option value="">--</option>
+       ${dddw_casetype}
+     </select>
+     &nbsp;
+     <input type="Button" class="btOther" id="btnNote"  value="注意事項" onClick="open_casenote()" >
+     <input type="hidden" name="case_conf_flag" value="${case_conf_flag}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;內容說明：
+      <input type="text" class="col_any" name="case_desc" value="${case_desc}"
+       zEdit="any,canTW" maxlength=100 size=100 />
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="text" class="col_any" name="case_desc2" value="${case_desc2}"
+       zEdit="any,canTW" maxlength=100 size=100 />
+
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;
+   <input type="checkbox" class="col_ckbox" value="Y" name="ugcall_flag" ${ugcall_flag-Y} />急件
+   &nbsp;
+   <input type="checkbox" class="col_ckbox" value="Y" name="reply_flag" ${reply_flag-Y} />回電
+   </td>
+   <td nowrap>&nbsp;預計回電日期：
+      <input type="text" class="col_date" name="eta_date" value="${eta_date}"
+         zEdit="date,yyyymmdd" MaxLength=10 size=10 />
+       <script language="JavaScript">
+            new tcal ({'formname': 'dataForm','controlname': 'eta_date'});
+       </script>
+   </td>
+   <td nowrap>&nbsp;回電電話：
+      <input type="text" class="col_any" name="reply_phone" value="${reply_phone}"
+       zEdit="any" maxlength=20 size=20 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;
+   <input type="checkbox" class="col_ckbox" value="Y" id="send_code" name="send_code" ${send_code-Y} />案件移送
+    &nbsp;&nbsp;
+         需簽核:<label class="dsp_text" id="conf_mark" >${conf_mark}</label>
+   </td>
+   <td nowrap colspan="1">&nbsp;處理結果：
+      <span class="col_radio" disabled >
+         <input type="radio" value="0" name="case_result" ${case_result-0} ${DEFAULT-case_result} />未處理
+         <input type="radio" value="9" name="case_result" ${case_result-9} />處理完成
+      </span>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="checkbox" value="Y" name="case_trace_flag" ${case_trace_flag-Y} >案件追蹤日期：
+      <input type="text" class="col_date" name="case_trace_date" value="${case_trace_date}"
+       zEdit="date,yyyymmdd" maxlength=8 size=10 />
+       <script language="JavaScript">
+            new tcal ({'formname': 'dataForm','controlname': 'case_trace_date'});
+       </script>
+   </td>
+  </tr>
+</table>
+</div>
+<br>
+ <table width="60%" id="table-dept" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">移送 </th>
+    <th nowrap class="list_cc">案件移送部門 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" id="opt-${dept_code}" name="opt_dept" value="${ser_num}" ${on_opt} />
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}" />
+      <input type="hidden" name="dept_code" value="${dept_code}" />
+      <input type="hidden" name="dept_name" value="${dept_name}" />
+    </td>
+    <td nowrap class="list_ll" >${dept_code}_${dept_name} </td />
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 補寄資料 ===================================================== -->
+<div id="tab-2" class="tabcontent">
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;案件類別：
+      <span class="dsp_text"> 補寄資料 </span>
+      <input type=hidden name="case_type" value="99999" />
+   </td>
+   <td nowrap>&nbsp;
+    <input type="checkbox" class="col_ckbox" value="Y" name="post_code" ${post_code-Y} ${DEFAULT-post_code}  />補寄資料
+   </td>
+   <td nowrap>&nbsp;</td>
+   <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap class="td_title">類別一:卡片類</td>
+   <td nowrap class="td_title">類別二:帳務類</td>
+   <td nowrap class="td_title">類別三:行銷類</td>
+   <td nowrap class="td_title">類別四:其他類</td>
+  </tr>
+  <tr>
+   <td nowrap>
+     <select size=1 id="db_case_id_A" name="db_case_id_A" class="col_ddlb" onChange="wf_add_option('A')" >
+       <option value="">--</option>
+       ${dddw_casetype_A}
+     </select>
+   </td>
+   <td nowrap>
+     <select size=1 id="db_case_id_B" name="db_case_id_B" class="col_ddlb" onChange="wf_add_option('B')" >
+       <option value="">--</option>
+       ${dddw_casetype_B}
+     </select>
+   </td>
+   <td nowrap>
+     <select size=1 id="db_case_id_C" name="db_case_id_C" class="col_ddlb" onChange="wf_add_option('C')" >
+       <option value="">--</option>
+       ${dddw_casetype_C}
+     </select>
+   </td>
+   <td nowrap>
+     <select size=1 id="db_case_id_D" name="db_case_id_D" class="col_ddlb" onChange="wf_add_option('D')" >
+       <option value="">--</option>
+       ${dddw_casetype_D}
+     </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">&nbsp;姓  名：
+      <input type="text" class="col_any" name="recv_cname" value="${recv_cname}"
+       zEdit="any,canTW" maxlength=50 size=50 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">&nbsp;補寄內容摘要：<br>
+      <input type="text" class="col_any" name="mail_desc" value="${mail_desc}"
+       zEdit="any,canTW" maxlength=100 size=100 />
+       <br>
+      <input type="text" class="col_any" name="mail_desc2" value="${mail_desc2}"
+       zEdit="any,canTW" maxlength=100 size=100 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">
+      <span class="col_radio">
+   <input type="radio" value="0" name="result_flag" ${result_flag-0} ${default-result_flag} onClick="wf_set_addr()" />按原帳單地址
+   <input type="radio" value="1" name="result_flag" ${result_flag-1} onClick="wf_clear_addr()" />另寄他址(請詳填下列細項)
+      </span>
+   </td>
+   <td nowrap colspan="2">
+      <span class="col_radio">
+   <input type="radio" value="3" name="mail_send_type" ${mail_send_type-3} ${default-mail_send_type} />平信
+   <input type="radio" value="2" name="mail_send_type" ${mail_send_type-2} />限專
+   <input type="radio" value="1" name="mail_send_type" ${mail_send_type-1} />掛號
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">&nbsp;郵寄地址：
+      <input type="text" class="col_any" name="bill_zip" value="${bill_zip}"
+       maxlength=5 size=6 onChange="wf_zip_chg('2')"/>
+      &nbsp;
+      <input type="text" class="col_any" id="bill_addr1" name="bill_addr1" value="${bill_addr1}"
+       zEdit="any,canTW" maxlength=10 size=12 />
+      &nbsp;縣市
+      <input type="text" class="col_any" id="bill_addr2" name="bill_addr2" value="${bill_addr2}"
+       zEdit="any,canTW" maxlength=10 size=12 />
+      &nbsp;鄉鎮市區
+      <input type="text" class="col_any" name="bill_addr3" value="${bill_addr3}"
+       zEdit="any,canTW" maxlength=12 size=14 />
+      &nbsp;村里
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="text" class="col_any" name="bill_addr4" value="${bill_addr4}"
+       zEdit="any,canTW" maxlength=12 size=12 />
+      &nbsp;鄰
+      <input type="text" class="col_any" name="bill_addr5" value="${bill_addr5}"
+       zEdit="any,canTW" maxlength=56 size=56 />
+   </td>
+  </tr>
+</table>
+</div>
+</div>
+<!-- 接聴記錄 ===================================================== -->
+<div id="tab-3" class="tabcontent">
+<table id="table1" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>受理日期 </th>
+    <th nowrap>ID / 卡號 </th>
+    <th nowrap>案件類別 </th>
+    <th nowrap>受理序號 </th>
+    <th nowrap>處理狀況 </th>
+    <th nowrap>移送 </th>
+    <th nowrap>退回數 </th>
+    <th nowrap>案件內容說明 </th>
+    <th nowrap>完成日期 </th>
+    <th nowrap>受理人員 </th>
+    <th nowrap>異動時間 </th>
+    <th nowrap>急件 </th>
+    <th nowrap>回電 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+    <td nowrap class="list_no"> ${B.ser_num}
+    	<input type="hidden" name="B.ser_num" value="${B.ser_num}">
+        <img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen_2('${B.case_date}','${B.case_seqno}','')" style="cursor:hand">
+    </td>
+    <td nowrap class="list_cc"> ${B.case_date.YMD}
+    	<input type="hidden" name="B.case_date" value="${B.case_date}">
+    </td>
+    <td nowrap class="list_cc"> ${B.case_idno}/${B.card_no}
+    	<input type="hidden" name="B.case_idno" value="${B.case_idno}">
+    	<input type="hidden" name="B.card_no" value="${B.card_no}">
+    </td>
+    <td nowrap class="list_cc"> ${B.case_type}
+    	<input type="hidden" name="B.case_type" value="${B.case_type}">
+    </td>
+    <td nowrap class="list_cc"> ${B.case_seqno}
+      <input type="hidden" name="B.case_seqno" value="${B.case_seqno}">
+    </td>
+    <td nowrap class="list_ll"> ${B.case_result}.${#java:ecsfunc.DeCodeCms.caseProcResult(B.case_result)}
+    	<input type="hidden" name="B.case_result" value="${B.case_result}">
+    </td>
+    <td nowrap class="list_cc"> ${B.send_code}
+    	<input type="hidden" name="B.send_code" value="${B.send_code}">
+    </td>
+    <td nowrap class="list_cc"> ${B.returnCnt}
+      <input type="hidden" name="B.returnCnt" value="${B.returnCnt}">
+    </td>
+    <td nowrap class="list_ll"> ${B.case_desc}
+    	<input type="hidden" name="B.case_desc" value="${B.case_desc}">
+   	</td>
+    <td nowrap class="list_cc"> ${B.finish_date.YMD}
+    	<input type="hidden" name="B.finish_date" value="${B.finish_date}">
+    </td>
+    <td nowrap class="list_cc"> ${B.case_user}_${B.tt_case_user}
+    	<input type="hidden" name="B.case_user" value="${B.case_user}">
+        <input type="hidden" name="B.tt_case_user" value="${B.tt_case_user}">
+    </td>
+    <td nowrap class="list_cc"> ${B.mod_time.TIME}
+    	<input type="hidden" name="B.mod_time" value="${B.mod_time}">
+    </td>
+    <td nowrap class="list_cc"> ${B.ugcall_flag}
+    	<input type="hidden" name="B.ugcall_flag" value="${B.ugcall_flag}">
+    </td>
+    <td nowrap class="list_cc"> ${B.reply_flag}
+    	<input type="hidden" name="B.reply_flag" value="${B.reply_flag}">
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!--POPUP-win:注意事項 ===================================================== -->
+<div id="casenote_dlog">
+ <table id="table_note" border="0" cellspacing="0" cellpadding="4" >
+  <tr>
+    <th nowrap >注意事項 </th>
+  </tr>
+ </table>
+</div>
+<!-- -->
+<input type="hidden" name="hh_bill_zip" value="${hh_bill_zip}">
+<input type="hidden" name="hh_bill_addr1" value="${hh_bill_addr1}">
+<input type="hidden" name="hh_bill_addr2" value="${hh_bill_addr2}">
+<input type="hidden" name="hh_bill_addr3" value="${hh_bill_addr3}">
+<input type="hidden" name="hh_bill_addr4" value="${hh_bill_addr4}">
+<input type="hidden" name="hh_bill_addr5" value="${hh_bill_addr5}">
+<input type="hidden" id="case_type_conf" name="case_type_conf" value="${case_type_conf}">
+<input type="hidden"  name="tab_click" value="${tab_click}">
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table-dept');
+	tigra_tables('table1');
+</script>
+
+<script>
+$(document).ready(function () {
+     $("#casenote_dlog").dialog({
+         title:'注意事項',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         height: 500, width: 600,
+         buttons: {
+             "確定": function() {
+            	 $(this).dialog("close");
+             }
+         }
+     });
+})
+
+function open_casenote() {
+   $("#casenote_dlog").dialog("open");
+}
+</script>
+
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ //top.allow_spec_char=true;
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+function wf_ajax_casetype(ps1) {
+  var ls_casetype =$("select[name=case_type]").val();
+  var tt =$("#case_type option:selected").text();
+  var li_start_len = tt.indexOf("_")+1;
+  $("input[name=case_desc]").val(tt.substring(li_start_len));
+  wf_caseNote_clear();
+  if (ls_casetype.length ==0 || ls_casetype.trim() =='') {
+    return false;
+  }
+  
+  idCode ="1";
+
+  resetJSON();
+  addJSON("ax_col","case_type");
+  addJSON("ax_case_type",ls_casetype);
+  processAJAX();
+}
+
+function wf_zip_chg(ps2) {
+	var  zip_code =document.forms["dataForm"]["bill_zip"].value.toUpperCase();
+	if ( zip_code === '' ) {
+		return false;
+	}
+
+	idCode = "2";
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    //if ( idCode === '2' ) {
+	// 	top.methodName = "wf_ajax_zip";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+    addJSON("ax_col","zip_code");
+	addJSON("ax_zip",zip_code);
+	processAJAX();
+}
+
+function ajaxResponse() {
+   top.respHtml ="cmsm6020_detl";
+   top.requHtml ="cmsm6020_detl";
+
+	if  ( idCode == '1' ) {
+		wf_set_optDept();
+
+    var ls_conf =getJson("ax_param_flag");
+    if (ls_conf=="N") {
+      document.getElementById('btnNote').disabled =true;      
+      document.getElementById('btnNote').style.background = 'gray' ;
+      return;
+    }
+   document.getElementById('btnNote').disabled =false;      
+   document.getElementById('btnNote').style.background = 'green' ;
+   wf_caseNote_add(getJson("ax_param_1"));
+   wf_caseNote_add(getJson("ax_param_2"));
+   wf_caseNote_add(getJson("ax_param_3"));
+   wf_caseNote_add(getJson("ax_param_4"));
+   wf_caseNote_add(getJson("ax_param_5"));
+   wf_caseNote_add(getJson("ax_param_6"));
+   wf_caseNote_add(getJson("ax_param_7"));
+   wf_caseNote_add(getJson("ax_param_8"));
+   wf_caseNote_add(getJson("ax_param_9"));
+   wf_caseNote_add(getJson("ax_param_10"));
+   wf_caseNote_add(getJson("ax_param_11"));
+   wf_caseNote_add(getJson("ax_param_12"));
+   wf_caseNote_add(getJson("ax_param_13"));
+   wf_caseNote_add(getJson("ax_param_14"));
+   wf_caseNote_add(getJson("ax_param_15"));
+   open_casenote();
+	}	
+  else if( idCode ==='2') {
+		 var bill_addr1 =getJson("bill_addr1");
+     if (bill_addr1.length>0) {
+     	$("#bill_addr1").text(bill_addr1);
+     	$("#bill_addr1").val(bill_addr1);
+     }
+     var bill_addr2 =getJson("bill_addr2");
+     if (bill_addr2.length>0) {
+     	$("#bill_addr2").text(bill_addr2);
+     	$("#bill_addr2").val(bill_addr2);
+     }
+	}
+}
+
+function wf_set_optDept() {
+   $("input[name='opt_dept']").each(function() {
+         $(this).prop("checked", false);
+   });
+   $("#send_code").prop("checked",false);
+
+   var li_dept_cnt =Number(getJson("ax_dept_cnt"));
+   //alert("dept_cnt="+li_dept_cnt);
+   if (li_dept_cnt <=0) {
+	//add 需簽核註記
+      $("#conf_mark").text('N');
+      $("#conf_mark").val('N');
+      return;
+   }
+   $("#send_code").prop("checked",true);
+
+   var ls_dept="";
+   for(var ii=0 ; ii<li_dept_cnt;ii++){
+        ls_dept ="#opt-"+getJSONvalue("ax_dept_no",ii);
+        $(ls_dept).prop("checked", true);
+   }
+
+   var case_type_conf = getJSONvalue("ax_conf_mark",0);
+   $("#case_type_conf").text(case_type_conf);
+   $("#case_type_conf").val(case_type_conf);
+   
+   //add 需簽核註記
+   if(case_type_conf =='Y'){
+       $("#conf_mark").text('Y');
+       $("#conf_mark").val('Y');
+  }    else    {
+       $("#conf_mark").text('N');
+       $("#conf_mark").val('N');
+  }
+   
+}
+
+function wf_caseNote_clear() {
+	 var tableRows = table_note.getElementsByTagName('tr');
+	 var rowCount = tableRows.length;
+    //alert("clear-Tab="+rowCount);
+
+	 for (var x=rowCount-1; x>0; x--) {
+      if (tableRows[x].cells.length==0) {
+         table_note.deleteRow(x);
+         continue;
+      }
+      table_note.deleteRow(x);
+	 }
+}
+function wf_caseNote_add(parm) {
+   if (parm=='') {
+      return;
+   }
+   $("#table_note").append(
+      "<tr>"
+      +"<td nowrap class='list_ll'>&nbsp;"+parm+"</td>"
+      +"</tr>"
+   );
+}
+
+ function detailScreen_2(parm,parm2,parm3) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm6020_log";
+    top.submitControl('S2');
+    return true;
+ }
+
+ function detailScreen(parm,parm2,parm3) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm6020_addr";
+    top.submitControl('S3');
+    return true;
+ }
+
+ function	wf_clear_addr(){
+	document.dataForm.bill_zip.value = '';
+	document.dataForm.bill_addr1.value = '';
+	document.dataForm.bill_addr2.value = '';
+	document.dataForm.bill_addr3.value = '';
+	document.dataForm.bill_addr4.value = '';
+	document.dataForm.bill_addr5.value = '';
+}
+ function wf_set_addr(){
+ 	document.dataForm.bill_zip.value = document.forms["dataForm"]["hh_bill_zip"].value.trim();
+	document.dataForm.bill_addr1.value = document.forms["dataForm"]["hh_bill_addr1"].value.trim();
+	document.dataForm.bill_addr2.value = document.forms["dataForm"]["hh_bill_addr2"].value.trim();
+	document.dataForm.bill_addr3.value = document.forms["dataForm"]["hh_bill_addr3"].value.trim();
+	document.dataForm.bill_addr4.value = document.forms["dataForm"]["hh_bill_addr4"].value.trim();
+	document.dataForm.bill_addr5.value = document.forms["dataForm"]["hh_bill_addr5"].value.trim();
+
+}
+
+ function wf_add_option(parm){
+ 	var ls_desc = document.forms["dataForm"]["mail_desc"].value;
+ 	var ls_desc2 = '';
+ 	if(parm=='A'){
+ 		ls_desc2 = $("#db_case_id_A option:selected").text();
+ 	}	else if (parm=='B'){
+ 		ls_desc2 = $("#db_case_id_B option:selected").text();
+ 	}	else if (parm=='C'){
+ 		ls_desc2 = $("#db_case_id_C option:selected").text();
+ 	}	else if (parm=='D'){
+ 		ls_desc2 = $("#db_case_id_D option:selected").text();
+ 	}
+
+ 	ls_desc += ls_desc2;
+ 	document.dataForm.mail_desc.value = ls_desc;
+ }
+
+ function wf_click(parm) {
+  	document.dataForm.tab_click.value = parm;
+ }
+
+</script>

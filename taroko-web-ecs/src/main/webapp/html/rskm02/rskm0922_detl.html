@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>子卡限額參數-V20200102</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">	
+	<table width="80%" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<td nowrap >&nbsp;卡號:
+				<input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}" maxlength="19" size="21" zEdit="number" OnChange="CardChange('1')" >
+			</td>
+		</tr>
+	</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+ 		<td nowrap >&nbsp;卡號:
+ 			<span class="dsp_text">${card_no}</span>
+ 			<input type="hidden" name="card_no" value="${card_no}">
+      &nbsp;&nbsp;待覆核:<span class="dsp_flag">${apr_flag}</span>
+        <input type="hidden" name="apr_flag" value="${apr_flag}" />
+ 		</td>
+ 		<td nowrap >&nbsp;正卡人ID:
+ 			<span class="dsp_text">${major_id_no}</span>
+ 			<input type="hidden" name="major_id_no" value="${major_id_no}">
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;子卡姓名:
+ 			<span class="dsp_text">${chi_name}</span>
+ 			<input type="hidden" name="chi_name" value="${chi_name}">　　
+            正卡額度:
+            <span class="dsp_text">${line_of_credit_amt.(999)}</span>
+            <input type="hidden" name="line_of_credit_amt" value="${line_of_credit_amt}"/>
+            &nbsp;帳戶溢繳款:
+            <span class="dsp_text">${over_pay.(999)}</span>
+            <input type="hidden" name="over_pay" value="${over_pay}" />            
+ 		</td>
+ 		<td nowrap >&nbsp;子卡人ID:
+ 			<span class="dsp_text">${id_no}</span>
+ 			<input type="hidden" name="id_no" value="${id_no}">
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;調整前子卡額度:
+ 			<span class="dsp_text">${indiv_crd_lmt.(999)}</span>
+            <input type="hidden" name="indiv_crd_lmt" value="${indiv_crd_lmt}">
+            &nbsp;&nbsp;調整後子卡額度:
+            <input type="text" class="col_number" id="new_indiv_crd_lmt" name="new_indiv_crd_lmt" value="${new_indiv_crd_lmt}" maxlength="12" size="14" zEdit="number" >
+ 		</td>
+ 		<td nowrap >&nbsp;子卡分期付款限額%:
+ 			<input type="text" class="col_number" id="indiv_inst_lmt" name="indiv_inst_lmt" value="${indiv_inst_lmt}" maxlength="5" size="7" zEdit="dignumber"  >
+ </tr>
+ <tr>
+ 	  <td nowrap >&nbsp;指定日期調整額度:
+ 			<input type="text" class="col_number" id="card_adj_limit" name="card_adj_limit" value="${card_adj_limit}" maxlength="9" size="11" zEdit="number" >
+ 		</td>
+ 		<td nowrap >&nbsp;指定日期:
+ 			<input type="text" class="col_date" id="card_adj_date1" name="card_adj_date1" value="${card_adj_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'card_adj_date1'});
+	       </script>
+	      --
+	    <input type="text" class="col_date" id="card_adj_date2" name="card_adj_date2" value="${card_adj_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'card_adj_date2'});
+	       </script>
+	  </td>
+ </tr>
+ <tr>
+        <td nowrap >&nbsp;是否為子卡
+            <span class="col_radio">
+             <input type="radio" value="N" name="son_card_flag" ${son_card_flag-N} ${DEFAULT_CHK} onClick="changeFlag()" />N
+             <input type="radio" value="Y" name="son_card_flag" ${son_card_flag-Y} />Y
+            </span>
+        </td>
+ 		<td nowrap >&nbsp;
+ 			<input type="checkbox" id="sms_flag" name="sms_flag" value="Y" ${sms_flag-Y}>發送簡訊
+ 		</td>
+ </tr>
+</table>
+</div>
+<br>
+<!-- -->
+
+<input type="hidden" name="ori_indiv_crd_lmt" value="${ori_indiv_crd_lmt}" />
+<input type="hidden" name="acno_p_seqno " value="${acno_p_seqno}" />
+<input type="hidden" name="acct_type" value="${acct_type}" />
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="major_id_p_seqno" value="${major_id_p_seqno}" />
+<input type="hidden" name="tot_amt_month" value="${tot_amt_month}" />
+<input type="hidden" name="adj_eff_start_date" value="${adj_eff_start_date}" />
+<input type="hidden" name="adj_eff_end_date" value="${adj_eff_end_date}" />
+<input type="hidden" name="ori_indiv_inst_lmt" value="${ori_indiv_inst_lmt}" />
+<input type="hidden" name="card_acct_idx" value="${card_acct_idx}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+ function changeFlag() {
+    $("#new_indiv_crd_lmt").val('');
+    $("#indiv_inst_lmt").val('');
+    $("#card_adj_limit").val('');
+    $("#card_adj_date1").val('');
+    $("#card_adj_date2").val('');  
+    document.dataForm.sms_flag.checked = false ; 
+ } 
+  
+
+</script>

@@ -1,0 +1,230 @@
+<html>
+<head>
+<title>消費簡訊門檻參數設定-country</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="wf_return_data()"; alt="回上層";/>&nbsp;&nbsp;  
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;  
+  <input type="Button" value="資料匯入" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btConfirm" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">優先序:
+		<span class="dsp_text"> ${sms_priority} </span>
+      <input type=hidden name="sms_priority" value="${sms_priority}">      
+   </td>
+   <td nowrap class="colKey">明細類別：
+      <span class="dsp_text">POS ENTRY MODE</span>
+      <input type=hidden name="data_type" value="POS">
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap colspan="3" >&nbsp;匯入媒體檔:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any" />
+      <input type="button" ${btnUpdate_disable} value="..." class="btProcess" onclick="return upload_click()">
+    </td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="3" >&nbsp;備註:
+  		<span class="td_remark" >人工匯入檔為*.txt檔，layout:POS ENTRY MODE</span>
+  	</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >
+      <input type="Button" value="國別" onclick="wf_detl_2page('COUNTRY');" class="btAdd_detl"  />
+      <input type="Button" value="幣別" onclick="wf_detl_2page('CURR');" class="btAdd_detl" />
+      <input type="Button" value="BIN" onclick="wf_detl_2page('BIN');" class="btAdd_detl" />
+      <input type="Button" value="團代" onclick="wf_detl_2page('GROUP');" class="btAdd_detl" />
+      <input type="Button" value="特店" onclick="wf_detl_2page('MCHT');" class="btAdd_detl" />            
+      <input type="Button" value="MCC CODE" onclick="wf_detl_2page('MCC');" class="btAdd_detl" />
+      <input type="Button" value="POS ENTRY MODE" onclick="wf_detl_2page('POS');" disabled />
+      <input type="Button" value="交易類別" onclick="wf_detl_2page('TRANS_TYPE');" class="btAdd_detl" />      
+      <input type="Button" value="回覆碼" onclick="wf_detl_2page('RESP');" class="btAdd_detl" />      
+   </td>   
+  </tr>
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap width="90%">POS ENTRY MODE:
+     <select size=1 id="ex_data_code" name="ex_data_code" class="col_ddlb">
+      <option value=''>--</option>
+      <option value='00'>00_Unknown</option>
+	  <option value='01'>01_PAN manual entry</option>
+	  <option value='03'>03_Consumer presented QR Code, chip information included.(銀聯卡專用)</option>
+	  <option value='05'>05_Chip card transaction, and CVV or iCVV is reliable</option>
+	  <option value='07'>07_PAN auto-entry via contactless with chip</option>
+	  <option value='09'>09_PAN entry via electronic commerce, including remote chip</option>
+	  <option value='10'>10_COF (國際組織 VISA 專用)</option>
+	  <option value='80'>80_Fallback transaction</option>
+	  <option value='81'>81_PAN entry via electronic commerce</option>
+	  <option value='82'>82_PAN auto entry via server</option>
+	  <option value='90'>90_PAN auto-entry via magnetic stripe</option>
+	  <option value='91'>91_PAN auto-entry via contactless with magnetic stripe.</option>
+	  <option value='92'>92_Magnetic stripe read; service code begins with ‘2’ or ‘6’; last transaction was an unsuccessful IC read</option>
+	  <option value='95'>95_Chip card transaction, but CVV or iCVV not reliabl</option>
+     </select>
+     &nbsp;
+     <input type="Button" id="detl_btnAdd" value="新增明細" ${btnUpdate_disable} class="btUpdate" onClick="wf_save()" />
+     <input type="Button" value="刪除明細" ${btnUpdate_disable} onClick="return top.submitControl('D2')" class="btUpdate" >
+     &nbsp;<label id="ex_errmsg" style="color: red"> </label>
+   </td>
+  </tr>
+</table>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">POS ENTRY MODE</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code1" value="${data_code1}">
+      <input type="hidden" name="tt_data_code" value="${tt_data_code}">
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${tt_data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${sms_priority}" />
+<input type=hidden name="data_k2" value="" />
+<input type="hidden"  name="upload_file" value="" />  
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_pos">
+<input type="hidden" name="ex_type_desc" value="POS ENTRY MODE" />
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+ 
+top.refreshButton2('2');
+top.pageRows="999";
+
+function validateInput() {
+
+  if ( top.actionCode == "C" ) {
+    if(confirm("匯入後明細資料將會全部覆蓋，確認是否執行 ?") == false) {
+        return false;
+    }
+  }
+
+  if (!top.checkFormat()) { 
+    return false; 
+  }
+  return true;
+}
+
+ function wf_save() {
+   $("#ex_errmsg").html("");
+   var ls_tt_data_code =$("#ex_data_code option:selected").text();
+   var ls_code =$("#ex_data_code").val();
+   if(ls_code.trim() ==''){       
+		alert("POS ENTRY MODE 不可空白");
+		return ;
+	}
+    resetJSON();
+    addJSON("approval_user", $("input[name=approval_user]").val());
+    addJSON("approval_passwd", $("input[name=approval_passwd]").val());
+    addJSON("sms_priority", $("input[name=sms_priority]").val());
+    addJSON("data_type", $("input[name=data_type]").val());    
+    addJSON("ex_type_desc", $("input[name=ex_type_desc]").val());
+    addJSON("ex_data_code", ls_code);
+    addJSON("ex_data_code2", "");
+
+    processAJAX();
+ }
+ function ajaxResponse(){
+    top.respHtml ="ccam5273_pos";
+    top.requHtml ="ccam5273_pos";
+
+    var ls_msg =getJson("ax_errmsg");
+    if (ls_msg.trim() == '') {
+      $("#ex_errmsg").html("新增成功");
+    }
+    else {
+      $("#ex_errmsg").html(ls_msg);      
+    }
+    return false;
+}
+
+function wf_detl_2page(parm) {
+  $("#ex_data_code").val('');
+  if (parm==="COUNTRY") {    
+	top.respHtml  = "ccam5273_country";
+  } else if (parm=="CURR") {
+	top.respHtml  = "ccam5273_curr";
+  } else if (parm=="BIN") {
+    top.respHtml  = "ccam5273_bin";
+  } else if (parm=="MCHT") {
+	top.respHtml  = "ccam5273_mcht";
+  } else if (parm=="MCC") {
+    top.respHtml  = "ccam5273_mcc";
+  } else if (parm=="POS") {
+    top.respHtml  = "ccam5273_pos";
+  } else if (parm=="TRANS_TYPE") {
+    top.respHtml  = "ccam5273_trans";
+  } else if (parm=="RESP") {
+    top.respHtml  = "ccam5273_resp";
+  } else if (parm=="GROUP") {
+    top.respHtml  = "ccam5273_group";
+  }
+
+  top.respLevel = 2;
+  document.dataForm.data_k2.value = parm;
+  top.submitControl("S2");
+  return true;
+}
+
+function wf_return_data() {
+  top.upperLevel();
+  top.submitControl("R");
+}
+
+function upload_click() {
+  document.dataForm.zz_file_name.value = "";
+    
+  var parmHtml    = "TarokoUpload";
+  var parmName    = "upload_file,zz_file_name";
+  var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+  top.packageName = "taroko.com";
+  top.javaName    = "TarokoUpload";
+  top.methodName  = "showScreen";
+  top.openWindow("",parmHtml,parmName,windowSize);
+    
+  top.packageName = "ccam02";
+  top.javaName    = "Ccam5273";    
+  top.requHtml    = "ccam5273_pos";
+  top.respHtml    = "ccam5273_pos";
+  return true;
+}
+  
+function wf_uploadAfter() { 	 
+   return;
+} 
+
+</script>

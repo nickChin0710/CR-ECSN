@@ -1,0 +1,380 @@
+<html>
+
+<head>
+    <title>帳單交易別參數檔維護-detl-V.2017-0503-yash-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+    <script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+    <script language="JavaScript" src="js/jquery-ui.min.js"></script>
+</head>
+<script language="JavaScript">
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">帳單來源：&nbsp;
+                        <input type="text" class="col_text" name="kk_bill_type" value="${kk_bill_type}" zEdit="alphanum,upper" maxlength=4 size=5 />
+                        <select size="1" name="dd_bill_type" id="dd_bill_type" class="col_ddlb" onchange="sel_bill_type()">
+                            <option value="">--</option>
+                            ${dddw_bill_type}
+                        </select>
+                    </td>
+                    <td nowrap>&nbsp;交易別代碼:
+                        <input type="text" class="col_any" name="kk_txn_code" value="${kk_txn_code}" zEdit="any" maxlength=2 size=2 />
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">帳單來源：
+                        <span class="dsp_text">${bill_type}</span>
+                        <input type="hidden" name="bill_type" value="${bill_type}">
+                    </td>
+                    <td nowrap class="colKey">交易別代碼：
+                        <span class="dsp_text">${txn_code}</span>
+                        <input type="hidden" name="txn_code" value="${txn_code}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>帳單來源說明:&nbsp;
+                        <input type="text" class="col_any" name="inter_desc" value="${inter_desc}" zEdit="canTW" maxlength="20" size="20" zRequire="Y" />
+                    </td>
+                    <td nowrap>列印帳單說明:&nbsp;
+                        <input type="text" class="col_any" name="exter_desc" value="${exter_desc}" zEdit="canTW" maxlength="40" size="40" zRequire="Y" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>正向負向:&nbsp;
+                        <input type="radio" value="+" name="sign_flag" ${sign_flag-+} ${DEFAULT_CHK}>正
+                        <input type="radio" value="-" name="sign_flag" ${sign_flag--}>負
+                    </td>
+                    <td nowrap width="50%">帳務科目代號：&nbsp;
+                        <select size="1" name="acct_code" class="col_ddlb" zRequire="Y">
+                            ${dddw_acct_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col_Key" colspan="2">持卡人方面:</td>
+                </tr>
+                <tr>
+                    <td nowrap>預借現金收取否:&nbsp;
+                        <input type="radio" value="Y" name="cash_adv_state" ${cash_adv_state-Y}>是
+                        <input type="radio" value="N" name="cash_adv_state" ${cash_adv_state-N} ${DEFAULT_CHK}>否
+                    </td>
+                    <td nowrap>其他手續費收取否:&nbsp;
+                        <input type="radio" value="Y" name="fees_state" ${fees_state-Y}>是
+                        <input type="radio" value="N" name="fees_state" ${fees_state-N} ${DEFAULT_CHK}>否
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col_Key" colspan="2">特店方面:</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">手續費=固定
+                        <input type=text class="col_number" name="fees_fix_amt" value="${fees_fix_amt}" zEdit="dignumber" maxlength="6" size="11" />元 + 本金*
+                        <input type=text class="col_number" name="fees_percent" value="${fees_percent}" zEdit="dignumber" maxlength="3" size="5" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">每筆手續費收取金額--最低
+                        <input type=text class="col_number" name="fees_min" value="${fees_min}" zEdit="dignumber" maxlength="6" size="11" />元 至 最高
+                        <input type=text class="col_number" name="fees_max" value="${fees_max}" zEdit="dignumber" maxlength="6" size="11" zRequire="Y" />元
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>起息日訂定方式：&nbsp;
+                        <select name="interest_mode" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" ${interest_mode-1}>1:以消費日</option>
+                            <option value="2" ${interest_mode-2}>2:以墊款日</option>
+                            <option value="3" ${interest_mode-3}>3:以關帳日</option>
+                            <option value="4" ${interest_mode-4}>4:以繳款日</option>
+                        </select>
+                    </td>
+                    <td nowrap>墊款工作日天數：&nbsp;入帳日+
+                        <input type=text class="col_any" name="adv_wkday" value="${adv_wkday}" zEdit="any" maxlength="2" size="2" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>是否送Visa卡:&nbsp;
+                        <input type="radio" value="Y" name="send_v_flag" ${send_v_flag-Y}>是
+                        <input type="radio" value="N" name="send_v_flag" ${send_v_flag-N} ${DEFAULT_CHK}>否
+                    </td>
+                    <td nowrap>是否送Master卡:&nbsp;
+                        <input type="radio" value="Y" name="send_m_flag" ${send_m_flag-Y}>是
+                        <input type="radio" value="N" name="send_m_flag" ${send_m_flag-N} ${DEFAULT_CHK}>否
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>是否可轉入分期付款:&nbsp;
+                        <input type="radio" value="Y" name="auto_installment" ${auto_installment-Y}>是
+                        <input type="radio" value="N" name="auto_installment" ${auto_installment-N} ${DEFAULT_CHK}>否
+                    </td>
+                    <td nowrap>是否送聯卡中心卡:&nbsp;
+                        <input type="radio" value="Y" name="send_nccc_flag" ${send_nccc_flag-Y}>是
+                        <input type="radio" value="N" name="send_nccc_flag" ${send_nccc_flag-N} ${DEFAULT_CHK}>否
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>是否轉入當期帳單檔:&nbsp;
+                        <input type="radio" value="Y" name="entry_acct" ${entry_acct-Y}>是
+                        <input type="radio" value="N" name="entry_acct" ${entry_acct-N} ${DEFAULT_CHK}>否
+                    </td>
+                    <td nowrap>是否做疑異帳單查核:&nbsp;
+                        <input type="radio" value="Y" name="chk_err_bill" ${chk_err_bill-Y}>是
+                        <input type="radio" value="N" name="chk_err_bill" ${chk_err_bill-N} ${DEFAULT_CHK}>否
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>是否做重覆查核:&nbsp;
+                        <input type="radio" value="Y" name="double_chk" ${double_chk-Y}>是
+                        <input type="radio" value="N" name="double_chk" ${double_chk-N} ${DEFAULT_CHK}>否
+                    </td>
+                    <td nowrap>是否做格式查核:&nbsp;
+                        <input type="radio" value="Y" name="format_chk" ${format_chk-Y}>是
+                        <input type="radio" value="N" name="format_chk" ${format_chk-N} ${DEFAULT_CHK}>否
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">
+                        <input type="Button" class="btAdd_detl" id="btn_rsn_x100"  value="不檢核凍結原因碼" onClick="processVendorCode()">
+                        <span class="dsp_text" >共&nbsp;${block_rsn_ct}&nbsp;筆&nbsp;${block_rsn_x100}</span>
+                        <input type="hidden" id="dis_block_rsn_x100" name="block_rsn_x100" value="${block_rsn_x100}" class="dsp_text" readonly>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 動態視窗控制 -->
+        <div id="riskdialog">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;原因碼:
+                        <input type=text class="col_text" id="rsn_x100_add" value="${rsn_x100_add}" zeditType="any,upper" maxlength="2" size="4" />
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addrisk_newrow();" class="btAdd_detl" />
+                    </td>
+                <tr>
+            </table>
+            <table id="table_risk" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">不檢核凍結原因碼</th>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="ptrm0160">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="CONFIRM_FLAG" value="X">
+        <input type="hidden" id="rx100" name="rx100" value="">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+var optionFlag = "N";
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function processVendorCode() {
+    init_table2(document.all.table_risk, document.getElementById("dis_block_rsn_x100"));
+
+    $("#riskdialog").dialog("open");
+}
+
+
+
+function init_table2(elmtTable, elmtDesc) {
+    //debugger;
+    var datas = elmtDesc.value.split('');
+    var datas2 = new Array();
+    var ll = 0;
+    for (var ii = 0; ii < datas.length; ii += 2) {
+        datas2[ll] = datas[ii] + datas[ii + 1];
+        ll++;
+    }
+    var nLen = 0;
+    if (elmtDesc.value != "")
+        nLen = 1;
+    var nRows = elmtTable.rows.length;
+    if (nRows == nLen + 1)
+        return;
+    clear_table(elmtTable, true);
+    for (i = 0; i < datas2.length; i++) {
+        add_table(elmtTable, datas2[i]);
+    }
+}
+
+$(document).ready(function() {
+    $("#riskdialog").dialog({
+        title: '不檢核凍結原因碼',
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        height: 400,
+        width: 300,
+        buttons: {
+            "確定": function() {
+                fill_desc2(document.all.table_risk, document.getElementById("dis_block_rsn_x100"));
+                $(this).dialog("close");
+            },
+            "取消": function() {
+                refresh_table(document.all.table_risk);
+                $(this).dialog("close");
+            }
+        }
+    });
+});
+
+
+function fill_desc2(elmtTable, elmtDesc) {
+    //debugger;
+    clear_table(elmtTable, false);
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    elmtDesc.value = "";
+
+    for (var x = 1; x < rowCount; x++) {
+        var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+        elmtDesc.value = elmtDesc.value + dat;
+    }
+}
+
+/**
+ * 取消刪除的打勾
+ */
+function refresh_table(elmtTable) {
+    //debugger;
+    checkbox = elmtTable.getElementsByTagName("input");
+
+    for (var i = 1; i < checkbox.length; i++) {
+        if (checkbox[i].type == 'checkbox') {
+            //do something
+            checkbox[i].checked = false;
+        }
+    }
+}
+
+
+/**
+ * 移除刪除被打勾的資料
+ */
+function clear_table(elmtTable, bAll) {
+    //debugger;
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+
+    for (var x = rowCount - 1; x > 0; x--) {
+        if (bAll) { elmtTable.deleteRow(x); } else {
+            var flag = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+            if (flag)
+                elmtTable.deleteRow(x);
+        }
+
+    }
+}
+
+
+/**
+ * 在table中新增一筆資料
+ */
+function add_table(elmtTable, dat) {
+    //debugger;
+    var ind = elmtTable.rows.length;
+    //var rowNum=ind;
+    var colNum = 0
+
+    var myRow = elmtTable.insertRow(ind);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) { serNo = "0" + ind; } else { serNo = "" + ind; }
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var ipSpan = document.createElement('span');
+    ipSpan.setAttribute('class', 'dsp_text');
+    ipSpan.textContent = dat;
+    myCell.appendChild(ipSpan);
+
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'blocks';
+    ip3.value = dat;
+    myCell.appendChild(ip3);
+
+}
+
+function wf_addrisk_newrow() {
+    //debugger;
+
+    var val_add = trim(document.getElementById("rsn_x100_add").value);
+
+    if (val_add.length != 2) {
+        alert("原因碼請輸入兩碼");
+        return;
+    }
+
+    add_table(document.all.table_risk, val_add);
+    document.getElementById("rsn_x100_add").value = "";
+}
+
+function trim(value) {
+    return value.replace(/^\s+|\s+$/g, "");
+}
+function sel_bill_type(){
+    var bill_type = document.getElementById("dd_bill_type").value;
+    document.dataForm.kk_bill_type.value = bill_type;
+    return;
+}
+</script>

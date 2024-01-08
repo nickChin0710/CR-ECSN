@@ -1,0 +1,202 @@
+<html>
+<head>
+<title>線上持卡人信用額度調整-jh-190627</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;修改方式:
+      <select   size="1" id="ex_emend_type"  name="ex_emend_type" class="col_ddlb" onChange="wf_type_change()" >
+      	 <option value="" >--</option>
+         <option value="1" ${ex_emend_type-1} >個人額度</option>
+         <option value="2" ${ex_emend_type-2} >商務卡公司額度</option>
+         <option value="3" ${ex_emend_type-3} >商務卡個人額度</option>
+         <option value="5" ${ex_emend_type-5} >預借現金額度</option>
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         ${dddw_acct_type}
+      </select>
+      <input type="text" class="col_text" id="ex_acct_key" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" >
+   </td>
+   <td nowrap >&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_log_date1" value="${ex_log_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_log_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_log_date2" value="${ex_log_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_log_date2'});
+	      </script>
+	</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" >
+   </td>
+   <td nowrap >&nbsp;調整人員:
+      <select size="1" name="ex_mod_user" class="col_ddlb" >
+      	<option value="" >--</option>
+         ${dddw_sec_user}
+      </select>
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;覆核日期:
+      <input type="text" class="col_date" name="ex_apr_date1" value="${ex_apr_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_apr_date1'});
+	       </script>
+	      --
+	    <input type="text" class="col_date" name="ex_apr_date2" value="${ex_apr_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_apr_date2'});
+	       </script>
+  	</td>
+  	<td nowrap >&nbsp;覆核:
+  		<span class="col_radio">
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y}  />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${DEFAULT_CHK} />未覆核
+      </span>
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="queryBlock">
+ <table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap width="5%">&nbsp;</td>
+   <td nowrap >總計:<span class="dsp_number">${db_cnt.(999)}</span>&nbsp;筆</td>
+   <td nowrap >總調升額度:<span class="dsp_number">${tl_upper.(999)}</span>&nbsp;</td>
+   <td nowrap >總調降額度:<span class="dsp_number">${tl_lower.(999)}</span>&nbsp;</td>
+  </tr></table>
+  <input type="hidden" name="db_cnt" value="${db_cnt}" />
+  <input type="hidden" name="tl_upper" value="${tl_upper}" />
+  <input type="hidden" name="tl_lower" value="${tl_lower}" />
+</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >修改方式&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >調整前額度&nbsp;</th>
+    <th nowrap >調整後額度&nbsp;</th>
+    <th nowrap >發送簡訊&nbsp;</th>    
+    <th nowrap >調整原因&nbsp;</th>
+    <th nowrap >身分證字號&nbsp;</th>
+    <th nowrap >調整人員&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >覆核人員&nbsp;</th>
+    <th nowrap >覆核&nbsp;</th>
+    <th nowrap >FH&nbsp;</th>
+    <th nowrap >調高/低&nbsp;</th>
+    <th nowrap >一般額度&nbsp;</th>
+    <th nowrap >預借現金&nbsp;</th>
+    <th nowrap >Db Upper&nbsp;</th>
+    <th nowrap >Db Low&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','${emend_type}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="rowid" value="rowid">
+      <input type="hidden" name="emend_type" value="${emend_type}">
+   </td>
+	<td nowrap class="list_ll"> ${#JAVA:ecsfunc.DeCodeRsk.emendType(emend_type)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;</td>	
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_idno_name}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_bef_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_aft_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${sms_flag}.${tt_sms_flag}&nbsp;</td>    
+	<td nowrap class="list_ll"> ${log_reason}_${tt_log_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_idno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${log_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${fh_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tt_adj_loc_flag}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_bef_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_bef_cash.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_upper.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_lower.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm0920_detl";
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm0920_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function wf_type_change(){
+   var ls_type =$("#ex_emend_type").val();
+   if(ls_type =='3'){
+   	 document.getElementById('ex_acct_key').disabled =true;
+   }	else	{
+   	 document.getElementById('ex_acct_key').disabled =false;
+   }
+ }
+
+</script>

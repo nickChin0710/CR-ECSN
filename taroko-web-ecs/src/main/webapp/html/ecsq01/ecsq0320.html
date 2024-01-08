@@ -1,0 +1,85 @@
+<html>
+<head>
+<title> 108/05/03 V1.00.01 RAY Ho Initial DM參數資料檔維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="6">
+   <tr>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8" width="80%">
+  <tr>
+      <th nowrap class="list_th" width="10%">No&nbsp;</th>
+      <th nowrap class="list_th" width="20%" >連線界面</th>
+      <th nowrap class="list_th" width="10%" >連線方式</th>
+      <th nowrap class="list_th" width="10%" >連線角色</th>
+      <th nowrap class="list_th" width="10%" >PORT NO</th>
+      <th nowrap class="list_th" width="10%" >最近監控日期</th>
+      <th nowrap class="list_th" width="10%" >最近監控時間</th>
+      <th nowrap class="list_th" width="10%" >連線狀態</th>
+      <th nowrap class="list_th" width="10%" >回應時間</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+      <td nowrap class="list_no">${SER_NO}&nbsp;
+        <input type="checkbox" value="${INTF_NO}" name="INTF_CHK">
+        <img src="images/btnQuery.gif" onclick="detailScreen('${SER_NO}','${INTF_NO}')" style="cursor:hand; width:15px; height:15px;">&nbsp;
+      </td>
+      <td nowrap class="list_ll"> ${interface_name}</td>
+      <td nowrap class="list_ll"> ${interface_type}</td>
+      <td nowrap class="list_ll"> ${interface_role}</td>
+      <td nowrap class="list_ll"> ${interface_port}</td>
+      <td nowrap class="list_cc"> ${monitor_date.YMD}</td>
+      <td nowrap class="list_cc"> ${monitor_time.TIME}</td>
+      <td nowrap class="list_cc" style="background: ${STATUS_COLOR};" > ${status_code}</td>
+      <td nowrap class="list_cc"> ${duration_time}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+<!-- hidden ************************************************************** -->
+ <input type="hidden"  name="HIDE"    value="${HIDE_DATA}">
+ <input type="hidden"  name="INTF_NO" value="" >
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+
+<script language="JavaScript" src="js/tigra_tables.js"></script>
+<script language="JavaScript"> tigra_tables('table1'); </script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+  top.refreshButton2('0');
+  top.pageRows="30";
+
+  function validateInput() {
+     return true;
+  }
+
+ function detailScreen(serNum,intf_no) {
+
+    document.dataForm.INTF_NO.value = intf_no;
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    top.respHtml  = "ecsq0321";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

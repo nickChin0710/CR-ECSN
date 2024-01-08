@@ -1,0 +1,304 @@
+<html>
+<head>
+<title>凍結、解凍、額度調整、強停例外覆核-jh-190617</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>   
+  <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;帳戶類別:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         <option value="">--</option>
+         ${d_dddw_accttype}
+      </select>
+    </td>
+    <td nowrap>&nbsp;帳戶帳號:
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13">
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap>&nbsp;帳戶帳號:
+         <span class="dsp_text">${acct_type}-${tt_acct_type}&nbsp;${acct_key}</span>
+         <input type="hidden" name="acct_type" value="${acct_type}">
+         <input type="hidden" name="tt_acct_type" value="${tt_acct_type}">        
+         <input type="hidden" name="acct_key" value="${acct_key}">
+      </td>
+      <td nowrap>&nbsp;中文姓名:
+         <span class="dsp_text">${chi_name}</span>
+         <input type="hidden" name="chi_name" value="${chi_name}">
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;帳戶現代碼:
+         <span class="dsp_text">${acct_status}.${#JAVA:ecsfunc.DeCodeAct.acctStatus(acct_status)}</span>
+         <input type="hidden" name="acct_status" value="${acct_status}">
+      </td>
+      <td nowrap>&nbsp;待覆核:
+         <span class="col_requ"><b>${ex_dual_flag}</b></span>
+         <input type="hidden" name="ex_dual_flag" value="${ex_dual_flag}">
+      </td>
+ </tr>  
+</table>
+<br>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap class="list_cc">修改</td>
+      <td nowrap>&nbsp;</td>
+      <td nowrap>&nbsp;</td>
+   </tr>
+   <tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="ex_no_block" value="Y" ${ex_no_block-Y} onClick="wf_no_block()">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="no_block_flag" value="Y" ${no_block_flag-Y}>&nbsp;不可凍結
+      </td>
+      <td nowrap>&nbsp;生效起訖日:
+         <input type="text" class="col_date" name="no_block_s_date" value="${no_block_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_block_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="no_block_e_date" value="${no_block_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_block_e_date'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="ex_no_unblock" value="Y" ${ex_no_unblock-Y} onClick="wf_no_un_block()">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="no_unblock_flag" value="Y" ${no_unblock_flag-Y}>&nbsp;不可解凍
+      </td>
+      <td nowrap>&nbsp;&nbsp;　　　　　
+         <input type="text" class="col_date" name="no_unblock_s_date" value="${no_unblock_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_unblock_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="no_unblock_e_date" value="${no_unblock_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_unblock_e_date'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="ex_no_high" value="Y" ${ex_no_high-Y} onClick="wf_no_high()">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="no_adj_loc_high" value="Y" ${no_adj_loc_high-Y}>&nbsp;不可調高額度
+      </td>
+      <td nowrap>&nbsp;&nbsp;　　　　　
+         <input type="text" class="col_date" name="no_adj_loc_high_s_date" value="${no_adj_loc_high_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_high_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="no_adj_loc_high_e_date" value="${no_adj_loc_high_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_high_e_date'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="ex_no_low" value="Y" ${ex_no_low-Y} onClick="wf_no_low()">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="no_adj_loc_low" value="Y" ${no_adj_loc_low-Y}>&nbsp;不可調低額度
+      </td>
+      <td nowrap>&nbsp;&nbsp;　　　　　
+         <input type="text" class="col_date" name="no_adj_loc_low_s_date" value="${no_adj_loc_low_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_low_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="no_adj_loc_low_e_date" value="${no_adj_loc_low_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_low_e_date'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="ex_no_stop" value="Y" ${ex_no_stop-Y} onClick="wf_no_stop()">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="no_f_stop_flag" value="Y" ${no_f_stop_flag-Y}>&nbsp;不可強停
+      </td>
+      <td nowrap>&nbsp;&nbsp;　　　　　
+         <input type="text" class="col_date" name="no_f_stop_s_date" value="${no_f_stop_s_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_f_stop_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="no_f_stop_e_date" value="${no_f_stop_e_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_f_stop_e_date'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="ex_no_high_cash" value="Y" ${ex_no_high_cash-Y} onClick="wf_no_high_cash()">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="no_adj_h_cash" value="Y" ${no_adj_h_cash-Y}>&nbsp;不可調高額度(預借現金)
+      </td>
+      <td nowrap>&nbsp;&nbsp;　　　　　
+         <input type="text" class="col_date" name="no_adj_h_s_date_cash" value="${no_adj_h_s_date_cash}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_h_s_date_cash'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="no_adj_h_e_date_cash" value="${no_adj_h_e_date_cash}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_h_e_date_cash'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="3">&nbsp;原因碼:
+	      <select size="1" name="chg_reason" class="col_ddlb" >
+	         <option value="">--</option>
+            ${dddw_chg_reason}
+         </select>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;備註:
+         <input type="text" class="col_any" name="chg_remark" value="${chg_remark}" maxlength="100" size="102" zEdit="any,canTw" >
+      </td>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="sys_date" value="${sys_date}" />
+<input type="hidden" name="p_seqno" value="${p_seqno}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+ function wf_no_block()
+ {
+ 	var ls_flag = document.dataForm.ex_no_block.checked;
+ 	var ls_date = document.dataForm.sys_date.value;
+ 	if(ls_flag==false)	return ; 	
+ 	document.dataForm.no_block_flag.checked = true; 	
+ 	document.dataForm.no_block_s_date.value = ls_date; 	
+ }
+ 
+ function wf_no_un_block()
+ {
+ 	var ls_flag = document.dataForm.ex_no_unblock.checked;
+ 	var ls_date = document.dataForm.sys_date.value;
+ 	if(ls_flag==false)	return ; 	
+ 	document.dataForm.no_unblock_flag.checked = true; 	
+ 	document.dataForm.no_unblock_s_date.value = ls_date; 	
+ }
+ 
+ function wf_no_high()
+ {
+ 	var ls_flag = document.dataForm.ex_no_high.checked;
+ 	var ls_date = document.dataForm.sys_date.value;
+ 	if(ls_flag==false)	return ; 	
+ 	document.dataForm.no_adj_loc_high.checked = true;
+   document.dataForm.no_adj_loc_high_s_date.value = ls_date; 	 	
+ }
+ 
+ function wf_no_low()
+ {
+ 	var ls_flag = document.dataForm.ex_no_low.checked;
+ 	var ls_date = document.dataForm.sys_date.value;
+ 	if(ls_flag==false)	return ; 	
+ 	document.dataForm.no_adj_loc_low.checked = true; 	
+ 	 	document.dataForm.no_adj_loc_low_s_date.value = ls_date; 	
+ }
+ 
+ function wf_no_stop()
+ {
+ 	var ls_flag = document.dataForm.ex_no_stop.checked;
+ 	var ls_date = document.dataForm.sys_date.value;
+ 	if(ls_flag==false)	return ; 	
+ 	document.dataForm.no_f_stop_flag.checked = true; 	
+ 	 	document.dataForm.no_f_stop_s_date.value = ls_date; 	
+ }
+ 
+ function wf_no_high_cash()
+ {
+ 	var ls_flag = document.dataForm.ex_no_high_cash.checked;
+ 	var ls_date = document.dataForm.sys_date.value;
+ 	if(ls_flag==false)	return ; 	
+ 	document.dataForm.no_adj_h_cash.checked = true; 	
+ 	document.dataForm.no_adj_h_s_date_cash.value = ls_date; 	
+ }
+</script>

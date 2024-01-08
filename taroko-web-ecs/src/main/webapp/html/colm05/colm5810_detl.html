@@ -1,0 +1,395 @@
+<html>
+<head>
+<title>colm5810: 整批凍結參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶類別:&nbsp;
+     <select size=1 name="kk_acct_type" class="col_ddlb" >
+      <option value="">--</option>
+       ${dddw_acct_type}
+     </select>
+   </td>
+   <td nowrap>&nbsp;生效日期:&nbsp;
+      <input type="text" class="col_date" name="kk_valid_date" value="${kk_valid_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+       <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'kk_valid_date'});
+	    </script>         
+   </td>
+  </tr>
+</table>
+<hr> 
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">&nbsp;帳戶類別:
+      <span class="dsp_date">${acct_type}.${tt_acct_type}</span>
+      <input type="hidden" name="acct_type" value="${acct_type}">
+      <input type="hidden" name="tt_acct_type" value="${tt_acct_type}">      
+   </td>
+   <td nowrap class="col_key">&nbsp;生效日期:
+      <span class="dsp_date">${valid_date.YMD}</span>
+      <input type="hidden" name="valid_date" value="${valid_date}">
+   </td>
+   <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;執行方式:&nbsp;
+      <span class="dsp_text">2.CYCLE後N日 </span>
+      <input type="hidden" name="exec_mode" value="2" />
+   </td>
+   <td nowrap>&nbsp;CYCLE後:
+      <input type="text" class="col_number" name="exec_cycle_nday" value="${exec_cycle_nday}"
+         zEdit="number" MaxLength=2 size=5 />&nbsp;日執行
+   </td>
+   <td nowrap>&nbsp; </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;是否放行:&nbsp;
+      <span class="dsp_text"> ${apr_flag}.${tt_apr_flag}</span>
+      <input type=hidden name="apr_flag" value="${apr_flag}">
+      <input type="hidden" name="tt_apr_flag" value="${tt_apr_flag}">
+   </td>
+   <td nowrap>&nbsp;是否執行:&nbsp;
+      <span class="dsp_text"> ${pause_flag}.${tt_pause_flag} </span>
+      <input type=hidden name="pause_flag" value="${pause_flag}">
+      <input type="hidden" name="tt_pause_flag" value="${tt_pause_flag}">
+   </td>
+   <td nowrap>&nbsp;最近執行日期:&nbsp;
+      <span class="dsp_date">${exec_date.YMD}</span>
+      <input type=hidden name="exec_date" value="${exec_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap> 
+     <input type="checkbox" class="col_ckbox" value="Y" name="exec_flag_m1" ${exec_flag_m1-Y} />檢核 Ma
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Ma:&nbsp;
+      <input type="text" class="col_number" name="mcode_value1" value="${mcode_value1}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xa:&nbsp;
+      <input type="text" class="col_number" name="debt_amt1" value="${debt_amt1}"
+         zEdit="number" MaxLength=8 size=10 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap> 
+   <input type="checkbox" class="col_ckbox" value="Y" name="exec_flag_m14" ${exec_flag_m14-Y} />檢核 Ma[4]
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Ma:&nbsp;
+      <input type="text" class="col_number" name="mcode_value14" value="${mcode_value14}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xa:&nbsp;
+      <input type="text" class="col_number" name="debt_amt14" value="${debt_amt14}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp;凍結碼[4]:&nbsp;
+      <input type="text" class="col_text" name="block_reason14" value="${block_reason14}"
+       maxlength=2 size=5 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap> 
+   <input type="checkbox" class="col_ckbox" value="Y" name="exec_flag_m2" ${exec_flag_m2-Y} />檢核 Mb
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Mb:&nbsp;
+      <input type="text" class="col_number" name="mcode_value2" value="${mcode_value2}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xb:&nbsp;
+      <input type="text" class="col_number" name="debt_amt2" value="${debt_amt2}"
+         zEdit="number" MaxLength=8 size=10 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap> 
+      <input type="checkbox" class="col_ckbox" value="Y" name="exec_flag_m24" ${exec_flag_m24-Y} />檢核 Mb[4]
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Mb:&nbsp;
+      <input type="text" class="col_number" name="mcode_value24" value="${mcode_value24}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xb:&nbsp;
+      <input type="text" class="col_number" name="debt_amt24" value="${debt_amt24}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp;凍結碼[4]:&nbsp;
+      <input type="text" class="col_text" name="block_reason24" value="${block_reason24}"
+       maxlength=2 size=5 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="exec_flag_m3" ${exec_flag_m3-Y} />檢核 Mc
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 >=Mc:&nbsp;
+      <input type="text" class="col_number" name="mcode_value3" value="${mcode_value3}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xc:&nbsp;
+      <input type="text" class="col_number" name="debt_amt3" value="${debt_amt3}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp; or 費用結欠(已通知) > :&nbsp;
+      <input type="text" class="col_number" name="debt_fee3" value="${debt_fee3}"
+         zEdit="number" MaxLength=8 size=10 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="exec_flag_m34" ${exec_flag_m34-Y} />檢核 Mc[4]
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 >=Mc:&nbsp;
+      <input type="text" class="col_number" name="mcode_value34" value="${mcode_value34}"
+         zEdit="number" MaxLength=2 size=5 />
+    &nbsp;本金結欠(已通知) >Xc:&nbsp;
+      <input type="text" class="col_number" name="debt_amt34" value="${debt_amt34}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp; or 費用結欠(已通知) > :&nbsp;
+      <input type="text" class="col_number" name="debt_fee34" value="${debt_fee34}"
+         zEdit="number" MaxLength=8 size=10 />
+    &nbsp;凍結碼[4]:&nbsp;
+      <input type="text" class="col_text" name="block_reason34" value="${block_reason34}"
+       maxlength=2 size=5 />
+   </td>
+  </tr>
+<!--  
+  <tr>
+   <td class="td_title" nowrap colspan=3>&nbsp;  流通卡數=0 , 連動D檔:&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;</td>
+   <td nowrap colspan=2>&nbsp;帳齡值 >Mg:&nbsp;
+      <input type="text" class="col_number" name="mcode_value4" value="${mcode_value4}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;僅欠費用者其結欠總額 <=Xg:&nbsp;
+      <input type="text" class="col_number" name="debt_amt4" value="${debt_amt4}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp;（一定要設定）      
+   </td>
+  </tr>
+-->
+  
+  <tr>
+   <td nowrap colspan=3>&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;執行方式:&nbsp;
+      <span class="dsp_text"> 1.每月固定日 </span>
+      <input type=hidden name="b_exec_mode" value="1">
+   </td>
+   <td nowrap>&nbsp;每月:&nbsp;
+      <span class="dsp_number"> 01 </span>
+      <input type=hidden name="b_exec_day" value="01">
+      &nbsp; 日執行
+   </td>
+   <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;是否放行:&nbsp;
+      <span class="dsp_text"> ${b_apr_flag}.${b_tt_apr_flag}</span>
+      <input type=hidden name="b_apr_flag" value="${b_apr_flag}">
+      <input type="hidden" name="b_tt_apr_flag" value="${b_tt_apr_flag}">
+   </td>
+   <td nowrap>&nbsp;是否執行:&nbsp;
+      <span class="dsp_text"> ${b_pause_flag}.${b_tt_pause_flag}</span>
+      <input type=hidden name="b_pause_flag" value="${b_pause_flag}">
+      <input type="hidden" name="b_tt_pause_flag" value="${b_tt_pause_flag}">
+   </td>
+   <td nowrap>&nbsp;最近執行日期:&nbsp;
+      <span class="dsp_date">${b_exec_date.YMD}</span>
+      <input type=hidden name="b_exec_date" value="${b_exec_date}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="b_exec_flag_m1" ${b_exec_flag_m1-Y} />檢核 Ma
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Ma:&nbsp;
+      <input type="text" class="col_number" name="b_mcode_value1" value="${b_mcode_value1}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xa:&nbsp;
+      <input type="text" class="col_number" name="b_debt_amt1" value="${b_debt_amt1}"
+         zEdit="number" MaxLength=8 size=10 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="b_exec_flag_m14" ${b_exec_flag_m14-Y} />檢核Ma[4]
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Ma:&nbsp;
+      <input type="text" class="col_number" name="b_mcode_value14" value="${b_mcode_value14}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xa:&nbsp;
+      <input type="text" class="col_number" name="b_debt_amt14" value="${b_debt_amt14}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp;凍結碼[4]:&nbsp;
+      <input type="text" class="col_text" name="b_block_reason14" value="${b_block_reason14}"
+       maxlength=2 size=5 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="b_exec_flag_m2" ${b_exec_flag_m2-Y} />檢核 Mb
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Mb:&nbsp;
+      <input type="text" class="col_number" name="b_mcode_value2" value="${b_mcode_value2}"
+         zEdit="number" MaxLength=2 size=5 />
+    &nbsp;本金結欠(已通知) >Xb:&nbsp;
+      <input type="text" class="col_number" name="b_debt_amt2" value="${b_debt_amt2}"
+         zEdit="number" MaxLength=8 size=10 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="b_exec_flag_m24" ${b_exec_flag_m24-Y} />檢核 Mb[4]
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 =Mb:&nbsp;
+      <input type="text" class="col_number" name="b_mcode_value24" value="${b_mcode_value24}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xb:&nbsp;
+      <input type="text" class="col_number" name="b_debt_amt24" value="${b_debt_amt24}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp;凍結碼[4]:&nbsp;
+      <input type="text" class="col_text" name="b_block_reason24" value="${b_block_reason24}"
+       maxlength=2 size=5 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="b_exec_flag_m3" ${b_exec_flag_m3-Y} />檢核 Mc
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 >=Mc:&nbsp;
+      <input type="text" class="col_number" name="b_mcode_value3" value="${b_mcode_value3}"
+         zEdit="number" MaxLength=2 size=5 />
+    &nbsp;本金結欠(已通知) >Xc:&nbsp;
+      <input type="text" class="col_number" name="b_debt_amt3" value="${b_debt_amt3}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp; or 費用結欠(已通知) > :&nbsp;
+      <input type="text" class="col_number" name="b_debt_fee3" value="${b_debt_fee3}"
+         zEdit="number" MaxLength=8 size=10 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>
+   <input type="checkbox" class="col_ckbox" value="Y" name="b_exec_flag_m34" ${b_exec_flag_m34-Y} />檢核 Mc[4]
+   </td>
+   <td nowrap colspan=2>&nbsp;帳齡值 >=Mc:&nbsp;
+      <input type="text" class="col_number" name="b_mcode_value34" value="${b_mcode_value34}"
+         zEdit="number" MaxLength=2 size=5 />
+   &nbsp;本金結欠(已通知) >Xc:&nbsp;
+      <input type="text" class="col_number" name="b_debt_amt34" value="${b_debt_amt34}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp; or 費用結欠(已通知) > :&nbsp;
+      <input type="text" class="col_number" name="b_debt_fee34" value="${b_debt_fee34}"
+         zEdit="number" MaxLength=8 size=10 />
+   &nbsp;凍結碼[4]:&nbsp;
+      <input type="text" class="col_text" name="b_block_reason34" value="${b_block_reason34}"
+       maxlength=2 size=5 />
+   </td>
+  </tr>
+  <tr>
+   <td class="td_remark" nowrap colspan=3>&nbsp; </td>
+  </tr>
+  <tr>
+   <td class="td_remark" nowrap colspan=3>
+   &nbsp;資訊部參考用-配合批次rsk_p810（ 整批凍結處理程式） 
+   <br>&nbsp;「每月固定日」執行說明： 
+   <br>&nbsp;1、執行時點：資料庫(ptr_blockparam)Hard Code為1日，並需配合shell（sh_m1_010） 
+   <br>&nbsp;2、帳齡值=Mb：1  例8/27關帳m_code='M1'，於9/1執行時get_m_code='M1'虛擬+1，執行後凍結碼='21' 
+   <br>&nbsp; 　 帳齡值=Mc：2  例8/27關帳m_code='M2'，於9/1執行時get_m_code='M2'虛擬+1，執行後凍結碼='31' 
+   </td>
+  </tr>
+  <tr>
+   <td class="td_remark" nowrap colspan=3>
+   &nbsp; 註1：若帳戶類別為商務卡，只針對個繳戶。
+   <br>&nbsp; 2：Ma,Mb,Mc 檢核，只可選擇「CYCLE後N天執行」或「每月固定日執行」其中一種執行方式。 
+   <br>&nbsp; 3：連動凍結（rsk_p835）於D檔時，僅參考「CYCLE後N日執行」之參數。 
+   </td>
+  </tr>
+</table>
+<!-- <span class="dsp_text"> mod_seqno: ${mod_seqno} </span> -->
+
+<!--hidden -->
+<!-- 
+<input type="hidden" name="approve_flag" value="${approve_flag}" >
+   -->
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+
+   //--confirm
+   if(top.actionCode==='A' || top.actionCode==='U') {
+      
+      var ls_exec_flag_m24 = document.dataForm.exec_flag_m24.checked;
+      var ls_mcode_value24 = Number(document.forms["dataForm"]["mcode_value24"].value);
+      var ls_b_exec_flag_m24 = document.dataForm.b_exec_flag_m24.checked;
+      var ls_b_mcode_value24 = Number(document.forms["dataForm"]["b_mcode_value24"].value);
+      if(ls_exec_flag_m24 ==true && ls_mcode_value24 === 0 ) {
+         if (confirm("Mb[4]檢核之 Mcode為0, 是否正確")==false) {
+            return false;
+         }   
+      }
+      
+      if(ls_b_exec_flag_m24 ==true && ls_b_mcode_value24 === 0 ) {
+         if (confirm("Mb[4]檢核之 Mcode為0, 是否正確")==false) {
+            return false;
+         }   
+      }      
+      var ls_exec_flag_m1 = document.dataForm.exec_flag_m1.checked;
+      var ls_exec_flag_m2 = document.dataForm.exec_flag_m2.checked;
+      var ls_exec_flag_m3 = document.dataForm.exec_flag_m3.checked;
+      var ls_b_exec_flag_m1 = document.dataForm.b_exec_flag_m1.checked;
+      var ls_b_exec_flag_m2 = document.dataForm.b_exec_flag_m2.checked;
+      var ls_b_exec_flag_m3 = document.dataForm.b_exec_flag_m3.checked;
+      
+      if(ls_exec_flag_m1 ==false && ls_exec_flag_m2 ==false && ls_exec_flag_m3 ==false){
+         if (confirm("CYCLE後N天執行~nMa,Mb,Mc 均不檢核, 此凍結參數不會執行~n是否重新設定")==true) {
+            return false ;
+         }
+      }
+      
+      if(ls_b_exec_flag_m1 ==false && ls_b_exec_flag_m2 ==false && ls_b_exec_flag_m3 ==false){
+         if (confirm("每月固定日執行~nMa,Mb,Mc 均不檢核, 此凍結參數不會執行~n是否重新設定")==true) {
+            return false ;
+         }
+      }                  
+   }
+      
+    
+    return true;
+  }
+
+</script>

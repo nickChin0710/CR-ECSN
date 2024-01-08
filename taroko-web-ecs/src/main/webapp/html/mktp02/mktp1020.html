@@ -1,0 +1,198 @@
+<html>
+<head>
+<title> 110/07/08 V1.00.02 RAY Machao 市區停車手KEY資料審核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="8">
+   <tr>
+   <td nowrap>&nbsp;停車日期:
+      <input type="text" class="col_date" name="ex_park_date_s_s" value="${ex_park_date_s_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_s_s'});
+      </script>
+      --
+      <input type="text" class="col_date" name="ex_park_date_s_e" value="${ex_park_date_s_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_s_e'});
+      </script>
+   審核結果:
+      <select  name="ex_verify_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_verify_flag-1} >正常交易</option>
+         <option value="2" ${ex_verify_flag-2} >本行吸收</option>
+         <option value="3" ${ex_verify_flag-3} >廠商吸收</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}"
+         zeditType="any"  maxlength=19 size=19 />
+   廠商代碼:
+      <select size="1" name="ex_park_vendor" class="col_ddlb" >
+         ${dddw_park_vendow}
+      </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"    value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="10%">
+         <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >放行
+    </th>
+    <th nowrap class="list_th">異動狀態</th>
+    <th nowrap class="list_th">審核日期</th>
+    <th nowrap class="list_th">審核結果</th>
+    <th nowrap class="list_th">傳送類別</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">廠商代碼</th>
+    <th nowrap class="list_th">停車<BR>時數</th>
+    <th nowrap class="list_th">免費<BR>時數</th>
+    <th nowrap class="list_th">應收<BR>停車費</th>
+    <th nowrap class="list_th">扣抵點數</th>
+    <th nowrap class="list_th">實扣點數</th>
+    <th nowrap class="list_th">實扣金額</th>
+    <th nowrap class="list_th">交易序號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr  style="cursor:hand">
+    <td nowrap class="list_no">
+      <span  class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}" />
+             ${SER_NUM}&nbsp;
+      <input type=hidden name="ser_num" value="${ser_num}" />
+      <img   src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${rowid}','','','','${aud_type}');" style="cursor:hand">
+             &nbsp;
+
+    </td>
+    <td nowrap class="list_cc"> ${aud_type}.${commfunc_aud_type}
+      <input type=hidden name="aud_type" value="${aud_type}" />
+      <input type=hidden name="commfunc_aud_type" value="${commfunc_aud_type}" />
+    </td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}
+      <input type=hidden name="crt_date" value="${crt_date}" />
+    </td>
+    <td nowrap class="list_cc"> ${verify_flag}-${comm_verify_flag}
+      <input type=hidden name="verify_flag" value="${verify_flag}" />
+      <input type=hidden name="comm_verify_flag" value="${comm_verify_flag}" />
+    </td>
+    <td nowrap class="list_cc">${pass_type}
+    <input type=hidden name="pass_type" value="${pass_type}" />
+    </td>
+    <td nowrap class="list_cc"> ${card_no}
+      <input type=hidden name="card_no" value="${card_no}" />
+    </td>
+    <td nowrap class="list_cc"> ${park_vendor}
+      <input type=hidden name="park_vendor" value="${park_vendor}" />
+    </td>
+    <td nowrap class="list_rr"> ${park_hr}
+      <input type=hidden name="park_hr" value="${park_hr}" />
+    </td>
+    <td nowrap class="list_rr"> ${free_hr}
+      <input type=hidden name="free_hr" value="${free_hr}" />
+    </td>
+    <td nowrap class="list_rr"> ${charge_amt.(999)}
+      <input type=hidden name="charge_amt" value="${charge_amt}" />
+    </td>
+    <td nowrap class="list_rr"> ${use_point.(999)}
+      <input type=hidden name="use_point" value="${use_point}" />
+    </td>
+    <td nowrap class="list_rr"> ${act_use_point.(999)}
+      <input type=hidden name="act_use_point" value="${act_use_point}" />
+    </td>
+    <td nowrap class="list_rr"> ${act_charge_amt.(999)}
+      <input type=hidden name="act_charge_amt" value="${act_charge_amt}" />
+    </td>
+    <td nowrap class="list_cc"> ${tran_seqno}
+      <input type=hidden name="tran_seqno" value="${tran_seqno}" />
+    </td>
+    <input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+    <input type="hidden"  name="rowid" value="${rowid}">
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktp1020_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    if (parm5 == 'A') 
+       top.respHtml  = "mktp1020_detn";
+    else if (parm5 == 'D') 
+       top.respHtml  = "mktp1020_detd";
+    else 
+        top.respHtml  = "mktp1020_detl";
+    top.submitControl('S');
+    return true;
+  }
+ function selectAll()
+  {
+   var opt_select =document.dataForm.ex_selectAll.checked;
+   var aElements = document.dataForm.getElementsByTagName("input");
+   for (var i=0;i<aElements.length;i++)
+     if (aElements[i].type=="checkbox")
+        aElements[i].checked = opt_select;
+  }
+
+</script>
+<!-- ******************************************************************** -->

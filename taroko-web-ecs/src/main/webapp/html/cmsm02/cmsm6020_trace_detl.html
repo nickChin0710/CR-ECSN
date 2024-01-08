@@ -1,0 +1,115 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-06  V1.00.00                             Initial                  -->
+<!-- 109-07-23  V1.00.01   JustinWu      ++ detailScreen()                    -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>案件追蹤</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"    value="存檔" onClick="return top.submitControl('C')" class="btUpdate" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<hr>
+<table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >追蹤完成&nbsp;
+    </th>
+    <th nowrap >案件卡人ID</th>
+    <th nowrap >受理案件流水號</th>
+    <th nowrap >案件追蹤日期</th>
+    <th nowrap >受理案件描述</th>
+    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> 
+   		<span class="dsp_flag">${ok_flag}</span>
+        <input type="checkbox" name="opt" value="${ser_num}" />
+ 	 	${SER_NUM} 
+    <img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${case_date1}','${case_seqno}','')" style="cursor:hand">
+ 	 	<input type="hidden" name="ser_num" value="${ser_num}" />
+ 	 	<input type="hidden" name="case_idno" value="${case_idno}">
+ 	 	<input type="hidden" name="case_seqno" value="${case_seqno}">
+ 	 	<input type="hidden" name="case_trace_date" value="${case_trace_date}">
+ 	 	<input type="hidden" name="case_desc" value="${case_desc}">
+        <input type="hidden" name="over_trace" value="${over_trace}">
+   </td>
+   <td nowrap class="list_cc"> ${case_idno} </td>
+   <td nowrap class="list_cc"> ${case_seqno} </td>
+   <td nowrap class="list_cc">    
+        <span ${over_trace} >${case_trace_date.YMD}</span>
+   </td>
+   <td nowrap class="list_ll"> ${case_desc} </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- -->
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="cond">
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1'); 
+ top.pageRows="999";
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+ function detailScreen(parm,parm2,parm3) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm6020_log";
+    top.submitControl('S2');
+    return true;
+ }
+
+</script>

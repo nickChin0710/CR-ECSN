@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>DeBit查詢媒體紀錄表-pond-V.2018-0129-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<style>
+.number{
+	color:blue;
+}
+</style>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+		 <td nowrap>&nbsp;扣款日期：
+      		<input type="text" class="col_date" name="ex_crdate_s" value="${ex_crdate_s}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crdate_s'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_crdate_e" value="${ex_crdate_e}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crdate_e'});
+	    	</script>
+   		</td>
+   		<td nowrap>&nbsp;選擇類別:
+      		<span class="col_radio" zRequire ="k">
+         		<input type="radio" value="A" name="ex_type" ${ex_type-A} ${DEFAULT-ex_type} />扣款
+         		<input type="radio" value="B" name="ex_type" ${ex_type-B} />回存
+      		</span>
+   		</td>
+    	<td nowrap>&nbsp;  
+      		<input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+      		<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    	</td>
+    </tr>
+</table>
+</div>
+<hr>
+
+<!--Sum -->
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No</th>
+    	<th nowrap class="list_th">類別</th>
+    	<th nowrap class="list_th">產生日期</th>
+    	<th nowrap class="list_th">產生時間</th>
+    	<th nowrap class="list_th">送扣款回存日期</th>
+    	<th nowrap class="list_th">送IBM筆數</th>
+    	<th nowrap class="list_th">送IBM金額</th>
+    	<th nowrap class="list_th">回覆失敗筆數</th>
+    	<th nowrap class="list_th">回覆失敗金額</th>
+    	<th nowrap class="list_th">回覆成功筆數</th>
+    	<th nowrap class="list_th">回覆成功金額</th>
+    	<th nowrap class="list_th">回覆日期</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr>
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${tt_proc_type}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${crt_date.YMD}&nbsp;</td>
+   		<td nowrap class="list_ll"> ${crt_time.TIME}&nbsp;</td>
+   		<td nowrap class="list_ll"> ${deduct_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${send_cnt.(999)}&nbsp; </td>
+   		<td nowrap class="list_rr"> &nbsp;${send_amt.(999)} </td>
+  		<td nowrap class="list_ll"> ${receive_fal_cnt.(999)}&nbsp; </td>
+   		<td nowrap class="list_rr"> &nbsp;${receive_fal_amt.(999)} </td>
+   		<td nowrap class="list_ll"> ${receive_suc_cnt.(999)}&nbsp; </td>
+   		<td nowrap class="list_rr"> &nbsp;${receive_suc_amt.(999)} </td>
+   		<td nowrap class="list_ll"> ${receive_date.YMD}&nbsp; </td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+   	<tr>
+   		<td colspan="4"></td>
+   		<td class="list_rr" >合計:</td>
+   		<td nowrap class="list_ll" >
+   		 	<span class="number">${tol_send_cnt.(999)}</span> 
+		  	<input type=hidden name="tol_send_cnt" value="${tol_send_cnt}" />
+   		</td>
+   		<td nowrap class="list_rr">
+   		 	<span class="number">${tol_send_amt.(999)}</span> 
+		  	<input type=hidden name="tol_send_amt" value="${tol_send_amt}" />
+   		</td>
+   		<td nowrap class="list_ll">
+   		 	<span class="number">${tol_receive_fal_cnt.(999)}</span> 
+		  	<input type=hidden name="tol_receive_fal_cnt" value="${tol_receive_fal_cnt}" />
+   		</td>
+   		<td nowrap class="list_rr">
+   		 	<span class="number">${tol_receive_fal_amt.(999)}</span> 
+		  	<input type=hidden name="tol_receive_fal_amt" value="${tol_receive_fal_amt}" />
+   		</td>
+   		<td nowrap class="list_ll">
+   		 	<span class="number">${tol_receive_suc_cnt.(999)}</span> 
+		  	<input type=hidden name="tol_receive_suc_cnt" value="${tol_receive_suc_cnt}" />
+   		</td>
+   		<td nowrap class="list_rr" >
+   		 	<span class="number">${tol_receive_suc_amt.(999)}</span> 
+		  	<input type=hidden name="tol_receive_suc_amt" value="${tol_receive_suc_amt}" />
+   		</td>
+   		<td></td>
+    </tr>
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="dbar0070">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" id="TTTS" name="TTTS" value="">
+
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ document.dataForm.ex_crdate_s.focus();
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+  /*  if (top.actionCode == "PDF") {
+        if (!chkdata()) {
+            return false;
+        }
+    }*/
+    return true;
+  }
+
+</script>

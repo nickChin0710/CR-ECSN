@@ -1,0 +1,185 @@
+<html>
+<head>
+<title>預備仲裁/仲裁登錄-覆核</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<!--
+<script language="JavaScript">
+  $(document).ready(function () {
+    var opt = document.getElementsByName("opt");
+    var aa_can = document.getElementsByName('can_appr');
+    for (ii = 0; ii < aa_can.length; ii++) {
+      if ($(aa_can[ii]).val() != '1') {
+        $(opt[ii]).attr("disabled", "true");
+      }
+    }
+  });
+</script>
+-->
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_add_date1" value="${ex_add_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_add_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_add_date2" value="${ex_add_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_add_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd"   value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;建檔經辦:
+      <input type="text" class="col_any" name="ex_user_id" value="${ex_user_id}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="queryBlock">
+  <table border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td nowrap width="30">&nbsp;</td>
+      <td nowrap><b>合計</b> &nbsp;筆數:
+        <span class="dsp_number">${sum_cnt.(999)}</span>
+        <input type="hidden" name="sum_cnt" value="${sum_cnt}" />
+      </td>
+      <td nowrap>
+        <input type="Button" id="btnProc2" value="全部覆核" ${btnproc2_off} onClick="return wf_approve('C2')" class="btConfirm">
+      </td>
+      <td nowrap width="20">&nbsp;</td>
+    </tr>
+  </table>
+</div>
+ <table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+    <th nowrap >控制流水號</th>
+    <th nowrap >卡號</th>
+    <th nowrap >消費日期</th>
+    <th nowrap >國別</th>
+    <th nowrap >微縮影NO</th>
+    <th nowrap >結算幣別</th>
+    <th nowrap >結算金額</th>
+    <th nowrap >登錄日期</th>
+    <th nowrap >預備仲裁<br>提出日期</th>
+    <th nowrap >預備仲裁<br>執行結果</th>
+    <th nowrap >仲裁提出日</th>
+    <th nowrap >仲裁執行結果</th>
+    <th nowrap >仲裁經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+    <input type="hidden" name="can_appr" value="${can_appr}" />
+   	<input type="hidden" name="rowid" value="${rowid}" />
+      <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+      <input type="hidden" name="can_user" value="${can_user}" />
+	</td>
+   <td nowrap class="list_ll">${bin_type}-${ctrl_seqno}-${arbit_times}-${debit_flag}&nbsp;
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" />
+      <input type="hidden" name="bin_type" value="${bin_type}" />
+      <input type="hidden" name="arbit_times" value="${arbit_times}" />
+      <input type="hidden" name="debit_flag" value="${debit_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;
+	   <input type="hidden" name="purchase_date" value="${purchase_date}">
+	</td>
+	<td nowrap class="list_cc"> ${mcht_country}&nbsp;
+	   <input type="hidden" name="mcht_country" value="${mcht_country}">
+	</td>
+	<td nowrap class="list_cc"> ${film_no}&nbsp;
+	   <input type="hidden" name="film_no" value="${film_no}">
+	</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;
+	   <input type="hidden" name="curr_code" value="${curr_code}">
+	</td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${pre_event_date.YMD}&nbsp;
+	   <input type="hidden" name="pre_event_date" value="${pre_event_date}">
+	</td>
+	<td nowrap class="list_cc"> ${pre_apply_date.YMD}&nbsp;
+	   <input type="hidden" name="pre_apply_date" value="${pre_apply_date}">
+	</td>
+	<td nowrap class="list_cc"> ${pre_result}.${#JAVA:ecsfunc.DeCodeRsk.arbitPreResult(pre_result)}
+	   <input type="hidden" name="pre_result" value="${pre_result}" />
+	</td>
+	<td nowrap class="list_cc"> ${arb_apply_date.YMD}&nbsp;
+	   <input type="hidden" name="arb_apply_date" value="${arb_apply_date}" />
+	</td>
+	<td nowrap class="list_cc"> ${arb_result}.${#JAVA:ecsfunc.DeCodeRsk.arbitResult(arb_result)}&nbsp;
+	   <input type="hidden" name="arb_result" value="${arb_result}">
+	</td>
+	<td nowrap class="list_cc"> ${arb_add_user}&nbsp;
+	   <input type="hidden" name="arb_add_user" value="${arb_add_user}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode==='C' ) {
+      return confirm('是否執行 [主管覆核]');
+    }
+    return true;
+  }
+
+  function wf_approve(parm1) {
+    if (confirm("是否執行全部覆核") == false) { return false; }
+    top.submitControl(parm1);
+  }
+  
+</script>

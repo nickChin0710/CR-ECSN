@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>期中覆審凍結處理匯入</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;身分證ID:
+    <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" />
+   </td>
+   <td nowrap >&nbsp;建檔日期:            
+    <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+    <script language="JavaScript">        
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	</script>
+	--
+	<input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+    <script language="JavaScript">
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	</script>
+   </td>
+   <td nowrap rowspan="2">&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="資料匯入" onClick="return top.submitControl('C')" class="btConfirm" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;覆審日期:
+     <input type="text" class="col_date" name="ex_review_date" value="${ex_review_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+     <script language="JavaScript">        
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_review_date'});
+	 </script>
+   </td>
+   <td nowrap>&nbsp;主管覆核:
+      <span class="col_radio">      	
+         <input type="radio" value="0" name="ex_apr_flag" ${default-ex_apr_flag} ${ex_apr_flag-0} />全部
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+      </span>
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;匯入媒體檔:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any" />
+      <input type="button" value="..." class="btProcess" onclick="return upload_click()">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="刪除未覆核" onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3">
+    <span class="dsp_text">檔案為*.txt檔，layout：帳戶類別(2)身分證ID(10)凍結碼(2)</span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;
+      <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+      結案
+    </th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >執行凍結碼&nbsp;</th>
+    <th nowrap >覆審日期&nbsp;</th>
+    <th nowrap >建檔日期&nbsp;</th>    
+    <th nowrap >覆核日期&nbsp;</th>
+    <th nowrap >覆核主管&nbsp;</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>    
+      <input type="checkbox" name="opt" value="${ser_num}" />
+      ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}" />
+      <input type="hidden" name="rowid" value="${rowid}" />
+      <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+   </td>
+    <td nowrap class="list_cc"> ${acct_type}&nbsp;
+      <input type="hidden" name="acct_type" value="${acct_type}" />
+    </td>
+    <td nowrap class="list_cc"> ${acct_key}&nbsp;
+      <input type="hidden" name="acct_key" value="${acct_key}" />
+    </td>
+    <td nowrap class="list_cc"> ${block_code}&nbsp;
+      <input type="hidden" name="block_code" value="${block_code}" />
+    </td>
+    <td nowrap class="list_cc"> ${review_date.YMD}&nbsp;
+      <input type="hidden" name="review_date" value="${review_date}" />
+    </td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;
+      <input type="hidden" name="crt_date" value="${crt_date}" />
+    </td>    
+    <td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;
+      <input type="hidden" name="apr_date" value="${apr_date}" />
+    </td>
+    <td nowrap class="list_cc"> ${apr_user}&nbsp;
+      <input type="hidden" name="apr_user" value="${apr_user}" />
+    </td>    
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  name="upload_file" value="" /> 
+ 
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ top.deleteConfirm_show ="";
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if (top.actionCode =='D') {
+       if (confirm('是否刪除未覆核資料')==false) {
+          return false;
+       }
+    }       
+    return true;
+  }
+
+ function upload_click() {    
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);    
+    top.packageName = "rskm02";
+    top.javaName    = "Rskm2400";    
+    top.requHtml    = "rskm2400";
+    top.respHtml    = "rskm2400";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+   return;
+ }  
+  
+</script>

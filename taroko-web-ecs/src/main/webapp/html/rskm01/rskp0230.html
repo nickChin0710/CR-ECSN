@@ -1,0 +1,242 @@
+<html>
+<head>
+<title>再提示整批登錄覆核-主管作業-jh20200528</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<!--
+<script language="JavaScript">
+  $(document).ready(function () {
+    var opt = document.getElementsByName("opt");
+    var aa_can = document.getElementsByName('can_appr');
+    for (ii = 0; ii < aa_can.length; ii++) {
+      if ($(aa_can[ii]).val() != '1') {
+        $(opt[ii]).attr("disabled", "true");
+      }
+    }
+  });
+</script>
+-->
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan=2 >&nbsp;再提示登錄日期:
+      <input type="text" class="col_date" name="ex_add_date1" value="${ex_add_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_add_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_add_date2" value="${ex_add_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_add_date2'});
+	      </script>
+	</td>
+      <td nowrap >&nbsp;
+         <span class="col_radio">
+            <input type="radio" value="1" name="ex_apr_flag" ${ex_apr_flag-1} ${default-ex_apr_flag} />未覆核
+            <input type="radio" value="2" name="ex_apr_flag" ${ex_apr_flag-2} />已覆核
+         </span>
+         &nbsp;
+      </td>
+  </tr>
+  <tr>
+      <td nowrap >&nbsp;控制流水號:
+         <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" >
+      </td>
+      <td nowrap >&nbsp;再提示登錄經辦:
+         <input type="text" class="col_any" name="ex_add_user" value="${ex_add_user}" maxlength="10" size="12" >
+      </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnProc" ${btnAdd_disable}  value="覆核" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;&nbsp;
+      <input type="Button" name="btnProc2" ${btnDelete_disable} value="解覆核" onClick="return top.submitControl('C2')" class="btProcess" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="queryBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap><b>合計</b> &nbsp;筆數:
+      <span class="dsp_number">${sum_cnt.(999)}</span>
+      <input type="hidden" name="sum_cnt" value="${sum_cnt}" />
+   </td>
+    <td nowrap>&nbsp;消費金額:
+      <span class="dsp_number">${sum_dc_dest_amt.(999.00)}</span>
+      <input type="hidden" name="sum_dc_dest_amt" value="${sum_dc_dest_amt}" />
+   </td>
+   <td nowrap>&nbsp;再提示金額:
+      <span class="dsp_number">${sum_rep_dc_amt.(999.00)}</span>
+      <input type="hidden" name="sum_rep_dc_amt" value="${sum_rep_dc_amt}" />
+   </td>
+   <td nowrap>&nbsp;原幣金額:
+      <span class="dsp_number">${sum_source_amt.(999.00)}</span>
+      <input type="hidden" name="sum_source_amt" value="${sum_source_amt}" />
+   </td>
+    <td nowrap>
+      <input type="Button" id="btnProc3" value="全部覆核" ${btnproc3_off} onClick="return wf_approve('C3')" class="btConfirm">
+    </td>
+  </tr>
+</table>
+</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%">
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();">執行</th>
+    <th nowrap >已覆核</th>
+    <th nowrap >控制流水號</th>
+    <th nowrap >卡號</th>
+    <th nowrap >Debit卡</th>
+    <th nowrap >消費日</th>
+    <th nowrap >結算幣別</th>
+    <th nowrap >結算消費金額</th>
+    <th nowrap >次別</th>
+    <th nowrap >再提示處理日</th>
+    <th nowrap >DOC</th>
+    <th nowrap >結算再提示金額</th>
+    <th nowrap >原幣金額</th>
+    <th nowrap >幣別</th>
+    <th nowrap >訊息</th>
+    <th nowrap >登錄日</th>
+    <th nowrap >登錄者</th>
+    <th nowrap >一扣結算金額</th>
+    <th nowrap >撥款結算金額</th>
+    <th nowrap >處理結果</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+  <input type="hidden" name="can_appr" value="${can_appr}" />
+	<input type="hidden" name="reference_no" value="${reference_no}">
+	<input type="hidden" name="reference_seq" value="${reference_seq}">
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${reference_no}','${reference_seq}','${debit_flag}');" style="cursor:hand" />
+	</td>
+	<td nowrap class="list_cc"> ${db_apr_flag}&nbsp;
+	   <input type="hidden" name="db_apr_flag" value="${db_apr_flag}" />
+	</td>
+	<td nowrap class="list_ll">${bin_type}-${ctrl_seqno}&nbsp;
+	   <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" />
+	   <input type="hidden" name="bin_type" value="${bin_type}" />
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}" />
+	</td>
+	<td nowrap class="list_cc">${debit_flag}
+	   <input type="hidden" name="debit_flag" value="${debit_flag}" />
+	</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;
+	   <input type="hidden" name="purchase_date" value="${purchase_date}" />
+	</td>
+	<td nowrap class="list_cc">${curr_code}&nbsp;
+	   <input type="hidden" name="curr_code" value="${curr_code}" />
+	</td>
+	<td nowrap class="list_rr">${dc_dest_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}" />
+   </td>
+	<td nowrap class="list_cc">${chg_times}&nbsp;
+	   <input type="hidden" name="chg_times" value="${chg_times}" />
+	</td>
+	<td nowrap class="list_cc"> ${repsent_date.YMD}&nbsp;
+	   <input type="hidden" name="repsent_date" value="${repsent_date}" />
+	</td>
+	<td nowrap class="list_cc">${rep_doc_mark}&nbsp;
+	   <input type="hidden" name="rep_doc_mark" value="${rep_doc_mark}" />
+	</td>
+	<td nowrap class="list_rr">${rep_dc_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="rep_dc_amt" value="${rep_dc_amt}" />
+	</td>
+	<td nowrap class="list_rr">${source_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="source_amt" value="${source_amt}" />
+	</td>
+	<td nowrap class="list_cc">${source_curr}&nbsp;
+	   <input type="hidden" name="source_curr" value="${source_curr}" />
+	</td>
+	<td nowrap class="list_ll">${rep_msg}&nbsp;
+	   <input type="hidden" name="rep_msg" value="${rep_msg}" />
+	</td>
+	<td nowrap class="list_cc">${rep_add_date.YMD}&nbsp;
+	   <input type="hidden" name="rep_add_date" value="${rep_add_date}" />
+	</td>
+	<td nowrap class="list_cc">${rep_add_user}&nbsp;
+     <input type="hidden" name="rep_add_user" value="${rep_add_user}" />
+    <input type="hidden" name="can_user" value="${rep_add_user}" />
+	</td>
+	<td nowrap class="list_rr">${fst_dc_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="fst_dc_amt" value="${fst_dc_amt}" />
+	</td>
+	<td nowrap class="list_rr">${fst_disb_dc_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="fst_disb_dc_amt" value="${fst_disb_dc_amt}" />
+	</td>
+	<td nowrap class="list_ll"><font color="red">${ok_msg}</font>&nbsp;
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+   if (top.actionCode=='C') {
+      return confirm('是否執行 [再提示覆核]');
+   }
+   if (top.actionCode=='C2') {
+      return confirm('是否取消 [再提示覆核]');
+   }
+	return true;
+  }
+  
+  function wf_approve(parm1) {
+    if (confirm("是否執行全部覆核") == false) { return false; }
+    top.submitControl(parm1);
+  }    
+
+function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskp0230_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+
+</script>

@@ -1,0 +1,108 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-12-05  V1.00.00  Zuwei Su       Initial                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>金庫幣活動回饋查詢作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<!--COND -->
+<table width="20%" border="0" cellspacing="0" cellpadding="4">
+	<tr>        
+		<td nowrap>&nbsp;帳務年月：
+      		<input type="text" class="col_date" name="ex_acct_month" value="${ex_acct_month}" 
+        		zEdit="date,yyyymm" maxlength="6" size="6"  />
+   		</td>
+   		<td nowrap>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;身分證號：
+      		<input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}"
+         		zeditType="any,upper"  maxlength=10 size=12 >
+         	&nbsp;卡號：
+			<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength=16 size=16 />
+		</td>
+		<td nowrap>&nbsp;
+			<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+			<!-- <input type="Button" name="btnAdd" value="產生媒體檔" onClick="return top.submitControl('XLS')" class="btAdd" >&nbsp;&nbsp; -->
+		    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">帳務年月</th>
+    	<th nowrap class="list_th">身分證號</th>
+    	<th nowrap class="list_th">卡號</th>
+    	<th nowrap class="list_th">增/減</th>
+    	<th nowrap class="list_th">OP回饋點數</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+ 	<tr>
+    	<td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+    	<td nowrap class="list_ll">${acct_month}&nbsp;</td>
+    	<td nowrap class="list_ll">${id_no}&nbsp;</td>
+    	<td nowrap class="list_ll">${card_no}&nbsp;</td>
+    	<td nowrap class="list_ll">${sign_flag}&nbsp;</td>
+    	<td nowrap class="list_rr">${tx_bonus}</td>
+    	<input type="hidden" name="SER_NUM" value="${SER_NUM}">
+    	<input type="hidden"  name="acct_month"  value="${acct_month}">
+    	<input type="hidden"  name="id_no"  value="${id_no}">
+    	<input type="hidden"  name="card_no"  value="${card_no}">
+    	<input type="hidden"  name="sign_flag"  value="${sign_flag}">
+    	<input type="hidden"  name="tx_bonus"  value="${tx_bonus}">
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_id_no.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if(top.actionCode === 'XLS'){
+    	if (confirm("是否產生媒體檔?") === false) {
+            return false;
+        } 
+    }
+    return true;
+}
+</script>

@@ -1,0 +1,240 @@
+<html>
+<head>
+<title>卡戶等級風險類別限額參數維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡片等級：
+      <select size="1" name="kk_card_note" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_card_note}
+      </select>
+   </td>
+   <td nowrap>&nbsp;風險類別：
+      <input type="text" class="col_text" id="kk_risk_type" name="kk_risk_type" value="${kk_risk_type}" maxlength=2 size=5 />
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4" >
+  <tr>
+      <td nowrap >&nbsp;卡片等級：
+         <span class="dsp_text">${card_note}</span>
+         <input type="hidden" name="card_note" value="${card_note}">
+      </td>
+      <td nowrap >&nbsp;風險類別：
+         <span class="dsp_text">${risk_type}</span>
+         <input type="hidden" name="risk_type" value="${risk_type}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;截止日期：
+         <span class="dsp_date">${end_date.YMD}</span>
+         <input type="hidden" name="end_date" value="${end_date}">
+	   </td>
+	   <td nowrap>&nbsp;國外預借現金總月限%：
+	      <span class="dsp_text">${oversea_cash_pct}</span>
+         <input type="hidden"  name="oversea_cash_pct" value="${oversea_cash_pct}">
+      </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;風險特店檢核
+	      <input type="checkbox" name="mcht_chk" value="1" ${mcht_chk-1} disabled >
+	      &nbsp;
+	      Delinquent檢核
+	      <input type="checkbox" name="delinquent" value="1" ${delinquent-1} disabled >
+	      &nbsp;
+	      開卡檢核
+	      <input type="checkbox" name="open_chk" value="1" ${open_chk-1} disabled >
+	      &nbsp;國外消費檢核
+         <input type="checkbox" name="oversea_chk" value="1" ${oversea_chk-1} disabled >
+         &nbsp;卡戶等級風險類-月限次
+         <input type="checkbox" name="month_risk_chk" value="1" ${month_risk_chk-1} disabled >
+         &nbsp;
+         日限次
+         <input type="checkbox" name="day_risk_chk" value="1" ${day_risk_chk-1} disabled >
+	   </td>
+	</tr>
+</table>
+</div>
+<div id="data2Block">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap >
+         <input type="Button" id="detl_btnAdd" value="重新產生卡人等級" class="btAdd_detl" onClick="return top.submitControl('R2')" />
+      </td>
+   </tr>
+</table>  
+</div>
+<br>
+<!--TAB Process---------------------------- -->
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')">風險類別限額</td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-2')">卡片等級限額</td>
+    </tr>
+  </table>
+</div>
+<!--START OF 風險類別限額-[Insert/Update] -->
+<div id="tab-1" class="tabcontent"> 
+<div id="dataBlock">
+ <table id="table1" width="80%" class="sortable" border="0" >
+  <tr>
+    <th nowrap width="5%">刪除</th>    
+    <th nowrap>卡人等級</th>
+    <th nowrap>月限額百分比</th>
+    <th nowrap>超額絶對金額</th>
+    <th nowrap>回覆碼</th>
+    <th nowrap>月限次</th>
+    <th nowrap>回覆碼</th>
+    <th nowrap>次限額百分比</th>
+    <th nowrap>回覆碼</th>
+    <th nowrap>日限次</th>
+    <th nowrap>回覆碼</th>
+  </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="B_rowid" value="${B_rowid}" >
+      <input type="hidden" name="mod_seqno" value="${B_mod_seqno}" >
+      <input type="hidden" name="risk_type" value="${risk_type}">
+      <input type="hidden" name="risk_level" value="${risk_level}" >
+      <input type="hidden" name="old_data" value="${lmt_amt_month_pct},${add_tot_amt},${rsp_code_1},${lmt_cnt_month},${rsp_code_2},${lmt_amt_time_pct},${rsp_code_3},${lmt_cnt_day},${rsp_code_4}">
+    </td>    
+    <td nowrap class="list_cc" >&nbsp;${risk_level}</td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="lmt_amt_month_pct" value="${lmt_amt_month_pct}" maxlength="3" size="5">  
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="add_tot_amt" value="${add_tot_amt}" maxlength="9" size="11">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_text" name="rsp_code_1" value="${rsp_code_1}" maxlength="2" size="5">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="lmt_cnt_month" value="${lmt_cnt_month}" maxlength="3" size="5">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_text" name="rsp_code_2" value="${rsp_code_2}" maxlength="2" size="5">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="lmt_amt_time_pct" value="${lmt_amt_time_pct}" maxlength="3" size="5">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_text" name="rsp_code_3" value="${rsp_code_3}" maxlength="2" size="5">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="lmt_cnt_day" value="${lmt_cnt_day}" maxlength="3" size="5">
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_text" name="rsp_code_4" value="${rsp_code_4}" maxlength="2" size="5">
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  
+  </table>
+</div>
+</div>
+
+<!-- START OF 卡人等級限額[多筆/display]- -->
+<div id="tab-2" class="tabcontent">
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No </th>
+    <th nowrap>卡人等級 </th>
+    <th nowrap>回覆碼 </th>
+    <th nowrap>一般總月限% </th>
+    <th nowrap>超額絕對金額</th>
+    <th nowrap>分期總月限</th>
+    <th nowrap>分期最高額度</th>
+    <th nowrap>預借現金最高額度</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${B_SER_NUM}&nbsp;
+   	<input type="hidden" name="B_SER_NUM" value="${B_SER_NUM}">
+  </td>
+	<td nowrap class="list_cc"> ${B_risk_level}&nbsp;
+		<input type="hidden" name="B_risk_level" value="${B_risk_level}">	
+	</td>
+	<td nowrap class="list_cc"> ${B_rsp_code}&nbsp;
+		<input type="hidden" name="B_rsp_code" value="${B_rsp_code}">	
+	</td>
+	<td nowrap class="list_cc"> ${B_tot_amt_pct}&nbsp;
+		<input type="hidden" name="B_tot_amt_pct" value="${B_tot_amt_pct}">		
+	</td>
+	<td nowrap class="list_cc"> ${B_add_tot_amt.(999)}&nbsp;
+		<input type="hidden" name="B_add_tot_amt" value="${B_add_tot_amt}">		
+	</td>
+	<td nowrap class="list_cc"> ${B_inst_month_pct}&nbsp;
+		<input type="hidden" name="B_inst_month_pct" value="${B_inst_month_pct}">		
+	</td>
+	<td nowrap class="list_cc"> ${B_max_inst_amt.(999)}&nbsp;
+		<input type="hidden" name="B_max_inst_amt" value="${B_max_inst_amt}">			
+	</td>
+	<td nowrap class="list_cc"> ${B_max_cash_amt.(999)}&nbsp;
+		<input type="hidden" name="B_max_cash_amt" value="${B_max_cash_amt}">				
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>    
+</div>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	//tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ //top.pageRows="999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

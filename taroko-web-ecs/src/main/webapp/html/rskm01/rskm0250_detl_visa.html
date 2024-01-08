@@ -1,0 +1,183 @@
+<html>
+<head>
+<title>預備仲裁/仲裁維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;控制流水號
+      <input type="text" class="col_text" name="kk_ctrl_seqno" value="${kk_ctrl_seqno}" maxlength="10" size="12">
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <span class="dsp_text">${ctrl_seqno}&nbsp;</span>
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+   </td>
+   <td nowrap >&nbsp;卡別:
+      <span class="dsp_text">${bin_type}&nbsp;</span>
+      <input type="hidden" name="bin_type" value="${bin_type}">
+      &nbsp;debit卡:
+      <span class="dsp_text">${debit_flag}&nbsp;</span>
+      <input type="hidden" name="debit_flag" value="${debit_flag}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;卡號:
+      <span class="dsp_text">${card_no}&nbsp;</span>
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+   <td nowrap >&nbsp;階段:
+      <span class="dsp_text">${arbit_times}.${#java:ecsfunc.DeCodeRsk.arbitStage(arbit_times)}</span>
+      <input type="hidden" name="arbit_times" value="${arbit_times}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;CASE NO:
+      <input type="text" class="col_text" name="vcr_case_no" value="${vcr_case_no}" maxlength="12" size="14">
+   </td>
+   <td nowrap >&nbsp;國別:
+      <span class="dsp_text">${mcht_country}&nbsp;</span>
+      <input type="hidden" name="mcht_country" value="${mcht_country}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;關帳年月:
+      <span class="dsp_text">${acct_month.YMD}&nbsp;</span>
+      <input type="hidden" name="acct_month" value="${acct_month}">
+   </td>
+   <td nowrap >&nbsp;消費日期:
+      <span class="dsp_text">${purchase_date.YMD}&nbsp;</span>
+      <input type="hidden" name="purchase_date" value="${purchase_date}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;微縮影NO:
+      <span class="dsp_text">${film_no}&nbsp;</span>
+      <input type="hidden" name="film_no" value="${film_no}">
+   </td>
+   <td nowrap >&nbsp;授權碼:
+      <span class="dsp_text">${auth_code}&nbsp;</span>
+      <input type="hidden" name="auth_code" value="${auth_code}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;原幣金額:
+      <span class="dsp_text">${source_amt.(999.00)}&nbsp;</span>
+      <input type="hidden" name="source_amt" value="${source_amt}">
+   </td>
+   <td nowrap >&nbsp;原幣別:
+      <span class="dsp_text">${source_curr}&nbsp;</span>
+      <input type="hidden" name="source_curr" value="${source_curr}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;結算金額:
+      <span class="dsp_text">${dc_dest_amt.(999.00)}&nbsp;</span>
+      <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}">
+   </td>
+   <td nowrap >&nbsp;結算幣別:
+      <span class="dsp_text">${curr_code.(999)}&nbsp;</span>
+      <input type="hidden" name="curr_code" value="${curr_code}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;入帳金額:
+      <span class="dsp_text">${dest_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="dest_amt" value="${dest_amt}">
+   </td>
+   <td nowrap >&nbsp;清算金額(USD):
+      <span class="dsp_text">${settl_amt.(999.00)}&nbsp;</span>
+      <input type="hidden" name="settl_amt" value="${settl_amt}">
+   </td>
+  </tr>
+</table>
+</div>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">預備仲裁</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">仲裁</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-3')">帳單資料</td>
+    </tr>
+  </table>
+</div>
+
+<div id="dataBlock">
+<!-----------預備仲裁-------------->
+<div id="tab-1" class="tabcontent">
+   <span style="margin-left: 40px;">
+          <input type="Button" name="btnAdd" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+          <input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+          <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+   </span>
+   ${#PLUGIN:rskm01.zz_rsk_prearbit_1v}
+</div>
+<!-----------仲裁-------------->
+<div id="tab-2" class="tabcontent">
+   <span style="margin-left: 40px;">
+            <input type="Button" name="btnUpdate2" value="新增/修改(U2)" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate">&nbsp;&nbsp;
+            <input type="Button" name="btnDelete2" value="刪除(D2)" ${btnDelete_disable} onClick="return top.submitControl('D2')" class="btDelete">&nbsp;&nbsp;
+   </span>
+   ${#PLUGIN:rskm01.zz_rsk_prearbit_2v}
+</div>
+<!-----------帳單資料-------------->
+<div id="tab-3" class="tabcontent" >
+ ${#PLUGIN:htmcomm_plugin.bil_bill_data}
+</div>
+</div>
+
+
+<input type="hidden" name="arbit_times" value="${arbit_times}">
+<input type="hidden" name="reference_no" value="${reference_no}">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="rskm0250">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+   if (top.actionCode=='D2') {
+      return confirm('是否取消 [仲裁登錄]');
+   }
+
+    return true;
+  }
+
+</script>

@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>ptrm0030繳款類別資料維護-Cond
+	112-12-18-v1.00.01-Simon-[update]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;繳款類別：
+      <input type="text" class="col_text" name="ex_payment_type" value="${ex_payment_type}"
+       maxlength=4 size=6 />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>  
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;是否為回饋金:
+  		<select name="ex_fund_flag" class="col_ddlb">
+	      <option value="">全部</option>
+	      <option value="Y" ${ex_fund_flag-Y}>Y</option>
+	      <option value="N" ${ex_fund_flag-N}>N</option>
+	      <option value="1" ${ex_fund_flag-1}>1.調整</option>
+    	</select> 
+    </td>
+    <td nowrap >&nbsp;帳單是否顯示:
+    	<select name="ex_bill_flag" class="col_ddlb">
+	      <option value="">全部&nbsp;</option>
+	      <option value="Y" ${ex_bill_flag-Y}>Y&nbsp;</option>
+	      <option value="N" ${ex_bill_flag-N}>N&nbsp;</option>
+    	</select> 
+    </td>
+    </td>
+  </tr>
+</table>
+
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap >繳款類別&nbsp;</th>
+    <th nowrap >中文簡稱&nbsp;</th>
+    <th nowrap >是否為回饋金&nbsp;</th>
+    <th nowrap >帳單是否顯示&nbsp;</th>
+    <th nowrap >對帳單上說明&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${payment_type}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${payment_type}&nbsp;</td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${fund_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${bill_flag}&nbsp;</td>
+   <td nowrap class="list_ll"> ${bill_desc}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pay_note}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0030_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0030_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

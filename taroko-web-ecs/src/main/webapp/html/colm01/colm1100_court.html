@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>前置協商基本資料查詢-法院公文維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="2"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;
+  <!-- <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;  -->
+  <input type="Button"  value="存檔"  onClick="return top.submitControl('CU')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"  value="修改取消"  id="btnAdd"  onClick="return top.submitControl('CS')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"  value="刪除公文"  id="btnDelete"  onClick="return top.submitControl('CD')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"  value="清除"  onClick="return top.submitControl('CL')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;收件日期：
+   	  <input type="text" class="col_date" name="recv_date" value="${recv_date}"
+    	zRequire="Y" zeditType="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'recv_date'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;主管覆核：
+      <span class="col_key">${apr_flag}</span>
+      <input type="hidden"  name="apr_flag"  value="${apr_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;文件編號：
+   	  <input type="text" class="col_any" name="liac_doc_no" value="${liac_doc_no}"
+   		zRequire="Y" zEdit="alphanum,upper" maxlength="10" size="10">
+    </td>
+    <td nowrap>&nbsp;是否認可:
+	  <span class="col_radio">
+        <input type="radio" value="Y" name="is_allow" ${is_allow-Y} ${DEFAULT_CHK} />Y 
+        <input type="radio" value="N" name="is_allow" ${is_allow-N} />N
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;法院名稱：
+   	  <select size="1" name="court_name" class="col_ddlb">
+        ${PtrSysIdtabList}
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;字號：
+   	  <input type="text" class="col_any" name="case_no" value="${case_no}"
+   		zRequire="Y" zEdit="any,canTW" maxlength="50" size="50">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;備註：
+      <textarea cols="60" rows="2" class="col_any" name="user_remark" wrap="soft" >${user_remark}</textarea>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>建檔日期：
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+    </td>
+    <td nowrap>建檔經辦：
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>覆核日期：
+      <span class="dsp_date">${apr_date.YMD}</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">   
+    </td>
+    <td nowrap>覆核主管：
+      <span class="dsp_text"> ${apr_user} </span>
+      <input type="hidden" name="apr_user" value="${apr_user}">   
+    </td>
+  </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colm1100">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="liac_seqno" value="${liac_seqno}">
+<input type="hidden" name="apply_date" value="${apply_date}">
+<input type="hidden" name="id_no" value="${id_no}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+ document.dataForm.recv_date.focus();
+
+ var af = document.dataForm.apr_flag.value;
+ //document.getElementById("btnAdd").style.display = "";
+ //document.getElementById("btnDelete").style.display = "";
+ document.getElementById("btnAdd").style.visibility = "hidden";
+ document.getElementById("btnDelete").style.visibility = "hidden";
+ //object.style.visibility = "visible|hidden|collapse|initial|inherit"
+ if(af == 'Y'){
+	 //document.getElementById("btnDelete").style.display = "";
+	 document.getElementById("btnDelete").style.visibility = "visible";
+ }
+ if(af == 'N'){
+	 //document.getElementById("btnAdd").style.display = "";
+	 document.getElementById("btnAdd").style.visibility = "visible";
+ }
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode != "CL" ) {
+    if ( document.dataForm.recv_date.value == '' 
+    	|| document.dataForm.liac_doc_no.value == ''
+    	|| document.dataForm.case_no.value == '' ) {
+    	alert("請輸入必輸欄位");
+    	return false;
+    }
+    }
+    
+    if ( top.actionCode == "CS" ) {
+    	if (confirm("是否取消修改?") === false) {
+            return false;
+        }
+    }
+
+    return true;
+  }
+
+</script>

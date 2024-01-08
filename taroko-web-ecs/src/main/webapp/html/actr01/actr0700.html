@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <title>郵局驗印紀錄查詢表-V20221020</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=6>&nbsp;處理日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                        </script>&nbsp;
+                    </td>
+                    <td nowrap colspan=6>&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=4>&nbsp;ID:
+                        <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" maxlength="11" size="13" />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;狀態:
+                        <select size="1" name="ex_rtn_staus" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="00" ${ex_rtn_staus-00}>00-成功</option>
+                            <option value="03" ${ex_rtn_staus-03}>03-已終止代繳</option>
+                            <option value="06" ${ex_rtn_staus-06}>06-凍結戶或警示戶</option>
+                            <option value="07" ${ex_rtn_staus-07}>07-業務支票專戶</option>
+                            <option value="08" ${ex_rtn_staus-08}>08-帳號錯誤</option>
+                            <option value="09" ${ex_rtn_staus-09}>09-終止戶</option>
+                            <option value="10" ${ex_rtn_staus-10}>10-身分證號不符</option>
+                            <option value="11" ${ex_rtn_staus-11}>11-轉出戶</option>
+                            <option value="12" ${ex_rtn_staus-12}>12-拒絕往來戶</option>
+                            <option value="13" ${ex_rtn_staus-13}>13-無此用戶編號</option>
+                            <option value="14" ${ex_rtn_staus-14}>14-用戶編號已存在</option>
+                            <option value="16" ${ex_rtn_staus-16}>16-管制帳戶</option>
+                            <option value="17" ${ex_rtn_staus-17}>17-掛失戶</option>
+                            <option value="18" ${ex_rtn_staus-18}>18-異常交易帳戶</option>
+                            <option value="19" ${ex_rtn_staus-19}>19-用戶編號非英數字元</option>
+                            <option value="41" ${ex_rtn_staus-41}>41:(*)局帳號不符</option>
+                            <option value="42" ${ex_rtn_staus-42}>42:(*)戶名不符</option>
+                            <option value="43" ${ex_rtn_staus-43}>43:(*)身分證號不符</option>
+                            <option value="44" ${ex_rtn_staus-44}>44:(*)印鑑不符</option>
+                            <option value="49" ${ex_rtn_staus-49}>49:(*)其他</option>
+                            <option value="91" ${ex_rtn_staus-91}>91-規定期限內未有扣款</option>
+                            <option value="98" ${ex_rtn_staus-98}>98-其他</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;帳戶帳號:
+                        <input type="text" class="col_text" name="ex_autopay_acct_no" value="${ex_autopay_acct_no}" maxlength="11" size="13" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">處理日</th>
+                <th nowrap class="list_th">ID</th>
+                <th nowrap class="list_th">歸屬ID</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">流水號</th>
+                <th nowrap class="list_th">帳號</th>
+                <th nowrap class="list_th">回覆日期</th>
+                <th nowrap class="list_th">狀態</th>
+                <th nowrap class="list_th">cycle</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${process_date} </td>
+                <td nowrap class="list_ll"> ${id_no} </td>
+                <td nowrap class="list_ll"> ${autopay_id} </td>
+                <td nowrap class="list_cc"> ${chi_name} </td>
+                <td nowrap class="list_ll"> ${p_seqno} </td>
+                <td nowrap class="list_ll"> ${autopay_acct_no} </td>
+                <td nowrap class="list_cc"> ${rtn_date} </td>
+                <td nowrap class="list_ll"> ${rtn_status} </td>
+                <td nowrap class="list_cc"> ${stmt_cycle} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.exDateS.focus();
+
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

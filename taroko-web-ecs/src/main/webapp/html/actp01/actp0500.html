@@ -1,0 +1,231 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-02-06  V1.00.01   ryan           Initial                             -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>回灌債務協商清分資料上傳作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<!--COND -->
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap colspan="4">&nbsp;  
+			<input type="Button"   value="資料上傳(FTP)" onClick="return upload_click()" class="btDelete">&nbsp;&nbsp;
+			<input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+			<input type="Button"   value="open(查詢明細)" id="processopen" class="btUpdate">&nbsp;&nbsp;
+			<input type="Button"     value="執行程式" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+		</td>
+	</tr>
+	<tr>
+	 <td nowrap colspan="3" >&nbsp;檔案名稱:
+			<input type="text" class="col_any" id="ex_fromfile" name="ex_fromfile" value="${ex_fromfile}"
+         	zeditType="any" size=60 />
+		</td>
+	</tr> 
+	<tr>
+		<td nowrap colspan="4">&nbsp;存放位置:
+			<span class="dsp_text">/Ecs/ecs/media/act</span>
+			<!-- <input type="text" class="col_any" name="ex_serverpath" value="/ecs/ecs/media/act"
+         	zeditType="any" size=60 /> -->
+		</td>
+	</tr>
+	<!--  <tr>
+		<td nowrap colspan="4">&nbsp;報表位置:
+			<input type="text" class="col_any" name="ex_downpath" value="/ecs/ecs/reports"
+         	zeditType="any" size=60 />
+		</td>
+	</tr>-->
+	<th colspan="4">批次執行</th>
+	<tr>
+		<td nowrap >&nbsp;執行程式:
+      		<span class="dsp_text">${ex_pgname}</span>
+			<input type="hidden"   name="ex_pgname" value="${ex_pgname}">
+		</td>
+		<td nowrap>&nbsp;帳務年月：
+      		<input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+         	zeditType="date,ym" MaxLength=6 size=6 />
+		</td>
+		<td nowrap colspan="2">&nbsp;強迫註記:
+      		<select   size="1"  name="ex_stmt_cycle" class="col_ddlb">
+      			<option value="N" ${ex_stmt_cycle-N} >N</option>
+         		<option value="Y" ${ex_stmt_cycle-Y} >Y</option>
+      		</select>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4">&nbsp;執行指令:
+			<input type="text" class="col_any" zEdit="any" name="ex_bpgm" value="${ex_bpgm}" size='60' disabled="disabled"/>
+		</td>
+	</tr>
+</table>
+<table width="70%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4"> 
+    <tr>
+        <td nowrap width="60%">Process Message:&nbsp;
+          <br>
+          <textarea rows=15 cols=70 name="proc_mesg">${proc_mesg}</textarea>
+        </td>
+    </tr>           
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+<!-- BEGIN DYNAMIC : DETAIL -->
+<tr>
+</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="actp0500">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="is_external_name"  value="${is_external_name}">
+<input type="text" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+<input type="hidden"  name="upload_file" value="" />
+<input type="hidden"  name="sys_upload_type" value="" />
+<input type="hidden"  name="sys_upload_alias" value="" />
+<input type="hidden"  id="db_list"  name="db_list" value="${db_list}" />
+<input id="myfile"  type="file" accept="text/plain, text/csv" />
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+ document.dataForm.proc_mesg.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { 
+    	return false; 
+       }
+
+    if ( top.actionCode == "C" ) {
+    	if(ofc_process()==false){
+    		return false;
+    	}
+    	if (confirm("確認要執行嗎 ??") === false) {
+    		return false;
+        }
+    	$("input[name=ex_bpgm]").prop("disabled","");
+    }
+    return true;
+  }
+
+ function detailScreen() { 
+    top.respLevel = 1;
+    top.respHtml  = "actp0500_detl";
+    top.submitControl('R');
+    return true;
+  }
+ 	
+ function ofc_process(){
+	 var ls_run='';
+	 var ls_prog=$("input[name=ex_pgname]").val();
+	 var ls_date=$("input[name=ex_date1]").val();
+	 var ls_cycle=$("select[name=ex_stmt_cycle]").val();
+	 var is_file=$("#ex_fromfile").val();
+	 var ls_bpgm=$("input[name=ex_bpgm]");
+	 if($.trim(ls_prog).length==0){
+		 alert("請輸入 執行程式 !");
+		 return false;
+	 }
+
+	 if($.trim(ls_date).length==0){
+		 ls_date='';
+	 }
+	 if($.trim(is_file).length==0){
+		 is_file='';
+	 }
+	
+	 ls_run = $.trim(ls_prog)+" "+is_file+" "+ls_date+" "+ls_cycle;
+	 ls_bpgm.val(ls_run);
+	 if($.trim(ls_bpgm.val()).length==0){
+		 alert("請輸入 Batch program !");
+		 return false;
+	 }
+	 
+	 return true;
+ }
+ $("#myfile").hide();
+ $(document).ready(function() {
+	 $("#processopen").click(function(){
+		 $("#myfile").val('');
+		 $("#myfile").click();
+	  }) 
+ })
+ 
+ window.onload = function () {
+	   document.getElementById('myfile').onchange = readFile;
+	};
+	function readFile() {
+	    file = this.files[0];
+	    var fReader = new FileReader();  
+	    var fromfile_value="";
+	    var fromfile_name="";
+	    fReader.onload = function (event) {
+	    	//fromfile_name = document.getElementById('myfile').value;
+	    	fromfile_value = event.target.result;
+	        //document.dataForm.ex_fromfile.value = fromfile_name;
+	        $('#db_list').val(fromfile_value);
+	    };
+	    fReader.readAsText(file);
+	    alert("檔案讀入成功");
+	    top.respLevel = 1;
+	    top.respHtml  = "actp0500_detl";
+	    top.submitControl('R');
+	}
+	 function upload_click(parm) {
+		  
+		    document.dataForm.zz_file_name.value = "";
+		    document.dataForm.data_k1.value = parm;
+		    
+		    var parmHtml    = "TarokoUpload";
+		    var parmName    = "upload_file,zz_file_name";
+		    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+		    top.packageName = "taroko.com";
+		    top.javaName    = "TarokoUpload";
+		    top.methodName  = "showScreen";
+		    top.openWindow("",parmHtml,parmName,windowSize);
+
+		    top.packageName = "actp01";
+		    top.javaName    = "Actp0500";
+		    top.requHtml    = "actp0500";
+		    top.respHtml    = "actp0500";
+		    return true;
+		  }
+		  
+		 function wf_uploadAfter() {
+		    var ss=document.dataForm.zz_file_name.value.trim();
+		    if (ss.length>0) {
+		      top.submitControl('UPLOAD');
+		    }
+		 }  
+ function trim(value) {
+	    return value.replace(/^\s+|\s+$/g,"");
+	}
+</script>

@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>凍結解凍歷史資料查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         ${dddw_acct_type}
+      </select>
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" >      
+   </td>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;異動類別:
+   		<span class="col_radio">
+         <input type="radio" value="0" name="ex_log_type" ${ex_log_type-0} ${DEFAULT-ex_log_type} />全部
+         <input type="radio" value="1" name="ex_log_type" ${ex_log_type-1} />凍結
+         <input type="radio" value="2" name="ex_log_type" ${ex_log_type-2} />卡特指
+      </span>
+	 </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;正卡姓名:
+      <span class="dsp_text">${ex_name}&nbsp;</span>
+      <input type="hidden" name="ex_name" value="${ex_name}">
+   </td>
+   <td nowrap >&nbsp;帳戶帳號:
+   		<span class="dsp_text" >${ex_acct_type1}-${ex_acct_key1}&nbsp;</span>
+   		<input type="hidden" name="ex_acct_type1" value="${ex_acct_type1}" >
+   		<input type="hidden" name="ex_acct_key1" value="${ex_acct_key}">
+   </td>   
+   <td nowrap >&nbsp;卡片特指:
+      <span class="dsp_text">${ex_card_spec_status}&nbsp;</span>
+      <input type="hidden" name="ex_card_spec_status" value="${ex_card_spec_status}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;目前凍結原因:
+      <span class="dsp_text">${ex_block_reason},${ex_block_reason2},${ex_block_reason3},${ex_block_reason4},${ex_block_reason5}</span>
+      <input type="hidden" name="ex_block_reason" value="${ex_block_reason}">
+      <input type="hidden" name="ex_block_reason2" value="${ex_block_reason2}">
+      <input type="hidden" name="ex_block_reason3" value="${ex_block_reason3}">
+      <input type="hidden" name="ex_block_reason4" value="${ex_block_reason4}">
+      <input type="hidden" name="ex_block_reason5" value="${ex_block_reason5}">
+      <input type="hidden" name="wk_block_reason" value="${wk_block_reason}">
+   </td>
+   <td nowrap >&nbsp;公司名稱(商務卡戶):
+      <span class="dsp_text">${ex_name1}&nbsp;</span>
+      <input type="hidden" name="ex_name1" value="${ex_name1}">
+   </td>
+   <td nowrap >&nbsp;戶特指:
+      <span class="dsp_text">${ex_spec_status}&nbsp;</span>
+      <input type="hidden" name="ex_spec_status" value="${ex_spec_status}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;特殊事項:
+      <span class="dsp_text">${ex_special_comment}&nbsp;</span>
+      <input type="hidden" name="ex_special_comment" value="${ex_special_comment}">
+   </td>
+   <td nowrap >&nbsp;往來狀態:
+      <span class="dsp_text">${ex_acct_status}.${#JAVA:ecsfunc.DeCodeAct.acctStatus(ex_acct_status)}&nbsp;</span>
+      <input type="hidden" name="ex_acct_status" value="${ex_acct_status}">      
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >異動方式&nbsp;</th>
+    <th nowrap >異動原因&nbsp;</th>
+    <th nowrap >帳戶/卡號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >修改人員&nbsp;</th>
+    <th nowrap colspan="5" >凍結原因&nbsp;</th>
+    <th nowrap >特指&nbsp;</th>
+    <th nowrap >刪除日期&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+    <th nowrap >Mx&nbsp;</th>
+    <th nowrap >Tx&nbsp;</th>
+    <th nowrap >來源&nbsp;</th>
+    <th nowrap >異動時間&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;
+   </td>
+   <td nowrap class="list_cc"> ${log_date.YMD}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${log_mode}${tt_log_mode}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${log_type}.${#JAVA:ecsfunc.DeCodeRsk.acnoLogType(log_type)}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${kind_flag}${tt_kind_flag}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${block_reason}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${block_reason2}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${block_reason3}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${block_reason4}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${block_reason5}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${spec_status}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${spec_del_date.YMD}&nbsp;
+	</td>
+	<td nowrap class="list_ll"> ${log_remark}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${log_reason}.${#JAVA:ecsfunc.DeCodeRsk.logReason(log_reason)}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${log_not_reason}.${#JAVA:ecsfunc.DeCodeRsk.logNotReason(log_not_reason)}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${mod_pgm}&nbsp;
+	</td>
+	<td nowrap class="list_cc"> ${mod_time}&nbsp;
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    return true;
+  }
+</script>

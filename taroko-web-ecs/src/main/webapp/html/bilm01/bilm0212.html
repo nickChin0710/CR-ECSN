@@ -1,0 +1,222 @@
+<html>
+<head>
+<title>線上加檔登錄作業-V.2019-1129-Amber-[Update]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="40%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;登&nbsp;錄&nbsp;批&nbsp;號:  
+            <input type="text" class="col_text" name="ex_key" id="ex_key" value="${ex_key}" zEdit="number" maxlength=4 size=4  zRequire ="k"/>
+        </td>
+        <td nowrap>&nbsp;登錄人員:   
+            <input type="text" class="col_text" name="ex_user" value="${ex_user}" zEdit="any" maxlength=10 size=10 />
+        </td>
+        <td nowrap>&nbsp;雙幣幣別:
+            <select  name="ex_curr_code" class="col_ddlb" >
+                ${dddw_curr_code}
+            </select>   
+        </td>
+        <td nowrap rowspan="3">&nbsp;錯誤代碼說明：
+            <span class="dsp_text" style="color:8608FB">
+                <br>&nbsp;1:ID Error <br>&nbsp;2:統編 Error <br>&nbsp;3:金額 Error <br>&nbsp;4:卡號 Error <br>&nbsp;5:帳戶 Error <br>
+            </span>  
+        </td>
+    </tr>
+    <tr>
+        <td nowrap>&nbsp;正卡身分證號:     
+            <input type="text" class="col_text" name="ex_id" value="${ex_id}" zEdit="alphanum,upper" maxlength=10 size=12 />
+        </td>
+        <td nowrapcolspan="2">&nbsp;卡&nbsp;&nbsp;&nbsp;&nbsp;號:  
+            <input type="text" class="col_text" name="ex_card" value="${ex_card}" zEdit="number" maxlength=19 size=19 />
+        </td>
+        <td nowrap>&nbsp;錯誤代碼：
+             <input type="radio" value="0" name="ex_err" ${ex_err-0} ${DEFAULT-ex_err}>全部
+             <input type="radio" value="1" name="ex_err" ${ex_err-1}>無
+             <input type="radio" value="2" name="ex_err" ${ex_err-2}>有&nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td nowrap colspan="3">&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+            <!-- <img src="images/uperLoad.gif" onclick="return upload_click()" style="cursor:hand" /> -->
+            <input type="Button"   value="匯入" onClick="return upload_click()" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"   value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D1')" class="btDelete">&nbsp;&nbsp;
+        </td> 
+    </tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+            <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >刪除&nbsp;</th>
+        <th nowrap class="list_th">錯誤<br>代碼</th>
+        <th nowrap class="list_th">帳戶<br>類別</th>
+        <th nowrap class="list_th">正卡<br>身分證號</th>
+        <th nowrap class="list_th"></th>
+        <th nowrap class="list_th">帳戶狀態</th>
+        <th nowrap class="list_th">結清戶</th>
+        <th nowrap class="list_th">中文姓名</th>
+        <th nowrap class="list_th">法人<br>統編</th>
+        <th nowrap class="list_th">公司簡稱</th>
+        <th nowrap class="list_th">加檔項目</th>
+        <th nowrap class="list_th">加檔卡號</th>
+        <th nowrap class="list_th">結算<br>幣別</th>
+        <th nowrap class="list_th">結算金額</th>
+        <th nowrap class="list_th">金額</th>
+        <th nowrap class="list_th">消費日期</th> 
+        <th nowrap class="list_th">帳上餘額<br>(結算幣別)</th> 
+        <th nowrap class="list_th">對帳單文字</th> 
+        <th nowrap class="list_th">覆核人員</th> 
+        <th nowrap class="list_th">登錄人員</th> 
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr >
+        <td nowrap class="list_no" >
+          <span class="dsp_flag">${ok_flag}</span>
+            ${SER_NUM}
+          <input type="checkbox" name="opt" value="${ser_num}">
+          <input type="hidden" name="ser_num" value="${ser_num}"/>
+          <input type="hidden" name="rowid" value="${rowid}"/>
+          <input type="hidden" name="mod_seqno" value="${mod_seqno}"/>
+        </td>
+        <td nowrap class="list_ll"> ${error_code}</td>
+        <td nowrap class="list_ll"> ${acct_type}</td>
+        <td nowrap class="list_ll" onclick="detailScreen('${SER_NUM}','${key_no}','${rowid}','${mod_seqno}')" style="cursor:hand"> ${id_no}</td>
+        <td nowrap class="list_ll"> ${id_no_code}</td>
+        <td nowrap class="list_ll"> ${db_status}</td>
+        <td nowrap class="list_ll"> ${db_end}</td>
+        <td nowrap class="list_ll"> ${chi_name}</td>
+        <td nowrap class="list_ll"> ${corp_no}</td>
+        <td nowrap class="list_ll"> ${company_name}</td>
+        <td nowrap class="list_ll"> ${db_add_item}</td>
+        <td nowrap class="list_ll"> ${card_no}</td>
+        <td nowrap class="list_ll"> ${curr_code}</td>
+        <td nowrap class="list_rr"> ${dc_destination_amt.(999)}</td>
+        <td nowrap class="list_rr"> ${dest_amt.(999)}</td>
+        <td nowrap class="list_ll"> ${purchase_date}</td>
+        <td nowrap class="list_rr"> ${dc_acct_jrnl_bal.(999)}</td>
+        <td nowrap class="list_ll"> ${bill_desc}</td>
+        <td nowrap class="list_ll"> ${apr_user}</td>
+        <td nowrap class="list_ll"> ${mod_user}</td>
+        <input type="hidden"  name="id_p_seqno"  value="${id_p_seqno}">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden"  name="add_item"  value="${add_item}">
+        <input type="hidden"  name="acct_type"  value="${acct_type}">
+        <input type="hidden"  name="id_no"  value="${id_no}">
+        <input type="hidden"  name="id_no_code"  value="${id_no_code}">
+        <input type="hidden"  name="db_status"  value="${db_status}">
+        <input type="hidden"  name="db_end"  value="${db_end}">
+        <input type="hidden"  name="chi_name"  value="${chi_name}">
+        <input type="hidden"  name="corp_no"  value="${corp_no}">
+        <input type="hidden"  name="company_name"  value="${company_name}">
+        <input type="hidden"  name="db_add_item"  value="${db_add_item}">
+        <input type="hidden"  name="card_no"  value="${card_no}">
+        <input type="hidden"  name="curr_code"  value="${curr_code}">
+        <input type="hidden"  name="dc_destination_amt"  value="${dc_destination_amt.(999)}">
+        <input type="hidden"  name="dest_amt"  value="${dest_amt.(999)}">
+        <input type="hidden"  name="purchase_date"  value="${purchase_date}">
+        <input type="hidden"  name="dc_acct_jrnl_bal"  value="${dc_acct_jrnl_bal.(999)}">
+        <input type="hidden"  name="bill_desc"  value="${bill_desc}">
+        <input type="hidden"  name="apr_user"  value="${apr_user}">
+        <input type="hidden"  name="mod_user"  value="${mod_user}">
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="text" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" readonly />
+<input type="hidden"  name="upload_file" value="" /> 
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="999";
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "bilm0212_add";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "bilm0212_detl";
+    top.submitControl('S');
+    return true;
+}
+
+function upload_click() {
+    var key_no = document.getElementById('ex_key').value ;
+    if(key_no ==''){
+       alert("請輸入登錄批號!!");
+       return false;     
+    }
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "bilm01";
+    top.javaName    = "Bilm0212";
+    //methodName  = "actionFunction";
+    top.requHtml    = "bilm0212";
+    top.respHtml    = "bilm0212";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ } 
+ 
+//全選
+ function selectAll() {
+     var aElements = document.dataForm.getElementsByTagName("input");
+     for ( var i=0;  i < aElements.length; i++ ) {
+         if  ( aElements[i].name == "opt" ) {
+             aElements[i].checked = document.dataForm.ex_selectAll.checked;
+         }
+     }
+     
+     return;
+ }
+
+</script>

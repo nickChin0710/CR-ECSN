@@ -1,0 +1,213 @@
+<html>
+<head>
+    <title> 113/03/22 V1.00.01 YANG Han Initial 稅務活動回饋參數維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <!-- Button **************************************************************-->
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td colspan="4">
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層"
+                     ; onmouseout="top.light_img(this);" ; onmouseover="top.dark_img(this);">&nbsp;
+                <input type="Button" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                <input type="Button" name="btnUpdate" value="存檔" ${btnUpdate_disable}
+                       onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable}
+                       onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+    <div id="dataBlock">
+        <!-- Key data2 ************************************************************ -->
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap class="colKey">稅務活動代碼：
+                    <input type="text" class="col_any" name="active_code" value="${active_code}"
+                           zeditType="any" maxlength=10 size=10/>
+                </td>
+                <td nowrap>覆核狀態:&nbsp;
+                    <select name="ex_apr_flag" class="col_ddlb">
+                     <option value="N" ${ex_apr_flag-N} >待覆核</option>
+                        <option value="Y" ${ex_apr_flag-Y} >已覆核</option>
+                        <option value="U" ${ex_apr_flag-U} >暫緩覆核</option>
+                    </select>
+                </td>
+                <td nowrap id="audTypeRow">放行狀態：
+                    <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+                    <input type="hidden" name="aud_type" value="${aud_type}"/>
+                    <input type="hidden" name="commfunc_aud_type" value="${commfunc_aud_type}"/>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>稅務活動説明：&nbsp;
+                    <input type="text" class="col_any" name="active_name" value="${active_name}"
+                           zEdit="any,canTW" maxlength="40" size="40"/>
+                </td>
+                <td nowrap>資料篩選日期：&nbsp;
+                   <input type="text" class="col_date" name="cal_def_date" value="${cal_def_date}" zEdit="date,yyyymmdd"
+                           maxlength="8" size="8"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'cal_def_date'
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>繳稅類別:&nbsp;
+                    <input type="radio" value="1" name="kk_active_type" ${kk_active_type-1}/>1.綜所稅
+                    <input type="radio" value="2" name="kk_active_type" ${kk_active_type-2}/>2.地價稅
+                    <input type="radio" value="3" name="kk_active_type" ${kk_active_type-3}/>3.牌照稅
+                    <input type="radio" value="4" name="kk_active_type" ${kk_active_type-4}/>4.房屋稅
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;繳稅(刷卡)期間：
+                    <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd"
+                           maxlength="8" size="8"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd"
+                           maxlength="8" size="8"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <!-- Detail data detl *************************************************** -->
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td>回饋總筆數：&nbsp;</td>
+                <td nowrap>
+                    全部 - 總筆數
+                    <input type="text" class="col_number" name="feedback_all_totcnt" value="${feedback_all_totcnt}"
+                           zEdit="dignumber" maxlength="9" size="9"/><br>
+                    員工 - 總筆數
+                    <input type="text" class="col_number" name="feedback_emp_totcnt" value="${feedback_emp_totcnt}"
+                           zEdit="dignumber" maxlength="9" size="9"/><br>
+                    非員工 - 總筆數
+                    <input type="text" class="col_number" name="feedback_nonemp_totcnt"
+                           value="${feedback_nonemp_totcnt}"
+                           zEdit="dignumber" maxlength="9" size="9"/>
+                </td>
+            </tr>
+            <tr>
+                <td>回饋對象張數：&nbsp;</td>
+                <td nowrap>
+                    員工 - 上限張數
+                    <input type="text" class="col_number" name="feedback_peremp_cnt" value="${feedback_peremp_cnt}"
+                           zEdit="dignumber" maxlength="9" size="9"/><br>
+                    非員工 - 上限張數
+                    <input type="text" class="col_number" name="feedback_pernonemp_cnt"
+                           value="${feedback_pernonemp_cnt}"
+                           zEdit="dignumber" maxlength="9" size="9"/>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="colKey">消費金額(信用卡):
+
+                </td>
+                <td>
+                    <input type="text" class="col_number" name="purchase_amt_s" value="${purchase_amt_s}"
+                           zEdit="dignumber" maxlength="9" size="9"/>
+                    --
+                    <input type="text" class="col_number" name="purchase_amt_e" value="${purchase_amt_e}"
+                           zEdit="dignumber" maxlength="9" size="9"/>
+                </td>
+            </tr>
+            <tr>
+                <td>回饋身分：&nbsp;</td>
+                <td nowrap>
+                    <input type="radio" value="1" name="feedback_id_type" ${feedback_id_type-1}>身份證號
+                    <input type="radio" value="2" name="feedback_id_type" ${feedback_id_type-2}>卡號
+                </td>
+            </tr>
+            <tr>
+                <td>回饋類型：&nbsp;</td>
+                <td nowrap>
+                    <input type="radio" value="1" name="gift_type" ${gift_type-1}>50元電子現金抵用券
+                </td>
+            </tr>
+        </table>
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>維護經辦：
+                    <span class="dsp_text">${crt_user}</span>
+                    <input size="10" type="hidden" name="crt_user" value="${crt_user}"/>
+                </td>
+                <td nowrap>維護日期：
+                    <span class="dsp_date">${crt_date.YMD}</span>
+                    <input size="8" type="hidden" name="crt_date" value="${crt_date.YMD}"/>
+            </tr>
+            <tr>
+                <td nowrap>覆核經辦：
+                    <span class="dsp_text">${apr_user}</span>
+                    <input size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+                </td>
+                <td nowrap>覆核日期：
+                    <span class="dsp_date">${apr_date.YMD}</span>
+                    <input size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- trail ************************************************************** -->
+    <input type="hidden" name="aud_type" value="${aud_type}">
+    <input type="hidden" name="active_code" value="${active_code}">
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="data_k4" value="">
+    <input type="hidden" name="data_k5" value="">
+    <input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+    <input type="hidden" name="ROWID" value="${rowid}">
+    <input type="hidden" name="MOD_PGM" value="mktm0900">
+    <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+    <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+    top.refreshButton2('1');
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    var allowAdd = '${btnAdd_disable}';
+    if (allowAdd == '') {
+    	document.getElementById('audTypeRow').style.display='none';
+    }
+
+</script>
+<!-- ******************************************************************** -->

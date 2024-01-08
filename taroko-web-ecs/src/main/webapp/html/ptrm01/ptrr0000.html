@@ -1,0 +1,100 @@
+
+<html>
+
+<head>
+    <title>報表顯示sample-jh-191101</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;報表代碼:&nbsp;
+                        <input type="text" class="col_any" name="ex_program_code" value="${ex_program_code}" zEdit="any" maxlength=16 size=16 />
+                        &nbsp;報表日期:&nbsp;
+                        <input type="text" class="col_date" name="ex_start_date" value="${ex_start_date}" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_start_date'});
+                        </script>
+                        --<input type="text" class="col_date" name="ex_end_date" value="${ex_end_date}" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_end_date'});
+                        </script>
+                    </td>
+                    <td nowrap>&nbsp;
+                        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan = "2" nowrap>&nbsp;報表名稱:&nbsp;
+                        <input type="text" class="col_any" name="ex_report_name" value="${ex_report_name}" zEdit="canTW" maxlength=20 size=20 />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap  width="5%">No&nbsp;</th>
+                <th nowrap >報表代碼</th>
+                <th nowrap >報表名稱</th>
+                <th nowrap >報表產生日期</th>
+                <th nowrap >報表產生時間</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${program_code}','${start_date}','${start_time}')" style="cursor:hand">
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${program_code}</td>
+                <td nowrap class="list_ll"> ${rptname}</td>
+                <td nowrap class="list_cc"> ${start_date.YMD}</td>
+                <td nowrap class="list_cc"> ${start_time.TIME}</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_program_code.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    // if (top.actionCode == "X") {
+    //     top.respLevel = 1;
+    //     top.respHtml = "ptrr0000_detl";
+    // }
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 0;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.submitControl('PDF');
+    //top.submitControl('S');
+    return true;
+}
+</script>

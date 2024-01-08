@@ -1,0 +1,145 @@
+<html>
+
+  <head>
+    <title>對帳單寄送方式/E-mail異動明細表-V20221020</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+  </head>
+  <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+  <body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+      <div id="condBlock">
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+          <tr>
+            <td nowrap colspan=12>&nbsp;
+              <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+              <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+            </td>
+          </tr>
+        </table>
+
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+          <tr>
+            <td nowrap colspan="2">&nbsp;*登錄日期:
+              <input type="text" class="col_date" name="ex_date_S" value="${ex_date_S}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="k" />
+              <script language="JavaScript">
+                new tcal({
+                  'formname': 'dataForm',
+                  'controlname': 'ex_date_S'
+                });
+              </script>
+              --
+              <input type="text" class="col_date" name="ex_date_E" value="${ex_date_E}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="k" />
+              <script language="JavaScript">
+                new tcal({
+                  'formname': 'dataForm',
+                  'controlname': 'ex_date_E'
+                });
+              </script>
+            </td>
+          </tr>
+
+          <tr>
+            <td nowrap width="50%">&nbsp;身分證字號:
+              <input type="text" class="col_text" name="ex_id" value="${ex_id}" maxlength="10" size="15" />
+            </td>
+
+            <td nowrap width="50%">&nbsp;登錄人員:
+              <select name="ex_mod_user" class="col_ddlb">
+                ${dddw_mod_user}
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td nowrap>&nbsp;異動類別:
+              <select name="ex_mod_type" value="${ex_mod_type}" class="col_ddlb">
+                <option value="0" selected>全部</option>
+                <option value="1" ${ex_mod_type-1}>對帳單寄送方式</option>
+                <option value="2" ${ex_mod_type-2}>E-mail</option>
+              </select>
+            </td>
+
+            <td nowrap>&nbsp;Email 異動管道:
+              <select name="ex_email_mark" value="${ex_email_mark}" class="col_ddlb">
+                <option value="0" selected>全部</option>
+                <option value="1" ${ex_email_mark-1}>IBM(網路銀行)</option>
+                <option value="M" ${ex_email_mark-M}>ECS(人工修改)</option>
+                <option value="W" ${ex_email_mark-W}>Web(信用卡網站)</option>
+                <option value="A" ${ex_email_mark-A}>ARS進件</option>
+                <option value="C" ${ex_email_mark-C}>Web(雲端櫃台)</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <hr>
+      <!-- 合計============================ -->
+      <div id="queryBlock">
+        <table border="0" cellspacing="0" cellpadding="4">
+          <tr>
+            <td nowrap width="100" align="right">合計:&nbsp;</td>
+            <td nowrap width="200">資料筆數:&nbsp;
+              <span class="dsp_number">${ft_cnt.(999)}</span>
+              <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- 明細============================ -->
+      <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+          <th nowrap width="5%">No&nbsp;</th>
+          <th nowrap>異動日期</th>
+          <th nowrap>類別</th>
+          <th nowrap>帳戶類別</th>
+          <th nowrap>身分證字號</th>
+          <th nowrap>姓名</th>
+          <th nowrap>寄送方式</th>
+          <th nowrap>生效年月</th>
+          <th nowrap>E-mail</th>
+          <th nowrap>E-mail異動管道</th>
+          <th nowrap>異動人員</th>
+          <th nowrap>異動時間</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+          <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+          <td nowrap class="list_cc"> ${mod_date} </td>
+          <td nowrap class="list_cc"> ${mod_type} </td>
+          <td nowrap class="list_cc"> ${acct_type} </td>
+          <td nowrap class="list_cc"> ${id_no} </td>
+          <td nowrap class="list_cc"> ${chi_name} </td>
+          <td nowrap class="list_cc"> ${stat_send_type} </td>
+          <td nowrap class="list_cc"> ${stat_mm} </td>
+          <td nowrap class="list_ll"> ${e_mail_addr} </td>
+          <td nowrap class="list_cc">${e_mail_from_mark}.${#java:ecsfunc.DeCodeCrd.idnoFromMark(e_mail_from_mark)} </td>
+                <td nowrap class="list_cc"> ${mod_user} </td>
+                <td nowrap class="list_cc"> ${mod_time} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_post_amt" value="${sum_post_amt}">  
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

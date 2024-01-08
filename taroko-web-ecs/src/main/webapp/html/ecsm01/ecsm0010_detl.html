@@ -1,0 +1,236 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-26  V1.00.01  Allen Ho       Initial                              -->
+<!-- 109-07-07  V1.00.02  JustinWu       參考ip代碼自動轉為大寫                 -->
+<!-- 109-10-13  V1.00.03  JustinWu       add MOVE whose value is 0 into ftp_type -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>系統參考IP位址維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=ie11">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user3}  
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">參考ip代碼:&nbsp;
+       <input type="text" class="col_text" name="kk_ref_ip_code" value="${kk_ref_ip_code}"
+              zEdit="any,upper" maxlength="20" size="20" />
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">參考IP代碼:
+       <span class="dsp_text">${ref_ip_code}</span>
+       <input   type="hidden" name="ref_ip_code" value="${ref_ip_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>參考IP位址:&nbsp; 
+       <input type="text" class="col_any" name="ref_ip" value="${ref_ip}"
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>參考名稱:&nbsp; 
+       <input type="text" class="col_any" name="ref_name" value="${ref_name}"
+              zEdit="any,canTW" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>FTP類別:&nbsp;
+       <select name="ftp_type" class="col_ddlb"  >
+       <option value="0" ${ftp_type-0} >0.MOVE</option>
+       <option value="1" ${ftp_type-1} >1.FTP</option>
+       <option value="2" ${ftp_type-2} >2.SFTP</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>使用者名稱:&nbsp; 
+       <input type="text" class="col_any" name="user_id" value="${user_id}"
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>使用者密碼:&nbsp; 
+       <input type="password" autocomplete="off" class="col_any" name="t_user_hidewd"
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>密碼確認　:&nbsp; 
+       <input type="password" autocomplete="off" class="col_any" name="apr_pwd" 
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>交易類型:&nbsp;
+       <select name="trans_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="A" ${trans_type-A} >A:ASCII</option>
+       <option value="B" ${trans_type-B} >B:BINARY</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>遠端目錄:&nbsp; 
+       <input type="text" class="col_any" name="remote_dir" value="${remote_dir}"
+              zEdit="any" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>近端目錄:&nbsp; 
+       <input type="text" class="col_any" name="local_dir" value="${local_dir}"
+              zEdit="any" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>埠號:&nbsp; 
+       <input type="text" class="col_any" name="port_no" value="${port_no}"
+              zEdit="any" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>檔案加壓密碼:&nbsp; 
+       <input type="password" autocomplete="off" class="col_any" name="t_file_zip_hidewd" 
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>檔案加壓密碼確認:&nbsp; 
+       <input type="password" autocomplete="off" class="col_any" name="apr_1_pwd" 
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>檔案解壓密碼:&nbsp; 
+       <input type="password" autocomplete="off" class="col_any" name="t_file_unzip_hidewd" 
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>檔案解壓密碼確認:&nbsp; 
+       <input type="password" autocomplete="off" class="col_any" name="apr_2_pwd" 
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >鍵檔日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+     <td  nowrap  >鍵檔人員: 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >異動日期: 
+       <span class="dsp_date">${mod_time.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_time" value="${mod_time}" />
+     </td>
+     <td  nowrap  >異動人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+     </td>
+     <td  nowrap  >覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+   </tr>
+   <tr>
+       <input type="hidden" class="col_any" name="hide_ref_code" value="${hide_ref_code}"
+              zEdit="any" maxlength="10" size="10" />
+     </td>
+   </tr>
+   <tr>
+       <input type="hidden" class="col_any" name="user_hidewd" value="${user_hidewd}"
+              zEdit="any" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+       <input type="hidden" class="col_any" name="file_zip_hidewd" value="${file_zip_hidewd}"
+              zEdit="any" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+       <input type="hidden" class="col_any" name="file_unzip_hidewd" value="${file_unzip_hidewd}"
+              zEdit="any" maxlength="60" size="60" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+<input type="hidden" name="hide_ref_code" value="${hide_ref_code}">
+<input type="hidden" name="user_hidewd" value="${user_hidewd}">
+<input type="hidden" name="file_zip_hidewd" value="${file_zip_hidewd}">
+<input type="hidden" name="file_unzip_hidewd" value="${file_unzip_hidewd}">
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="ecsm0010">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

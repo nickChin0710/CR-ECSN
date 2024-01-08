@@ -1,0 +1,127 @@
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 2020/12/08  V1.00.00  Justin        Initial                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>新貴通卡/龍騰卡撥款明細表-JustinWu-20201208</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;使用日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+        </script>
+        --
+        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+        </script>
+  </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;貴賓卡
+      <select name="ex_vip_kind" id="ex_vip_kind" class="col_ddlb" zRequire="Y">
+         <option value="1" ${ex_vip_kind-1} >1.新貴通</option>
+         <option value="2" ${ex_vip_kind-2} >2.龍騰卡</option>
+       </select>
+    </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;貴賓卡卡號:
+      <input type="text" class="col_text" name="ex_ppcard_no" value="${ex_ppcard_no}" maxlength="19" size="21">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;卡別:
+      <select   size="1"  name="ex_bin_type" class="col_ddlb">
+         <option value="">--</option>         
+         <option value="V" ${ex_bin_type-V} >VISA</option>
+         <option value="M" ${ex_bin_type-M} >MasterCard</option>
+         <option value="J" ${ex_bin_type-J} >JCB</option>         
+      </select>
+   </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="list_no" width="5%">&nbsp;</td>
+   <td nowrap class="list_rr" colspan="6">合計:&nbsp;</td>
+   <td nowrap class="list_ll">${db_cnt.(999)}&nbsp;筆
+      <input type="hidden" name="db_cnt" value="${db_cnt}"> 
+   </td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >使用日期&nbsp;</th>
+    <th nowrap >貴賓卡&nbsp;</th>
+    <th nowrap >貴賓卡號&nbsp;</th>
+    <th nowrap >交易卡號&nbsp;</th>
+    <th nowrap >持卡人ID_姓名&nbsp;</th>
+    <th nowrap >使用地區&nbsp;</th>
+    <th nowrap >異常原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+  <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+  <td nowrap class="list_cc"> ${visit_date.YMD}&nbsp;</td>
+  <td nowrap class="list_ll"> ${vip_kind_desc}&nbsp;</td>
+  <td nowrap class="list_ll"> ${pp_card_no}&nbsp;</td>
+  <td nowrap class="list_ll"> ${card_no}&nbsp;</td>
+  <td nowrap class="list_ll"> ${wk_id_name}&nbsp;</td>  
+  <td nowrap class="list_ll"> ${wk_city}&nbsp;</td>
+  <td nowrap class="list_ll"> ${err_desc}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+ <input type="hidden"  name="tableName"  value="${tableName}" />
+
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

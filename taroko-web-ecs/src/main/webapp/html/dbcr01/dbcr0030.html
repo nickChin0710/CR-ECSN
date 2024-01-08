@@ -1,0 +1,120 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-08-11  V1.00.01    ryan                                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>Debit Card預製卡客戶申請成功/失敗報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+     <td nowrap>&nbsp;申請日期:
+      <input type="text" class="col_date" zEdit="date,yyyymmdd" name="ex_emboss_date1" value="${ex_emboss_date1}" maxlength="8" size="10" />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_emboss_date1'});
+	  </script>
+	  --
+	  <input type="text" class="col_date" zEdit="date,yyyymmdd" name="ex_emboss_date2" value="${ex_emboss_date2}" maxlength="8" size="10" />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_emboss_date2'});
+	  </script>
+   </td>
+   <td nowrap >&nbsp;金融帳號:
+      <input type="text" class="col_text" zEdit="any" name="ex_act_no" value="${ex_act_no}" maxlength="13" size="15" />
+   </td>
+   <td nowrap >&nbsp;身分證字號:
+      <input type="text" class="col_text" zEdit="any" name="ex_apply_id" value="${ex_apply_id}" maxlength="10" size="12" />
+   </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" zEdit="any" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" />
+    </td>
+    <td nowrap>&nbsp;處理結果:
+      <span class="col_radio">
+      	 <input type="radio" value="0" name="ex_check_code_flag" ${ex_check_code_flag-0} ${DEFAULT_CHK}/>全部
+         <input type="radio" value="N" name="ex_check_code_flag" ${ex_check_code_flag-N} />失敗
+         <input type="radio" value="Y" name="ex_check_code_flag" ${ex_check_code_flag-Y} />成功
+      </span>
+    </td>
+    <td nowrap >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!-- <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+       -->
+      <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+     <th nowrap width="5%">No&nbsp;</th>
+     <th nowrap >批號&nbsp;</th>
+     <th nowrap >序號&nbsp;</th>
+     <th nowrap >申請日期&nbsp;</th>
+     <th nowrap >金融帳號&nbsp;</th>
+     <th nowrap >身分證字號&nbsp;</th>
+     <th nowrap >卡號&nbsp;</th>
+     <th nowrap >處理結果&nbsp;</th>
+     <th nowrap >處理結果說明&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${batchno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${recno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${emboss_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${act_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apply_id}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${check_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${msg}&nbsp;</td>
+   </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

@@ -1,0 +1,237 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-09-06  V1.00.01  jiangyingdong      Create                           -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>POS終端機代碼(按鈕4)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript">
+function wf_add_newrow() {
+    //debugger;
+    var ind = document.getElementById('table1').rows.length -2;
+    var rowNum = document.getElementById('table1').rows.length -1;
+    var colNum = 0;
+    var fi = 0;
+    var num = '${ser_num}';
+    if(num==''){
+        ind=document.getElementById( 'table1' ).rows.length-3;
+    }
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) { serNo = "0" + ind; } else { serNo = "" + ind; }
+    fi++;
+
+    var con = document.createElement('span');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var mno = document.createElement('input');
+    mno.type = 'hidden';
+    mno.name = 'rowid1';
+    mno.value = '';
+    myCell.appendChild(mno);
+
+
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'mod_seqno';
+    ip3.value = '';
+    myCell.appendChild(ip3);
+
+    //======================================
+    var sel_merchant = document.getElementById("kk_merchant").value;
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mno = document.createElement('input');
+    mno.setAttribute('class', 'col_text');
+    mno.type = 'text';
+    mno.name = 'data_code';
+    mno.maxLength = 20;
+    mno.size = 20;
+    mno.value = sel_merchant;
+    mno.setAttribute('zEdit', 'any');
+    myCell.appendChild(mno);
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;width:20%">
+            <tr>
+                <td align="center">&nbsp;
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R_POS')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  id="update" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('mcht_pos')" class="btUpdate">
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">            
+            <table border="0" width="5%">
+            <tr>
+                    <td nowrap class="colKey" >&nbsp;團體代號:
+                        <span class="dsp_text">${group_code}</span>
+                        <input type="hidden" name="group_code" value="${group_code}" />
+                    </td>
+                    <td nowrap class="col_key">已覆核：
+                    <span class="dsp_text">${apr_flag}</span>
+                    <input type=hidden name="apr_flag" value="${apr_flag}" />
+                </td>
+                </tr>
+                <tr>
+                    <td align="right">&nbsp;POS終端機代碼:
+                        <input class="field_style" type="text" id="kk_merchant" name="kk_merchant" 
+                        size="15" maxlength="15" value="${kk_merchant}" >(前8碼)&nbsp;&nbsp;
+                        <!-- <input type="Button"  value="..." onclick="processVendorCode()" class="btAdd_detl" /> -->
+                        <input type="Button" id="update2"  value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;                       
+                    </td>
+                    <script>
+                    if("${apr_flag}"=="Y"){
+                    	document.getElementById("update").remove();
+                    	document.getElementById("update2").remove();
+                    }
+                    </script>
+                </tr>
+            </table>
+            <table id="table1" width="20%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td>
+                        總筆數:<span class="dsp_text">${row_ct}</span>
+                    </td>                    
+                </tr>
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">POS終端機代碼</th>
+                    <th nowrap class="list_th">Err Msg</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no">
+                        <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                        <input type="checkbox" name="opt" value="${ser_num}" />
+                        <input type="hidden" name="ser_num" value="${ser_num}" />
+                        <input type="hidden" name="rowid1" value="${rowid1}" />
+                    </td>
+                    <td nowrap class="list_cc">
+                        <input type="text" class="col_text" name="data_code" value="${data_code}" zEdit="any" maxlength='20' size='20' />
+                    </td>
+                    <td nowrap class="list_ll" style="color:red"> ${err_mesg}</td>
+                    <input type="hidden" name="program_code" value="${program_code}" />
+                    <input type="hidden" name="data_type" value="${data_type}" />
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!-- 動態 BLOCK 視窗控制 -->
+        <div id="disDiv" class="disScreen"></div>
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style=" position: fixed; left: 400px;  top: 40px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">POS終端機代碼：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('kk_merchant','merchant_2'); top.hideBlock('popDiv');" class="btConfirm">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->        
+        <input type="hidden" name="kk_program_code" value="${program_code}" />
+        <input type="hidden" name="MOD_PGM" value="mktm0210">
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="nccc">
+        <input type="hidden" name="h_data_code" id="h_data_code" value="${data_code}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('2');
+top.pageRows = "9999";
+
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    return true;
+}
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.kk_merchant.value;
+
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("kk_merchant", vendorNo);
+    top.actionCode = "AJAX";
+    // top.methodName = "actionFunction";  // 20200102 updated for archit.  change
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    var vendorNo = document.dataForm.kk_merchant.value;
+    var vendorList = document.getElementById("merchant_2");
+
+    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+    }
+
+    top.popupBlock('popDiv');
+}
+</script>

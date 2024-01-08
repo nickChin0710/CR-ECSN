@@ -1,0 +1,207 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-19  V1.00.01                                                      -->
+<!-- 109-07-29  V1.00.02  Justin Wu      「處理代碼」顯示對應中文且此欄位請置左對齊  -->
+<!-- 111-11-24  V1.00.03  sunny          配合卡部要求，將「接聽」改為「受理」  -->
+<!-- 2022-11-29  sunny       增加限制只能查詢自己單位，除信用卡部(A401)的使用者除外可看到全部    -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>各部門案件處理覆核作業V2020-0729</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript">
+$(document).ready(function(){
+ //部門代號add
+  var ls_usr_dept=$("input[name=wk_edit_dept]").val();
+  if (ls_usr_dept =='Y') {
+    $("select[name=ex_dept_no]").removeAttr("disabled");
+  }
+  else {
+    $("select[name=ex_dept_no]").attr("disabled",true);
+  }
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;部門代號:
+      <select size="1" name="ex_dept_no" class="col_ddlb" zRequire="C" >
+      	<option value="">--</option>
+      		${dddw_dept_no}
+   		</select>
+   </td>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"    value="覆核" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;受理日期:
+         <input type="text" class="col_date" name="ex_case_date1" value="${ex_case_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_case_date2" value="${ex_case_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date2'});
+	      </script>
+	</td>
+	<td nowrap>&nbsp;處理人員:
+      <select size="1" name="ex_crt_user" class="col_ddlb" >
+      	<option value="">--</option>
+      		${dddw_crt_user}
+   		</select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;處理日期:
+         <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	      </script>
+	</td>   
+   <td nowrap>&nbsp;受理序號:
+      <input type="text" class="col_text" name="ex_seqno" value="${ex_seqno}" maxlength="10" size="12">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" ${opt_disabled}>
+    覆核
+	 </th>
+	 <th nowrap >受理日期&nbsp;</th>
+	 <th nowrap >受理序號&nbsp;</th>
+	 <th nowrap >處理部門&nbsp;</th>
+	 <th nowrap >處理結果&nbsp;</th>
+	 <th nowrap >處理代碼&nbsp;</th>
+	 <th nowrap >處理說明&nbsp;</th>
+	 <th nowrap >處理日期&nbsp;</th>
+	 <th nowrap >處理經辦&nbsp;</th>
+     <th nowrap >覆核失敗原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled}/>
+ 	 ${SER_NUM}&nbsp;
+ <input type="hidden" name="opt_disabled" value="${opt_disabled}" />  	
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}" />
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+	</td>
+	<td nowrap class="list_cc"> ${case_date.YMD}&nbsp;
+	   <input type="hidden" name="case_date" value="${case_date}" />   
+	</td>
+	<td nowrap class="list_cc"> ${case_seqno}&nbsp;
+	   <input type="hidden" name="case_seqno" value="${case_seqno}" />   
+	</td>
+	<td nowrap class="list_cc"> ${proc_deptno}.${tt_proc_deptno}&nbsp;
+	   <input type="hidden" name="proc_deptno" value="${proc_deptno}" />   
+	   <input type="hidden" name="tt_proc_deptno" value="${tt_proc_deptno}">
+	</td>
+	<td nowrap class="list_cc"> ${proc_result}.${tt_proc_result}&nbsp;
+	   <input type="hidden" name="proc_result" value="${proc_result}" />   
+	   <input type="hidden" name="tt_proc_result" value="${tt_proc_result}" />
+	</td>
+	<td nowrap class="list_cc"> ${proc_id}.${case_desc}&nbsp;
+	   <input type="hidden" name="proc_id" value="${proc_id}" />   
+	</td>
+	<td nowrap class="list_ll"> ${proc_desc}&nbsp;
+	   <input type="hidden" name="proc_desc" value="${proc_desc}" />   
+	</td>
+	<td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;
+	   <input type="hidden" name="crt_date" value="${crt_date}" />   
+	</td>
+	<td nowrap class="list_cc"> ${crt_user}_${tt_crt_user}&nbsp;
+	   <input type="hidden" name="crt_user" value="${crt_user}" />   
+       <input type="hidden" name="tt_crt_user" value="${tt_crt_user}" />   
+	</td>
+    <td nowrap class="list_ll"> ${error_desc}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <!--部門代號add-->
+   <input type="hidden" name="wk_edit_dept" value="${wk_edit_dept}">
+    
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ /*
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+ */
+ 
+//部門代號add
+ function validateInput()
+ {
+	$("select[name=ex_dept_no]").removeAttr("disabled");  
+	if ( !top.checkFormat() )
+      { return false; }	
+    $("select[name=ex_dept_no]").removeAttr("disabled");   
+   return true;
+ }
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

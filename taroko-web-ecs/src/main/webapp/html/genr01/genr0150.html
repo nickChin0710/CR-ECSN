@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <title>信用卡會計科目餘額平帳作業-112-09-12-V1.00.01-JeffKung-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="40%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+                	<td nowrap colspan="1">&nbsp;營業日期：
+                    	<input type="text" class="col_date" name="ex_vouch_date" value="${ex_vouch_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                    	<script language="JavaScript">
+                        	new tcal ({'formname': 'dataForm','controlname': 'ex_vouch_date'});
+                    	</script>
+                	</td>
+                	<td nowrap>&nbsp;
+                        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    </td>
+                	
+                </tr>
+                <tr>
+                	<td nowrap>&nbsp;結算幣別:
+                   		<select size="1" name="ex_curr_code" class="col_ddlb">
+                        	${dddw_curr_code}
+                    	</select>
+                	</td>
+                    <td nowrap colspan="1">&nbsp;科目:
+                        <input type="text" class="col_any" name="ex_ac_no" value="${ex_ac_no}" zEdit="any" maxlength="5" size="7" />
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">營業日期</th>
+                <th nowrap class="list_th">幣別</th>
+                <th nowrap class="list_th">科目</th>
+                <th nowrap class="list_th">科目名稱</th>
+                <th nowrap class="list_th">前日科目餘額</th>
+                <th nowrap class="list_th">當日出帳借方金額</th>
+				<th nowrap class="list_th">當日出帳貸方金額</th>
+				<th nowrap class="list_th">當日調整借方金額</th>
+				<th nowrap class="list_th">當日調整貸方金額</th>
+				<th nowrap class="list_th">當日科目餘額</th>
+				<th nowrap class="list_th">科目平帳差額</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${vouch_date.YMD} </td>
+                <td nowrap class="list_ll"> ${curr_code} </td>
+                <td nowrap class="list_ll"> ${ac_no} </td>
+                <td nowrap class="list_ll"> ${chi_short_name} </td>
+                <td nowrap class="list_rr"> ${pre_master_bal.(999.00)} </td>
+                <td nowrap class="list_rr"> ${this_vouch_dr_amt.(999.00)} </td>
+                <td nowrap class="list_rr"> ${this_vouch_cr_amt.(999.00)} </td>
+                <td nowrap class="list_rr"> ${adj_vouch_dr_amt.(999.00)} </td>
+                <td nowrap class="list_rr"> ${adj_vouch_cr_amt.(999.00)} </td>
+				<td nowrap class="list_rr"> ${this_master_bal.(999.00)} </td>
+				<td nowrap class="list_rr"> ${diff_bal.(999.00)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "genm0220_detl";
+    }
+    return true;
+}
+
+</script>

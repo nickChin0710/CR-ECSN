@@ -1,0 +1,211 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-06-23  V1.00.01  jh                                                  -->
+<!-- 109-02-12  V1.00.02  JustinWu       add new columns                      -->
+<!-- 109-02-25  V1.00.03  JustinWu       turn corp_no into uppercase          -->
+<!-- 109-07-01  V1.00.04  tanwei         增加關係人欄位                                                                            -->
+<!-- 112-11-17  V1.00.05  Ryan           帳戶資料查詢修正                                                                           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>法人相關資料維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;統一編號:
+      <input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}" maxlength="11" size="13" zEdit="alphanum,upper">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" id="btnAdd"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>   
+   <td nowrap colspan="2">&nbsp;公司名稱:
+      <input type="text" class="col_any" name="ex_chi_name" value="${ex_chi_name}" maxlength="40" size="42" zEdit="any,canTw">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">基本資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">帳戶資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-3')">聯絡人資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-4')">關係人</td>
+       <!-- <input type="Button" id="btnSelectTxn" value="關係人" ${btnUpdate_disable} onClick="detailScreen()" class="btQuery" >&nbsp;&nbsp; -->       
+    </tr>
+  </table>
+</div>
+
+<!-----------基本資料-------------->
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+   <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >統一編號&nbsp;</th>
+    <th nowrap >公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenA('${SER_NUM}','${A.corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${A.corp_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${A.chi_name}&nbsp;</td>
+	<input type="hidden" name="A.corp_p_seqno" value="${A.corp_p_seqno}">
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------帳戶資料-------------->
+<div id="tab-2" class="tabcontent" > 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenB('${SER_NUM}','${B.acno_p_seqno}','${B.corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${B.acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.acct_type}&nbsp;</td>
+	<td nowrap class="list_ll"> ${B.chi_name}&nbsp;</td>
+	<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------聯絡人資料-------------->
+<div id="tab-3" class="tabcontent" > 
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >統一編號&nbsp;</th>
+    <th nowrap >公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenC('${SER_NUM}','${C.corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${C.corp_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.chi_name}&nbsp;</td>
+	<input type="hidden" name="corp_no" value="${C.corp_no}">
+	<input type="hidden" name="C.corp_p_seqno" value="${C.corp_p_seqno}">
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------關係人-------------->
+<div id="tab-4" class="tabcontent" > 
+ <table id="table4" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >統一編號&nbsp;</th>
+    <th nowrap >公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenD()" style="cursor:hand">
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${D.corp_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${D.chi_name}&nbsp;</td>
+	<input type="hidden" name="corp_no" value="${D.corp_no}">
+	<input type="hidden" name="D.corp_p_seqno" value="${D.corp_p_seqno}">
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" /> 
+ 
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+	tigra_tables('table3');
+	tigra_tables('table4');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+       
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cmsm2020_add"; 
+    }     
+       
+    return true;
+  }
+  
+  function detailScreenA(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm2020_corp";
+    top.submitControl('S');
+    return true;
+  }
+  
+  function detailScreenB(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm2020_acno";
+    top.submitControl('S1');
+    return true;
+  }
+  
+  function detailScreenC(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm2020_contr";
+    top.submitControl('S2');
+    return true;
+  }
+  
+  function detailScreenD() {
+	    top.respLevel = 1;  
+	    top.respHtml  = "cmsm2020_rela";
+	    top.submitControl('R2');
+	    return true;
+	 }
+  
+</script>

@@ -1,0 +1,230 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-06-14  V1.00.01  jh                                                  -->
+<!-- 109-01-31  V1.00.02  Justin Wu      PP->貴賓, and add new column vip_kind -->
+<!-- 112-07-26  V1.00.03  Ryan           修改停用原因 = P1、P2、P5時，是否補發才能選"補發"     -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>新貴通卡/龍騰卡掛失及停用登錄</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層" />&nbsp;
+  <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" id="btnUpdate"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;  
+  <input type="Button" id="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;貴賓卡號:
+      <input type="text" class="col_text" name="kk_pp_card_no" value="${kk_pp_card_no}" maxlength="19" size="21" >
+   </td>
+   <td nowrap >&nbsp;貴賓卡:
+      <select  size="1"  name="kk_vip_kind" class="col_ddlb">
+         <option value="" >--</option>
+         <option value="1" ${kk_vip_kind-1} >1_新貴通卡</option>
+         <option value="2" ${kk_vip_kind-2} >2_龍騰卡</option>       
+      </select>
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;貴賓卡:
+      <span class="dsp_text">${vip_kind_desc}&nbsp;</span>
+      <input type="hidden" name="vip_kind" value="${vip_kind}">
+      <input type="hidden" name="vip_kind_desc" value="${vip_kind_desc}">
+   </td>
+   <td></td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;貴賓卡號:
+      <span class="dsp_text">${pp_card_no}&nbsp;</span>
+      <input type="hidden" name="pp_card_no" value="${pp_card_no}">
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="N" name="cancel_flag" ${cancel_flag-N} />停掛
+         <input type="radio" value="Y" name="cancel_flag" ${cancel_flag-Y} />撤掛
+      </span>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;身分證ID:
+      <span class="dsp_text">${db_idno}&nbsp;</span>
+      <input type="hidden" name="db_idno" value="${db_idno}">
+   </td>
+   <td nowrap >&nbsp;姓名:
+      <span class="dsp_text">${db_chi_name}&nbsp;</span>
+      <input type="hidden" name="db_chi_name" value="${db_chi_name}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;使用狀態:
+      <span class="dsp_text">${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}&nbsp;</span>
+      <input type="hidden" name="current_code" value="${current_code}">
+   </td>
+   <td nowrap >&nbsp;使用期限:
+      <span class="dsp_text">${end_date.YMD}&nbsp;</span>
+      <input type="hidden" name="end_date" value="${end_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;停用原因:
+      <select   size="1"  name="oppost_reason" class="col_ddlb">
+         <option value="">--</option>
+         <option value="P1" ${oppost_reason-P1} >掛失停用</option>
+         <option value="P2" ${oppost_reason-P2} >偽冒停用</option>
+         <option value="P3" ${oppost_reason-P3} >Cancelled(CA取消)</option>
+         <option value="P4" ${oppost_reason-P4} >Not Received(NR)</option>
+         <option value="P5" ${oppost_reason-P5} >毀損停用</option>         
+         <option value="B1" ${oppost_reason-B1} >屆期停用</option>         
+      </select>
+   </td>
+   <td nowrap >&nbsp;停用日期:
+      <span class="dsp_text">${oppost_date.YMD}&nbsp;</span>
+      <input type="hidden" name="oppost_date" value="${oppost_date}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;備註:
+      <input type="text" class="col_any" name="oppost_remark" value="${oppost_remark}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;是否補發:
+      <span class="col_radio">
+         <input type="radio" value="Y" name="reissue_flag" ${reissue_flag-Y} />補發
+         <input type="radio" value="N" name="reissue_flag" ${reissue_flag-N} />不補發         
+      </span>
+   </td>
+   <td nowrap >&nbsp;補發貴賓卡號:
+      <span class="dsp_text">${new_pp_card_no}&nbsp;</span>
+      <input type="hidden" name="new_pp_card_no" value="${new_pp_card_no}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;掛失處理旗標:
+      <span class="dsp_text">${tt_proc_flag}&nbsp;</span>
+      <input type="hidden" name="proc_flag" value="${proc_flag}">
+      <input type="hidden" name="tt_proc_flag" value="${tt_proc_flag}">
+   </td>
+   <td nowrap >&nbsp;掛失處理日期:
+      <span class="dsp_text">${proc_date.YMD}&nbsp;</span>
+      <input type="hidden" name="proc_date" value="${proc_date}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;撤掛說明:
+      <input type="text" class="col_any" name="cancel_remark" value="${cancel_remark}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;停掛經辦:
+      <span class="dsp_text">${crt_user}&nbsp;</span>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+   <td nowrap >&nbsp;停掛建檔日期:
+      <span class="dsp_text">${crt_date.YMD}&nbsp;</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+      <span class="dsp_text">${crt_time.TIME}&nbsp;</span>
+      <input type="hidden" name="crt_time" value="${crt_time}">      
+   </td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="stop_apply_no" value="${stop_apply_no}" />
+<input type="hidden" name="card_no" value="${card_no}" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    var ls_reissue_flag = $("input[name=reissue_flag]:checked").val();    
+    var ls_cancel_flag = $("input[name=cancel_flag]:checked").val();    
+    if(ls_reissue_flag == 'Y' && top.actionCode==='U' && ls_cancel_flag =='N'){
+        if(confirm("請先確認信用卡狀態，再進行補發")==false){
+            return false ;
+        }    
+    }
+    
+    
+    return true;
+  }
+
+ $(document).ready(function() {
+	$("select[name=oppost_reason]").on("change" ,function(){
+		var oppostReason = $("select[name=oppost_reason]").val();
+		if(",P1,P2,P5".indexOf(oppostReason) > 0){
+			$("input[name=reissue_flag]").attr("disabled", false);
+		}else{
+			$("input[name=reissue_flag][value='N']").prop("checked",true);
+			$("input[name=reissue_flag]").attr("disabled", true);
+		}
+	}).trigger('change')
+ });
+ 
+</script>

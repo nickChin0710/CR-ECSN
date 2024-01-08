@@ -1,0 +1,239 @@
+<html>
+<head>
+<title>非新製卡轉入送製卡檔覆核作業-V.2017-0822-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="javascript"> 
+
+</script>
+
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+	<!-- ${#PLUGIN:htmcomm_plugin.apr_user} -->
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap >&nbsp;批號:
+			<input type="text" class="col_any" name="ex_batchno1" value="${ex_batchno1}" 
+        	zEdit="any" size="10" maxlength="10"/>
+      		-
+			<input type="text" class="col_any" name="ex_batchno2" value="${ex_batchno2}" 
+        	zEdit="any" size="10" maxlength="10"/>
+    	</td>
+     	<td nowrap>製卡來源:
+            <select size="1" name="ex_emboss_source" class="col_ddlb">
+            	<option value="">--</option>
+            	<option value="3" ${ex_emboss_source-3}>整批續卡</option>
+            	<option value="4" ${ex_emboss_source-4}>線上續卡</option>
+            	<option value="5" ${ex_emboss_source-5}>重製</option>
+            </select>
+   		</td>
+     	<td nowrap>重製原因:
+      		<select   size="1"  name="ex_emboss_reason" class="col_ddlb">
+         		<option value="">--</option>
+         		<option value="1" ${ex_emboss_reason-1} >掛失</option>
+         		<option value="2" ${ex_emboss_reason-2} >毀損</option>
+         		<option value="3" ${ex_emboss_reason-3} >偽卡</option>
+      		</select>
+      		<input type="checkbox" value="Y" name="card_flag" ${card_flag-Y} >依卡號排序
+   		</td>
+  	</tr>
+  	<tr>
+    	<td nowrap >&nbsp;產生日期:
+      		<input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	  		</script>
+      		--
+      		<input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	  		</script>&nbsp;        
+    	</td>
+    	<td nowrap td >&nbsp;經辦:
+        	<select name="ex_crt_user" class="col_ddlb">
+        	<option value="">--</option>
+            	${dddw_keyin}
+            </select>
+    	</td>
+    	<td nowrap td >&nbsp;卡號:
+      		<input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" 
+        	zEdit="any" size="19" maxlength="21"/>
+    	</td>
+  	</tr>
+  	<tr>
+        <td nowrap>&nbsp;團體代號:
+            <select size="1" name="ex_group_code" class="col_ddlb" >
+            <option value="">--</option>
+                ${dddw_group_code}
+            </select>
+        </td>
+        <td nowrap>&nbsp;卡種:
+            <select size="1" name="ex_card_type" class="col_ddlb" >
+            <option value="">--</option>
+                ${dddw_card_type}
+            </select>
+        </td>
+        <td nowrap>&nbsp;  
+			<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+			<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+			<input type="Button"  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+		</td>
+    </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+    	<th nowrap class="list_th" >
+      		<input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" >覆核&nbsp;</th>
+    	<th nowrap class="list_th">批號</th>
+    	<th nowrap class="list_th">製卡來源</th>
+    	<th nowrap class="list_th">重製原因</th>
+    	<th nowrap class="list_th">卡號</th>
+    	<th nowrap class="list_th">舊卡號</th>
+    	<th nowrap class="list_th">卡種</th>
+    	<th nowrap class="list_th">團體代號</th>
+    	<th nowrap class="list_th">認同碼</th>
+    	<th nowrap class="list_th">申請人ID</th>
+    	<th nowrap class="list_th">統一編號</th>
+    	<th nowrap class="list_th">姓名</th>
+    	<th nowrap class="list_th">生日</th>
+    	<th nowrap class="list_th">英文姓名</th>
+    	<th nowrap class="list_th">有效年月起</th>
+    	<th nowrap class="list_th">有效年月止</th>
+    	<th nowrap class="list_th">正卡 ID</th>
+    	<th nowrap class="list_th">電信業者</th>
+        <th nowrap class="list_th">手機號碼</th>
+        <th nowrap class="list_th">SE類型</th>
+        <th nowrap class="list_th">安全元件識別碼</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no">
+	<span class="col_key">${ok_flag}</span>
+	<input type="checkbox" name="opt" class="check"  value="${ser_num}" ${check}/>
+ 	 ${SER_NUM}&nbsp;
+   </td>
+   <td nowrap class="list_ll"> ${wk_batchno}&nbsp; </td>
+   <td nowrap class="list_ll"> ${tt_emboss_source}&nbsp; </td>
+   <td nowrap class="list_ll"> ${tt_emboss_reason}&nbsp; </td>
+   <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+   <td nowrap class="list_ll"> ${old_card_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${card_type}&nbsp; </td>
+   <td nowrap class="list_ll"> ${group_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${unit_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_applyid}&nbsp; </td>
+   <td nowrap class="list_ll"> ${wk_corpno}&nbsp; </td>
+   <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+   <td nowrap class="list_ll"> ${birthday.YMD}&nbsp; </td>
+   <td nowrap class="list_ll"> ${eng_name}&nbsp; </td>
+   <td nowrap class="list_ll"> ${valid_fm.YMD}&nbsp; </td>
+   <td nowrap class="list_ll"> ${valid_to.YMD}&nbsp; </td>
+   <td nowrap class="list_ll"> ${wk_pmid}&nbsp; </td>
+   <td nowrap class="list_ll"> ${mno_id}&nbsp;</td>
+   <td nowrap class="list_ll"> ${msisdn}&nbsp;</td>
+   <td nowrap class="list_ll"> ${service_type}&nbsp;</td>
+   <td nowrap class="list_ll"> ${se_id}&nbsp;</td>
+  </tr>
+ 	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="wk_batchno" value="${wk_batchno}">
+	<input type="hidden" name="emboss_source" value="${emboss_source}">
+	<input type="hidden" name="emboss_reason" value="${emboss_reason}">
+	<input type="hidden" name="card_no" value="${card_no}">
+	<input type="hidden" name="old_card_no" value="${old_card_no}">
+	<input type="hidden" name="card_type" value="${card_type}">
+	<input type="hidden" name="wk_applyid" value="${wk_applyid}">
+	<input type="hidden" name="wk_corpno" value="${wk_corpno}">
+	<input type="hidden" name="chi_name" value="${chi_name}">
+	<input type="hidden" name="birthday" value="${birthday}">
+	<input type="hidden" name="eng_name" value="${eng_name}">
+	<input type="hidden" name="valid_fm" value="${valid_fm}">
+	<input type="hidden" name="valid_to" value="${valid_to}">
+	<input type="hidden" name="wk_pmid" value="${wk_pmid}">
+	<input type="hidden" name="group_code" value="${group_code}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden" name="batchno" value="${batchno}">
+	<input type="hidden" name="recno" value="${recno}">
+	<input type="hidden" name="crt_date" value="${crt_date}">
+	<input type="hidden" name="mno_id" value="${mno_id}">
+	<input type="hidden" name="msisdn" value="${msisdn}">
+	<input type="hidden" name="service_type" value="${service_type}">
+	<input type="hidden" name="se_id" value="${se_id}">
+	<input type="hidden" name="unit_code" value="${unit_code}">
+<!-- END DYNAMIC : DETAIL -->
+</table> 
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="crdp0105">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_crt_date1.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+
+    	if (confirm("是否執行 覆核作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "crdp0105_detl_notuse";
+    top.submitControl('S');
+    return true;
+  }
+
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+ }
+ 
+
+ 
+</script>

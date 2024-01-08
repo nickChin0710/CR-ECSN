@@ -1,0 +1,221 @@
+<html>
+
+<head>
+    <title>DebitCard退卡登錄作業-detl-108-12-24-V1.00.02-Amber-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <!-- <input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp; -->
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">卡號：&nbsp;
+                        <input type="text" class="col_any" name="kk_card_no" value="${kk_card_no}" zEdit="any" maxlength="19" size="21" zRequire="k" onChange="return top.submitControl('C')" ${set}/>
+                        <span style="background-color:#FFFF33;color: red" class="dsp_text2" id="card_desp">${card_desp}</span>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey" colspan=4>卡號：
+                        <span class="dsp_text">${card_no}</span>
+                        <input type="hidden" name="card_no" value="${card_no}">
+                    </td>
+                    <td nowrap class="colKey" colspan=4>退回日期：
+                        <input type="text" class="col_date" name="return_date" value="${return_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="k" , "C"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'return_date' });
+                        </script>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;VD金融帳號:
+                        <input type="text" class="col_any" name="acct_no" ${acct_no_disable} value="${acct_no}" zEdit="any" maxlength="11" size="11" />
+                    </td> 
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan=4>身份證字號:
+                        <span class="dsp_text">${db_id_no}</span>
+                        <input type="hidden" name="id_no" value="${id_no}">
+                    </td>
+                    <td nowrap class="colKey" colspan=4>姓名:
+                        <span class="dsp_text">${chi_name}</span>
+                        <input type="hidden" name="chi_name" value="${chi_name}">
+                    </td>
+                    <td nowrap class="colKey" colspan=4>卡人流水號:
+                    	<span class="dsp_text">${id_p_seqno}</span>
+                        <input type="hidden" name="id_p_seqno" value="${id_p_seqno}"/>
+                    </td>                   
+                </tr>
+                <tr>
+                    <td nowrap colspan=12>團體代號:&nbsp;
+                        <select name="group_code" class="col_ddlb">
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan=12>卡片效期:&nbsp;
+                        <input type="text" class="col_date" name="beg_date" value="${beg_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'beg_date' });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="end_date" value="${end_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'end_date' });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=4>退件重寄寄件別:&nbsp;
+                        <select size="1" name="mail_type" class="col_ddlb">
+                            <option value="" ${mail_type-}></option>
+                            <option value="1" ${mail_type-1}>1.普掛</option>
+                            <option value="2" ${mail_type-2}>2.限掛</option>
+                            <option value="3" ${mail_type-3}>3:信用卡部親取</option>
+                            <option value="4" ${mail_type-4}>4.分行</option>
+                            <option value="4" ${mail_type-4}>5.暫不寄</option>
+                            <option value="4" ${mail_type-4}>6.快捷</option>
+                            <option value="4" ${mail_type-4}>7.航空</option>
+                            <option value="4" ${mail_type-4}>8.快遞</option>
+                            <option value="4" ${mail_type-4}>9.其他</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=8>寄件分行:&nbsp;
+                        <select name="mail_branch" class="col_ddlb">
+                            ${dddw_branch}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=4>退卡性質別:&nbsp;
+                        <select size="1" name="return_type" class="col_ddlb">
+                            <option value="1" ${return_type-1}>1.新製卡</option>
+                            <option value="2" ${return_type-2}>2.續卡</option>
+                            <option value="3" ${return_type-3}>3.毀損重製</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=8>退卡原因:&nbsp;
+                        <select name="reason_code" class="col_ddlb">
+                            <option value="01" ${reason_code-01}>01.查無此公司</option>
+                            <option value="02" ${reason_code-02}>02.查無此人</option>
+                            <option value="03" ${reason_code-03}>03.遷移不明</option>
+                            <option value="04" ${reason_code-04}>04.地址欠詳</option>
+                            <option value="05" ${reason_code-05}>05.查無此址</option>
+                            <option value="06" ${reason_code-06}>06.收件人拒收</option>
+                            <option value="07" ${reason_code-07}>07.招領逾期</option>
+                            <option value="08" ${reason_code-08}>08.分行退件</option>
+                            <option value="09" ${reason_code-09}>09.其他</option>
+                            <option value="10" ${reason_code-10}>10.地址改變</option>
+                            <option value="11" ${reason_code-11} >11.先寄</option>  
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan="12" >帳單地址:
+                        <span class="dsp_text">${db_addr}</span>
+                        <input type="hidden" name="db_addr" value="${db_addr}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">卡片寄送地址:&nbsp;
+                        <select name="zip_code" class="col_ddlb">
+                            ${dddw_zipcode}
+                        </select>
+                        <input type="text" class="col_any" name="mail_addr1" value="${mail_addr1}" zEdit="any,canTW" maxlength="10" size="10" /> 縣市&nbsp;
+                        <input type="text" class="col_any" name="mail_addr2" value="${mail_addr2}" zEdit="any,canTW" maxlength="10" size="10" /> 鄉鎮市區&nbsp;
+                        <input type="text" class="col_any" name="mail_addr3" value="${mail_addr3}" zEdit="any,canTW" maxlength="12" size="12" /> 村里
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=12>
+                        <input type="text" class="col_any" name="mail_addr4" value="${mail_addr4}" zEdit="any,canTW" maxlength="12" size="12" /> 鄰&nbsp;
+                        <input type="text" class="col_any" name="mail_addr5" value="${mail_addr5}" zEdit="any,canTW" maxlength="56" size="56" /> 
+                    </td>
+                </tr>
+                 <tr>
+                    <td nowrap colspan=4>處理結果:&nbsp;
+                        <select size="1" name="proc_status" class="col_ddlb">
+                            <option value="1" ${proc_status-1}>1.處理中</option>
+                            <option value="2" ${proc_status-2}>2.銷毀</option>
+                            <option value="3" ${proc_status-3}>3.寄出</option>
+                            <option value="4" ${proc_status-4}>4.申停</option>
+                            <option value="5" ${proc_status-5}>5.重製</option>
+                            <option value="6" ${proc_status-6}>6.寄出不封裝</option>
+                            <option value="7" ${proc_status-7}>7.庫存</option>
+                        </select>
+                    </td>
+                    <td nowrap class="colKey" colspan=4>退卡重寄日期:&nbsp;
+                        <input type="text" class="col_date" name="mail_date" value="${mail_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'mail_date' });
+                        </script>                        
+                    </td>
+                    <td nowrap class="colKey" colspan=4>大宗掛號號碼:&nbsp;
+                        <input type="text" class="col_any" name="mail_no" value="${mail_no}" zEdit="any" maxlength="10" size="10" />     
+                    </td>
+                </tr>          
+                <tr>
+                    <td nowrap class="colKey" colspan=4>產生封裝檔：&nbsp;
+                        <span class="col_radio">
+                          <input type="radio" value="Y"  name="package_flag" ${package_flag-Y}>是 
+                          <input type="radio" value="N"  name="package_flag" ${package_flag-N} ${DEFAULT_CHK}>否
+                        </span>
+                    </td>
+                    <td nowrap class="colKey" colspan=4>產生封裝檔日期:&nbsp;
+                        <input type="text" class="col_date" name="package_date" value="${package_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'package_date' });
+                        </script>                       
+                    </td>
+                    <td nowrap colspan=4>數位化註記:&nbsp;
+                        <select size="1" name="digital_flag" class="col_ddlb">
+                            <option value="Y" ${digital_flag-Y}>Y</option>
+                            <option value="N" ${digital_flag-N}>N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12" >退卡備註:&nbsp;
+                        <br>
+                        <textarea rows=3 cols=70 name="return_note" value="${return_note}" zEdit="any,canTW">${return_note}</textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="dbcm0160">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+</script>

@@ -1,0 +1,185 @@
+<html>
+<head>
+<title>調單作業結案主管覆核-jh-190618</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<!--
+<script language="JavaScript">
+  $(document).ready(function () {
+    var opt = document.getElementsByName("opt");
+    var aa_can = document.getElementsByName('can_appr');
+    for (ii = 0; ii < aa_can.length; ii++) {
+      if ($(aa_can[ii]).val() != '1') {
+        $(opt[ii]).attr("disabled", "true");
+      }
+    }
+  });
+</script>
+-->
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;結案日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnConfirm" value="覆核" onClick="return top.submitControl('C')" class="btConfirm" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+      <td nowrap >&nbsp;調單流水號:
+         <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12">
+      </td>
+      <td nowrap >&nbsp;卡號:
+         <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18">
+      </td>
+      <td nowrap >&nbsp;結案經辦:
+         <input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" >
+      </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%">
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+    <th nowrap>卡別</th>
+    <th nowrap>調單流水號</th>
+    <th nowrap>狀態</th>
+    <th nowrap>消費卡號</th>
+    <th nowrap>Debit卡</th>
+    <th nowrap>TPAN</th>
+    <th nowrap>調單理由碼</th>
+    <th nowrap>調單結果</th>
+    <th nowrap>回單日期</th>
+    <th nowrap>收費</th>
+    <th nowrap>調單費金額</th>
+    <th nowrap>結案日期</th>
+    <th nowrap>結案經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+   <input type="checkbox" name="opt" ${opt_on} value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+  <input type="hidden" name="can_appr" value="${can_appr}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+  	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${rowid}','','');" style="cursor:hand">
+	</td>
+	<td nowrap class="list_cc"> ${bin_type}&nbsp;
+	   <input type="hidden" name="bin_type" value="${bin_type}" />
+	</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}-${rept_seqno}&nbsp;
+	   <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" />
+	   <input type="hidden" name="rept_seqno" value="${rept_seqno}" />
+	</td>
+	<td nowrap class="list_cc"> ${rept_status}&nbsp;
+	   <input type="hidden" name="rept_status" value="${rept_status}" />
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}" />
+	</td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;
+	   <input type="hidden" name="debit_flag" value="${debit_flag}" />
+	</td>
+	<td nowrap class="list_cc">${v_card_no}&nbsp;
+	   <input type="hidden" name="v_card_no" value="${v_card_no}" />
+	</td>
+	<td nowrap class="list_cc">${reason_code}&nbsp;
+	   <input type="hidden" name="reason_code" value="${reason_code}" />
+   </td>
+	<td nowrap class="list_cc">${proc_result}.${#JAVA:ecsfunc.DeCodeRsk.reptProcResult(proc_result)}&nbsp;
+	   <input type="hidden" name="proc_result" value="${proc_result}" />
+	</td>
+	<td nowrap class="list_cc">${recv_date.YMD}
+	   <input type="hidden" name="recv_date" value="${recv_date}" />
+	</td>
+	<td nowrap class="list_cc">${fees_flag}&nbsp;
+	   <input type="hidden" name="fees_flag" value="${fees_flag}" />
+	</td>
+	<td nowrap class="list_rr">${fees_amt.(999)}&nbsp;
+	   <input type="hidden" name="fees_amt" value="${fees_amt}" />
+	</td>
+	<td nowrap class="list_cc"> ${close_add_date.YMD}&nbsp;
+	   <input type="hidden" name="close_add_date" value="${close_add_date}" />
+	</td>
+	<td nowrap class="list_cc"> ${close_add_user}&nbsp;
+	   <input type="hidden" name="close_add_user" value="${close_add_user}" />
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode==='C') {
+      return confirm('是否執行 [調單結案] 覆核');
+    }
+
+	 return true;
+  }
+
+function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskp0120_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+
+</script>

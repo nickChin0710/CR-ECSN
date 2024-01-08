@@ -1,0 +1,117 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-12-12  V1.00.00  Max Lin        Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>帳戶利率不一致明細表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="85%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=12>&nbsp;
+                        <input type="Button"   ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"   ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+<!--                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                            <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+-->
+                    </td>
+                </tr>
+            </table>
+            
+            <table width="85%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <!-- 帳戶年月或身分證字號 擇一即可(Linda, 20180907) -->
+                    <td nowrap width="50%">&nbsp;帳戶年月:
+                   	<!--  <td nowrap width="50%">&nbsp;*帳戶年月:-->
+                        <input type="text" class="col_date" name="ex_acct_month" value="${ex_acct_month}" zEdit="date,yymm" maxlength="6" size="6" />
+                   	</td>
+				   
+                    <td nowrap width="50%">&nbsp;身分證字號:
+                        <input type="text" class="col_any" name="ex_id" value="${ex_id}" maxlength="10" size="15" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">資料筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+             <tr>
+                <th nowrap class="list_th" width="5%">&nbsp;</th>
+                <th nowrap class="list_th" colspan="4">&nbsp;</th>
+                <th nowrap class="list_th" colspan="2">調整前</th>
+                <th nowrap class="list_th" colspan="2">調整後</th>
+            </tr>
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">處理日期</th>
+                <th nowrap class="list_th">帳戶類別</th>
+                <th nowrap class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">加減碼</th>
+                <th nowrap class="list_th">生效起迄年月</th>
+                <th nowrap class="list_th">加減碼</th>
+                <th nowrap class="list_th">生效起迄年月</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${crt_date} </td>
+                <td nowrap class="list_cc"> ${acct_type} </td>
+                <td nowrap class="list_cc"> ${acct_key} </td>
+                <td nowrap class="list_ll"> ${chi_name} </td>
+                <td nowrap class="list_rr"> ${revolve_int_rate.(999)} </td>
+                <td nowrap class="list_cc"> ${revolve_mm} </td>
+                <td nowrap class="list_rr"> ${new_revolve_int_rate.(999)} </td>
+                <td nowrap class="list_cc"> ${new_revolve_mm} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_post_amt" value="${sum_post_amt}">  
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

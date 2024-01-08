@@ -1,0 +1,230 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>期中覆審ACTION參數維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=loan_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=loan_flag]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; 
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;ACTION 版本號碼:
+      <input type="text" class="col_text" name="kk_batch_no" value="${kk_batch_no}" maxlength="10" size="12" onChange="keyChange('1')" >
+    </td>
+    <td nowrap colspan="2">&nbsp;風險族群:
+         <select size="1" name="kk_risk_group" class="col_ddlb" >
+            <option value="">--</option>
+          ${dddw_risk_group}
+         </select>
+      </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap>&nbsp;ACTION 版本號碼:
+         <span class="dsp_text">${batch_no}&nbsp;</sapn>
+         <input type="hidden" name="batch_no" value="${batch_no}">
+      </td>　
+      <td nowrap>&nbsp;覆核:
+         <span class="dsp_text">${apr_flag}&nbsp;</span>
+         <input type="hidden" name="apr_flag" value="${apr_flag}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap colspan="2">&nbsp;風險族群:
+         <span class="dsp_text">${risk_group}</span>
+         <input type="hidden" name="risk_group" value="${risk_group}">
+      </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;版本說明:
+ 			<input type="text" class="col_any" id="action_desc" name="action_desc" value="${action_desc}" maxlength="60" size="62" zEdit="any,canTw" > 
+ 		</td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;Action Code:
+         <select size="1" name="action_code" class="col_ddlb" zRequire="Y" >
+          ${dddw_action_code}
+         </select>
+      </td>
+      <td nowrap>&nbsp;Action延遲執行天數:
+         <input type="text" class="col_number" name="delay_action_day" value="${delay_action_day}" zEdit="number" maxlength="2" size="5">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="delay_msg_flag" value="Y" ${delay_msg_flag-Y}>發送延遲簡訊
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="msg_flag" value="Y" ${msg_flag-Y}>發送簡訊
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;調降額度比例[%]:
+         <input type="text" class="col_number" name="adj_limit_rate" value="${adj_limit_rate}" maxlength="6" size="8" zEdit="dignumber">
+      </td>
+      <td nowrap>&nbsp;額度調整原因碼:
+				 <select size="1" name="adj_limit_reason" class="col_ddlb">
+				 	<option value="">--</option>
+      			${dddw_adj_limit_reason}
+   			 </select>         
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;凍結碼[4]:
+         <input type="text" class="col_text" name="block_reason4" value="${block_reason4}" maxlength="2" size="5" zEdit="alphanum,upper">
+      </td>
+      <td nowrap>&nbsp;凍結碼[5]:
+         <input type="text" class="col_text" name="block_reason5" value="${block_reason5}" maxlength="2" size="5" zEdit="alphanum,upper">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;戶特指:
+      	 <input type="text" class="col_text" name="spec_status" value="${spec_status}" maxlength="2" size="5" zEdit="alphanum,upper" />         
+      </td>
+      <td nowrap>&nbsp;LOAN 覆審決策:
+         <span class="col_radio">
+            <input type="radio" value="0" name="loan_flag" ${loan_flag-0} />0.正常
+            <input type="radio" value="1" name="loan_flag" ${loan_flag-1} />1.加強催理
+         </span>
+      </td>   
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;覆核主管:
+         <span class="dsp_text">${apr_user}</span>
+         <input type="hidden" name="apr_user" value="${apr_user}">
+      </td>
+      <td nowrap>&nbsp;覆核日期:
+         <span class="dsp_text">${apr_date.YMD}</span>
+         <input type="hidden" name="apr_date" value="${apr_date}">
+      </td>
+ </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="rskm1040">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+  function keyChange(ps1)
+ {
+	var  batch_no =document.forms["dataForm"]["kk_batch_no"].value.toUpperCase();
+	if ( batch_no === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+   
+/*// 20200102 updated for archit.  change
+   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_key";
+   }*/
+
+	resetJSON();
+	addJSON("ax_key",batch_no);
+	processAJAX();
+ }
+ 
+  function ajaxResponse()
+ {
+	 top.respHtml ="rskm1040_detl";
+   top.requHtml ="rskm1040_detl";
+
+	if  ( idCode === '1') {
+      var action_desc =getJSONvalue("action_desc",0);
+      if (action_desc.length>0) { 
+      	$("#action_desc").val(action_desc);   
+      }
+	}
+   
+   
+	if ( idCode === '1')
+	{ return false; }
+ }
+
+</script>

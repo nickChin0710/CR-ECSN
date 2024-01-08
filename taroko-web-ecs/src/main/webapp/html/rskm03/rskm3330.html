@@ -1,0 +1,167 @@
+<html>
+<head>
+<title>監控交易作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;消費日期:
+      <input type="text" class="col_date" name="ex_txn_date1" value="${ex_txn_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_txn_date1'});
+	  </script>
+	    &nbsp;--
+      <input type="text" class="col_date" name="ex_txn_date2" value="${ex_txn_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_txn_date2'});
+	  </script>
+   </td>
+   <td nowrap >&nbsp;風險係數 >= 
+      <input type="text" class="col_number" name="ex_risk_score" value="${ex_risk_score}" maxlength="3" size="5" zEdit="number" />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;            
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;身份證字號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" />
+   </td>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" />
+   </td>
+   <td nowrap >&nbsp;授權狀態:
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_auth" ${ex_auth-0} ${DEFAULT-ex_auth} />全部
+         <input type="radio" value="Y" name="ex_auth" ${ex_auth-Y} />成功
+         <input type="radio" value="N" name="ex_auth" ${ex_auth-N} />失敗
+      </span>
+   </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="3" >&nbsp;處理狀態:
+      <span class="col_radio">
+         <input type="radio" value="A" name="ex_status_code" ${ex_status_code-A} ${DEFAULT-ex_status_code} />全部
+         <input type="radio" value="0" name="ex_status_code" ${ex_status_code-0} />未處理
+         <input type="radio" value="5" name="ex_status_code" ${ex_status_code-5} />處理中
+         <input type="radio" value="9" name="ex_status_code" ${ex_status_code-9} />處理完成
+      </span>
+      &nbsp;&nbsp;
+      排列順序:
+      <select   size="1"  name="ex_order" class="col_ddlb">         
+         <option value="0" ${ex_order-0} >風險係數升冪</option>
+         <option value="1" ${ex_order-1} >風險係數降冪</option>
+         <option value="2" ${ex_order-2} >卡號</option>
+         <option value="3" ${ex_order-3} >交易時間升冪</option>         
+         <option value="4" ${ex_order-4} >交易時間降冪</option>
+         <option value="5" ${ex_order-5} >金額升冪</option>
+         <option value="6" ${ex_order-6} >金額降冪</option>
+      </select>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >交易日期時間</th>    
+    <th nowrap >卡號</th>
+    <th nowrap >風險分數</th>
+    <th nowrap >幣別</th>
+    <th nowrap >交易金額<br>原幣</th>
+    <th nowrap >交易金額<br>台幣</th>
+    <th nowrap >MCC</th>
+    <th nowrap >授權回覆碼</th>
+    <th nowrap >授權碼</th>
+    <th nowrap >Pos Entry Mode</th>
+    <th nowrap >特店代號</th>
+    <th nowrap >特店名稱</th>
+    <th nowrap >城市</th>
+    <th nowrap >國別</th>
+    <th nowrap >處理狀態</th>    
+    <th nowrap >帳單比對註記</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${card_no}','${tx_date}','${tx_time}','${auth_no}','${trace_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tx_date.YMD}&nbsp;${tx_time.TIME}</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${risk_score}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tx_currency}&nbsp;${tt_currency}&nbsp;</td>
+   <td nowrap class="list_rr"> ${ori_amt.(999.00)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${nt_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcc_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${auth_status_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${auth_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pos_mode}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcht_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcht_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcht_city}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcht_country}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_status_code}&nbsp;</td>   
+   <td nowrap class="list_cc"> ${mtch_flag}&nbsp;</td>	
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+ <input type="hidden"  name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="100";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+       
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm3330_detl"; 
+    }   
+       
+    return true;
+  }
+  
+  function detailScreen(serNum,parm,parm2,parm3,parm4,parm5) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "rskm3330_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

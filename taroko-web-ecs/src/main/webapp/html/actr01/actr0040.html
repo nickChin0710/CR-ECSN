@@ -1,0 +1,217 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/24  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>信用卡申請人扣繳帳號 IBM 查核報表-V.2018-0719-Alex-[bug]
+        信用卡申請人扣繳帳號 IBM 查核報表-V.2017-1212-Max Lin-[Initial]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <table width="85%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap colspan=12>&nbsp;
+                    <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button" name="btnPDF1" ${btnClear_disable} value="ERROR 報表列印" onClick="return top.submitControl('PDF1')" class="btOther2">&nbsp;&nbsp;
+                    <input type="Button" name="btnPDF1" ${btnClear_disable} value="OK 報表列印" onClick="return top.submitControl('PDF2')" class="btOther2">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+
+        <table width="85%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >&nbsp;處理日期:
+                    <input type="text" class="col_date" name="ex_date_S" value="${ex_date_S}" zEdit="date,yyyymmdd" maxlength="8" size="10" zRequire ="k"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_S'
+                        });
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="ex_date_E" value="${ex_date_E}" zEdit="date,yyyymmdd" maxlength="8" size="10" zRequire ="k"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_E'
+                        });
+                    </script>
+                </td>
+
+                <td nowrap >&nbsp;來源類別:
+                    <select name="ex_from_mark" value="${ex_from_mark}" class="col_ddlb">
+                        <option value="0" ${ex_from_mark-0} >全部</option>
+                        <option value="1" ${ex_from_mark-1}>新製卡</option>
+                        <option value="2" ${ex_from_mark-2}>授權書-新申請</option>
+                        <option value="3" ${ex_from_mark-3}>授權書-修改帳號</option>
+                        <option value="4" ${ex_from_mark-4}>雲端櫃台-04</option>
+                        <option value="5" ${ex_from_mark-5}>網銀-W</option>
+                        <!--                     	<option value="4" ${ex_from_mark-4}>官網-eDDA</option>    -->
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="2" >&nbsp;雙幣幣別:
+                    <select name="ex_curr_code" class="col_ddlb">
+                        <option value="" >--</option>
+                        ${dddw_curr_code}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td nowrap colspan="2">&nbsp;帳戶帳號:
+                    <select size="1" name="ex_acct_type" class="col_ddlb" >
+                        <option value="">--</option>
+                        ${d_dddw_accttype}
+                    </select>
+                    <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="15" />
+                    &nbsp;&nbsp;
+                    <input type="radio" value="0" name="ex_vip" ${ex_vip-0} ${DEFAULT_CHK} />全部卡友
+                    <input type="radio" value="1" name="ex_vip" ${ex_vip-1} />一般卡友
+                    <input type="radio" value="2" name="ex_vip" ${ex_vip-2} />VIP 卡友
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!-- 合計============================ -->
+    <div id="dataBlock">
+        <table border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >&nbsp;合計:</td>
+                <td nowrap >&nbsp;ERROR 資料筆數:
+                    <span class="dsp_text">${error_cnt.(999)}&nbsp;</span>
+                    <input type="hidden" name="error_cnt" value="${error_cnt}">
+                </td>
+                <td nowrap >&nbsp;&nbsp;&nbsp;OK 資料筆數:
+                    <span class="dsp_text">${ok_cnt.(999)}&nbsp;</span>
+                    <input type="hidden" name="ok_cnt" value="${ok_cnt}">
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td nowrap >&nbsp;&nbsp;本次條件查詢之實際ERROR資料筆數:
+                    <span class="dsp_text">${real_error_cnt.(999)}&nbsp;</span>
+                    <input type="hidden" name="real_error_cnt" value="${real_error_cnt}">
+                </td>
+                <td nowrap >&nbsp;本次條件查詢之實際OK資料筆數:
+                    <span class="dsp_text">${real_ok_cnt.(999)}&nbsp;</span>
+                    <input type="hidden" name="real_ok_cnt" value="${real_ok_cnt}">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div class="tab">
+        <table>
+            <tr>
+                <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">扣款帳號IBM查核ERROR報表</td>
+                <td class="tablinks" onclick="return tabControl(event, 'tab-2')">扣款帳號IBM查核OK報表</td>
+            </tr>
+        </table>
+    </div>
+    <!-- 明細============================ -->
+    <div id="tab-1" class="tabcontent">
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">處理日期</th>
+                <th nowrap class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">正卡姓名</th>
+                <th nowrap class="list_th">雙幣幣別</th>
+                <th nowrap class="list_th">扣繳帳號歸屬 ID</th>
+                <th nowrap class="list_th">扣繳帳號</th>
+                <th nowrap class="list_th">失敗原因</th>
+                <th nowrap class="list_th">來源類別</th>
+                <th nowrap class="list_th">收件編號</th>
+                <th nowrap class="list_th">異動經辦</th>
+                <th nowrap class="list_th">結轉台幣</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_print_date.YMD} </td>
+                <td nowrap class="list_cc"> ${A1_wk_acct_key} </td>
+                <td nowrap class="list_cc"> ${A1_chi_name} </td>
+                <td nowrap class="list_cc"> ${A1_tt_curr_code} </td>
+                <td nowrap class="list_cc"> ${A1_tt_autopay_id} </td>
+                <td nowrap class="list_cc"> ${A1_autopay_acct_no} </td>
+                <td nowrap class="list_cc"> ${A1_tt_reject_code} </td>
+                <td nowrap class="list_cc"> ${A1_tt_from_mark} </td>
+                <td nowrap class="list_cc"> ${A1_appl_no} </td>
+                <td nowrap class="list_cc"> ${A1_mod_user} </td>
+                <td nowrap class="list_cc"> ${A1_autopay_dc_flag} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <div id="tab-2" class="tabcontent">
+        <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">處理日期</th>
+                <th nowrap class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">正卡姓名</th>
+                <th nowrap class="list_th">雙幣幣別</th>
+                <th nowrap class="list_th">扣繳帳號歸屬 ID</th>
+                <th nowrap class="list_th">扣繳帳號</th>
+                <th nowrap class="list_th">自動扣繳指示碼</th>
+                <th nowrap class="list_th">來源類別</th>
+                <th nowrap class="list_th">收件編號</th>
+                <th nowrap class="list_th">異動經辦</th>
+                <th nowrap class="list_th">結轉台幣</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_print_date.YMD} </td>
+                <td nowrap class="list_cc"> ${A2_wk_acct_key} </td>
+                <td nowrap class="list_cc"> ${A2_chi_name} </td>
+                <td nowrap class="list_cc"> ${A2_tt_curr_code} </td>
+                <td nowrap class="list_cc"> ${A2_tt_autopay_id} </td>
+                <td nowrap class="list_cc"> ${A2_autopay_acct_no} </td>
+                <td nowrap class="list_cc"> ${A2_tt_autopay_indicator}</td>
+                <td nowrap class="list_cc"> ${A2_tt_from_mark} </td>
+                <td nowrap class="list_cc"> ${A2_appl_no} </td>
+                <td nowrap class="list_cc"> ${A2_mod_user} </td>
+                <td nowrap class="list_cc"> ${A2_autopay_dc_flag} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+    tigra_tables('table2');
+</script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows = "1499";
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+        return true;
+    }
+</script>

@@ -1,0 +1,29 @@
+
+if [ $(grep -c "ON" /cr/ecs/conf/batchRun.properties) -eq 0 ]
+then 
+     echo "BatchRun.properties = OFF" 
+	 exit 0
+fi
+
+dir_file=`pwd`
+OLDIFS="$IFS"
+IFS="/"
+for dir_name in $dir_file
+do
+    pgm_name=$dir_name
+done
+
+IFS=""
+
+if [ -f $pgm_name.java ]
+then
+    java -Xmx5000m -Dfile.encoding=UTF-8 -cp /cr/ecs/bin/taroko-batch-ecs.jar:$PROJ_HOME/bin `echo ${pgm_name}|cut -c 1-3`.${pgm_name} $1 $2 $3 $4 $5
+    code=$?
+    echo ${pgm_name} 'Return('$code')'
+else
+    java -Xmx5000m -Dfile.encoding=UTF-8 -cp /cr/ecs/bin/taroko-batch-ecs.jar:$PROJ_HOME/bin `echo $1|cut -c 1-3`.$1 $2 $3 $4 $5 $6 
+    code=$?
+    echo $1 'Return('$code')'
+fi
+exit $code
+

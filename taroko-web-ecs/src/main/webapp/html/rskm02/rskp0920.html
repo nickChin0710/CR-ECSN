@@ -1,0 +1,187 @@
+<html>
+<head>
+<title>線上持卡人信用額度調整主管覆核-jh190628</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_log_date1" value="${ex_log_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_log_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_log_date2" value="${ex_log_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_log_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;調整人員:
+	   <input type="text" class="col_any" name="ex_mod_user" value="${ex_mod_user}" zEdit="any,canTw" maxlength="10" size="12" >
+		</td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="覆核" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;身分證字號:
+			<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+		</td>
+  	<td nowrap >&nbsp;卡號:
+  		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" >
+  	</td>
+	</tr>
+ </table>
+</div>
+<hr>
+	<div id="dataBlock" >
+		<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+			<tr>
+				<td nowrap >&nbsp;筆數:
+					<span class="dsp_text">${tl_cnt.(999)}&nbsp;</span>
+					<input type="hidden" name="tl_cnt" value="${tl_cnt}" >
+				</td>
+				<td nowrap >&nbsp;總調升額度:
+					<span class="dsp_text">${wk_up_amt.(999)}&nbsp;</span>
+					<input type="hidden" name="wk_up_amt" value="${wk_up_amt}">
+				</td>
+				<td nowrap >&nbsp;總調降額度:
+					<span class="dsp_text">${wk_down_amt.(999)}&nbsp;</span>
+					<input type="hidden" name="wk_down_amt" value="${wk_down_amt}">
+				</td>
+				<td nowrap >&nbsp;主管額度層級:(個人)
+					<span class="dsp_text">${apr_amt.(999)}&nbsp;</span>
+					<input type="hidden" name="apr_amt" value="${apr_amt}" />
+					&nbsp;(公司)<span class="dsp_text">${apr_amt02.(999)}&nbsp;</span>
+					<input type="hidden" name="apr_amt02" value="${apr_amt02}" />
+				</td>
+		</table>
+	</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <th nowrap class="list_th">
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" />覆核
+	 </th>
+    <th nowrap >修改方式&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >關係人&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >調整前額度&nbsp;</th>
+    <th nowrap >調整後額度&nbsp;</th>
+    <th nowrap >發送簡訊&nbsp;</th>    
+    <th nowrap >調整原因&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >調整人員&nbsp;</th>
+    <th nowrap >調高/低&nbsp;</th>
+    <th nowrap >Db Upper&nbsp;</th>
+    <th nowrap >Db Low&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<input type="hidden" name="opt_show" value="${opt_show}" />
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} ${opt_show} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="adj_loc_flag" value="${adj_loc_flag}" />
+   	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+   	<input type="hidden" name="rowid" value="${rowid}">
+   	<input type="hidden" name="log_remark" value="${log_remark}">
+   	<input type="hidden" name="mod_user" value="${mod_user}">
+   	<input type="hidden" name="apr_user" value="${apr_user}">
+   	<input type="hidden" name="wk_line" value="${wk_line}" />
+	</td>
+   <td nowrap class="list_ll"> ${#JAVA:ecsfunc.DeCodeRsk.emendType(emend_type)}&nbsp;
+      <input type="hidden" name="emend_type" value="${emend_type}" />      
+	</td>
+	<td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;
+	   <input type="hidden" name="acct_type" value="${acct_type}">
+	   <input type="hidden" name="acct_key" value="${acct_key}">
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${fh_flag}&nbsp;
+	   <input type="hidden" name="fh_flag" value="${fh_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${db_idno_name}&nbsp;
+	   <input type="hidden" name="db_idno_name" value="${db_idno_name}">
+	</td>
+	<td nowrap class="list_rr"> ${wk_bef_amt.(999)}&nbsp;
+	   <input type="hidden" name="wk_bef_amt" value="${wk_bef_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${wk_aft_amt.(999)}&nbsp;
+	   <input type="hidden" name="wk_aft_amt" value="${wk_aft_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${sms_flag}${tt_sms_flag}&nbsp;
+	   <input type="hidden" name="sms_flag" value="${sms_flag}" />
+     <input type="hidden" name="tt_sms_flag" value="${tt_sms_flag}" />
+	</td>    
+	<td nowrap class="list_ll"> ${log_reason}.${#java2:ecsfunc.IdDescRsk.limitAdjReason(log_reason)}&nbsp;
+	   <input type="hidden" name="log_reason" value="${log_reason}" />
+	   <input type="hidden" name="tt_log_reason" value="${tt_log_reason}" />
+	</td>
+	<td nowrap class="list_cc"> ${log_date.YMD}&nbsp;
+	   <input type="hidden" name="log_date" value="${log_date}">
+	</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;
+	   <input type="hidden" name="mod_user" value="${mod_user}">
+	</td>
+	<td nowrap class="list_cc"> ${tt_adj_loc_flag}&nbsp;
+	   <input type="hidden" name="tt_adj_loc_flag" value="${tt_adj_loc_flag}">
+	</td>
+	<td nowrap class="list_rr"> ${db_upper.(999)}&nbsp;
+	   <input type="hidden" name="db_upper" value="${db_upper}">
+	</td>
+	<td nowrap class="list_rr"> ${db_lower.(999)}&nbsp;
+	   <input type="hidden" name="db_lower" value="${db_lower}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden" name="db_apr_limit" value="${db_apr_limit}" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if (top.actionCode =='C') {
+      if (confirm('是否執行覆核作業')==false) {
+         return false;
+      }
+    }
+    return true;
+  }
+
+</script>

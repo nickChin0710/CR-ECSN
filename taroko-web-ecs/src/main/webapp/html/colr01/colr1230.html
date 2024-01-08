@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>Z13報送明細表-106-10-20-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;身分證字號:
+      <input type="text" class="col_text" name="exId" value="${exId}" 
+        zEdit="alphanum,upper" maxlength="10" size="10" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;報送日期:
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}"
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+        new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+      </script>
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+	  </script>&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;M-code:
+      <input type="text" class="col_number" name="exMcodeS" value="${exMcodeS}" 
+        zEdit="number" maxlength="2" size="3" />
+      --
+      <input type="text" class="col_number" name="exMcodeE" value="${exMcodeE}" 
+        zEdit="number" maxlength="2" size="3" />
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">身分證字號</th>
+    <th nowrap class="list_th">報送日期</th>
+    <th nowrap class="list_th">卡別</th>
+    <th nowrap class="list_th">M-code</th>
+    <th nowrap class="list_th">分期還款起迄日期</th>
+    <th nowrap class="list_th">異動原因</th>
+    <th nowrap class="list_th">報送事由</th>
+    <th nowrap class="list_th">報送檔名</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+    <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+    <td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+    <td nowrap class="list_cc"> ${proc_date.YMD}&nbsp; </td>
+    <td nowrap class="list_cc"> ${acct_type}&nbsp; </td>
+    <td nowrap class="list_cc"> ${inst_s_mcode}&nbsp; </td>
+    <td nowrap class="list_cc"> ${inst_s_date.YMD} -- ${inst_e_date.YMD}&nbsp; </td>
+    <td nowrap class="list_ll"> ${tt_tran_type}&nbsp; </td>
+    <td nowrap class="list_ll"> ${tt_inst_flag}&nbsp; </td>
+    <td nowrap class="list_cc"> ${file_name}&nbsp; </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <!-- <tr>
+    <td></td>
+    <td nowrap colspan="6" class="td_data" align="right">總筆數:&nbsp;</td>
+    <td nowrap colspan="2" class="td_data" align="right">
+      <span class="dsp_number"> ${sum_fisc_rows.(999)}&nbsp; </span>
+    </td>
+  </tr> -->
+ </table>
+ 
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="MOD_PGM" value="colr1230">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ 
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.exId.focus();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    return true;
+  }
+ 
+</script>

@@ -1,0 +1,279 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-18  V1.00.00  Justin Wu     Initial                               -->
+<!-- 108-12-25  V1.00.01  Justin Wu     remove risk_factor                    -->
+<!-- 109-04-06  V1.00.02  Justin Wu     change top.err_alert() into errorAlert-->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>免照會VIP維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" id="btnUpdate"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶類別：
+      <span></span>
+      <select id="kk_acct_type" name="kk_acct_type" class="col_ddlb" onchange="acctTypeChange(this);">
+         ${dddw_acct_type}
+      </select>
+      <input type="hidden" id="card_indicator" name="card_indicator" value="${card_indicator}">
+   </td>
+   <td nowrap id="kk_id_no_td" style="display: none;">&nbsp;正卡人ID：
+      <span></span>
+      <input type="text" class="col_text" id="kk_id_no" name="kk_id_no" value="${kk_id_no}"/>
+   </td>
+   <td nowrap id="with_sup_card_td" style="display: none;">
+     <input type="checkbox" id="with_sup_card" name="with_sup_card" value="Y" ${with_sup_card-Y}>是否含附卡
+   </td>
+   <td nowrap id="kk_card_no_td" style="display: none;">&nbsp;商務卡卡號：
+      <span></span>
+      <input type="text" class="col_text" id="kk_card_no" name="kk_card_no" value="${kk_card_no}" />
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;有效期間：
+      <input type="text" class="col_date" id="start_date" name="start_date" value="${start_date}" maxlength="8" size="8" zEdit="date,yyyymmdd" zRequire="Y">
+      <script language="JavaScript">
+        new tcal({ 'formname': 'dataForm', 'controlname': 'start_date' });
+      </script>
+      ~
+      <input type="text" class="col_date" id="end_date" name="end_date" value="${end_date}" maxlength="8" size="8" zEdit="date,yyyymmdd" zRequire="Y">
+      <script language="JavaScript">
+        new tcal({ 'formname': 'dataForm', 'controlname': 'end_date' });
+      </script>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      ${temp_desc}
+      <input type="hidden" name="temp_desc" value="${temp_desc}" />
+   </td>
+ </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">
+<input type="hidden" name="idno_p_seqno" value="${idno_p_seqno}">
+<input type="hidden" name="MOD_PGM" value="ccam3080">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="temp_flag" value="${temp_flag}" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ window.addEventListener("load", function(){
+
+  var kk_acct_type = document.getElementById("kk_acct_type");
+  var card_indicator = document.getElementById("card_indicator");
+  var btnUpdate = document.getElementById("btnUpdate");
+
+  // 更新
+  if(! btnUpdate.disabled){
+    var selected_kk_acct_type = kk_acct_type.options[kk_acct_type.selectedIndex];
+
+    // 顯示acct_type
+    kk_acct_type.style.display = "none";
+    kk_acct_type.previousElementSibling.innerHTML= selected_kk_acct_type.innerHTML;
+
+    switch(card_indicator.value){
+      case "1": 
+      var kk_id_no = document.getElementById("kk_id_no");
+      var kk_id_no_td = document.getElementById("kk_id_no_td");
+      var with_sup_card = document.getElementById("with_sup_card");
+      var with_sup_card_td = document.getElementById("with_sup_card_td");
+
+      // 顯示id_no
+      kk_id_no_td.style.display = "";
+      kk_id_no.style.display = "none";
+      kk_id_no.previousElementSibling.innerHTML = kk_id_no.value;
+
+      with_sup_card_td.style.display = "";
+      break;
+
+      case "2":
+      var kk_card_no = document.getElementById("kk_card_no");
+      var kk_card_no_td = document.getElementById("kk_card_no_td");
+
+      // 顯示card_no
+      kk_card_no_td.style.display = "";
+      kk_card_no.style.display = "none";
+      kk_card_no.previousElementSibling.innerHTML = kk_card_no.value;
+      break;
+    }
+
+  }
+  // 新增
+  else{
+    acctTypeChange(kk_acct_type);
+  }
+
+ });
+ 
+
+ function validateInput()
+  {
+
+    if ( !top.checkFormat() ){ 
+      return false; 
+    }
+
+    if(top.actionCode == "A" || top.actionCode == "U"){
+      if( !checkData() ){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+ function checkData(){  
+  var kk_acct_type = document.getElementById("kk_acct_type");
+  var card_indicator = document.getElementById("card_indicator");
+  var formatexp;
+
+  
+  if(kk_acct_type.value.length == 0 ){
+    errorAlert(kk_acct_type, "帳戶類別不可空白");
+    return false;
+  }
+
+  switch(card_indicator.value){
+    case "1":
+    var kk_id_no = document.getElementById("kk_id_no");
+    if(kk_id_no.value.trim().length == 0 ) {
+      errorAlert(kk_id_no, "未填寫正卡人ID");
+      return false;
+    }
+    break;
+
+    case "2":
+    var kk_card_no = document.getElementById("kk_card_no");
+    if(kk_card_no.value.trim().length == 0 ) {
+      errorAlert(kk_card_no, "未填寫商務卡卡號");
+      return false;
+    }
+    break;
+
+    default:
+    alert("card_indicator錯誤");
+    break;
+  }
+
+  return true;
+
+ }
+
+
+ function acctTypeChange(acct_type_ele){
+    var kk_id_no_td = document.getElementById("kk_id_no_td");
+    var kk_card_no_td = document.getElementById("kk_card_no_td");
+    var with_sup_card_td = document.getElementById("with_sup_card_td");
+    var card_indicator = document.getElementById("card_indicator");
+
+    switch(acct_type_ele.value){
+      case "01":
+      card_indicator.value = "1";
+      break;
+
+      case "03":
+      card_indicator.value = "2";
+      break;
+	  
+      case "06":
+      card_indicator.value = "2";
+      break;
+      
+      default:
+      card_indicator.value = "";
+      break;
+    }
+
+    switch(card_indicator.value){
+      case "1":
+      kk_id_no_td.style.display = "";
+      with_sup_card_td.style.display = "";
+      kk_card_no_td.style.display = "none";
+      break;
+
+      case "2":
+      kk_id_no_td.style.display = "none";
+      with_sup_card_td.style.display = "none";
+      kk_card_no_td.style.display = "";
+      break;
+
+      default:
+      kk_id_no_td.style.display = "none";
+      with_sup_card_td.style.display = "none";
+      kk_card_no_td.style.display = "none";
+      break;
+    }
+  }
+
+  function errorAlert(element, errorString){
+    element.style.background = "pink";
+    alert(errorString);
+  }
+
+</script>

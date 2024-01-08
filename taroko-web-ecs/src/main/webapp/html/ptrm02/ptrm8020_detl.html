@@ -1,0 +1,191 @@
+<!--**************************************************************************-->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.01                 initial                              -->
+<!-- 111-06-15  V1.00.02  JustinWu       increase the length of wf_id         -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>ptrm8020-detl V111-06-15</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0;fi=0;
+
+function wf_add_newrow()
+{
+   colNum=0;
+//   if ( ind == 1 )
+//      { rowNum++; }
+   rowNum++;
+   ind++;
+   var myRow = document.all.table1.insertRow(rowNum);
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_no";
+   myCell.noWrap ="nowrap";
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   fi++;
+   myCell.innerHTML = ""+serNo
+         +" <input type='checkbox' class='col_ckbox' name='opt' value='"+serNo+"' />"
+         +" <input type='hidden' name='ser_num' value='"+serNo+"' />"
+         +" <input type='hidden' name='rowid' value='' />"
+         ;
+
+   colNum++      
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "wf_id";
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='alphanum' size='32' maxlength='30' value='' />";
+   var newCell=document.getElementById(forName);
+
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "wf_desc";
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='any,canTW' size='60' maxlength='60' value='' />";
+	
+	 colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "id_code";
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='any,canTW' size='10' maxlength='80' value='' />";
+      
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "id_code2";
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='any,canTW' size='10' maxlength='10' value='' />";   
+	 
+   //newCell.focus(); 
+}
+</script>
+
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">資料類別：
+      <span class="dsp_date">${A_wf_key}</span>
+      <input type=hidden name="A_wf_key" value="${A_wf_key}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >說明：
+      <span class="dsp_date">${A_wf_desc}</span>
+      <input type=hidden name="A_wf_desc" value="${A_wf_desc}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>歸屬部門：
+      <span class="dsp_date">${A_wf_value5}</span>
+      <input type=hidden name="A_wf_value5" value="${A_wf_value5}" />
+   &nbsp; 長度:
+      <span class="dsp_date">${A_wf_value6}</span>
+      <input type=hidden name="A_wf_value6" value="${A_wf_value6}" />
+   </td>
+  </tr>
+</table>
+<hr>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">資料庫代碼 </th>
+    <th nowrap class="list_cc">對照說明 </th>
+    <th nowrap class="list_cc">類別一 </th>
+    <th nowrap class="list_cc">類別二 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+    	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on}>
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_td">&nbsp;
+       <input type="text" class="col_any" name="wf_id" value="${wf_id}" 
+         zEdit="alphanum" size="32" maxlength="30" />
+    </td>  
+    <td nowrap class="list_td" >&nbsp;
+      <input type="text" class="col_any" name="wf_desc" value="${wf_desc}" 
+         zEdit="any,canTW" size="60" maxlength="60" />
+    </td>  
+    <td nowrap class="list_td">&nbsp;
+       <input type="text" class="col_any" name="id_code" value="${id_code}" 
+         zEdit="any,canTW" size="10" maxlength="10" />
+    </td>  
+    <td nowrap class="list_td">&nbsp;
+       <input type="text" class="col_text" name="id_code2" value="${id_code2}" 
+         zEdit="any,canTW" size="10" maxlength="10" />
+    </td>  
+  </tr>       
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+
+<table border="0" width="60%">
+<tr><td align="right">
+<input type="Button" value="新增明細" 
+             onclick="wf_add_newrow();" class="btAdd_detl" />
+</td><tr>
+</table>  
+</div>
+<br>
+
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

@@ -1,0 +1,1007 @@
+<html>
+
+<head>
+    <title>BANKNEWS月訊參數維護_detl-107-0226-V1.00.01-ryan-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+    <script language="JavaScript" src="js/jquery-ui.min.js"></script>
+</head>
+<style>
+font {
+    color: red;
+}
+</style>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+    	${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+                    <input type="Button"  value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  value=" 新增 " ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"  value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"  value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="90%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap>&nbsp;批號:
+                        <input type="text" class="col_any" name="kk_batchno" value="${kk_batchno}" maxlength="10" size="10" zRequire="k" />
+                    	<span style="color:red">(讀取用,新增時由系統自動產生批號)</span>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="90%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey" colspan="2">&nbsp;批號:
+                        <span class="dsp_text">${batch_no}</span>
+                        <input type="hidden" name="batch_no" value="${batch_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;主管覆核:
+                        <span class="dsp_text">${confirm_parm}</span>
+                        <input type="hidden" name="confirm_parm" value="${confirm_parm}">
+                    </td>
+                    <td nowrap>&nbsp;覆核日期:
+                        <span class="dsp_text">${confirm_date.YMD}</span>
+                        <input type="hidden" name="confirm_date" value="${confirm_date}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;活動說明:
+                        <input type="text" class="col_any" zEdit="canTW,any" name="description" value="${description}" maxlength="40" size="40" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;A.帳戶類別:
+                        <select size="1" name="acct_type_1" class="col_ddlb">
+                        <option value="">--</option>
+                            ${dddw_acct_type_1}
+                        </select>
+                        <select size="1" name="acct_type_2" class="col_ddlb">
+                        <option value="">--</option>
+                            ${dddw_acct_type_2}
+                        </select>
+                        <select size="1" name="acct_type_3" class="col_ddlb">
+                        <option value="">--</option>
+                            ${dddw_acct_type_3}
+                        </select>
+                        <select size="1" name="acct_type_4" class="col_ddlb">
+                        <option value="">--</option>
+                            ${dddw_acct_type_4}
+                        </select>
+                        <select size="1" name="acct_type_5" class="col_ddlb">
+                        <option value="">--</option>
+                            ${dddw_acct_type_5}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border:1px blue solid;">
+                        <input type="radio" value="1"  ${all_card-1} name="all_card" onClick="allCard()" ${DEFAULT_CHK} />全體卡友
+                        <br>&nbsp;&nbsp;&nbsp;
+                        <span class="col_radio">
+                        	<input type="radio" value="I" name="purch_ym_ct_flag" class="all_card1" ${purch_ym_ct_flag-I} />指定
+                        	<input type="radio" value="E" name="purch_ym_ct_flag" class="all_card1" ${purch_ym_ct_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card1"  value="卡種" onClick="processCardType('purch_ym_ct')">
+                        <font>${errmsg8}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="purch_ym_ct_desc" name="purch_ym_ct_desc" value="${purch_ym_ct_desc}" size="100" class="dsp_text all_card1" readonly>
+                        <input type="hidden" id="purch_ym_ct" name="purch_ym_ct" value="${purch_ym_ct}" class="all_card1">
+                        <br>&nbsp;&nbsp;&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="purch_ym_gc_flag" class="all_card1" ${purch_ym_gc_flag-I} />指定
+                            <input type="radio" value="E" name="purch_ym_gc_flag" class="all_card1" ${purch_ym_gc_flag-E} ${DEFAULT_CHK}/>排除
+                       	</span>
+                        <input type="Button" class="btAdd_detl all_card1"  value="團體代號" onClick="processGroupCode('purch_ym_gc')">
+                        <font>${errmsg9}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="purch_ym_gc_desc" name="purch_ym_gc_desc" value="${purch_ym_gc_desc}" size="100" class="dsp_text all_card1" readonly>
+                        <input type="hidden" id="purch_ym_gc" name="purch_ym_gc" value="${purch_ym_gc}" class="all_card1">
+                    </td>                    
+                </tr>
+           	</table>
+            <table width="90%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2" >
+                       	<input type="radio" value="2"  ${all_card-2} name="all_card" onClick="allCard()"/>消費金額&nbsp;&nbsp;&nbsp;&nbsp;近
+                        <input type="text" class="col_number" zEdit="number" id ="purch_month" name="purch_month" value="${purch_month}" size="2" />&nbsp;個月,平均消費金額
+                        <input type="text" class="col_number" zEdit="number" id ="purch_amt" name="purch_amt" value="${purch_amt}" size="6" />&nbsp;元以上
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        <input type="checkbox" value="Y" name="condition1" ${condition1-Y}>全新卡&nbsp;&nbsp;核卡後
+                        <input type="text" class="col_number all_card2" zEdit="number" name="new_not_purchase_month" value="${new_not_purchase_month}" size="6" />個月未消費
+                    </td>
+                    <td>
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="new_not_purchase_ym_ct_flag" class="all_card2" ${new_not_purchase_ym_ct_flag-I} />指定
+                            <input type="radio" value="E" name="new_not_purchase_ym_ct_flag" class="all_card2" ${new_not_purchase_ym_ct_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card2"  value="卡種" onClick="processCardType('new_not_purchase_ym_ct')">
+                        <font>${errmsg1}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="new_not_purchase_ym_ct_desc" name="new_not_purchase_ym_ct_desc" value="${new_not_purchase_ym_ct_desc}" size="100" class="dsp_text all_card2" readonly>
+                        <input type="hidden" id="new_not_purchase_ym_ct" name="new_not_purchase_ym_ct" value="${new_not_purchase_ym_ct}" class="all_card2">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="new_not_purchase_ym_gc_flag" class="all_card2" ${new_not_purchase_ym_gc_flag-I} />指定
+                            <input type="radio" value="E" name="new_not_purchase_ym_gc_flag" class="all_card2" ${new_not_purchase_ym_gc_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card2"  value="團體代號" onClick="processGroupCode('new_not_purchase_ym_gc')">
+                        <font>${errmsg2}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="new_not_purchase_ym_gc_desc" name="new_not_purchase_ym_gc_desc" value="${new_not_purchase_ym_gc_desc}" size="100" class="dsp_text all_card2" readonly>
+                        <input type="hidden" id="new_not_purchase_ym_gc" name="new_not_purchase_ym_gc" value="${new_not_purchase_ym_gc}" class="all_card2">
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        <input type="checkbox" value="Y" name="condition2" ${condition2-Y}>非全新卡&nbsp;&nbsp;無帳單年月
+                        <input type="text" class="col_date all_card2" zEdit="date,yymm" name="old_not_bill_ym_s" value="${old_not_bill_ym_s}" size="6" MaxLength=6/> ~
+                        <input type="text" class="col_date all_card2" zEdit="date,yymm" name="old_not_bill_ym_e" value="${old_not_bill_ym_e}" size="6" MaxLength=6/>
+                        </p>
+                        <span Style="color:red">(非全新卡日期格式:YYYYMM~ YYYYMM)</span>
+                    </td>
+                    <td>
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="old_not_bill_ym_ct_flag" class="all_card2" ${old_not_bill_ym_ct_flag-I} />指定
+                            <input type="radio" value="E" name="old_not_bill_ym_ct_flag" class="all_card2" ${old_not_bill_ym_ct_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card2"  value="卡種" onClick="processCardType('old_not_bill_ym_ct')">
+                        <font>${errmsg3}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="old_not_bill_ym_ct_desc" name="old_not_bill_ym_ct_desc" value="${old_not_bill_ym_ct_desc}" size="100" class="dsp_text all_card2" readonly>
+                        <input type="hidden" id="old_not_bill_ym_ct" name="old_not_bill_ym_ct" value="${old_not_bill_ym_ct}" class="all_card2">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="old_not_bill_ym_gc_flag" class="all_card2" ${old_not_bill_ym_gc_flag-I} />指定
+                            <input type="radio" value="E" name="old_not_bill_ym_gc_flag" class="all_card2" ${old_not_bill_ym_gc_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card2"  value="團體代號" onClick="processGroupCode('old_not_bill_ym_gc')">
+                        <font>${errmsg4}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="old_not_bill_ym_gc_desc" name="old_not_bill_ym_gc_desc" value="${old_not_bill_ym_gc_desc}" size="100" class="dsp_text all_card2" readonly>
+                        <input type="hidden" id="old_not_bill_ym_gc" name="old_not_bill_ym_gc" value="${old_not_bill_ym_gc}" class="all_card2">
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        <input type="checkbox" value="Y" name="condition3" ${condition3-Y}>無帳單月份
+                        <input type="text" class="col_date all_card2" zEdit="date,yymm" name="not_bill_ym_s" value="${not_bill_ym_s}" size="6" MaxLength=6/> ~
+                        <input type="text" class="col_date all_card2" zEdit="date,yymm" name="not_bill_ym_e" value="${not_bill_ym_e}" size="6" MaxLength=6/>
+                    	</p>
+                    	<span Style="color:red">(無帳單月份定義: 不分新舊卡，日期格式:YYYYMM~ YYYYMM)</span>
+                    </td>
+                    <td>
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="not_bill_ym_ct_flag" class="all_card2" ${not_bill_ym_ct_flag-I} />指定
+                            <input type="radio" value="E" name="not_bill_ym_ct_flag" class="all_card2" ${not_bill_ym_ct_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card2"  value="卡種" onClick="processCardType('not_bill_ym_ct')">
+                        <font>${errmsg5}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="not_bill_ym_ct_desc" name="not_bill_ym_ct_desc" value="${not_bill_ym_ct_desc}" size="100" class="dsp_text all_card2" readonly>
+                        <input type="hidden" id="not_bill_ym_ct" name="not_bill_ym_ct" value="${not_bill_ym_ct}" class="all_card2">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="col_radio">
+                            <input type="radio" value="I" name="not_bill_ym_gc_flag" class="all_card2" ${not_bill_ym_gc_flag-I} />指定
+                            <input type="radio" value="E" name="not_bill_ym_gc_flag" class="all_card2" ${not_bill_ym_gc_flag-E} ${DEFAULT_CHK}/>排除
+                        </span>
+                        <input type="Button" class="btAdd_detl all_card2"  value="團體代號" onClick="processGroupCode('not_bill_ym_gc')">
+                        <font>${errmsg6}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="not_bill_ym_gc_desc" name="not_bill_ym_gc_desc" value="${not_bill_ym_gc_desc}" size="100" class="dsp_text all_card2" readonly>
+                        <input type="hidden" id="not_bill_ym_gc" name="not_bill_ym_gc" value="${not_bill_ym_gc}" class="all_card2">
+                    </td>
+                </tr>
+           	</table>
+           	<table width="90%" border="0" cellspacing="0" cellpadding="4">
+                <th colspan="2">排除條件</th>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" value="Y" name="exclude_foreigner_flag" ${exclude_foreigner_flag-Y}>外國人旗標&nbsp;
+                        <input type="checkbox" value="Y" name="exclude_staff_flag" ${exclude_staff_flag-Y}>金控員工旗標&nbsp;
+                        <input type="checkbox" value="Y" name="exclude_mbullet_flag" ${exclude_mbullet_flag-Y}>月訊旗標&nbsp;
+                        <input type="checkbox" value="Y" name="exclude_call_sell_flag" ${exclude_call_sell_flag-Y}>電話行銷旗標&nbsp;
+                        <input type="checkbox" value="Y" name="exclude_sms_flag" ${exclude_sms_flag-Y}>簡訊旗標&nbsp;
+                        <input type="checkbox" value="Y" name="exclude_dm_flag" ${exclude_dm_flag-Y}>DM旗標&nbsp;
+                        <input type="checkbox" value="Y" name="exclude_e_news_flag" ${exclude_e_news_flag-Y}>EDM旗標&nbsp;
+                        <input type="checkbox" value="Y" id="exclude_list_flag" name="exclude_list_flag" ${exclude_list_flag-Y}>排除名單旗標&nbsp;
+                        <!-- <input type="Button" class="btAdd_detl" id="exclude_list_btn" disabled name="btnAccType" value="排除名單" onClick="processExcludelist()"><font>${errmsg7}</font>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="exclude_list_desc" name="exclude_list_desc" value="${exclude_list_desc}" size="125" class="dsp_text" readonly>
+                        <input type="hidden"  id="exclude_list"  name="exclude_list" value="${exclude_list}" >  -->
+                        <input id="myfile" type="file"  accept="text/plain, text/csv" />
+                        <input type="Button" class="btAdd_detl" name="btnAccType" value="排除條件" id="processList">
+                        <font>${errmsg7}</font>
+                        <br> &nbsp;&nbsp;&nbsp;
+                        <input type="text" id="exclude_list_desc" name="exclude_list_desc" value="${exclude_list_desc}" size="125" class="dsp_text" readonly>
+                        <input type="hidden" id="exclude_list" name="exclude_list" value="${exclude_list}">
+                    </td>
+                </tr>                
+            </table>
+        </div>
+        <div id="carddialog" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;卡種:
+                        <select size="1" name="excl_card_add" class="col_ddlb" id="excl_card_add">
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addcard_newrow('new_not_purchase_ym_ct');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_card" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">卡種</th>
+                </tr>
+            </table>
+        </div>
+        <div id="carddialog2" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;卡種:
+                        <select size="1" name="excl_card_add2" class="col_ddlb" id="excl_card_add2">
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addcard_newrow('old_not_bill_ym_ct');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_card2" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">卡種</th>
+                </tr>
+            </table>
+        </div>
+        <div id="carddialog3" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;卡種:
+                        <select size="1" name="excl_card_add3" class="col_ddlb" id="excl_card_add3">
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addcard_newrow('not_bill_ym_ct');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_card3" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">卡種</th>
+                </tr>
+            </table>
+        </div>
+        <div id="carddialog4" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;卡種:
+                        <select size="1" name="excl_card_add4" class="col_ddlb" id="excl_card_add4">
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addcard_newrow('purch_ym_ct');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_card4" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">卡種</th>
+                </tr>
+            </table>
+        </div>
+        <div id="groupdialog" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;團體代號:
+                        <select size="1" name="excl_group_add" class="col_ddlb" id="excl_group_add">
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addgroup_newrow('new_not_purchase_ym_gc');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_group" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">團體代號</th>
+                </tr>
+            </table>
+        </div>
+        <div id="groupdialog2" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;團體代號:
+                        <select size="1" name="excl_group_add2" class="col_ddlb" id="excl_group_add2">
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addgroup_newrow('old_not_bill_ym_gc');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_group2" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">團體代號</th>
+                </tr>
+            </table>
+        </div>
+        <div id="groupdialog3" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;團體代號:
+                        <select size="1" name="excl_group_add3" class="col_ddlb" id="excl_group_add3">
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addgroup_newrow('not_bill_ym_gc');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_group3" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">團體代號</th>
+                </tr>
+            </table>
+        </div>
+        <div id="groupdialog4" style="display: none;">
+            <table border="0" width="60%">
+                <tr>
+                    <td>&nbsp;團體代號:
+                        <select size="1" name="excl_group_add4" class="col_ddlb" id="excl_group_add4">
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td align="right">
+                        <input type="Button"  value="新增" onclick="wf_addgroup_newrow('purch_ym_gc');" class="btAdd_detl" />
+                    </td>
+                    <tr>
+            </table>
+            <table id="table_group4" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">團體代號</th>
+                </tr>
+            </table>
+        </div>
+        <!--<div id="listdialog" style="display: none;">
+    <table border="0" width="60%">
+        <tr>
+          <td>&nbsp;排除名單:
+           <input type=text class="col_text" id="excl_list_add" value="${excl_list_add}" 
+                  zeditType="any,upper" maxlength="10" size="10" /> 
+            </td>  
+            <td align="right">
+              <input type="Button" name="btnAdd" value="新增" onclick="wf_addlist_newrow();" class="btAdd_detl" />
+          </td>
+        <tr>
+    </table>
+    <table id="table_list" width="80%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th nowrap class="list_th" width="5%">刪除 </th>
+        <th nowrap class="list_th">排除名單</th>
+      </tr>
+    </table>
+</div>  -->
+        <br>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="mktm0120">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="data_k4" value="">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+	$(".all_card1").prop("disabled",false);
+	$(".all_card2").prop("disabled",false);
+	
+    return true;
+}
+
+/**
+ * 出始化table
+ */
+function init_table(elmtTable, elmtDesc) {
+    //debugger;
+    var datas = elmtDesc.value.split(',');
+    var nLen = 0;
+    if (elmtDesc.value != "")
+        nLen = 1;
+    var nRows = elmtTable.rows.length;
+    if (nRows == nLen + 1)
+        return;
+    clear_table(elmtTable, true);
+    for (i = 0; i < datas.length; i++) {
+        add_table(elmtTable, datas[i]);
+    }
+}
+
+function wf_addcard_newrow(value) {
+    if (value == 'new_not_purchase_ym_ct') {
+        var str = document.getElementById("new_not_purchase_ym_ct_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("卡種已經100個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_card_add").value);
+        add_table(document.all.table_card, val_add);
+    }
+    
+    if (value == 'old_not_bill_ym_ct') {
+        var str = document.getElementById("old_not_bill_ym_ct_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("卡種已經100個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_card_add2").value);
+        add_table(document.all.table_card2, val_add);
+    }
+    
+    if (value == 'not_bill_ym_ct') {
+        var str = document.getElementById("not_bill_ym_ct_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("卡種已經100個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_card_add3").value);
+        add_table(document.all.table_card3, val_add);
+    }
+    
+    if (value == 'purch_ym_ct') {
+        var str = document.getElementById("purch_ym_ct_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("卡種已經100個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_card_add4").value);
+        add_table(document.all.table_card4, val_add);
+    }
+    /* if (duplicate(document.all.table_card, val_add))
+     {
+       alert("資料重覆");
+         return;
+     }*/
+}
+
+function wf_addgroup_newrow(value) {
+    if (value == 'new_not_purchase_ym_gc') {
+        var str = document.getElementById("new_not_purchase_ym_gc_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("團體代號已經50個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_group_add").value);
+        add_table(document.all.table_group, val_add);
+    }
+    
+    if (value == 'old_not_bill_ym_gc') {
+        var str = document.getElementById("old_not_bill_ym_gc_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("團體代號已經50個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_group_add2").value);
+        add_table(document.all.table_group2, val_add);
+    }
+    
+    if (value == 'not_bill_ym_gc') {
+        var str = document.getElementById("not_bill_ym_gc_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("團體代號已經50個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_group_add3").value);
+        add_table(document.all.table_group3, val_add);
+    }
+    
+    if (value == 'purch_ym_gc') {
+        var str = document.getElementById("purch_ym_gc_desc").value;
+        var datas = str.split(',')
+        if (datas.length >= 200) {
+            alert("團體代號已經50個，無法新增");
+            return;
+        }
+        var val_add = trim(document.getElementById("excl_group_add4").value);
+        add_table(document.all.table_group4, val_add);
+    }
+    /* if (duplicate(document.all.table_card, val_add))
+     {
+       alert("資料重覆");
+         return;
+     }*/
+}
+
+/*function wf_addlist_newrow()
+{
+
+    var str = document.getElementById("exclude_list_desc").value;
+    var datas = str.split(',')
+    
+    if (datas.length >= 200)
+    {
+     alert("排除名單已經20個，無法新增");
+        return;
+    }
+    var val_add = trim(document.getElementById("excl_list_add").value);
+    add_table(document.all.table_list, val_add);
+
+   /* if (duplicate(document.all.table_card, val_add))
+    {
+     alert("資料重覆");
+        return;
+    }
+}*/
+
+/*function duplicate(elmtTable, str)
+{
+    //debugger;
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    
+    for (var x=1; x<rowCount; x++) {
+        var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+        if (str == dat)
+            return true;
+    }
+    return false;
+}*/
+
+
+$("#carddialog").dialog({
+    title: '卡種',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 250,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_card, document.getElementById("new_not_purchase_ym_ct_desc"), document.getElementById("new_not_purchase_ym_ct"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_card);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#carddialog2").dialog({
+    title: '卡種',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 250,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_card2, document.getElementById("old_not_bill_ym_ct_desc"), document.getElementById("old_not_bill_ym_ct"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_card2);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#carddialog3").dialog({
+    title: '卡種',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 250,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_card3, document.getElementById("not_bill_ym_ct_desc"), document.getElementById("not_bill_ym_ct"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_card3);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#carddialog4").dialog({
+    title: '卡種',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 250,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_card4, document.getElementById("purch_ym_ct_desc"), document.getElementById("purch_ym_ct"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_card4);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#groupdialog").dialog({
+    title: '團體代號',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 350,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_group, document.getElementById("new_not_purchase_ym_gc_desc"), document.getElementById("new_not_purchase_ym_gc"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_group);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#groupdialog2").dialog({
+    title: '團體代號',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 350,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_group2, document.getElementById("old_not_bill_ym_gc_desc"), document.getElementById("old_not_bill_ym_gc"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_group2);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#groupdialog3").dialog({
+    title: '團體代號',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 350,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_group3, document.getElementById("not_bill_ym_gc_desc"), document.getElementById("not_bill_ym_gc"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_group3);
+            $(this).dialog("close");
+        }
+    }
+});
+
+$("#groupdialog4").dialog({
+    title: '團體代號',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 350,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_group4, document.getElementById("purch_ym_gc_desc"), document.getElementById("purch_ym_gc"));
+            $(this).dialog("close");
+        },
+        "取消": function() {
+            refresh_table(document.all.table_group4);
+            $(this).dialog("close");
+        }
+    }
+});
+
+/*$("#listdialog").dialog({
+    title:'排除名單',
+    autoOpen: false,
+    resizable: false,
+    modal: true,
+    height: 400,
+    width: 250,
+    buttons: {
+        "確定": function() {
+            fill_desc(document.all.table_list, document.getElementById("exclude_list_desc"), document.getElementById("exclude_list"));
+            $(this).dialog("close");
+        },
+        "取消": function () {
+            refresh_table(document.all.table_list);
+            $(this).dialog("close");
+        }
+    }
+});*/
+
+function processCardType(value) {
+    if (value == 'new_not_purchase_ym_ct') {
+        init_table(document.all.table_card, document.getElementById("new_not_purchase_ym_ct_desc"));
+        $("#carddialog").dialog("open");
+    }
+    if (value == 'old_not_bill_ym_ct') {
+        init_table(document.all.table_card2, document.getElementById("old_not_bill_ym_ct_desc"));
+        $("#carddialog2").dialog("open");
+    }
+    if (value == 'not_bill_ym_ct') {
+        init_table(document.all.table_card3, document.getElementById("not_bill_ym_ct_desc"));
+        $("#carddialog3").dialog("open");
+    }
+    if (value == 'purch_ym_ct') {
+        init_table(document.all.table_card4, document.getElementById("purch_ym_ct_desc"));
+        $("#carddialog4").dialog("open");
+    }
+}
+
+function processGroupCode(value) {
+    if (value == 'new_not_purchase_ym_gc') {
+        init_table(document.all.table_group, document.getElementById("new_not_purchase_ym_gc_desc"));
+        $("#groupdialog").dialog("open");
+    }
+    if (value == 'old_not_bill_ym_gc') {
+        init_table(document.all.table_group2, document.getElementById("old_not_bill_ym_gc_desc"));
+        $("#groupdialog2").dialog("open");
+    }
+    if (value == 'not_bill_ym_gc') {
+        init_table(document.all.table_group3, document.getElementById("not_bill_ym_gc_desc"));
+        $("#groupdialog3").dialog("open");
+    }
+    if (value == 'purch_ym_gc') {
+        init_table(document.all.table_group4, document.getElementById("purch_ym_gc_desc"));
+        $("#groupdialog4").dialog("open");
+    }
+}
+
+/*function processExcludelist() {
+     init_table(document.all.table_list, document.getElementById("exclude_list_desc"));
+     $("#listdialog").dialog("open");
+
+}*/
+
+window.onload = function() {
+    document.getElementById('myfile').onchange = readFile;
+};
+
+function readFile() {
+    file = this.files[0];
+    var fReader = new FileReader();
+    var exclude_list_desc = "";
+    var buf = "";
+    fReader.onload = function(event) {
+        exclude_list_desc = event.target.result;
+        buf = exclude_list_desc.replace(/\r/g, ",");
+        document.getElementById('exclude_list_desc').value = buf;
+        document.getElementById('exclude_list').value = buf;
+    };
+    fReader.readAsText(file);
+}
+
+function trim(value) {
+    return value.replace(/^\s+|\s+$/g, "");
+}
+
+/**
+ * 在table中新增一筆資料
+ */
+function add_table(elmtTable, dat) {
+    //debugger;
+    var ind = elmtTable.rows.length;
+    //var rowNum=ind;
+    var colNum = 0
+
+    var myRow = elmtTable.insertRow(ind);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) { serNo = "0" + ind; } else { serNo = "" + ind; }
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var ipSpan = document.createElement('span');
+    ipSpan.setAttribute('class', 'dsp_text');
+    ipSpan.textContent = dat;
+    myCell.appendChild(ipSpan);
+
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'blocks';
+    ip3.value = dat;
+    myCell.appendChild(ip3);
+
+}
+
+/**
+ * 移除刪除被打勾的資料
+ */
+function clear_table(elmtTable, bAll) {
+    //debugger;
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+
+    for (var x = rowCount - 1; x > 0; x--) {
+        if (bAll) { elmtTable.deleteRow(x); } else {
+            var flag = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+            if (flag)
+                elmtTable.deleteRow(x);
+        }
+
+    }
+}
+
+/**
+ * 取消刪除的打勾
+ */
+function refresh_table(elmtTable) {
+    //debugger;
+    checkbox = elmtTable.getElementsByTagName("input");
+
+    for (var i = 1; i < checkbox.length; i++) {
+        if (checkbox[i].type == 'checkbox') {
+            //do something
+            checkbox[i].checked = false;
+        }
+    }
+}
+
+/**
+ * 將table的資料組成字串，資料間用逗號分隔
+ */
+function fill_desc(elmtTable, elmtDesc, hElmtDesc) {
+    //debugger;
+    clear_table(elmtTable, false);
+    var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    elmtDesc.value = "";
+
+    for (var x = 1; x < rowCount; x++) {
+        var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+        if (elmtDesc.value == "")
+            elmtDesc.value = dat;
+        else
+            elmtDesc.value = elmtDesc.value + "," + dat;
+    }
+    hElmtDesc.value = elmtDesc.value;
+}
+$("#myfile").hide();
+$(document).ready(function() {
+	allCard();
+    if ($("#exclude_list_flag").prop("checked") == true) {
+        $("#exclude_list_desc").show();
+        $("#processList").prop("disabled", false);
+    } else {
+        $("#exclude_list_desc").hide();
+        $("#processList").prop("disabled", true);
+    }
+    $("#processList").click(function() {
+        $("#myfile").click();
+    })
+    $("#exclude_list_flag").click(function() {
+        if ($("#exclude_list_flag").prop("checked") == true) {
+            $("#exclude_list_desc").show();
+            $("#processList").prop("disabled", false);
+        } else {
+            $("#exclude_list_desc").hide();
+            $("#processList").prop("disabled", true);
+        }
+    });
+});
+
+
+//全體卡友
+function allCard(){
+	var all_card = $("input[name=all_card][value='1']").prop("checked");
+	if(all_card==true){
+		$("input[name = condition1]").prop("disabled",true);
+		$("input[name = condition2]").prop("disabled",true);
+		$("input[name = condition3]").prop("disabled",true);
+		$(".all_card1").prop("disabled",false);
+		$(".all_card1").css("backgroundColor","");
+		$(".all_card2").prop("disabled",true);
+		$(".all_card2").css("backgroundColor","#EDEDED");
+		$("input[name = condition1]").prop("checked",false);
+		$("input[name = condition2]").prop("checked",false);
+		$("input[name = condition3]").prop("checked",false);
+        document.getElementById('purch_month').disabled = true; 
+        document.getElementById('purch_amt').disabled = true;
+        document.getElementById('purch_month').style.backgroundColor = "#EDEDED";
+        document.getElementById('purch_amt').style.backgroundColor = "#EDEDED";
+        document.getElementById('purch_month').value = ""; 
+        document.getElementById('purch_amt').value = "";
+	}else{
+		$(".all_card1").prop("disabled",true);
+		$(".all_card1").css("backgroundColor","#EDEDED");
+		$(".all_card2").prop("disabled",false);
+		$(".all_card2").css("backgroundColor","");
+		$("input[name = condition1]").prop("disabled",false);
+		$("input[name = condition2]").prop("disabled",false);
+		$("input[name = condition3]").prop("disabled",false);
+		document.getElementById('purch_month').disabled = false; 
+	    document.getElementById('purch_amt').disabled = false;
+	    document.getElementById('purch_month').style.backgroundColor = "#FFFFFF";
+	    document.getElementById('purch_amt').style.backgroundColor = "#FFFFFF";
+	}
+}
+
+</script>

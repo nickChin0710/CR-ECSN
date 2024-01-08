@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>商務卡覆審 JCIC查詢及統計作業-jh-191002</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;查詢批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" >
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="讀取" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="名單匯入(b104)" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;&nbsp;
+      <input type="Button" value="JCIC媒體檔(b107)" onClick="return wf_jcic1('C2')" class="btProcess" >&nbsp;&nbsp;
+      <input type="Button" value="JCIC回覆轉入" onClick="return wf_jcic2()" class="btProcess" >&nbsp;&nbsp;
+      <input type="Button" value="JCIC資料統計(b103)" onClick="return top.submitControl('C4')" class="btProcess" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >覆審批號</th>
+    <th nowrap >覆審說明</th>
+    <th nowrap >第一次<br>分群日期</th>
+    <th nowrap >JCIC查詢<br>筆數</th>
+    <th nowrap >JCIC媒體<br>產生日期</th>
+    <th nowrap >JCIC資料<br>回覆日期</th>
+    <th nowrap >JCIC資料<br>統計日期</th>
+    <th nowrap >公司筆數</th>
+    <th nowrap >負責人筆數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="radio" name="opt" value="${ser_num}" ${opt_on} onchange="wf_opt_select(${ser_num});" >
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   </td>
+   <td nowrap class="list_cc"> ${batch_no}&nbsp;
+      <input type="hidden" name="batch_no" value="${batch_no}" />
+   </td>
+	<td nowrap class="list_ll"> ${batch_desc}&nbsp;
+	   <input type="hidden" name="batch_desc" value="${batch_desc}" />
+	</td>
+	<td nowrap class="list_cc"> ${group_date1.YMD}&nbsp;
+	   <input type="hidden" name="group_date1" value="${group_date1}" />
+	</td>
+	<td nowrap class="list_rr"> ${db_jcic_cnt.(999)}&nbsp;
+	   <input type="hidden" name="db_jcic_cnt" value="${db_jcic_cnt}" />
+	</td>
+	<td nowrap class="list_cc"> ${jcic_query_date.YMD}&nbsp;
+	   <input type="hidden" name="jcic_query_date" value="${jcic_query_date}" />
+	</td>
+	<td nowrap class="list_cc"> ${db_jcic_resp_date.YMD}&nbsp;
+	   <input type="hidden" name="db_jcic_resp_date" value="${db_jcic_resp_date}" />
+	</td>
+	<td nowrap class="list_cc"> ${jcic_proc_date.YMD}&nbsp;
+	   <input type="hidden" name="jcic_proc_date" value="${jcic_proc_date}" />
+	</td>
+	<td nowrap class="list_rr"> ${db_corp_cnt.(999)}&nbsp;
+	   <input type="hidden" name="db_corp_cnt" value="${db_corp_cnt}" />
+	</td>
+	<td nowrap class="list_rr"> ${db_idno_cnt.(999)}&nbsp;
+	   <input type="hidden" name="db_idno_cnt" value="${db_idno_cnt}" />
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+
+ <input type="hidden"  name="upload_file" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+ <input type="hidden" id="hh_batch_no" name="hh_batch_no" value="${hh_batch_no}" />
+ <input type="hidden" id="hh_list_cnt" name="hh_list_cnt" value="${hh_list_cnt}" />
+ <input type="hidden" id="hh_jcic_proc_date" name="hh_jcic_proc_date" value="${hh_jcic_proc_date}" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ if (1==2 ${proc4_mesg}) {
+ 		var ls_jcic_proc_date = document.dataForm.hh_jcic_proc_date.value;
+   if(ls_jcic_proc_date !=''){
+      var resp  = confirm("已執行 JCIC 之資料統計分析處理, 是否重新執行");
+      if( resp == true ) {
+         top.submitControl('CB');
+      }  else  {
+         alert("no run.....");
+      }
+   }  else  {
+      var resp  = confirm("是否執行 JCIC 之資料統計分析處理");
+      if( resp ==true ) {
+         top.submitControl('CB');
+      }  else  {
+         alert("no run.....");
+      }
+   }
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+    top.packageName = "rskm02";
+    top.javaName    = "Rskp1240";
+    //methodName  = "actionFunction";
+    top.requHtml    = "rskp1240";
+    top.respHtml    = "rskp1240";
+    return true;
+  }
+
+ function wf_uploadAfter() {
+   return;
+ }
+
+ function wf_opt_select(parm1) {
+   var ii =parseInt(parm1) - 1;
+   var ls_bb2 =document.getElementsByName("batch_no")[ii].value;
+   var ls_jcic_proc_date =document.getElementsByName("jcic_proc_date")[ii].value;
+   $('input[name=hh_batch_no]').val(ls_bb2);
+   $('input[name=hh_list_cnt]').val(ii);
+   $('input[name=hh_jcic_proc_date]').val(ls_jcic_proc_date);
+ }
+
+ function wf_jcic1(parm1) {
+  var resp  = confirm("是否執行 產生JCIC查詢文字檔處理(RskB107)");
+  if ( resp ==true ) {
+    top.submitControl('C2');
+    return true;
+  }
+  return false;
+ }
+
+ function wf_jcic2() {
+    alert("請執行 colq0240 JCIC查詢資料檔傳送記錄查詢");
+ }
+
+</script>

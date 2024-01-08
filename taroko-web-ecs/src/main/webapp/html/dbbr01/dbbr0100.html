@@ -1,0 +1,113 @@
+<html>
+
+<head>
+    <title>帳單比對未成功報表-107-07-24-V1.00.00-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">                
+                <tr>
+                    <td nowrap colspan=4>&nbsp;入帳日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;正負類別：
+                        <input type="radio" value="0" name="ex_db_sign" ${ex_db_sign-0} ${DEFAULT-ex_db_sign}>0:全部
+                        <input type="radio" value="1" name="ex_db_sign" ${ex_db_sign-1}>1:正項交易                                  
+                        <input type="radio" value="2" name="ex_db_sign" ${ex_db_sign-2}>2:負項交易                         
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!--<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;-->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr> 
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">交易卡號</th>
+                <th nowrap class="list_th">正負</th>
+                <th nowrap class="list_th">授權日期</th>
+                <th nowrap class="list_th">授權金額</th>
+                <th nowrap class="list_th">CCAS授權碼</th>
+                <th nowrap class="list_th">消費日期</th>
+                <th nowrap class="list_th">消費金額</th>
+                <th nowrap class="list_th">授權碼</th>
+                <th nowrap class="list_th">國別</th>
+                <th nowrap class="list_th">商店類別</th>
+                <th nowrap class="list_th">ECS-旗標</th>
+                <th nowrap class="list_th">入帳日期</th>
+                <th nowrap class="list_th">帳戶號碼</th>
+                <th nowrap class="list_th">扣帳失敗</th>
+
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${dbb_bill_card_no}&nbsp; </td>
+                <td nowrap class="list_cc"> ${db_sign}&nbsp; </td>
+                <td nowrap class="list_cc"> ${dbb_ccas_dtl_purchase_date}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${dbb_ccas_dtl_dest_amt.(999)} </td>
+                <td nowrap class="list_cc"> ${dbb_ccas_dtl_auth_code}&nbsp; </td>
+                <td nowrap class="list_cc"> ${dbb_bill_purchase_date}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${dbb_bill_dest_amt.(999)} </td>
+                <td nowrap class="list_cc"> ${dbb_bill_auth_code}&nbsp; </td>
+                <td nowrap class="list_cc"> ${mcht_country}&nbsp; </td>
+                <td nowrap class="list_cc"> ${mcht_category}&nbsp; </td>
+                <td nowrap class="list_cc"> ${rsk_type_special}&nbsp; </td>
+                <td nowrap class="list_cc"> ${post_date}&nbsp; </td>
+                <td nowrap class="list_cc"> ${acct_no}&nbsp; </td>
+                <td nowrap class="list_cc"> ${db_deduct_proc_type}&nbsp; </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+        <input type="hidden" name="user_id" value="${user_id}">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+// document.dataForm.ex_card_type.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

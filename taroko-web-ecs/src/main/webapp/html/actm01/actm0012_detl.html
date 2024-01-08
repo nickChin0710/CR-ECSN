@@ -1,0 +1,355 @@
+<html> 
+<head>
+<title>外幣自動扣繳帳號維護-detl-109-02-18-V1.00.02-Alex </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;&nbsp;
+                    <input type="Button" name="btnQuery" value="讀取" ${btnQuery_disable} onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnAdd"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap>&nbsp;帳戶號碼:</td>
+                    <td nowrap>&nbsp;
+						<select size="1" name="kk_acct_type" class="col_ddlb" zRequire="k" ${kk_acct_type_attr} >${dddw_acct_type}</select>-- 
+						<input type="text" class="col_text" name="kk_acct_key" ${kk_acct_key_attr} value="${kk_acct_key}" maxlength=11 size=13 zRequire="k" />
+                    </td>
+                    <td nowrap>&nbsp;
+                      <span style="color:red; font-weight:bold;">${pending_msg}
+                        <input type="hidden" name="pending_msg" value="${pending_msg}">
+                      </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;雙幣幣別:</td>
+                    <td nowrap>&nbsp;
+                        <select size="1" name="kk_curr_code" ${kk_curr_code_attr} class="col_ddlb"  zRequire="k" >${dddw_curr_code}</select>
+                    </td>
+                    <td nowrap>&nbsp;關帳期別:</td>
+                    <td nowrap>
+			          			<span class="dsp_text">${stmt_cycle}</span>
+                      <input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+<!--			<td nowrap class="col_key">帳戶號碼</td>     -->
+<!--			<td nowrap style="color:red";>帳戶號碼</td>  -->
+					<td nowrap>帳戶號碼</td>
+					<td nowrap>
+						<span class="dsp_text">${acct_type}-${acct_key}</span>
+						<input type="hidden" name="acct_type" value="${acct_type}">
+						<input type="hidden" name="acct_key" value="${acct_key}">
+					</td>
+<!--			<td nowrap class="col_key">雙幣幣別</td>    -->
+<!--			<td nowrap style="color:red";>雙幣幣別</td> -->
+					<td nowrap>雙幣幣別</td>
+					<td nowrap>
+						<span class="dsp_text">${tt_curr_code}</span>
+						<input type="hidden" name="curr_code" value="${curr_code}">
+						<input type="hidden" name="tt_curr_code" value="${tt_curr_code}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>姓名(公司名稱)</td>
+					<td nowrap colspan="3">
+						<span class="dsp_text">${db_holder_name}</span>
+						<input type="hidden" name="db_holder_name" value="${db_holder_name}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>申請書編號</td>
+					<td nowrap>
+						<span class="dsp_text">${appl_no}</span>
+						<input type="hidden" name="appl_no" value="${appl_no}">
+					</td>
+					
+					<td nowrap>正卡ID</td>
+					<td nowrap>
+						<span class="dsp_text">${tt_id_no}</span>
+						<input type="hidden" name="tt_id_no" value="${tt_id_no}">
+						<input type="hidden" name="id_no" value="${id_no}">
+						<input type="hidden" name="id_no_code" value="${id_no_code}">
+					</td>
+				</tr>
+	    </table>
+<!--  <table bgcolor="greenyellow" width="80%" border="0" cellspacing="0" cellpadding="4">
+      <table style="background-color:lightgreen;" width="80%" border="0" cellspacing="0" cellpadding="4">
+			  <tr>
+					<td nowrap>
+           台幣 自動扣繳帳戶
+					</td>
+        </tr>
+--> 
+      <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th nowrap colspan=4 >　台幣　自動扣繳帳戶　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+      </tr>
+			  <tr>
+					<td nowrap>台幣-扣繳行庫</td>
+					<td nowrap>
+						<span class="dsp_text">${acno_autopay_acct_bank}</span>
+						<input type="hidden" name="acno_autopay_acct_bank" value="${acno_autopay_acct_bank}">
+					</td>
+					
+					<td nowrap>台幣-扣繳帳號</td>
+					<td nowrap>
+						<span class="dsp_text">${acno_autopay_acct_no}</span>
+						<input type="hidden" name="acno_autopay_acct_no" value="${acno_autopay_acct_no}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>台幣-指示碼</td>
+					<td nowrap>
+						<span class="dsp_text">${acno_autopay_indicator}</span>
+						<span class="dsp_text">${tt_acno_autopay_indicator}</span>
+						<input type="hidden" name="acno_autopay_indicator" value="${acno_autopay_indicator}">
+						<input type="hidden" name="tt_acno_autopay_indicator" value="${tt_acno_autopay_indicator}">
+					</td>
+					
+					<td nowrap>台幣-固定金額</td>
+					<td nowrap>
+						<span class="dsp_text">${acno_autopay_fix_amt.(999)}</span>
+						<input type="hidden" name="acno_autopay_fix_amt" value="${acno_autopay_fix_amt}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>台幣-有效期間</td>
+					<td nowrap>
+						<span class="dsp_text">${acno_autopay_acct_s_date.YMD}-${acno_autopay_acct_e_date.YMD}</span>
+						<input type="hidden" name="acno_autopay_acct_s_date" value="${acno_autopay_acct_s_date}">
+						<input type="hidden" name="acno_autopay_acct_e_date" value="${acno_autopay_acct_e_date}">
+					</td>
+					
+					<td nowrap>台幣-固定比率</td>
+					<td nowrap>
+						<span class="dsp_text">${acno_autopay_rate}</span>
+						<input type="hidden" name="acno_autopay_rate" value="${acno_autopay_rate}">&nbsp;%
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>台幣-扣繳帳號歸屬ID</td>
+					<td nowrap colspan="3">
+						<span class="dsp_text">${acno_autopay_id}-${acno_autopay_id_code}</span>
+						<input type="hidden" name="acno_autopay_id" value="${acno_autopay_id}">
+						<input type="hidden" name="acno_autopay_id_code" value="${acno_autopay_id_code}">
+					</td>
+				</tr>
+	    </table>
+<!--  <table bgcolor="lightskyblue" width="80%" border="0" cellspacing="0" cellpadding="4">
+      <table style="background-color:lightskyblue;" width="80%" border="0" cellspacing="0" cellpadding="4">
+			  <tr>
+					<td nowrap>
+           外幣 自動扣繳帳戶
+					</td>
+        </tr>
+-->
+      <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th nowrap colspan=4 >　外幣　自動扣繳帳戶　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+      </tr>
+				<tr>
+					<td nowrap>外幣-扣繳行庫</td>
+					<td nowrap>
+						<select  name="autopay_acct_bank" class="col_ddlb" zRequire="Y" >
+							${dddw_acct_bank}
+						</select>
+						<input type="hidden" name="chk_autopay_acct_bank" value="${chk_autopay_acct_bank}">
+					</td>
+					
+					<td nowrap>外幣-扣繳帳號</td>
+					<td nowrap>
+						<input type="text" class="col_any" zRequire="Y" name="autopay_acct_no" value="${autopay_acct_no}" zEdit="number" maxlength=16 size=16 />
+						<input type="hidden" name="chk_autopay_acct_no" value="${chk_autopay_acct_no}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>外幣-指示碼</td>
+					<td nowrap>
+						<input type="radio" value="1" name="autopay_indicator" ${autopay_indicator-1} ${DEFAULT_CHK} />1-扣TTL
+						<input type="radio" value="2" name="autopay_indicator" ${autopay_indicator-2} />2-扣MP
+						<input type="hidden" name="chk_autopay_indicator" value="${chk_autopay_indicator}">
+					</td>
+					
+					<td nowrap>外幣-生效旗標</td>
+					<td nowrap>
+						<input type="radio" value="1" name="valid_flag" ${valid_flag-1} ${DEFAULT_CHK} />1-即時生效
+						<input type="radio" value="2" name="valid_flag" ${valid_flag-2} />2-CYCLE生效
+						<input type="hidden" name="chk_valid_flag" value="${chk_valid_flag}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>外幣-扣繳帳號歸屬ID</td>
+					<td nowrap>
+						<input type="text" class="col_text" zRequire="Y" name="autopay_id" value="${autopay_id}" zEdit="alphanum,upper" maxlength=16 size=16 />
+						<input type="text" class="col_any" zRequire="YY" name="autopay_id_code" value="${autopay_id_code}" zEdit="number" maxlength=3 size=3 />
+						<input type="hidden" name="chk_autopay_id" value="${chk_autopay_id}">
+						<input type="hidden" name="chk_autopay_id_code" value="${chk_autopay_id_code}">
+					</td>
+					
+					<td nowrap>
+						<input type="checkbox" name="autopay_dc_flag" value="Y" ${autopay_dc_flag-Y} />外幣-外幣存款不足轉扣台幣
+						<input type="hidden" name="chk_autopay_dc_flag" value="${chk_autopay_dc_flag}">
+					</td>
+					
+					<td nowrap>
+						<input type="radio" value="1" name="autopay_dc_indicator" ${autopay_dc_indicator-1} ${DEFAULT_CHK} />1-扣TTL
+						<input type="radio" value="2" name="autopay_dc_indicator" ${autopay_dc_indicator-2} />2-扣MP
+						<input type="hidden" name="chk_autopay_dc_indicator" value="${chk_autopay_dc_indicator}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>外幣-台幣換匯帳號</td>
+					<td nowrap>
+						<input type="text" class="col_any" name="exchange_acct_no" value="${exchange_acct_no}" zEdit="number" maxlength=16 size=16 />
+						<input type="hidden" name="chk_exchange_acct_no" value="${chk_exchange_acct_no}">
+					</td>
+					
+					<td nowrap>來源代號</td>
+					<td nowrap>
+						<span class="dsp_text">${from_mark}.${tt_from_mark}</span>
+						<input type="hidden" name="from_mark" value="${from_mark}">
+						<input type="hidden" name="tt_from_mark" value="${tt_from_mark}">
+					</td>
+				</tr>
+	    </table>
+      <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th nowrap colspan=2 >　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+      </tr>
+				<tr>
+					<td nowrap >
+						<input type="checkbox" name="verify_flag" value="Y" ${verify_flag-Y}>驗印完畢:
+						<input type="hidden" name="chk_verify_flag" value="${chk_verify_flag}">
+					</td>
+					<td nowrap>驗印結果:
+						<select   size="1"  name="verify_return_code" class="col_ddlb" >
+			         <option value="">--</option>
+			         <option value="00" ${verify_return_code-00} >成功</option>
+			         <option value="01" ${verify_return_code-01} >失敗</option>
+     			  </select>
+						<input type="hidden" name="chk_verify_return_code" value="${chk_verify_return_code}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>驗印完成日期
+						<span class="dsp_text">${verify_date.YMD}</span>
+						<input type="hidden" name="verify_date" value="${verify_date}">
+					</td>
+					<td nowrap>維護日期
+						<span class="dsp_text">${Crt_date.YMD}</span>
+						<input type="hidden" name="Crt_date" value="${Crt_date}">
+					</td>
+					
+				</tr>
+				<tr>
+					<td nowrap>IBM查核日期
+						<span class="dsp_text">${ibm_check_date.YMD}</span>
+						<input type="hidden" name="ibm_check_date" value="${ibm_check_date}">
+					</td>
+					
+					<td nowrap>查核結果
+						<span class="dsp_text">${ibm_return_code}</span>
+						<input type="hidden" name="ibm_return_code" value="${ibm_return_code}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>上次簡訊發送日期
+						<span class="dsp_text">${sms_send_date.YMD}</span>
+						<input type="hidden" name="sms_send_date" value="${sms_send_date}">
+					</td>
+					
+					<td nowrap>簡訊發送次數
+						<span class="dsp_text">${sms_send_cnt}</span>
+						<input type="hidden" name="sms_send_cnt" value="${sms_send_cnt}">
+						&nbsp;
+						<input type="Button" name="btnSms" ${btnSms_disable} value="發送簡訊" onClick="wf_send_sms_msg()" class="btOther">&nbsp;&nbsp;
+					</td>
+				</tr>
+        </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="MOD_PGM" value="actm0012">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="rowid" value="${rowid}">
+        <input type="hidden" name="exec_check_flag" value="${exec_check_flag}">
+        <input type="hidden" id="sms_send_flag" name="sms_send_flag" value="${sms_send_flag}">
+        <input type="hidden" name="acno_rc_use_indicator" value="${acno_rc_use_indicator}">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden"  name="kp_acct_type" value="${kp_acct_type}">
+        <input type="hidden"  name="kp_acct_key" value="${kp_acct_key}">
+        <input type="hidden"  name="kp_curr_code" value="${kp_curr_code}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_acct_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+		
+		var ls_acno_rc_use_indicator = document.forms["dataForm"]["acno_rc_use_indicator"].value;
+		var ls_autopay_indicator = document.forms["dataForm"]["autopay_indicator"].value;
+		
+		if (top.actionCode=='A' || top.actionCode=='U') {
+			if(ls_acno_rc_use_indicator =='3' && ls_autopay_indicator != '1'){
+				if(confirm("此帳戶不準允用RC, 請確認是否繼續")==false){
+					return false;
+				}
+			}
+			
+			if (confirm("是否 發送簡訊")==true) {
+        $("#sms_send_flag").val("Y");                 
+     	}	else	{
+     		$("#sms_send_flag").val("N");      		
+     	}	
+			
+		}
+		
+    return true;
+}
+
+function wf_send_sms_msg() {
+	var ls_rowid = document.forms["dataForm"]["rowid"].value;
+	if(ls_rowid ==''){
+		alert("資料未讀取 or 尚未新增 不可發送簡訊");
+		return ;
+	}
+
+	if(confirm("是否 發送簡訊")==false){
+		return ;
+	}
+
+	top.submitControl('C1');
+
+}
+
+</script>

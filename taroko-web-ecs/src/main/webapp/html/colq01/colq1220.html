@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>LGD(901)起始日報送資料查詢-pond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="3">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;身分證ID/統編：
+      <input type="text" class="col_text" name="exIdCorpNo" value="${exIdCorpNo}" 
+        zEdit="alphanum,upper,idnum" maxlength="10" size="10" />
+    </td>
+    <td nowrap>&nbsp;違約原因：
+      <select size="1" name="exLgdReason" class="col_ddlb">
+         <option value="">--</option>
+         <option value="A" ${exLgdReason-A} >A.本息延滯90日</option>
+         <option value="B1" ${exLgdReason-B1} >B1.前置協商,更生清算</option>
+         <option value="B2" ${exLgdReason-B2} >B2.強制停用</option>
+      </select>
+    </td>
+    <td rowspan="4" nowrap><span style="color:#A23400;">
+          ＊表示報送901先留存資料欄位<br>&nbsp;&nbsp;，供報送902結案時使用
+    </span></td>
+  </tr>  
+  <tr>
+    <td nowrap>&nbsp;報送：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exSendFlag" ${exSendFlag-0} ${DEFAULT-exSendFlag} />全部
+         <input type="radio" value="Y" name="exSendFlag" ${exSendFlag-Y} />已報送
+         <input type="radio" value="N" name="exSendFlag" ${exSendFlag-N} />未報送
+      </span>
+    </td>
+    <td nowrap>&nbsp;報送年月：
+      <input type="text" class="col_date" name="exSendYm" value="${exSendYm}" 
+        zEdit="date,yymm" maxlength="6" size="8" />
+    </td>
+  </tr>
+  
+  <tr>
+    <td nowrap>&nbsp;建檔管道：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exFromType" ${exFromType-0} ${DEFAULT-exFromType} />全部
+         <input type="radio" value="1" name="exFromType" ${exFromType-1} />人工
+         <input type="radio" value="2" name="exFromType" ${exFromType-2} />批次
+      </span>
+    </td>
+    <td nowrap>&nbsp;資料來源：
+      <select size="1" name="exDataTable" class="col_ddlb">
+         <option value="">--</option>
+         <option value="acno" ${exDataTable-acno} >acno.帳戶資料</option>
+         <option value="nego" ${exDataTable-nego} >nego.前置協商</option>
+         <option value="renew" ${exDataTable-renew} >renew.更生</option>
+         <option value="liqu" ${exDataTable-liqu} >liqu.清算</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;結案：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exCloseFlag" ${exCloseFlag-0} ${DEFAULT-exCloseFlag} />全部
+         <input type="radio" value="Y" name="exCloseFlag" ${exCloseFlag-Y} />已結案
+         <input type="radio" value="N" name="exCloseFlag" ${exCloseFlag-N} />未結案
+      </span>
+    </td>
+    <td nowrap>&nbsp;建檔日期：
+      <input type="text" class="col_date" name="exCrtDateS" value="${exCrtDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exCrtDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exCrtDateE" value="${exCrtDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exCrtDateE'});
+	  </script>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">LGD 序號</th>
+    <th nowrap class="list_th">身分證ID/統編</th>
+    <th nowrap class="list_th">違約年月</th>
+    <th nowrap class="list_th">違約原因</th>
+    <th nowrap class="list_th">資料來源</th>
+    <th nowrap class="list_th">通知日期</th>
+    <th nowrap class="list_th">建檔管道</th>
+    <th nowrap class="list_th">建檔日期</th>
+    <th nowrap class="list_th">媒體報送日期</th>
+    <th nowrap class="list_th">結案</th>
+    <th nowrap class="list_th">結案日期</th>
+    <th nowrap class="list_th"><span style="color:#0000FF;">＊最早違約<br>暴險金額</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF;">＊列入<br>逾放年月</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF;">＊列入逾放日<br>暴險金額</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF;">＊轉催收<br>年月</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF;">＊轉催收<br>暴險金額</span></th>
+    <th nowrap class="list_th">違約備註</th>
+  </tr>
+
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll"> ${lgd_seqno} </td>
+   <td nowrap class="list_cc"> ${id_corp_no} </td>
+   <td nowrap class="list_cc"> ${lgd_early_ym.YMD} </td>
+   <td nowrap class="list_ll"> ${lgd_reason}.${tt_lgd_reason} </td>
+   <td nowrap class="list_cc"> ${tt_data_table} </td>
+   <td nowrap class="list_cc"> ${notify_date.YMD} </td>
+   <td nowrap class="list_cc"> ${tt_from_type} </td>
+   <td nowrap class="list_cc"> ${crt_date.YMD} </td>
+   <td nowrap class="list_cc"> ${crt_901_date.YMD} </td>
+   <td nowrap class="list_cc"><span style="color:#930093; font-weight:bold;"> ${tt_close_flag} </span></td>
+   <td nowrap class="list_cc"> ${close_date.YMD} </td>
+   <td nowrap class="list_rr"><span style="color:#0000FF;"> ${db_risk_amt} </span></td>
+   <td nowrap class="list_cc"><span style="color:#0000FF;"> ${db_overdue_ym.YMD} </span></td>
+   <td nowrap class="list_rr"><span style="color:#0000FF;"> ${db_overdue_amt} </span></td>
+   <td nowrap class="list_cc"><span style="color:#0000FF;"> ${db_coll_ym.YMD} </span></td>
+   <td nowrap class="list_rr"><span style="color:#0000FF;"> ${db_coll_amt} </span></td>
+   <td nowrap class="list_cc"> ${lgd_remark} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.exIdCorpNo.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

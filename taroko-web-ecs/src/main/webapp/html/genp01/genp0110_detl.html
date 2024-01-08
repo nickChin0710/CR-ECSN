@@ -1,0 +1,316 @@
+<html>
+
+<head>
+    <title>會計分錄自由格式維護作業-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript">
+function wf_add_newrow() {
+    //debugger;
+    var ind = document.getElementById('table1').rows.length - 1;
+    var rowNum = document.getElementById('table1').rows.length - 1;
+    var colNum = 0;
+    var fi = 0;
+    //console.log("a:"+ind);
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) {
+        serNo = "0" + ind;
+    } else {
+        serNo = "" + ind;
+    }
+    fi++;
+
+    var con = document.createElement('span');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var ip2 = document.createElement('input');
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild(ip2);
+
+    //dbcr======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    var dbcrarray = ["C", "D"];
+
+    var idbcr = document.createElement('select');
+    idbcr.setAttribute('class', 'col_ddlb');
+    idbcr.name = 'dbcr';
+    idbcr.value = '';
+    for (var i = 0; i < dbcrarray.length; i++) {
+        var option = document.createElement("option");
+        option.value = dbcrarray[i];
+        if (dbcrarray[i] == "C") {
+            option.text = "貸";
+        } else if (dbcrarray[i] == "D") {
+            option.text = "借";
+        }
+
+        idbcr.appendChild(option);
+    }
+    myCell.appendChild(idbcr);
+
+    //acno====================================== 
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    debugger;
+    var acno = document.createElement('select');
+    acno.setAttribute('class', 'col_ddlb');
+    acno.name = 'ac_no';
+    //acno.value ='';
+    //alert(document.getElementById('JQList').value);
+    var jqstr = document.getElementById('JQList').value;
+    var params = jqstr.split(",");
+    for (var i = 0; i < params.length; i++) {
+        var option = document.createElement("option");
+        option.value = params[i];
+        option.text = params[i];
+        acno.appendChild(option);
+    }
+    //acno.appendChild(document.getElementById('JQList'));
+    myCell.appendChild(acno);
+
+    //amt======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var amt = document.createElement('input');
+    amt.setAttribute('class', 'col_number');
+    amt.type = 'number';
+    amt.name = 'amt';
+
+    amt.maxLength = 11;
+    amt.size = 11;
+    amt.value = 0;
+    myCell.appendChild(amt);
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var iid_no = document.createElement('input');
+    iid_no.setAttribute('class', 'clo_text');
+    iid_no.type = 'text';
+    iid_no.name = 'id_no';
+    iid_no.maxLength = 20;
+    iid_no.size = 20;
+    iid_no.value = '';
+    myCell.appendChild(iid_no);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mo1 = document.createElement('input');
+    mo1.setAttribute('class', 'col_any');
+    mo1.type = 'text';
+    mo1.name = 'memo1';
+    //mo1.maxLength = 20;
+    //mo1.size = 20;
+    mo1.maxLength = 10;
+    mo1.size = 20;
+    mo1.value = '';
+    myCell.appendChild(mo1);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mo2 = document.createElement('input');
+    mo2.setAttribute('class', 'col_any');
+    mo2.type = 'text';
+    mo2.name = 'memo2';
+    //mo2.maxLength = 20;
+    //mo2.size = 20;
+    mo2.maxLength = 10;
+    mo2.size = 20;
+    mo2.value = '';
+    myCell.appendChild(mo2);
+}
+
+function wf_check() {
+console.log("a:");
+
+}
+
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+             ${#PLUGIN:htmcomm_plugin.apr_user3}  
+            <table>
+                <td nowrap colspan="5">&nbsp;
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ; onmouseout="light_img(this);" ; onmouseover="dark_img(this);">&nbsp;
+                    <input type="Button"  value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button"  value="存檔" onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value="列印" onClick="return top.submitControl('P')" class="btAdd">&nbsp;&nbsp;
+                </td>
+            </table>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;建檔日期：
+                        <input type="text" class="col_date" name="ex_tx_date" value="${tx_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap colspan="4">&nbsp;套號：
+                        <input type="text" class="col_text" name="ex_refno" value="${refno}" zEdit="alphanum" maxlength=6 size=6 />
+                    </td>
+                    <td nowrap colspan="4">&nbsp;分行代碼:
+                        <select size="1" name="ex_branch" class="col_ddlb">
+                            ${dddw_branch}
+                        </select>
+                    </td>
+                    <td nowrap colspan="4">&nbsp;幣別：
+                        <select name="ex_curr" class="col_ddlb" zRequire="k">
+                            ${dddw_curr}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">&nbsp;業務別：UB</td>
+                    <td nowrap colspan="6">&nbsp;部門：
+                        <select size="1" name="ex_depno" class="col_ddlb">
+                            <option value="1" ${depno-1}>1:銀行部</option>
+                            <option value="2" ${depno-2}>2:儲蓄部</option>
+                            <option value="3" ${depno-3}>3:信託部</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="3">&nbsp;營業日期：${business_date}</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="25">&nbsp;新舊分錄識別碼：&nbsp;新舊制(B)&nbsp;&nbsp;&nbsp; 　註：分錄識別碼有IFRS新制(I)、舊制(G)，請另提需求單申請
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table border="0" width="5%">
+            <tr>
+                <td nowrap colspan="6">&nbsp;標準分錄代碼：
+                    <select name="ex_std_vouch_cd" class="col_ddlb">
+                        ${dddw_std_vouch_cd}
+                    </select>
+                </td>
+                <td nowrap>
+                    <input type="Button"  value="帶入" ${btnSelect_disable} onClick="wf_check();return top.submitControl('G')" class="btAdd_detl" />&nbsp;
+                </td>
+                <td nowrap>
+                    <input type="Button"  value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+                </td>
+            </tr>
+        </table>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();">刪除&nbsp;</th>
+                <th nowrap class="list_th">借/貸</th>
+                <th nowrap class="list_th">科子細目</th>
+                <th nowrap class="list_th">金額</th>
+                <th nowrap class="list_th">身分證號碼</th>
+                <th nowrap class="list_th">摘要一</th>
+                <th nowrap class="list_th">摘要二</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}">
+                    <input type="hidden" name="ser_num" value="${ser_num}">
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                </td>
+                <td nowrap class="list_ll">
+                    <select size="1" name="dbcr" class="col_ddlb">
+                        <option value="C" ${dbcr-C}>貸</option>
+                        <option value="D" ${dbcr-D}>借</option>
+                    </select>
+                </td>
+                <td nowrap class="list_ll">
+                    <select name="ac_no" class="col_ddlb">
+                        ${JcicQueryMastListD}
+                    </select>
+                </td>
+                <td nowrap class="list_ll">
+                    <input type="text" class="col_text" name="amt" value="${amt}" maxlength=8 size=8 style="text-align:right;" />
+                </td>
+                <td nowrap class="list_ll">
+                    <input type="text" class="col_text" name="id_no" value="${id_no}" maxlength=10 size=10 />
+                </td>
+                <td nowrap class="list_ll">
+                    <!-- <input type="text" class="col_any" name="memo1" value="${memo1}" zEdit="canTW" maxlength=20 size=20 /> -->
+                    <input type="text" class="col_any" name="memo1" value="${memo1}" zEdit="canTW" maxlength=10 size=20 />
+                </td>
+                <td nowrap class="list_ll">
+                    <!-- <input type="text" class="col_any" name="memo2" value="${memo2}" zEdit="canTW" maxlength=20 size=20 /> -->
+                    <input type="text" class="col_any" name="memo2" value="${memo2}" zEdit="canTW" maxlength=10 size=20 />
+                </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="h_tx_date" value="${tx_date}">
+        <input type="hidden" name="h_refno" value="${refno}">
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="genp0110">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="JQList" id="JQList" value="${JcicQueryMastList}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    return true;
+}
+</script>

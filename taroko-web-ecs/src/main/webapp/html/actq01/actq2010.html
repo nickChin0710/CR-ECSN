@@ -1,0 +1,117 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/23  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!-- 112/07/13  V1.00.02  Simon          取消"借方科目"、"銷帳鍵值"           -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+	<title>繳款批次明細查詢-V.106-11-06 V1.00.00 OrisChang Initial
+		-V.109-11-02 V1.00.01 Andy Update
+		-V.112-07-13 V1.00.02 Simon Update
+	</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+	<div id="condBlock">
+		<table width="50%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap>&nbsp;批次號碼:
+					<select size="1" name="ex_batch_no" class="col_ddlb">${dddw_batch_no}</select>
+				</td>
+				<td nowrap>&nbsp;結算幣別:
+					<select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan=2>&nbsp;
+					<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+					&nbsp;&nbsp;
+					<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+					&nbsp;&nbsp;
+					<!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+					<img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+					<!-- <input type="Button" name="btnUpdate" value="產生.CSV檔" onClick="return wf_downfile();" class="btUpdate">&nbsp;&nbsp; -->
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan="2">&nbsp;
+					總筆數:&nbsp;
+					<span style="color: blue" class="dsp_text" id='sum_ct'>${sum_ct.(999)}</span>&nbsp;
+					繳款金額合計(結算幣別):&nbsp;
+					<span style="color: blue" class="dsp_text" id='sum_amt'>${sum_amt.(999)}</span>&nbsp;
+					繳款金額合計:&nbsp;
+					<span style="color: blue" class="dsp_text" id='sum_amt1'>${sum_amt1.(999)}</span>&nbsp;
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr>
+	<!-- 明細============================ -->
+	<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<th nowrap class="list_th">批次號碼</th>
+			<th nowrap class="list_th">序號</th>
+			<th nowrap class="list_th">歸戶帳號</th>
+			<th nowrap class="list_th">帳戶中文名稱</th>
+			<th nowrap class="list_th">繳款卡號</th>
+			<th nowrap class="list_th">結算幣別</th>
+			<th nowrap class="list_th">繳款金額<br>(結算幣別)</th>
+			<th nowrap class="list_th">繳款金額</th>
+			<th nowrap class="list_th">繳款日</th>
+			<th nowrap class="list_th">繳款類別</th>
+<!--
+			<th nowrap class="list_th">借方科目</th>
+			<th nowrap class="list_th">銷帳鍵值</th>
+-->
+		</tr>
+		<!-- BEGIN DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_ll">${batch_no}</td>
+			<td nowrap class="list_ll">${serial_no}</td>
+			<td nowrap class="list_ll">${acct_no}</td>
+			<td nowrap class="list_ll">${db_acno_name}</td>
+			<td nowrap class="list_ll">${pay_card_no}</td>
+			<td nowrap class="list_ll">${curr_code}</td>
+			<td nowrap class="list_rr">${dc_pay_amt}</td>
+			<td nowrap class="list_rr">${pay_amt}</td>
+			<td nowrap class="list_cc">${pay_date.YMD}</td>
+			<td nowrap class="list_ll">${payment_type}</td>
+		</tr>
+		<!-- END DYNAMIC : DETAIL -->
+	</table>
+	<hr>
+	<!--保留功能-->
+	<input type="hidden" name="data_k1" value="">
+	<input type="hidden" name="data_k2" value="">
+	<input type="hidden" name="data_k3" value="">
+	<input type="hidden" name="data_k4" value="">
+	<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+	<input type="hidden" name="pageType" value="cond">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+	top.refreshButton2('0');
+	top.pageRows = "20";
+
+	//document.dataForm.ex_risk_type.focus();
+
+	function validateInput() {
+		if (!top.checkFormat()) { return false; }
+
+		return true;
+	}
+</script>

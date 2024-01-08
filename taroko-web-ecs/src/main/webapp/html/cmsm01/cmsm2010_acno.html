@@ -1,0 +1,1136 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-06-24  V1.00.01    tanwei        隱藏字段                             -->
+<!-- 109-08-05  V1.00.02    JustinWu      disable 強停,免收違約金              -->
+<!-- 109-08-11  V1.00.03    JustinWu      外幣自扣帳戶->自動扣款帳號            -->
+<!-- 109-08-20  V1.00.04    Sunny         調整radio/checkbox直接顯示結果       -->
+<!-- 109-08-28  V1.00.05    JustinWu      修改扣繳帳號變數                     -->
+<!-- 109-12-16  V1.00.06    JustinWu      check addr and disable risk_bank_no -->
+<!-- 109-12-30  V1.00.07    JustinWu      調整畫面                            -->
+<!-- 110-01-06  V1.00.08    JustinWu      updated for XSS                     -->
+<!-- 110-10-05  V1.00.09    JustinWu      add zip2                            -->
+<!-- 111-11-17  V1.00.07    Sunny         固定背景避免畫面部分欄位被隱藏        -->
+<!-- 111-12-14  V1.00.08    Sunny         隱藏風險行欄位        -->
+<!-- 112-01-17  V1.00.09    Sunny         調整帳單地址處理，選4可以修改       -->
+<!-- 112-02-02  V1.00.10    Sunny         新增顯示台幣換匯帳號      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人帳戶資料查詢-V20221117</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<style>
+	body {background-attachment : fixed;}
+</style>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="修改取消" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+
+<hr>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證號碼:
+      <span class="dsp_text">${wk_idno}</span>
+      <input type="hidden" name="wk_idno" value="${wk_idno}"/>
+   </td>
+   <td nowrap>&nbsp;出生日期:
+      <span class="dsp_text">${birthday.YMD}</span>
+      <input type="hidden" name="birthday" value="${birthday}"/>
+   </td>
+   <td nowrap>&nbsp;性別:
+      <span class="dsp_text">${sex}.${#JAVA:ecsfunc.DeCodeCrd.idnoSex(sex)}</span>
+      <input type="hidden" name="sex" value="${sex}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;中文姓名:
+      <span class="dsp_text">${chi_name}</span>
+      <input type="hidden" name="chi_name" value="${chi_name}"/>
+   </td>
+</tr>
+ <tr>
+   <td nowrap >&nbsp;居留證號碼:
+      <span class="dsp_text">${resident_no}</span>
+      <input type="hidden" name="resident_no" value="${resident_no}"/>
+   </td>
+   <td nowrap colspan="2">&nbsp;外籍護照號碼:
+      <span class="dsp_text">${other_cntry_code}</span>
+      <input type="hidden" name="other_cntry_code" value="${other_cntry_code}"/>
+      -&nbsp;
+      <span class="dsp_text">${passport_no}</span>
+      <input type="hidden" name="passport_no" value="${passport_no}"/>
+   </td>
+</tr>
+      
+</table>
+</div>
+<hr>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">帳戶資料一</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">帳戶資料二</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-3')">自動扣款帳號</td>
+    </tr>
+  </table>
+</div>
+<div id="dataBlock">
+<!-----------帳戶資料一-------------->
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+  <tr>
+   <td nowrap colspan="3">&nbsp;帳號:
+      <span class="dsp_text">${wk_acctkey}</span>
+      <input type="hidden" name="wk_acctkey" value="${wk_acctkey}"/>
+      <input type="hidden" name="acct_type" value="${acct_type}"/>
+      <input type="hidden" name="acct_key" value="${acct_key}"/>
+   </td>
+   <td nowrap colspan="2" style="display:none">&nbsp;授信帳號:
+      <span class="dsp_text">${credit_act_no}</span>
+      <input type="hidden" name="credit_act_no" value="${credit_act_no}"/>
+   </td>
+   <td nowrap colspan="3">&nbsp;帳戶屬性:
+      <span class="dsp_text">${corp_act_flag}${tt_corp_act_flag}</span>
+      <input type="hidden" name="corp_act_flag" value="${corp_act_flag}"/>
+      <input type="hidden" name="tt_corp_act_flag" value="${tt_corp_act_flag}" />
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;法人統編:
+         <span class="dsp_text">${corp_no}</span>
+         <input type="hidden" name="corp_no" value="${corp_no}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;名稱:
+         <span class="dsp_text">${db_corpname}</span>
+         <input type="hidden" name="db_corpname" value="${db_corpname}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;往來狀態:
+         <span class="dsp_text">${acct_status}${tt_acct_status}</span>
+         <input type="hidden" name="acct_status" value="${acct_status}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;狀態日期:
+         <span class="dsp_text">${status_change_date.YMD}</span>
+         <input type="hidden" name="status_change_date" value="${status_change_date}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;帳務週期:
+         <span class="dsp_text">${stmt_cycle}</span>
+         <input type="hidden" name="stmt_cycle" value="${stmt_cycle}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;強停: <span class="dsp_text">${stop_status}</span>
+         <input type="hidden" name="stop_status" value="${stop_status}" />
+      &nbsp;原因:
+         <span class="dsp_text">${stop_reason}</span>
+         <input type="hidden" name="stop_reason" value="${stop_reason}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;凍結:
+         <span class="dsp_text">${block_status}${tt_block_status}</span>
+         <input type="hidden" name="block_status" value="${block_status}"/>
+         <input type="hidden" name="tt_block_status" value="${tt_block_status}"/>
+      &nbsp;原因:
+         <span class="dsp_text">${block_reason}</span>
+         <input type="hidden" name="block_reason" value="${block_reason}"/>
+         <span class="dsp_text">${block_reason2}</span>
+         <input type="hidden" name="block_reason2" value="${block_reason2}"/>
+         <span class="dsp_text">${block_reason3}</span>
+         <input type="hidden" name="block_reason3" value="${block_reason3}"/>
+         <span class="dsp_text">${block_reason4}</span>
+         <input type="hidden" name="block_reason4" value="${block_reason4}"/>
+         <span class="dsp_text">${block_reason5}</span>
+         <input type="hidden" name="block_reason5" value="${block_reason5}"/>
+      </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="2"  >&nbsp;免收違約金:<span class="dsp_text">${no_penalty_flag}</span>
+         <input type="hidden" name="no_penalty_flag" value="${no_penalty_flag}" />
+      </td>
+      <td nowrap colspan="2">&nbsp;起迄:
+         <span class="dsp_text">${no_penalty_s_month.YMD}</span>
+         <input type="hidden" name="no_penalty_s_month" value="${no_penalty_s_month}"/>
+         --
+         <span class="dsp_text">${no_penalty_e_month.YMD}</span>
+         <input type="hidden" name="no_penalty_e_month" value="${no_penalty_e_month}"/>
+      </td>
+      <td nowrap colspan="2" >&nbsp;COMBO卡帳戶: <span class="dsp_text">${combo_indicator}</span> 
+         <input type="hidden" name="combo_indicator" value="${combo_indicator}" />
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;RC利率加減碼:
+         <span class="dsp_text">${revolve_int_sign}</span>
+         <input type="hidden" name="revolve_int_sign" value="${revolve_int_sign}"/>
+         <span class="dsp_text">${revolve_int_rate}</span>
+         <input type="hidden" name="revolve_int_rate" value="${revolve_int_rate}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;起迄:
+         <span class="dsp_text">${revolve_rate_s_month.YMD}</span>
+         <input type="hidden" name="revolve_rate_s_month" value="${revolve_rate_s_month}"/>
+         --
+         <span class="dsp_text"> ${revolve_rate_e_month.YMD} </span>
+         <input type="hidden" name="revolve_rate_e_month" value="${revolve_rate_e_month}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;COMBO金融卡帳號:
+         <span class="dsp_text">${combo_acct_no}</span>
+         <input type="hidden" name="combo_acct_no" value="${combo_acct_no}"/>
+      </td>
+   </tr>
+   
+   <tr style="display:none">
+      <td nowrap colspan="2">&nbsp;
+         <input type="hidden" name="lawsuit_mark" value="Y" ${lawsuit_mark-Y}>訴追註記
+      </td>
+      <td nowrap colspan="2">&nbsp;
+         <span class="dsp_text"> 發生日: ${lawsuit_mark_date.YMD}</span>
+         <input type="hidden" name="lawsuit_mark_date" value="${lawsuit_mark_date}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;
+         <span class="dsp_text">處理情形: ${lawsuit_process_log}</span>
+         <input type="hidden" name="lawsuit_process_log" value="${lawsuit_process_log}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;帳戶有效正卡數:
+         <span class="dsp_text">${valid_card_num}</span>
+         <input type="hidden" name="valid_card_num" value="${valid_card_num}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;有效正附卡數:
+         <span class="dsp_text">${valid_card_num2}</span>
+         <input type="hidden" name="valid_card_num2" value="${valid_card_num2}"/>
+      </td>
+      <td nowrap colspan="2">&nbsp;分期還款戶:
+         <span class="dsp_text">${pay_by_stage_flag}</span>
+         <input type="hidden" name="pay_by_stage_flag" value="${pay_by_stage_flag}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;總月限額:
+         <span class="dsp_text">${line_of_credit_amt.(999)}</span>
+         <input type="hidden" name="line_of_credit_amt" value="${line_of_credit_amt}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;分期付款額度:
+         <span class="dsp_text">${inst_auth_loc_amt.(999)}</span>
+         <input type="hidden" name="inst_auth_loc_amt" value="${inst_auth_loc_amt}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;特殊MP百分比:
+         <span class="dsp_text">${min_pay_rate}</span>
+         <input type="hidden" name="min_pay_rate" value="${min_pay_rate}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;起迄:
+         <span class="dsp_text">${min_pay_rate_s_month.YMD}</span>
+         <input type="hidden" name="min_pay_rate_s_month" value="${min_pay_rate_s_month}"/>
+         --
+         <span class="dsp_text">${min_pay_rate_e_month.YMD}</span>
+         <input type="hidden" name="min_pay_rate_e_month" value="${min_pay_rate_e_month}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap  colspan="3">&nbsp;自動扣款比率:
+         <span class="dsp_text">${autopay_rate}</span>
+         <input type="hidden" name="autopay_rate" value="${autopay_rate}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;定額$:
+         <span class="dsp_text">${autopay_fix_amt}</span>
+         <input type="hidden" name="autopay_fix_amt" value="${autopay_fix_amt}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;自動扣款起迄:
+         <span class="dsp_text">${autopay_acct_s_date.YMD}</span>
+         <input type="hidden" name="autopay_acct_s_date" value="${autopay_acct_s_date}"/>
+         --
+         <span class="dsp_text">${autopay_acct_e_date.YMD}</span>
+         <input type="hidden" name="autopay_acct_e_date" value="${autopay_acct_e_date}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;最差M code:
+         <span class="dsp_text">${worse_mcode}</span>
+         <input type="hidden" name="worse_mcode}" value="${worse_mcode}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;繳款評等:
+         <span class="dsp_text">${payment_rate1}</span>
+         <input type="hidden" name="payment_rate1" value="${payment_rate1}"/>
+         <span class="dsp_text">${payment_rate2}</span>
+         <input type="hidden" name="payment_rate2" value="${payment_rate2}"/>
+         <span class="dsp_text">${payment_rate3}</span>
+         <input type="hidden" name="payment_rate3" value="${payment_rate3}"/>
+         <span class="dsp_text">${payment_rate4}</span>
+         <input type="hidden" name="payment_rate4" value="${payment_rate4}"/>
+         <span class="dsp_text">${payment_rate5}</span>
+         <input type="hidden" name="payment_rate5" value="${payment_rate5}"/>
+         <span class="dsp_text">${payment_rate6}</span>
+         <input type="hidden" name="payment_rate6" value="${payment_rate6}"/>
+         <span class="dsp_text">${payment_rate7}</span>
+         <input type="hidden" name="payment_rate7" value="${payment_rate7}"/>
+         <span class="dsp_text">${payment_rate8}</span>
+         <input type="hidden" name="payment_rate8" value="${payment_rate8}"/>
+         <span class="dsp_text">${payment_rate9}</span>
+         <input type="hidden" name="payment_rate9" value="${payment_rate9}"/>
+         <span class="dsp_text">${payment_rate10}</span>
+         <input type="hidden" name="payment_rate10" value="${payment_rate10}"/>
+         <span class="dsp_text">${payment_rate11}</span>
+         <input type="hidden" name="payment_rate11" value="${payment_rate11}"/>
+         <span class="dsp_text">${payment_rate12}</span>
+         <input type="hidden" name="payment_rate12" value="${payment_rate12}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;帳戶等級:
+         <span class="dsp_text">${class_code}</span>
+         <input type="hidden" name="class_code" value="${class_code}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;預測違約評等:
+         <span class="dsp_text">${curr_pd_rating}</span>
+         <input type="hidden" name="curr_pd_rating" value="${curr_pd_rating}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3" style="display:none">&nbsp;虛帳號:
+         <span class="dsp_text">${no_acct_no}</span>
+         <input type="hidden" name="no_acct_no" value="${no_acct_no}"/>
+      </td>
+      <td nowrap colspan="6">&nbsp;法人保證:
+         <span class="dsp_text">${corp_assure_flag}</span>
+         <input type="hidden" name="corp_assure_flag" value="${corp_assure_flag}"/>
+      </td>
+     </tr>
+      <tr>
+      <td nowrap colspan="3">&nbsp;繳款編號:
+         <span class="dsp_text">${payment_no}</span>
+         <input type="hidden" name="payment_no" value="payment_no"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;繳款編號II:
+         <span class="dsp_text">${payment_no_ii}</span>
+         <input type="hidden" name="payment_no_ii" value="${payment_no_ii}"/>
+      </td>
+   </tr>
+   </tr>
+      <tr>
+      <td nowrap colspan="3">&nbsp;花農自動扣繳帳戶行庫:
+         <span class="dsp_text">${autopay_acct_bank_fl}</span>
+         <input type="hidden" name="autopay_acct_bank_fl" value="${autopay_acct_bank_fl}"/>
+      </td>
+      <td nowrap colspan="3">&nbsp;花農自動扣繳帳號:
+         <span class="dsp_text">${autopay_acct_no_fl}</span>
+         <input type="hidden" name="autopay_acct_no_fl" value="${autopay_acct_no_fl}"/>
+      </td>
+   </tr>
+   <tr>
+    <td nowrap colspan="6" class="td_titl">主管覆核</td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;VIP:
+         <select size="1" name="vip_code" class="col_ddlb" style="${mod_vip_code}" >
+            ${dddw_vip_code}
+         </select>
+      </td>
+      <!--td nowrap colspan="2">&nbsp;風險行:
+         <select size="1" name="risk_bank_no" class="col_ddlb" style="${mod_risk_bank_no}" >
+            ${d_dddw_branch}
+         </select>
+      </td-->
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;VIP備註:
+         <input type="text" class="col_any" name="vip_remark" value="${vip_remark}" maxlength="60" size="62" zEdit="any,canTw" style="${mod_vip_remark}">
+      </td>
+   </tr>
+   <tr style="display:none">
+      <td nowrap colspan="6" >&nbsp;帳單地國家別代碼:
+         <input type="text" class="col_text" name="bill_sending_country_code" value="${bill_sending_country_code}" style="${mod_bill_sending_country_code}" maxlength="2" size="5" zEdit="alphanum,upper" />
+      </td>
+   </tr>
+    <tr>
+      <td nowrap colspan="6" >&nbsp;帳單註記:
+          <select name="bill_apply_flag" id="bill_apply_flag" class="col_ddlb" style="${mod_bill_apply_flag}" onChange="billApplyOnChange(this);">
+          ${bill_apply_flag_options}
+          </select> 
+      </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="6">&nbsp;帳單寄送地址:
+      <br><br>&nbsp;
+      <span class="dsp_text" id="bill_sending_zip_text" style="${mod_bill_sending_zip}">${bill_sending_zip}</span>
+      <select size="1" name="bill_sending_zip" id="bill_sending_zip" class="col_ddlb" style="${mod_bill_sending_zip}" onChange="zipChange('bill_sending')" >
+         ${d_dddw_zipcode}
+      </select>
+      <span class="dsp_text" id="bill_sending_zip2_text" style="${mod_bill_sending_zip2}">${bill_sending_zip2}</span>
+      <input type="text" class="col_any" name="bill_sending_zip2" id="bill_sending_zip2" value="${bill_sending_zip2}" maxlength="3" size="6" zEdit="Number" style="${mod_bill_sending_zip2}" >
+      <span class="dsp_text" id="bill_sending_addr1_text" style="${mod_bill_sending_addr1}">${bill_sending_addr1}</span>
+      <input type="hidden" class="col_any" name="bill_sending_addr1" id="bill_sending_addr1" value="${bill_sending_addr1}" maxlength="5" size="12" zEdit="any,canTw" ${mod_bill_sending_addr1} >
+      縣市 
+      <span class="dsp_text" id="bill_sending_addr2_text" style="${mod_bill_sending_addr2}">${bill_sending_addr2}</span>
+      <input type="hidden" class="col_any" name="bill_sending_addr2" id="bill_sending_addr2" value="${bill_sending_addr2}" maxlength="5" size="12" zEdit="any,canTw" ${mod_bill_sending_addr2} >
+      鄉鎮市區
+      <span class="dsp_text" id="bill_sending_addr3_text" style="${mod_bill_sending_addr3}">${bill_sending_addr3}</span>
+      <input type="text" class="col_any" name="bill_sending_addr3" id="bill_sending_addr3" value="${bill_sending_addr3}" maxlength="6" size="12" zEdit="any,canTw" style="${mod_bill_sending_addr3}" >
+      村里
+      <br><br>&nbsp;
+      <span class="dsp_text" id="bill_sending_addr4_text" style="${mod_bill_sending_addr4}">${bill_sending_addr4}</span>
+      <input type="text" class="col_any" name="bill_sending_addr4" id="bill_sending_addr4" value="${bill_sending_addr4}" maxlength="6" size="14" zEdit="any,canTw" style="${mod_bill_sending_addr4}" >
+      鄰
+      <span class="dsp_text" id="bill_sending_addr5_text" style="${mod_bill_sending_addr5}">${bill_sending_addr5}</span>
+      <input type="text" class="col_any" name="bill_sending_addr5" id="bill_sending_addr5" value="${bill_sending_addr5}" maxlength="28" size="58" zEdit="any,canTW" style="${mod_bill_sending_addr5}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;最近變更帳單地址日期:
+         <span class="dsp_text">${chg_addr_date.YMD}</span>
+         <input type="hidden" name="chg_addr_date" value="${chg_addr_date}"/>
+      </td>
+</tr>
+    <tr>
+   <td nowrap colspan="6">&nbsp;電子帳單專用郵件信箱:
+      <input type="text" class="col_any" name="e_mail_ebill" value="${e_mail_ebill}" maxlength="50" size="52" zEdit="any" style="${mod_e_mail_ebill}" >
+      <input type="hidden" name="e_mail_ebill_old" value="${e_mail_ebill}">
+   </td> 
+ </tr>
+ <tr>
+    <td nowrap colspan="6">&nbsp;電子帳單信箱異動日期:
+      <span class="dsp_text">${e_mail_ebill_date.YMD}</span>
+      <input type="hidden" name="e_mail_ebill_date" value="${e_mail_ebill_date}"/>
+   </td>
+ </tr>
+   <tr>
+      <td nowrap colspan="6" >&nbsp;
+         <span style="${mod_new_acct_flag}">預現成數旗標:</span>
+         <span class="col_radio">
+            <input type="radio" value="Y" name="new_acct_flag" ${new_acct_flag-Y} />新戶
+            <input type="radio" value="N" name="new_acct_flag" ${new_acct_flag-N} />舊戶
+         </span>
+         <span class="td_remark">(僅限風管部維護)
+      </td>
+   </tr>
+   <tr>
+    <td nowrap colspan="6" class="td_titl"></td>
+  </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;特殊事項:
+         <input type="text" class="col_any" name="special_comment" value="${special_comment}" maxlength="100" size="102" zEdit="any,canTw" >
+      </td>
+  </tr>
+ </table>
+</div>
+<!-----------被查詢資料 之主債務人-------------->
+<div id="tab-2" class="tabcontent" > 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <td nowrap colspan="2">&nbsp;帳號:
+      <span class="dsp_text">${wk_acctkey}</span>
+      <input type="hidden" name="wk_acctkey" value="${wk_acctkey}"/>
+   </td>
+    <td nowrap colspan="2">&nbsp;法人統編:
+      <span class="dsp_text">${corp_no}</span>      
+   </td>
+   <td nowrap colspan="2" style="display:none">&nbsp;授信帳號:
+      <span class="dsp_text">${credit_act_no}</span>
+      <input type="hidden" name="credit_act_no" value="${credit_act_no}"/>
+   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="6">&nbsp;法人名稱:
+	      <span class="dsp_text">${db_corpname}</span>	      
+	   </td>
+	</tr>
+	<tr>
+	    <td nowrap colspan="2">&nbsp;不可凍結:
+	      <span class="dsp_text">${no_block_flag}</span>
+	      <input type="hidden" name="no_block_flag" value="${no_block_flag}"/>
+	   </td>	  
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_block_s_date.YMD}</span>
+	      <input type="hidden" name="no_block_s_date" value="${no_block_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_block_e_date.YMD}</span>
+	      <input type="hidden" name="no_block_e_date" value="${no_block_e_date}"/>
+	   </td>
+	</tr>
+	<tr>  
+	   <td nowrap colspan="2">&nbsp;不可解凍:
+	      <span class="dsp_text">${no_unblock_flag}</span>
+	      <input type="hidden" name="no_unblock_flag" value="${no_unblock_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_unblock_s_date.YMD}</span>
+	      <input type="hidden" name="no_unblock_s_date" value="${no_unblock_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_unblock_e_date.YMD}</span>
+	      <input type="hidden" name="no_unblock_e_date" value="${no_unblock_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;允用RC碼:
+	      <span class="dsp_text">${rc_use_indicator}${tt_rc_use_indicator}</span>
+	      <input type="hidden" name=" c_use_indicator" value="${rc_use_indicator}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${rc_use_s_date.YMD}</span>
+	      <input type="hidden" name="rc_use_s_date" value="${rc_use_s_date}"/>
+	      --
+	      <span class="dsp_text">${rc_use_e_date.YMD}</span>
+	      <input type="hidden" name="rc_use_e_date" value="${rc_use_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="6">&nbsp;調整前RC指示碼:
+	      <span class="dsp_text">${rc_use_b_adj}${tt_rc_use_b_adj}</span>
+	      <input type="hidden" name="rc_use_b_adj" value="${rc_use_b_adj}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;特殊對帳單:
+	      <span class="dsp_text">${special_stat_code}${tt_special_stat_code}</span>
+	      <input type="hidden" name="special_stat_code" value="${special_stat_code}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${special_stat_s_month.YMD}</span>
+	      <input type="hidden" name="special_stat_s_month" value="${special_stat_s_month}"/>
+	      --
+	      <span class="dsp_text">${special_stat_e_month.YMD}</span>
+	      <input type="hidden" name="special_stat_e_month" value="${special_stat_e_month}"/>
+	   </td> 
+	</tr>
+	<tr>	  
+	   <td nowrap colspan="2">&nbsp;不列印對帳單:
+	      <span class="dsp_text">${stat_unprint_flag}</span>
+	      <input type="hidden" name="stat_unprint_flag" value="${stat_unprint_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄年月:
+	      <span class="dsp_text">${stat_unprint_s_month.YMD}</span>
+	      <input type="hidden" name="stat_unprint_s_month" value="${stat_unprint_s_month}"/>
+	      --
+	      <span class="dsp_text">${stat_unprint_e_month.YMD}</span>
+	      <input type="hidden" name="stat_unprint_e_month" value="${stat_unprint_e_month}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap>&nbsp;對帳單寄送方式:</td>  
+	   <td nowrap colspan="1">&nbsp;<!-- Paper - 郵寄:-->郵寄紙本帳單:
+	      <span class="dsp_text">${stat_send_paper}</span>
+	      <input type="hidden" name="stat_send_paper" value="${stat_send_paper}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄年月:
+	      <span class="dsp_text">${stat_send_s_month.YMD}</span>
+	      <input type="hidden" name="stat_send_s_month" value="${stat_send_s_month}"/>
+	      --
+	      <span class="dsp_text">${stat_send_e_month.YMD}</span>
+	      <input type="hidden" name="stat_send_e_month" value="${stat_send_s_month}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="3"  >&nbsp;
+	      <input type="checkbox" name="stat_send_fax" value="Y" ${stat_send_fax-Y} disabled>Fax - 網銀
+	      <input type="checkbox" name="stat_send_internet" value="Y" ${stat_send_internet-Y} disabled>Internet - 網路
+	   </td-->
+	   <td nowrap colspan="1" disabled >&nbsp;
+	   <td nowrap colspan="1"><!--&nbsp;Fax - 網銀:
+	      <span class="dsp_text">${stat_send_fax}</span>
+	      <input type="hidden" name="stat_send_fax" value="${stat_send_fax}"/>-->
+	      &nbsp;訂閱電子帳單:
+	      <span class="dsp_text">${stat_send_internet}</span>
+	      <input type="hidden" name="stat_send_internet" value="${stat_send_internet}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄年月:
+	      <span class="dsp_text">${stat_send_s_month2.YMD}</span>
+	      <input type="hidden" name="stat_send_s_month2" value="${stat_send_s_month2}"/>
+	      --
+	      <span class="dsp_text">${stat_send_e_month2.YMD}</span>
+	      <input type="hidden" name="stat_send_e_month2" value="${stat_send_e_month2}"/>
+	   </td>	   
+	</tr>
+   <!-- <tr>
+	   td nowrap colspan="3" >&nbsp;&nbsp;　　　　　　　
+	      <input type="checkbox" name="mobile_mail" value="Y" ${mobile_mail-Y} disabled>行動帳單-EMAIL
+	   </td-->
+	    <!--<td nowrap colspan="1" disabled  >&nbsp;
+	    <td nowrap colspan="1">&nbsp;行動帳單-EMAIL:
+	      <span class="dsp_text">${mobile_mail}</span>
+	      <input type="hidden" name="mobile_mail" value="${mobile_mail}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄年月:
+	      <span class="dsp_text">${mobile_mail_smonth.YMD}</span>
+	      <input type="hidden" name="mobile_mail_smonth" value="${mobile_mail_smonth}"/>
+	      --
+	      <span class="dsp_text">${mobile_mail_emonth.YMD}</span>
+	      <input type="hidden" name="mobile_mail_emonth" value="${mobile_mail_emonth}"/>
+	   </td>
+	</tr>-->
+    <tr>
+	   <!--td nowrap colspan="3" >&nbsp;&nbsp;　　　　　　　
+	      <input type="checkbox" name="mobile_msg" value="Y" ${mobile_msg-Y} disabled>行動帳單-簡訊
+	   </td-->
+	   <td nowrap colspan="1" disabled  >&nbsp;
+	   <td nowrap colspan="1">&nbsp;行動帳單-簡訊:
+	      <span class="dsp_text">${mobile_msg}</span>
+	      <input type="hidden" name="mobile_msg" value="${mobile_msg}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄年月:
+	      <span class="dsp_text">${mobile_msg_smonth.YMD}</span>
+	      <input type="hidden" name="mobile_msg_smonth" value="${mobile_msg_smonth}"/>
+	      --
+	      <span class="dsp_text">${mobile_msg_emonth.YMD}</span>
+	      <input type="hidden" name="mobile_msg_emonth" value="${mobile_msg_emonth}"/>
+	   </td>
+	</tr>
+	<tr style="display:none">
+	   <td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_cancel_debt_flag" value="Y" ${no_cancel_debt_flag-Y} disabled>催收戶不自動銷帳
+	   </td>
+	   <td nowrap colspan="4">&nbsp;起迄:
+	      <span class="dsp_text">${no_cancel_debt_s_date.YMD}</span>
+	      <input type="hidden" name="no_cancel_debt_s_date" value="${no_cancel_debt_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_cancel_debt_e_date.YMD}</span>
+	      <input type="hidden" name="no_cancel_debt_e_date" value="${no_cancel_debt_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_tel_coll_flag" value="Y" ${no_tel_coll_flag-Y} disabled>暫不電催
+	   </td-->
+	   <td nowrap colspan="2">&nbsp;暫不電催:
+	      <span class="dsp_text">${no_tel_coll_flag}</span>
+	      <input type="hidden" name="no_tel_coll_flag" value="${no_tel_coll_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_tel_coll_s_date.YMD}</span>
+	      <input type="hidden" name="no_tel_coll_s_date" value="${no_tel_coll_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_tel_coll_e_date.YMD}</span>
+	      <input type="hidden" name="no_tel_coll_e_date" value="${no_tel_coll_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_per_coll_flag" value="Y" ${no_per_coll_flag-Y} disabled>暫不語催
+	   </td-->
+	  <td nowrap colspan="2">&nbsp;暫不語催:
+	      <span class="dsp_text">${no_per_coll_flag}</span>
+	      <input type="hidden" name="no_per_coll_flag" value="${no_per_coll_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_per_coll_s_date.YMD}</span>
+	      <input type="hidden" name="no_per_coll_s_date" value="${no_per_coll_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_per_coll_e_date.YMD}</span>
+	      <input type="hidden" name="no_per_coll_e_date" value="${no_per_coll_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_delinquent_flag" value="Y" ${no_delinquent_flag-Y} disabled>暫不轉逾放
+	   </td-->
+	   <td nowrap colspan="2">&nbsp;暫不轉逾放:
+	      <span class="dsp_text">${no_delinquent_flag}</span>
+	      <input type="hidden" name="no_delinquent_flag" value="${no_delinquent_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_delinquent_s_date.YMD}</span>
+	      <input type="hidden" name="no_delinquent_s_date" value="${no_delinquent_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_delinquent_e_date.YMD}</span>
+	      <input type="hidden" name="no_delinquent_e_date" value="${no_delinquent_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_collection_flag" value="Y" ${no_collection_flag-Y} disabled>暫不轉催收
+	   </td-->
+	    <td nowrap colspan="2">&nbsp;暫不轉催收:
+	      <span class="dsp_text">${no_collection_flag}</span>
+	      <input type="hidden" name="no_collection_flag" value="${no_collection_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_collection_s_date.YMD}</span>
+	      <input type="hidden" name="no_collection_s_date" value="${no_collection_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_collection_e_date.YMD}</span>
+	      <input type="hidden" name="no_collection_e_date" value="${no_collection_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" > &nbsp;
+	      <input type="checkbox" name="recourse_mark" value="Y" ${recourse_mark-Y} disabled>追索債權註記
+	   </td-->
+	   <td nowrap colspan="2">&nbsp;追索債權註記:
+	      <span class="dsp_text">${recourse_mark}</span>
+	      <input type="hidden" name="recourse_mark" value="${recourse_mark}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;發生日:
+	      <span class="dsp_text">${recourse_mark_date.YMD}</span>
+	      <input type="hidden" name="recourse_mark_date" value="${recourse_mark_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;法定逾期代碼:
+	      <span class="dsp_text">${legal_delay_code}</span>
+	      <input type="hidden" name="legal_delay_code" value="${legal_delay_code}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;發生日:
+	      <span class="dsp_text">${legal_delay_code_date.YMD}</span>
+	      <input type="hidden" name="legal_delay_code_date" value="${legal_delay_code_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_adj_loc_high" value="Y" ${no_adj_loc_high-Y}  disabled>不可調高額度
+	   </td-->
+	   <td nowrap colspan="2">&nbsp;不可調高額度:
+	      <span class="dsp_text">${no_adj_loc_high}</span>
+	      <input type="hidden" name="no_adj_loc_high" value="${no_adj_loc_high}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_adj_loc_high_s_date.YMD}</span>
+	      <input type="hidden" name="no_adj_loc_high_s_date" value="${no_adj_loc_high_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_adj_loc_high_e_date.YMD}</span>
+	      <input type="hidden" name="no_adj_loc_high_e_date" value="${no_adj_loc_high_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_adj_loc_low" value="Y" ${no_adj_loc_low-Y} disabled >不可調低額度
+	   </td-->
+	   <td nowrap colspan="2">&nbsp;不可調低額度:
+	      <span class="dsp_text">${no_adj_loc_low}</span>
+	      <input type="hidden" name="no_adj_loc_low" value="${no_adj_loc_low}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_adj_loc_low_s_date.YMD}</span>
+	      <input type="hidden" name="no_adj_loc_low_s_date" value="${no_adj_loc_low_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_adj_loc_low_e_date.YMD}</span>
+	      <input type="hidden" name="no_adj_loc_low_e_date" value="${no_adj_loc_low_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="2" >&nbsp;
+	      <input type="checkbox" name="no_f_stop_flag" value="Y" ${no_f_stop_flag-Y} disabled >不可強停
+	   </td-->
+	   <td nowrap colspan="2">&nbsp;不可強停:
+	      <span class="dsp_text">${no_f_stop_flag}</span>
+	      <input type="hidden" name="no_f_stop_flag" value="${no_f_stop_flag}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效起迄:
+	      <span class="dsp_text">${no_f_stop_s_date.YMD}</span>
+	      <input type="hidden" name="no_f_stop_s_date" value="${no_f_stop_s_date}"/>
+	      --
+	      <span class="dsp_text">${no_f_stop_e_date.YMD}</span>
+	      <input type="hidden" name="no_f_stop_e_date" value="${no_f_stop_e_date}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <!--td nowrap colspan="6" >&nbsp;
+	      <input type="checkbox" name="bank_rel_flag" value="Y" ${bank_rel_flag-Y} disabled >利害關係人
+	   </td-->
+	   <td nowrap colspan="6">&nbsp;利害關係人:
+	      <span class="dsp_text">${bank_rel_flag}</span>
+	      <input type="hidden" name="bank_rel_flag" value="${bank_rel_flag}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;
+	      <span class="td_titl">前次循環信用利率</span>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;
+	      <span class="td_titl">系統循環信用利率</span>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;加減指示碼:
+	      <span class="dsp_text">${prev_int_sign}</span>
+	      <input type="hidden" name="prev_int_sign" value="${prev_int_sign}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;加減指示碼:
+	      <span class="dsp_text">${batch_int_sign}</span>
+	      <input type="hidden" name="batch_int_sign" value="${batch_int_sign}"/>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;加減利率:
+	      <span class="dsp_text">${prev_int_rate}</span>
+	      <input type="hidden" name="prev_int_rate" value="${prev_int_rate}"/>
+	      /10000
+	   </td>
+	   <td nowrap colspan="4">&nbsp;加減利率:
+	      <span class="dsp_text">${batch_int_rate}</span>
+	      <input type="hidden" name="batch_int_rate" value="${batch_int_rate}"/>
+	      /10000
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;生效期間:
+	      <span class="dsp_text">${prev_rate_s_month.YMD}</span>
+	      <input type="hidden" name="prev_rate_s_month" value="${prev_rate_s_month}"/>
+	      --
+	      <span class="dsp_text">${prev_rate_e_month.YMD}</span>
+	      <input type="hidden" name="prev_rate_e_month" value="${prev_rate_e_month}"/>
+	   </td>
+	   <td nowrap colspan="4">&nbsp;生效期間:
+	      <span class="dsp_text">${batch_rate_s_month.YMD}</span>
+	      <input type="hidden" name="batch_rate_s_month" value="${batch_rate_s_month}"/>
+	      --
+	      <span class="dsp_text">${batch_rate_e_month.YMD}</span>
+	      <input type="hidden" name="batch_rate_e_month" value="${batch_rate_e_month}"/>
+	   </td>
+	</tr>
+ </table>
+</div>
+</div>
+<!-----------從債務人-------------->
+<div id="tab-3" class="tabcontent">
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >幣別&nbsp;</th>
+    <th nowrap >自動扣繳<br>指示碼&nbsp;</th>
+    <th nowrap >自動扣繳<br>帳戶行庫&nbsp;</th>
+    <th nowrap >自動扣繳<br>帳戶帳號&nbsp;</th>
+    <th nowrap >扣繳帳號<br>歸屬ID&nbsp;</th>
+    <th nowrap >外幣存款不足<br>轉扣台幣&nbsp;</th>
+    <th nowrap >自動結匯<br>外幣</th>
+    <th nowrap >自動結匯<br>台幣帳號</th>
+    <th nowrap >免收循環息<br>帳外息&nbsp;</th>
+    <th nowrap >免收循環息<br>生效年月&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${curr_code}${tt_curr_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${autopay_indicator}${tt_autopay_indicator}&nbsp;</td>
+	<td nowrap class="list_cc"> ${autopay_acct_bank}&nbsp;</td>
+	<td nowrap class="list_cc"> ${autopay_acct_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_autopay_id_and_desc}&nbsp;</td>
+	<td nowrap class="list_cc"> ${autopay_dc_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${autopay_dc_indicator}${tt_autopay_dc_indicator}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_change_accout}&nbsp;</td>
+	<td nowrap class="list_cc"> ${no_interest_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_no_int_month}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+<!-- -->
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="debit_flag" value="N" />
+<input type="hidden" name="mod_vip_code" value="${mod_vip_code}"/>
+<input type="hidden" name="mod_risk_bank_no" value="${mod_risk_bank_no}"/>
+<input type="hidden" name="mod_vip_remark" value="${mod_vip_remark}"/>
+<input type="hidden" name="mod_bill_sending_zip" value="${mod_bill_sending_zip}"/>
+<input type="hidden" name="mod_bill_sending_zip2" value="${mod_bill_sending_zip2}"/>
+<input type="hidden" name="mod_bill_sending_addr3" value="${mod_bill_sending_addr3}"/>
+<input type="hidden" name="mod_bill_sending_addr4" value="${mod_bill_sending_addr4}"/>
+<input type="hidden" name="mod_bill_sending_addr5" value="${mod_bill_sending_addr5}"/>
+<input type="hidden" name="mod_new_acct_flag" value="${mod_new_acct_flag}"/>
+<input type="hidden" name="resident_zip"    id="resident_zip"    value="${resident_zip}" />
+<input type="hidden" name="resident_zip2"   id="resident_zip2"   value="${resident_zip2}" />
+<input type="hidden" name="resident_addr1"  id="resident_addr1"  value="${resident_addr1}" />
+<input type="hidden" name="resident_addr2"  id="resident_addr2"  value="${resident_addr2}" />
+<input type="hidden" name="resident_addr3"  id="resident_addr3"  value="${resident_addr3}" />
+<input type="hidden" name="resident_addr4"  id="resident_addr4"  value="${resident_addr4}" />
+<input type="hidden" name="resident_addr5"  id="resident_addr5"  value="${resident_addr5}" />
+<input type="hidden" name="company_zip"   id="company_zip"   value="${company_zip}" />
+<input type="hidden" name="company_zip2"  id="company_zip2"  value="${company_zip2}" />
+<input type="hidden" name="company_addr1" id="company_addr1" value="${company_addr1}" />
+<input type="hidden" name="company_addr2" id="company_addr2" value="${company_addr2}" />
+<input type="hidden" name="company_addr3" id="company_addr3" value="${company_addr3}" />
+<input type="hidden" name="company_addr4" id="company_addr4" value="${company_addr4}" />
+<input type="hidden" name="company_addr5" id="company_addr5" value="${company_addr5}" />
+<input type="hidden" name="mail_zip"   id="mail_zip"   value="${mail_zip}" />
+<input type="hidden" name="mail_zip2"  id="mail_zip2"  value="${mail_zip2}" />
+<input type="hidden" name="mail_addr1" id="mail_addr1" value="${mail_addr1}" />
+<input type="hidden" name="mail_addr2" id="mail_addr2" value="${mail_addr2}" />
+<input type="hidden" name="mail_addr3" id="mail_addr3" value="${mail_addr3}" />
+<input type="hidden" name="mail_addr4" id="mail_addr4" value="${mail_addr4}" />
+<input type="hidden" name="mail_addr5" id="mail_addr5" value="${mail_addr5}" />
+<input type="hidden" name="reg_zip"    id="reg_zip"    value="${reg_zip}" />
+<input type="hidden" name="reg_zip2"   id="reg_zip2"   value="${reg_zip2}" />
+<input type="hidden" name="reg_addr1"  id="reg_addr1"  value="${reg_addr1}" />
+<input type="hidden" name="reg_addr2"  id="reg_addr2"  value="${reg_addr2}" />
+<input type="hidden" name="reg_addr3"  id="reg_addr3"  value="${reg_addr3}" />
+<input type="hidden" name="reg_addr4"  id="reg_addr4"  value="${reg_addr4}" />
+<input type="hidden" name="reg_addr5"  id="reg_addr5"  value="${reg_addr5}" />
+<input type="hidden" name="comm_zip"   id="comm_zip"   value="${comm_zip}" />
+<input type="hidden" name="comm_zip2"  id="comm_zip2"  value="${comm_zip2}" />
+<input type="hidden" name="comm_addr1" id="comm_addr1" value="${comm_addr1}" />
+<input type="hidden" name="comm_addr2" id="comm_addr2" value="${comm_addr2}" />
+<input type="hidden" name="comm_addr3" id="comm_addr3" value="${comm_addr3}" />
+<input type="hidden" name="comm_addr4" id="comm_addr4" value="${comm_addr4}" />
+<input type="hidden" name="comm_addr5" id="comm_addr5" value="${comm_addr5}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table3');
+</script>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode == 'U') {
+      if (! chkAddr() ) {
+         return false;
+      }
+    }
+
+    return true;
+  }
+
+ function chkAddr(){
+    var ele;
+    var residentArr = ["bill_sending_addr1", "bill_sending_addr5"];
+    
+    ele = document.getElementById("bill_apply_flag");
+    if (ele.value.trim().length == 0) {
+       ele.style.background = "pink";
+       alert("帳單註記不可空白");
+       return false;
+    }else{
+       ele.style.background = "white";
+    }
+
+    for (var i = 0; i < residentArr.length; i++) {
+      ele = document.getElementById(residentArr[i]);
+      if (ele.value.trim().length == 0) {
+        ele.style.background = "pink";
+        alert("帳單寄送地址不可空白");
+        return false;
+      }else{
+        ele.style.background = "white";
+      }
+    }
+    return true;
+ }
+
+	function zipChange(changeTarget) {
+		var zip_code = document.forms["dataForm"][changeTarget + "_zip"].value
+				.toUpperCase();
+
+		if (zip_code === '') {
+			document.getElementById(changeTarget + "_addr1_text").innerHTML = "";
+			document.getElementById(changeTarget + "_addr2_text").innerHTML = "";
+			document.getElementById(changeTarget + "_addr1").value = "";
+			document.getElementById(changeTarget + "_addr2").value = "";
+			return false;
+		}
+
+		top.actionCode = "AJAX";
+		top.methodName = "wfAjaxKey"; // "wf_ajax_key";
+
+		resetJSON();
+		addJSON("changeTarget", changeTarget);
+		addJSON("ax_zip_code", zip_code);
+		processAJAX();
+	}
+
+	function ajaxResponse() {
+		top.respHtml = "cmsm2010_acno";
+		top.requHtml = "cmsm2010_acno";
+
+		var changeTarget = getJSONvalue("changeTarget", 0);
+
+		var ajax_addr1 = getJSONvalue("ajax_addr1", 0);
+		if (ajax_addr1.length > 0) {
+			document.getElementById(changeTarget + "_addr1_text").innerHTML = ajax_addr1;
+			document.getElementById(changeTarget + "_addr1").value = ajax_addr1;
+		}
+
+		var ajax_addr2 = getJSONvalue("ajax_addr2", 0);
+		if (ajax_addr2.length > 0) {
+			document.getElementById(changeTarget + "_addr2_text").innerHTML = ajax_addr2;
+			document.getElementById(changeTarget + "_addr2").value = ajax_addr2;
+		}
+	}
+
+	function billApplyOnChange(bill_apply_flag) {
+		var bill_apply_value = bill_apply_flag.value;
+		var addr_arr = [ "zip", "zip2", "addr1", "addr2", "addr3", "addr4",
+				"addr5" ];
+		var addr_content = [];
+		var reg_arr = [ "reg_zip", "reg_zip2", "reg_addr1", "reg_addr2",
+				"reg_addr3", "reg_addr4", "reg_addr5" ];
+		var comm_arr = [ "comm_zip", "comm_zip2", "comm_addr1", "comm_addr2",
+				"comm_addr3", "comm_addr4", "comm_addr5" ];
+		var resident_arr = [ "resident_zip", "resident_zip2", "resident_addr1",
+				"resident_addr2", "resident_addr3", "resident_addr4",
+				"resident_addr5" ];
+		var company_arr = [ "company_zip", "company_zip2", "company_addr1",
+				"company_addr2", "company_addr3", "company_addr4",
+				"company_addr5" ];
+		var mail_arr = [ "mail_zip", "mail_zip2", "mail_addr1", "mail_addr2",
+				"mail_addr3", "mail_addr4", "mail_addr5" ];
+		var bill_sending_arr = [ "bill_sending_zip", 
+				"bill_sending_zip2",
+				"bill_sending_addr1", 
+				"bill_sending_addr2",
+				"bill_sending_addr3",
+				"bill_sending_addr4",
+				"bill_sending_addr5" ]
+		if (bill_apply_value == "5") {
+			copy_column = "公司登記地址";
+			for (var i = 0; i < reg_arr.length; i++) {
+				addr_content[addr_arr[i]] = document.getElementById(reg_arr[i]);
+			}
+			/* for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).type = "hidden";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "inline-block";
+			}
+			; */
+		} else if (bill_apply_value == "4") {
+			copy_column = "公司通訊地址";
+			for (var i = 0; i < comm_arr.length; i++) {
+				addr_content[addr_arr[i]] = document
+						.getElementById(comm_arr[i]);
+			}
+			// 1120106 - 【帳單註記】選擇【4其他】時，帳單寄送地址可以人工自行輸入
+			for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).style.display = "";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "none";
+			}
+		} else if (bill_apply_value == "1") {
+			copy_column = "戶籍地址";
+			for (var i = 0; i < resident_arr.length; i++) {
+				addr_content[addr_arr[i]] = document
+						.getElementById(resident_arr[i]);
+			}
+			/* for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).type = "hidden";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "inline-block";
+			}
+			; */
+		} else if (bill_apply_value == "2") {
+			copy_column = "住家地址";
+			for (var i = 0; i < mail_arr.length; i++) {
+				addr_content[addr_arr[i]] = document
+						.getElementById(mail_arr[i]);
+			}
+			/* for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).type = "hidden";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "inline-block";
+			}
+			; */
+		} else if (bill_apply_value == "3") {
+			copy_column = "公司地址";
+			for (var i = 0; i < company_arr.length; i++) {
+				addr_content[addr_arr[i]] = document
+						.getElementById(company_arr[i]);
+			}
+			/* for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).type = "hidden";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "inline-block";
+			}
+			; */
+		} else if (bill_apply_value == "") {
+			for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).value = "";
+				document.getElementById(bill_sending_arr[i] + "_text").innerHTML = "";
+			}
+			/* for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).type = "hidden";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "inline-block";
+			}
+			; */
+			return true;
+		}
+		// 1120113 - 【帳單註記】選擇不是【4其他】時，帳單寄送地址禁止可以人工自行輸入
+		if (bill_apply_value != "4") {
+			for (var i = 0; i < bill_sending_arr.length; i++) {
+				document.getElementById(bill_sending_arr[i]).style.display = "none";
+				document.getElementById(bill_sending_arr[i] + '_text').style.display = "";
+			}
+		}
+
+		for (var i = 0; i < bill_sending_arr.length; i++) {
+			document.getElementById(bill_sending_arr[i]).value = addr_content[addr_arr[i]].value;
+			document.getElementById(bill_sending_arr[i] + "_text").innerHTML = addr_content[addr_arr[i]].value;
+		}
+
+	}
+	
+	 function checkAddr(){
+		    var residentArr = ["bill_sending_zip", "bill_sending_addr5"];
+		    var ele;
+
+		    for (var i = 0; i < residentArr.length; i++) {
+		      ele = document.getElementById(residentArr[i]);
+		      if (ele.value.trim().length == 0) {
+		        ele.style.background = "pink";
+		        alert("帳單地址不可空白");
+		        return false;
+		      }else{
+		        ele.style.background = "white";
+		      }
+		    }
+	 }
+
+	$(document)
+			.ready(
+					function() {
+						var bill_sending_arr = [ "bill_sending_zip",
+								"bill_sending_zip2", 
+								/* "bill_sending_addr1",
+								"bill_sending_addr2", */
+								"bill_sending_addr3", 
+								"bill_sending_addr4", 
+								"bill_sending_addr5" ];
+						var billApplyFlag = $("#bill_apply_flag").val();
+						if (billApplyFlag == '4') {
+							for (var i = 0; i < bill_sending_arr.length; i++) {
+								document.getElementById(bill_sending_arr[i]).style.display = "";
+								document.getElementById(bill_sending_arr[i]
+										+ '_text').style.display = "none";
+							}
+						} else {
+							for (var i = 0; i < bill_sending_arr.length; i++) {
+								document.getElementById(bill_sending_arr[i]).style.display = "none";
+								document.getElementById(bill_sending_arr[i]
+										+ '_text').style.display = "";
+							}
+						}
+					});
+</script>

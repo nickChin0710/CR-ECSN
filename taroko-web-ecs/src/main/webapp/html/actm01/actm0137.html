@@ -1,0 +1,527 @@
+<html> 
+<head>
+<title>Payment Reversal 作業-108-12-20-V1.00.03-Alex</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+
+<div id="condBlock">
+	<table width="80%" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<td nowrap>&nbsp;帳戶帳號:
+				<select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+	 <!-- <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 zRequire ="K" onChange="initinfo()"/> -->
+				<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 zRequire ="K" />
+			</td>			
+			<td nowrap>&nbsp;帳戶姓名/名稱:
+				<span class="dsp_text">${ex_cname}</span>
+				<input type="hidden" name="ex_cname" value="${ex_cname}">
+			</td>			
+		</tr>
+		<tr>
+			<td nowrap>&nbsp;幣別:
+				<select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>	
+			</td>
+			<!-- <td nowrap  >&nbsp;入帳日期 >
+      	 <input type="text" class="col_date" name="ex_date" value="${ex_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />      
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date'});
+	       </script>	      
+		  </td>	-->		
+     <td nowrap  >&nbsp;入帳起迄日期:
+        <input type="text" class="col_date" name="ex_date_s" value="${ex_date_s}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+           <script language="JavaScript">
+	          new tcal ({'formname': 'dataForm','controlname': 'ex_date_s'});
+	         </script>
+	        --
+	      <input type="text" class="col_date" name="ex_date_e" value="${ex_date_e}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+           <script language="JavaScript">
+	          new tcal ({'formname': 'dataForm','controlname': 'ex_date_e'});
+	         </script>
+	  </td>
+		</tr>
+		<tr>
+			<td nowrap colspan="2">&nbsp;
+				<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+				<input type="Button" name="btnQuery" ${btnQuery_disable} value="讀取" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+			</td>
+		</tr>
+	</table>
+</div>
+<hr>
+<div class="tab">
+<table>
+    <tr>
+      <td class="tablinks" id="${act_click_b}" onclick="tab_select('b'); tabControl(event, 'tab-2')">科目明細沖回</td>
+      <td class="tablinks" id="${act_click_c}" onclick="tab_select('c'); tabControl(event, 'tab-3')">Payment Reversal作業</td>
+      <td class="tablinks" id="${act_click_a}" onclick="tab_select('a'); tabControl(event, 'tab-1')">繳款回沖註記</td>
+    </tr>
+</table>
+</div>
+<!--List -->
+<!-- 繳款註記================= -->
+<!-- <div id="content1" class="tabPage"> -->
+<div id="tab-1" class="tabcontent">
+<input type="Button" name="btnAdd" ${btnAdd_disable} value="執行" onClick="top.submitControl('X1')" 
+ class="btAdd">&nbsp;&nbsp;
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap class="list_rr" colspan="2" >&nbsp;已勾選金額總計:</td>
+		<td nowrap class="list_ll" colspan="7" >
+			<input type="text" class="dsp_text" id="click_total_A" name="click_total_A" value="${click_total_A}" onfocus="this.blur()" >
+		</td>
+	</tr>
+	<tr>
+		<th nowrap class="list_th">確認</th>
+		<th nowrap class="list_th">繳款沖回金額</th>
+		<th nowrap class="list_th">入帳日期</th>
+		<th nowrap class="list_th">繳款日期</th>
+		<th nowrap class="list_th">結算幣別</th>
+		<th nowrap class="list_th">繳款金額</th>
+		<th nowrap class="list_th">己沖回金額</th>
+		<th nowrap class="list_th">可沖回金額</th>
+		<th nowrap class="list_th">繳款類別</th>
+	</tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+	<tr>            
+		<td nowrap class="list_ll">
+			<span class="dsp_flag">${a-ok_flag}</span>
+			<input type="checkbox" name="a-opt" value="${ser_num}" onClick="set_click_amt('1','${ser_num}')" 
+			${opt_on_A} /> ${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}" />
+			<input type="hidden" name="a-rowid" value="${a-rowid}" />
+			<input type="hidden" name="a-mod_seqno" value="${a-mod_seqno}" />
+			<input type="hidden" name="a-payment_rev_amt" value="${a-payment_rev_amt}">
+			<input type="hidden" name="a-dramt" value="${a-dramt}">
+			<input type="hidden" name="a-acct_date" value="${a-acct_date}">
+			<input type="hidden" name="a-interest_date" value="${a-interest_date}">
+			<input type="hidden" name="a-curr_code" value="${a-curr_code}">
+			<input type="hidden" name="a-transaction_amt" value="${a-transaction_amt}">						
+			<input type="hidden" name="a-tran_type" value="${a-tran_type}">
+			<input type="hidden" name="set_amt_A" value="${set_amt_A}">
+			<input type="hidden" name="minus_amt_A" value="${minus_amt_A}">
+		</td>
+		<td nowrap class="list_ll"><input type="text" class="col_number" name="a-adramt" zEdit="canminus" 
+			  maxlength="9" size="10" value="${a-adramt}" onChange="set_amtChange('1','${ser_num}');" /></td>
+		<td nowrap class="list_cc">${a-acct_date.YMD}</td>
+		<td nowrap class="list_cc">${a-interest_date.YMD}</td>
+		<td nowrap class="list_cc">${a-curr_code}</td>
+		<td nowrap class="list_rr">${a-transaction_amt.(999.00)}</td>
+		<td nowrap class="list_rr">${a-payment_rev_amt.(999.00)}</td>
+		<td nowrap class="list_rr">${a-dramt.(999.00)}</td>
+		<td nowrap class="list_cc">${a-tran_type}</td>
+	</tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 科目明細沖回================================ -->
+<!-- <div id="content2" class="tabPage"> -->
+<div id="tab-2" class="tabcontent">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;利息起算日指示碼:
+			<input type="checkbox" name="ex_onflag" value="Y" ${ex_onflag-Y}/>覆核日	
+		</td>		
+		<td nowrap>最近沖銷MP=0的日期:
+<!--
+			<input type="text" class="col_text" name="ex_last_min_pay_date" value="${ex_last_min_pay_date}" maxlength=11 size=11 />
+-->
+			<span class="dsp_text">${ex_last_min_pay_date}</span>
+			<input type="hidden" name="ex_last_min_pay_date" value="${ex_last_min_pay_date}">
+		</td>		
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;調整原因:
+			<input type="text" class="col_text" name="ex_reason_code" value="${ex_reason_code}" maxlength=11 size=11 />	
+		</td>		
+		<td nowrap>調整備註:
+			<input type="text" class="col_any" name="ex_comment" value="${ex_comment}" zEdit="any,canTW" maxlength=20 size=22 />
+		</td>		
+	</tr>
+<!--
+	<tr>
+		<td nowrap>&nbsp;銷帳鍵值:
+			<input type="text" class="col_text" name="ex_c_debt_key" value="${ex_c_debt_key}" maxlength=20 size=22 />	
+		</td>
+		
+		<td nowrap>貸方科目:
+			<select size="1" name="ex_cr_item" class="col_ddlb">
+				<option value="60000300" ${ex_cr_item-60000300}>臨時存欠--業務系統 6000-0300</option>
+				<option value="14817000" ${ex_cr_item-14817000}>應收款--其他 1481-7000</option>
+				<option value="24817000" ${ex_cr_item-24817000}>應付款--其他 2481-7000</option>
+				<option value="40000700" ${ex_cr_item-40000700}>利息收入--信用卡息 4000-0700</option>
+			</select>	
+		</td>		
+	</tr>
+-->
+</table>
+<input type="Button" name="btnAdd" ${btnAdd_disable} value="執行" onClick="top.submitControl('X2')" 
+ class="btAdd">&nbsp;&nbsp;
+<table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap class="list_rr" colspan="2">&nbsp;已勾選金額總計:</td>
+		<td nowrap class="list_ll" colspan="13" >
+			<input type="text" class="dsp_text" id="click_total_B" name="click_total_B" value="${click_total_B}" onfocus="this.blur()" >
+		</td>
+	</tr>
+	<tr>
+		<th nowrap class="list_th">Reversal</th>
+		<th nowrap class="list_th">Reversal金額</th>
+		<th nowrap class="list_th">結算幣別</th>
+		<th nowrap class="list_th">交易參考號</th>
+		<th nowrap class="list_th">入帳日期</th>
+		<th nowrap class="list_th">關帳年月</th>
+		<th nowrap class="list_th">起息日期</th>
+		<th nowrap class="list_th">期初餘額</th>
+		<th nowrap class="list_th">期末餘額</th>
+		<th nowrap class="list_th">可D數餘額</th>
+		<th nowrap class="list_th">尚可Payment Reversal 金額</th>
+		<th nowrap class="list_th">科目_中文名稱</th>
+		<th nowrap class="list_th">帳單類別</th>
+		<th nowrap class="list_th">交易代號</th>
+<!--<th nowrap class="list_th">利息重新起算日</th>-->
+	</tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+	 <tr>            
+		<td nowrap class="list_ll">
+			<span class="dsp_flag">${b-ok_flag}</span>
+			<input type="checkbox" name="b-opt" value="${ser_num_b}" onClick="set_click_amt('2','${ser_num_b}')" 
+			 ${opt_on_B} /> ${SER_NUM_B}&nbsp;
+			<input type="hidden" name="ser_num_b" value="${ser_num_b}" />			
+			<input type="hidden" name="b-rowid" value="${b-rowid}" />
+			<input type="hidden" name="b-acajrowid" value="${b-acajrowid}" />
+			<input type="hidden" name="b-apr_flag" value="${b-apr_flag}" />
+			<input type="hidden" name="set_amt_B" value="${set_amt_B}">
+			<input type="hidden" name="minus_amt_B" value="${minus_amt_B}">
+		</td>
+		<td nowrap class="list_ll"><input type="text" class="col_number" name="b-adramt" zEdit="dignumber" 
+			  maxlength="9" size="10" value="${b-adramt}" onChange="set_amtChange('2','${ser_num_b}');" /></td>
+		<td nowrap class="list_cc">${b-curr_code}</td>
+		<td nowrap class="list_cc">${b-reference_no}</td>
+		<td nowrap class="list_cc">${b-post_date.YMD}</td>
+		<td nowrap class="list_cc">${b-acct_month.YMD}</td>
+		<td nowrap class="list_cc">${b-interest_date.YMD}</td>
+		<td nowrap class="list_rr">${b-beg_bal.(999.00)}</td>
+		<td nowrap class="list_rr">${b-end_bal.(999.00)}</td>
+		<td nowrap class="list_rr">${b-d_avail_bal.(999.00)}</td>
+		<td nowrap class="list_rr">${b-dramt.(999.00)}</td>
+		<td nowrap class="list_ll">${b-acct_code}-${b-chi_short_name}</td>
+		<td nowrap class="list_cc">${b-db_bill_type}</td>
+		<td nowrap class="list_cc">${b-db_trans_code}</td>
+<!--<td nowrap class="list_cc">${b-interest_rs_date.YMD}-->
+			<input type="hidden" name="b-Db_table" value="${b-Db_table}">
+			<input type="hidden" name ="b-curr_code" value="${b-curr_code}" />
+			<input type="hidden" name ="b-reference_no" value="${b-reference_no}" />
+			<input type="hidden" name ="b-post_date" value="${b-post_date}" />
+			<input type="hidden" name ="b-acct_month" value="${b-acct_month}" />
+			<input type="hidden" name ="b-interest_date" value="${b-interest_date}" />
+			<input type="hidden" name ="b-beg_bal" value="${b-beg_bal}" />
+			<input type="hidden" name ="b-beg_bal_tw" value="${b-beg_bal_tw}" />
+			<input type="hidden" name ="b-end_bal" value="${b-end_bal}" />
+			<input type="hidden" name ="b-d_avail_bal" value="${b-d_avail_bal}" />
+			<input type="hidden" name ="b-dramt" value="${b-dramt}" />
+			<input type="hidden" name ="b-acct_code" value="${b-acct_code}" />
+			<input type="hidden" name ="b-CHI_SHORT_NAME" value="${b-CHI_SHORT_NAME}" />
+			<input type="hidden" name ="b-db_bill_type" value="${b-db_bill_type}" />
+			<input type="hidden" name ="b-db_trans_code" value="${b-db_trans_code}" />
+			<input type="hidden" name ="b-interest_rs_date" value="${b-interest_rs_date}" />
+		</td>
+	 </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+        
+<!-- Payment Reversal作業================================ -->
+<!-- <div id="content3" class="tabPage"> -->
+<!-- <div id="content3" class="tabPage"> -->
+<div id="tab-3" class="tabcontent">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;利息起算日指示碼:
+			<input type="checkbox" name="ex_onflagc" value="Y" ${ex_onflagc-Y}/>覆核日	
+		</td>
+		<td nowrap>最近沖銷MP=0的日期:
+<!--
+			<input type="text" class="col_text" name="ex_last_min_pay_date2" value="${ex_last_min_pay_date2}" maxlength=11 size=11 />	
+-->
+			<span class="dsp_text">${ex_last_min_pay_date2}</span>
+			<input type="hidden" name="ex_last_min_pay_date2" value="${ex_last_min_pay_date2}">
+		</td>		
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;調整原因:
+			<input type="text" class="col_text" name="ex_reason_code2" value="${ex_reason_code2}"  maxlength=11 size=11 />
+		</td>		
+		<td nowrap>調整備註:
+			<input type="text" class="col_any" name="ex_comment2" value="${ex_comment2}" zEdit="any,canTW" maxlength=20 size=22 />
+		</td>		
+	</tr>
+<!--
+	<tr>
+		<td nowrap>&nbsp;銷帳鍵值:
+			<input type="text" class="col_text" name="ex_c_debt_key2" value="${ex_c_debt_key2}" maxlength=20 size=22 />
+		</td>		
+		<td nowrap>貸方科目:
+			<select size="1" name="ex_cr_item2" class="col_ddlb">
+				<option value="60000300" ${ex_cr_item2-60000300}>臨時存欠--業務系統 6000-0300</option>
+				<option value="14817000" ${ex_cr_item2-14817000}>應收款--其他 1481-7000</option>
+				<option value="24817000" ${ex_cr_item2-24817000}>應付款--其他 2481-7000</option>
+				<option value="40000700" ${ex_cr_item2-40000700}>利息收入--信用卡息 4000-0700</option>
+			</select>    	
+		</td>
+	</tr>
+-->
+</table>
+<input type="Button" name="btnAdd" ${btnAdd_disable} value="執行 " onClick="top.submitControl('X3')" 
+ class="btAdd" >&nbsp;&nbsp;
+<table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap class="list_rr" colspan="2">&nbsp;已勾選金額總計:</td>
+		<td nowrap class="list_ll" colspan="8" >
+			<input type="text" class="dsp_text" id="click_total_C" name="click_total_C" value="${click_total_C}" onfocus="this.blur()" >
+		</td>
+	</tr>
+	<tr>
+		<th nowrap class="list_th">確認</th>
+		<th nowrap class="list_th">繳款沖回金額</th>
+		<th nowrap class="list_th">入帳日期</th>
+		<th nowrap class="list_th">繳款日期</th>
+		<th nowrap class="list_th">結算幣別</th>
+		<th nowrap class="list_th">繳款金額</th>
+		<th nowrap class="list_th">己沖回金額</th>
+		<th nowrap class="list_th">可沖回金額</th>
+		<th nowrap class="list_th">繳款類別</th>
+		<th nowrap class="list_th">已覆核</th>
+	</tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+	<tr>
+		<td nowrap class="list_ll">
+			<span class="dsp_flag">${c-ok_flag}</span>
+			<input type="checkbox" name="c-opt" value="${ser_num_c}" onClick="set_click_amt('3','${ser_num_c}')" 
+			${click_C} ${opt_on_C} /> ${ser_num_c}&nbsp;
+			<input type="hidden" name="ser_num_c" value="${ser_num_c}" />			
+			<input type="hidden" name="c-rowid" value="${c-rowid}" />
+			<input type="hidden" name="c-acajrowid" value="${c-acajrowid}" />
+			<input type="hidden" name="c-reference_no" value="${c-reference_no}" />
+			<input type="hidden" name="c-db_apr_flag" value="${c-db_apr_flag}" />
+			<input type="hidden" name="c-jrnl_seqno" value="${c-jrnl_seqno}" />
+			<input type="hidden" name="c-enq_seqno" value="${c-enq_seqno}" />
+			<input type="hidden" name="c-dc_transaction_amt" value="${c-dc_transaction_amt}">
+			<input type="hidden" name="set_amt_C" value="${set_amt_C}">
+			<input type="hidden" name="minus_amt_C" value="${minus_amt_C}">
+		</td>
+		<td nowrap class="list_ll"><input type="text" class="col_number" name="c-adramt" zEdit="dignumber" 
+			  maxlength="9" size="10" value="${c-adramt}" onChange="set_amtChange('3','${ser_num_c}');" /></td>
+		<td nowrap class="list_cc">${c-acct_date.YMD}</td>
+		<td nowrap class="list_cc">${c-interest_date.YMD}</td>
+		<td nowrap class="list_cc">${c-curr_code}</td>
+		<td nowrap class="list_rr">${c-transaction_amt.(999.00)}</td>
+		<td nowrap class="list_rr">${c-payment_rev_amt.(999.00)}</td>
+		<td nowrap class="list_rr">${c-dramt.(999.00)}</td>
+		<td nowrap class="list_cc">${c-tran_type}
+		<td nowrap class="list_cc">${c-db_apr_flag}
+			<input type="hidden" name="c-acct_date" value="${c-acct_date}" />
+			<input type="hidden" name="c-interest_date" value="${c-interest_date}" />
+			<input type="hidden" name="c-curr_code" value="${c-curr_code}" />
+			<input type="hidden" name="c-transaction_amt" value="${c-transaction_amt}" />
+			<input type="hidden" name="c-payment_rev_amt" value="${c-payment_rev_amt}" />
+			<input type="hidden" name="c-dramt" value="${c-dramt}" />
+			<input type="hidden" name="c-tran_type" value="${c-tran_type}" />
+		</td>
+	</tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+<!-- -->
+<!--保留功能-->
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="cond">
+<!-- <input type="hidden" name="optname" value="">  -->
+<input type="hidden"  name="tab_click" value="${tab_click}">
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+tigra_tables('table2');
+tigra_tables('table3');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "9999";
+
+//document.dataForm.ex_risk_type.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+	
+		if (top.actionCode=='X1') {
+			if(confirm("存檔後不可再更改,是否執行 ?")==false){
+					return false;
+			}
+		}
+		
+    return true;
+}
+/***
+function tab_select(optname) {
+	 
+	 document.dataForm.optname.value = optname;
+}
+***/
+
+function tab_select(parm) {
+	 
+	 document.dataForm.tab_click.value = parm;
+}
+
+function initinfo() { 
+	top.submitControl('I');	 
+}
+
+function set_click_amt(parm,parm2){
+	var ii = parseInt(parm2) - 1;		
+	if(parm=='1'){		
+		var d_amt = Number(document.getElementsByName("a-adramt")[ii].value);		
+		var total_amt = Number(document.dataForm.click_total_A.value);				
+		var ls_ckbox = document.getElementsByName("a-opt")[ii].checked;
+		var set_amt = document.getElementsByName("set_amt_A")[ii].value;
+		var minus_amt =	document.getElementsByName("minus_amt_A")[ii].value;	
+		if(ls_ckbox==true){
+			if(set_amt =='1')	return ;
+			total_amt = Number(total_amt + d_amt);
+			document.dataForm.set_amt_A[ii].value = '1';		
+			document.dataForm.minus_amt_A[ii].value = d_amt;		
+		}	else if(ls_ckbox==false){
+			if(set_amt =='0')	return ;
+			total_amt = Number(total_amt - minus_amt);
+			document.dataForm.set_amt_A[ii].value = '0';		
+		}		
+		$("#click_total_A").text(total_amt);   
+    $("#click_total_A").val(total_amt);   		
+	}	else if(parm=='2'){		
+		var d_amt = Number(document.getElementsByName("b-adramt")[ii].value);				
+		var total_amt = Number(document.dataForm.click_total_B.value);				
+		var ls_ckbox = document.getElementsByName("b-opt")[ii].checked;
+		var set_amt = document.getElementsByName("set_amt_B")[ii].value;		
+		var minus_amt =	document.getElementsByName("minus_amt_B")[ii].value;	
+		if(ls_ckbox==true){
+			if(set_amt =='1')	return ;
+			total_amt = Number(total_amt + d_amt);
+			document.dataForm.set_amt_B[ii].value = '1';	
+			document.dataForm.minus_amt_B[ii].value = d_amt;			
+		}	else if(ls_ckbox==false){
+			if(set_amt =='0')	return ;
+			total_amt = Number(total_amt - minus_amt);
+			document.dataForm.set_amt_B[ii].value = '0';		
+		}		
+		$("#click_total_B").text(total_amt);   
+    $("#click_total_B").val(total_amt);   	
+	}	else if(parm=='3'){
+		var d_amt = Number(document.getElementsByName("c-adramt")[ii].value);				
+		var total_amt = Number(document.dataForm.click_total_C.value);				
+		var ls_ckbox = document.getElementsByName("c-opt")[ii].checked;
+		var set_amt = document.getElementsByName("set_amt_C")[ii].value;		
+		var minus_amt =	document.getElementsByName("minus_amt_C")[ii].value;	
+		if(ls_ckbox==true){			
+			if(set_amt =='1')	return ;
+			total_amt = Number(total_amt + d_amt);
+			document.dataForm.set_amt_C[ii].value = '1';		
+			document.dataForm.minus_amt_C[ii].value = d_amt;			
+		}	else if(ls_ckbox==false){
+			if(set_amt =='0')	return ;
+			total_amt = Number(total_amt - minus_amt);
+			document.dataForm.set_amt_C[ii].value = '0';		
+		}		
+		$("#click_total_C").text(total_amt);   
+    $("#click_total_C").val(total_amt);   	
+	}
+}
+
+function set_amtChange(parm,parm2){
+	var ii = parseInt(parm2) - 1;		
+	if(parm=='1'){		
+		var d_amt = Number(document.getElementsByName("a-adramt")[ii].value);		
+		var total_amt = Number(document.dataForm.click_total_A.value);				
+		var ls_ckbox = document.getElementsByName("a-opt")[ii].checked;
+		var set_amt = document.getElementsByName("set_amt_A")[ii].value;
+		var minus_amt =	document.getElementsByName("minus_amt_A")[ii].value;	
+		if(ls_ckbox==true){
+			if(set_amt =='1')	{
+			  total_amt = Number(total_amt - minus_amt + d_amt);
+			  document.dataForm.minus_amt_A[ii].value = d_amt;		
+		  }	else {
+			  total_amt = Number(total_amt + d_amt);
+			  document.dataForm.minus_amt_A[ii].value = d_amt;		
+			  document.dataForm.set_amt_A[ii].value = '1';		
+		  }		
+		}		
+		$("#click_total_A").text(total_amt);   
+    $("#click_total_A").val(total_amt);   		
+	}	else if(parm=='2'){		
+		var d_amt = Number(document.getElementsByName("b-adramt")[ii].value);				
+		var total_amt = Number(document.dataForm.click_total_B.value);				
+		var ls_ckbox = document.getElementsByName("b-opt")[ii].checked;
+		var set_amt = document.getElementsByName("set_amt_B")[ii].value;		
+		var minus_amt =	document.getElementsByName("minus_amt_B")[ii].value;	
+		if(ls_ckbox==true){
+			if(set_amt =='1')	{
+			  total_amt = Number(total_amt - minus_amt + d_amt);
+			  document.dataForm.minus_amt_B[ii].value = d_amt;			
+			} else {
+ 	  		total_amt = Number(total_amt + d_amt);
+			  document.dataForm.minus_amt_B[ii].value = d_amt;			
+		  	document.dataForm.set_amt_B[ii].value = '1';		
+			}
+		}		
+		$("#click_total_B").text(total_amt);   
+    $("#click_total_B").val(total_amt);   	
+	}	else if(parm=='3'){
+		var d_amt = Number(document.getElementsByName("c-adramt")[ii].value);				
+		var total_amt = Number(document.dataForm.click_total_C.value);				
+		var ls_ckbox = document.getElementsByName("c-opt")[ii].checked;
+		var set_amt = document.getElementsByName("set_amt_C")[ii].value;		
+		var minus_amt =	document.getElementsByName("minus_amt_C")[ii].value;	
+		if(ls_ckbox==true){			
+			if(set_amt =='1')	{
+			  total_amt = Number(total_amt - minus_amt + d_amt);
+			  document.dataForm.minus_amt_C[ii].value = d_amt;			
+			} else {
+			  total_amt = Number(total_amt + d_amt);
+			  document.dataForm.minus_amt_C[ii].value = d_amt;			
+			  document.dataForm.set_amt_C[ii].value = '1';		
+			}
+		}		
+		$("#click_total_C").text(total_amt);   
+    $("#click_total_C").val(total_amt);   	
+	}
+}
+
+function process_query() {
+
+    if ( document.dataForm.ex_acct_type.value == '02' && document.dataForm.ex_acct_key.value.length >= 8 )
+       { return top.submitControl('Q'); }
+    else
+       { query_acct_type('ex_acct_type','ex_acct_key','Q'); }
+
+    return true;
+}
+
+
+</script>

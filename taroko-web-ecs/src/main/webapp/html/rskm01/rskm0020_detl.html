@@ -1,0 +1,248 @@
+<html>
+<head>
+<title>問交/特交/不合格作業維護-jh201116</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層">&nbsp;
+  <input type="Button" name="btnUpdate"  value="結案" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="取消結案" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+<hr>
+<!--TAB Process---------------------------- -->
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')">問交結案</td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-2')">帳單資料</td>
+    </tr>
+  </table>
+</div>
+
+<div id="tab-1" class="tabcontent"> 
+<div id="dataBlock">   
+ <table id="table1" width="80%" class="sortable" border="0" >
+    <tr>
+   <td nowrap colspan="2">&nbsp;控制流水號:
+      <span class="dsp_text">${ctrl_seqno}</span>
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+   </td>
+   <td nowrap colspan="2">&nbsp;卡別:
+      <span class="dsp_text">${bin_type}</span>&nbsp;
+      <input type="hidden" name="bin_type" value="${bin_type}">
+      &nbsp;debit卡:
+      <span class="dsp_text">${debit_flag}</span>&nbsp;
+      <input type="hidden" name="debit_flag" value="${debit_flag}">
+      &nbsp;
+      <span class="dsp_text">${prb_mark}.${#JAVA:ecsfunc.DeCodeRsk.prbMark(prb_mark)}</span>&nbsp;
+      <input type="hidden" name="prb_mark" value="${prb_mark}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;消費卡號:
+      <span class="dsp_text">${card_no}</span>&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">&nbsp;
+   </td>
+   <td nowrap colspan="2">&nbsp;狀態碼:
+      <span class="dsp_text">${prb_status}.${#JAVA:ecsfunc.DeCodeRsk.prbStatus(prb_status)}</span>
+      <input type="hidden" name="prb_status" value="${prb_status}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;原因碼:
+      <span class="dsp_text">${prb_reason_code}.${tt_reason_code}</span>
+      <input type="hidden" name="prb_reason_code" value="${prb_reason_code}">
+      <input type="hidden" name="tt_reason_code" value="${tt_reason_code}">
+   </td>
+   <td nowrap colspan="2">&nbsp;來源碼:
+      <span class="dsp_text">${prb_src_code}.${#JAVA:ecsfunc.DeCodeRsk.prbSrcCode(prb_src_code)}</span>&nbsp;
+      <input type="hidden" name="prb_src_code" value="${prb_src_code}">
+      &nbsp;交易碼:<span class="dsp_text">${txn_code}</span>
+      <input type="hidden" name="txn_code" value="${txn_code}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;問題金額:
+      <span class="dsp_number">${prb_amount.(999)}</span>
+      <input type="hidden" name="prb_amount" value="${prb_amount}" >
+   </td>
+   <td nowrap colspan="2">&nbsp;結算幣別:
+      <span class="dsp_text">${db_curr_code}</span>
+      <input type="hidden" name="db_curr_code" value="${db_curr_code}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;問題金額(結算):
+      <span class="dsp_number">${dc_prb_amount.(999.00)}</span>
+      <input type="hidden" name="dc_prb_amount" value="${dc_prb_amount}" >
+   </td>
+   <td nowrap colspan="2">&nbsp;提詐欺通報否:
+      <input type="radio" name="prb_fraud_rpt" value="1" ${prb_fraud_rpt-1} disabled >是
+      <input type="radio" name="prb_fraud_rpt" value="0" ${prb_fraud_rpt-0} disabled >否
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="4">&nbsp;回存:
+    <span class="dsp_text">${back_flag}</span>
+    <input type="hidden" name="back_flag" value="${back_flag}" />
+    &nbsp;&nbsp;
+    回存狀態:
+    <span class="dsp_text">${back_status}.${tt_back_status}</span>
+    <input type="hidden" name="back_status" value="${back_status}" />
+    <input type="hidden" name="back_status" value="${back_status}" />
+    &nbsp;&nbsp;
+    <span class="dsp_text">${back_date.YMD}</span>
+    <input type="hidden" name="back_date" value="${back_date}" />
+    &nbsp;&nbsp;
+ </tr>
+ <tr>
+   <td nowrap colspan="4">&nbsp;說明:
+      <span class="dsp_text">${prb_comment}</span>
+      <input type="hidden" name="prb_comment" value="${prb_comment}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan=2>&nbsp;
+      <input type="checkbox" name="letter_flag" value="Y" disabled ${letter_flag-Y}>列印問交信函
+   </td>
+   <td nowrap>&nbsp;列印信函日期
+      <span class="dsp_text">${letter_print_date.YMD}</span>
+      <input type="hidden" name="letter_print_date" value="${letter_print_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;列印信函經辦:
+      <span class="dsp_text">${letter_print_user}</span>
+      <input type="hidden" name="letter_print_user" value="${letter_print_user}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;新增登錄:
+      <span class="dsp_text">${add_user}</span>&nbsp;
+      <input type="hidden" name="add_user" value="${add_user}">
+      <span class="dsp_text">${add_date.YMD}</span>
+      <input type="hidden" name="add_date" value="${add_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;新增覆核:
+      <span class="dsp_text">${add_apr_user}</span>&nbsp;
+      <input type="hidden" name="add_apr_user" value="${add_apr_user}">
+      <span class="dsp_text">${add_apr_date.YMD}</span>
+      <input type="hidden" name="add_apr_date" value="${add_apr_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;結案登錄:
+      <span class="dsp_text">${close_add_user}</span>&nbsp;
+      <input type="hidden" name="close_add_user" value="${close_add_user}">
+      <span class="dsp_text">${close_add_date.YMD}</span>
+      <input type="hidden" name="close_add_date" value="${close_add_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;結案覆核:
+      <span class="dsp_text">${close_apr_user}</span>&nbsp;
+      <input type="hidden" name="close_apr_user" value="${close_apr_user}">
+      <span class="dsp_text">${close_apr_date.YMD}</span>
+      <input type="hidden" name="close_apr_date" value="${close_apr_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;結案處理結果:
+      <select size="1" name="clo_result" id="clo_result" class="col_ddlb" zRequire="Y">
+         <option value="">--</option>
+         ${dddw_clo_result}
+      </select>
+   </td>
+  <td nowrap colspan="2">&nbsp;申購書編號:
+    <input type="text" class="col_text" name="contract_no" value="${contract_no}" maxlength="10" size="12" />
+  </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;正確卡號:     
+      <input type="text" class="col_text" name="org_card_no" value="${org_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+   <td nowrap colspan="2" >&nbsp;應付款-其他銷帳鍵值:
+      <input type="text" class="col_text" name="prb_glmemo3" value="${prb_glmemo3}" maxlength="20" size="22" >
+   </td> 
+ </tr>
+ <tr>
+   <td nowrap colspan="2" >&nbsp;結案結算金額:
+      <input type="text" class="col_number" name="dc_mcht_repay" value="${dc_mcht_repay}" maxlength="12" size="14" zEdit="dignumber">
+   </td>
+   <td nowrap >&nbsp;結案金額:
+      <span class="dsp_text">${mcht_repay.(999)}</span>
+      <input type="hidden" name="mcht_repay" value="${mcht_repay}">
+   </td>
+   <td nowrap >&nbsp;手續費: 
+      <span class="dsp_text">${mcht_close_fee.(999)}</span>
+      <input type="hidden" name="mcht_close_fee" value="${mcht_close_fee}" >
+   </td>
+ </tr>
+</table>
+</div>
+</div>
+
+<div id="tab-2" class="tabcontent"> 
+<div id="queryBlock">      
+ ${#PLUGIN:htmcomm_plugin.bil_bill_data} 
+</div>
+</div>
+
+<input type="hidden" name="reference_no" value="${reference_no}" />
+<input type="hidden" name="reference_no_ori" value="${reference_no_ori}" />
+<input type="hidden" name="close_add_user_2" value="${close_add_user_2}">
+<input type="hidden" name="close_add_date_2" value="${close_add_date_2}">
+<input type="hidden" name="close_apr_user_2" value="${close_apr_user_2}">
+<input type="hidden" name="close_apr_date_2" value="${close_apr_date_2}">
+<input type="hidden" name="clo_result_2" value="${clo_result_2}">
+<input type="hidden" name="dc_mcht_repay_2" value="${dc_mcht_repay_2}" />
+<input type="hidden" name="prb_glmemo3_2" value="${prb_glmemo3_2}" />
+<input type="hidden" name="mcht_repay_2" value="${mcht_repay_2}">
+<input type="hidden" name="mcht_close_fee_2" value="${mcht_close_fee_2}">
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ top.deleteConfirm_show ="";
+ function validateInput() {
+    if (top.actionCode==='D') {
+       if (confirm("是否取消結案??")==false) {
+         return false;
+       }
+    }
+      
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if (top.actionCode=='U') {
+      var e_clo =document.getElementById("clo_result");
+      var ls_clo_result =e_clo.options[e_clo.selectedIndex].value;
+      var ls_gl_memo3 =document.forms["dataForm"]["prb_glmemo3"].value;
+      var str = "|06|07|18|20|51|D1|D3|D7|D8|DA";
+      if (str.indexOf(ls_clo_result)>0 && ls_gl_memo3.trim().length==0) {
+         if (confirm("未輸入銷帳鍵值是否存檔")==false) {
+            return false;
+         }
+      }
+    }  
+    return true;
+  }
+
+</script>

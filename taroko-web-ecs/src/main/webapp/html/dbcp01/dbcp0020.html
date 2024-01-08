@@ -1,0 +1,195 @@
+
+<html>
+<head>
+<title>DebitCard申請來源維護-V.2017-1123-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript">
+function wf_add_newrow()
+{
+//debugger;
+var ind=document.getElementById( 'table1' ).rows.length -1;
+var rowNum=document.getElementById( 'table1' ).rows.length -1;
+var colNum=0;
+var fi=0;
+//console.log("a:"+ind);
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+	
+	var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+	
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+
+    var ip2 = document.createElement( 'input' );
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild( ip2 );
+    
+    var ip3 = document.createElement( 'input' );
+    ip3.type = 'hidden';
+    ip3.name = 'mod_seqno';
+    ip3.value = '';
+    myCell.appendChild( ip3 );
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    
+    var re4 = document.createElement( 'input' );
+	re4.setAttribute('class', 'col_any');
+    re4.type = 'text';
+    re4.name = 'apply_source';
+	re4.maxLength=1;
+	re4.size=1;
+    re4.value = '';
+    re4.setAttribute('zEdit', 'alpha,upper');
+    myCell.appendChild(re4);	
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    
+    var re4 = document.createElement( 'input' );
+	re4.setAttribute('class', 'col_any');
+    re4.type = 'text';
+    re4.name = 'apply_source_name';
+	re4.maxLength=40;
+	re4.size=40;
+    re4.value = '';
+    re4.setAttribute('zEdit', 'canTW');
+    myCell.appendChild(re4);	
+
+}	
+</script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<!--COND -->
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;申請來源:
+            <input type="text" class="col_text" name="ex_card_type_t" value="${ex_card_type_t}" zEdit="alpha,upper" maxlength="1" size="1" />
+        </td>
+        <td nowrap >&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<table border="0" width="5%">
+  <tr>
+    <td nowrap>
+      <input type="Button"  value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+    </td>
+  </tr>
+</table>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="65%">
+    <tr>
+        <th nowrap class="list_th" width="5%">刪除&nbsp;</th>
+        <th nowrap class="list_th">申請來源</th>
+        <th nowrap class="list_th">申請來源名稱</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+     <tr  style="cursor:hand">
+        <td nowrap class="list_no" >
+		  <span class="dsp_flag">${ok_flag}</span>
+			${SER_NUM}
+		  <input type="checkbox" name="opt" value="${ser_num}"/>
+		  <input type="hidden" name="ser_num" value="${ser_num}"/>
+		  <input type="hidden" name="rowid" value="${rowid}"/>
+		  <input type="hidden" name="mod_seqno" value="${mod_seqno}"/>
+		</td>
+        <td nowrap class="list_ll" width="5%"> 
+           <input type="text" class="col_any" name="apply_source" value="${apply_source}" zEdit="alpha,upper"  
+            maxlength="1" size="1" />              
+        </td>
+        <td nowrap class="list_ll" width="5%"> 
+           <input type="text" class="col_any" name="apply_source_name" value="${apply_source_name}" zEdit="canTW"  
+            maxlength="40" size="40" />              
+        </td>
+        <input type="hidden" name="h_apply_source" value="${apply_source}"/>
+        <input type="hidden" name="h_apply_source_name" value="${apply_source_name}"/>
+      </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="MOD_PGM" value="dbcp0020">
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="9999";
+document.dataForm.ex_card_type_t.focus();
+
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "dbcp0020_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "dbcp0020_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

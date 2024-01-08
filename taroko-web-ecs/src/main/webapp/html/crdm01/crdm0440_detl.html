@@ -1,0 +1,253 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-07-25  V1.00.01    Ryan           initial                            -->
+<!-- 110-08-20  V1.00.02    JustinWu       chi_name: half width -> full width -->
+<!-- 112-02-06  V1.00.03    Ryan            修改服務年資改成只能輸入2碼                -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>報送JCIC信用卡戶基本資料維護作業_detl-V.2021-0820</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+</head>
+<script language="javascript">
+
+</script>
+<body background="${water_mark}" > 
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  			<input type="Button" id="btnQuery"   value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 新增 " ${btnAdd_disable} id="${A}"   onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+  	<tr>
+   		<td nowrap width="50%">卡人身份證號:&nbsp;
+     		<input type="text" class="col_any" name="kk_id_no" value="${kk_id_no}" 
+      		maxlength="10" size="10" onChange="itemChanged()"/>
+      		<input type="text" class="col_any" name="kk_id_no_code" value="${kk_id_no_code}" 
+      		maxlength="1" size="1" onChange="itemChanged()" />
+		</td>
+		<td nowrap >建檔JCIC日期:
+       		<input type="text" class="col_date" name="kk_crt_date" value="${kk_crt_date}"  
+        	zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'kk_crt_date'});
+	  		</script>
+   		</td> 
+  	</tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+      	<td nowrap ><span style="color:red">卡人身份證號:</span>
+      		<span class="dsp_text">${id_no}</span>
+      		<input type="hidden"   name="id_no" value="${id_no}">
+      		<span class="dsp_text">${id_no_code}</span>
+      		<input type="hidden"   name="id_no_code" value="${id_no_code}">
+   		</td>
+ 		<td nowrap ><span style="color:red">建檔JCIC日期:</span>
+			<span class="dsp_text">${crt_date.YMD}</span>
+	  		<input type="hidden"   name="crt_date" value="${crt_date}">
+   		</td> 
+   	</tr>
+   	<tr>
+  		<td nowrap>JCIC交易代碼:
+      		<select   size="1"  name="trans_type" class="col_ddlb" >
+         		<option value="A" ${trans_type-A} >新增</option>
+         		<option value="C" ${trans_type-C} >異動</option>
+         		<option value="D" ${trans_type-D} >刪除</option>
+      		</select>
+   		</td>
+    	<td nowrap>卡片型態:
+       		<select size="1" name="account_style" class="col_ddlb" value="" zRequire ="Y">
+   				<option value="">--</option>
+      			${dddw_account_style}
+   			</select>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap>中文姓名:
+      		<input type="text" class="col_any"  name="chi_name" value="${chi_name}" zEdit="canTW"   maxlength="20" size="20" onchange="top.convertInputToFullWidth(this)" />
+   		</td>
+   		<td nowrap>英文姓名:
+      		<input type="text" class="col_text"  name="eng_name" value="${eng_name}" zEdit=""   maxlength="20" size="20" />
+   		</td>
+   	</tr>
+   	<tr>
+   	    <td nowrap colspan="2">原住民姓名羅馬拼音:
+      		<input type="text" class="col_any"  name="indigenous_name" value="${indigenous_name}" zEdit="any,canTw"   maxlength="50" size="92" onchange="top.convertInputToFullWidth(this)" />
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap>生日 :
+        	<input type="text" class="col_date" name="birthday" value="${birthday}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'birthday'});
+	  		</script>
+   		</td>
+   		<td nowrap>教育程度 :
+   			<select size="1" name="education" class="col_ddlb" value="${education}">
+   				<option value="">--</option>
+      			${dddw_education}
+   			</select>
+   		</td>
+   	</tr>
+   	<tr>
+      	<td nowrap>性 別 :
+      		<span class="col_radio">
+         		<input type="radio" value="1" name="sex" ${sex-1} />男
+         		<input type="radio" value="2" name="sex" ${sex-2} />女
+      		</span>
+   		</td>
+ 		<td nowrap>國 籍:
+     		<input type="text" class="col_text"  name="cntry_code" value="${cntry_code}" maxlength="5" size="5" />
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap>護照號碼 :
+      		<input type="text" class="col_any" zEdit="any"  name="passport_no" value="${passport_no}"  maxlength="20" size="20" />
+   		</td>
+    	<td nowrap>護照日期 :
+      		<input type="text" class="col_date" name="passport_date" value="${passport_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'passport_date'});
+	  		</script>
+   		</td>
+   	</tr>
+    <tr>
+  		<td nowrap colspan="2">寄送帳單住址 :
+    		<input type="text" class="col_any" zEdit="any,canTW" name="mail_addr" value="${mail_addr}"  maxlength="66" size="66" />
+   		</td>
+   	</tr>
+   	<tr>
+    	<td nowrap colspan="2">戶籍住址 :
+  			<input type="text" class="col_any" zEdit="any,canTW" name="resident_addr" value="${resident_addr}"  maxlength="66" size="66" />
+   		</td>
+   	</tr>
+  	<tr>
+ 		<td nowrap>自家住宅(Y/N):
+     		<input type="checkbox" value="Y" name="resident_flag" ${resident_flag-Y} >
+   		</td>
+      	<td nowrap>大哥大 :
+     		<input type="text" class="col_text" name="cellar_phone" value="${cellar_phone}"  maxlength="15" size="15" />
+   		</td>
+   	</tr>
+ 	<tr>
+  		<td nowrap>住家電話 :
+   			<input type="text" class="col_text" name="tel_no" value="${tel_no}"  maxlength="16" size="16" />
+   		</td>
+    	<td nowrap>任職機構名稱 :
+   			<input type="text" class="col_any" zEdit="any,canTW" name="company_name" value="${company_name}"  maxlength="30" size="30" />
+   		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap>任職機構統編 :
+    		<input type="text" class="col_text" name="business_id" value="${business_id}"  maxlength="10" size="10" />
+   		</td>
+   		<td nowrap>職位名稱 :
+      		<input type="text" class="col_any" zEdit="any,canTW" name="job_position" value="${job_position}" maxlength="24" size="24" />
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap>任職機構電話 :
+      		<input type="text" class="col_text"  name="office_tel_no" value="${office_tel_no}"  maxlength="16" size="16" />
+   		</td>
+    	<td nowrap>年薪 :
+   			<input type="text" class="col_number" zEdit="number"   name="salary" value="${salary}"  maxlength="10" size="10" />元
+   		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap>服務年資 :
+      		<input type="text" class="col_text"  name="service_year" value="${service_year}" maxlength="2" size="4"/>
+   		</td>
+    	<td nowrap>更新日期:
+        	<input type="text" class="col_date" name="update_date" value="${update_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="10" zRequire ="Y"/>
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'update_date'});
+	  		</script>
+   		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap colspan="2">職業類別 :
+   			<select size="1" name="business_code" class="col_ddlb" value="${business_code}">
+   				<option value="">--</option>
+      			${dddw_business_code}
+   			</select>
+  		</td>
+  	</tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  	<tr>
+    	<td nowrap class="td_text" width="20%">建檔人員:</td>
+     	<td nowrap class="td_text" width="20%">
+      		<span class="dsp_text"> ${crt_user} </span>
+      		<input type="hidden" name="crt_user" value="${crt_user}">   
+   		</td>
+   		<td nowrap class="td_text" width="20%">送JCIC日期:</td> 
+    	<td nowrap class="td_data" width="20%">
+      		<span class="dsp_date">${to_jcic_date.YMD}</span>
+      		<input type="hidden" name="to_jcic_date" value="${to_jcic_date}">   
+   		</td>
+  	</tr>
+</table>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="crdm0440">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="USERID" value="${userId}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="mail_zip" value="${mail_zip}">
+<input type="hidden" name="old_mail_zip" value="${old_mail_zip}">
+<input type="hidden" name="old_mail_addr" value="${old_mail_addr}">
+<input type="hidden" name="" value="${}">
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.kk_id_no.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode == "A" ) {
+    	alert("此畫面只修改送JCIC資料,並不會改變ECS DB資料!");
+    }
+    return true;
+  }
+  function itemChanged(){
+	  top.submitControl('R2');
+  }
+</script>

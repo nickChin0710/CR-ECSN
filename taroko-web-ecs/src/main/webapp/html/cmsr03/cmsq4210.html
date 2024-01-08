@@ -1,0 +1,542 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 109-11-03  V1.00.03  tanwei         modify select                        -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡友貢獻度及卡友權益查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+
+<style>
+.dsp_number2
+{
+	border-style: none;
+   padding-left: 6px; 
+   padding-right: 4px; 	
+	color:  Red; 
+  FONT-FAMILY: "Consolas", "Microsoft Sans Serif" , "Arial", "新細明體", "DFKai-SB";
+  FONT-SIZE:  12pt;
+	background-color: #FFFAEC;
+	text-align: right;
+}
+</style>
+
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;            
+      <input type="Button" value="剩餘金額" onClick="sum()" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;姓名:      
+      <input type="text" class="dsp_text" id="chi_name" name="chi_name" value="${chi_name}" zEdit="any,canTw" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;VIP:      
+      <input type="text" class="dsp_text" id="chi_name" name="vip_code" value="${vip_code}" onfocus="this.blur()" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;貢獻度平等:      
+      <input type="text" class="dsp_text" id="wk_score_01" name="wk_score_01" value="${wk_score_01}" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;執行最大年月:      
+      <input type="text" class="dsp_text" id="score_yymm" name="score_yymm" value="${score_yymm}" onfocus="this.blur()" > 
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;近一年&nbsp;收入:      
+      <input type="text" class="dsp_text" id="yy_income_amt" name="yy_income_amt" value="${yy_income_amt}" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;－　支出:
+      <input type="text" class="dsp_text" id="yy_cost_amt" name="yy_cost_amt" value="${yy_cost_amt}" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;＝近一年貢獻度:      
+      <input type="text" class="dsp_text" id="wk_net_amt" name="wk_net_amt" value="${wk_net_amt}" onfocus="this.blur()" >
+   </td>
+  </tr>
+ </table>
+ <hr>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap colspan="3" >&nbsp;卡片權益:
+         <select   size="1"  name="ex_acct_code" class="col_ddlb">
+            ${dddw_acct_code}       
+         </select>
+      </td>
+      <td nowrap colspan="3" >&nbsp;查詢期間:
+         <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+            <script language="JavaScript">
+   	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+   	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+            <script language="JavaScript">
+   	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+   	      </script>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2" >&nbsp;消費剩餘金額:	      
+	      <input type="text" class="dsp_text" id="wk_net_tot_amt" name="wk_net_tot_amt" value="${wk_net_tot_amt}" onfocus="this.blur()" >
+	   </td>
+	   <td nowrap colspan="2" >＝&nbsp;卡片消費金額:	      
+	      <input type="text" class="dsp_text" id="card_tot_amt" name="card_tot_amt" value="${card_tot_amt}" onfocus="this.blur()" >
+	   </td>
+	   <td nowrap colspan="2" >－&nbsp;權益使用金額:	      
+	      <input type="text" class="dsp_text" id="item_tot_amt" name="item_tot_amt" value="${item_tot_amt}" onfocus="this.blur()" >
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="6" >
+	      <span class="col_key">註：<br>1.「前一年卡片累積消費金額」僅計算BL及IT並排除各項代收款項（mktm0080參數中指定特店），並以消費月計算
+	         <br>2.10/11前權益使用成本（機場接送、機場停車、龍騰卡貴賓室），將被計入「收入」。
+	      </span>
+	   </td>
+	</tr>	         
+ </table>
+</div>
+<hr>
+
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" ${a_click_1} onclick="wf_click('1');  return tabControl(event, 'tab-1')" >消費金額</td>
+       <td class="tablinks" ${a_click_2} onclick="wf_click('2');  return tabControl(event, 'tab-2')" >卡片權益</td>       
+    </tr>
+  </table>
+</div>
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+  	<td nowrap class="list_rr" colspan="3" >總計:</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_cnt" name="tl_cnt" value="${tl_cnt}" onfocus="this.blur()" size="8" >筆
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_purch_amt" name="tl_purch_amt" value="${tl_purch_amt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_income_amt" name="tl_income_amt" value="${tl_income_amt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_cost_amt" name="tl_cost_amt" value="${tl_cost_amt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_contri_amt" name="tl_contri_amt" value="${tl_contri_amt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_bill_cost" name="tl_bill_cost" value="${tl_bill_cost}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_air_shutt_cnt" name="tl_air_shutt_cnt" value="${tl_air_shutt_cnt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_air_park_cnt" name="tl_air_park_cnt" value="${tl_air_park_cnt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_favor_room_cnt" name="tl_favor_room_cnt" value="${tl_favor_room_cnt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number" id="tl_moore_room_cnt" name="tl_moore_room_cnt" value="${tl_moore_room_cnt}" onfocus="this.blur()" size="8" >
+  	</td>
+  	<td nowrap class="list_rr" >
+  		<input type="text" class="dsp_number2" id="tl_amt_2" name="tl_amt_2" value="${tl_amt_2}" onfocus="this.blur()" size="8" >
+  	</td>
+  </tr>
+  <tr>
+    <th nowrap width="10%">累計&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正附卡&nbsp;</th>
+    <th nowrap >團代名稱&nbsp;</th>
+    <th nowrap >消費金額&nbsp;</th>
+    <th nowrap >收入&nbsp;</th>
+    <th nowrap >支出&nbsp;</th>
+    <th nowrap >貢獻度&nbsp;</th>
+    <th nowrap >預支消費金額&nbsp;</th>
+    <th nowrap >預支機接次數&nbsp;</th>
+    <th nowrap >預支機停天數&nbsp;</th>
+    <th nowrap >預支新貴通次數&nbsp;</th>
+    <th nowrap >預支龍騰卡次數&nbsp;</th>
+    <th nowrap >扣除預支金額累消&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->  
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} onClick="set_click_amt('${ser_num}')"  />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="ctrl_click" value="${ctrl_click}" id="ctrl_click" /> 
+	</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCrd.supFlag(sup_flag)}&nbsp;
+      <input type="hidden" name="sup_flag" value="${sup_flag}">
+	</td>
+	<td nowrap class="list_ll"> ${tt_group_name}&nbsp;
+      <input type="hidden" name="tt_group_name" value="${tt_group_name}">
+	</td>
+	<td nowrap class="list_rr"> ${db_purch_amt.(999)}&nbsp;
+      <input type="hidden" name="db_purch_amt" value="${db_purch_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_income_amt.(999)}&nbsp;
+      <input type="hidden" name="db_income_amt" value="${db_income_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_cost_amt.(999)}&nbsp;
+      <input type="hidden" name="db_cost_amt" value="${db_cost_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${wk_contri_amt.(999)}&nbsp;
+      <input type="hidden" name="wk_contri_amt" value="${wk_contri_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_bill_cost.(999)}&nbsp;
+      <input type="hidden" name="db_bill_cost" value="${db_bill_cost}">
+	</td>
+	<td nowrap class="list_rr"> ${db_air_shutt_cnt.(999)}&nbsp;
+      <input type="hidden" name="db_air_shutt_cnt" value="${db_air_shutt_cnt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_air_park_cnt.(999)}&nbsp;
+      <input type="hidden" name="db_air_park_cnt" value="${db_air_park_cnt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_favor_room_cnt.(999)}&nbsp;
+      <input type="hidden" name="db_favor_room_cnt" value="${db_favor_room_cnt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_moore_room_cnt.(999)}&nbsp;
+      <input type="hidden" name="db_moore_room_cnt" value="${db_moore_room_cnt}">
+	</td>
+	<td nowrap class="list_rr"> 
+      <span class="dsp_number2">${wk_amt_2.(999)}&nbsp;</span>
+      <input type="hidden" name="wk_amt_2" value="${wk_amt_2}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<div id="tab-2" class="tabcontent"> 
+   <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%">累計&nbsp;</th>
+    <th nowrap >權益項目&nbsp;</th>
+    <th nowrap >使用日期&nbsp;</th>
+    <th nowrap >使用次數&nbsp;</th>
+    <th nowrap >換算消費金額&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="ex_opt" value="${ser_num}" ${opt_show} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+	</td>
+   <td nowrap class="list_cc"> ${ex_item_no}${tt_item_no}&nbsp;
+      <input type="hidden" name="ex_item_no" value="${ex_item_no}">
+      <input type="hidden" name="tt_item_no" value="${tt_item_no}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_date.YMD}&nbsp;
+      <input type="hidden" name="ex_date" value="${ex_date}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_cnt}&nbsp;
+      <input type="hidden" name="ex_cnt" value="${ex_cnt}">
+	</td>
+	<td nowrap class="list_rr"> ${ex_tot_amt.(999)}&nbsp;
+      <input type="hidden" name="ex_tot_amt" value="${ex_tot_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_card_no}&nbsp;
+      <input type="hidden" name="ex_card_no" value="${ex_card_no}">
+	</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+ <input type="hidden"  name="id_p_seqno" value="${id_p_seqno}" />
+ <input type="hidden"  name="income_score" value="${income_score}" />
+ <input type="hidden"  name="ex_id_card" value="${ex_id_card}" />
+ <input type="hidden"  name="tab_click" value="${tab_click}">
+ 
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+function IdnoChange(ps1)
+ {
+	var  idno =document.forms["dataForm"]["ex_idno"].value.toUpperCase();
+	if ( idno === '' ) {
+		return false;
+	}
+	if ( idno.length !=10 ) {
+	   alert("身分證ID 輸入錯誤");  
+	   return false ;
+	}
+	idCode = ps1;
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    //if ( idCode === '1' ) { 
+	//	top.methodName = "wf_ajax_idno";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_idno",idno);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+
+function CardChange(ps1)
+ {
+	var  card_no =document.forms["dataForm"]["ex_card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+	
+	if ( card_no.length <14 ){
+	   alert("卡號 輸入錯誤");
+	   return false;  
+	}
+	
+	idCode = ps1;
+	//20200107 modify AJAX
+    //top.actionCode = "Q";
+    //if ( idCode === '2' ) { 
+	//	top.methodName = "wf_ajax_card";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_card",card_no);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+	top.respHtml ="cmsq4210";
+   top.requHtml ="cmsq4210";
+
+	if  ( idCode === '1' || idCode ==='2' ) {
+      var chi_name =getJSONvalue("chi_name",0);
+      if (chi_name.length>0) {
+         $("#chi_name").val(chi_name); 
+      }
+      
+      var vip_code =getJSONvalue("vip_code",0);
+      if (vip_code.length>0) {
+         $("#vip_code").val(vip_code);  
+      }            
+
+      var score = getJSONvalue("score",0);
+      if(score.length>0){
+          $("#wk_score_01").val(score);  
+      }
+      
+      var score_yymm = getJSONvalue("score_yymm",0);
+      if(score_yymm.length>0){
+          $("#score_yymm").val(score_yymm);  
+      }
+            
+      var yy_income_amt = getJSONvalue("yy_income_amt",0);
+      if(yy_income_amt.length>0){
+          $("#yy_income_amt").val(yy_income_amt);  
+      }
+      
+      var yy_cost_amt = getJSONvalue("yy_cost_amt",0);
+      if(yy_cost_amt.length>0){
+          $("#yy_cost_amt").val(yy_cost_amt);  
+      }
+      
+      var wk_net_amt = Math.round(yy_income_amt - yy_cost_amt) ;
+       $("#wk_net_amt").val(wk_net_amt);  
+	}
+                  
+	if ( idCode === '1' || idCode === '2' )
+	{ return false; }
+ }
+
+ function sum()
+ {   
+   $("#card_tot_amt").val('');  
+   $("#item_tot_amt").val('');  
+   var aElements1 = document.getElementsByName("opt");
+   var aElements2 = document.getElementsByName("ex_opt");
+   var li_card_amt = 0 ;
+   var li_item_amt = 0 ;
+   var li_net_amt = 0 ;
+   for (var i=0 ; i < aElements1.length ; i++){
+      var ls_opt = document.getElementsByName("opt")[i];     
+      var li_pur_amt = document.getElementsByName("db_purch_amt")[i].value;     
+      if(li_pur_amt ==''){
+         li_pur_amt = 0 ;
+      }
+      if(ls_opt.checked){
+         li_card_amt += parseInt(li_pur_amt);
+      }            
+   }
+   
+   for (var l=0 ; l < aElements2.length ; l++){
+       var ls_ex_opt = document.getElementsByName("ex_opt")[l];
+       var li_tot_amt = document.getElementsByName("ex_tot_amt")[l].value;  
+       if(li_tot_amt ==''){
+       li_tot_amt = 0 ;  
+      }      
+       if(ls_ex_opt.checked){
+         li_item_amt += parseInt(li_tot_amt);
+      }      
+   }
+   
+   li_net_amt = li_card_amt - li_item_amt ;
+   
+   $("#card_tot_amt").val(li_card_amt);  
+   $("#item_tot_amt").val(li_item_amt);   
+   $("#wk_net_tot_amt").val(li_net_amt);
+ }
+ 
+ function set_click_amt(parm2){
+	var ii = parseInt(parm2) - 1;		
+	var ls_ckbox = document.getElementsByName("opt")[ii].checked;
+	var ls_ctrl_click = document.getElementsByName("ctrl_click")[ii].value;
+	
+	if(ls_ckbox ==true && ls_ctrl_click =='1')	return;
+	if(ls_ckbox ==false && ls_ctrl_click =='0') return;
+	
+	var db_purch_amt = Number(document.getElementsByName("db_purch_amt")[ii].value);	
+	var db_income_amt = Number(document.getElementsByName("db_income_amt")[ii].value);	
+	var db_cost_amt = Number(document.getElementsByName("db_cost_amt")[ii].value);	
+	var wk_contri_amt = Number(document.getElementsByName("wk_contri_amt")[ii].value);	
+	var db_bill_cost = Number(document.getElementsByName("db_bill_cost")[ii].value);	
+	var db_air_shutt_cnt = Number(document.getElementsByName("db_air_shutt_cnt")[ii].value);	
+	var db_air_park_cnt = Number(document.getElementsByName("db_air_park_cnt")[ii].value);	
+	var db_favor_room_cnt = Number(document.getElementsByName("db_favor_room_cnt")[ii].value);	
+	var db_moore_room_cnt = Number(document.getElementsByName("db_moore_room_cnt")[ii].value);	
+	var wk_amt_2 = Number(document.getElementsByName("wk_amt_2")[ii].value);	
+	var tl_cnt = Number(document.dataForm.tl_cnt.value);
+	var tl_purch_amt = Number(document.dataForm.tl_purch_amt.value);
+	var tl_income_amt = Number(document.dataForm.tl_income_amt.value);
+	var tl_cost_amt = Number(document.dataForm.tl_cost_amt.value);
+	var tl_contri_amt = Number(document.dataForm.tl_contri_amt.value);
+	var tl_bill_cost = Number(document.dataForm.tl_bill_cost.value);
+	var tl_air_shutt_cnt = Number(document.dataForm.tl_air_shutt_cnt.value);
+	var tl_air_park_cnt = Number(document.dataForm.tl_air_park_cnt.value);
+	var tl_favor_room_cnt = Number(document.dataForm.tl_favor_room_cnt.value);
+	var tl_moore_room_cnt = Number(document.dataForm.tl_moore_room_cnt.value);
+	var tl_amt_2 = Number(document.dataForm.tl_amt_2.value);
+	var kk_cnt = 0;
+	var kk_purch_amt = 0;
+	var kk_income_amt = 0;
+	var kk_cost_amt = 0;
+	var kk_contri_amt = 0;
+	var kk_bill_cost = 0;
+	var kk_air_shutt_cnt = 0;
+	var kk_air_park_cnt = 0;
+	var kk_favor_room_cnt = 0;
+	var kk_moore_room_cnt = 0;
+	var kk_amt_2 = 0;
+	if(ls_ckbox==true){
+		kk_cnt = tl_cnt+1;
+		kk_purch_amt = tl_purch_amt + db_purch_amt;
+		kk_income_amt = tl_income_amt + db_income_amt;
+		kk_cost_amt = tl_cost_amt + db_cost_amt;
+		kk_contri_amt = tl_contri_amt + wk_contri_amt;
+		kk_bill_cost = tl_bill_cost + db_bill_cost;
+		kk_air_shutt_cnt = tl_air_shutt_cnt + db_air_shutt_cnt;
+		kk_air_park_cnt = tl_air_park_cnt + db_air_park_cnt;
+		kk_favor_room_cnt = tl_favor_room_cnt + db_favor_room_cnt;
+		kk_moore_room_cnt = tl_moore_room_cnt + db_moore_room_cnt;
+		kk_amt_2 = tl_amt_2 + wk_amt_2;
+		document.dataForm.ctrl_click[ii].value = '1';		
+//		$("#ctrl_click")[ii].text('1');   
+//  	$("#ctrl_click")[ii].val('1');
+	}	else if(ls_ckbox==false){ 
+		kk_cnt = tl_cnt - 1;
+		kk_purch_amt = tl_purch_amt - db_purch_amt;
+		kk_income_amt = tl_income_amt - db_income_amt;
+		kk_cost_amt = tl_cost_amt - db_cost_amt;
+		kk_contri_amt = tl_contri_amt - wk_contri_amt;
+		kk_bill_cost = tl_bill_cost - db_bill_cost;
+		kk_air_shutt_cnt = tl_air_shutt_cnt - db_air_shutt_cnt;
+		kk_air_park_cnt = tl_air_park_cnt - db_air_park_cnt;
+		kk_favor_room_cnt = tl_favor_room_cnt - db_favor_room_cnt;
+		kk_moore_room_cnt = tl_moore_room_cnt - db_moore_room_cnt;
+		kk_amt_2 = tl_amt_2 - wk_amt_2;
+		document.dataForm.ctrl_click[ii].value = '0';		
+//		$("#ctrl_click")[ii].text('0');   
+//  	$("#ctrl_click")[ii].val('0');
+	}
+	$("#tl_cnt").text(kk_cnt);   
+  $("#tl_cnt").val(kk_cnt);   	
+  $("#tl_purch_amt").text(kk_purch_amt);   
+  $("#tl_purch_amt").val(kk_purch_amt);   	
+  $("#tl_income_amt").text(kk_income_amt);   
+  $("#tl_income_amt").val(kk_income_amt);   	
+  $("#tl_cost_amt").text(kk_cost_amt);   
+  $("#tl_cost_amt").val(kk_cost_amt);   	
+  $("#tl_contri_amt").text(kk_contri_amt);   
+  $("#tl_contri_amt").val(kk_contri_amt);   	
+  $("#tl_bill_cost").text(kk_bill_cost);   
+  $("#tl_bill_cost").val(kk_bill_cost);   	
+  $("#tl_air_shutt_cnt").text(kk_air_shutt_cnt);   
+  $("#tl_air_shutt_cnt").val(kk_air_shutt_cnt);   	
+  $("#tl_air_park_cnt").text(kk_air_park_cnt);   
+  $("#tl_air_park_cnt").val(kk_air_park_cnt);   	
+  $("#tl_favor_room_cnt").text(kk_favor_room_cnt);   
+  $("#tl_favor_room_cnt").val(kk_favor_room_cnt);   	
+  $("#tl_moore_room_cnt").text(kk_moore_room_cnt);   
+  $("#tl_moore_room_cnt").val(kk_moore_room_cnt);   	
+  $("#tl_amt_2").text(kk_amt_2);   
+  $("#tl_amt_2").val(kk_amt_2);   	  
+}
+ 
+ function wf_click(parm) { 
+  	document.dataForm.tab_click.value = parm;
+ }
+ 
+</script>

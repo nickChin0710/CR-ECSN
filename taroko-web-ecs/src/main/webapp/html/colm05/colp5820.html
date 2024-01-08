@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>整批凍結參數覆核-主管作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  <td nowrap>&nbsp;帳戶類別：
+     <select size=1 name="ex_acct_type" class="col_ddlb" >
+       ${d_dddw_accttype}
+     </select>
+   </td>
+   <td nowrap>&nbsp;生效年月：
+      <input type="text" class="col_text" name="ex_valid_date" value="${ex_valid_date}" maxlength="6" size="8" zEdit="date,yyyymm" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+</table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >生效日期&nbsp;</th>
+    <th nowrap >放行&nbsp;</th>
+    <th nowrap >執行&nbsp;</th>    
+    <th nowrap >CYCLE後<br>N日&nbsp;</th>
+    <th nowrap >帳齡值<br> =Ma&nbsp;</th>
+    <th nowrap >本金結欠<br> >Xa&nbsp;</th>
+    <th nowrap >帳齡值<br> =Mb&nbsp;</th>
+    <th nowrap >本金結欠<br> >Xb&nbsp;</th>
+    <th nowrap >帳齡值<br> >=Mc&nbsp;</th>
+    <th nowrap>每月01日<br>執行</th>
+    <th nowrap >最近<br>執行日期&nbsp;</th>
+  </tr>
+
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${acct_type}','${valid_date}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp;</td>
+   <td nowrap class="list_cc"> ${valid_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pause_flag}&nbsp;</td>   
+   <td nowrap class="list_cc"> ${exec_cycle_nday}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcode_value1}&nbsp;</td>
+   <td nowrap class="list_rr"> ${debt_amt1.(999)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcode_value2}&nbsp;</td>
+   <td nowrap class="list_rr"> ${debt_amt2.(999)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcode_value3}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pause_flag_2} </td>
+   <td nowrap class="list_cc"> ${exec_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colp5820_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k2.value = parm;
+    document.dataForm.data_k3.value = parm2;
+    top.respHtml  = "colp5820_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

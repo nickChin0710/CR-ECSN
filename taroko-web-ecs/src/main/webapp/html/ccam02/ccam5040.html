@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>國家別維護 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;授權連線別:FISC</td>   	  
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;ISO國家別(2碼)：
+      <input type="text" class="col_text" name="ex_country_code" value="${ex_country_code}"
+       maxlength=2 size=5 />
+   </td>
+   <td nowrap>&nbsp;ISO國家別(3碼)：
+      <input type="text" class="col_text" name="ex_bin_country" value="${ex_bin_country}"
+       maxlength=3 size=5 />
+   </td>   
+   </tr>
+   <tr>
+   	<td nowrap colspan="2">&nbsp;國家說明：
+      <input type="text" class="col_any" name="ex_country_remark" value="${ex_country_remark}" zEdit="any,canTw" maxlength=30 size=32 />
+   	</td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th">No</th>
+    <th nowrap class="list_th">授權連線</th>
+    <th nowrap class="list_th">ISO<br>國家別(2碼)</th>
+    <th nowrap class="list_th">ISO<br>國家別(3碼)</th>
+    <th nowrap class="list_th">ISO<br>國家別(數字)</th>
+    <th nowrap class="list_th">說明</th>
+    <th nowrap class="list_th">拒絕交易</th>   
+    <th nowrap class="list_th">高風險國家</th>
+    <th nowrap class="list_th">風險係數</th>
+    <th nowrap class="list_th">產生日期</th>
+    <th nowrap class="list_th">產生人員</th>
+    <th nowrap class="list_th">異動日期</th>
+    <th nowrap class="list_th">異動人員</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${country_code}','${ccas_link_type}','${bin_country}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}</td>
+   <td nowrap class="list_cc"> ${tt_ccas_link_type}</td>
+   <td nowrap class="list_cc"> ${country_code}</td>
+   <td nowrap class="list_cc"> ${bin_country}</td>
+   <td nowrap class="list_cc"> ${country_no}</td>
+   <td nowrap class="list_ll"> ${country_remark}</td>
+   <td nowrap class="list_cc"> ${rej_code}</td>   
+   <td nowrap class="list_cc"> ${high_risk}</td>
+   <td nowrap class="list_cc"> ${risk_factor}</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+   <td nowrap class="list_cc"> ${crt_user}</td>
+   <td nowrap class="list_cc"> ${mod_date.YMD}</td>
+   <td nowrap class="list_cc"> ${mod_user}</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5040_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5040_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

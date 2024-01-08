@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>道路救援異動統計表V20191227</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;處理年月:
+      <input type="text" class="col_text" name="ex_proc_mm1" value="${ex_proc_mm1}" maxlength="6" size="8" zEdit="date,yyyymm" zRequire="C" >
+      --
+      <input type="text" class="col_text" name="ex_proc_mm2" value="${ex_proc_mm2}" maxlength="6" size="8" zEdit="date,yyyymm" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;停用原因:
+      <select   size="1"  name="ex_stoprsn" class="col_ddlb">         
+         <option value="0" ${ex_stoprsn-0} >0.全部</option>
+         <option value="1" ${ex_stoprsn-1} >1.到期不續購</option>
+         <option value="2" ${ex_stoprsn-2} >2.消費不足暫停服務</option>
+         <option value="3" ${ex_stoprsn-3} >3.片已為無效卡</option>
+         <option value="4" ${ex_stoprsn-4} >4.卡友來電要求停用</option>
+         <option value="5" ${ex_stoprsn-5} >5.金卡提升為白金卡</option>
+         <option value="6" ${ex_stoprsn-6} >6.未達年度續用標準</option>
+         <option value="7" ${ex_stoprsn-7} >7.無車號且非自動登錄卡</option>
+         <option value="8" ${ex_stoprsn-8} >8.製卡進件停用</option>
+      </select>
+      &nbsp;(篩選條件為明細表)
+   </td>
+   <td nowrap >&nbsp;
+      <input type="Button" value="列印總表" onClick="return top.submitControl('PDF')" class="btOther" >&nbsp;&nbsp;
+      <input type="Button" value="列印明細表" onClick="return top.submitControl('PDF2')" class="btOther" >&nbsp;&nbsp;
+   </td>
+  </tr>
+      
+ </table>
+</div>
+<hr>
+ 
+ <div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" ${a_click_1} onclick="wf_click('1');  return tabControl(event, 'tab-1')">總表</td>
+       <td class="tablinks" ${a_click_2} onclick="wf_click('2');  return tabControl(event, 'tab-2')">明細表</td>
+    </tr>
+  </table>
+</div>
+<div id="tab-1" class="tabcontent">  
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >年月&nbsp;</th>
+    <th nowrap >道路救援異動狀態&nbsp;</th>
+    <th nowrap >消費不符&nbsp;</th>
+    <th nowrap >卡片無效&nbsp;</th>
+    <th nowrap >金卡升級白卡&nbsp;</th>
+    <th nowrap >製卡進件停用&nbsp;</th>
+    <th nowrap >其它原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A1_proc_month.YMD}&nbsp;</td>
+<td nowrap class="list_cc"> ${A1_rd_status}.${#JAVA:ecsfunc.DeCodeRdsm.rdStatus(A1_rd_status)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A1_rsn_2_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A1_rsn_3_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A1_rsn_5_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A1_rsn_8_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A1_rsn_other_cnt.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>    
+<div id="tab-2" class="tabcontent">  
+ <div id="dataBlock" >
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+ <td nowrap >&nbsp;總筆數:${tl_detl_cnt.(999)}</td>
+    <input type="hidden" name="tl_detl_cnt" value="${tl_detl_cnt}">
+ </tr>
+ </table>
+ </div>
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >年月&nbsp;</th>
+    <th nowrap >道路救援異動狀態&nbsp;</th>
+    <th nowrap >停用卡號&nbsp;</th>
+    <th nowrap >停用原因&nbsp;</th>
+    <th nowrap >最近異動日&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A2_proc_month.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A2_rd_status}.${#JAVA:ecsfunc.DeCodeRdsm.rdStatus(A2_rd_status)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A2_rd_cardno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A2_rd_stoprsn}.${#JAVA:ecsfunc.DeCodeRdsm.rdStoprsn(A2_rd_stoprsn)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A2_last_st_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  name="tab_click" value="${tab_click}">
+ 
+ 
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+ function wf_click(parm) { 
+  	document.dataForm.tab_click.value = parm;
+ } 
+</script>

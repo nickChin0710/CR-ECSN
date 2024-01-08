@@ -1,0 +1,226 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>其他手續費參數維護-detl-V.2017-0801-yash-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <!-- 動態 BLOCK 視窗控制 -->
+        <div id="disDiv" class="disScreen"></div>
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">特店代號：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('kk_merchant_no','merchant_2'); top.hideBlock('popDiv');" class="btConfirm">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap colspan="2" width="50%">特店代號：&nbsp;
+                        <input type="text" class="col_any" name="kk_merchant_no" zEdit="any" maxlength="15" size="15" value="${kk_merchant_no}"/>
+                        <input type="Button"   value="..." onclick="processVendorCode1()" class="btAdd_detl" />
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2" class="colKey">特店代號：
+                        <span class="dsp_text">${merchant_no}</span>
+                        <input type="hidden" name="merchant_no" value="${merchant_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>帳單來源：
+                        <select name="fees_bill_type" class="col_ddlb" zRequire="Y">
+                            ${dddw_bill_type}
+                        </select>
+                    </td>
+                    <td nowrap class="colKey">交易代碼:
+                        <input type="text" class="col_text" name="fees_txn_code" value="${fees_txn_code}" zEdit="alpha,upper" maxlength="2" size="2" zRequire="Y" onchange="return top.submitControl('itemchanged')" />&nbsp;&nbsp;
+                        <b><span class="dsp_text" style="color: red">中文說明：${exter_desc}</span></b>
+                    </td>
+                </tr>
+                <th colspan="2">一般</th>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:1px 1px 0px 1px;border-color:#000000; solid;">&nbsp;
+                        <input type="text" class="col_number" name="nor_amt" value="${nor_amt}" zEdit="number" MaxLength=6 size=8 />
+                        元以下交易手續費:固定
+                        <input type="text" class="col_number" name="nor_fix_amt" value="${nor_fix_amt}" zEdit="number" MaxLength=12 size=8 />
+                        元+本金
+                        <input type="text" class="col_number" name="nor_percent" value="${nor_percent}" zEdit="dignumber" MaxLength=12 size=8 />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; solid;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        其他金額交易手續費:固定
+                        <input type="text" class="col_number" name="dom_fix_amt" value="${dom_fix_amt}" zEdit="number" MaxLength=12 size=8 />
+                        元+本金
+                        <input type="text" class="col_number" name="dom_percent" value="${dom_percent}" zEdit="dignumber" MaxLength=12 size=8 />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; solid;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        手續費收取最低金額:
+                        <input type="text" class="col_number" name="dom_min_amt" value="${dom_min_amt}" zEdit="number" MaxLength=6 size=20 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 1px 1px;border-color:#000000; solid;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        手續費收取最高金額:
+                        <input type="text" class="col_number" name="dom_max_amt" value="${dom_max_amt}" zEdit="number" MaxLength=6 size=20 zRequire="Y" />
+                    </td>
+                </tr>
+                <th colspan="2">特殊</th>
+                <tr>
+                    <td nowrap colspan=2 style="border-width:1px 1px 0px 1px;border-color:#000000; solid;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        交易日期:
+                        <input type="text" class="col_date" name="tx_date_f" value="${tx_date_f}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'tx_date_f'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="tx_date_e" value="${tx_date_e}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'tx_date_e'});
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; solid;">&nbsp;
+                        <input type="text" class="col_number" name="spe_amt" value="${spe_amt}" zEdit="number" MaxLength=6 size=8 />
+                        元以下交易手續費:固定
+                        <input type="text" class="col_number" name="spe_fix_amt" value="${spe_fix_amt}" zEdit="number" MaxLength=12 size=8 />
+                        元+本金
+                        <input type="text" class="col_number" name="spe_percent" value="${spe_percent}" zEdit="dignumber" MaxLength=12 size=8 />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; solid;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        其他金額交易手續費:固定
+                        <input type="text" class="col_number" name="int_fix_amt" value="${int_fix_amt}" zEdit="number" MaxLength=12 size=8 />
+                        元+本金
+                        <input type="text" class="col_number" name="int_percent" value="${int_percent}" zEdit="dignumber" MaxLength=12 size=8 />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; solid;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        手續費收取最低金額:
+                        <input type="text" class="col_number" name="int_min_amt" value="${int_min_amt}" zEdit="number" MaxLength=6 size=20 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 1px 1px;border-color:#000000; solid;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        手續費收取最高金額:
+                        <input type="text" class="col_number" name="int_max_amt" value="${int_max_amt}" zEdit="number" MaxLength=6 size=20 />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0290">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode1() {
+    var vendorNo = document.dataForm.kk_merchant_no.value;
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("kk_merchant_no", vendorNo);
+    addJSON("ex", "ex_merchant_no");
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    if (getJSONvalue("ex", 0) == 'merchant_no') {
+        var vendorNo = document.dataForm.kk_merchant_no.value;
+        var vendorList = document.getElementById("merchant_2");
+
+        for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+        var len = getJSONlength("OPTION_TEXT");
+        for (var i = 0; i < len; i++) {
+            vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+            if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+        }
+
+        top.popupBlock('popDiv');
+    }
+
+
+}
+</script>

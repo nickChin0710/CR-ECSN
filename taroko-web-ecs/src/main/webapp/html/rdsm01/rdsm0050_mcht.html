@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>免費使用道路救援參數維護-V.2018-0416-ryan[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+
+<body bgcolor="#FFFFFF">
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+  			<input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U3')" class="btUpdate" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<td nowrap >&nbsp;專案代號:
+			<span class="dsp_text">${proj_no}&nbsp;</span>
+      		<input type=hidden name="proj_no" value="${proj_no}">      
+   		</td>
+   		<td nowrap >&nbsp;有效截止日期:
+			<span class="dsp_text">${valid_end_date.YMD}&nbsp;</span>
+      		<input type=hidden name="valid_end_date" value="${valid_end_date}">
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;專案說明:
+      		<span class="dsp_text">${proj_desc}&nbsp;</span>
+      		<input type="hidden" name="proj_desc" value="${proj_desc}">
+   		</td>
+   		<td nowrap >&nbsp;資料類別:
+      		<span class="dsp_text">${data_type}&nbsp;</span>
+      		<input type="hidden" name="data_type" value="${data_type}">
+   		</td>
+  	</tr>
+</table>  
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<td nowrap >&nbsp;特店代號:
+      		<input type="text" class="col_text" name="wk_mcht_no" value="${wk_mcht_no}" id="ex_mcht_no" maxlength="16" size="16" zEdit="number">
+      		&nbsp;
+      		<input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />
+   		</td>          
+  	</tr>
+</table>  
+<hr>
+<table width="80%" id="table1" class="sortable" border="0" >
+	<tr>
+		<td colspan="2">&nbsp;筆數:
+			<span class="dsp_text">${ind_num}</span>
+      	 	<input type="hidden" name="ind_num" value="${ind_num}">
+		</td> 
+	</tr>
+  	<tr>
+    	<th nowrap class="list_cc" width="5%">刪除 </th>
+    	<th nowrap class="list_cc">特店代號</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr>
+    	<td nowrap class="list_no">
+      		<span class="dsp_flag">${ok_flag}</span>
+      		<input type="checkbox" name="opt" value="${ser_num}">
+      		${SER_NUM}
+      		<input type="hidden" name="ser_num" value="${ser_num}">
+      		<input type="hidden" name="data_code" value="${data_code}">
+      		<input type="hidden" name="rowid" value="${rowid}">
+    	</td>
+    	<td nowrap class="list_cc" >${data_code}&nbsp;</td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="" />
+<input type=hidden name="data_k2" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_accttype">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2'); 
+ top.pageRows="99999";
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    
+   return true;
+ }
+ 
+	var ind=document.getElementById( 'table1' ).rows.length -2;
+	var num = '${ser_num}';
+	if(num==''){
+	    ind=document.getElementById( 'table1' ).rows.length-3;
+	}
+	var rowNum=document.getElementById( 'table1' ).rows.length -1;
+	var colNum=0;
+	var fi=0;
+ 
+    $("#detl_btnAdd").click(function(){
+
+	 var ls_mcht_no =$("#ex_mcht_no").val();
+	
+	 if(ls_mcht_no =='') {
+	   alert("特店代號 不可空白 !");
+	   return ;
+	}	   
+   
+	 colNum=0 
+	 rowNum++;
+	 ind++;
+	 var myRow = document.all.table1.insertRow(rowNum);
+	 myCell = myRow.insertCell(colNum);
+	 myCell.className = "list_no";
+	 myCell.noWrap ="nowrap";
+
+	 var serNo ="";
+	 if ( ind < 10 )
+	     { serNo = "0"+ind; }
+	 else
+	     { serNo = ""+ind;  }
+	 fi++;
+		
+	 
+	 var ip = document.createElement( 'input' );
+	 ip.className = 'col_ckbox';
+	 ip.type = 'checkbox';
+	 ip.name = 'opt';
+	 ip.value = serNo;
+	 myCell.appendChild( ip );
+	 
+	 var con = document.createElement( 'span' );
+	 con.textContent = serNo;
+	 myCell.appendChild( con );
+	   
+	 var ip1 = document.createElement( 'input' );
+	 ip1.type = 'hidden';
+	 ip1.name = 'ser_num';
+	 ip1.value = serNo;
+	 myCell.appendChild( ip1 );
+
+	 var ip2 = document.createElement( 'input' );
+	 ip2.type = 'hidden';
+	 ip2.name = 'rowid';
+	 ip2.value = '';
+	 myCell.appendChild( ip2 );
+	   
+	 var ip3 = document.createElement( 'input' );
+	 ip3.type = 'hidden';
+	 ip3.name = 'mod_seqno';
+	 ip3.value = '';
+	 myCell.appendChild( ip3 );
+	 
+	 var ip4 = document.createElement( 'input' );
+	 ip4.type = 'hidden';
+	 ip4.name = 'data_code';
+	 ip4.value = ls_mcht_no;
+	 myCell.appendChild( ip4 );
+
+	 //======================================
+	 colNum++;
+	 myCell = myRow.insertCell(colNum);
+	 myCell.className = "list_td";
+	 var mo1 = document.createElement( 'span' );
+	 mo1.textContent = ls_mcht_no;
+	 myCell.appendChild(mo1);
+	 
+	 //-clear-
+	 $("#ex_mcht_no").val('');
+	}); 
+</script>

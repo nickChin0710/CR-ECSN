@@ -1,0 +1,363 @@
+<html>
+<head>
+<title>臨時調整額度維護-依卡戶批次-190611-jh</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層" />&nbsp;&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+      <span class="dsp_text">${acct_type}-${acct_key}&nbsp;</span>
+      <input type="hidden" name="acct_type" value="${acct_type}" />
+      <input type="hidden" name="acct_key" value="${acct_key}" />
+      &nbsp;
+      卡號:
+      <span class="dsp_text" >${card_no}</span>
+      <input type="hidden" name="card_no" value="${card_no}" />      
+   </td>
+   <td nowrap >&nbsp;戶特指:
+      <span class="dsp_text">${spec_status}&nbsp;</span>
+      <input type="hidden" name="spec_status" value="${spec_status}">
+      &nbsp;凍結:
+      <span class="dsp_text">${block_reason1},${block_reason2},${block_reason3},${block_reason4},${block_reason5}&nbsp;</span>
+      <input type="hidden" name="block_reason1" value="${block_reason1}">
+      <input type="hidden" name="block_reason2" value="${block_reason2}">
+      <input type="hidden" name="block_reason3" value="${block_reason3}">
+      <input type="hidden" name="block_reason4" value="${block_reason4}">
+      <input type="hidden" name="block_reason5" value="${block_reason5}">
+   </td>      
+   <td nowrap>&nbsp;待覆核:
+      <span class="dsp_flag">${xx_temp}</span>
+      <input type="hidden" name="xx_temp" value="${xx_temp}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;姓名:
+      <span class="dsp_text">${chi_name}&nbsp;</span>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+   <td nowrap >&nbsp;附卡張數:
+      <span class="dsp_text">${card_sup_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="card_sup_cnt" value="${card_sup_cnt}">
+   </td>
+   <td nowrap >&nbsp;
+   	<input type="checkbox" name="notice_flag" value="Y" ${notice_flag-Y}>通知附卡人
+   </td>
+ </tr> 
+ <tr>
+   <td nowrap >&nbsp;金控利害關係人:
+      <span class="dsp_text">${rela_flag}&nbsp;</span>
+      <input type="hidden" name="rela_flag" value="${rela_flag}">
+   </td>
+   <td nowrap >&nbsp;消貸餘額:
+      <span class="dsp_text">${asset_balance.(999)}&nbsp;</span>
+      <input type="hidden" name="asset_balance" value="${asset_balance}">
+   </td>
+   <td nowrap >&nbsp;擔保品:
+      <span class="dsp_text">${bond_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="bond_amt" value="${bond_amt}">
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;調整原因:      
+      <select size="1" name="adj_reason" class="col_ddlb" zRequire="Y">
+         <option value="">--</option>
+         ${dddw_adj_reason}
+      </select>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="checkbox" name="adj_sms_flag" value="Y" ${adj_sms_flag-Y}>送簡訊
+   </td>
+   <td nowrap >&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;有效日期 :
+      <input type="text" class="col_date" id="adj_eff_start_date" name="adj_eff_start_date" value="${adj_eff_start_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_eff_start_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" id="adj_eff_end_date" name="adj_eff_end_date" value="${adj_eff_end_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_eff_end_date'});
+	      </script>
+	</td>
+    <td nowrap >&nbsp;適用地區別:
+      <select   size="1"  name="adj_area" class="col_ddlb" zRequire="Y" >          	    
+      	<option value="3" ${adj_area-3} >國內外</option>         
+        <option value="1" ${adj_area-1} >國外</option>
+        <option value="2" ${adj_area-2} >國內</option>         
+      </select>
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;調整一般月限額至 :
+      <input type="text" class="col_number" name="tot_amt_month" value="${tot_amt_month}" maxlength="11" size="13" zEdit="number" />
+      &nbsp;<span class="col_key">(此額度需含專款專用額度總計)</span>
+   </td>
+   <td nowrap >&nbsp;目前額度:
+      <span class="dsp_text">${line_credit_amt.(999)}</span>
+      <input type="hidden" name="line_credit_amt" value="${line_credit_amt}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;調整分期月限額至 : 
+      <input type="text" class="col_number" name="adj_inst_pct" value="${adj_inst_pct}" maxlength="11" size="13" zEdit="number" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;調整原因備註:
+      <input type="text" class="col_any" name="adj_remark" value="${adj_remark}" maxlength="100" size="102" zEdit="any,canTw" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >
+      <input type="checkbox" name="adj_risk_flag" value="Y" ${adj_risk_flag-Y} />管制高風險交易&nbsp;      
+	     卡別:
+	  <span class="dsp_text">${card_note}</span>
+	  <input type="hidden" name="card_note" value="${card_note}">
+	     卡人等級
+	  <span class="dsp_text">${risk_level}</span>
+	  <input type="hidden" name="risk_level" value="${risk_level}">
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >風險分類:
+      <select size="1" id="ex_risk_type" name="ex_risk_type" class="col_ddlb" >
+      ${dddw_risk_type}
+      &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" ${noOnButton} />
+      &nbsp;
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap width="5%">刪除</th>
+    <th nowrap width="5%">專款<br>專用</th>
+    <th nowrap>調整MCC風險分類</th>
+    <th nowrap>臨調月限額</th>
+    <th nowrap>臨調次限額</th>
+    <th nowrap>調整後月限次</th>
+    <th nowrap>調整後日限次</th>
+    <th nowrap>有效日期(起)</th>
+    <th nowrap>有效日期(迄)</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}&nbsp;
+      <input type="checkbox" name="opt_del" value="${ser_num}" ${opt1_on} />
+      <input type="hidden" name="ser_num" value="${ser_num}">
+    </td>
+    <td nowrap class="lict_cc" >
+      <input type="checkbox" name="opt" value="${ser_num}" ${opt2_on} />
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${risk_type}.${tt_risk_type}
+      <input type="hidden" name="risk_type" value="${risk_type}" />
+      <input type="hidden" name="tt_risk_type" value="${tt_risk_type}" />
+    </td>
+    <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="adj_month_amt" value="${adj_month_amt}" zEdit="number" maxlength=10 size=12 />
+   </td>
+   <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="adj_day_amt" value="${adj_day_amt}" zEdit="number" maxlength=10 size=12 />
+   </td>
+   <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="adj_month_cnt" value="${adj_month_cnt}" zEdit="number" maxlength=5 size=7 />
+   </td>
+   <td nowrap class="list_cc" >
+      <input type="text" class="col_number" name="adj_day_cnt" value="${adj_day_cnt}" zEdit="number" maxlength=5 size=7 />
+   </td>
+   <td nowrap class="list_cc" >
+   	  <input type="text" class="col_date" name="adj_date1" value="${adj_date1}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+   </td>
+   <td nowrap class="list_cc" >
+   	  <input type="text" class="col_date" name="adj_date2" value="${adj_date2}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+   </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >  
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<input type="hidden" name="card_acct_idx" value="${card_acct_idx}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="acctp_seqno" value="${acct_p_seqno}" />
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="class_code" value="${class_code}">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+<input type="hidden" name="conf_flag" value="" />
+
+<input type="hidden" name="wk_block_reason" value="${wk_block_reason}" />
+<input type="hidden" name="org_area" value="${org_area}">
+<input type="hidden" name="org_reason" value="${org_reason}">
+<input type="hidden" name="org_remark" value="${org_remark}">
+<input type="hidden" name="org_amt_mon" value="${org_amt_mon}">
+<input type="hidden" name="ecs_adj_rate" value="${ecs_adj_rate}">
+<input type="hidden" name="adj_date" value="${adj_date}">
+<input type="hidden" name="debit_flag" value="${debit_flag}">
+<input type="hidden" name="line_credit_amt_t" value="${line_credit_amt_t}">
+<input type="hidden" name="ori_end_date" value="${ori_end_date}">
+<input type="hidden" name="ori_start_date" value="${ori_start_date}">
+<input type="hidden" name="ori_inst_pct" value="${ori_inst_pct}">
+<input type="hidden" name="cellphone" value="${cellphone}">
+<input type="hidden" name="dddw_risk_type" value="${dddw_risk_type}" />
+<input type="hidden" name="acno_flag" value="${acno_flag}" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+// if (1==2 ${conf_mesg}) { 
+//   var resp  = confirm("繳款未消帳臨調 , 是否存檔");
+//   if ( resp == true ) { 
+//      document.dataForm.conf_flag.value="Y";
+//      top.submitControl('U');
+//   }
+//   else { 
+//      document.dataForm.conf_flag.value="N";
+//   }
+// } 
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+		
+		if (top.actionCode=='U') {
+			var ls_spec_status = document.dataForm.spec_status.value ;
+			var ls_block_status = document.dataForm.wk_block_reason.value ;
+				
+			if(ls_spec_status !='' || ls_block_status != ''){
+				if (confirm("該戶有特指/凍結 是否存檔")==false) {
+         	return false;
+            }
+			}
+			
+			var ls_adj_sms_flag = document.dataForm.adj_sms_flag.checked;
+			if(ls_adj_sms_flag==false){
+					if (confirm("確定不發送簡訊 ?")==false) {
+						return false;
+					}
+			}
+			
+		}
+		
+		if (top.actionCode=='D') {
+			var ls_temp = document.dataForm.xx_temp.value ;
+			if(ls_temp != 'Y' ){
+				if (confirm("確認刪除臨調是/否")==false) {
+					return false ;
+				}
+			}
+		}
+    return true;
+  }   
+  
+ $("#detl_btnAdd").click(function(){	 
+	 var ls_data_code =$("#ex_risk_type").val().toUpperCase();
+	 var ls_tt_data_code = $("#ex_risk_type option:selected").text();
+	 if(ls_data_code =='') {
+	    alert("風險分類: 不可空白");
+	    return ;
+	 }	 
+	 var ls_date_1 = $("#adj_eff_start_date").val();
+	 var ls_date_2 = $("#adj_eff_end_date").val();	 
+	 rowNum++;
+	 ind++;	 
+	 var serNo ="0";
+ 	 if ( ind < 10 ) 		 
+		 { serNo = "0"+ind; }
+		 else
+		 { serNo = ""+ind;  } 	
+	 $("#table1").append(
+	   "<tr>"
+	   +"<td nowrap class='list_no'>"	   
+	   +"&nbsp;"+serNo
+	   +"&nbsp;"
+	   +"<input type='checkbox' value='"+serNo+"' name='opt_del' />"
+	   +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+	   +"<input type='hidden' value='"+ls_data_code+"' name='risk_type' />"	   
+	   +"<input type='hidden' value='"+ls_tt_data_code+"' name='tt_risk_type' />"
+	   +"</td>"
+	   +"<td nowrap class='list_cc'>"
+	   +"<input type='checkbox' value='"+serNo+"' name='opt' checked />"
+	   +"</td>"
+	   +"<td nowrap class='list_ll'>"+ls_tt_data_code
+	   +"</td>"
+	   +"<td>"
+	   +"<input type='text' class='col_number' name='adj_month_amt' value='0' zEdit='number' maxlength=10 size=12 />"
+	   +"</td>"
+	   +"<td>"
+	   +"<input type='text' class='col_number' name='adj_day_amt' value='0' zEdit='number' maxlength=10 size=12 />"
+	   +"</td>"
+	   +"<td>"
+	   +"<input type='text' class='col_number' name='adj_month_cnt' value='0' zEdit='number' maxlength=5 size=7 />"
+	   +"</td>"
+	   +"<td>"
+	   +"<input type='text' class='col_number' name='adj_day_cnt' value='0' zEdit='number' maxlength=5 size=7 />"
+	   +"</td>"
+	   +"<td>"
+	   +"<input type='text' class='col_number' name='adj_date1' value='"+ls_date_1+"' zEdit='date,yyyymmdd' maxlength=8 size=10 />"
+	   +"</td>"
+	   +"<td>"
+	   +"<input type='text' class='col_number' name='adj_date2' value='"+ls_date_2+"' zEdit='date,yyyymmdd' maxlength=8 size=10 />"
+	   +"</td>"
+	   +"</tr>"
+	);	   //-clear-
+		
+	$("#ex_risk_type").val('');	  
+	});
+ 
+</script>

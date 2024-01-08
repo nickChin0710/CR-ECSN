@@ -1,0 +1,119 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/11/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title> 109/10/12 V1.00.02 Allen Ho Initial 航空公司 PGP參數維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+    <div id="condBlock">
+        <!-- query key *************************************************************-->
+        <table width="60%" border="0" cellspacing="0" cellpadding="2">
+            <tr>
+                <td nowrap>&nbsp;航空公司：
+                    <select size="1" name="ex_air_type" class="col_ddlb" >
+                        ${dddw_air_type_b}
+                    </select>
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+                    <input type="Button" name="btnAdd"  ${btnAdd_disable} value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- browse ************************************************************** -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">航空公司</th>
+            <th nowrap class="list_th">參考IP代碼</th>
+            <th nowrap class="list_th">中文說明</th>
+            <th nowrap class="list_th">內部Public檔名</th>
+            <th nowrap class="list_th">內部Private檔名</th>
+            <th nowrap class="list_th">外部PublicY檔名</th>
+            <th nowrap class="list_th">鍵檔日期</th>
+            <th nowrap class="list_th">鍵檔人員</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="rowid" value="${rowid}"/>
+            </td>
+            <td  nowrap class="list_cc"> ${air_type}-${comm_air_type}</td>
+            <td nowrap class="list_cc"> ${ref_ip_code}</td>
+            <td nowrap class="list_ll"> ${pgp_name}</td>
+            <td nowrap class="list_cc"> ${public_key_name_i}</td>
+            <td nowrap class="list_cc"> ${private_key_name_i}</td>
+            <td nowrap class="list_cc"> ${public_key_name_o}</td>
+            <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+            <td nowrap class="list_cc"> ${crt_user}</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <!-- hidden ************************************************************** -->
+    <input type="hidden" name="WPROWID" value="${wprowid}">
+    <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+    <input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+    <input type="hidden" name="data_k4" value="" >
+    <input type="hidden" name="data_k5" value="" >
+
+    <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+    <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+    top.refreshButton2('0');
+    top.pageRows="20";
+
+
+    function validateInput()
+    {
+        if ( !top.checkFormat() )
+        { return false; }
+
+        if ( top.actionCode == "X" ) {
+            top.respLevel = 1;
+            top.respHtml = "ecsm0400_detl";
+        }
+        return true;
+    }
+
+    function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+    {
+        top.respLevel = 1;
+        top.currRows  = serNum;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        document.dataForm.data_k4.value = parm4;
+        document.dataForm.data_k5.value = parm5;
+        top.respHtml  = "ecsm0400_detl";
+        top.submitControl('S');
+        return true;
+    }
+
+</script>
+<!-- ******************************************************************** -->

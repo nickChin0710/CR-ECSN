@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>偽冒郵寄異常交易通知書清單-190624</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+   <td nowrap >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="列印存檔" ${btnUpdate_disable} onClick="return UpdateAction();" class="btUpdate" >&nbsp;&nbsp;
+      <input type="Button" value="產生通知函" ${btnUpdate_disable} onClick="return PDFPrint();" class="btUpdate" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap  >&nbsp;處理日期:
+      <input type="text" class="col_date" name="ex_proc_date1" value="${ex_proc_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_proc_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_proc_date2" value="${ex_proc_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_proc_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;通知函類別
+	   <span class="col_radio">
+         <input type="radio" value="1" name="ex_report_type" ${ex_report_type-1} ${default-ex_report_type} />換卡
+         <input type="radio" value="2" name="ex_report_type" ${ex_report_type-2} />異常交易
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+   	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >列印
+	 </th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >處理日期&nbsp;</th>
+    <th nowrap >發現來源&nbsp;</th>
+    <th nowrap >郵寄日期&nbsp;</th>
+    <th nowrap >身分證ID&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="rowid" value="${rowid}">
+   	<input type="hidden" name="ctfg_seqno" value="${ctfg_seqno}">
+	</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}" >
+   </td>
+   <td nowrap class="list_cc"> ${proc_date.YMD}&nbsp;
+      <input type="hidden" name="proc_date" value="${proc_date}" >
+   </td>
+   <td nowrap class="list_cc"> ${find_type}&nbsp;
+      <input type="hidden" name="find_type" value="${find_type}" >
+   </td>
+   <td nowrap class="list_cc"> ${mail_date.YMD}&nbsp;
+      <input type="hidden" name="mail_date" value="${mail_date}" >
+   </td>
+   <td nowrap class="list_cc"> ${db_idno}&nbsp;
+      <input type="hidden" name="db_idno" value="${db_idno}" >
+   </td>
+   <td nowrap class="list_cc"> ${db_id_cname}&nbsp;
+      <input type="hidden" name="db_id_cname" value="${db_id_cname}" >
+   </td>
+	<td nowrap class="list_ll"> 聯絡地址:&nbsp;
+	   <input type="text" class="col_any" name="db_zip_code" value="${db_zip_code}" maxlength="5" size="7" zEdit="any" >
+	   <input type="text" class="col_any" name="db_addr1" value="${db_addr1}" maxlength="10" size="12" zEdit="any,canTw" >縣市
+	   <input type="text" class="col_any" name="db_addr2" value="${db_addr2}" maxlength="10" size="12" zEdit="any,canTw" >鄉鎮市區
+	   <input type="text" class="col_any" name="db_addr3" value="${db_addr3}" maxlength="12" size="14" zEdit="any,canTw" >村里
+	   <input type="text" class="col_any" name="db_addr4" value="${db_addr4}" maxlength="12" size="14" zEdit="any,canTw" >鄰
+	   <input type="text" class="col_any" name="db_addr5" value="${db_addr5}" maxlength="56" size="58" zEdit="any,canTw" >
+	</td>	   
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden" id="hh_report_type" name="hh_report_type" value="${hh_report_type}" />
+ 
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function UpdateAction()
+ {
+   if (confirm("是否執行 [列印完成] 註記")==false) {
+         return false;
+       }
+   top.submitControl('U');  
+ }
+ 
+ function PDFPrint()
+ {
+   var ls_report_type = $("input[name=ex_report_type]:checked").val();
+      
+   $("#hh_report_type").val(ls_report_type); 
+   top.submitControl('PDF');  
+ }
+
+</script>

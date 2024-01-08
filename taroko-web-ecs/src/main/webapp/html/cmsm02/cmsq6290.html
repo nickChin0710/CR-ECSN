@@ -1,0 +1,208 @@
+<html>
+<head>
+<title> 112/09/05 V1.00.01 Ryan Initial 信用卡&VD金融卡-紅利點數軌跡查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="8">
+   <tr>
+   <td nowrap colspan="3" >&nbsp;資料類別：
+      <select  name="ex_query_table" class="col_ddlb" >
+         <option selected="selected" value="1" ${ex_query_table-1} >近程資料</option>
+         <option value="2" ${ex_query_table-2} >歷史資料</option>
+       </select>
+     </td>
+     <td nowrap rowspan="4">&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+     </td>
+   </tr>
+   <tr>
+   <td nowrap style="border-right-style:none">&nbsp;身分證號：
+      <input type="text" class="col_any" name="ex_id_no" value="${ex_id_no}"
+         zeditType="any,upper"  maxlength=11 size=11  zRequire="Y"/>
+      <span class="dsp_text">${ex_chi_name}</span>
+     <td style="border-right-style:none;border-left-style:none">
+   		&nbsp;信用卡-最新點數餘額: 
+      	<span class="dsp_text">${end_tran_bp01.(999)}</span>&nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;
+	 </td>
+	 <td nowrap style="border-left-style:none" >
+	    &nbsp;VisaDebit 金融卡-最新點數餘額:
+      	<span class="dsp_text">${end_tran_bp90.(999)}</span>
+      	&nbsp;&nbsp;&nbsp; = &nbsp;&nbsp;&nbsp;總餘額點數:
+      	<span class="dsp_text">${sum_end_tran_bp.(999)}</span>
+	</td>
+  </tr>
+  <tr>
+  	<td style="border-right-style:none"></td>
+  	<td nowrap style="border-right-style:none;border-left-style:none">&nbsp;信用卡-
+  		<span class="dsp_text">${crd_current_code_0}</span>流通主卡
+	</td>
+	<td nowrap style="border-left-style:none" >	
+		&nbsp;VisaDebit 金融卡-
+		<span class="dsp_text">${dbc_current_code_0}</span>流通卡
+	</td>
+  </tr>
+  <tr>
+   <td nowrap style="border-right-style:none">&nbsp;查詢方式: </td>
+   <td nowrap style="border-left-style:none" width="800" colspan="2">
+          <li style="list-style-type:none"><input type="radio" value="1"  name="ex_select_type" ${ex_select_type-1} ${DEFAULT_CHK} />帳戶序號/紅利類別彙總</li>
+          <li style="list-style-type:none"><input type="radio" value="2"  name="ex_select_type" ${ex_select_type-2} />軌跡區間查詢 
+            <input type="text" class="col_date" name="ex_tran_date1" value="${ex_tran_date1}"
+              zeditType="date,ymd" MaxLength=8 size=10 />
+            <script language="JavaScript">
+	            new tcal ({'formname': 'dataForm','controlname': 'ex_tran_date1'});
+            </script>
+            ~
+            <input type="text" class="col_date" name="ex_tran_date2" value="${ex_tran_date2}"
+              zeditType="date,ymd" MaxLength=8 size=10 />
+            <script language="JavaScript">
+	            new tcal ({'formname': 'dataForm','controlname': 'ex_tran_date2'});
+	          </script>
+          </li>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">帳戶類別</th>
+    <th nowrap class="list_th">身分證號</th>
+    <th nowrap class="list_th">紅利類別</th>
+    <th nowrap class="list_th">可用點數</th>
+    <th nowrap class="list_th">圈存點數</th>
+    <th nowrap class="list_th">3個月後到期</th>
+    <th nowrap class="list_th">6個月後到期</th>
+    <th nowrap class="list_th">最後交易日</th>
+    <th nowrap class="list_th">筆數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen1('${SER_NUM}','${table_type}','${acct_type}','${id_p_seqno}','${bonus_type}','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${acct_type}-${comm_acct_type}</td>
+    <td nowrap class="list_cc"> ${id_no}${comm_id_no}</td>
+    <td nowrap class="list_ll"> ${bonus_type}-${comm_bonus_type}</td>
+    <td nowrap class="list_rr"> ${tot_end_tran_bp.(999)}</td>
+    <td nowrap class="list_rr"> ${res_tran_bp.(999)}</td>
+    <td nowrap class="list_rr"> ${tot_fail3_bp}</td>
+    <td nowrap class="list_rr"> ${tot_fail6_bp}</td>
+    <td nowrap class="list_cc"> ${tran_date.YMD}</td>
+    <td nowrap class="list_cc"> ${data_cnt}</td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">交易日期</th>
+    <th nowrap class="list_th">帳戶類別</th>
+    <th nowrap class="list_th">交易類別</th>
+    <th nowrap class="list_th">交易點數</th>
+    <th nowrap class="list_th">餘額點數</th>
+    <th nowrap class="list_th">備註</th>
+    <th nowrap class="list_th">交易時間</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen2('${SER_NUM}','${table_type}','${rowid}','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${tran_date.YMD}</td>
+    <td nowrap class="list_ll"> ${acct_type}-${comm_acct_type}</td>
+    <td nowrap class="list_ll"> ${tran_code}-${comm_tran_code} </td>
+    <td nowrap class="list_ll"> ${beg_tran_bp}</td>
+    <td nowrap class="list_ll"> ${end_tran_bp}</td>
+    <td nowrap class="list_ll"> ${mod_memo}</td>
+    <td nowrap class="list_ll"> ${tran_time.TIME}</td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+        tigra_tables('table2');
+</script>
+<!--  script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ $('#table1').hide();
+ $('#table2').hide();
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen1(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "cmsq6290_dbro";
+    top.submitControl('S1');
+    return true;
+  }
+
+ function detailScreen2(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml  = "cmsq6290_detl";
+    top.submitControl('S2');
+    return true;
+  }
+ 
+ $(document).ready(function(){ 
+	 if ($('input[name=ex_select_type][value=1]').prop("checked")==true) {
+	        $('#table1').show();
+	        $('#table2').hide();
+	 }
+	 if ($('input[name=ex_select_type][value=2]').prop("checked")==true) {
+	        $('#table1').hide();
+	        $('#table2').show();
+	 }
+  });
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,108 @@
+<html>
+<head>
+    <title> 會計科子細目金額彙總表-111-12-19  V1.00.00-[Inital]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>
+                        會計科目大類:
+                        <input type="radio" value="1" name="ex_ac_no_1" onclick="A()" ${ex_ac_no_1-1} />資產
+                        <input type="radio" value="2" name="ex_ac_no_1" onclick="A()" ${ex_ac_no_1-2} />負債
+                        <input type="radio" value="4" name="ex_ac_no_1" onclick="A()" ${ex_ac_no_1-4} />收入
+                        <input type="radio" value="5" name="ex_ac_no_1" onclick="A()" ${ex_ac_no_1-5} />費用
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        科子細目:
+                        <input type="text" class="col_text" name="ac_no_2" value="${ac_no_2}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        日期:
+                        <input type="text" class="col_date" name="tx_date_s" value="${tx_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        -
+                        <input type="text" class="col_date" name="tx_date_e" value="${tx_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                    </td>
+                    <td nowrap colspan=2>&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">日期</th>
+                <th nowrap class="list_th">大類</th>
+                <th nowrap class="list_th">科子細目代號</th>
+                <th nowrap class="list_th">名稱</th>
+                <th nowrap class="list_th">借方金額</th>
+                <th nowrap class="list_th">貸方金額</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${tx_date} </td>
+                <td nowrap class="list_ll"> ${ac_no_1} </td>
+                <td nowrap class="list_ll"> ${ac_no} </td>
+                <td nowrap class="list_cc" style="text-align:left;">${ac_full_name} </td>
+                <td nowrap class="list_ll" style="text-align:right;"> ${amt_D.(999.00)} </td>
+                <td nowrap class="list_ll" style="text-align:right;"> ${amt_C.(999.00)} </td>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="dbcr" value="${dbcr}">
+         <input type="hidden" name="rowid" value="${rowid}"/>
+        <input type="hidden" name="SER_NUM" value="${SER_NUM}"/>
+    </form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.exDateS.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>
+<script>
+    function A() {
+        document.getElementsByName('ac_no_2')[0].value = '';
+        document.getElementsByName('tx_date_s')[0].value = '';
+        document.getElementsByName('tx_date_e')[0].value = '';
+    }
+</script>

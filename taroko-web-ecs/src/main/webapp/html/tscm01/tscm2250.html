@@ -1,0 +1,389 @@
+<html>
+<head>
+<title>悠遊卡凍結/特指拒絕代行排除參數維護-V20191231</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" class="td_title">　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　${parm_desc}</td>
+ </tr>
+ <tr>
+   <td nowrap width="5%">
+      <input type="checkbox" name="bkec_block_cond" value="Y" ${bkec_block_cond-Y}>
+   </td>
+   <td nowrap >&nbsp;
+      <input type="Button" class="btOther" value="排除凍結碼" ${btnUpdate_disable} onClick="proc_block_reason()" >
+      <input type="text" class="dsp_text"  name="ttbkec_block_reason" value="${ttbkec_block_reason}" size="100" readonly />
+      <input type="hidden" name="bkec_block_reason" value="${bkec_block_reason}">
+   </td>
+</tr>
+ <tr>
+   <td nowrap width="5%">
+      <input type="checkbox" name="auto_block_cond" value="Y" ${auto_block_cond-Y}>
+   </td>
+   <td nowrap >&nbsp;
+      <input type="Button" class="btOther" value="排除維護特指" ${btnUpdate_disable} onClick="proc_auto_block()" >
+      <input type="text" class="dsp_text"  name="ttauto_block_reason" value="${ttauto_block_reason}" size="100"  readonly />
+      <input type="hidden" name="auto_block_reason" value="${auto_block_reason}">
+   </td>
+</tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <td nowrap >&nbsp;覆核日期:
+      <span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+   </td>
+   <td nowrap >&nbsp;覆核主管:
+      <span class="dsp_text">${apr_user}&nbsp;</span>
+      <input type="hidden" name="apr_user" value="${apr_user}">
+   </td>
+</tr>
+</table>
+</div>
+
+<!--dialog 1-->
+<div id="block_dlog">
+<table border="0" >
+ <tr><td>&nbsp;排除凍結碼:
+      <input type=text class="col_text" id="ex_block" value=""
+         zeditType="alphanum,upper" maxlength="2" size="4" />
+     </td>
+     <td align="right">
+     <input type="Button" id="block_btnAdd" value="新增" class="btAdd_detl" />
+ </td><tr>
+</table>
+<hr>
+ <table id="tbl_block" border="0" >
+  <tr>
+    <th nowrap width="5%">刪除 </th>
+    <th nowrap >排除凍結碼 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+    </td>
+    <td nowrap class="list_cc">&nbsp;${block_code}
+      <input type="hidden" name="block_code" value="${block_code}" />
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!--dialog 2-->
+<div id="block2_dlog">
+<table border="0" >
+ <tr><td>&nbsp;排除維護特指:
+      <input type=text class="col_text" id="ex_auto_block2" value=""
+         zeditType="alphanum,upper" maxlength="2" size="4" />
+     </td>
+     <td align="right">
+     <input type="Button" id="block2_btnAdd" value="新增" class="btAdd_detl" />
+ </td><tr>
+</table>
+<hr>
+ <table id="tbl_block2" border="0" >
+  <tr>
+    <th nowrap width="5%">刪除 </th>
+    <th nowrap >維護特指 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+    </td>
+    <td nowrap class="list_cc">&nbsp;${auto_block}
+      <input type="hidden" name="auto_block" value="${auto_block}" />
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="tscm2250">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="parm_type" value="${parm_type}">
+<input type="hidden" name="seq_no" value="${seq_no}"/>
+
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind1=${IND_NUM1};
+var rowNum1=${IND_NUM1};
+</script>
+
+<script language="javascript">
+var ind2=${IND_NUM2};
+var rowNum2=${IND_NUM2};
+</script>
+
+<script>
+$(document).ready(function () {
+     $("#block_dlog").dialog({
+         title:'排除凍結碼',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         height: 400, width: 300,
+         buttons: {
+             "確定": function() {
+                wf_set_block(document.all.tbl_block);
+            	 $(this).dialog("close");
+             },
+             "取消": function () {
+            	 $(this).dialog("close");
+             }
+         }
+     });
+
+  $("#block_btnAdd").click(function(){
+	var ls_data_code =$("#ex_block").val().toUpperCase().trim();
+	if(ls_data_code.length!=2){
+	   alert("排除凍結碼為 2 碼,請重新輸入");
+	   return;
+	}
+
+   rowNum1++;
+   ind1++;
+   var serNo ="0";
+   if ( ind1 < 10 )
+      { serNo = "0"+ind1; }
+   else
+   	{ serNo = ""+ind1;  }
+
+   $("#tbl_block").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code
+      +"<input type='hidden' value='"+ls_data_code+"' name='block_code' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_block").val('');
+
+  });
+
+ });
+</script>
+
+<script>
+$(document).ready(function () {
+     $("#block2_dlog").dialog({
+         title:'排除維護特指',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         height: 400, width: 300,
+         buttons: {
+             "確定": function() {
+                wf_set_block2(document.all.tbl_block2);
+            	 $(this).dialog("close");
+             },
+             "取消": function () {
+            	 $(this).dialog("close");
+             }
+         }
+     });
+
+  $("#block2_btnAdd").click(function(){
+	var ls_data_code2 =$("#ex_auto_block2").val().toUpperCase().trim();
+	if(ls_data_code2.length!=2){
+	   alert("維護特指為 2 碼,請重新輸入");
+	   return;
+	}
+
+   rowNum2++;
+   ind2++;
+   var serNo ="0";
+   if ( ind2 < 10 )
+      { serNo = "0"+ind2; }
+   else
+   	{ serNo = ""+ind2;  }
+
+   $("#tbl_block2").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code2
+      +"<input type='hidden' value='"+ls_data_code2+"' name='auto_block' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_auto_block2").val('');
+
+  });
+
+ });
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+  function proc_block_reason() {
+   $("#block_dlog").dialog("open");
+ }
+
+ function wf_set_block(elmtTable)
+ {
+	 //debugger;
+	 wf_clear_table1(elmtTable, false);
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    //alert("table1-row="+rowCount);
+    var ls_block="";
+    var ls_ttblock="";
+     for (var x=1; x<rowCount; x++) {
+       if (tableRows[x].cells.length<2) {
+          continue;
+       }
+    	 var ss = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+        if (ls_ttblock.indexOf(ss)>=0) {
+         continue;
+       }
+       ls_block +=ss;
+       if(x==1){
+         ls_ttblock +=ss;
+       } else  {
+         ls_ttblock +=","+ss;
+       }
+     }
+     $("input[name=bkec_block_reason]").val(ls_block);
+     $("input[name=ttbkec_block_reason]").val(ls_ttblock);
+ }
+
+ function wf_clear_table1(elmtTable, bAll)
+ {
+	 //debugger;
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+	 var rowCount = tableRows.length;
+    //alert("clear-Tab="+rowCount);
+
+	 for (var x=rowCount-1; x>0; x--) {
+      //alert("x="+x+", cell="+tableRows[x].cells.length);
+      if (tableRows[x].cells.length==0) {
+         elmtTable.deleteRow(x);
+         continue;
+      }
+		 if (bAll)
+		 { elmtTable.deleteRow(x); }
+		 else
+		 {
+			 var flag = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+         if (flag) {
+            rowNum1--;
+            ind1--;
+            elmtTable.deleteRow(x);
+         }
+		 }
+	 }
+ }
+
+ function wf_clear_table2(elmtTable, bAll)
+ {
+	 //debugger;
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+	 var rowCount = tableRows.length;
+    //alert("clear-Tab="+rowCount);
+
+	 for (var x=rowCount-1; x>0; x--) {
+      //alert("x="+x+", cell="+tableRows[x].cells.length);
+      if (tableRows[x].cells.length==0) {
+         elmtTable.deleteRow(x);
+         continue;
+      }
+		 if (bAll)
+		 { elmtTable.deleteRow(x); }
+		 else
+		 {
+			 var flag = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+          //alert("xxx="+flag);
+         if (flag) {
+            rowNum2--;
+            ind2--;
+            elmtTable.deleteRow(x);
+         }
+		 }
+	 }
+ }
+
+ function proc_auto_block() {
+   $("#block2_dlog").dialog("open");
+ }
+
+ function wf_set_block2(elmtTable)
+ {
+	 wf_clear_table2(elmtTable, false);
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    var ls_autoblock="";
+    var ls_ttautoblock="";
+     for (var x=1; x<rowCount; x++) {
+       if (tableRows[x].cells.length<2) {
+          continue;
+       }
+    	 var ss = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+       var ss = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+              
+       if (ls_ttautoblock.indexOf(ss)>=0) {
+         continue;
+       }
+       ls_autoblock +=ss;
+       if(x==1){
+         ls_ttautoblock +=ss;
+       } else  {
+         ls_ttautoblock +=","+ss;
+       }
+     }
+     $("input[name=auto_block_reason]").val(ls_autoblock);
+     $("input[name=ttauto_block_reason]").val(ls_ttautoblock);
+ }
+
+</script>

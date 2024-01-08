@@ -1,0 +1,110 @@
+<html>
+
+<head>
+    <title>消費回饋聯名機構參數維護-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">            
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">                
+                <tr>
+                    <td nowrap colspan=8>&nbsp;團體代號:
+                        <input type="text" class="col_text" name="ex_group_code"  value="${ex_group_code}"
+                        zEdit="alphanum"    maxlength="4" size="4" />
+                    </td>                      
+                    <td nowrap  >&nbsp;覆核碼:
+                        <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} ${DEFAULT-ex_apr_flag}>(全部:不含新增)
+                        <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N}>未覆核
+                    </td> 
+                    <td nowrap >&nbsp;
+                        <input type="Button" ${btnQuery_disable} value="讀取" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                <tr>                
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">團體代號</th>
+                <th nowrap class="list_th">說明</th>
+                <th nowrap class="list_th">回饋方式</th>
+                <th nowrap class="list_th">建檔人員</th>
+                <th nowrap class="list_th">建檔日期</th>
+                <th nowrap class="list_th">主管覆核</th>                
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${group_code}','${program_code}','')" style="cursor:hand">
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>               
+                <td nowrap class="list_ll">${group_code}-${comm_group_code}&nbsp; </td>
+                <td nowrap class="list_ll">${description}&nbsp; </td>
+                <td nowrap class="list_ll">${db_reward_type}&nbsp; </td>
+                <td nowrap class="list_ll">${crt_user}&nbsp; </td>
+                <td nowrap class="list_ll">${crt_date}&nbsp; </td>
+                <td nowrap class="list_ll">${apr_flag}&nbsp; </td>                
+                <input type="hidden" name="group_code" value="${group_code}">
+                <input type="hidden" name="description" value="${description}"> 
+                <input type="hidden" name="reward_type" value="${reward_type}">   
+                <input type="hidden" name="crt_user" value="${crt_user}"> 
+                <input type="hidden" name="crt_date" value="${crt_date}"> 
+                <input type="hidden" name="apr_flag" value="${apr_flag}">    
+                <input type="hidden" name="program_code" value="${program_code}">             
+                <input type="hidden" name="rowid" value="${rowid}">   
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden"  name="data_k1" value="" >
+        <input type="hidden"  name="data_k2" value="" >
+        <input type="hidden"  name="data_k3" value="" >
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="mktm0210">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+// tigra_tables('table1');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_group_code.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm0210_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "mktm0210_detl";
+    top.submitControl('R');
+    return true;
+}
+
+</script>

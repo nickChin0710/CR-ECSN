@@ -1,0 +1,172 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-06-21  V1.00.01     Ryan       Initial                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>批次排程程式維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8;">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <!-- <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+      -->
+     <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>SHELL代號:&nbsp; 
+       <input type="text" class="col_any" name="shell_id" value="${shell_id}"
+              zEdit="any" maxlength="20" size="22" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>排程代號:&nbsp; 
+       <input type="text" class="col_any" name="schedule_job_id" value="${schedule_job_id}"
+              zEdit="any,canTW" maxlength="20" size="22" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>執行順序:&nbsp; 
+       <input type="text" class="col_number" name="priority_level" value="${priority_level}"
+              zEdit="number" maxlength="8" size="10" />
+     </td>
+   </tr>
+
+   <tr>
+     <td nowrap>程式代號:&nbsp; 
+       <input type="text" class="col_any" name="pgm_id" value="${pgm_id}"
+              zEdit="any" maxlength="20" size="22" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>程式說明:&nbsp; 
+       <input type="text" class="col_any" name="pgm_desc" value="${pgm_desc}"
+              zEdit="canTW" maxlength="60" size="62" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數1:&nbsp; 
+       <input type="text" class="col_any" name="key_parm1" value="${key_parm1}"
+              zEdit="any" maxlength="40" size="42" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數2:&nbsp; 
+       <input type="text" class="col_any" name="key_parm2" value="${key_parm2}"
+              zEdit="any" maxlength="40" size="42" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數3:&nbsp; 
+       <input type="text" class="col_any" name="key_parm3" value="${key_parm3}"
+              zEdit="any" maxlength="40" size="42" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數4:&nbsp; 
+       <input type="text" class="col_any" name="key_parm4" value="${key_parm4}"
+              zEdit="any" maxlength="40" size="42" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數5:&nbsp; 
+       <input type="text" class="col_any" name="key_parm5" value="${key_parm5}"
+              zEdit="any" maxlength="40" size="42" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>暫停碼:&nbsp; 
+       <select name="wait_flag" class="col_ddlb"  >
+       		<option value="N" ${wait_flag-N} >N</option>
+       		<option value="Y" ${wait_flag-Y} >Y</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>REPEAT_CODE:&nbsp; 
+       <input type="text" class="col_any" name="repeat_code" value="${repeat_code}"
+              zEdit="any" maxlength="1" size="3" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>正常回應碼:&nbsp; 
+       <input type="text" class="col_any" name="normal_code" value="${normal_code}"
+              zEdit="any" maxlength="4" size="6" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>異常時通知維護人員:&nbsp;
+       <select name="call_duty_ind" class="col_ddlb"  >
+       <option value="Y" ${call_duty_ind-Y} >Y</option>
+       <option value="N" ${call_duty_ind-N} >N</option>
+       </select>
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >異動日期: 
+       <span class="dsp_date">${mod_time.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_time" value="${mod_time}" />
+     </td>
+     <td  nowrap  >異動人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+     </td>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ecsm0620">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>科目明細D檔 Reversal 作業-106-12-20-V1.00.00-OrisChang-[Initial]
+112-12-18-V1.00.01-Simon-[update]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+					<td nowrap>&nbsp;帳戶帳號: </td>
+					<td nowrap>
+						<select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>-- 
+						<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" zEdit="alphanum,upper" maxlength=11 size=13 zRequire ="k"/>
+					</td>
+					<td nowrap>&nbsp;帳戶姓名:</td>
+					<td nowrap>${q_id_cname}</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;　費用類:</td>
+					<td nowrap colspan="3">
+						<input type="checkbox" value="Y" name="ex_acitem01" ${ex_acitem01-Y}/><span style="color:#0000FF;">費用　&nbsp;</span>
+						<input type="checkbox" value="Y" name="ex_acitem02" ${ex_acitem02-Y}/><span style="color:#0000FF;">利息　&nbsp;</span>
+						<input type="checkbox" value="Y" name="ex_acitem03" ${ex_acitem03-Y}/><span style="color:#0000FF;">違約金&nbsp;</span>
+	                </td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;　本金類:</td>
+					<td nowrap>
+						<input type="checkbox" value="Y" name="ex_acitem04" ${ex_acitem04-Y}/>
+	        </td>
+					<td nowrap>&nbsp;結算幣別:</td>
+					<td>
+	            <select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+	        </td>
+				</tr>
+<!--
+				<tr>
+					<td nowrap>&nbsp;　代收款:</td>
+					<td nowrap>
+						<input type="checkbox" value="Y" name="ex_acitem05" ${ex_acitem05-Y}/><span style="color:#0000FF;">Model1&nbsp;</span>
+						<input type="checkbox" value="Y" name="ex_acitem06" ${ex_acitem06-Y}/><span style="color:#0000FF;">Model2&nbsp;</span>
+						<input type="checkbox" value="Y" name="ex_acitem07" ${ex_acitem07-Y}/><span style="color:#0000FF;">其他&nbsp;</span>
+	        </td>
+	      </tr>
+-->
+        <tr>
+            <td nowrap colspan=4>&nbsp;
+                <input type="Button"   ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                <input type="Button"   ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                <!-- <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp; -->
+            </td>
+        </tr>
+    </table>
+  </div>
+  <hr>
+    <!-- 明細============================ -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+            	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+				<th nowrap class="list_th">D檔日期</th>
+				<th nowrap class="list_th">科目代號_名稱</th>
+				<th nowrap class="list_th">科目<br>入帳日期</th>
+				<th nowrap class="list_th">起息日期</th>
+				<th nowrap class="list_th">結算<br>幣別</th>
+				<th nowrap class="list_th">D檔金額</th>
+				<th nowrap class="list_th">調整後<br>金額</th>
+				<th nowrap class="list_th">調整後<br>可D數</th>
+				<th nowrap class="list_th">利息<br>指示碼</th>
+				<th nowrap class="list_th">已回沖</th>
+				<th nowrap class="list_th">交易<br>參考號</th>
+				<th nowrap class="list_th">調整原因</th>
+				<th nowrap class="list_th">調整<br>類別</th>
+				<th nowrap class="list_th">調整備註欄</th>
+			</tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${ser_num}','${rowid}','${reference_no}','${reversal_flag}','${transaction_amt}','${dc_transaction_amt}')" style="cursor:hand">
+				<td nowrap class="list_no"> ${SER_NUM}&nbsp;
+				</td>
+				<td nowrap class="list_cc">${crt_date.YMD}&nbsp;</td>
+				<td nowrap class="list_ll">${tt_acct_code}&nbsp;</td>
+				<td nowrap class="list_cc">${item_date.YMD}&nbsp;</td>
+				<td nowrap class="list_cc">${interest_date.YMD}&nbsp;</td>
+				<td nowrap class="list_cc"><span style="color:#930093; font-weight:bold;">${curr_code}&nbsp;</span></td>
+				<td nowrap class="list_rr">${wk_transamt}&nbsp;</td>
+				<td nowrap class="list_rr">${item_bal}&nbsp;</td>
+				<td nowrap class="list_rr">${item_d_bal}&nbsp;</td>
+				<td nowrap class="list_cc">${value_type}&nbsp;</td>
+				<td nowrap class="list_cc">${reversal_flag}&nbsp;</td>
+				<td nowrap class="list_ll">${reference_no}&nbsp;</td>
+				<td nowrap class="list_ll">${adj_reason_code}&nbsp;</td>
+				<td nowrap class="list_cc">${tran_type}&nbsp;</td>
+				<td nowrap class="list_ll">${adj_comment}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="data_k4" value="">
+        <input type="hidden" name="data_k5" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_acct_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "actm0120_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm1, parm2, parm3, parm4, parm5) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm1;
+    document.dataForm.data_k2.value = parm2;
+    
+    //--check reversal--//
+    if ( parm3 == "Y" ) {
+    	if (confirm("此筆資料已曾被註記reversal,請確認是否還要reversal !") === false) {
+    		parm3 = "Y";  //only used by w_actm120, indicate only enquiry
+        } else {
+        	parm3 = "N";  //only used by w_actm120, indicate add reversal amt
+        }
+    }
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    
+    top.respHtml = "actm0120_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

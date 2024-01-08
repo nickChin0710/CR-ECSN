@@ -1,0 +1,127 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/24  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>自行自動扣繳比對報表-V.2020-0617-Andy-[Update UI]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap colspan=12>&nbsp;
+                    <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <!--                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    -->
+                    <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap colspan=4>&nbsp;IBM 扣帳日期:
+                    <input type="text" class="col_date" name="ex_date_S" value="${ex_date_S}" zEdit="date,yyyymmdd" maxlength="8" size="10" zRequire ="k"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_S'
+                        });
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="ex_date_E" value="${ex_date_E}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_E'
+                        });
+                    </script>
+                </td>
+                <td nowrap class="list_ll" colspan=8>&nbsp;雙幣幣別:
+                    <select name="ex_curr_code" class="col_ddlb">
+                        ${dddw_curr_code}
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <div id="dataBlock" >
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >&nbsp;總計:
+                    <span class="dsp_text">${tl_rows.(999)}&nbsp;</span>筆
+                    <input type="hidden" name="tl_rows" value="${tl_rows}">
+                </td>
+                <td nowrap >&nbsp;金額:
+                    <span class="dsp_text">${tl_amt.(999.00)}&nbsp;</span>
+                    <input type="hidden" name="tl_amt" value="${tl_amt}">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <!-- 明細============================ -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">IBM 扣帳日</th>
+            <th nowrap class="list_th">帳戶帳號</th>
+            <th nowrap class="list_th">正卡 ID</th>
+            <th nowrap class="list_th">中文姓名</th>
+            <th nowrap class="list_th">雙幣幣別</th>
+            <th nowrap class="list_th">扣繳帳號</th>
+            <th nowrap class="list_th">自動扣繳帳號歸屬 ID</th>
+            <th nowrap class="list_th">金額</th>
+            <th nowrap class="list_th">比對不到 X 檔</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+            <td nowrap class="list_cc">${enter_acct_date.YMD} </td>
+            <td nowrap class="list_cc">${wk_acct_key} </td>
+            <td nowrap class="list_ll">${id_no} </td>
+            <td nowrap class="list_cc">${chi_name} </td>
+            <td nowrap class="list_cc">${#JAVA:ecsfunc.DeCodePtr.currCode(curr_code)} </td>
+            <td nowrap class="list_ll">${autopay_acct_no} </td>
+            <td nowrap class="list_cc">${autopay_id} </td>
+            <td nowrap class="list_rr">${transaction_amt.(999.00)} </td>
+            <td nowrap class="list_cc">${err_type} </td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+    <input type="hidden" name="row_ct" value="${row_ct}">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows = "20";
+
+    function validateInput() {
+
+        if (!top.checkFormat()) {
+            return false;
+        }
+        return true;
+    }
+</script>

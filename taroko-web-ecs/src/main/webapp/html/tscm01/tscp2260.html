@@ -1,0 +1,130 @@
+<html>
+<head>
+<title>悠遊卡扣款待傳送資料處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user} 
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;傳送日期:
+      <input type="text" class="col_date" name="ex_send_date" value="${ex_send_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_send_date'});
+	      </script>	     
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="傳送" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    傳送
+	 </th>
+    <th nowrap >卡別&nbsp;</th>
+    <th nowrap >流水號&nbsp;</th>
+    <th nowrap >消費卡號&nbsp;</th>
+    <th nowrap >悠遊卡號&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >扣款理由碼&nbsp;</th>
+    <th nowrap >扣款金額&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}"  />
+ 	      ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	   <input type="hidden" name="err" value="${err}">
+	   <input type="hidden" name="db_tsc_card" value="${db_tsc_card}">
+      <input type="hidden" name="db_purch_date" value="${db_purch_date}">
+      <input type="hidden" name="db_purch_time" value="${db_purch_time}">
+      <input type="hidden" name="fst_twd_amt" value="${fst_twd_amt}">
+      <input type="hidden" name="db_traf_code" value="${db_traf_code}">
+      <input type="hidden" name="db_place_code" value="${db_place_code}">
+      <input type="hidden" name="db_traf_name" value="${db_traf_name}">
+      <input type="hidden" name="db_place_name" value="${db_place_name}">
+      <input type="hidden" name="fst_reason_code" value="${fst_reason_code}">
+      <input type="hidden" name="reference_no" value="${reference_no}">
+      <input type="hidden" name="reference_seq" value="${reference_seq}">
+      <input type="hidden" name="db_online_mark" value="${db_online_mark}">
+      <input type="hidden" name="bin_type" value="${bin_type}">
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+      <input type="hidden" name="ctrl_seqno2" value="${ctrl_seqno2}">
+      <input type="hidden" name="card_no" value="${card_no}">
+      <input type="hidden" name="purchase_date" value="${purchase_date}">
+      <input type="hidden" name="fst_send_date" value="${fst_send_date}">
+      <input type="hidden" name="fst_send_cnt" value="${fst_send_cnt}">
+      <input type="hidden" name="send_flag" value="${send_flag}">
+      <input type="hidden" name="rowid" value="${rowid}">
+   </td>
+	<td nowrap class="list_cc"> ${bin_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_tsc_card}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${fst_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${fst_twd_amt.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ 
+</script>

@@ -1,0 +1,124 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-09-13  V1.00.01  Ryan       Initial                                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>郵資參數資料維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>郵寄種類：&nbsp;
+        <select size="1" name="ex_mail_type" class="col_ddlb" >
+           ${dddw_mail_type}
+        </select>
+    </td>
+   	<td nowrap>&nbsp;卡片張數:
+      <input type="text" class="col_number" 
+         name="ex_min_card_sheets" value="${ex_min_card_sheets}"
+         zEdit="number"  maxlength=10 size=12 />
+         --
+      <input type="text" class="col_number" 
+         name="ex_max_card_sheets" value="${ex_max_card_sheets}"
+         zEdit="number"  maxlength=10 size=12 />
+   	</td>
+   	<td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   	</td>
+   </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">郵寄種類</th>
+    <th nowrap class="list_th">卡片張數<br>(MIN)</th>
+    <th nowrap class="list_th">卡片張數<br>(MAX)</th>
+    <th nowrap class="list_th">北北基地區郵資<br>(元)</th>
+    <th nowrap class="list_th">其他地區郵資<br>(元)</th>
+    <th nowrap class="list_th">信封重量<br>(克)</th>
+    <th nowrap class="list_th">每張卡重量<br>(克)</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${mail_type}','${min_card_sheets}','${max_card_sheets}','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${mail_type}[${msg}]</td>
+    <td nowrap class="list_ll"> ${min_card_sheets}</td>
+    <td nowrap class="list_ll"> ${max_card_sheets}</td>
+    <td nowrap class="list_ll"> ${bigtaipei_area_post.(999)}</td>
+    <td nowrap class="list_ll"> ${other_area_post.(999)}</td>
+    <td nowrap class="list_ll"> ${env_weight}</td>
+    <td nowrap class="list_ll"> ${card_weight}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0181_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ptrm0181_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

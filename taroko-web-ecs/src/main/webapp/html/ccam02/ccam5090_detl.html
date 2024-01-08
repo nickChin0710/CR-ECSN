@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>回覆碼維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+   var selected = $("input[name=resp_status]:checked");
+   if (selected.length == 0) {
+      $("input:radio[name=resp_status]").filter('[value=N]').prop('checked', true);
+   }
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >回覆碼：
+      <input type="text" class="col_text" name="kk_resp_code" value="${kk_resp_code}" 
+         zEdit="alphanum,upper" size="5" maxlength="2" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+	  <td nowrap colspan="2" class="col_key" >&nbsp;回覆碼：
+      <span class="dsp_text">${resp_code}</span>
+      <input type="hidden" name="resp_code" value="${resp_code}"> 
+     </td>
+  </tr>
+  <tr>
+  	<td nowrap >
+  		<input type="checkbox" class="col_ckbox" name="resp_status" value="Y" ${resp_status-Y} > 失敗原因類別統計報表
+  	</td>  	
+  	<td nowrap>
+  		<input type="checkbox" class="col_ckbox" value="Y" name="abnorm_flag" ${abnorm_flag-Y} > 不當代行報表
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2">&nbsp;說明：
+  	<input type="text" class="col_any" name="resp_remark" value="${resp_remark}" zRequire="Y"
+  		zEdit="any,canTW" maxlength="60" size="62"></td>
+  </tr>
+</table>
+  <table width="60%" border="0" cellspacing="0" cellpadding="4" >
+  <tr>
+  	<td nowrap class="td_title"></td>
+  	<td nowrap class="td_title">FISC財金公司</td>
+  	<td nowrap class="td_title">Visa</td>
+ 		<td nowrap class="td_title">Master</td>
+ 		<td nowrap class="td_title">JCB</td>
+  </tr>
+  <tr>
+  	<td nowrap class="td_text">P-38回覆碼</td>
+  	<td nowrap><input type="text" class="col_text" name="nccc_p38" value="${nccc_p38}" 
+ 			zEdit="alphanum,upper" maxlength="6" size="8"></td>
+ 		<td nowrap class="td_data">&nbsp;</td>
+ 		<td nowrap class="td_data">&nbsp;</td>
+ 		<td nowrap class="td_data">&nbsp;</td>
+  </tr>
+  <tr>
+  	<td nowrap class="td_text">P-39回覆碼</td>
+  	<td nowrap><input type="text" class="col_text" name="nccc_p39" value="${nccc_p39}" maxlength="2" size="5">
+      </td>
+  	<td nowrap>
+      <input type="text" class="col_text" name="visa_p39" value="${visa_p39}" 
+ 			maxlength="2" size="5">
+    </td>
+ 		<td nowrap><input type="text" class="col_text" name="mast_p39" value="${mast_p39}"
+ 			maxlength="2" size="5"></td>
+ 		<td nowrap><input type="text" class="col_text" name="jcb_p39" value="${jcb_p39}" 
+ 			maxlength="2" size="5">
+         </td>
+  </tr>
+  <tr>
+    <td class="td_remark" colspan="5">
+      <b>若為網路(EC)交易或國外郵購(MOTO)交易，P-39回覆碼於參數維護'01'者一律強制改回覆為'05'。
+      </b>
+    </td>
+  </tr>  
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

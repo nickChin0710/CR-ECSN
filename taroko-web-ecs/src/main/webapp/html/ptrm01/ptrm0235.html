@@ -1,0 +1,112 @@
+
+<html>
+<head>
+<title>國外交易手續費參數維護-V.2017-0504-David FU-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;清算類別:
+            <select   size="1"  name="ex_card_property" class="col_ddlb"  zRequire="Y">
+		         <option value=""  ${ex_card_property-}>--</option>
+		         <option value="C" ${ex_card_property-C}>C-信用卡</option>
+		         <option value="D" ${ex_card_property-D}>D-金融卡</option>
+	       </select>
+        </td>
+        <td nowrap>&nbsp;幣別:
+           <select size="1" name="ex_curr_code" class="col_ddlb" zRequire="Y">
+                ${dddw_curr_code}
+           </select>
+        </td>
+        <td nowrap>&nbsp;
+            <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th">清算類別</th>
+        <th nowrap class="list_th">幣別</th>
+        <th nowrap class="list_th">VISA不同國別不同幣別附加費費率</th>
+        <th nowrap class="list_th">VISA不同國別相同幣別附加費費率</th>
+        <th nowrap class="list_th">VISA相同國別不同幣別附加費費率</th>
+        <th nowrap class="list_th">M/C不同國別不同幣別附加費費率</th>
+        <th nowrap class="list_th">M/C不同國別相同幣別附加費費率</th>
+        <th nowrap class="list_th">M/C相同國別不同幣別附加費費率</th>
+        <th nowrap class="list_th">JCB不同國別不同幣別附加費費率</th>
+        <th nowrap class="list_th">JCB不同國別相同幣別附加費費率</th>
+        <th nowrap class="list_th">JCB相同國別不同幣別附加費費率</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr onclick="detailScreen('${SER_NUM}','${card_property}','${curr_code}','')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_ll"> ${card_property}</td>
+        <td nowrap class="list_cc"> ${curr_code}-${curr_code_name}</td>
+        <td nowrap class="list_rr"> ${v_both_diff_rate}</td>
+        <td nowrap class="list_rr"> ${v_country_diff_rate}</td>
+        <td nowrap class="list_rr"> ${v_currency_diff_rate}</td>
+        <td nowrap class="list_rr"> ${m_both_diff_rate}</td>
+        <td nowrap class="list_rr"> ${m_country_diff_rate}</td>
+        <td nowrap class="list_rr"> ${m_currency_diff_rate}</td>
+        <td nowrap class="list_rr"> ${j_both_diff_rate}</td>
+        <td nowrap class="list_rr"> ${j_country_diff_rate}</td>
+        <td nowrap class="list_rr"> ${j_currency_diff_rate}</td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_card_property.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0235_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0235_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

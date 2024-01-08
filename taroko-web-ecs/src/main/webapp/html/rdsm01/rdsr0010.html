@@ -1,0 +1,128 @@
+<html>
+<head>
+<title>每日產出異動報表(含網銀、Web)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="2">&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zRequire="C" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;  
+		<input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+		<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+		<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+ </td>   
+</tr>
+  <tr>
+   <td nowrap >&nbsp;異動來源:
+   		<select   size="1"  name="ex_type" class="col_ddlb">
+				<option value="">--</option>
+				<option value="1" ${ex_type-1} >1.Web</option>
+				<option value="2" ${ex_type-2} >2.網銀</option>
+      </select>
+	 </td>
+	 <td nowrap >&nbsp;異動狀態:
+   		<select   size="1"  name="ex_status" class="col_ddlb">
+         <option value="">--</option>         
+         <option value="1" ${ex_status-1} >1.新增車號</option>         
+         <option value="2" ${ex_status-2} >2.變更車號</option>
+         <option value="3" ${ex_status-3} >3.取消車號</option>
+         <option value="4" ${ex_status-4} >4.未啟用</option>
+         <option value="0" ${ex_status-0} >0.停用</option>
+      </select>
+	 </td>
+	 <td>&nbsp;</td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <div id="dataBlock" >
+ 	<table id="table0" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 		<tr>
+ 			<td nowrap >&nbsp;合計:
+ 				<span class="dsp_text">${tl_cnt.(999)}&nbsp;</span>
+ 				<input type="hidden" name="tl_cnt" value="${tl_cnt}">
+ 			</td>
+ 			<td nowrap >&nbsp;優惠別:
+ 				<span class="dsp_text">${tl_rds_pcard}&nbsp;</span>
+ 				<input type="hidden" name="tl_rds_pcard" value="${tl_rds_pcard}">
+ 			</td>
+ 		</tr>
+ 	</table>
+ </div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >優惠別</th>
+    <th nowrap >車號</th>
+    <th nowrap >持卡人ID</th>
+    <th nowrap >姓名</th>
+    <th nowrap >團代</th>
+    <th nowrap >卡號</th>
+    <th nowrap >異動狀態</th>
+    <th nowrap >建檔日期</th>
+    <th nowrap >異動日期</th>
+    <th nowrap >異動程式</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rds_pcard}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rd_carno}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rd_carmanid}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rd_carmanname}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${group_code}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rd_status}.${tt_rd_status}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${rd_moddate.YMD}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${mod_pgm}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

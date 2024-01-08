@@ -1,0 +1,167 @@
+<html>
+<head>
+<title>問題交易新增登錄待覆核清單列印</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_dbcard_flag]:checked");
+if (selected.length == 0) {
+   $("input:radio[name=ex_dbcard_flag]").filter('[value=0]').prop('checked', true);
+}
+var selected = $("input[name=ex_prb_src_code]:checked");
+if (selected.length == 0) {
+   $("input:radio[name=ex_prb_src_code]").filter('[value=AL]').prop('checked', true);
+}
+var selected = $("input[name=ex_apr_flag]:checked");
+if (selected.length == 0) {
+   $("input:radio[name=ex_apr_flag]").filter('[value=N]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;新增登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>&nbsp;&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} />全部
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+      </span>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;新增登錄者:　
+      <input type="text" class="col_any" name="ex_id1" value="${ex_id1}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_dbcard_flag" ${ex_dbcard_flag-0} />全部
+         <input type="radio" value="1" name="ex_dbcard_flag" ${ex_dbcard_flag-1} />信用卡
+         <input type="radio" value="2" name="ex_dbcard_flag" ${ex_dbcard_flag-2} />VD 卡
+         <input type="radio" value="3" name="ex_dbcard_flag" ${ex_dbcard_flag-3} />悠遊卡加值
+      </span>
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="AL" name="ex_prb_src_code" ${ex_prb_src_code-AL} />全部
+         <input type="radio" value="RQ" name="ex_prb_src_code" ${ex_prb_src_code-RQ} />風管列問交
+         <input type="radio" value="CQ" name="ex_prb_src_code" ${ex_prb_src_code-CQ} />客服列問交
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock">
+ <table class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+    <td nowrap class="list_rr" colspan="5">&nbsp;合計:</td>
+    <td nowrap class="list_cc">&nbsp;筆數 :${wk_A.(999)}
+      <input type="hidden" name="wk_A" value="${wk_A}">  
+    </td>
+    <td nowrap class="list_cc">&nbsp;結算金額 :${wk_Ad.(999.00)}
+      <input type="hidden" name="wk_Ad" value="${wk_Ad}">  
+    </td>
+    <td nowrap class="list_cc">&nbsp;結算問交金額 :${wk_Ap.(999.00)}
+      <input type="hidden" name="wk_Ap" value="${wk_Ap}">  
+    </td>
+    <td nowrap class="list_cc">&nbsp;差異數 :${wk_Adp.(999.00)}
+      <input type="hidden" name="wk_Adp" value="${wk_Adp}">  
+    </td>
+  </tr>
+ </table>
+</div>
+ <br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">  
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >持卡人&nbsp;</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >消費日&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >結算金額&nbsp;</th>
+    <th nowrap >結算問交金額&nbsp;</th>
+    <th nowrap >差異數&nbsp;</th>
+    <th nowrap >原因碼&nbsp;</th>
+    <th nowrap >來源碼&nbsp;</th> 
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >登錄者&nbsp;</th>
+    <th nowrap >覆核日期&nbsp;</th>
+    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_prb_amount.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${wk_diff_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prb_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prb_src_code}&nbsp;</td>
+    <td nowrap class="list_cc"> ${add_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${add_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${add_apr_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');	
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+</script>

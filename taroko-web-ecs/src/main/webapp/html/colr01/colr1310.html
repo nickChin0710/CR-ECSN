@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>每月轉列呆帳報表-112-12-05-V1.00.01-sunny</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+      <!-- <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;轉呆月份：
+      <input type="text" class="col_date" name="exTransYymm" value="${exTransYymm}" 
+        zEdit="date,yyyymm" maxlength="6" size="6"/>
+    </td>
+    <td nowrap>&nbsp;結帳週期：
+      <input type="text" class="col_text" name="exStmtCycle" value="${exStmtCycle}" 
+        zEdit="alphanum,upper" maxlength="2" size="4" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;身分證號：
+      <input type="text" class="col_text" name="exId" value="${exId}" 
+        zEdit="alphanum,upper" maxlength="10" size="10" />
+    </td>
+     <td nowrap>&nbsp;公司統編：
+      <input type="text" class="col_text" name="exCorpNo" value="${exCorpNo}" 
+        zEdit="alphanum,upper" maxlength="10" size="10" />
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">身分證字號</th>
+    <th nowrap class="list_th">公司統編</th>
+    <th nowrap class="list_th">姓名/公司名稱</th>
+    <th nowrap class="list_th">帳戶別</th>
+    <th nowrap class="list_th">轉呆本金</th>
+    <th nowrap class="list_th">轉呆利息</th>
+    <th nowrap class="list_th">轉呆費用</th>
+    <th nowrap class="list_th">呆帳合計</th>
+    <th nowrap class="list_th">ID/公司<BR>歸戶轉呆總額</th>
+    <th nowrap class="list_th">最早往來日</th>
+    <th nowrap class="list_th">逾放日</th>
+    <th nowrap class="list_th">轉催日</th>
+    <th nowrap class="list_th">協商狀態</th>
+    <th nowrap class="list_th">轉呆日</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+    <td nowrap class="list_ll"> ${id_no}&nbsp;</td>
+    <td nowrap class="list_ll"> ${corp_no}&nbsp;</td>
+    <td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+    <td nowrap class="list_cc"> ${acct_type}&nbsp;</td>
+    <td nowrap class="list_rr"> ${cb_amt_acct.(999)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${ci_amt_acct.(999)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${cc_amt_acct.(999)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${sum_end_bal.(999)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${id_total_amt.(999)}&nbsp;</td>
+    <td nowrap class="list_cc"> ${card_since.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${org_delinquent_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${trans_date3.YMD}&nbsp;</td>
+    <td nowrap class="list_ll"> ${tt_nego_status}&nbsp;</td>
+    <td nowrap class="list_cc"> ${trans_date4.YMD}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+    <td></td>
+    <td nowrap class="td_data" align="right">欠款總額：&nbsp;</td>
+    <td nowrap class="td_data" align="right" colspan="3">
+      <span class="dsp_number"> ${total_end_bal.(999)}&nbsp; </span>
+    </td>
+    <td nowrap class="td_data" align="right">ID 數：&nbsp;</td>
+    <td nowrap class="td_data" align="right" colspan="2">
+      <span class="dsp_number"> ${total_id_cnt.(999)}&nbsp; </span>
+    </td>
+  </tr>
+    <tr>
+    <td></td>
+    <td nowrap class="td_data" align="right">個人戶(01)總額：&nbsp;</td>
+    <td nowrap class="td_data" align="right" colspan="3">
+      <span class="dsp_number"> ${id_sum_end_bal.(999)}&nbsp; </span>
+    </td>
+    <td nowrap class="td_data" align="right">ID 數：&nbsp;</td>
+    <td nowrap class="td_data" align="right" colspan="2">
+      <span class="dsp_number"> ${id_cnt.(999)}&nbsp; </span>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td nowrap class="td_data" align="right">公司戶(03)總額：&nbsp;</td>
+    <td nowrap class="td_data" align="right" colspan="3">
+      <span class="dsp_number"> ${corp_sum_end_bal.(999)}&nbsp; </span>
+    </td>
+    <td nowrap class="td_data" align="right">ID 數：&nbsp;</td>
+    <td nowrap class="td_data" align="right" colspan="2">
+      <span class="dsp_number"> ${corp_cnt.(999)}&nbsp; </span>
+    </td>
+  </tr>
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="MOD_PGM" value="colr1310">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ 
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ //top.pageRows="999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode == "C" ) {
+    	//var filename = document.getElementById('exImportFile').value;
+    	//if(filename==""){
+    	//	return false;
+    	//}
+    }
+    
+    return true;
+  }
+ 
+</script>

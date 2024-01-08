@@ -1,0 +1,186 @@
+<html>
+<head>
+<title>信用卡臨時額度調整統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_self]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_self]").filter('[value=0]').prop('checked', true);
+}
+
+var selected = $("input[name=ex_temp_adj]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_temp_adj]").filter('[value=0]').prop('checked', true);
+}
+
+var selected = $("input[name=ex_impo_cust]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_impo_cust]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;來電日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;主動服務:
+			<span class="col_radio">
+         <input type="radio" value="0" name="ex_self" ${ex_self-0} />全部
+         <input type="radio" value="Y" name="ex_self" ${ex_self-Y} />是
+         <input type="radio" value="N" name="ex_self" ${ex_self-N} />否
+      </span>
+  </td>
+  <td nowrap >&nbsp;暫永調:
+			<span class="col_radio">
+         <input type="radio" value="0" name="ex_temp_adj" ${ex_temp_adj-0} />全部
+         <input type="radio" value="Y" name="ex_temp_adj" ${ex_temp_adj-Y} />是
+         <input type="radio" value="N" name="ex_temp_adj" ${ex_temp_adj-N} />否
+      </span>
+  </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;重要客戶:
+			<span class="col_radio">
+         <input type="radio" value="0" name="ex_impo_cust" ${ex_impo_cust-0} />全部
+         <input type="radio" value="Y" name="ex_impo_cust" ${ex_impo_cust-Y} />是
+         <input type="radio" value="N" name="ex_impo_cust" ${ex_impo_cust-N} />否
+      </span>
+  	</td>
+  	<td nowrap >&nbsp;核決層級:
+  		<select   size="1"  name="ex_decs_lvl" class="col_ddlb">
+         <option value="">--</option>
+         <option value="乙級" ${ex_decs_lvl-乙級} >乙級</option>
+         <option value="甲級" ${ex_decs_lvl-甲級} >甲級</option>
+         <option value="處長" ${ex_decs_lvl-處長} >處長</option>
+         <option value="總行" ${ex_decs_lvl-總行} >總行</option>         
+      </select>      
+		</td>
+		<td nowrap >&nbsp;主管代號:
+			<select size="1" name="ex_charge_user" class="col_ddlb" >
+				<option value="">--</option>
+	      ${dddw_charge_user}
+	    </select>
+		</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="4" >&nbsp;
+  		<input type="checkbox" name="ex_cond1" value="Y" ${ex_cond1-Y}>&nbsp;預約消費
+  		<input type="checkbox" name="ex_cond2" value="Y" ${ex_cond2-Y}>&nbsp;未銷帳調整
+  		<input type="checkbox" name="ex_cond3" value="Y" ${ex_cond3-Y}>&nbsp;圈存調整
+  		<input type="checkbox" name="ex_cond4" value="Y" ${ex_cond4-Y}>&nbsp;二段臨調
+  		<input type="checkbox" name="ex_cond5" value="Y" ${ex_cond5-Y}>&nbsp;商務卡參數
+  		<input type="checkbox" name="ex_cond6" value="Y" ${ex_cond6-Y}>&nbsp;其他
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap class="list_rr" colspan="6" >合計:</td>
+ 		<td nowrap class="list_rr" >&nbsp;${tl_cnt.(999)}
+ 			<input type="hidden" name="tl_cnt" value="${tl_cnt}">
+ 		</td>
+ 		<td nowrap class="list_rr" >&nbsp;${tl_nopass.(999)}
+ 			<input type="hidden" name="tl_nopass" value="${tl_nopass}">
+ 		</td>
+ 		<td nowrap class="list_rr" >&nbsp;${tl_reject.(999)}
+ 			<input type="hidden" name="tl_reject" value="${tl_reject}">
+ 		</td>
+ 		<td nowrap class="list_rr" >&nbsp;${tl_pass.(999)}
+ 			<input type="hidden" name="tl_pass" value="${tl_pass}">
+ 		</td>
+ 		<td nowrap class="list_rr" >&nbsp;${tl_cancel.(999)}
+ 			<input type="hidden" name="tl_cancel" value="${tl_cancel}">
+ 		</td>
+ 	</tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >主動<br>服務</th>
+    <th nowrap >暫永調</th>
+    <th nowrap >重要<br>客戶</th>
+    <th nowrap >核決層級&nbsp;</th>
+    <th nowrap >主管代號&nbsp;</th>
+    <th nowrap >總件數&nbsp;</th>
+    <th nowrap >初審<br>未通過件數</th>
+    <th nowrap >審核後<br>拒絕件數</th>
+    <th nowrap >核准件數&nbsp;</th>
+    <th nowrap >取消<br>臨調件數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${self_flag}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${temp_adj_flag}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${impo_cust_flag}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${decs_level}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${charge_user}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_tot_cnt.(999)}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_nopass.(999)}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_reject.(999)}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_pass.(999)}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_cancel.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

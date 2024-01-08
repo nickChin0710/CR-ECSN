@@ -1,0 +1,115 @@
+<html>
+<head>
+<title>逾期催理紀錄報表-20231019</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;紀錄日期:
+      <input type="text" class="col_date" name="ex_crt_date_s" value="${ex_crt_date_s}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zrequire="C"  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_s'});
+	       </script>
+	      --
+	    <input type="text" class="col_date" name="ex_crt_date_e" value="${ex_crt_date_e}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_e'});
+	       </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="return top.submitControl('PDF');" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+	<td nowrap >&nbsp;正卡人證號:
+	   <input type="text" class="col_text" name="ex_id_p_seqno" value="${ex_id_p_seqno}" maxlength="16" size="18">
+	</td>
+	<td nowrap >&nbsp;商務卡統編:
+	   <input type="text" class="col_text" name="ex_corp_p_seqno" value="${ex_corp_p_seqno}" maxlength="16" size="18">
+	</td>
+</tr>
+<tr> 
+	<td nowrap>&nbsp;帳戶類別：
+     <select size=1 name="ex_acct_type" class="col_ddlb" >
+     <option value="">--</option>
+       ${dddw_acct_type}
+     </select>
+   </td>
+   <td nowrap >&nbsp;雙幣幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_curr_code}
+      </select>
+   </td>
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >紀錄日期&nbsp;</th>
+    <th nowrap >記錄時間&nbsp;</th>
+    <th nowrap >正卡人證號&nbsp;</th>  
+    <th nowrap >商務卡統編&nbsp;</th>
+<!--   <th nowrap >使用者&nbsp;</th> <th nowrap >使用者所屬單位&nbsp;</th>     -->  
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >雙幣幣別&nbsp;</th>
+    <th nowrap >處理結果類型&nbsp;</th>
+    <th nowrap >去電電話&nbsp;</th>
+    <th nowrap >催理紀錄&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+  <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll"> ${crt_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_time.TIME}&nbsp;</td>
+	<td nowrap class="list_ll"> ${id_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${corp_no}&nbsp;</td>
+<!-- <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_user_dept}&nbsp;</td>  -->
+	<td nowrap class="list_cc"> ${acct_type}.${chin_name}&nbsp;</td>	
+	<td nowrap class="list_ll"> ${curr_code}.${curr_chi_name}&nbsp;</td>
+	<td nowrap class="list_ll"> ${proc_code}.${proc_code_desc}&nbsp;</td>
+	<td nowrap class="list_ll"> ${callout_tel}&nbsp;</td>
+	<td nowrap class="list_ll"> ${proc_desc}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

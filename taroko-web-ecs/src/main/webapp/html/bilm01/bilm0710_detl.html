@@ -1,0 +1,368 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.03  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>卡友來電自動分期參數設定-detl-108-06-27-V1.00.02-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <!--不用覆核 ${#PLUGIN:htmcomm_plugin.apr_user}  -->
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <!--<input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;-->
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap>&nbsp;特店代號:
+                        <input type="text" class="col_text" name="kk_mcht_no" value="${kk_mcht_no}" zEdit="number" maxlength=15 size=15 zRequire ="K" onChange = "itemChangeProduct('1');"/>
+                        &nbsp;&nbsp;
+                        <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />&nbsp;
+                    </td>
+                    <td nowrap >分期期數:&nbsp;
+			            <select size="1" name="kk_product_no" class="col_ddlb" id ="product_no" >
+			                ${dddw_productno_in}
+			           </select>
+			        </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- 動態 BLOCK 視窗控制 -->
+            <div id="popDiv" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">特店代號：</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="merchant_2" id="merchant_2">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('kk_mcht_no','merchant_2'); top.hideBlock('popDiv') ;itemChangeProduct('2');" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Detail data================================= -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>特店代號:
+                        <input type="hidden" name="mcht_no" value="${mcht_no}">
+                        <span class="dsp_text">${mcht_no}</span>
+                    </td>
+                    <td nowrap>活動說明：&nbsp;
+                        <input type=text class="col_any" name="action_desc" value="${action_desc}" zedit="canTW,any" maxlength="40" size="40" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>有效期間：&nbsp;
+                        <input type="text" class="col_date" name="effc_date_b" value="${effc_date_b}" zeditType="date,ymd" MaxLength=8 size=8 zRequire="Y" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'effc_date_b'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="effc_date_e" value="${effc_date_e}" zeditType="date,ymd" MaxLength=8 size=8 zRequire="Y" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'effc_date_e'});
+                        </script>
+                        (YYYY/MM/DD)
+                    </td>
+                </tr>
+                <tr>
+                   <td nowrap colspan="2">分期期數:
+                        <input type="hidden" name="product_no" value="${product_no}">
+                        <input type="hidden" name="product_name" value="${product_name}">
+                        <span class="dsp_text">${product_no}</span>
+                   </td>
+                </tr>
+            </table>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <th colspan="2">第一階段檢核項目</th>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="destination_amt_flag" ${destination_amt_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;單筆消費門檻 >=&nbsp;
+                        <input type=text class="col_number" name="destination_amt" value="${destination_amt}" zedit="number" maxlength="12" size="12" />
+                        &nbsp;(含)元&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" class="flag" id="flag1" name="payment_rate_flag" ${payment_rate_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;近&nbsp;
+                        <input type=text class="col_number" name="payment_rate" value="${payment_rate}" zedit="number" maxlength="2" size="2" />
+                        &nbsp;期繳款記錄不為&nbsp;
+                        <input type="Button" class="btOther"  value="指定繳款評等" ${btnUpdate_disable} onClick="return detailCbcpaymentrate('${mcht_no}','指定繳款評等', '${product_no}')">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap rowspan="1">
+                        <input type="checkbox" value="Y" name="rc_rate_flag" ${rc_rate_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;循環信用比率 ≦&nbsp;
+                        <input type=text class="col_number" name="rc_rate" value="${rc_rate}" zedit="number" maxlength="4" size="4" />
+                        &nbsp;％（上期結欠金額／信用額度）&nbsp;或
+                        <br>
+                        &nbsp;額度使用比率 ≦&nbsp;
+                        <input type=text class="col_number" name="credit_amt_rate" value="${credit_amt_rate}" zedit="number" maxlength="4" size="4" />
+                        &nbsp;％（累計本期結欠餘額／信用額度）&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" class="flag" id="flag5" name="mcc_code_flag" ${mcc_code_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;排除高風險交易&nbsp;
+                        <input type="Button" class="btOther"  value="排除MCC CODE" ${btnUpdate_disable} onClick="return detailCbcmcccode('${mcht_no}','排除MccCode','${product_no}')">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" class="flag" id="flag6" name="mcht_flag" ${mcht_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;排除特店代號&nbsp;
+                        <input type="Button" class="btOther"  value="排除 特店代號" ${btnUpdate_disable} onClick="return detailCbcmcht('${mcht_no}','排除特店代號','${product_no}')">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="over_credit_amt_flag" ${over_credit_amt_flag-Y}>
+                    </td>
+                    <td>&nbsp;排除超額&nbsp;</td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" class="flag" id="flag7" name="block_reason_flag" ${block_reason_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;排除凍結戶 （ &nbsp;
+                        <input type="Button" class="btOther"  value="凍結碼" ${btnUpdate_disable} onClick="return detailCbcblockreason('${mcht_no}','不排除之凍結碼','${product_no}')">
+                        &nbsp; ）除外&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" class="flag" id="flag8" name="spec_status_flag" ${spec_status_flag-Y}>
+                    </td>
+                    <td>
+                        &nbsp;排除特殊指示戶 （ &nbsp;
+                        <input type="Button" class="btOther"  value="特殊指示碼" ${btnUpdate_disable} onClick="return detailCbcspecstatus('${mcht_no}','不排除之特指戶','${product_no}')">
+                        &nbsp; ）除外&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td style="color:red" colspan="2">
+                        備註：無任一流通卡或帳戶類別為03(商務卡公司戶)、05(採購卡)及90(VD卡)及雙幣卡不得申請分期。
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0710">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+var a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+top.refreshButton2('1');
+
+//document.dataForm.kk_action_cd.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+$(document).ready(function() {
+    a[0] = $("#flag1:checked").length;
+    a[1] = $("#flag2:checked").length;
+    a[2] = $("#flag3:checked").length;
+    a[3] = $("#flag4:checked").length;
+    a[4] = $("#flag5:checked").length;
+    a[5] = $("#flag6:checked").length;
+    a[6] = $("#flag7:checked").length;
+    a[7] = $("#flag8:checked").length;
+    a[8] = $("#flag9:checked").length;
+    a[9] = $("#flag10:checked").length;
+    $(".flag").click(function() {
+        a[0] = $("#flag1:checked").length;
+        a[1] = $("#flag2:checked").length;
+        a[2] = $("#flag3:checked").length;
+        a[3] = $("#flag4:checked").length;
+        a[4] = $("#flag5:checked").length;
+        a[5] = $("#flag6:checked").length;
+        a[6] = $("#flag7:checked").length;
+        a[7] = $("#flag8:checked").length;
+        a[8] = $("#flag9:checked").length;
+        a[9] = $("#flag10:checked").length;
+    });
+});
+
+function detailCbcpaymentrate(parm, parm2,parm3) {
+    if (a[0] == 1) {
+        top.respLevel = 2;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        top.respHtml = "bilm0710_paymet_rate";
+        top.submitControl("S2");
+        return true;
+    }
+}
+
+function detailCbcmcccode(parm, parm2,parm3) {
+    if (a[4] == 1) {
+        top.respLevel = 2;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        top.respHtml = "bilm0710_mcc_code";
+        top.submitControl("S1");
+        return true;
+    }
+}
+
+function detailCbcmcht(parm, parm2,parm3) {
+    if (a[5] == 1) {
+        top.respLevel = 2;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        top.respHtml = "bilm0710_mcht";
+        top.submitControl("S1");
+        return true;
+    }
+}
+
+function detailCbcblockreason(parm, parm2,parm3) {
+    if (a[6] == 1) {
+        top.respLevel = 2;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        top.respHtml = "bilm0710_block_reason";
+        top.submitControl("S1");
+        return true;
+    }
+}
+
+function detailCbcspecstatus(parm, parm2,parm3) {
+    if (a[7] == 1) {
+        top.respLevel = 2;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        top.respHtml = "bilm0710_spec_status";
+        top.submitControl("S1");
+        return true;
+    }
+}
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.kk_mcht_no.value;
+
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("kk_mcht_no", vendorNo);
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function itemChangeProduct(str){
+    var merchant2 ;
+    if($("input[name=mcht_no]").val().length>0){
+        return false;
+    }
+    if(str == '1'){
+        merchant2 = $("input[name=kk_mcht_no]").val();
+    }
+    if(str == '2'){
+        merchant2 = $("#merchant_2 :selected").val();
+    }
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("data_mcht_no",merchant2);
+    addJSON("action_code","AJAX1"); 
+    processAJAX();
+}
+
+function detailTot_term(data_tot_term) { 
+	top.submitControl('TOTTERM');
+}
+
+function ajaxResponse() {
+    if (getJSONvalue("json_action_code", 0) == 'AJAX1') {
+        if (getJSONvalue("dddw_tot_term_option", 0) != null) {
+            $("#product_no option").remove();
+            $("#product_no").append(getJSONvalue("dddw_tot_term_option", 0));
+        }
+    }
+
+    if (getJSONvalue("json_action_code", 0) == 'AJAX') {
+        var vendorNo = document.dataForm.kk_mcht_no.value;
+        var vendorList = document.getElementById("merchant_2");
+
+        for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+        var len = getJSONlength("OPTION_TEXT");
+        for (var i = 0; i < len; i++) {
+            vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+            if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+        }
+        top.popupBlock('popDiv');
+    }
+}
+</script>

@@ -1,0 +1,230 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!-- 109-08-25  V1.00.03  Wilson         mark excep_flag                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>線上持卡人信用額度調整[20190610-jh]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript">
+$(document).ready(function(){
+wf_excep_show();
+
+$("#id_oppo_reason").change(function(){
+   wf_oppo_Change('1',$(this).val());
+});
+
+});
+
+function wf_excep_show() {
+   var page_type =$('#pageType').val();
+   $('.visa_file').hide();
+   $('.mast_file').hide();
+   $('.jcb_file').hide();
+
+   var ls_bin_type =$('#bin_type').val();
+   if (ls_bin_type=='V') {
+      $('.visa_file').show();
+   }
+   else if (ls_bin_type==='M') {
+      $('.mast_file').show();
+   }
+   else if (ls_bin_type==='J') {
+      $('.jcb_file').show();
+   }
+}
+
+</script>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}" maxlength="16" size="18" />
+   </td>
+ <td>&nbsp; 
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;
+  <input type="Button"     value="停掛" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;
+  <input type="Button"     value="撤掛" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;
+  
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+  </td>
+  </tr>
+</table>  
+</div>
+<hr>
+<div id="queryBlock">
+<!--<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="td_title">
+      <input type="Button" value="outgoing 查詢結果" onClick="return top.submitControl('R2')" class="btOther" >&nbsp;&nbsp;
+   </td>
+   <td nowrap class="td_titl">回覆碼</td>
+   <td nowrap class="td_titl">原因碼</td>
+   <td nowrap class="td_titl">傳送信息</td>
+  </tr> 
+  <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>NEG</b></td>
+   <td align="center"><span class="dsp_text">${neg_resp_code}</span>
+            <input type="hidden" name="neg_resp_code" value="${neg_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${neg_reason_code}</span>
+      <input type="hidden" name="neg_reason_code" value="${neg_reason_code}" />
+   </td>
+   <td>
+      <span class="dsp_text">${neg_call_status}</span>
+      <input type="hidden" name="neg_call_status" value="${neg_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>V/M/J</b></td>
+   <td align="center">
+      <span class="dsp_text">${vmj_resp_code}</span>
+      <input type="hidden" name="vmj_resp_code" value="${vmj_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${vmj_reason_code}</span>
+      <input type="hidden" name="vmj_reason_code" value="${vmj_reason_code}" />
+      <input type="hidden" name="vmj_region" value="${vmj_region}" />
+   </td>
+   <td>
+      <span class="dsp_text">${vmj_call_status}</span>
+      <input type="hidden" name="vmj_call_status" value="${vmj_call_status}" />
+   </td>
+   </tr>
+</table>-->
+</div>
+<hr>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">&nbsp;卡號:${card_no}
+      <input type="hidden" name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap >&nbsp;卡別:
+      <span class="dsp_text">${bin_type}&nbsp;</span>
+      <input type="hidden" id="bin_type" name="bin_type" value="${bin_type}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;Debit卡:
+      <span class="dsp_text">${debit_flag}&nbsp;</span>
+      <input type="hidden" name="debit_flag" value="${debit_flag}" />
+   </td>
+   <td nowrap >&nbsp;停掛日期:
+      <span class="dsp_text">${oppo_date.YMD}&nbsp;</span>
+      <input type="hidden" name="oppo_date" value="${oppo_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;NEG刪除日期:
+      <input type="text" class="col_date" name="neg_del_date" value="${neg_del_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'neg_del_date'});
+	      </script>	      
+	</td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;停掛類別：
+      <span class="dsp_text">5.偽卡停用</span>
+      <input type="hidden" name="oppo_type" value="5" />      
+   </td>
+   <td nowrap >&nbsp;停掛原因：
+   <select size="1" name="oppo_reason" id="id_oppo_reason" class="col_ddlb" zRequire="Y">
+      <option value=""></option>
+      ${dddw_oppo_reason}
+   </select>
+<!--    <input type="text" name="excep_flag" value="${excep_flag}" size="2" readonly onkeydown="return false;" /> --> 
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;停掛備註:
+      <input type="text" class="col_any" name="opp_remark" value="${opp_remark}" maxlength="60" size="62" zEdit="any,canTw">
+   </td>
+  </tr>
+</table>
+${#PLUGIN:ccam01.vmj_except_file}
+</div>
+<br>
+
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" id="pageType" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ top.deleteConfirm_show ="";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if (top.actionCode==='A') {
+      if (confirm("是否執行 非本行卡停用")==false) {
+         return false;
+      } 
+    }  
+    else if (top.actionCode=='D') {
+      if (confirm("是否執行 [非本行卡停用-撤掛]")==false) {
+         return false;
+      }
+    }
+    return true;
+  }
+ 
+ function wf_oppo_Change(ps_id,ps_oppo)
+ {
+   $('input[name=excep_flag]').val('');
+   var ls_type =$("input[name=bin_type]").val();
+   var ls_oppo=ps_oppo;
+	
+	if ( ls_oppo === '' ) {
+      wf_excep_show();  
+		return false;
+	}
+	idCode = ps_id;
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    //if ( idCode === '1' ) { 
+	//	top.methodName = "wf_ajax_opptype";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_bin_type",ls_type);
+	addJSON("ax_oppo",ls_oppo);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+  
+ function ajaxResponse()
+ {
+	top.respHtml ="ccam2017";
+   top.requHtml ="ccam2017";
+   $('input[name=excep_flag]').val(getJSONvalue("excep_flag",0));
+   wf_excep_show();   
+ }  
+ 
+</script>

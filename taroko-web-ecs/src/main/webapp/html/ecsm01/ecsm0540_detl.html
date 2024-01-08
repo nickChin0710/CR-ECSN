@@ -1,0 +1,215 @@
+<html>
+<head>
+<title> 108/09/27 V1.00.01 Allen Ho Initial </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=ie11">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">ecs表格代碼:&nbsp;
+       <input type="text" class="col_any" name="kk_ecs_table_name" value="${kk_ecs_table_name}"
+              zEdit="any,upper" maxlength="30" size="30" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap  width="50%">db2表格代碼:&nbsp;
+       <input type="text" class="col_any" name="kk_db2_table_name" value="${kk_db2_table_name}"
+              zEdit="any,upper" maxlength="50" size="50" />
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">ECS表格代碼:
+       <span class="dsp_text">${ecs_table_name}</span>
+       <input  type="hidden" name="ecs_table_name" value="${ecs_table_name}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="colKey">DB2表格代碼:
+       <span class="dsp_text">${db2_table_name}</span>
+       <input  type="hidden" name="db2_table_name" value="${db2_table_name}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>DB2表格名稱:&nbsp; 
+       <input type="text" class="col_any" name="db2_table_chi_name" value="${db2_table_chi_name}"
+              zEdit="any,canTW" maxlength="30" size="30" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>負責SA:&nbsp; 
+       <input type="text" class="col_any" name="table_owner" value="${table_owner}"
+              zEdit="any" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>表格與索引同時建立:&nbsp;
+       <select name="crnoind_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="" ${crnoind_flag-} >系統自行判斷</option>
+       <option value="N" ${crnoind_flag-N} >N.先建表格轉檔後建索引</option>
+       <option value="Y" ${crnoind_flag-Y} >Y.表格與索引同時建立</option>
+       <option value="X" ${crnoind_flag-X} >X.系統轉完再建</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>轉檔優先順序:&nbsp;
+       <select name="prior_code" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="1" ${prior_code-1} >第一優先</option>
+       <option value="2" ${prior_code-2} >第二優先</option>
+       <option value="3" ${prior_code-3} >第三優先</option>
+       <option value="4" ${prior_code-4} >第四優先</option>
+       <option value="5" ${prior_code-5} >第五優先</option>
+       <option value="6" ${prior_code-6} >第六優先</option>
+       <option value="7" ${prior_code-7} >第七優先</option>
+       <option value="8" ${prior_code-8} >第八優先</option>
+       <option value="9" ${prior_code-9} >第九優先</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>是否全新表格:&nbsp;
+       <select name="new_table_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="Y" ${new_table_flag-Y} >Y.是</option>
+       <option value="N" ${new_table_flag-N} >N.否</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>使用公用程式:&nbsp;
+       <select name="use_compgm_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="Y" ${use_compgm_flag-Y} >Y.是</option>
+       <option value="N" ${use_compgm_flag-N} >N.否</option>
+       </select>
+              (使用CnvB060類轉檔)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>只建立不轉檔:&nbsp;
+       <select name="no_tran_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="Y" ${no_tran_flag-Y} >Y.是</option>
+       <option value="N" ${no_tran_flag-N} >N.否</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>可事先轉檔:&nbsp;
+       <select name="pre_tran_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="Y" ${pre_tran_flag-Y} >Y.是</option>
+       <option value="N" ${pre_tran_flag-N} >N.否</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>以條件分割執行轉檔:&nbsp;
+       <select name="condition_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="" ${condition_flag-} ></option>
+       <option value="Y" ${condition_flag-Y} >Y.條件分割執行</option>
+       <option value="N" ${condition_flag-N} >N不使用.</option>
+       </select>
+              (在$PROJ_HOME/etc/CnvFile 下定義)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>以cycle產生表格:&nbsp;
+       <select name="cycle_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="" ${cycle_flag-} ></option>
+       <option value="Y" ${cycle_flag-Y} >Y.是</option>
+       <option value="N" ${cycle_flag-N} >N.否</option>
+       </select>
+          
+      <input type="checkbox" value="Y" name="cycle_drop_code" ${cycle_drop_code-Y} >
+              刪除源表格  (關障專用)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>轉檔資料庫來源&nbsp;
+       <select name="comp_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="E" ${comp_flag-E} >ECS</option>
+       <option value="C" ${comp_flag-C} >CCAS</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>獨立轉檔程式:&nbsp; 
+       <input type="text" class="col_any" name="addon_pgm" value="${addon_pgm}"
+              zEdit="any" maxlength="120" size="120" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>相依表格代碼:&nbsp; 
+       <input type="text" class="col_any" name="depend_table" value="${depend_table}"
+              zEdit="any" maxlength="300" size="300" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="ecsm0540">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

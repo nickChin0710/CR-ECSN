@@ -1,0 +1,194 @@
+<html>
+<head>
+<title>愛金卡卡款參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=kk_bin_type]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=kk_bin_type]").filter('[value=V]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+<!-- 輸入資料讀取條件  -->
+    <td nowrap colspan="2" >&nbsp;國際組織:
+			<span class="col_radio">
+         <input type="radio" value="V" name="kk_bin_type" ${kk_bin_type-V} ${DEFAULT_CHK} />Visa
+         <input type="radio" value="M" name="kk_bin_type" ${kk_bin_type-M} />MasterCard
+         <input type="radio" value="J" name="kk_bin_type" ${kk_bin_type-J} />JCB
+      </span>
+		</td>		
+	</tr>
+	<tr>
+		<td nowrap >&nbsp;新增年度:
+  		<input type="text" class="col_text" name="kk_add_year" value="${kk_add_year}" maxlength="4" size="6" zEdit="number" >
+  	</td>  	
+  	<td nowrap >&nbsp;序號:
+  		<input type="text" class="col_number" name="kk_seq_no" value="${kk_seq_no}" maxlength="2" size="4" zEdit="number" >
+  	</td>
+  </tr>  
+  <tr>
+  	<td nowrap >&nbsp;銀行別:
+  		<input type="text" class="col_text" name="kk_bank_id" value="${kk_bank_id}" maxlength="2" size="4" zEdit="number" > 
+  	</td>
+  	<td nowrap >&nbsp;聯名代碼:
+  		<input type="text" class="col_text" name="kk_group_id" value="${kk_group_id}" maxlength="2" size="4" zEdit="number" >
+  	</td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="2" >&nbsp;國際組織:
+			<span class="dsp_text">${bin_type}&nbsp;</span>
+			<input type="hidden" name="bin_type" value="${bin_type}">
+		</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;新增年度:
+  		<span class="dsp_text">${add_year}&nbsp;</span>
+  		<input type="hidden" name="add_year" value="${add_year}">  	
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;序號:
+  		<span class="dsp_text">${seq_no}&nbsp;</span>
+  		<input type="hidden" name="seq_no" value="${seq_no}">  		
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;銀行別:
+  		<span class="dsp_text">${bank_id}</span>
+  		<input type="hidden" name="bank_id" value="${bank_id}">
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;聯名代碼:
+  		<span class="dsp_text">${group_id}</span>
+  		<input type="hidden" name="group_id" value="${group_id}">
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;中文姓名:
+  		<input type="text" class="col_any" name="card_name" value="${card_name}" maxlength="60" size="62" zEdit="any,canTw" >
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;製卡廠商:
+  		<select size="1" name="vendor_ich" class="col_ddlb" >
+  			<option value="">--</option>
+      	${dddw_vendor_ich}
+   		</select>
+		</td>
+		<td nowrap >&nbsp;已使用流水號:
+			<input type="text" class="col_any" id = "seq_no_curr" name="seq_no_curr" value="${seq_no_curr}" ${btOther_disable} maxlength="6" size="8" zEdit="number" zRequire ="Y"  >	
+			<input type="Button"  id="seq_no_curr_button"  value="更改已使用流水號"  class="btOther" >&nbsp;&nbsp;
+		</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;卡款號碼:
+  		<span class="dsp_text">${card_code}&nbsp;</span>
+  		<input type="hidden" name="card_code" value="${card_code}">
+  	</td>
+  	<td nowrap >&nbsp;傳送日期:
+  		<span class="dsp_text">${send_date.YMD}&nbsp;</span>
+  		<input type="hidden" name="send_date" value="${send_date}">
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;覆核日期:
+  		<span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+  		<input type="hidden" name="apr_date" value="${apr_date}">
+  	</td>
+  	<td nowrap >&nbsp;覆核主管:
+  		<span class="dsp_text">${apr_user}&nbsp;</span>
+  		<input type="hidden" name="apr_user" value="${apr_user}">
+  	</td>
+  </tr>  
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ichm0010">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    $("#seq_no_curr").attr("disabled",false);
+    return true;
+  }
+ 
+	$(document).ready(function() {
+	    $("#seq_no_curr_button").click(function() {
+	    	if (confirm("請確認是否要更改已使用流水號?") === true) {
+	    		$("#seq_no_curr").attr("disabled",false);
+	        } 
+	    })
+	})
+</script>

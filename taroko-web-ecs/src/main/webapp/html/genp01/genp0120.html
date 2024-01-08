@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>會計分錄-主管放行作業-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>日期區間:&nbsp;
+            <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" 
+               zeditType="date,yyyymmdd" size=8 maxlength=10 />
+            <script language="JavaScript">
+                  new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+             </script>         
+            ~
+            <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" 
+               zRequire="k" zeditType="date,yyyymmdd" size=8 maxlength=10 />
+            <script language="JavaScript">
+                  new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+            </script>(YYYYMMDD)
+        
+          <span class="col_radio">
+              <input type="radio" value="1" name="ex_jrn_status" ${ex_jrn_status-1} checked="checked">未放行
+              <input type="radio" value="2" name="ex_jrn_status" ${ex_jrn_status-2}>取消放行
+          </span>
+        </td>
+        <td nowrap>&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="執行" onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+			<input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">
+				<span class="ex_selectAll">放行&nbsp;</span></th>
+        <th nowrap class="list_th">日期</th>
+        <th nowrap class="list_th">套號</th>
+        <th nowrap class="list_th">分行別</th>
+        <th nowrap class="list_th">業務別</th>
+        <th nowrap class="list_th">部門別</th>
+        <th nowrap class="list_th">幣別</th>
+        <th nowrap class="list_th">金額</th>
+        <th nowrap class="list_th">經辦人員</th>
+        <th nowrap class="list_th">狀態</th>
+        <th nowrap class="list_th">新舊分錄</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+        <td nowrap class="list_no" rowspan="2">
+            <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+            <input type="checkbox" name="opt" value="${ser_num}" />
+            <input type="hidden" name="rowid" value="${rowid}" />
+            <input type="hidden" name="ser_num" value="${ser_num}" />
+        </td>
+    </tr>
+    <tr onclick="detailScreen('${SER_NUM}','${tx_date}','${refno}','${curr}')" style="cursor:hand">
+        <td nowrap class="list_ll"> ${tx_date.YMD}</td>
+        <td nowrap class="list_ll"> ${refno}</td>
+        <td nowrap class="list_ll"> ${brno}</td>
+        <td nowrap class="list_ll"> ${dept}</td>
+        <td nowrap class="list_ll"> ${depno}</td>
+        <td nowrap class="list_ll"> ${curr}</td>
+        <td nowrap class="list_rr"> ${amt.(999.00)}</td>
+        <td nowrap class="list_ll"> ${crt_user}</td>
+        <td nowrap class="list_ll"> ${jrn_status}</td>
+        <td nowrap class="list_ll"> ${#JAVA:ecsfunc.deCode_gen.ifrsFlag(ifrs_flag)}</td>
+        <input type="hidden" name="tx_date" value="${tx_date}">
+        <input type="hidden" name="refno" value="${refno}">
+        <input type="hidden" name="brno" value="${brno}">
+        <input type="hidden" name="dept" value="${dept}">
+        <input type="hidden" name="depno" value="${depno}">
+        <input type="hidden" name="curr" value="${curr}">
+        <input type="hidden" name="amt" value="${amt}">
+        <input type="hidden" name="crt_user" value="${crt_user}">
+        <input type="hidden" name="jrn_status" value="${jrn_status}">
+        <input type="hidden" name="ifrs_flag" value="${ifrs_flag}">
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="mod_pgm"  value="genp0120">
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_date1.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    
+    if ( top.actionCode == "X" ) {
+        //top.respLevel = 1;
+        //top.respHtml = "genp0120_detl";
+        if (!confirm("是否執行放行/取消放行作業?"))
+            return false;
+    }
+    
+    return true;
+}
+
+//全選
+function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "genp0120_detl";
+    top.submitControl('S');
+    
+    return true;
+}
+
+</script>

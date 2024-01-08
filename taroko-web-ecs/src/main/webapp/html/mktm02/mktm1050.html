@@ -1,0 +1,215 @@
+<html>
+<head>
+<title> 108/09/10 V1.00.01 Allen Ho Initial 媒體檔案上傳作業
+		111/05/19 V1.00.02 Ryan     調整畫面文字
+		112/03/31 V1.00.03 Ryan     txt匯入改為excel匯入
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="6">
+   <tr>
+   <!--  <td nowrap>&nbsp;高鐵升等對檔案名稱:-->
+   <td nowrap>&nbsp;高鐵升等對帳檔案名稱:
+      <input type="text" class="col_any" name="ex_file_name" value="${ex_file_name}"
+         zeditType="any"  maxlength=12 size=12 />
+     </td>
+   <td nowrap colspan=2>&nbsp;上傳註記:
+      <select  name="ex_file_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_file_flag-Y} >成功</option>
+         <option value="N" ${ex_file_flag-N} >失敗</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+  <!--   <td nowrap>&nbsp;高鐵升等對轉入日期:-->
+   <td nowrap>&nbsp;高鐵升等檔案轉入日期:
+      <input type="text" class="col_date" name="ex_file_date_s" value="${ex_file_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_file_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" name="ex_file_date_e" value="${ex_file_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_file_date_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+   <td nowrap colspan="2">&nbsp;匯入檔案:
+      <input type="button"  value="..." class="btOther2" onclick="return upload_click()">
+      <span class="col_key">&nbsp;(*.xls)</span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">轉入日期</th>
+    <th nowrap class="list_th">轉入時間</th>
+    <th nowrap class="list_th">檔案名稱</th>
+    <th nowrap class="list_th">上傳序號</th>
+    <th nowrap class="list_th">上傳註記</th>
+    <th nowrap class="list_th">上傳筆數</th>
+    <th nowrap class="list_th">失敗筆數</th>
+    <th nowrap class="list_th">覆核註記</th>
+    <th nowrap class="list_th">處理日期</th>
+    <th nowrap class="list_th">維護經辦</th>
+    <th nowrap class="list_th">覆核人員</th>
+    <th nowrap class="list_th">覆核日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="ser_num" value="${ser_num}"/>
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${file_date}
+      <input type=hidden name="file_date" value="${file_date}" />
+    </td>
+    <td nowrap class="list_cc"> ${file_time}
+      <input type=hidden name="file_time" value="${file_time}" />
+    </td>
+    <td nowrap class="list_cc"> ${file_name}
+      <input type=hidden name="file_name" value="${file_name}" />
+    </td>
+    <td nowrap class="list_cc"> ${trans_seqno}
+      <input type=hidden name="trans_seqno" value="${trans_seqno}" />
+    </td>
+    <td nowrap class="list_cc"> ${file_flag}-${comm_file_flag}
+      <input type=hidden name="file_flag" value="${file_flag}" />
+      <input type=hidden name="comm_file_flag" value="${comm_file_flag}" />
+    </td>
+    <td nowrap class="list_rr"> ${file_cnt.(999)}
+      <input type=hidden name="file_cnt" value="${file_cnt}" />
+    </td>
+    <td nowrap class="list_rr"> ${error_cnt.(999)}
+      <input type=hidden name="error_cnt" value="${error_cnt}" />
+    </td>
+    <td nowrap class="list_ll"> ${apr_flag}-${comm_apr_flag}
+      <input type=hidden name="apr_flag" value="${apr_flag}" />
+      <input type=hidden name="comm_apr_flag" value="${comm_apr_flag}" />
+    </td>
+    <td nowrap class="list_cc"> ${proc_date.YMD}
+      <input type=hidden name="proc_date" value="${proc_date}" />
+    </td>
+    <td nowrap class="list_cc"> ${crt_user}
+      <input type=hidden name="crt_user" value="${crt_user}" />
+    </td>
+    <td nowrap class="list_cc"> ${apr_user}
+      <input type=hidden name="apr_user" value="${apr_user}" />
+    </td>
+    <td nowrap class="list_cc"> ${apr_date.YMD}
+      <input type=hidden name="apr_date" value="${apr_date}" />
+    </td>
+    <input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+    <input type="hidden"  name="rowid" value="${rowid}">
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm1050_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm1050_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+function upload_click(parm1,parm2)
+ {
+  document.dataForm.zz_file_name.value = "";
+
+  document.dataForm.sys_upload_type.value = parm1;
+  document.dataForm.sys_upload_alias.value = parm2;
+  var parmHtml    = "TarokoUpload";
+  var parmName    = "upload_file,zz_file_name";
+  var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+  top.packageName = "taroko.com";
+  top.javaName    = "TarokoUpload";
+  top.methodName  = "showScreen";
+  top.openWindow("",parmHtml,parmName,windowSize);
+
+  top.packageName = "mktm02";
+  top.javaName    = "Mktm1050";
+  top.requHtml    = "mktm1050";
+  top.respHtml    = "mktm1050";
+  return true;
+ }
+
+function wf_uploadAfter()
+ {
+  var ss=document.dataForm.zz_file_name.value.trim();
+  if (ss.length>0)  top.submitControl('UPLOAD0');
+ }
+
+
+</script>
+<!-- ******************************************************************** -->

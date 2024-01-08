@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>DeBitCard 回存帳戶成功/失敗報表-pond-V.2018-0129-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<style>
+.number{
+	color:blue;
+}
+</style>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+		 <td nowrap>&nbsp;回存日期：
+      		<input type="text" class="col_date" name="ex_crdate_s" value="${ex_crdate_s}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crdate_s'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_crdate_e" value="${ex_crdate_e}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crdate_e'});
+	    	</script>
+   		</td>
+   		<td nowrap>&nbsp;回存結果:
+      		<span class="col_radio">
+         		<input type="radio" value="00" name="ex_deduct_type" ${ex_deduct_type-00} ${DEFAULT-ex_deduct_type} />回存成功
+         		<input type="radio" value="99" name="ex_deduct_type" ${ex_deduct_type-99} />回存失敗
+      		</span>
+   		</td>
+    	<td nowrap rowspan="3">&nbsp;  
+      		<input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+      		<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    	</td>
+    </tr>
+    <tr>
+    	<td nowrap>&nbsp;ID:
+			<input type="text" class="col_any" zEdit="any" name="ex_id" value="${ex_id}"
+      		maxlength="10" size="12" />
+		</td>
+		<td nowrap>&nbsp;卡號:<!--test card 4213330015682855 -->
+			<input type="text" class="col_any" zEdit="any" name="ex_cardno" value="${ex_cardno}"
+      		maxlength="19" size="21" />
+		</td>
+    </tr>
+    <tr>
+    	<td nowrap>&nbsp;回存帳號:
+			<input type="text" class="col_any" zEdit="any" name="ex_accno" value="${ex_accno}"
+      		maxlength="16" size="18"/>
+		</td>
+		<td nowrap>&nbsp;調整類別:
+      		<select name="ex_type" class="col_ddlb">
+      			<option value="">--</option>
+         		<option value="1" ${ex_type-1} >基金類</option>
+         		<option value="2" ${ex_type-2} >非基金類別</option>
+         		<option value="3" ${ex_type-3} >訂票退款</option>
+      		</select>
+   		</td>
+    </tr>
+</table>
+</div>
+<hr>
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;回存總金額:
+      		<span class="dsp_text">${deduct_amt_tol.(999)}</span>
+			<input type="hidden"   name="deduct_amt_tol" value="${deduct_amt_tol}">
+		</td>
+	</tr>
+</table>
+</div>
+<!--Sum -->
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No</th>
+    	<th nowrap class="list_th">回存日</th>
+    	<th nowrap class="list_th">ID</th>
+    	<th nowrap class="list_th">中文姓名</th>
+    	<th nowrap class="list_th">回存帳號</th>
+    	<th nowrap class="list_th">卡號</th>
+    	<th nowrap class="list_th">消費日期</th>
+    	<th nowrap class="list_th">回存金額</th>
+    	<th nowrap class="list_th">回覆理由碼</th>
+    	<th nowrap class="list_th">科目代號</th>
+    	<th nowrap class="list_th">回存原因</th>
+    	<th nowrap class="list_th">調整類別</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr>
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${deduct_date.YMD}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${db_id}&nbsp;</td>
+   		<td nowrap class="list_ll"> ${db_chiname}&nbsp;</td>
+   		<td nowrap class="list_ll"> ${acct_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${purchase_date.YMD}&nbsp; </td>
+  		<td nowrap class="list_rr"> &nbsp;${deduct_amt.(999)}</td>
+   		<td nowrap class="list_ll"> ${deduct_proc_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_acct_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${from_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${adjust_type}&nbsp; </td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="dbar0030">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" id="TTTS" name="TTTS" value="">
+
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ document.dataForm.ex_crdate_s.focus();
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+  /*  if (top.actionCode == "PDF") {
+        if (!chkdata()) {
+            return false;
+        }
+    }*/
+    return true;
+  }
+
+</script>

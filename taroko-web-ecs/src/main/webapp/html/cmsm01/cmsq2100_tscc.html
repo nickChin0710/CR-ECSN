@@ -1,0 +1,396 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.01                                                      -->
+<!-- 109-07-30  V1.00.02    jh                                                -->
+<!-- 109-08-12  V1.00.03    JustinWu    add disabled in checkbox and radio button   -->
+<!-- 109-08-17  V1.00.04    JustinWu    display acct_no when the type of the data is tsc_vd_card    -->
+<!-- 109-08-25  V1.00.05    Sunny       add cmsq.css display in checkbox and radio button-->
+<!-- 109-12-31  V1.00.02    JustinWu    tsccCurrentCode -> electronicCurrentCode                                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人帳戶資料查詢-1090825</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/cmsq.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+  </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證號碼:
+      <span class="dsp_text">${wk_idno}</span>
+      <input type="hidden" name="wk_idno" value="${wk_idno}">
+   </td>
+   <td nowrap>&nbsp;出生日期:
+      <span class="dsp_text">${birthday.YMD}</span>
+      <input type="hidden" name="birthday" value="${birthday}">
+   </td>
+   <td nowrap>&nbsp;性別:
+      <span class="dsp_text">${sex}.${#JAVA:ecsfunc.DeCodeCrd.idnoSex(sex)}</span>
+      <input type="hidden" name="sex" value="${sex}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;中文姓名:
+      <span class="dsp_text">${chi_name}</span>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+</tr>
+ <tr>
+   <td nowrap >&nbsp;居留證號碼:
+      <span class="dsp_text">${resident_no}</span>
+      <input type="hidden" name="resident_no" value="${resident_no}">
+   </td>
+   <td nowrap colspan="2">&nbsp;外籍護照號碼:
+      <span class="dsp_text">${other_cntry_code}</span>
+      <input type="hidden" name="other_cntry_code" value="${other_cntry_code}">
+      -&nbsp;
+      <span class="dsp_text">${passport_no}</span>
+      <input type="hidden" name="passport_no" value="${passport_no}">
+   </td>
+</tr>
+      
+</table>
+</div>
+<hr>
+<div id="dataBlock">
+<!-----------帳戶資料一-------------->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr id="acct_no_tr" style="display: none;">
+      <td nowrap colspan="6">&nbsp;金融帳號:
+         <span class="dsp_text">${acct_no}</span>
+         <input type="hidden" id="acct_no" name="acct_no" value="${acct_no}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;悠遊卡卡號:
+         <span class="dsp_text">${tsc_card_no}</span>
+         <input type="hidden" name="tsc_card_no" value="${tsc_card_no}">
+      </td>
+      <td nowrap colspan="3">&nbsp;信用卡號:
+         <span class="dsp_text">${card_no}</span>
+         <input type="hidden" name="card_no" value="${card_no}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;悠遊卡狀態:
+         <span class="dsp_text">${current_code}.${#JAVA:ecsfunc.DeCodeCrd.electronicCurrentCode(current_code)}</span>
+         <input type="hidden" name="current_code" value="${current_code}">
+      </td>
+      <td nowrap colspan="3">&nbsp;製卡日期:
+         <span class="dsp_text">${crt_date.YMD}</span>
+         <input type="hidden" name="crt_date" value="${crt_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;有效日期:
+         <span class="dsp_text">${new_beg_date.YMD}</span>
+         <input type="hidden" name="new_beg_date" value="${new_beg_date}">
+         --
+         <span class="dsp_text">${new_end_date.YMD}</span>
+         <input type="hidden" name="new_end_date" value="${new_end_date}">
+      </td>
+      <td nowrap colspan="3">&nbsp;停卡日期:
+         <span class="dsp_text">${oppost_date.YMD}</span>
+         <input type="hidden" name="oppost_date" value="${oppost_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;悠遊卡金額:
+         <span class="dsp_text">${tsc_amt.(999)}</span>
+         <input type="hidden" name="tsc_amt" value="${tsc_amt}">
+      </td>
+      <td nowrap colspan="3">&nbsp;悠遊卡押金:
+         <span class="dsp_text">${tsc_pledge_amt.(999)}</span>
+         <input type="hidden" name="tsc_pledge_amt" value="${tsc_pledge_amt}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;晶片序號:
+         <span class="dsp_text">${ic_seq_no}</span>
+         <input type="hidden" name="ic_seq_no" value="${ic_seq_no}">
+      </td>
+      <td nowrap colspan="3">&nbsp;ISAM晶片序號:
+         <span class="dsp_text">${isam_seq_no}</span>
+         <input type="hidden" name="isam_seq_no" value="${isam_seq_no}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;ISAM製卡批號:
+         <span class="dsp_text">${isam_batch_no}</span>
+         <input type="hidden" name="isam_batch_no" value="${isam_batch_no}">
+         <span class="dsp_text">${isam_batch_seq}</span>
+         <input type="hidden" name="isam_batch_seq" value="${isam_batch_seq}">
+      </td>
+      <td nowrap colspan="3">&nbsp;信用卡功能註記:
+         <span class="dsp_text">${combine_flag}</span>
+         <input type="hidden" name="combine_flag" value="${combine_flag}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;AUTOLOAD 開啟旗標:
+         <span class="dsp_text">${autoload_flag}</span>
+         <input type="hidden" name="autoload_flag" value="${autoload_flag}">
+      </td>
+      <td nowrap colspan="3">&nbsp;AUTOLOAD金額:
+         <span class="dsp_text">${autoload_amt.(999)}</span>
+         <input type="hidden" name="autoload_amt" value="${autoload_amt}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;AUTOLOAD開啟日期:
+         <span class="dsp_text">${autoload_date.YMD}</span>
+         <input type="hidden" name="autoload_date" value="${autoload_date}">
+      </td>
+      <td nowrap colspan="3">&nbsp;AUTOLOAD來源代碼:
+         <span class="dsp_text">${iden_code}</span>
+         <input type="hidden" name="iden_code" value="${iden_code}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;餘額轉置日期:
+         <span class="dsp_text">${balance_date.YMD}</span>
+         <input type="hidden" name="balance_date" value="${balance_date}">
+      </td>
+      <td nowrap colspan="2">&nbsp;餘額轉置回饋日期:
+         <span class="dsp_text">${balance_rtn_date.YMD}</span>
+         <input type="hidden" name="balance_rtn_date" value="${balance_rtn_date}">
+      </td>
+      <td nowrap colspan="2">&nbsp;負值交易資料</td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;餘額轉置金額:
+         <span class="dsp_text">${balance_amt.(999)}</span>
+         <input type="hidden" name="balance_amt" value="${balance_amt}">
+      </td>
+      <td nowrap colspan="2">&nbsp;餘額轉置服務費:
+         <span class="dsp_text">${balance_fee.(999)}</span>
+         <input type="hidden" name="balance_fee" value="${balance_fee}">
+      </td>
+      <td nowrap colspan="2">&nbsp;交易日期:
+         <span class="dsp_text">${purchase_date.YMD}</span>
+         <input type="hidden" name="purchase_date" value="${purchase_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;退卡註記:
+         <span class="dsp_text">${return_flag}</span>
+         <input type="hidden" name="return_flag" value="${return_flag}">
+      </td>
+      <td nowrap colspan="2">&nbsp;退卡日期:
+         <span class="dsp_text">${return_date.YMD}</span>
+         <input type="hidden" name="return_date" value="${return_date}">
+         <span class="dsp_text">${return_time.TIME}</span>
+         <input type="hidden" name="return_time" value="${return_time}">
+      </td>
+      <td nowrap colspan="2">&nbsp;交易時間:
+         <span class="dsp_text">${purchase_time.TIME}</span>
+         <input type="hidden" name="purchase_time" value="${purchase_time}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;退卡金額:
+         <span class="dsp_text">${return_amt.(999)}</span>
+         <input type="hidden" name="return_amt" value="${return_amt}">
+      </td>
+      <td nowrap colspan="2">&nbsp;退卡服務費:
+         <span class="dsp_text">${return_fee.(999)}</span>
+         <input type="hidden" name="return_fee" value="${return_fee}">
+      </td>
+      <td nowrap colspan="2">&nbsp;交易金額:
+         <span class="dsp_text">${destination_amt.(999)}</span>
+         <input type="hidden" name="destination_amt" value="${destination_amt}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;退卡交通業者代碼:
+         <span class="dsp_text">${traffic_cd}</span>
+         <input type="hidden" name="traffic_cd" value="${traffic_cd}">
+      </td>
+      <td nowrap colspan="2">&nbsp;業者簡稱:
+         <span class="dsp_text">${traffic_abbr}</span>
+         <input type="hidden" name="traffic_abbr" value="${traffic_abbr}">
+      </td>
+      <td nowrap colspan="2">&nbsp;交易業者簡稱:
+         <span class="dsp_text">${traffic_abbr_neg}</span>
+         <input type="hidden" name="traffic_abbr_neg" value="${traffic_abbr_neg}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;地點代碼:
+         <span class="dsp_text">${addr_cd}</span>
+         <input type="hidden" name="addr_cd" value="${addr_cd}">
+      </td>
+      <td nowrap colspan="2">&nbsp;地點簡稱:
+         <span class="dsp_text">${addr_abbr}</span>
+         <input type="hidden" name="addr_abbr" value="${addr_abbr}">
+      </td>
+      <td nowrap colspan="2">&nbsp;交易地點簡稱:
+         <span class="dsp_text">${addr_abbr_neg}</span>
+         <input type="hidden" name="addr_abbr_neg" value="${addr_abbr_neg}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;退卡來源:
+         <span class="dsp_text">${oppost_source}</span>
+         <input type="hidden" name="oppost_source" value="${oppost_source}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;鎖卡註記:
+         <span class="dsp_text">${lock_flag}</span>
+         <input type="hidden" name="lock_flag" value="${lock_flag}">
+      </td>
+      <td nowrap colspan="3">&nbsp;鎖卡日期:
+         <span class="dsp_text">${lock_date.YMD}</span>
+         <input type="hidden" name="lock_date" value="${lock_date}">
+         <span class="dsp_text">${lock_time.TIME}</span>
+         <input type="hidden" name="lock_time" value="${lock_time}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;黑名單旗標:
+         <span class="dsp_text">${blacklt_flag}</span>
+         <input type="hidden" name="blacklt_flag" value="${blacklt_flag}">
+      </td>
+      <td nowrap colspan="3">&nbsp;黑名單日期:
+         <span class="dsp_text">${blacklt_s_date.YMD}</span>
+         <input type="hidden" name="blacklt_s_date" value="${blacklt_s_date}">
+         --
+         <span class="dsp_text">${blacklt_e_date.YMD}</span>
+         <input type="hidden" name="blacklt_e_date" value="${blacklt_e_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3" disabled >&nbsp;悠遊卡記名註記:
+         <span class="col_radio">
+          <input type="radio" value="N" name="tsc_sign_flag" ${tsc_sign_flag-N} disabled /><label for="tsc_sign_flag"></label> 不記名
+          <input type="radio" value="Y" name="tsc_sign_flag" ${tsc_sign_flag-Y} disabled /><label for="tsc_sign_flag"></label> 記名
+         </span>
+      </td>
+      <td nowrap colspan="3">&nbsp;更新日期:
+         <span class="dsp_text">${tsc_sign_date.YMD}</span>
+         <input type="hidden" name="tsc_sign_date" value="${tsc_sign_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6" disabled >&nbsp;是否同意悠遊卡公司行銷註記:
+         <span class="col_radio">
+          <input type="radio" value="Y" name="db_market_flag" ${db_market_flag-Y} disabled /><label for="db_market_flag"></label> 是
+          <input type="radio" value="N" name="db_market_flag" ${db_market_flag} disabled /><label for="db_market_flag"></label> 否
+         </span>
+         (預設為是)
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;悠遊記名卡掛失傳送時間:
+         <span class="dsp_text">${db_cre_date_1.YMD}</span>
+         <input type="hidden" name="db_cre_date_1" value="${db_cre_date_1}">
+         <span class="dsp_text">${db_cre_time_1.TIME}</span>
+         <input type="hidden" name="db_cre_time_1" value="${db_cre_time_1}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;悠遊記名卡掛失回覆時間:
+         <span class="dsp_text">${db_resp_date_1.YMD}</span>
+         <input type="hidden" name="db_resp_date_1" value="${db_resp_date_1}">
+         <span class="dsp_text">${db_resp_time_1.TIME}</span>
+         <input type="hidden" name="db_resp_time_1" value="${db_resp_time_1}">
+      </td>
+      <td nowrap colspan="3">&nbsp;回覆狀況:
+         <span class="dsp_text">${db_resp_code_1}</span>
+         <input type="hidden" name="db_resp_code_1" value="${db_resp_code_1}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;悠遊記名卡取消掛失傳送時間:
+         <span class="dsp_text">${db_cre_date_2.YMD}</span>
+         <input type="hidden" name="db_cre_date_2" value="${db_cre_date_2}">
+         <span class="dsp_text">${db_cre_time_2.TIME}</span>
+         <input type="hidden" name="db_cre_time_2" value="${db_cre_time_2}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;悠遊記名卡取消掛失回覆時間:
+         <span class="dsp_text">${db_resp_date_2.YMD}</span>
+         <input type="hidden" name="db_resp_date_2" value="${db_resp_date_2}">
+         <span class="dsp_text">${db_resp_time_2.TIME}</span>
+         <input type="hidden" name="db_resp_time_2" value="${db_resp_time_2}">
+      </td>
+      <td nowrap colspan="3">&nbsp;回覆狀況:
+         <span class="dsp_text">${db_resp_code_2}</span>
+         <input type="hidden" name="db_resp_code_2" value="${db_resp_code_2}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;悠遊記名卡掛失當下餘額
+         <span class="dsp_text">${db_amt_1.(999)}</span>
+         <input type="hidden" name="db_amt_1" value="${db_amt_1}">
+         元
+      </td>
+      <td nowrap colspan="3">&nbsp;掛失後3小時之餘額
+         <span class="dsp_text">${db_amt_2.(999)}</span>
+         <input type="hidden" name="db_amt_2" value="${db_amt_2}">
+         元
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;悠遊記名卡掛失餘額回覆日期:
+         <span class="dsp_text">${db_crt_date_3}</span>
+         <input type="hidden" name="db_crt_date_3" value="${db_crt_date_3}">
+      </td>
+   </tr>
+</table>
+</div>
+<!-- -->
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="cmsq2100">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="isTscVDCard" id="isTscVDCard" value="${isTscVDCard}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+  // 若為悠遊VD卡，則要多顯示acct_no欄位
+  window.onload = function(){
+   isTscVDCard = document.getElementById("isTscVDCard");
+   if (isTscVDCard.value == "Y") {
+      document.getElementById("acct_no_tr").style.display = "table-row";
+   }
+  }
+
+</script>

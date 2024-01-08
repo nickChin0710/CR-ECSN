@@ -1,0 +1,349 @@
+﻿<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-05-04  V1.00.01  David FU       Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>帳戶類別參數維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0;
+var fi=0;
+
+window.onload = function() {
+   // your page initialization code here
+   // the DOM will be available here
+    checkControl();
+};
+function toggle_u_cycle_flag(element)
+{
+    checkControl();
+}
+function checkControl()
+{
+    //debugger;
+    if (document.getElementById("u_cycle_flag").checked)
+    {
+        document.getElementById("stmt_cycle").disabled = false;
+    }
+    else
+    {
+        document.getElementById("stmt_cycle").selectedIndex = 0;
+        document.getElementById("stmt_cycle").disabled = true;
+    }
+}
+
+function wf_add_newrow()
+{
+    debugger;
+    var sel_group_code_element = document.getElementById("sel_group_code");
+    var sel_card_type_element = document.getElementById("sel_card_type");
+    
+    if (sel_group_code_element.selectedIndex == 0 && 
+        sel_card_type_element.selectedIndex == 0)
+        return;
+        
+    var val_group_code = sel_group_code_element.options[sel_group_code_element.selectedIndex].value;
+    var val_card_type = sel_card_type_element.options[sel_card_type_element.selectedIndex].value;
+    
+    colNum=0
+ 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+
+    fi++;
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    var ip2 = document.createElement( 'input' );
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild( ip2 );
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var ipSpan = document.createElement( 'span' );
+    ipSpan.setAttribute('class', 'dsp_text');
+    ipSpan.textContent = val_group_code;
+    myCell.appendChild( ipSpan );
+    
+    var ip3 = document.createElement( 'input' );
+    ip3.type = 'hidden';
+    ip3.name = 'group_code';
+    ip3.value = val_group_code;
+    myCell.appendChild( ip3 );
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var ipSpan1 = document.createElement( 'span' );
+    ipSpan1.setAttribute('class', 'dsp_text');
+    ipSpan1.textContent = val_card_type;
+    myCell.appendChild( ipSpan1 );
+    
+    var ip4 = document.createElement( 'input' );
+    ip4.type = 'hidden';
+    ip4.name = 'card_type';
+    ip4.value = val_card_type;
+    myCell.appendChild( ip4 );
+
+
+}
+
+
+</script>
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+     <td width="100">&nbsp;</td>
+     <td class="td_text" width="100">覆核主管: </td> 
+     <td class="td_data" width="150">
+        <input type="text" class="col_text" name="apr_user" value="${apr_user}"
+                size="12" maxlength="10" /> 
+     </td> 
+     <td class="td_text" width="100">覆核密碼: </td> 
+     <td class="td_data" width="150">
+        <input type="password" class="col_text" name="apr_passwd" value="${apr_passwd}"
+                size="12" maxlength="10" /> 
+     </td> 
+</tr>
+<tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" onmouseout="light_img(this);" onmouseover="dark_img(this);">&nbsp;
+          <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+          <input type="Button"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"    value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+  <tr>
+       <td nowrap width="50%">帳戶類別：&nbsp;
+              <input type="text" class="col_text" name="kk_acct_type" value="${kk_acct_type}" 
+              zEdit="any" maxlength="2" size="2" />
+       </td>
+  </tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap class="colKey" >帳戶類別：
+          <span class="dsp_text">${acct_type}</span>
+          <input type="hidden" name="acct_type" value="${acct_type}" >
+       </td>
+       <td nowrap>
+          <span class="col_radio">
+              <input type="radio" value="1" name="card_indicator" ${card_indicator-1} checked="checked">一般卡型 
+              <input type="radio" value="2" name="card_indicator" ${card_indicator-2}>商務卡型
+          </span>
+       </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="2">中文說明:&nbsp;
+            <input type=text class="col_any" name="chin_name" value="${chin_name}" 
+              zRequire="Y" zeditType="any,canTW" maxlength="20" size="20" /> 
+       </td>
+   </tr>
+   <tr>
+       <td nowrap class="colKey" >幣別：
+          <select size="1" name="curr_code" value="${curr_code}" class="col_ddlb" >
+	      <option value="${curr_code}">${curr_code}</option>
+	           ${dddw_curr_code}
+	      </select>
+       </td>
+       <td nowrap>
+          <input type="checkbox" value="Y" name="f_currency_flag" ${f_currency_flag-Y}>
+                        是否為外幣卡
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>
+          <input type="checkbox" value="Y" name="bonus_flag" ${bonus_flag-Y}>
+                        適用紅利積點
+       </td>
+       <td nowrap>
+          <input type="checkbox" value="Y" name="rc_use_flag" ${rc_use_flag-Y}>
+                        適用使用循環信用
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>
+          <input type="checkbox" value="Y" name="car_service_flag" ${car_service_flag-Y}>
+                        享有免費道路救援服務
+       </td>
+       <td nowrap>
+          <input type="checkbox" value="Y" name="inssurance_flag" ${inssurance_flag-Y}>
+                        享有旅遊保險
+       </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="2">
+          <input id="u_cycle_flag" type="checkbox" value="Y" name="u_cycle_flag" ${u_cycle_flag-Y} onchange="toggle_u_cycle_flag(this)">
+                        指定Cycle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;帳戶對帳單週期:
+          <select id="stmt_cycle" size="1" name="stmt_cycle" value="${stmt_cycle}" class="col_ddlb" >
+            <option value="${stmt_cycle}">${stmt_cycle}</option>
+               ${dddw_stmt_cycle}
+          </select>
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>代收代碼:&nbsp;
+            <input type=text class="col_number" name="atm_code" value="${atm_code}" 
+              zRequire="Y" zeditType="number" maxlength="5" size="5" /> 
+       </td>
+       <td nowrap>指定卡片無息分期限額共用註記:&nbsp;
+            <input type=text class="col_text" name="unon_flag" value="${unon_flag}" 
+              zeditType="alphanum,upper" maxlength="1" size="1" /> 
+       </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="2">指定卡片無息分期限額:&nbsp;$
+            <input type=text class="col_number" name="inst_crdtamt" value="${inst_crdtamt}" 
+              zeditType="dignumber" maxlength="10" size="10" /> 
+              + 信用額度 X 
+              <input type=text class="col_number" name="inst_crdtrate" value="${inst_crdtrate}" 
+              zeditType="dignumber" maxlength="10" size="10" />%
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>預借現金額度百分比:&nbsp;
+            <input type=text class="col_number" name="cashadv_loc_rate" value="${cashadv_loc_rate}" 
+              zeditType="number" maxlength="3" size="3" /> %
+       </td>
+       <td nowrap>舊預借現金額度百分比:&nbsp;
+            <input type=text class="col_number" name="cashadv_loc_rate_old" value="${cashadv_loc_rate_old}" 
+              zeditType="number" maxlength="3" size="3" /> %
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>最高預借現金額度:&nbsp;
+            <input type=text class="col_number" name="cashadv_loc_maxamt" value="${cashadv_loc_maxamt}" 
+              zeditType="number" maxlength="10" size="10" />
+       </td>
+       <td nowrap>中斷n個月即視為新卡友:&nbsp;
+            <input type=text class="col_number" name="breach_num_month" value="${breach_num_month}" 
+              zeditType="number" maxlength="3" size="3" />
+       </td>
+   </tr>
+</table>
+</table>
+
+<hr>
+<table border="0" width="60%">
+    <tr><td>&nbsp;團體代號:
+            <select size="1" id="sel_group_code" name="sel_group_code" class="col_ddlb">
+            <option value="" ${sel_group_code} >--</option>
+                ${dddw_sel_group_code}
+            </select>
+    
+        <td>&nbsp;卡種:
+            <select size="1" id="sel_card_type" name="sel_card_type" class="col_ddlb">
+            <option value="" ${sel_card_type} >--</option>
+                ${dddw_sel_card_type}
+            </select>
+        </td>
+        <td align="right">
+        <input type="Button"  value="新增明細" 
+                 onclick="wf_add_newrow();" class="btAdd_detl" />
+    </td><tr>
+</table>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">團體代號</th>
+    <th nowrap class="list_th">卡種</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+         <span class="dsp_text">${group_code}</span>
+          <input type="hidden" name="group_code" value="${group_code}" >
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+         <span class="dsp_text">${card_type}</span>
+          <input type="hidden" name="card_type" value="${card_type}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+</div>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ptrm0300">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ document.dataForm.kk_acct_type.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    return true;
+}
+
+</script>

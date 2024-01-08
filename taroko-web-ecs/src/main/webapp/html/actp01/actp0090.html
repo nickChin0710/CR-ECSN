@@ -1,0 +1,393 @@
+<html>
+<head>
+    <title>它行自動扣繳回饋檔作業-108-12-26-V1.00.02-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=3>&nbsp;銀行代號:
+                        <span class="dsp_text">${ex_bankid}</span>
+                        <input type="hidden" name="ex_bankid" value="${ex_bankid}">
+                        <span class="dsp_text">${ex_mdaname}</span>
+                        <input type="hidden" name="ex_mdaname" value="${ex_mdaname}">
+                    </td>
+                    <td nowrap colspan="3">&nbsp;營業日年月:
+                        <input type="text" class="col_any" name="ex_busyymm1" value="${ex_busyymm1}" zEdit="alphanum" maxlength=6 size=6 />
+                        --
+                        <input type="text" class="col_any" name="ex_busyymm2" value="${ex_busyymm2}" zEdit="alphanum" maxlength=6 size=6 />
+                    </td>
+                    <td nowrap colspan=3>&nbsp;
+                        <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp; 
+                        <input type="Button" name="btnAdd" value="上傳" onClick="return upload_click()" class="btAdd">&nbsp;&nbsp;                    
+                        <input type="Button" name="btnDelete" value="還原" onClick="return top.submitControl('S2')" class="btDelete">&nbsp;&nbsp;
+                    </td>
+                    <td nowrap colspan=3 rowspan="6" style="color:FE0303">
+                        備註:自103年10月07日起，郵局扣款檔由系統自動產生，惟上傳至郵局仍採人工方式上傳。
+                        <br> 如係「系統產生」郵局扣款檔，即列示該扣款"日"(註2) ; 如係「人工產生」郵局扣款檔，
+                        <br> 即列示cycle(註1、註2)。
+                        <br> 例如: 103年8月的03cycle為103.8.18(禮拜一)扣款
+                        <br> 如為"人工"產生郵局扣款檔，註1列示03、註2列示03
+                        <br> 如為"系統"產生郵局扣款檔，註2列示18
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=3>&nbsp;關帳年月:
+                        <span class="dsp_text" id="ex_actmm">${ex_actmm}</span>
+                        <input type="hidden" name="ex_actmm" value="${ex_actmm}">
+                    </td>
+                    <td nowrap colspan=6>&nbsp;帳期起迄:
+                        <span class="dsp_text" id="ex_cycle1">${ex_cycle1}</span>&nbsp;--
+                        <span class="dsp_text" id="ex_cycle2">${ex_cycle2}</span>
+                        <input type="hidden" name="ex_cycle1" value="${ex_cycle1}">
+                        <input type="hidden" name="ex_cycle2" value="${ex_cycle2}">                       
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;檔案名稱:
+                        <span class="dsp_text">${ex_extfile}</span>
+                        <input type="hidden" name="ex_extfile" value="${ex_extfile}">
+                    </td>
+                    <td nowrap colspan=3>&nbsp;Value Date:
+                        <input type="radio" value="1" name="ex_valdate" ${ex_valdate-1}${DEFAULT_CHK} />帳單截止日
+                        <input type="radio" value="2" name="ex_valdate" ${ex_valdate-2} />自動轉帳扣款日
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;處理程式:
+                        <span class="dsp_text">${ex_pgm}</span>
+                        <input type="hidden" name="ex_pgm" value="${ex_pgm}">
+                    </td>
+                    <td nowrap colspan=6>&nbsp;存放目錄:
+                        <span class="dsp_text">${ex_topath}</span>
+                        <input type="hidden" name="ex_topath" value="${ex_topath}">
+                    </td>
+                </tr>
+                <input type="hidden" name="ex_seqno" value="${ex_seqno}">
+                <input type="hidden" name="ex_business_date" value="${ex_business_date}">
+            </table>
+        </div>
+        <hr>
+        <div class="tab">
+            <table>
+                <tr>
+                    <td class="tablinks" ${id_tab1} onclick="tab_select('aopt'); tabControl(event, 'tab-1')">傳出媒體清單</td>
+                    <td class="tablinks" ${id_tab2} onclick="tab_select('bopt'); tabControl(event, 'tab-2')">自動扣繳回饋檔</td>
+                </tr>
+            </table>
+        </div>        
+        <div id="tab-1" class="tabcontent">
+            <!--List -->
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">No</th>
+                    <th nowrap class="list_th">營業日</th>
+                    <th nowrap class="list_th">序號</th>
+                    <th nowrap class="list_th">檔案名稱</th>
+                    <th nowrap class="list_th">產生檔案</th>
+                    <th nowrap class="list_th">傳出媒體</th>
+                    <th nowrap class="list_th">媒體已回饋</th>
+                    <th nowrap class="list_th">關帳年月</th>
+                    <th nowrap class="list_th">註1</th>
+                    <th nowrap class="list_th">註2</th>
+                    <th nowrap class="list_th">銀行代碼</th>
+                    <th nowrap class="list_th">扣帳日期</th>
+                    <th nowrap class="list_th">處理程式</th>
+                    <th nowrap class="list_th">處理日期</th>
+                    <th nowrap class="list_th">處理時間</th>
+                    <th nowrap class="list_th">傳輸日期</th>
+                    <th nowrap class="list_th">傳輸時間</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr ondblclick="setvalue('${SER_NUM}','${a-acct_month}','${a-s_stmt_cycle}','${a-e_stmt_cycle}','${a-in_file_flag}','${a-seq_no}','${a-out_file_flag}','${a-business_date}')"  style="cursor:hand">
+                    <td nowrap class="list_ll">${SER_NUM}&nbsp;</td>
+                    <td nowrap class="list_ll"> ${a-business_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-seq_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-external_name}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-out_file_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-out_media_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-in_file_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-acct_month.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-s_stmt_cycle}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-e_stmt_cycle}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-acct_bank}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-value_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-program_name}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-proc_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-proc_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-trans_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-trans_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${a-rowid}&nbsp; </td>
+                    <input type="hidden" name="a-business_date" value="${a-business_date}">
+                    <input type="hidden" name="a-seq_no" value="${a-seq_no}">
+                    <input type="hidden" name="a-external_name" value="${a-external_name}">
+                    <input type="hidden" name="a-out_file_flag" value="${a-out_file_flag}">
+                    <input type="hidden" name="a-out_media_flag" value="${a-out_media_flag}">
+                    <input type="hidden" name="a-in_file_flag" value="${a-in_file_flag}">
+                    <input type="hidden" name="a-acct_month" value="a-acct_month">
+                    <input type="hidden" name="a-s_stmt_cycle" value="${a-s_stmt_cycle}">
+                    <input type="hidden" name="a-e_stmt_cycle" value="${a-e_stmt_cycle}">
+                    <input type="hidden" name="a-value_date" value="${a-value_date}">
+                    <input type="hidden" name="a-program_name" value="${a-program_name}">
+                    <input type="hidden" name="a-proc_date" value="${a-proc_date}">
+                    <input type="hidden" name="a-proc_time" value="${a-proc_time}">
+                    <input type="hidden" name="a-trans_date" value="${a-trans_date}">
+                    <input type="hidden" name="a-trans_time" value="${a-trans_time}">
+                    <input type="hidden" name="a-rowid" value="${a-rowid}">
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <div id="tab-2" class="tabcontent">
+            <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="70%">Process Message:&nbsp;
+                        <br>
+                        <textarea rows=5 cols=100 name="proc_mesg">${proc_mesg}</textarea>
+                    </td>
+                </tr>
+            </table>
+            <!--List -->
+            <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+                <tr>
+                    <th nowrap class="list_th" style="color:blue">處理</th>
+                    <th nowrap class="list_th" style="color:FE0303">還原</th>
+                    <th nowrap class="list_th">營業日</th>
+                    <th nowrap class="list_th">序號</th>
+                    <th nowrap class="list_th">檔案名稱</th>
+                    <th nowrap class="list_th">上傳</th>
+                    <th nowrap class="list_th">處理</th>
+                    <th nowrap class="list_th">關帳年月</th>
+                    <th nowrap class="list_th">註1</th>
+                    <th nowrap class="list_th">註2</th>
+                    <th nowrap class="list_th">銀行</th>
+                    <th nowrap class="list_th">還原</th>
+                    <th nowrap class="list_th">批號</th>
+                    <th nowrap class="list_th">總筆數</th>
+                    <th nowrap class="list_th">正確筆數</th>
+                    <th nowrap class="list_th">處理程式</th>
+                    <th nowrap class="list_th">處理日期</th>
+                    <th nowrap class="list_th">處理時間</th>
+                    <th nowrap class="list_th">傳輸日期</th>
+                    <th nowrap class="list_th">傳輸時間</th>
+                    <th nowrap class="list_th">處理訊息</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no">
+                        <!--<input type="checkbox" name="opt" value="${ser_num}"/> -->
+                        <input type="hidden" name="ser_num" value="${ser_num}" />
+                        <input type="hidden" name="rowid" value="${rowid}" />
+                        <input type="Button" class="btOther" name="btn_mchtout" value="處理" ${btnUpdate_disable} onClick="return proc_click('${b-media_name}','${b-business_date}','${b-seq_no}','${b-in_file_flag}')">
+                    </td>
+                    <td nowrap class="list_no">
+                        <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                        <input type="checkbox" name="opt" value="${ser_num}" />
+                    </td>
+                    <td nowrap class="list_ll"> ${b-business_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-seq_no}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-external_name}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-in_media_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-in_file_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-acct_month.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-s_stmt_cycle}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-e_stmt_cycle}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-acct_bank}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-recover_flag}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-batch_no}&nbsp; </td>
+                    <td nowrap class="list_rr"> &nbsp;${b-total_rec.(999)} </td>
+                    <td nowrap class="list_rr"> &nbsp;${b-right_rec.(999)} </td>
+                    <td nowrap class="list_ll"> ${b-program_name}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-proc_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-proc_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-trans_date.YMD}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-trans_time}&nbsp; </td>
+                    <td nowrap class="list_ll"> ${b-wk_mesg}&nbsp; </td>
+                    <input type="hidden" name="b-media_name" value="${b-media_name}">
+                    <input type="hidden" name="b-business_date" value="${b-business_date}">
+                    <input type="hidden" name="b-seq_no" value="${b-seq_no}">
+                    <input type="hidden" name="b-external_name" value="${b-external_name}">
+                    <input type="hidden" name="b-in_media_flag" value="${b-in_media_flag}">
+                    <input type="hidden" name="b-in_file_flag" value="${b-in_file_flag}">
+                    <input type="hidden" name="b-acct_month" value="${b-acct_month}">
+                    <input type="hidden" name="b-s_stmt_cycle" value="${b-s_stmt_cycle}">
+                    <input type="hidden" name="b-e_stmt_cycle" value="${b-e_stmt_cycle}">
+                    <input type="hidden" name="b-acct_bank" value="${b-acct_bank}">
+                    <input type="hidden" name="b-recover_flag" value="${b-recover_flag}">
+                    <input type="hidden" name="b-batch_no" value="${b-batch_no}">
+                    <input type="hidden" name="b-total_rec" value="${b-total_rec}">
+                    <input type="hidden" name="b-right_rec" value="${b-right_rec}">
+                    <input type="hidden" name="b-program_name" value="${b-program_name}">
+                    <input type="hidden" name="b-proc_date" value="${b-proc_date}">
+                    <input type="hidden" name="b-proc_time" value="${b-proc_time}">
+                    <input type="hidden" name="b-trans_date" value="${b-trans_date}">
+                    <input type="hidden" name="b-trans_time" value="${b-trans_time}">
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>       
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="data_k4" value="">
+        <input type="hidden" name="msg" value="${msg}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <!-- upload use -->
+        <input type="hidden" class="dsp_text" name="zz_file_name" value="" zEdit="any,canTw" readonly />
+        <input type="hidden" name="upload_file" value="" />
+        <input type="hidden"  name="optname" value="${optname}" >
+        <!-- tab use -->
+        <input type="hidden"  name="id_tab1" value="${id_tab1}" >
+        <input type="hidden"  name="id_tab2" value="${id_tab2}" >
+         
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+tigra_tables('table2', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+//document.dataForm.ex_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "actp0090_detl";
+    }
+
+    if (top.actionCode == "S2") {
+        if (!chkdata()) {
+            return false;
+        }
+        if (confirm("是否執行還原作業?!") === false) {
+            return false;
+        }
+    }
+
+
+    // if (top.actionCode == "S3") {
+    //     if (confirm("是否執行上傳作業?!") === false) {
+    //         return false;
+    //     } else {
+    //         alert("上傳功能待討作業流程後開發!!");
+    //         return false;
+    //     }
+    // }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "actp0090_detl";
+    top.submitControl('S');
+    return true;
+}
+
+function setvalue(serNum, parm, parm2, parm3, parm4,parm5,parm6,parm7) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    if (parm6 != 'Y'){
+        alert("POST0001.DAT檔未產生");
+        return false;
+    }
+    if (parm4 == 'Y') {
+        alert("已回饋不可點選!!");
+        return false;
+    }
+    $('input[name=ex_actmm]').val(parm);
+    $('#ex_actmm').text(parm);
+    $('input[name=ex_cycle1]').val(parm2);
+    $('#ex_cycle1').text(parm2);
+    $('input[name=ex_cycle2]').val(parm3);
+    $('#ex_cycle2').text(parm3);
+    $('input[name=ex_seqno]').val(parm5);
+    $('input[name=ex_business_date]').val(parm7);
+
+    return true;
+}
+
+function chkdata() {
+    var agy = 0;
+    $("input[name=opt]").each(function() {
+        if ($(this).prop("checked") == true) {
+            agy++;
+        }
+    })
+    if (agy == 0) {
+        alert("未選取資料!");
+        return false;
+    }
+    return true;
+}
+
+function wf_uploadAfter() {
+    var ss = document.dataForm.zz_file_name.value.trim();
+    if (ss.length > 0) {
+        top.submitControl('UPLOAD');
+    }
+}
+
+function upload_click() {
+    var ss =  document.dataForm.ex_actmm.value
+    if(ss == ''){
+        alert("請先點選原始檔案的資料!!")
+        return false;
+    }
+
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml = "TarokoUpload";
+    var parmName = "upload_file,zz_file_name";
+    var windowSize = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName = "TarokoUpload";
+    top.methodName = "showScreen";
+    top.openWindow("", parmHtml, parmName, windowSize);
+
+    top.packageName = "actp01";
+    top.javaName = "Actp0090";
+    top.requHtml = "actp0090";
+    top.respHtml = "actp0090";
+    return true;
+}
+
+function proc_click(parm,parm2,parm3,parm4){
+    var ss =  document.dataForm.ex_actmm.value
+    if(ss == ''){
+        alert("請先點選原始檔案的資料!!")
+        return false;
+    }
+
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.submitControl('S4');
+}
+function tab_select(optname) {   
+     document.dataForm.optname.value = optname;
+     document.dataForm.id_tab1.value = (optname=='aopt')? "id='tab_active'":"";
+     document.dataForm.id_tab2.value = (optname=='bopt')? "id='tab_active'":"";
+ }
+</script>

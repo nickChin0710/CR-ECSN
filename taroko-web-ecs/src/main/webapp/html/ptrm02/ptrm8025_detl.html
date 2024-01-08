@@ -1,0 +1,297 @@
+<!--**************************************************************************-->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-04-20  V1.00.00  JustinWu       Initial                              -->
+<!-- 111-04-22  V1.00.01  JustinWu       調整新增資料方式                      -->
+<!-- 111-04-25  V1.00.02  JustinWu       修改顯示訊息方式                      -->
+<!-- 111-06-15  V1.00.03  JustinWu       increase the length of wf_id         -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>ptrm8025-detl 111-06-15</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="JavaScript">
+var isAJAXFinished = true;
+var rowNum=${IND_NUM},colNum=0;fi=0;
+
+function wf_add_newrow()
+{
+
+   let isOk = doAjax();
+   if (isOk == false) return false;	 
+   //newCell.focus(); 
+}
+
+function doAjax(){
+   let wfKey = document.getElementById("A_wf_key");
+   let newWfId = document.getElementById("new_wf_id");
+   let newWfDesc = document.getElementById("new_wf_desc");
+   let newIdCode = document.getElementById("new_id_code");
+   let newIdCode2 = document.getElementById("new_id_code2");
+   let isCheckOk = true;
+   if (newWfId.value.trim() == "") {
+      alert("「資料庫代碼」為必填欄位");
+      isCheckOk = false;
+   }
+
+   if (newWfDesc.value.trim() == "" ) {
+      alert("「對照說明」為必填欄位");
+      isCheckOk = false;
+   }
+
+   if (isCheckOk == false) return false;
+
+   // check idno or corpno is valid
+   top.actionCode = "AJAX";
+
+   resetJSON();
+     
+   addJSON("A_wf_key", wfKey.value);
+   addJSON("newWfId", newWfId.value);
+   addJSON("newWfDesc", newWfDesc.value);
+   addJSON("newIdCode", newIdCode.value);
+   addJSON("newIdCode2", newIdCode2.value);
+
+   isAJAXFinished = false;
+
+   document.getElementById("insertBtn").disabled = true;
+
+   processAJAX();
+
+   return true;
+}
+
+ function ajaxResponse(){
+   isAJAXFinished = true;
+
+   document.getElementById("insertBtn").disabled = false;
+
+   top.respHtml ="ptrm8025_detl";
+   top.requHtml ="ptrm8025_detl";
+
+   if( getJson("isAJAXOk") != "Y" ){
+    alert(getJson("ajaxMsg"));
+    return false;
+   }
+
+   colNum=0;
+//   if ( ind == 1 )
+//      { rowNum++; }
+   rowNum++;
+   ind = getNextInd();
+   var myRow = document.all.table1.insertRow(rowNum);
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_no";
+   myCell.noWrap ="nowrap";
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+      { serNo = ""+ind;  }
+
+   fi++;
+   myCell.innerHTML = ""+serNo
+         +" <input type='checkbox' class='col_ckbox' name='opt' value='"+serNo+"' />"
+         +" <input type='hidden' name='ser_num' value='"+serNo+"' />"
+         ;
+
+   colNum++      
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "wf_id";
+   insertVal = document.getElementById("new_wf_id").value;
+   insertVal = (insertVal == null) ? "" : insertVal;
+   myCell.innerHTML = "<span class='dsp_text'>" + insertVal + "</span>"
+      +"<input type='hidden' class='col_any' name='"+forName+"'"
+      +" zEdit='alphanum' size='32' maxlength='30' value='" 
+      + insertVal + "' />";
+
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "wf_desc";
+   insertVal = document.getElementById("new_wf_desc").value;
+   insertVal = (insertVal == null) ? "" : insertVal;
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='any,canTW' size='60' maxlength='60' value='" + insertVal + "' />";
+   
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "id_code";
+   insertVal = document.getElementById("new_id_code").value;
+   insertVal = (insertVal == null) ? "" : insertVal;
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='any,canTW' size='10' maxlength='80' value='" + insertVal + "' />";
+      
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "id_code2";
+   insertVal = document.getElementById("new_id_code2").value;
+   insertVal = (insertVal == null) ? "" : insertVal;
+   myCell.innerHTML = "<input type='text' class='col_any' name='"+forName+"'"
+      +" zEdit='any,canTW' size='10' maxlength='10' value='" + insertVal + "' />";  
+
+   cleanInsertCol();
+   alert("資料新增成功");
+   return true;
+ }
+
+ function getNextInd(){
+   let serNums = document.getElementsByName("ser_num");
+   if (serNums.length == 0) return 1;
+   return 1 + Number(serNums[serNums.length-1].value);
+ }
+
+function cleanInsertCol(){
+   document.getElementById("new_wf_id").value = "";
+   document.getElementById("new_wf_desc").value = "";
+   document.getElementById("new_id_code").value = "";
+   document.getElementById("new_id_code2").value = "";
+}
+
+</script>
+
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">資料類別：
+      <span class="dsp_date">${A_wf_key}</span>
+      <input type="hidden" name="A_wf_key" id="A_wf_key" value="${A_wf_key}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="col_key">資料庫代碼：
+      <input type="text" class="col_any" name="kk_wf_id" value="${kk_wf_id}" 
+         zEdit="alphanum" size="32" maxlength="30" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >說明：
+      <span class="dsp_date">${A_wf_desc}</span>
+      <input type="hidden" name="A_wf_desc" value="${A_wf_desc}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>歸屬部門：
+      <span class="dsp_date">${A_wf_value5}</span>
+      <input type="hidden" name="A_wf_value5" value="${A_wf_value5}" />
+   &nbsp; 長度:
+      <span class="dsp_date">${A_wf_value6}</span>
+      <input type="hidden" name="A_wf_value6" value="${A_wf_value6}" />
+   </td>
+  </tr>
+</table>
+<hr>
+<table id="table3" border="0" width="60%">
+   <tr>
+      <td align="left" colspan="2">
+         <input type="Button" id="insertBtn" value="新增明細" onclick="wf_add_newrow();" class="btAdd_detl" />
+      </td>
+   </tr>
+   <tr>
+      <td nowrap>資料庫代碼：
+         <input type="text" class="col_any" id="new_wf_id" value="" zEdit="alphanum" size="32" maxlength="30" />
+      </td>
+      <td nowrap>對照說明：
+         <input type="text" class="col_any" id="new_wf_desc" value="" zEdit="any,canTW" size="60" maxlength="60" />
+      </td> 
+   </tr>
+   <tr>
+      <td nowrap>類別一：
+       <input type="text" class="col_any" id="new_id_code" value="" zEdit="any,canTW" size="10" maxlength="10" />
+      </td>  
+      <td nowrap>類別二：
+       <input type="text" class="col_any" id="new_id_code2" value="" zEdit="any,canTW" size="10" maxlength="10" />
+      </td> 
+   </tr>
+</table>  
+<hr>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">資料庫代碼 </th>
+    <th nowrap class="list_cc">對照說明 </th>
+    <th nowrap class="list_cc">類別一 </th>
+    <th nowrap class="list_cc">類別二 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+    	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on}>
+      <input type="hidden" name="ser_num" value="${ser_num}">
+    </td>
+    <td nowrap class="list_td">
+       <span class="dsp_text" >${wf_id}</span>
+       <input type="hidden" class="col_any" name="wf_id" value="${wf_id}" zEdit="alphanum" size="32" maxlength="30" />
+    </td>  
+    <td nowrap class="list_td" >
+      <input type="text" class="col_any" name="wf_desc" value="${wf_desc}" 
+         zEdit="any,canTW" size="60" maxlength="60" />
+    </td>  
+    <td nowrap class="list_td">
+       <input type="text" class="col_any" name="id_code" value="${id_code}" 
+         zEdit="any,canTW" size="10" maxlength="10" />
+    </td>  
+    <td nowrap class="list_td">
+       <input type="text" class="col_text" name="id_code2" value="${id_code2}" 
+         zEdit="any,canTW" size="10" maxlength="10" />
+    </td>  
+  </tr>       
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+</div>
+<br>
+
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="100";
+ top.pageDiv.style.visibility = "visible";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

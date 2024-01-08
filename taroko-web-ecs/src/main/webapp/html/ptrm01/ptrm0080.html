@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>風險分類維護[risk_type]-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;對帳單期別：
+      <input type="text" class="col_text" name="ex_stmt_cycle" value="${ex_stmt_cycle}"
+       maxlength=2 size=5 />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">對帳單期別&nbsp;</th>
+    <th nowrap class="list_th">發卡起日&nbsp;</th>
+    <th nowrap class="list_th">發卡迄日&nbsp;</th>
+    <th nowrap class="list_th">期別標註&nbsp;</th>
+    <th nowrap class="list_th">關帳標準日&nbsp;</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${stmt_cycle}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${stmt_cycle}&nbsp;</td>
+   <td nowrap class="list_cc"> ${issue_s_day}&nbsp;</td>
+   <td nowrap class="list_cc"> ${issue_e_day}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cycle_flag}.${tt_cycle_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${close_stand}&nbsp;</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0080_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0080_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

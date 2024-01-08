@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>超過N天未更新敘實查詢 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;立案日期：
+     <input type="text" class="col_date" name="ex_case_date1" value="${ex_case_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date1'});
+	    </script>
+	--
+	   <input type="text" class="col_date" name="ex_case_date2" value="${ex_case_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date2'});
+	    </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+      <td nowrap colspan="2">&nbsp;查詢類別：
+         <span class="col_radio">
+            <input type="radio" value="1" name="ex_type" ${ex_type-1} ${default-ex_type} />1.超過 N 天未更新敘實
+         </span>&nbsp;　　　　　
+         N = 
+         <input type="text" class="col_number" name="ex_day_1" value="${ex_day_1}" maxlength="3" size="5" zEdit="number">
+         <br>&nbsp;　　　　　
+         <span class="col_radio">
+            <input type="radio" value="2" name="ex_type" ${ex_type-2} />2.立案 X 日後未見調查開始
+         </span>&nbsp;　　　
+         X = 
+         <input type="text" class="col_number" name="ex_day_2" value="${ex_day_2}" maxlength="3" size="5" zEdit="number">
+         <br>&nbsp;　　　　　
+         <span class="col_radio">
+            <input type="radio" value="3" name="ex_type" ${ex_type-3} />3.帳務已登錄, 但案件未關閉
+         </span>&nbsp;         
+         <br>&nbsp;　　　　　
+         <span class="col_radio">
+            <input type="radio" value="4" name="ex_type" ${ex_type-4} />4.判決日超過Y個月未轉法訴
+         </span>&nbsp;　　　
+         Y =
+         <input type="text" class="col_number" name="ex_day_3" value="${ex_day_3}" maxlength="3" size="5" zEdit="number">
+      </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap  width="5%">No&nbsp;</th>
+    <th nowrap >立案日&nbsp;</th>
+    <th nowrap >案件編號&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >身分證ID&nbsp;</th>
+    <th nowrap >卡  號&nbsp;</th>
+    <th nowrap >案件類型&nbsp;</th>
+    <th nowrap >案件來源&nbsp;</th>
+    <th nowrap >盜刷成功筆數&nbsp;</th>
+    <th nowrap >盜刷成功金額&nbsp;</th>
+    <th nowrap >調查經辦&nbsp;</th>
+    <th nowrap >帳卡登錄日&nbsp;</th>
+    <th nowrap >最近敘實日&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_id_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_source}&nbsp;</td>
+	<td nowrap class="list_rr"> ${fraud_ok_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${fraud_ok_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${survey_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${debit_card_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_log_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

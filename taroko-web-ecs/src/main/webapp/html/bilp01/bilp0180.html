@@ -1,0 +1,201 @@
+<html>
+<head>
+<title>指定卡片預約分期覆核作業-V.2017-1110-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+<div id="condBlock">
+<div id="a">
+</div>
+<!--COND -->
+
+<table id="table3" width="40%" border="0" cellspacing="0" cellpadding="4" >
+    <tr>
+        <td nowrap>正卡身分證字號:
+            <input type=text class="col_any" name="ex_major_id" value="${ex_major_id}" zeditType="any" maxlength="10" size="12" />
+        </td>
+        <td nowrap>維護人員:
+   			<select size="1" name="ex_upduser" class="col_ddlb" >
+      			${dddw_apuser}
+   			</select>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;
+            <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+            <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+            <input type="Button"   value="執行" onClick="return top.submitControl('C')" class="btAdd">&nbsp;&nbsp;
+        </td>
+    </tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table width="50%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">
+            <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();">執行&nbsp;</th>
+        <th nowrap class="list_th">正卡身份證</th>
+        <th nowrap class="list_th">卡號</th>
+        <th nowrap class="list_th">消費起日</th>
+        <th nowrap class="list_th">消費迄日</th>
+        <th nowrap class="list_th">金額(含)以上</th>
+        <th nowrap class="list_th">期數</th>
+        <th nowrap class="list_th">預約類別</th>
+        <th nowrap class="list_th">終止</th>
+        <th nowrap class="list_th">終止日期</th>
+        <th nowrap class="list_th">維護人員</th>
+        <th nowrap class="list_th">維護日期</th>
+        
+    </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+        <td nowrap class="list_no" rowspan="2">
+            <span class="col_key">${ok_flag}</span>
+            <input type="checkbox" name="opt" class="check" value="${ser_num}" ${opt_disabled}/> ${SER_NUM}&nbsp;
+            <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+            <input type="hidden" name="rowid" value="${rowid}">
+            <input type="hidden" name="ser_num" value="${ser_num}">
+            <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+            <input type="hidden" name="major_id" value="${major_id}">
+			<input type="hidden" name="card_no" value="${card_no}">
+			<input type="hidden" name="start_date" value="${start_date}">
+			<input type="hidden" name="end_date" value="${end_date}">
+			<input type="hidden" name="amt_from" value="${amt_from}">
+			<input type="hidden" name="installment_term" value="${installment_term}">
+			<input type="hidden" name="reserve_type" value="${reserve_type}">
+			<input type="hidden" name="break_flag" value="${break_flag}">
+			<input type="hidden" name="break_date" value="${break_date}">
+			<input type="hidden" name="crt_user" value="${crt_user}">
+			<input type="hidden" name="crt_date" value="${crt_date}">
+			<input type="hidden" name="apr_user" value="${apr_user}">
+			<input type="hidden" name="apr_date" value="${apr_date}"> 
+			<input type="hidden" name="tt_reserve_type" value="${tt_reserve_type}"> 
+        </td>
+    </tr>
+    <tr>
+        <td nowrap class="list_ll">${major_id}&nbsp;</td>
+        <td nowrap class="list_ll">${card_no}&nbsp;</td>
+        <td nowrap class="list_ll">${start_date.YMD}&nbsp;
+        <td nowrap class="list_ll">${end_date.YMD}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${amt_from}</td>
+        <td nowrap class="list_ll">${installment_term}&nbsp;</td>
+        <td nowrap class="list_ll">${tt_reserve_type}&nbsp;</td>
+        <td nowrap class="list_ll">${break_flag}&nbsp;</td>
+        <td nowrap class="list_ll">${break_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${crt_user}&nbsp;</td>
+        <td nowrap class="list_ll">${crt_date.YMD}&nbsp;</td>
+    </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<!-- 動態視窗控制 -->
+<div id="disDiv" class="disScreen"></div>
+<div id="popDiv" class="popup1">
+  <table id="popup2">
+     <tr><td colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+
+     <!--List -->
+<tr><td colspan="2">
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+        <th nowrap class="list_th" width="5%">No</th>
+        <th nowrap class="list_th">身分證號碼</th>
+        <th nowrap class="list_th">中文姓名</th>
+        <th nowrap class="list_th">性別</th>
+        <th nowrap class="list_th">出生日期</th>
+  	</tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenPop('${SER_NUM}','${id_p_seqno}','','')" style="cursor:hand">
+        <td nowrap class="list_no">
+            ${SER_NUM}&nbsp;
+        </td>
+        <td nowrap class="list_ll">${id_no}-${id_no_code}&nbsp;</td>
+        <td nowrap class="list_ll">${chi_name}&nbsp;</td>
+        <td nowrap class="list_ll">${sex}&nbsp;
+        <td nowrap class="list_ll">${birthday}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</td></tr>     
+  </table>
+</div>
+
+<!-- -->
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+<input type="hidden" name="MOD_PGM" value="bilp0180">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="cond">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table2', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_major_id.focus();
+
+ var CC = "${queryReadCnt}";
+ if(Number(CC) >1){
+ 	top.popupBlock('popDiv');
+ }
+ 
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "C") {
+        if (!chkdata()) {
+            return false;
+        }
+        if (confirm("是否執行 覆核作業?!") === false) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+//全選
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox" && aElements[i].disabled == false) {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+function chkdata() {
+	 var agy =0;
+	 $("input[name=opt]").each(function (){
+		 if($(this).prop("checked")==true){
+			 agy++; 
+		 }
+	 })
+	 if(agy == 0){
+		 alert("未選取覆核資料!");
+		 return false;
+ 	 }
+	 return true;
+}
+
+function detailScreenPop(serNum,parm,parm2,parm3) { 
+	 document.dataForm.data_k1.value = parm;
+	 document.dataForm.data_k2.value = parm2;
+	 document.dataForm.data_k3.value = parm3;
+	 top.hideBlock('popDiv');
+	 top.submitControl('Q');
+	 return true;
+}
+</script>

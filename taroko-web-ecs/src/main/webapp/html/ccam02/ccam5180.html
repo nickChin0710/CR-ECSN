@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>風險分類維護[risk_type]-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_spec_type]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_spec_type]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;原因代碼：
+      <input type="text" class="col_text" name="ex_spec_code" value="${ex_spec_code}" maxlength=2 size=5 />
+   </td>
+   <td nowrap >&nbsp;代碼類別:
+   		<span class="col_radio">
+   			 <input type="radio" value="0" name="ex_spec_type" ${ex_spec_type-0} />全部
+         <input type="radio" value="1" name="ex_spec_type" ${ex_spec_type-1} />凍結
+         <input type="radio" value="2" name="ex_spec_type" ${ex_spec_type-2} />特指
+      </span>
+	 </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap >代碼&nbsp;</th>
+    <th nowrap >說明&nbsp;</th>
+    <th nowrap >回覆碼&nbsp;</th>
+    <th nowrap >作業指示&nbsp;</th>
+    <th nowrap >NEG&nbsp;</th>
+    <th nowrap >VISA&nbsp;</th>
+    <th nowrap >MASTERCARD&nbsp;</th>
+    <th nowrap >JCB&nbsp;</th>
+    <th nowrap >送主機&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${spec_code}','','')" style="cursor:hand">
+  <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_code}&nbsp;</td>
+  <td nowrap class="list_ll"> ${spec_desc}&nbsp;</td>
+  <td nowrap class="list_cc"> ${resp_code}&nbsp;</td>
+  <td nowrap class="list_cc"> ${check_level}&nbsp;</td>
+  <td nowrap class="list_cc"> ${neg_reason}&nbsp;</td>
+  <td nowrap class="list_cc"> ${visa_reason}&nbsp;</td>
+  <td nowrap class="list_cc"> ${mast_reason}&nbsp;</td>
+  <td nowrap class="list_cc"> ${jcb_reason}&nbsp;</td>
+  <td nowrap class="list_cc"> ${send_ibm}&nbsp;</td>
+  <td nowrap class="list_cc"> ${spec_type}.${tt_spec_type}&nbsp;</td>
+ 	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ //document.dataForm.ex_risk_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5180_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5180_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

@@ -1,0 +1,249 @@
+<html> 
+<head>
+<title>帳戶對帳單寄送方式維護作業-106-11-06-V1.00.00-OrisChang-[Initial]
+-110-11-16-V1.00.01-Andy Liu-[Update Mantis9045]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+	                <td nowrap>&nbsp;帳戶帳號:
+	                    <select size="1" name="ex_acct_type" class="col_ddlb">
+	                      ${dddw_acct_type}
+	                    </select>
+	                </td>
+	                <td nowrap>&nbsp;身分證字號:
+	                	<input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" zEdit="alphanum,upper" maxlength="11" size="13" />	                    
+	                </td>
+	                <td nowrap>&nbsp;統一編號:
+	                	<input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}" zEdit="number" maxlength="11" size="13" />	                    
+	                </td>
+				</tr>
+				<tr>
+	                <td nowrap>&nbsp;下次關帳月份:&nbsp;${next_acct_month.YMD}
+	                </td>
+	                <td nowrap>&nbsp;卡人姓名:&nbsp;${chi_name}
+	                </td>
+					<td>&nbsp;公司名稱:&nbsp;${corp_name}
+					</td>
+				</tr>
+                <tr>
+					<td nowrap colspan="3">&nbsp;
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="存檔" onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+					</td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div id="queryBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap colspan="2" style="color:#930093; font-weight:bold;">目前帳單寄送方式&nbsp;</td>
+					<td nowrap align="center">異動日期 </td>
+					<td nowrap align="center">異動經辦 </td>
+				</tr>
+				<tr>
+					<td nowrap style="color:darkblue"><input type="checkbox" value="Y" name="paper_flag" ${paper_flag-Y} disabled/>Paper郵寄</td>
+					<td nowrap >&nbsp;&nbsp;生效年月 ${stat_send_s_month.YMD} -- ${stat_send_e_month.YMD}</td>
+					<td nowrap align="center">${paper_upd_date.YMD}</td>
+					<td nowrap align="center">${paper_upd_user}</td>
+				</tr>
+				<tr>
+					<td nowrap style="color:darkblue"><input type="checkbox" value="Y" name="internet_flag" ${internet_flag-Y} disabled/>internet網路</td>
+					<td nowrap >&nbsp;&nbsp;生效年月 ${stat_send_s_month2.YMD} -- ${stat_send_e_month2.YMD}</td>
+					<td nowrap align="center">${internet_upd_date.YMD}</td>
+					<td nowrap align="center">${internet_upd_user}</td>
+				</tr>
+<!-- 				<tr> -->
+<!-- 					<td nowrap style="color:darkblue"><input type="checkbox" value="Y" name="mobile_line_flag" ${mobile_line_flag-Y} disabled/>行動帳單-LINE</td> -->
+<!-- 				</tr> -->
+            </table>
+        </div>
+        <hr>
+<!--         <div id="queryBlock"> -->
+<!--             <table width="80%" border="0" cellspacing="0" cellpadding="4"> -->
+<!-- 				<tr> -->
+<!-- 					<td nowrap width="50%" align="right" style="color:darkblue">郵寄 改 網路, 對帳單並行月份: </td> -->
+<!-- 					<td nowrap width="10%" align="center" style="color:red">${paper2email}</td> -->
+<!-- 					<td nowrap><input type="Button" id="dwcb_paper2email" name="dwcb_paper2email" value="郵寄 改 網路" onclick="wf_paper2email();" class="btAdd_detl"/></td> -->
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<!-- 					<td nowrap align="right" style="color:darkblue">網路 改 郵寄, 對帳單並行月份: </td> -->
+<!-- 					<td nowrap align="center" style="color:red">${email2paper}</td> -->
+<!-- 					<td nowrap><input type="Button" id="dwcb_email2paper" name="dwcb_email2paper" value="網路 改 郵寄" onclick="wf_email2paper();" class="btAdd_detl"/></td> -->
+<!-- 				</tr> -->
+<!--             </table> -->
+<!--         </div> -->
+<!--         <hr> -->
+    <div id="queryBlock">
+      <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+            		<td nowrap colspan="2" style="color:#930093; font-weight:bold;">帳單寄送方式&nbsp;</td>
+            	</tr>
+				<tr>
+					<td nowrap><input type="checkbox" value="Y" name="stat_paper" ${stat_paper-Y} onClick="btn_init();"/>Paper郵寄</td>
+					<td nowrap>&nbsp;&nbsp;生效年月 
+						<input type="text" class="col_date" name="stat_paper_ym_s" value="${stat_paper_ym_s}" zEdit="date,yyyymm" maxlength="6" size="8" /> --
+						<input type="text" class="col_date" name="stat_paper_ym_e" value="${stat_paper_ym_e}" zEdit="date,yyyymm" maxlength="6" size="8" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap><input type="checkbox" value="Y" name="stat_internet" ${stat_internet-Y} onClick="btn_init();"/>internet網路</td>
+					<td nowrap>&nbsp;&nbsp;生效年月 
+						<input type="text" class="col_date" name="stat_internet_ym_s" value="${stat_internet_ym_s}" zEdit="date,yyyymm" maxlength="6" size="8" /> --
+						<input type="text" class="col_date" name="stat_internet_ym_e" value="${stat_internet_ym_e}" zEdit="date,yyyymm" maxlength="6" size="8" />
+					</td>
+				</tr>
+      </table>
+    </div>
+        <hr>
+    <div id="queryBlock">
+      <table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap colspan="2">E-mail:&nbsp;<span style="color:darkblue">${e_mail_ebill}</span></td>
+					        <input type="hidden" name="e_mail_ebill" value="${e_mail_ebill}">
+				</tr>
+				<tr>
+<!-- 					<td nowrap>E-mail 最後異動管道:&nbsp;<span style="color:darkblue">${tt_e_mail_from_mark}</span></td> -->
+					<td nowrap>E-mail 最後異動日期:&nbsp;<span style="color:darkblue">${e_mail_ebill_date.YMD}</span></td>
+					        <input type="hidden" name="e_mail_ebill_date" value="${e_mail_ebill_date}">
+				</tr>
+      </table>
+    </div>
+        <hr>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}">
+        <input type="hidden" name="acno_flag" value="${acno_flag}">
+        <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+        <input type="hidden" name="this_acct_month" value="${this_acct_month}">
+        <input type="hidden" name="next_acct_month" value="${next_acct_month}">
+        <input type="hidden" name="chi_name" value="${chi_name}">
+        <input type="hidden" name="corp_name" value="${corp_name}">
+        <input type="hidden" name="paper_flag-Y" value="${paper_flag-Y}">
+        <input type="hidden" name="stat_send_s_month" value="${stat_send_s_month}">
+        <input type="hidden" name="stat_send_e_month" value="${stat_send_e_month}">
+        <input type="hidden" name="paper_upd_date" value="${paper_upd_date}">
+        <input type="hidden" name="paper_upd_user" value="${paper_upd_user}">
+        <input type="hidden" name="internet_flag-Y" value="${internet_flag-Y}">
+        <input type="hidden" name="stat_send_s_month2" value="${stat_send_s_month2}">
+        <input type="hidden" name="stat_send_e_month2" value="${stat_send_e_month2}">
+        <input type="hidden" name="internet_upd_date" value="${internet_upd_date}">
+        <input type="hidden" name="internet_upd_user" value="${internet_upd_user}">
+        <input type="hidden" name="chk_paper_flag" value="${chk_paper_flag}">
+        <input type="hidden" name="chk_internet_flag" value="${chk_internet_flag}">
+        <input type="hidden" name="paper2email" value="${paper2email}">
+        <input type="hidden" name="email2paper" value="${email2paper}">
+        <input type="hidden" name="e_mail_addr" value="${e_mail_addr}">
+        <input type="hidden" name="e_mail_addr2" value="${e_mail_addr2}">
+        <input type="hidden" name="e_mail_addr3" value="${e_mail_addr3}">
+        <input type="hidden" name="cell_phone" value="${cell_phone}">
+        <input type="hidden" name="e_mail_from_mark" value="${e_mail_from_mark}">
+        <input type="hidden" name="tt_e_mail_from_mark" value="${tt_e_mail_from_mark}">
+        <input type="hidden" name="e_mail_chg_date" value="${e_mail_chg_date}">
+        <input type="hidden" name="chk_mobile_line_flag" value="${chk_mobile_line_flag}">
+        <input type="hidden" name="mobile_line_flag-Y" value="${mobile_line_flag-Y}">  
+
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_id_no.focus();
+btn_init();
+
+function btn_init() {
+	document.getElementById("dwcb_paper2email").style.display = "none";
+	document.getElementById("dwcb_email2paper").style.display = "none";
+	if (document.dataForm.stat_paper.checked ==true && document.dataForm.stat_internet.checked !=true)
+		document.getElementById("dwcb_paper2email").style.display = "";
+	if (document.dataForm.stat_paper.checked !=true && document.dataForm.stat_internet.checked ==true)
+		document.getElementById("dwcb_email2paper").style.display = "";
+}
+
+function wf_paper2email() {
+	var ls_sysYM  = document.dataForm.next_acct_month.value;
+	var ls_sysYM2 = document.dataForm.this_acct_month.value;
+	document.dataForm.stat_internet.checked = true;
+	document.dataForm.stat_internet_ym_s.value = ls_sysYM;
+	document.dataForm.stat_internet_ym_e.value = "";
+	document.dataForm.stat_paper.checked = false;
+	document.dataForm.stat_paper_ym_s.value = "";
+	document.dataForm.stat_paper_ym_e.value = "";
+	var ii_paper2email = document.dataForm.paper2email.value;
+	if (ii_paper2email > 0) {
+		if (ls_sysYM!='') {
+		document.dataForm.stat_paper.checked = true;
+		document.dataForm.stat_paper_ym_s.value = ls_sysYM;
+		
+		var myDate = new Date(ls_sysYM.substring(0,4), ls_sysYM.substring(4,6)-1, 1);
+		myDate.setMonth(myDate.getMonth() + (ii_paper2email -1), 2);
+		var res = myDate.toISOString().slice(0,10).replace(/-/g,"").substring(0,6);
+		document.dataForm.stat_paper_ym_e.value = res;
+		}
+	} else {
+		if (ls_sysYM2!='') {
+		document.dataForm.stat_paper.checked = true;
+		document.dataForm.stat_paper_ym_e.value = ls_sysYM2;
+		}
+	}
+
+	btn_init();
+}
+function wf_email2paper() {
+	var ls_sysYM  = document.dataForm.next_acct_month.value;
+	var ls_sysYM2 = document.dataForm.this_acct_month.value;
+	document.dataForm.stat_paper.checked = true;
+	document.dataForm.stat_paper_ym_s.value = ls_sysYM;
+	document.dataForm.stat_paper_ym_e.value = "";
+	document.dataForm.stat_internet.checked = false;
+	document.dataForm.stat_internet_ym_s.value = "";
+	document.dataForm.stat_internet_ym_e.value = "";
+	var ii_email2paper = document.dataForm.email2paper.value;
+	if (ii_email2paper > 0) {
+		if (ls_sysYM!='') {
+		document.dataForm.stat_internet.checked = true;
+		document.dataForm.stat_internet_ym_s.value = ls_sysYM;
+		
+		var myDate = new Date(ls_sysYM.substring(0,4), ls_sysYM.substring(4,6)-1, 1);
+		myDate.setMonth(myDate.getMonth() + (ii_email2paper -1), 2);
+		var res = myDate.toISOString().slice(0,10).replace(/-/g,"").substring(0,6);
+		document.dataForm.stat_internet_ym_e.value = res;
+		}
+	} else {
+		if (ls_sysYM2!='') {
+		document.dataForm.stat_internet.checked = true;
+		document.dataForm.stat_internet_ym_e.value = ls_sysYM2;
+		}
+	}
+	btn_init();
+}
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    
+    return true;
+}
+
+</script>

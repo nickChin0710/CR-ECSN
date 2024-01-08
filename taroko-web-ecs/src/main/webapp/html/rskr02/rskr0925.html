@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>信用額度調高附卡通知信-190621</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;調高原因碼:
+   <select size="1" name="ex_log_reason" class="col_ddlb" >
+      <option value="">--</option>
+      ${dddw_log_reason}
+   </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;覆核日期:
+      <input type="text" class="col_date" name="ex_apr_date1" value="${ex_apr_date1}" zEdit="date,yyyymmdd" zrequire="C" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_apr_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_apr_date2" value="${ex_apr_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_apr_date2'});
+	      </script>
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <div id="queryBlock">
+ 	<table id="table0" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 		<tr>
+ 			<td nowrap >&nbsp;總筆數:
+ 				<span class="dsp_text">${ll_rows.(999)}&nbsp;</span>
+ 				<input type="hidden" name="ll_rows" value="${ll_rows}" />
+ 			</td>
+ 			<td nowrap >&nbsp;列印筆數:
+ 				<input type="text" class="dsp_text" id="ex_print_rows" name="ex_print_rows" value="${ex_print_rows}" size="3" readonly >
+ 			</td>
+ 	</table>
+ </div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" ${check_on} >
+    	No&nbsp;
+    </th>    
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >卡人姓名&nbsp;</th>
+    <th nowrap >主卡姓名&nbsp;</th>
+    <th nowrap >調整前額度&nbsp;</th>
+    <th nowrap >調整後額度&nbsp;</th>
+    <th nowrap >調整日期&nbsp;</th>
+    <th nowrap >覆核日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+  <td nowrap class="list_no">
+		<input type="checkbox" id="${#_opt-}" name="opt" value="${ser_num}" ${check_on} onChange="sumPrintRow('${ser_num}')" />
+ 	 	${SER_NUM}&nbsp;
+		<input type="hidden" name="ser_num" value="${ser_num}" />
+		<input type="hidden" name="db_sex" value="${db_sex}" /> 
+		<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />		
+		<input type="hidden" name="card_no" value="${card_no}" />
+		<input type="hidden" name="db_idno_name" value="${db_idno_name}" />
+		<input type="hidden" name="db_major_name" value="${db_major_name}" />
+		<input type="hidden" name="bef_loc_amt" value="${bef_loc_amt}" />
+		<input type="hidden" name="aft_loc_amt" value="${aft_loc_amt}" />
+		<input type="hidden" name="log_date" value="${log_date}" />
+		<input type="hidden" name="apr_date" value="${apr_date}" />
+	</td>	
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_major_name}&nbsp;</td>
+	<td nowrap class="list_rr"> ${bef_loc_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${aft_loc_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${log_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="30";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    var ll = -1; 
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+			ll++;
+		}
+    }
+		
+		if(opt_select){
+			document.getElementById("ex_print_rows").value = ll;
+		}	else	{
+			document.getElementById("ex_print_rows").value = 0;
+		}
+		
+    return;
+ } 
+ 
+  function sumPrintRow(serNum) {   	  	  	
+  	var ii =parseInt(serNum) - 1;  	
+  	var ls_opt = document.getElementById("opt-"+ii);
+  	var ls_print_rows = Number(document.getElementById("ex_print_rows").value);  	
+  	if(ls_opt.checked){
+  		ls_print_rows += 1;
+  	}	else	{
+  		ls_print_rows -= 1;			
+  	}  	
+  	document.getElementById("ex_print_rows").value = ls_print_rows;
+  }
+ 
+</script>

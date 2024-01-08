@@ -1,0 +1,187 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 102-06-11  V1.00.00    Sunny        調整簽約完成日期顯示位置                                                          -->
+<!-- 102-10-03  V1.00.01    Ryan         修正協商狀態選單                                                                        -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>前置協商基本資料查詢-sunny 20230611</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;申請日期：
+      <input type="text" class="col_date" name="exApplyDateS" value="${exApplyDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exApplyDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exApplyDateE" value="${exApplyDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exApplyDateE'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;結案/結清日期：
+      <input type="text" class="col_date" name="exEndDate" value="${exEndDate}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exEndDate'});
+	  </script>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;身分證號：
+      <input type="text" class="col_text" name="exId" value="${exId}" 
+        zEdit="alphanum,upper" maxlength="10" size="12" />
+    </td>
+    <td nowrap>&nbsp;結案/復催原因：
+      <input type="text" class="col_text" name="exRecolReason" value="${exRecolReason}" 
+        zEdit="alphanum,upper" maxlength="10" size="12" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;協商狀態：
+      <select size="1" name="exLiacStatus" class="col_ddlb">
+         <option value="0" ${exLiacStatus-0} >--</option>
+         <option value="1" ${exLiacStatus-1} >1.受理申請</option>
+         <option value="2" ${exLiacStatus-2} >2.停催通知</option>
+         <option value="3" ${exLiacStatus-3} >3.簽約完成</option>
+         <option value="4" ${exLiacStatus-4} >4.結案/復催</option>
+         <option value="5" ${exLiacStatus-5} >5.結案/毀諾</option>        
+         <option value="6" ${exLiacStatus-6} >6.結案/結清</option>
+      </select> 
+    </td>
+    <td nowrap >&nbsp;最大債權機構：
+      <select size="1" name="exBankCode" class="col_ddlb">
+         ${ColLiabBankList}
+      </select> 
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">協商序號</th>
+    <th nowrap class="list_th">轉入日期</th>
+    <th nowrap class="list_th">協商狀態</th>
+    <th nowrap class="list_th">通知日期</th>
+    <th nowrap class="list_th">身分證號</th>
+    <th nowrap class="list_th">中文姓名</th>
+    <th nowrap class="list_th">最大債權金融機構</th>
+    <th nowrap class="list_th">申請日期</th>
+    <th nowrap class="list_th">開始日期</th>
+    <th nowrap class="list_th">停催日期</th>
+    <th nowrap class="list_th">簽約完成日</th>
+    <th nowrap class="list_th">結案/復催原因</th>
+    <th nowrap class="list_th">有擔保貸款</th>
+    <th nowrap class="list_th">無擔保貸款</th>
+    <th nowrap class="list_th">有現金卡</th>
+    <th nowrap class="list_th">有信用卡</th>
+    <th nowrap class="list_th">備註</th>
+    <th nowrap class="list_th">結案/結清日期</th>
+    <th nowrap class="list_th">結案/結清原因</th>
+    <th nowrap class="list_th">法院認可日</th>
+    <th nowrap class="list_th">案件進度</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${liac_seqno}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+	</td>
+   <td nowrap class="list_cc"> ${liac_seqno}&nbsp;</td>
+   <td nowrap class="list_cc"> ${file_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${tt_liac_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${notify_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_bank_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apply_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${nego_s_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${stop_notify_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${contract_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${recol_reason}&nbsp;</td>
+   <td nowrap class="list_cc"> ${credit_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${no_credit_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cash_card_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${credit_card_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_liac_remark}&nbsp;</td>
+   <td nowrap class="list_cc"> ${end_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${end_reason}&nbsp;</td>
+   <td nowrap class="list_cc"> ${court_agree_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${case_status}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ //top.pageRows="999";
+ 
+ document.dataForm.exApplyDateS.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colm1100_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "colm1100_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

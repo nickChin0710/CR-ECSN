@@ -1,0 +1,171 @@
+<html>
+<head>
+<title>LGD帳戶繳款回收金額註記-主管覆核-pond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;帳戶帳號：
+      <input type="text" class="col_text" name="exAcctKey" value="${exAcctKey}" 
+        zEdit="alphanum,upper" maxlength="19" size="19" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;建檔日期：
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+	  </script>&nbsp;
+    </td>
+    <td nowrap>&nbsp;建檔經辦：
+      <select size="1" name="exCrtUser" class="col_ddlb">
+        ${SecUserIDNameList}
+      </select>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+      <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >覆核&nbsp;</th>
+    <th nowrap class="list_th">帳戶帳號</th>
+    <th nowrap class="list_th">姓名/公司名稱</th>
+    <th nowrap class="list_th">入帳日期</th>
+    <th nowrap class="list_th">繳款日期</th>
+    <th nowrap class="list_th">繳款金額</th>
+    <th nowrap class="list_th">回收金額註記</th>
+    <th nowrap class="list_th">還款來源</th>
+    <th nowrap class="list_th">建檔經辦</th>
+    <th nowrap class="list_th">建檔日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no">
+	<span class="col_key">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden" name="acno_acct_type" value="${acno_acct_type}">
+	<input type="hidden" name="acno_acct_key" value="${acno_acct_key}">
+	<input type="hidden" name="db_cname" value="${db_cname}">
+	<input type="hidden" name="acct_date" value="${acct_date}">
+	<input type="hidden" name="interest_date" value="${interest_date}">
+	<input type="hidden" name="trans_amt" value="${trans_amt}">
+	<input type="hidden" name="lgd_coll_flag" value="${lgd_coll_flag}">
+	<input type="hidden" name="tt_lgd_coll_flag" value="${tt_lgd_coll_flag}">
+	<input type="hidden" name="tran_type" value="${tran_type}">
+	<input type="hidden" name="tt_tran_type" value="${tt_tran_type}">
+	<input type="hidden" name="crt_user" value="${crt_user}">
+	<input type="hidden" name="crt_date" value="${crt_date}">
+   </td>
+   <td nowrap class="list_cc"> ${acno_acct_type}-${acno_acct_key} </td>
+   <td nowrap class="list_cc"> ${db_cname} </td>
+   <td nowrap class="list_cc"> ${acct_date.YMD} </td>
+   <td nowrap class="list_cc"> ${interest_date.YMD} </td>
+   <td nowrap class="list_rr"> ${trans_amt.(999)} </td>
+   <td nowrap class="list_ll"> ${tt_lgd_coll_flag} </td>
+   <td nowrap class="list_ll"> ${tt_tran_type}</td>
+   <td nowrap class="list_cc"> ${crt_user} </td>
+   <td nowrap class="list_cc"> ${crt_date.YMD} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="colp1220">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ 
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.exDateS.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行 覆核作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+ }
+ 
+function chkdata() {
+	var seq = 0;
+	var agy = document.getElementsByName('opt');
+	var ll = agy.length;
+	for ( var i=0; i < ll; i++ ) {
+		if(agy[i].checked){
+			seq++;
+		}
+	}
+
+	if(seq == 0){
+		alert("請點選欲覆核資料!");
+		return false;
+	}
+	return true;
+}
+ 
+</script>

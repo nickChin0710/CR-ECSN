@@ -1,0 +1,308 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-01-11  V1.00.00    Yang Bo              program initial              -->
+<!-- 112-09-22  V1.00.01    Ryan         業績分行查詢權限調整,調整分頁100筆,調整協商狀態顯示          -->
+<!-- 112-09-25  V1.00.02    Ryan         分期還款註記改為協商狀態,          -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>Colm6020_detl 逾期催收案件處理 112/01/11 V1.00.00</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.css"/>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+    <script language="JavaScript" src="js/jquery-ui.js"></script>
+    ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td>
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"
+                     alt="回上層">&nbsp;
+                <input type="Button" value="存檔" ${btnAdd_disable} onClick="return top.submitControl('A')"
+                       class="btAdd">&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+    <hr>
+
+    <div id="dataBlock">
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>&nbsp;帳務類別：
+                    <span class="dsp_text">${acct_type}.${chin_name}</span>
+                </td>
+                <td nowrap>&nbsp;帳戶狀態：
+                    <span class="dsp_text">${acct_status}</span>
+                </td>
+                <td nowrap>&nbsp;MCODE：
+                    <span class="dsp_text"> ${int_rate_mcode}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;商務卡統編：
+                    <span class="dsp_text">${corp_no}</span>
+                </td>
+                <td nowrap>&nbsp;商務卡公司稱：
+                    <span class="dsp_text">${corp_chi_name}</span>
+                </td>
+                <td nowrap></td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;正卡人證號：
+                    <span class="dsp_text">${id_no}</span>
+                </td>
+                <td nowrap>&nbsp;中文姓名：
+                    <span class="dsp_text">${chi_name}</span>
+                </td>
+                <td nowrap>&nbsp;年收入：
+                    <span class="dsp_text">${annual_income.(999)}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;出生日期：
+                    <span class="dsp_text">${birthday}</span>
+                </td>
+                <td nowrap>&nbsp;學歷等級：
+                    <span class="dsp_text">${education}.${education_desc}</span>
+                </td>
+                <td nowrap>&nbsp;行業別：
+                    <span class="dsp_text">${business_code}.${business_desc}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;公司名稱：
+                    <span class="dsp_text">${company_name}</span>
+                </td>
+                <td nowrap>&nbsp;職稱：
+                    <span class="dsp_text">${job_position}</span>
+                </td>
+                <td nowrap>&nbsp;服務年資：
+                    <span class="dsp_text">${service_year}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;住家電話：
+                    <span class="dsp_text">${home_area_code1}-${home_tel_no1}#${home_tel_ext1}</span>
+                </td>
+                <td nowrap>&nbsp;公司電話：
+                    <span class="dsp_text">${office_area_code1}-${office_tel_no1}#${office_tel_ext1}</span>
+                </td>
+                <td nowrap>&nbsp;手機：
+                    <span class="dsp_text">${cellar_phone}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;代表卡號：
+                    <span class="dsp_text">${card_no}</span>
+                </td>
+                <td nowrap>&nbsp;業績分行：
+                    <span class="dsp_text">${reg_bank_no}.${reg_bank_name}</span>
+                </td>
+                <td nowrap>&nbsp;核卡分行：
+                    <span class="dsp_text">${risk_bank_no}.${risk_bank_name}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;信用額度(台幣)：
+                    <span class="dsp_text">${line_of_credit_amt.(999)}</span>
+                </td>
+                <td nowrap>&nbsp;自動扣繳帳戶行庫：
+                    <span class="dsp_text">${autopay_acct_bank}</span>
+                </td>
+                <td nowrap>&nbsp;自動扣繳帳戶帳號：
+                    <span class="dsp_text">${autopay_acct_no}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;暫不轉逾放：
+                    <span class="dsp_text">${no_delinquent_flag}</span>
+                </td>
+                <td nowrap>&nbsp;暫不電催：
+                    <span class="dsp_text">${no_tel_coll_flag}</span>
+                </td>
+                <td nowrap>&nbsp;暫不轉催收：
+                    <span class="dsp_text">${no_collection_flag}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;協商狀態：
+                    <span class="dsp_text">${nego_type}.${tt_liab_type}${tt_pay_by_stage_flag}</span>
+                </td>
+                <td nowrap>&nbsp;免列報：
+                    <span class="dsp_text ${css_font}">${collect_flagx}</span>
+                </td>
+                <td nowrap>&nbsp;暫不發簡訊：
+                    <span class="dsp_text">${no_sms_flag}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;雙幣幣別：
+                    <span class="dsp_text">${curr_code}.${curr_chi_name}</span>
+                </td>
+                <td nowrap>&nbsp;帳單應繳總額：
+                    <span class="dsp_text">${ttl_amt.(999.00)}</span>
+                </td>
+                <td nowrap>&nbsp;帳單應繳最低金額：
+                    <span class="dsp_text">${stmt_over_due_amt.(999.00)}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap></td>
+                <td nowrap>&nbsp;當前應繳餘額：
+                    <span class="dsp_text">${dc_ttl_amt_bal.(999.00)}</span>
+                </td>
+                <td nowrap>&nbsp;當前應繳最低餘額：
+                    <span class="dsp_text">${dc_min_pay_bal.(999.00)}</span>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap></td>
+                <td nowrap>&nbsp;繳款編號：
+                    <span class="dsp_text">${payment_no}</span>
+                </td>
+                <td nowrap>&nbsp;繳款編號II：
+                    <span class="dsp_text">${payment_no_ii}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+
+    <div class="tab">
+        <table cellspacing="5">
+            <tr>
+                <td class="tablinks" ${a_click_1}
+                    onclick="wfClick('1');  return tabControl(event, 'tab-1')">催理紀錄
+                </td>
+                <td class="tablinks" ${a_click_2} id="tab_active"
+                    onclick="wfClick('2');  return tabControl(event, 'tab-2')">催理內容
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="tab-1" class="tabcontent">
+        <table id="table1" border="0" cellspacing="0" cellpadding="2">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap>紀錄日期</th>
+                <th nowrap>記錄時間</th>
+                <th nowrap>使用者</th>
+                <th nowrap>使用者所屬單位</th>
+                <th nowrap>帳戶類別</th>
+                <th nowrap>雙幣幣別</th>
+                <th nowrap>處理結果類型</th>
+                <th nowrap>去電電話</th>
+                <th nowrap>催理紀錄</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${C.ser_num}</td>
+                <td nowrap class="list_cc"> ${C.crt_date.YMD}</td>
+                <td nowrap class="list_cc"> ${C.crt_time.TIME}</td>
+                <td nowrap class="list_ll"> ${C.proc_user}</td>
+                <td nowrap class="list_ll"> ${C.proc_user_deptno}</td>
+                <td nowrap class="list_ll"> ${C.acct_type}.${C.chin_name}</td>
+                <td nowrap class="list_ll"> ${C.curr_code}.${C.curr_chi_name}</td>
+                <td nowrap class="list_ll"> ${C.proc_code}.${C.proc_code_desc}</td>
+                <td nowrap class="list_ll"> ${C.callout_tel}</td>
+                <td nowrap class="list_ll"> ${C.proc_desc}</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <div id="tab-2" class="tabcontent">
+        <div id="dataBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="3">&nbsp;處理結果類型：
+                        <select name="proc_code" class="col_ddlb">
+                            <option value="">--</option>
+                            ${dddw_proc_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">&nbsp;去電電話：
+                        <select name="sel_callout_tel" onchange="selCalloutTel(this.value)" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1">1.手機</option>
+                            <option value="2">2.住家電話</option>
+                            <option value="3">3.公司電話</option>
+                        </select>
+                        <input type="text" class="col_text" name="callout_tel" maxlength="25" size="27" zEdit="any">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">&nbsp;催理記錄：
+                        <textarea rows=2 cols=50 class="col_any" name="proc_desc" zEdit="any,canTW"
+                                  maxlength=100></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <input type="hidden" name="tab_click" value="${tab_click}">
+    <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+    <input type="hidden" name="p_seqno" value="${p_seqno}">
+    <input type="hidden" name="curr_code" value="${curr_code}">
+    <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">
+    <input type="hidden" name="acct_type" value="${acct_type}">
+    <input type="hidden" name="phone_tel" value="${cellar_phone}">
+    <input type="hidden" name="home_tel" value="${home_area_code1}-${home_tel_no1}#${home_tel_ext1}">
+    <input type="hidden" name="office_tel" value="${office_area_code1}-${office_tel_no1}#${office_tel_ext1}">
+    <input type="hidden" name="id_no" value="${id_no}">
+    <input type="hidden" name="card_no" value="${card_no}">
+
+    <!-- -->
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1')
+</script>
+<script language="javascript">
+  top.refreshButton2('1')
+
+  function validateInput() {
+    if (!top.checkFormat()) {
+      return false
+    }
+
+    return true
+  }
+
+  function wfClick(parm) {
+    document.dataForm.tab_click.value = parm
+  }
+
+  function selCalloutTel(value) {
+    if (value == 1) {
+      document.dataForm.callout_tel.value = document.dataForm.phone_tel.value
+    } else if (value == 2) {
+      document.dataForm.callout_tel.value = document.dataForm.home_tel.value
+    } else if (value == 3) {
+      document.dataForm.callout_tel.value = document.dataForm.office_tel.value
+    } else {
+      document.dataForm.callout_tel.value = ''
+    }
+  }
+</script>

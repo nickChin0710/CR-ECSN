@@ -1,0 +1,145 @@
+<!-- 
+*****************************************************************************
+*                                                                            *
+*                              MODIFICATION LOG                              *
+*                                                                            *
+* DATE       Version   AUTHOR      DESCRIPTION                               *
+* ---------  --------  ---------- ------------------------------------------ *
+* 108-12-23  V1.00.01  Andy       Update                                     *
+* 110-03-31  V1.00.02  Justin     fix XSS                                    *       
+****************************************************************************** 
+-->
+<html>
+<head>
+    <title>卡片庫存量查詢-V.2021-0331-Justin-[fix XSS]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="4">&nbsp;庫存年月:
+                        <input type="text" class="col_date" name="ex_date" value="${ex_date}" zEdit="date,yyyymm" maxlength="6" size="6" zRequire="k" />
+                    </td>
+                    <td nowrap colspan="4">&nbsp;庫位:
+                        <select size="1" name="ex_place" class="col_ddlb">
+                            ${d_dddw_place}
+                        </select>
+                    </td>
+                    <td nowrap colspan="4">&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">&nbsp;卡樣:
+                        <select size="1" name="ex_card_item1" class="col_ddlb">
+                            ${d_dddw_card_item}
+                        </select>
+                        --
+                        <select size="1" name="ex_card_item2" class="col_ddlb">
+                            ${d_dddw_card_item2}
+                        </select>
+                    </td>
+                    <td nowrap colspan="6">&nbsp;
+                        <span class="dsp_number">本月出庫量:${item_tot_qty_out_all.(999)}</span> &nbsp;&nbsp;
+                        <span class="dsp_number">目前存量:${total.(999)}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--Sum -->
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="70%">
+            <tr>
+                <!-- <th nowrap class="list_th" width="5%">No&nbsp;</th> -->
+                <th nowrap class="list_th">卡樣代碼</th>
+                <th nowrap class="list_th">卡樣中文</th>
+                <th nowrap class="list_th">庫位</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">期初<br>庫存量</th>
+                <th nowrap class="list_th">新購<br>卡數</th>
+                <th nowrap class="list_th">本月<br>入庫量</th>
+                <th nowrap class="list_th">本月<br>出庫量</th>
+                <th nowrap class="list_th">目前<br>存量</th>
+                <th nowrap class="list_th">當月實際<br>領卡數</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <!-- <td nowrap class="list_no">&nbsp;${SER_NUM}</td> -->
+                <td nowrap class="list_cc">&nbsp;${card_item}</td>
+                <td nowrap class="list_cc">&nbsp;${name}</td>
+                <td nowrap class="list_cc">&nbsp;${tt_place}</td>
+                <td nowrap class="list_cc">&nbsp;${lot_no}</td>
+                <td nowrap class="list_rr">&nbsp;${pre_total.(999)}</td>
+                <td nowrap class="list_rr">&nbsp;${tt_in_qty01_buy.(999)}</td>
+                <td nowrap class="list_rr">&nbsp;${tt_in_qty01.(999)}</td>
+                <td nowrap class="list_rr">&nbsp;${tt_out_qty01.(999)}</td>
+                <td nowrap class="list_rr">&nbsp;${tt_cur_qty.(999)}</td>
+                <td nowrap class="list_rr">&nbsp;${wk_real_qty.(999)}</td>
+            </tr>
+            <!-- ${tr} 2021-03-31 Justin fix XSS-->
+            <tr>
+                <td nowrap class="td_data" align="left" colspan=3 style="color: blue">安全庫存量:${safe_qty}</td>
+                <td nowrap class="td_data" align="right">小計:</td>
+                <td nowrap class="list_rr">${itemTotQty3}</td>
+                <td nowrap class="list_rr">${itemTotQty0}</td>
+                <td nowrap class="list_rr">${itemTotQty1}</td>
+                <td nowrap class="list_rr">${itemTotQty2}</td>
+                <td nowrap class="list_rr">${itemTotQty}</td>
+                <td nowrap class="list_rr">${itemTotQtyOut}</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+          <!--  <tr>
+                <td colspan="7"></td>
+                <td nowrap class="td_data" align="right">&nbsp;庫存量總計:</td>
+                <td nowrap class="td_data">&nbsp;
+                    <span class="dsp_number">${total}</span>
+                </td>
+                <td nowrap class="td_data">&nbsp;
+                    <span class="dsp_number">${item_tot_qty_out_all}</span>
+                </td>
+            </tr> -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="crdq0010">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" id="TTTS" name="TTTS" value="">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "9999";
+document.dataForm.ex_place.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "C") {
+        var filename = document.getElementById('exImportFile').value;
+
+        if (filename == "") {
+
+            return false;
+        }
+    }
+
+    return true;
+}
+</script>

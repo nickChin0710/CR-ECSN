@@ -1,0 +1,770 @@
+<html>
+<head>
+<title>單月帳務資料查詢-jh-202201012 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_history]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_history]").filter('[value=N]').prop('checked', true);
+   document.getElementById('ex_yymm').disabled = true ;
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         ${d_dddw_accttype}
+      </select>
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" >
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+   <td nowrap >&nbsp;姓名(公司):
+      <span class="dsp_text">${ex_acno_name}&nbsp;</span>
+      <input type="hidden" name="ex_acno_name" value="${ex_acno_name}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >
+      <span class="col_radio">
+         <input type="radio" value="N" name="ex_history" ${ex_history-N} onClick="chgHistory()" />當期
+         <input type="radio" value="Y" name="ex_history" ${ex_history-Y} onClick="chgHistory()" />歷史
+      </span>
+   </td>
+   <td nowrap >&nbsp;帳務週期:
+      <span class="dsp_text">${ex_stmt_cycle}&nbsp;</span>
+      <input type="hidden" name="ex_stmt_cycle" value="${ex_stmt_cycle}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;帳務年月:
+      <input type="text" class="col_text" id="ex_yymm" name="ex_yymm" value="${ex_yymm}" maxlength="6" size="8" zEdit="date,yyyymm" >
+   </td>
+   <td nowrap >&nbsp;結算幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_dc_curr_code_tw}
+      </select>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="${a_click_1}" onclick="wfClick('1');  return tabControl(event, 'tab-1')">1.帳務資料<br>&nbsp;</td>
+       <td class="tablinks" id="${a_click_3}" onclick="wfClick('3');  return tabControl(event, 'tab-3')" style="color:deeppink;">
+       	2.科目餘額<br>(依幣別)</td>
+       <td class="tablinks" id="${a_click_5}" onclick="wfClick('5');  return tabControl(event, 'tab-5')" style="color:deeppink;">
+       	3.對帳單上訊息<br>(依幣別)</td>
+       <td class="tablinks" id="${a_click_6}" onclick="wfClick('6');  return tabControl(event, 'tab-6')">4.統計資料<br>&nbsp;</td>
+       <td class="tablinks" id="${a_click_7}" onclick="wfClick('7');  return tabControl(event, 'tab-7')" style="color:deeppink;">
+       	5.MP計算<br>&nbsp;</td>
+       <td class="tablinks" id="${a_click_8}" onclick="wfClick('8');  return tabControl(event, 'tab-8')">6.利率差異<br>&nbsp;</td>
+       <td class="tablinks" id="${a_click_9}" onclick="wfClick('9');  return tabControl(event, 'tab-9')">7.債協債清<br>&nbsp;</td>
+    </tr>
+  </table>
+</div>
+<!-----------帳務資料-------------->
+<div id="tab-1" class="tabcontent">
+<div id="dataBlock">
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;帳戶類別:
+      <span class="dsp_text">${A1_acct_type}&nbsp;</span>
+      <input type="hidden" name="A1_acct_type" value="${A1_acct_type}">
+   </td>
+   <td nowrap >&nbsp;帳戶帳號:
+      <span class="dsp_text">${A1_acct_key}&nbsp;</span>
+      <input type="hidden" name="A1_acct_key" value="${A1_acct_key}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;本行繳款編號  :
+      <span class="dsp_text">${A1_wk_pay}&nbsp;</span>
+      <input type="hidden" name="A1_wk_pay" value="${A1_wk_pay}">
+   </td>
+   <td nowrap >&nbsp;台幣欠款總額:
+      <span class="${A1_bal_style}">${A1_acct_jrnl_bal.(999)}&nbsp;</span>
+      <input type="hidden" name="A1_acct_jrnl_bal" value="${A1_acct_jrnl_bal}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;本行繳款編號II:
+      <span class="dsp_text">${A1_wk_pay_2}&nbsp;</span>
+      <input type="hidden" name="A1_wk_pay_2" value="${A1_wk_pay_2}">
+   </td>
+ </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap colspan="3" >&nbsp;標準RC最低應繳金額:
+         <span class="dsp_text">${A1_rc_min_pay.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_rc_min_pay" value="${A1_rc_min_pay}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;餘額:
+         <span class="dsp_text">${A1_rc_min_pay_bal.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_rc_min_pay_bal" value="${A1_rc_min_pay_bal}">
+      </td>
+<!--
+      <td nowrap colspan="2" >&nbsp;帳齡一M0:
+         <span class="dsp_text">${A1_rc_min_pay_m0}&nbsp;</span>
+         <input type="hidden" name="A1_rc_min_pay_m0" value="${A1_rc_min_pay_m0}">
+      </td>
+-->
+   </tr>
+<!--
+   <tr>
+      <td nowrap colspan="2" >&nbsp;催呆戶承諾還款金額:
+         <span class="dsp_text">${A1_pay_by_stage_amt.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_pay_by_stage_amt" value="${A1_pay_by_stage_amt}">
+      </td>
+      <td nowrap colspan="2" >&nbsp;餘額:
+         <span class="dsp_text">${A1_pay_by_stage_bal.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_pay_by_stage_bal" value="${A1_pay_by_stage_bal}">
+      </td>
+      <td nowrap colspan="2" >&nbsp;日期:
+         <span class="dsp_text">${A1_pay_by_stage_date.YMD}&nbsp;</span>
+         <input type="hidden" name="A1_pay_by_stage_date" value="${A1_pay_by_stage_date}">
+      </td>
+   </tr>
+-->
+   <tr>
+      <td nowrap colspan="3" >&nbsp;最近實際繳款的日期:
+         <span class="dsp_text">${A1_last_payment_date.YMD}&nbsp;</span>
+         <input type="hidden" name="A1_last_payment_date" value="${A1_last_payment_date}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;代收繳款金額:
+         <span class="dsp_text">${A1_db_cou_pay.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_cou_pay" value="${A1_db_cou_pay}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3" >&nbsp;郵局帳號扣款未銷金額:
+         <span class="dsp_text">${A1_db_aut2_pay.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_aut2_pay" value="${A1_db_aut2_pay}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;它行帳號扣款未銷金額:
+         <span class="dsp_text">${A1_db_ach_total.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_ach_total" value="${A1_db_ach_total}">
+      </td>
+   </tr>
+<!--
+   <tr>
+      <td nowrap colspan="3" >&nbsp;當日IBM繳款金額:</td>
+      <td nowrap colspan="1" >&nbsp;本日銷帳:
+         <span class="dsp_text">${A1_db_ibm_pay.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_ibm_pay" value="${A1_db_ibm_pay}">
+      </td>
+      <td nowrap colspan="2">
+         &nbsp;非本日銷帳:
+         <span class="dsp_text">${A1_db_ibm_pay_other.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_ibm_pay_other" value="${A1_db_ibm_pay_other}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6" >&nbsp;
+         <span class="td_remark">上述IBM繳款金額不含本行扣款未銷金額，若要查詢請至【對帳單訊息(依幣別)】 查詢</span>
+      </td>
+   </tr>
+-->
+   <tr>
+      <td nowrap colspan="3" >&nbsp;最近沖銷MP=0的日期:
+         <span class="dsp_text">${A1_last_min_pay_date.YMD}&nbsp;</span>
+         <input type="hidden" name="A1_last_min_pay_date" value="${A1_last_min_pay_date}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;分期付款未Posting本金:
+      	 <a href="#" onClick="detailScreen6()" style="cursor:hand">${A1_db_inst_unpost.(999)}</a>
+         <input type="hidden" name="A1_db_inst_unpost" value="${A1_db_inst_unpost}">
+         <span class="col_key">連結bilq0010郵購/分期付款明細查詢</span>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3" >&nbsp;最近沖銷TTL的日期:
+         <span class="dsp_text">${A1_last_cancel_debt_date.YMD}&nbsp;</span>
+         <input type="hidden" name="A1_last_cancel_debt_date" value="${A1_last_cancel_debt_date}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;RC轉分期未Posting利息:
+         <span class="dsp_text">${A1_db_aofee.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_aofee" value="${A1_db_aofee}">
+      </td>
+   </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap >&nbsp;預算結清利息:
+         <span class="dsp_text">${A1_db_adv_intr.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_adv_intr" value="${A1_db_adv_intr}">
+      </td>
+      <td nowrap >&nbsp;預算結清違約金:
+         <span class="dsp_text">${A1_db_adv_penl.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_adv_penl" value="${A1_db_adv_penl}">
+      </td>
+      <td nowrap >&nbsp;結清總應繳款:
+         <span class="dsp_text">${A1_db_adv_total.(999)}&nbsp;</span>
+         <input type="hidden" name="A1_db_adv_total" value="${A1_db_adv_total}">
+      </td>
+   </tr>
+   <tr>
+   	<td nowrap colspan="3" class="dsp_flag">&nbsp;備註：</td>
+   </tr>
+   <tr>
+   	<td nowrap colspan="3" class="dsp_flag">&nbsp;1. 結清總應繳款=已通知期末/目前餘額+未通知期末/目前餘額+分期付款未Posting本金+RC轉分期未Posting利息+預算結清利息+預算結清違約金</td>
+   </tr>
+   <tr>
+   	<td nowrap colspan="3" class="dsp_flag">&nbsp;2. 當日IBM還款，非本日銷帳原因：營業日15:30後及例假日轉帳匯款之交易或支票託收未到期之還款。<br>&nbsp;若想知道詳細之IBM還款明細可自"actr0350代收代付作業明細表"查詢。</td>
+   </tr>
+</table>
+</div>
+</div>
+<!-----------科目餘額(依幣別)-------------->
+<div id="tab-3" class="tabcontent">
+<div id="dataBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;欠款總額:
+      <span class="dsp_text">${A2_acct_jrnl_bal.(999)}&nbsp;</span>
+      <input type="hidden" name="A2_acct_jrnl_bal" value="${A2_acct_jrnl_bal}">
+   </td>
+   <td nowrap >&nbsp;本月帳外息總額:
+      <span class="dsp_text">${A2_adi_beg_bal.(999.00)}&nbsp;</span>
+      <input type="hidden" name="A2_adi_beg_bal" value="${A2_adi_beg_bal}">
+   </td>
+   <td nowrap >&nbsp;餘額:
+      <span class="dsp_text">${A2_adi_end_bal.(999.00)}&nbsp;</span>
+      <input type="hidden" name="A2_adi_end_bal" value="${A2_adi_end_bal}">
+   </td>
+   <td nowrap >&nbsp;可D數:
+      <span class="dsp_text">${A2_adi_d_avail.(999.00)}&nbsp;</span>
+      <input type="hidden" name="A2_adi_d_avail" value="${A2_adi_d_avail}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;溢付款期初餘額:
+      <span class="dsp_text">${A2_beg_bal_op.(999)}&nbsp;</span>
+      <input type="hidden" name="A2_beg_bal_op" value="${A2_beg_bal_op}">
+   </td>
+   <td nowrap colspan="3" >&nbsp;期末餘額:
+      <span class="dsp_text">${A2_end_bal_op.(999)}&nbsp;</span>
+      <input type="hidden" name="A2_end_bal_op" value="${A2_end_bal_op}">
+   </td>
+ </tr>
+<!--
+ <tr>
+   <td nowrap >&nbsp;溢付款已圈存期初餘額:
+      <span class="dsp_text">${A2_beg_bal_lk.(999)}&nbsp;</span>
+      <input type="hidden" name="A2_beg_bal_lk" value="${A2_beg_bal_lk}">
+   </td>
+   <td nowrap >&nbsp;期末餘額:
+      <span class="dsp_text">${A2_end_bal_lk.(999)}&nbsp;</span>
+      <input type="hidden" name="A2_end_bal_lk" value="${A2_end_bal_lk}">
+   </td>
+   <td nowrap >&nbsp;圈存起日:
+      <span class="dsp_text">${A2_overpay_lock_sta_date.YMD}&nbsp;</span>
+      <input type="hidden" name="A2_overpay_lock_sta_date" value="${A2_overpay_lock_sta_date}">
+   </td>
+   <td nowrap >&nbsp;圈存迄日:
+      <span class="dsp_text">${A2_overpay_lock_due_date.YMD}&nbsp;</span>
+      <input type="hidden" name="A2_overpay_lock_due_date" value="${A2_overpay_lock_due_date}">
+   </td>
+  </tr>
+-->
+  <tr>
+   <td nowrap class="td_titl"><b>當期</b></td>
+   <td nowrap class="td_titl"><b>台幣</b></td>
+   <td nowrap class="td_titl"><b>美金(約當台幣)</b></td>
+   <td nowrap class="td_titl"><b>日幣(約當台幣)</b></td>
+  </tr>
+  <tr>
+   <td nowrap>溢付款期末餘額:</td>
+   <td nowrap><input type="text" readonly class="dsp_number" name="A2_end_op" value="${A2_end_op.(999)}" size="12" /></td>
+   <td nowrap><input type="text" readonly class="dsp_number" name="A2_end_op_us" value="${A2_end_op_us.(999.00)}" size="12" /></td>
+   <td nowrap><input type="text" readonly class="dsp_number" name="A2_end_op_jp" value="${A2_end_op_jp.(999.00)}" size="12" /></td>
+  </tr>
+<!--
+  <tr>
+   <td nowrap>溢付款已圈存期末餘額:</td>
+   <td nowrap><input type="text" readonly class="dsp_number" name="A2_end_lk" value="${A2_end_lk.(999)}" size="12" /></td>
+   <td nowrap><input type="text" readonly class="dsp_number" name="A2_end_lk_us" value="${A2_end_lk_us.(999.00)}" size="12" /></td>
+   <td nowrap><input type="text" readonly class="dsp_number" name="A2_end_lk_jp" value="${A2_end_lk_jp.(999.00)}" size="12" /></td>
+  </tr>
+-->
+</table>
+<!-- //    <th nowrap></th>
+<th nowrap></th> -->
+
+</div>
+<hr>
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>結算幣別&nbsp;</th>
+    <th nowrap>欠款總額&nbsp;</th>
+    <th nowrap>已通知<br>期初餘額</th>
+    <th nowrap>已通知<br>期末/目前餘額</th>
+    <th nowrap>未通知<br>期初餘額</th>
+    <th nowrap>未通知<br>期末/目前餘額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen3('${SER_NUM}','${A3_curr_code}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}">
+	</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodePtr.currCode(A3_curr_code)}&nbsp;
+      <input type="hidden" name="A3_curr_code" value="${A3_curr_code}">
+	</td>
+	<td nowrap class="list_rr"> ${A3_acct_jrnl_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A3_acct_jrnl_bal" value="${A3_acct_jrnl_bal}">
+	</td>
+	<td nowrap class="list_rr"> ${A3_billed_beg_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A3_billed_beg_bal" value="${A3_billed_beg_bal}">
+	</td>
+	<td nowrap class="list_rr"> ${A3_billed_end_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A3_billed_end_bal" value="${A3_billed_end_bal}">
+	</td>
+	<td nowrap class="list_rr"> ${A3_unbill_beg_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A3_unbill_beg_bal" value="${A3_unbill_beg_bal}">
+	</td>
+	<td nowrap class="list_rr"> ${A3_unbill_end_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A3_unbill_end_bal" value="${A3_unbill_end_bal}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------對帳單上訊息(依幣別)-------------->
+<div id="tab-5" class="tabcontent">
+<div id="dataBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;結帳年月:
+      <span class="dsp_text">${A5_stmt_acct_month}&nbsp;</span>
+      <input type="hidden" name="A5_stmt_acct_month" value="${A5_stmt_acct_month}">
+   </td>
+   <td nowrap >&nbsp;異常戶不列印帳單旗標:
+      <span class="dsp_text">${A5_unprint_flag}&nbsp;</span>
+      <input type="hidden" name="A5_unprint_flag" value="${A5_unprint_flag}">
+   </td>
+   <td nowrap >&nbsp;一般不列印帳單旗標:
+      <span class="dsp_text">${A5_unprint_flag_regular}&nbsp;</span>
+      <input type="hidden" name="A5_unprint_flag_regular" value="${A5_unprint_flag_regular}">
+   </td>
+  </tr>
+</table>
+</div>
+<hr>
+ <table id="table5" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >本行繳款鍵值&nbsp;</th>
+    <th nowrap >上期最低應繳餘額&nbsp;</th>
+    <th nowrap >本期待繳總額&nbsp;</th>
+    <th nowrap >本期最低應繳金額&nbsp;</th>
+    <th nowrap >銀行代號&nbsp;</th>
+    <th nowrap >自動扣繳帳號&nbsp;</th>
+    <th nowrap >預定扣款日&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen5('${SER_NUM}','${A5_curr_code}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}">
+	</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodePtr.currCode(A5_curr_code)}&nbsp;
+      <input type="hidden" name="A5_curr_code" value="${A5_curr_code}">
+	</td>
+	<td nowrap class="list_cc"> ${A5_stmt_payment_no}&nbsp;
+      <input type="hidden" name="A5_stmt_payment_no" value="${A5_stmt_payment_no}">
+	</td>
+	<td nowrap class="list_rr"> ${A5_min_pay_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A5_min_pay_bal" value="${A5_min_pay_bal}">
+	</td>
+	<td nowrap class="list_rr"> ${A5_stmt_this_ttl_amt.(999.00)}&nbsp;
+      <input type="hidden" name="A5_stmt_this_ttl_amt" value="${A5_stmt_this_ttl_amt}" />
+	</td>
+    <td nowrap class="list_rr"> ${A5_stmt_mp.(999.00)}&nbsp;
+      <input type="hidden" name="A5_stmt_mp" value="${A5_stmt_mp}">
+	</td>
+	<td nowrap class="list_cc"> ${A5_stmt_auto_pay_bank}&nbsp;
+      <input type="hidden" name="A5_stmt_auto_pay_bank" value="${A5_stmt_auto_pay_bank}">
+	</td>
+	<td nowrap class="list_cc"> ${A5_stmt_auto_pay_no}&nbsp;
+      <input type="hidden" name="A5_stmt_auto_pay_no" value="${A5_stmt_auto_pay_no}">
+	</td>
+	<td nowrap class="list_cc"> ${A5_stmt_auto_pay_date.YMD}&nbsp;
+      <input type="hidden" name="A5_stmt_auto_pay_date" value="${A5_stmt_auto_pay_date}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------統計資料-------------->
+<div id="tab-6" class="tabcontent">
+<div id="dataBlock">
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;每月歷史累積消費次數:
+      <span class="dsp_text">${A6_his_purchase_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_purchase_cnt" value="${A6_his_purchase_cnt}">
+   </td>
+   <td nowrap >&nbsp;每月累積繳款次數:
+      <span class="dsp_text">${A6_his_pay_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_pay_cnt" value="${A6_his_pay_cnt}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;每月歷史累積消費金額:
+      <span class="dsp_text">${A6_his_purchase_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_purchase_amt" value="${A6_his_purchase_amt}">
+   </td>
+   <td nowrap >&nbsp;每月累積繳款金額:
+      <span class="dsp_text">${A6_his_pay_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_pay_amt" value="${A6_his_pay_amt}">
+   </td>
+</tr>
+<tr>
+<!--
+   <td nowrap >&nbsp;不包含M2的累積消費額:
+      <span class="dsp_text">${A6_his_pur_no_m2.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_pur_no_m2" value="${A6_his_pur_no_m2}">
+   </td>
+-->
+   <td nowrap >&nbsp;每月歷史累積預現次數:
+      <span class="dsp_text">${A6_his_cash_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_cash_cnt" value="${A6_his_cash_cnt}">
+   </td>
+   <td nowrap >&nbsp;每月累積調整借方次數:
+      <span class="dsp_text">${A6_his_adj_dr_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_adj_dr_cnt" value="${A6_his_adj_dr_cnt}">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;每月歷史累積預現金額:
+      <span class="dsp_text">${A6_his_cash_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_cash_amt" value="${A6_his_cash_amt}">
+   </td>
+   <td nowrap >&nbsp;每月累積調整借方金額:
+      <span class="dsp_text">${A6_his_adj_dr_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_adj_dr_amt" value="${A6_his_adj_dr_amt}">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;每月歷史繳款百分比:
+      <span class="dsp_text">${A6_his_pay_percentage.(999.00)}&nbsp;</span>％
+      <input type="hidden" name="A6_his_pay_percentage" value="${A6_his_pay_percentage}">
+   </td>
+   <td nowrap >&nbsp;每月累積調整貸方次數:
+      <span class="dsp_text">${A6_his_adj_cr_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_adj_cr_cnt" value="${A6_his_adj_cr_cnt}">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;每月歷史RC使用率百分比:
+      <span class="dsp_text">${A6_his_rc_percentage.(999.00)}&nbsp;</span>％
+      <input type="hidden" name="A6_his_rc_percentage" value="${A6_his_rc_percentage}">
+   </td>
+   <td nowrap >&nbsp;每月累積調整貸方金額:
+      <span class="dsp_text">${A6_his_adj_cr_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="A6_his_adj_cr_amt" value="${A6_his_adj_cr_amt}">
+   </td>
+</tr>
+<!--
+<tr>
+   <td nowrap >&nbsp;</td>
+</tr>
+-->
+</table>
+</div>
+</div>
+<!-----------MP計算-------------->
+<div id="tab-7" class="tabcontent">
+ <table id="table7" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap class="td_titl" colspan="2">幣別:</td>
+ 		<td nowrap class="td_titl" >&nbsp;台幣
+ 		<td nowrap class="td_titl" colspan="3" >合計:</td>
+ 		<td nowrap class="td_titl" >${A7_tl_cnt_tw.(999)}&nbsp;筆
+ 				<input type="hidden" name="A7_tl_cnt_tw" value="${A7_tl_cnt_tw}">
+ 		</td>
+ 		<td nowrap class="td_titl" >${A7_tl_wk_mp_amt_tw.(999.00)}&nbsp;
+ 				<input type="hidden" name="A7_tl_wk_mp_amt_tw" value="${A7_tl_wk_mp_amt_tw}">
+ 		</td>
+ 		<td nowrap class="td_titl" colspan="3" >&nbsp;</td>
+ 	</tr>
+ 	<tr>
+ 		<td nowrap class="td_titl" colspan="2">幣別:</td>
+ 		<td nowrap class="td_titl" >&nbsp;美金
+ 		<td nowrap class="td_titl" colspan="3" >合計:</td>
+ 		<td nowrap class="td_titl" >${A7_tl_cnt_a.(999)}&nbsp;筆
+ 				<input type="hidden" name="A7_tl_cnt_a" value="${A7_tl_cnt_a}">
+ 		</td>
+ 		<td nowrap class="td_titl" >${A7_tl_wk_mp_amt_a.(999.00)}&nbsp;
+ 				<input type="hidden" name="A7_tl_wk_mp_amt_a" value="${A7_tl_wk_mp_amt_a}">
+ 		</td>
+ 		<td nowrap class="td_titl" colspan="3" >&nbsp;</td>
+ 	</tr>
+ 	<tr>
+ 		<td nowrap class="td_titl" colspan="2">幣別:</td>
+ 		<td nowrap class="td_titl" >&nbsp;日幣
+ 		<td nowrap class="td_titl" colspan="3" >合計:</td>
+ 		<td nowrap class="td_titl" >${A7_tl_cnt_jp.(999)}&nbsp;筆
+ 				<input type="hidden" name="A7_tl_cnt_jp" value="${A7_tl_cnt_jp}">
+ 		</td>
+ 		<td nowrap class="td_titl" >${A7_tl_wk_mp_amt_jp.(999.00)}&nbsp;
+ 				<input type="hidden" name="A7_tl_wk_mp_amt_jp" value="${A7_tl_wk_mp_amt_jp}">
+ 		</td>
+ 		<td nowrap class="td_titl" colspan="3" >&nbsp;</td>
+ 	</tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >關帳<br>年月</th>
+    <th nowrap >結算<br>幣別</th>
+    <th nowrap >MP說明&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >金額&nbsp;</th>
+    <th nowrap >MP<br>百分比</th>
+    <th nowrap >MP金額&nbsp;</th>
+    <th nowrap >帳戶循環<br>信用額度</th>
+    <th nowrap >未到期<br>分期付款</th>
+    <th nowrap >科目英文<br>名稱代碼</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}">
+	</td>
+	<td nowrap class="list_cc"> ${A7_acct_month.YMD}&nbsp;
+      <input type="hidden" name="A7_acct_month" value="${A7_acct_month}">
+	</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodePtr.currCode(A7_curr_code)}&nbsp;
+      <input type="hidden" name="A7_curr_code" value="${A7_curr_code}">
+	</td>
+	<td nowrap class="list_ll"> ${A7_mp_desc}&nbsp;
+      <input type="hidden" name="A7_mp_desc" value="${A7_mp_desc}">
+	</td>
+	<td nowrap class="list_cc"> ${A7_mcht_no}&nbsp;
+      <input type="hidden" name="A7_mcht_no" value="${A7_mcht_no}">
+	</td>
+	<td nowrap class="list_rr"> ${A7_wk_end_bal.(999.00)}&nbsp;
+      <input type="hidden" name="A7_wk_end_bal" value="${A7_wk_end_bal}">
+	</td>
+	<td nowrap class="list_rr"> ${A7_mp_rate.(999.00)}&nbsp;
+      <input type="hidden" name="A7_mp_rate" value="${A7_mp_rate}">
+	</td>
+	<td nowrap class="list_rr"> ${A7_wk_mp_amt.(999.00)}&nbsp;
+      <input type="hidden" name="A7_wk_mp_amt" value="${A7_wk_mp_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${A7_line_of_credit_amt.(999)}&nbsp;
+      <input type="hidden" name="A7_line_of_credit_amt" value="${A7_line_of_credit_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${A7_unpost_installment.(999.00)}&nbsp;
+      <input type="hidden" name="A7_unpost_installment" value="${A7_unpost_installment}">
+	</td>
+	<td nowrap class="list_cc"> ${A7_acct_code}&nbsp;
+      <input type="hidden" name="A7_acct_code" value="${A7_acct_code}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------利率差異-------------->
+<div id="tab-8" class="tabcontent">
+ <table id="table8" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >帳務年月&nbsp;</th>
+    <th nowrap >實際利率&nbsp;</th>
+    <th nowrap >標準利率&nbsp;</th>
+    <th nowrap >當季預估利率&nbsp;</th>
+    <th nowrap >當季適用期間&nbsp;</th>
+    <th nowrap >當季不適用原因說明&nbsp;</th>
+    <th nowrap >下季預估利率&nbsp;</th>
+    <th nowrap >下季適用期間&nbsp;</th>
+    <th nowrap >下季不適用原因說明&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}">
+	</td>
+	<td nowrap class="list_cc"> ${A8_acct_month.YMD}&nbsp;
+      <input type="hidden" name="A8_acct_month" value="${A8_acct_month}">
+	</td>
+	<td nowrap class="list_rr"> ${A8_real_int_rate_3}&nbsp;
+      <input type="hidden" name="A8_real_int_rate_3" value="${A8_real_int_rate_3}">
+	</td>
+	<td nowrap class="list_cc"> ${A8_standard_int_rate}&nbsp;
+      <input type="hidden" name="A8_standard_int_rate" value="${A8_standard_int_rate}">
+	</td>
+	<td nowrap class="list_rr"> ${A8_real_int_rate}&nbsp;
+      <input type="hidden" name="A8_real_int_rate" value="${A8_real_int_rate}">
+	</td>
+	<td nowrap class="list_cc"> ${A8_revolve_rate_s_date.YMD}&nbsp;--&nbsp;${A8_revolve_rate_e_date.YMD}
+      <input type="hidden" name="A8_revolve_rate_s_date" value="${A8_revolve_rate_s_date}">
+      <input type="hidden" name="A8_revolve_rate_e_date" value="${A8_revolve_rate_e_date}">
+	</td>
+	<td nowrap class="list_cc"> ${A8_proc_desc}&nbsp;
+      <input type="hidden" name="A8_proc_desc" value="${A8_proc_desc}">
+	</td>
+	<td nowrap class="list_rr"> ${A8_real_int_rate_2}&nbsp;
+      <input type="hidden" name="A8_real_int_rate_2" value="${A8_real_int_rate_2}">
+	</td>
+	<td nowrap class="list_cc"> ${A8_revolve_rate_s_date_2.YMD}&nbsp;--&nbsp;${A8_revolve_rate_e_date_2.YMD}
+      <input type="hidden" name="A8_revolve_rate_s_date_2" value="${A8_revolve_rate_s_date_2}">
+      <input type="hidden" name="A8_revolve_rate_e_date_2" value="${A8_revolve_rate_e_date_2}">
+	</td>
+	<td nowrap class="list_cc"> ${A8_proc_desc2}&nbsp;
+      <input type="hidden" name="A8_proc_desc2" value="${A8_proc_desc2}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------債協債清-------------->
+<div id="tab-9" class="tabcontent">
+ <table id="table9" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >資料類別&nbsp;</th>
+    <th nowrap >狀態/進度&nbsp;</th>
+    <th nowrap >通報日期&nbsp;</th>
+    <th nowrap >結案日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="ser_num" >
+	</td>
+	<td nowrap class="list_cc">${A9_ex_type}&nbsp;
+	   <input type="hidden" name="A9_ex_type" value="${A9_ex_type}">
+	</td>
+	<td nowrap class="list_cc">${A9_ex_status}&nbsp;
+	   <input type="hidden" name="A9_ex_status" value="${A9_ex_status}">
+	</td>
+	<td nowrap class="list_cc">${A9_ex_rcv_date.YMD}&nbsp;
+	   <input type="hidden" name="A9_ex_rcv_date" value="${A9_ex_rcv_date}">
+	</td>
+	<td nowrap class="list_cc">${A9_ex_end_date.YMD}&nbsp;
+	   <input type="hidden" name="A9_ex_end_date" value="${A9_ex_end_date}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+<input type="hidden"  name="tab_click" value="${tab_click}">
+
+ <input type="hidden"  name="ex_p_seqno" value="${ex_p_seqno}">
+ <input type="hidden"  name="ex_acct_month" value="${ex_acct_month}">
+ <input type="hidden"  name="ex_last_mm" value="${ex_last_mm}">
+ <input type="hidden"  name="ex_this_mm" value="${ex_this_mm}">
+ <input type="hidden"  name="ex_next_mm" value="${ex_next_mm}">
+ <input type="hidden"  name="ex_delay_date" value="${ex_delay_date}">
+ <input type="hidden"  name="ex_intr_date" value="${ex_intr_date}">
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="acno_cnt"  value="${acno_cnt}">
+
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables_2.js"></script>
+<script language="JavaScript">
+	tigra_tables('table3',1,0,0);
+	tigra_tables('table5', 1, 0, 0);
+	tigra_tables('table7',1,4,0);
+	tigra_tables('table8', 1, 0, 0);
+	tigra_tables('table9', 1, 0, 0);
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen3(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "actq0020_3_detl";
+    top.submitControl('S3');
+    return true;
+  }
+
+  function detailScreen5(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "actq0020_5_detl";
+    top.submitControl('S5');
+    return true;
+  }
+
+  function detailScreen6() {
+    var ex_p_seqno = document.dataForm.ex_p_seqno.value ;
+    if(ex_p_seqno == ''){
+        alert("請先查詢資料");
+        return false ;
+    }
+    top.respLevel = 1;
+    top.respHtml  = "actq0020_6_detl";
+    top.submitControl('S6');
+    return true;
+  }
+
+  function wfClick(parm) {
+  	document.dataForm.tab_click.value = parm;
+  }
+
+  function chgHistory() {
+    var ex_history = $("input[name=ex_history]:checked").val();
+    if(ex_history =='N'){
+        document.getElementById('ex_yymm').disabled = true ;
+    }   else if(ex_history =='Y'){
+        document.getElementById('ex_yymm').disabled = false ;
+    }
+
+  }
+</script>

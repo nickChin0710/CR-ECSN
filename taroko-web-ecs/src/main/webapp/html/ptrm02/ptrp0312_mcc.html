@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>卡人等級參數設定[mcc]-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+
+
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">帳戶類別：
+      <span class="dsp_text">${acct_type}</span>
+      <input type="hidden" name="acct_type" value="${acct_type}" />
+   </td>
+   <td nowrap class="col_key">卡人等級：
+      <span class="dsp_text">${class_code}</span>
+      <input type="hidden" name="class_code" value="${class_code}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>明細類別：
+      <span class="dsp_date">MCC Code</span>
+      <input type="hidden" name="data_type" value="MCC-CODE" />
+   </td>
+   <td nowrap class="col_key">已覆核：
+      <span class="dsp_text">${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">
+   	  <input type="Button" value="MCC_CODE" onclick="wf_detl_2page('1');" disabled />
+      <input type="Button" value="當時違約評等"  onclick="wf_detl_2page('2');" class="btAdd_detl" />
+      <input type="Button" value="近期違約評等"  onclick="wf_detl_2page('3');" class="btAdd_detl" />
+      <input type="Button" value="VIP code" onclick="wf_detl_2page('4');" class="btAdd_detl" />
+   </td>
+  </tr>
+</table>
+<hr>
+<table id="table1" width="60%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap class="list_cc" width="5%">No </th>
+    <th nowrap class="list_cc">MCC Code </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_value" value="${data_value}" />
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${data_value}</td>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ptrm0312">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="mcc">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+ }
+  
+ function wf_detl_2page(parm) { 
+    top.respLevel = 2;
+   if (parm === "1") {
+      top.respHtml ="ptrp0312_mcc";
+   }
+   else if (parm === "2") {
+      top.respHtml ="ptrp0312_pdrate1";
+   }
+   else if (parm === "3") {
+      top.respHtml ="ptrp0312_pdrate2";
+   }
+   else if (parm === "4") {
+      top.respHtml ="ptrp0312_vip";
+   }
+   else {
+      return false;
+   }
+   top.submitControl("R2");
+   return true;
+ }
+</script>

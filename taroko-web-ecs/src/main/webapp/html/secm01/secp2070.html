@@ -1,0 +1,141 @@
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-01-22  V1.00.02  Justin      disabled rows when  crt user equals to loginUser                                                 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>子系統權限設定覆核處理-Justin-210122</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;子系統代碼:
+      <select size="1" name="ex_group_id" class="col_ddlb" zRequire="C">
+         ${dddw_group_id}
+      </select>
+   </td>
+   <td nowrap >&nbsp;使用者層級:
+      <select size="1" name="ex_user_level" class="col_ddlb" zRequire="C">
+         ${dddw_user_level}
+      </select>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="覆核" onClick="return wf_confirm_appr('C')" class="btProcess" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <div id="queryBlock">
+ 	<table border="0" cellspacing="0" cellpadding="4">
+ 		<tr>
+    	<td nowrap>&nbsp;子系統:&nbsp;
+    	<span class="dsp_text">${kk_group_id}</span>&nbsp;
+	      <input type="hidden" name="kk_group_id" value="${kk_group_id}" />
+  		<td nowrap>&nbsp;使用者層級:&nbsp;
+    	<span class="dsp_text">${kk_user_level}</span>&nbsp;
+      	<input type="hidden" name="kk_user_level" value="${kk_user_level}" />
+  		</td>
+  		<td nowrap>&nbsp;待覆核筆數:&nbsp;
+    	<span class="dsp_number">${kk_tot_cnt}</span>&nbsp;
+      	<input type="hidden" name="kk_tot_cnt" value="${kk_tot_cnt}" />
+  		</td>
+      <td nowrap>&nbsp;每次覆核筆數:&nbsp;
+        <input type="text" class="col_number" name="ex_apr_cnt" value="${ex_apr_cnt}" maxlength="3" size="5" zRequire="C" zEdit="number" />
+      </td>
+  	</tr>
+ 	</table>
+ </div>
+ <table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	覆核&nbsp;
+    </th>
+    <th nowrap >程式代碼&nbsp;</th>
+    <th nowrap >作業說明&nbsp;</th>
+    <th nowrap >異動類別&nbsp;</th>
+    <th nowrap >查詢&nbsp;</th>
+    <th nowrap >維護&nbsp;</th>
+    <th nowrap >線上覆核&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> &nbsp;
+      <span class="dsp_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} ${canApprove}/>
+	   ${SER_NUM}&nbsp;
+	   <input type="hidden" name="canApprove" value="${canApprove}" />
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	   <input type="hidden" name="log_rowid" value="${log_rowid}" />
+	   <input type="hidden" name="db_same_dept" value="${db_same_dept}" />
+	</td>
+   <td nowrap class="list_cc">${wf_winid}&nbsp;
+      <input type="hidden" name="wf_winid" value="${wf_winid}" />
+   </td>
+   <td nowrap class="list_ll">${wf_name}&nbsp;
+      <input type="hidden" name="wf_name" value="${wf_name}" />
+   </td>
+   <td nowrap class="list_cc">${mod_audcode}.${tt_mod_audcode}&nbsp;
+      <input type="hidden" name="mod_audcode" value="${mod_audcode}" />
+      <input type="hidden" name="tt_mod_audcode" value="${tt_mod_audcode}" />
+   </td>
+   <td nowrap class="list_cc">${aut_query}&nbsp;
+      <input type="hidden" name="aut_query" value="${aut_query}" />
+   </td>
+   <td nowrap class="list_cc">${aut_update}&nbsp;
+      <input type="hidden" name="aut_update" value="${aut_update}" />
+   </td>
+   <td nowrap class="list_cc">${aut_approve}&nbsp;
+      <input type="hidden" name="aut_approve" value="${aut_approve}" />
+   </td>
+   <td nowrap class="list_cc">${crt_user}&nbsp;
+    <input type="hidden" name="crt_user" value="${crt_user}" />
+  </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function wf_confirm_appr(par) {
+   if (confirm('是否執行覆核')==false) {
+      return false;
+   }
+   top.submitControl(par);
+ }
+
+</script>

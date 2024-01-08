@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>風險分類維護[risk_type]-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡片等級：
+      <select size="1" name="ex_card_note" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_card_note}
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡片等級</th> 
+    <th nowrap >日期期間</th>
+    <th nowrap >說明</th>
+    <th nowrap >總消費<br>月限額</th>
+    <th nowrap >月限額</th>
+    <th nowrap >次限額</th>
+    <th nowrap >月限次</th>
+    <th nowrap >日限次</th>
+    <th nowrap >月限額</th>
+    <th nowrap >次限額</th>
+    <th nowrap >月限次</th>
+    <th nowrap >日限次</th>
+    <th nowrap >異動日期</th>
+    <th nowrap >異動經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${card_note}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM} </td>
+   <td nowrap class="list_cc"> ${card_note}.${tt_card_note} </td>
+   <td nowrap class="list_cc"> ${start_date.YMD}&nbsp;--&nbsp;${end_date.YMD} </td>
+   <td nowrap class="list_ll"> ${prd_remark} </td>
+   <td nowrap class="list_rr"> ${lmt_amt_mm} </td>
+   <td nowrap class="list_rr"> ${n_amt_mm} </td>
+   <td nowrap class="list_rr"> ${N_amt_time} </td>
+   <td nowrap class="list_rr"> ${N_cnt_mm} </td>
+   <td nowrap class="list_rr"> ${N_cnt_dd} </td>
+   <td nowrap class="list_rr"> ${C_amt_mm} </td>
+   <td nowrap class="list_rr"> ${C_amt_time} </td>
+   <td nowrap class="list_rr"> ${C_cnt_mm} </td>
+   <td nowrap class="list_rr"> ${C_cnt_dd} </td>
+   <td nowrap class="list_cc"> ${mod_date.YMD} </td>
+   <td nowrap class="list_cc"> ${mod_user} </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+// document.dataForm.ex_risk_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5060_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "ccam5060_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

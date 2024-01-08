@@ -1,0 +1,114 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-08-12  V1.00.01  tanwei        新增預借現金密碼解鎖重置次數列表頁面  -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>預借現金密碼解鎖重置次數</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡號：
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" ${cond_edit}
+       maxlength=16 size=19 />
+   <td nowrap>&nbsp;身分證ID：
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" ${cond_edit}
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+ <table class="tbl_list" id="table1" width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>No</th>
+    <th nowrap>卡號</th>
+    <th nowrap>有效日期</th>
+    <th nowrap>密碼錯誤次數</th>
+    <th nowrap>身分證ID</th>
+    <th nowrap>姓名</th>
+    <th nowrap>生日</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${card_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}
+      <input type="hidden" name="ser_num" value="{ser_num}" />
+   </td>
+   <td nowrap class="list_cc"> ${card_no}
+         <input type="hidden" name="card_no" value="${a.card_no}" />
+   </td>
+   <td nowrap class="list_cc"> ${new_end_date.YMD}
+         <input type="hidden" name="new_end_date" value="${a.new_end_date}" />
+   </td>
+   <td nowrap class="list_cc"> ${passwd_err_count}
+         <input type="hidden" name="passwd_err_count" value="${a.passwd_err_count}" />
+   </td>
+   <td nowrap class="list_cc"> ${id_no}
+         <input type="hidden" name="id_no" value="${b.id_no}" />
+   </td>
+   <td nowrap class="list_cc"> ${chi_name}
+         <input type="hidden" name="chi_name" value="${b.chi_name}" />
+   </td>
+   <td nowrap class="list_cc"> ${birthday.YMD}
+         <input type="hidden" name="birthday" value="${b.birthday}" />
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  id="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+ var idCode="";
+ 
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    top.respHtml  = "cmsm2320_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+  </script>

@@ -1,0 +1,453 @@
+<html>
+<head>
+<title>調單/扣款/雜項費用-待傳送資料製作處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  <td nowrap>&nbsp;新增登錄日期：
+  <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zeditType="date,ymd" MaxLength=8 size=10 />
+  <script language="JavaScript">
+    new tcal({ 'formname': 'dataForm', 'controlname': 'ex_date1' });
+  </script>
+  --
+  <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zeditType="date,ymd" MaxLength=8 size=10 />
+  <script language="JavaScript">
+    new tcal({ 'formname': 'dataForm', 'controlname': 'ex_date2' });
+  </script>
+  </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+      <input type="Button" name="btnProc1" value="執行覆核" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;
+<!--      
+      <input type="Button" name="btnProc2"   value="產生傳送媒體" onClick="return top.submitControl('C2')" class="btProcess" >&nbsp;
+-->     
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">調單資料${t1_rows}</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">扣款資料${t2_rows}</td>
+    </tr>
+  </table>
+</div>
+
+<!-----------調單資料-------------->
+<div id="tab-1" class="tabcontent">
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+   <tr>
+    <th nowrap class="list_th" width="10%">
+	 <input type="checkbox" name="ex_selectAll1" value="Y" onClick="selectAll1();" >
+    覆核
+	 </th>
+    <th nowrap >
+   	<input type="checkbox" name="ex_selectAll3" value="Y" onClick="selectAll3();" >
+    	傳送&nbsp;
+    </th>
+    <th nowrap >交易代碼&nbsp;</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >消費卡號&nbsp;</th>
+    <th nowrap >調單類別&nbsp;</th>
+    <th nowrap >微縮影編號&nbsp;</th>
+    <th nowrap >清算會員ID&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >原始金額&nbsp;</th>
+    <th nowrap >原始幣別&nbsp;</th>
+    <th nowrap >繳款方式&nbsp;</th>
+    <th nowrap >特店英文名稱&nbsp;</th>
+    <th nowrap >城市&nbsp;</th>
+    <th nowrap >國別&nbsp;</th>
+    <th nowrap >業別&nbsp;</th>
+    <th nowrap >郵區&nbsp;</th>
+    <th nowrap >調單流水號&nbsp;</th>
+    <th nowrap >理由碼&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >處理太陽日&nbsp;</th>
+    <th nowrap >新增日&nbsp;</th>
+    <th nowrap >目的地金額&nbsp;</th>
+    <th nowrap >清算金額&nbsp;</th>
+    <th nowrap >授權碼&nbsp;</th>
+    <th nowrap >TPAN No&nbsp;</th>
+    <th nowrap >Reference No&nbsp;</th>
+    <th nowrap >Refer N-Ori&nbsp;</th>
+    <th nowrap >Debit卡&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${A.ok_flag}</span>
+   	<input type="checkbox" name="A.opt" value="${ser_num}" ${opt_on} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="A.rowid" value="${A.rowid}">
+	</td>
+   <td nowrap class="list_cc">
+   	<input type="checkbox" name="A.opt_send" value="${ser_num}" ${A.opt_chk} ${opt_on2} />
+   </td>
+	<td nowrap class="list_cc"> ${A.db_tran_code}&nbsp;
+      <input type="hidden" name="A.db_tran_code" value="${A.db_tran_code}">
+   </td>
+   <td nowrap class="list_ll"> ${A.bin_type}-${A.ctrl_seqno}&nbsp;
+      <input type="hidden" name="A.ctrl_seqno" value="${A.ctrl_seqno}">
+      <input type="hidden" name="A.bin_type" value="${A.bin_type}">
+   </td>
+   <td nowrap class="list_cc"> ${A.card_no}&nbsp;
+      <input type="hidden" name="A.card_no" value="${A.card_no}">
+   </td>
+   <td nowrap class="list_cc"> ${A.rept_type}.${#JAVA:ecsfunc.DeCodeRsk.reptType(A.rept_type)}&nbsp;
+      <input type="hidden" name="A.rept_type" value="${A.rept_type}">
+   </td>
+   <td nowrap class="list_cc"> ${A.film_no}&nbsp;
+      <input type="hidden" name="A.film_no" value="${A.film_no}">
+   </td>
+   <td nowrap class="list_cc"> ${A.acq_member_id}&nbsp;
+      <input type="hidden" name="A.acq_member_id" value="${A.acq_member_id}">
+   </td>
+   <td nowrap class="list_cc"> ${A.purchase_date.YMD}&nbsp;
+      <input type="hidden" name="A.purchase_date" value="${A.purchase_date}">
+   </td>
+   <td nowrap class="list_rr"> ${A.source_amt.(999.00)}&nbsp;
+      <input type="hidden" name="A.source_amt" value="${A.source_amt}">
+   </td>
+   <td nowrap class="list_cc"> ${A.source_curr}&nbsp;
+      <input type="hidden" name="A.source_curr" value="${A.source_curr}">
+   </td>
+   <td nowrap class="list_cc"> ${A.payment_type}&nbsp;
+      <input type="hidden" name="A.payment_type" value="${A.payment_type}">
+   </td>
+   <td nowrap class="list_ll"> ${A.mcht_eng_name}&nbsp;
+      <input type="hidden" name="A.mcht_eng_name" value="${A.mcht_eng_name}">
+   </td>
+   <td nowrap class="list_cc"> ${A.mcht_city}&nbsp;
+      <input type="hidden" name="A.mcht_city" value="${A.mcht_city}">
+   </td>
+   <td nowrap class="list_cc"> ${A.mcht_country}&nbsp;
+      <input type="hidden" name="A.mcht_country" value="${A.mcht_country}">
+   </td>
+   <td nowrap class="list_cc"> ${A.mcht_category}&nbsp;
+      <input type="hidden" name="A.mcht_category" value="${A.mcht_category}">
+   </td>
+   <td nowrap class="list_cc"> ${A.mcht_zip}&nbsp;
+      <input type="hidden" name="A.mcht_zip" value="${A.mcht_zip}">
+   </td>
+   <td nowrap class="list_cc"> ${A.rept_seqno}&nbsp;
+      <input type="hidden" name="A.rept_seqno" value="${A.rept_seqno}">
+   </td>
+   <td nowrap class="list_cc"> ${A.reason_code}&nbsp;
+      <input type="hidden" name="A.reason_code" value="${A.reason_code}">
+   </td>
+   <td nowrap class="list_cc"> ${A.mcht_no}&nbsp;
+      <input type="hidden" name="A.mcht_no" value="${A.mcht_no}">
+   </td>
+   <td nowrap class="list_cc"> ${A.process_date.YMD}&nbsp;
+      <input type="hidden" name="A.process_date" value="${A.process_date}">
+   </td>
+   <td nowrap class="list_cc"> ${A.add_date.YMD}&nbsp;
+      <input type="hidden" name="A.add_date" value="${A.add_date}">
+   </td>
+   <td nowrap class="list_rr"> ${A.dest_amt.(999)}&nbsp;
+      <input type="hidden" name="A.dest_amt" value="${A.dest_amt}">
+   </td>
+   <td nowrap class="list_rr"> ${A.settl_amt.(999)}&nbsp;
+      <input type="hidden" name="A.settl_amt" value="${A.settl_amt}">
+   </td>
+   <td nowrap class="list_cc"> ${A.auth_code}&nbsp;
+      <input type="hidden" name="A.auth_code" value="${A.auth_code}">
+   </td>
+   <td nowrap class="list_cc"> ${A.v_card_no}&nbsp;
+      <input type="hidden" name="A.v_card_no" value="${A.v_card_no}">
+   </td>
+   <td nowrap class="list_cc"> ${A.reference_no}&nbsp;
+      <input type="hidden" name="A.reference_no" value="${A.reference_no}">
+   </td>
+   <td nowrap class="list_cc"> ${A.reference_no_ori}&nbsp;
+      <input type="hidden" name="A.reference_no_ori" value="${A.reference_no_ori}">
+   </td>
+   <td nowrap class="list_cc"> ${A.debit_flag}&nbsp;
+      <input type="hidden" name="A.debit_flag" value="${A.debit_flag}">
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+<!-----------扣款資料-------------->
+<div id="tab-2" class="tabcontent" >
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap class="list_th" width="10%">
+	  <input type="checkbox" name="ex_selectAll2" value="Y" onClick="selectAll2();" >
+    覆核
+	 </th>
+    <th nowrap >
+    	<input type="checkbox" name="ex_selectAll4" value="Y" onClick="selectAll4();" >
+    	傳送&nbsp;
+    </th>
+    <th nowrap >待傳送日期&nbsp;</th>
+    <th nowrap >交易代碼&nbsp;</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >消費卡號&nbsp;</th>
+    <th nowrap >交易碼&nbsp;</th>
+    <th nowrap >次數&nbsp;</th>
+    <th nowrap >目的地金額&nbsp;</th>
+    <th nowrap >幣別&nbsp;</th>
+    <th nowrap >原始金額&nbsp;</th>
+    <th nowrap >原始幣別&nbsp;</th>
+    <th nowrap >扣款金額&nbsp;</th>
+    <th nowrap >扣款台幣金額&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >清算金額&nbsp;</th>
+    <th nowrap >微縮影編號&nbsp;</th>
+    <th nowrap >清算會員&nbsp;</th>
+    <th nowrap >沖銷註記&nbsp;</th>
+    <th nowrap >重建註記&nbsp;</th>
+    <th nowrap >使用碼&nbsp;</th>
+    <th nowrap >部份扣款&nbsp;</th>
+    <th nowrap >繳款方式&nbsp;</th>
+    <th nowrap >特店英文名稱&nbsp;</th>
+    <th nowrap >城市&nbsp;</th>
+    <th nowrap >國別&nbsp;</th>
+    <th nowrap >業別&nbsp;</th>
+    <th nowrap >特店郵區&nbsp;</th>
+    <th nowrap >特店州別&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >訊息欄&nbsp;</th>
+    <th nowrap >文件註記&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >授權碼&nbsp;</th>
+    <th nowrap >結算金額&nbsp;</th>
+    <th nowrap >扣款結算金額&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >TPAN No&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${B.ok_flag}</span>
+   	<input type="checkbox" name="B.opt" value="${ser_num}" ${opt_on3} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="B.rowid" value="${B.rowid}">
+	</td>
+	<td nowrap class="list_cc">
+      <input type="checkbox" name="B.opt_send" value="${ser_num}" ${B.opt_chk} ${opt_on4} />
+  </td>
+  <td nowrap class="list_cc"> ${B.fst_send_date.YMD}&nbsp;
+  	 <input type="hidden" name="B.fst_send_date" value="${B.fst_send_date}">
+  </td>
+	<td nowrap class="list_cc"> ${B.db_tran_code}&nbsp;
+	   <input type="hidden" name="B.db_tran_code" value="${B.db_tran_code}">
+	</td>
+	<td nowrap class="list_ll"> ${B.bin_type}-${B.ctrl_seqno}&nbsp;
+	   <input type="hidden" name="B.ctrl_seqno" value="${B.ctrl_seqno}" />
+	   <input type="hidden" name="B.bin_type" value="${B.bin_type}" />
+	</td>
+	<td nowrap class="list_cc"> ${B.card_no}&nbsp;
+	   <input type="hidden" name="B.card_no" value="${B.card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${B.txn_code}&nbsp;
+	   <input type="hidden" name="B.txn_code" value="${B.txn_code}">
+	</td>
+	<td nowrap class="list_cc"> ${B.chg_times}&nbsp;
+	   <input type="hidden" name="B.chg_times" value="${B.chg_times}">
+	</td>
+	<td nowrap class="list_rr"> ${B.dest_amt.(999)}&nbsp;
+	   <input type="hidden" name="B.dest_amt" value="${B.dest_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${B.dest_curr}&nbsp;
+	   <input type="hidden" name="B.dest_curr" value="${B.dest_curr}">
+	</td>
+	<td nowrap class="list_rr"> ${B.source_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="B.source_amt" value="${B.source_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${B.source_curr}&nbsp;
+	   <input type="hidden" name="B.source_curr" value="${B.source_curr}">
+	</td>
+	<td nowrap class="list_rr"> ${B.fst_amount.(999.00)}&nbsp;
+	   <input type="hidden" name="B.fst_amount" value="${B.fst_amount}">
+	</td>
+	<td nowrap class="list_rr"> ${B.fst_twd_amt.(999)}&nbsp;
+	   <input type="hidden" name="B.fst_twd_amt" value="${B.fst_twd_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${B.purchase_date.YMD}&nbsp;
+	   <input type="hidden" name="B.purchase_date" value="${B.purchase_date}">
+	</td>
+	<td nowrap class="list_rr"> ${B.settl_amt.(999)}&nbsp;
+	   <input type="hidden" name="B.settl_amt" value="${B.settl_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${B.film_no}&nbsp;
+	   <input type="hidden" name="B.film_no" value="${B.film_no}">
+	</td>
+	<td nowrap class="list_cc"> ${B.acq_member_id}&nbsp;
+	   <input type="hidden" name="B.acq_member_id" value="${B.acq_member_id}">
+	</td>
+	<td nowrap class="list_cc"> ${B.fst_reverse_mark}&nbsp;
+	   <input type="hidden" name="B.fst_reverse_mark" value="${B.fst_reverse_mark}">
+	</td>
+	<td nowrap class="list_cc"> ${B.fst_rebuild_mark}&nbsp;
+	   <input type="hidden" name="B.fst_rebuild_mark" value="${B.fst_rebuild_mark}">
+	</td>
+	<td nowrap class="list_cc"> ${B.fst_usage_code}&nbsp;
+	   <input type="hidden" name="B.fst_usage_code" value="${B.fst_usage_code}">
+	</td>
+	<td nowrap class="list_cc"> ${B.fst_part_mark}&nbsp;
+	   <input type="hidden" name="B.fst_part_mark" value="${B.fst_part_mark}">
+	</td>
+	<td nowrap class="list_cc"> ${B.payment_type}&nbsp;
+	   <input type="hidden" name="B.payment_type" value="${B.payment_type}">
+	</td>
+	<td nowrap class="list_ll"> ${B.mcht_eng_name}&nbsp;
+	   <input type="hidden" name="B.mcht_eng_name" value="${B.mcht_eng_name}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mcht_city}&nbsp;
+	   <input type="hidden" name="B.mcht_city" value="${B.mcht_city}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mcht_country}&nbsp;
+	   <input type="hidden" name="B.mcht_country" value="${B.mcht_country}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mcht_category}&nbsp;
+	   <input type="hidden" name="B.mcht_category" value="${B.mcht_category}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mcht_zip}&nbsp;
+	   <input type="hidden" name="B.mcht_zip" value="${B.mcht_zip}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mcht_state}&nbsp;
+	   <input type="hidden" name="B.mcht_state" value="${B.mcht_state}">
+	</td>
+	<td nowrap class="list_cc"> ${B.mcht_no}&nbsp;
+	   <input type="hidden" name="B.mcht_no" value="${B.mcht_no}">
+	</td>
+	<td nowrap class="list_ll"> ${B.fst_msg}&nbsp;
+	   <input type="hidden" name="B.fst_msg" value="${B.fst_msg}">
+	</td>
+	<td nowrap class="list_cc"> ${B.fst_doc_mark}&nbsp;
+	   <input type="hidden" name="B.fst_doc_mark" value="${B.fst_doc_mark}">
+	</td>
+	<td nowrap class="list_cc"> ${B.fst_add_date.YMD}&nbsp;
+	   <input type="hidden" name="B.fst_add_date" value="${B.fst_add_date}">
+	</td>
+	<td nowrap class="list_cc"> ${B.auth_code}&nbsp;
+	   <input type="hidden" name="B.auth_code" value="${B.auth_code}">
+	</td>
+	<td nowrap class="list_rr"> ${B.dc_dest_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="B.dc_dest_amt" value="${B.dc_dest_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${B.fst_dc_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="B.fst_dc_amt" value="${B.fst_dc_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${B.curr_code}&nbsp;
+	   <input type="hidden" name="B.curr_code" value="${B.curr_code}">
+	</td>
+	<td nowrap class="list_cc"> ${B.v_card_no}&nbsp;
+	   <input type="hidden" name="B.v_card_no" value="${B.v_card_no}">
+	</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+   if (top.actionCode==='C') {
+      return confirm('是否執行 [媒體產生覆核]');
+   }
+   if (top.actionCode==='C2') {
+      return confirm('是否執行批次處理 [產生傳送媒體]');
+   }
+
+    return true;
+  }
+
+ function selectAll1() {
+	 var opt_select =document.dataForm.ex_selectAll1.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ )
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+		   if (aElements[i].name==='A.opt') {
+		      aElements[i].checked = opt_select;
+		   }
+		}
+    }
+    return;
+ }
+
+ function selectAll2() {
+	 var opt_select =document.dataForm.ex_selectAll2.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ )
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+		   if (aElements[i].name==='B.opt') {
+		      aElements[i].checked = opt_select;
+		   }
+		}
+    }
+    return;
+ }
+
+  function selectAll3() {
+	 var opt_select =document.dataForm.ex_selectAll3.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ )
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+		   if (aElements[i].name==='A.opt_send') {
+		      aElements[i].checked = opt_select;
+		   }
+		}
+    }
+    return;
+ }
+
+   function selectAll4() {
+	 var opt_select =document.dataForm.ex_selectAll4.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ )
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+		   if (aElements[i].name==='B.opt_send') {
+		      aElements[i].checked = opt_select;
+		   }
+		}
+    }
+    return;
+ }
+
+</script>

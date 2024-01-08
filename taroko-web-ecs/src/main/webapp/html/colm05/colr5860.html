@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>符合凍結條件而不凍結明細表-jh-191209</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;執行日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zrequire="C"  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	       </script>
+	      --
+	    <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	       </script>
+	</td>
+	<td nowrap>&nbsp;帳戶類別:
+	   <select size="1" name="ex_acct_type" class="col_ddlb" >
+	   <option value="">--</option>
+         ${dddw_acct_type}
+      </select>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="return top.submitControl('PDF');" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">列印&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >生效日期&nbsp;</th>
+    <th nowrap >執行日期&nbsp;</th>
+    <th nowrap >處理筆數&nbsp;</th>
+    <th nowrap >應解凍而不解凍<br>筆數</th>
+    <th nowrap >類別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+    	<input type="radio" name="opt" value="${ser_num}" />
+    	${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}" />
+      <input type="hidden" name="rowid" value="${rowid}" />
+   </td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp;
+      <input type="hidden" name="acct_type" value="${acct_type}" />
+   </td>
+   <td nowrap class="list_cc"> ${valid_date.YMD}&nbsp;
+      <input type="hidden" name="valid_date" value="${valid_date}" />
+   </td>
+   <td nowrap class="list_cc"> ${exec_date.YMD}&nbsp;
+      <input type="hidden" name="exec_date" value="${exec_date}" />
+   </td>
+   <td nowrap class="list_rr"> ${t_acct_cnt.(999)}&nbsp;
+      <input type="hidden" name="t_acct_cnt" value="${t_acct_cnt}" />
+   </td>
+   <td nowrap class="list_rr"> ${blocknot_cnt.(999)}&nbsp;
+      <input type="hidden" name="blocknot_cnt" value="${blocknot_cnt}" />
+   </td>
+   <td nowrap class="list_cc"> ${param_type}.${#JAVA:ecsfunc.DeCodeRsk.blockParamType(param_type)}&nbsp;
+      <input type="hidden" name="param_type" value="${param_type}" />
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

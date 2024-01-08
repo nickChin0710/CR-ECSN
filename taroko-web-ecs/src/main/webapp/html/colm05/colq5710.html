@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>帳戶強停統計查詢-jh-0619</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2">&nbsp;強停日期：
+     <input type="text" class="col_date" name="ex_stop_date1" value="${ex_stop_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C"/>
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_stop_date1'});
+	    </script>
+	--
+	   <input type="text" class="col_date" name="ex_stop_date2" value="${ex_stop_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_stop_date2'});
+	    </script>
+	</td>
+	
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="list_rr" colspan="2">合計:&nbsp;</td>
+   <td nowrap class="list_rr">${sum_tot_cnt.(999)}
+      <input type="hidden" name="sum_tot_cnt" value="${sum_tot_cnt}">
+   </td>
+   <td nowrap class="list_rr">${sum_tot_amt.(999)}
+      <input type="hidden" name="sum_tot_amt" value="${sum_tot_amt}">
+   </td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >強停戶數&nbsp;</th>
+    <th nowrap >欠款金額&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_type}.${tt_acct_type}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_count.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_acct_jrnl_bal.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+</script>

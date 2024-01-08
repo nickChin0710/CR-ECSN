@@ -1,0 +1,153 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110/07/08  V1.00.00    Suzuwei      Initial                              -->                                
+<!--**************************************************************************-->
+<html>
+<head>
+<title>帳戶類別</title><html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="return top.upperLevel()"; >&nbsp;
+  <input type="Button"  value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"  value="存檔" ${btnUpdate_off} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >專案代碼:
+   		<span class="col_key">${proj_code}</span>
+    	<input type=hidden name="proj_code" value="${proj_code}">
+    </td>
+   <td nowrap >已覆核:
+      <span class="col_key">${apr_flag}&nbsp;</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>參數類別:
+      <span class="dsp_text">帳戶類別</span>
+      <input type="hidden" name="data_type" value="01" />
+   </td>
+   <td nowrap >&nbsp;
+   </td>
+  </tr>
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >帳戶類別：
+     <select size=1 name="ex_data_code" class="col_ddlb">
+       <option value="">--</option>
+       ${dddw_acct_type}
+     </select>
+     &nbsp;
+     <input type="Button"  value="新增明細" ${btnUpdate_off} onClick="wf_insert()" class="btAdd_detl" />&nbsp;&nbsp;
+    <input type="text" id="err_msg" class="dsp_text" style="color: red" value="" disabled />
+   </td>
+  </tr>
+</table>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">帳戶類別</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag"></span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+      <input type="hidden" name="tt_data_code" value="${tt_data_code}">
+    </td>
+    <td nowrap class="list_ll">${data_code}&nbsp;${tt_data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="01" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="" />
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('2');
+ top.pageRows ="9999";
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+}
+
+ function wf_insert() {
+   $("#err_msg").val("");
+
+    var ls_proj_code =$("input[name=proj_code]").val();
+    var ls_data_type =$("input[name=data_type]").val();
+    var ls_code =$("select[name=ex_data_code]").val();
+    // var ls_code2 =$("input[name=ex_data_code2]").val();
+    // alert("code="+ls_code+", code2="+ls_code2);
+
+    // top.actionCode ="Q";
+    // top.methodName ="wf_insert";
+
+    resetJSON();
+    addJSON("proj_code", ls_proj_code);
+    addJSON("data_type", ls_data_type);
+    addJSON("apr_flag", "N");
+    addJSON("ex_data_code", ls_code);
+    // addJSON("ex_data_code2", ls_code2);
+    //alert("item="+ls_item_no+", proj="+ls_proj_code+", type="+ls_data_type);
+
+    processAJAX();
+}
+
+function ajaxResponse(){
+    top.respHtml ="mktm0220_actp";
+    top.requHtml ="mktm0220_actp";
+
+    var li_rc =getJSONvalue("ax_rc",0);
+    var ls_msg =getJSONvalue("ax_msg",0);
+    if (li_rc != 1) {
+      $("#err_msg").val(ls_msg);
+      alert("新增失敗: "+ls_msg);
+    }
+    else {
+      $("#err_msg").val("新增成功");
+      alert("新增成功");
+      top.submitControl('R2');
+    }
+    return false;
+}
+
+</script>

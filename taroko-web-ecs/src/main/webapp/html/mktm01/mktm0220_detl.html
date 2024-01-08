@@ -1,0 +1,475 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-07-07              suzuwei            init                           -->
+<!-- 112-07-05              machao            自動加值次數達   欄位update bug調整                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>聯名機構推卡獎勵參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.del_apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" />
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;專案代碼:
+    	<input type="text" class="col_text" name="kk_proj_code" id="kk_proj_code" value="${kk_proj_code}" maxlength="10" size="12" zEdit="alphanum,upper" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;專案代碼:
+    	${proj_code}
+    	<input type="hidden" name="proj_code" value="${proj_code}" />
+    </td>
+    <td nowrap >&nbsp;覆核:
+      ${apr_flag}
+		<input type="hidden" name="apr_flag" value="${apr_flag}" />
+    </td>
+  </tr>
+ <tr>
+  <td nowrap colspan="2">&nbsp;專案活動日期：
+    <input type="text" class="col_date" id="proj_date_s" name="proj_date_s" value="${proj_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+    <script language="JavaScript">
+      new tcal({ 'formname': 'dataForm', 'controlname': 'proj_date_s' });
+    </script>
+    &nbsp;~&nbsp;
+    <input type="text" class="col_date" id="proj_date_e" name="proj_date_e" value="${proj_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+    <script language="JavaScript">
+      new tcal({ 'formname': 'dataForm', 'controlname': 'proj_date_e' });
+    </script>
+  </td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;專案說明:
+		<input type="text" class="col_any" name="proj_desc" value="${proj_desc}" maxlength="60" size="62" zEdit="any,canTw" zRequire="Y" >
+	</td>
+ </tr>
+  <tr>
+  	<td nowrap >&nbsp;排除證券員工:
+		<span class="col_radio">
+	       <input type="radio" value="Y" name="eliminate_flag" ${eliminate_flag-Y} ${default-eliminate_flag} />是
+	       <input type="radio" value="N" name="eliminate_flag" ${eliminate_flag-N} />否
+	   	</span>
+  	</td>
+  	<td nowrap >&nbsp;簽約日期 :
+  		<input type="text" class="col_date" id="contract_date" name="contract_date" value="${contract_date}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+	    <script language="JavaScript">
+	      new tcal({ 'formname': 'dataForm', 'controlname': 'contract_date' });
+	    </script>
+  	</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;帳戶類別 :
+ 		<span class="col_radio">
+	       <input type="radio" value="0" name="acct_type_flag" ${acct_type_flag-0} ${default-acct_type_flag} onChange="radioOnChange()" />全部
+	       <input type="radio" value="1" name="acct_type_flag" ${acct_type_flag-1} onChange="radioOnChange()" />指定
+	       <input type="radio" value="2" name="acct_type_flag" ${acct_type_flag-2} onChange="radioOnChange()" />排除
+      	</span>
+      	<input type="Button" class="btnactp"  id="btnactp"  value="帳戶類別" 
+               onClick="return buttonScreen('actp','01')" >
+    </td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;卡片種類 :
+ 		<span class="col_radio">
+	       <input type="radio" value="0" name="card_type_flag" ${card_type_flag-0} ${default-card_type_flag} onChange="radioOnChange()" />全部
+	       <input type="radio" value="1" name="card_type_flag" ${card_type_flag-1} onChange="radioOnChange()" />指定
+	       <input type="radio" value="2" name="card_type_flag" ${card_type_flag-2} onChange="radioOnChange()" />排除
+      	</span>
+     	<input type="Button" class="btncaty"  id="btncaty"  value="卡種" 
+               onClick="return buttonScreen('caty','03')" >
+    </td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;團體代號 :
+ 		<span class="col_radio">
+	       <input type="radio" value="0" name="group_code_flag" ${group_code_flag-0} ${default-group_code_flag} onChange="radioOnChange()" />全部
+	       <input type="radio" value="1" name="group_code_flag" ${group_code_flag-1} onChange="radioOnChange()" />指定
+	       <input type="radio" value="2" name="group_code_flag" ${group_code_flag-2} onChange="radioOnChange()" />排除
+      	</span>
+      	<input type="Button" class="btngpcd" id="btngpcd"  value="團體代號" 
+               onClick="return buttonScreen('gpcd','02')" >
+	</td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;首年認定：
+		<input type="checkbox" name="debut_sup_flag_0" value="Y" ${debut_sup_flag_0-Y}>正卡&nbsp;
+		<input type="checkbox" name="debut_sup_flag_1" value="Y" ${debut_sup_flag_1-Y}>附卡&nbsp;
+		<br>&nbsp;　　　　
+		<span class="col_radio">
+      		<input type="radio" value="1" name="debut_year_flag" ${debut_year_flag-1} ${defult-debut_year_flag} />
+      	</span>
+      新申辦卡:核卡日前
+      <input type="text" class="col_number" name="debut_month1" value="${debut_month1}" maxlength="2" size="3" zEdit="number" >
+      個月內未持有本行任一信用卡
+		<br>&nbsp;　　　　
+		<span class="col_radio">
+       		<input type="radio" value="2" name="debut_year_flag" ${debut_year_flag-2} />
+      	</span>
+      全新卡:從未持有本行任一信用卡
+	</td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;消費金額累積方式:
+		<span class="col_radio">
+	       <input type="radio" value="1" name="consume_type" ${consume_type-1} ${DEFAULT-consume_type} />1.正卡ID
+	       <input type="radio" value="2" name="consume_type" ${consume_type-2} />2.正附卡合併
+	       <input type="radio" value="3" name="consume_type" ${consume_type-3} />3.正附卡分開
+      </span>
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;消費金額本金類:
+ 		<input type="checkbox" name="consume_bl" value="Y" ${consume_bl-Y}>簽帳款(BL)&nbsp;&nbsp;
+ 		<input type="checkbox" name="consume_ca" value="Y" ${consume_ca-Y}>預借現金(CA)&nbsp;&nbsp;
+ 		<input type="checkbox" id="consume_it" name="consume_it" value="Y" ${consume_it-Y}>分期付款(IT)&nbsp;&nbsp;
+ 		<br>&nbsp;&nbsp;　　　　　　　
+ 		<input type="checkbox" name="consume_ao" value="Y" ${consume_ao-Y}>餘額代償(AO)
+ 		<input type="checkbox" name="consume_id" value="Y" ${consume_id-Y}>代收款(ID)&nbsp;&nbsp;　
+ 		<input type="checkbox" name="consume_ot" value="Y" ${consume_ot-Y}>其他應收款(OT)&nbsp;&nbsp;
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;消費條件：核卡後：近：
+		<input type="text" class="col_number" name="curr_pre_day" id="curr_pre_day" value="${curr_pre_day}" maxlength="3" size="3" zEdit="number" >
+		天內刷卡消費，累積消費金額：達
+		<input type="text" class="col_number" name="curr_amt" id="curr_amt" value="${curr_amt}" maxlength="13" size="13" zEdit="number">
+		元(含)以上，
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="checkbox" name="curr_tot_cond" value="Y" ${curr_tot_cond-Y}>
+		或 累積消費筆數達
+		<input type="text" class="col_number" name="curr_tot_cnt" id="curr_tot_cnt" value="${curr_tot_cnt}" maxlength="13" size="13" zEdit="number">
+		筆(含)以上，
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="checkbox" name="online_cond" value="Y" ${online_cond-Y}>
+		或 自動加值次數達
+		<input type="text" class="col_number" name="online_cnt" id="online_cnt" value="${online_cnt}" maxlength="13" size="13" zEdit="number">
+		筆(含)以上，
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回饋方式：
+		<input type="radio" value="1" name="feedback_type" ${feedback_type-1} />回饋金額比例
+		<input type="text" class="col_number" name="feedback_rate" id="feedback_rate" value="${feedback_rate}" maxlength="5" size="5" zEdit="canminus">
+		% 
+		<input type="radio" value="2" name="feedback_type" ${feedback_type-2} />回饋金額：
+		<input type="text" class="col_number" name="feedback_amt" id="feedback_amt" value="${feedback_amt}" maxlength="3" size="3" zEdit="number">
+		元
+ 	</td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;特店類別 :
+ 		<span class="col_radio">
+	       <input type="radio" value="0" name="mcc_flag" ${mcc_flag-0} ${default-mcc_flag} onChange="radioOnChange()" />全部
+	       <input type="radio" value="1" name="mcc_flag" ${mcc_flag-1} onChange="radioOnChange()" />指定
+	       <input type="radio" value="2" name="mcc_flag" ${mcc_flag-2} onChange="radioOnChange()" />排除
+      	</span>
+      	<input type="Button" class="btnmccc"  id="btnmccc"  value="特店類別" 
+               onClick="return buttonScreen('mccc','04')" >
+	</td>
+ </tr>
+ <tr>
+	<td nowrap colspan="2" >&nbsp;特店代號 :
+ 		<span class="col_radio">
+	       <input type="radio" value="0" name="mcht_flag" ${mcht_flag-0} ${default-mcht_flag} onChange="radioOnChange()" />全部
+	       <input type="radio" value="1" name="mcht_flag" ${mcht_flag-1} onChange="radioOnChange()" />指定
+	       <input type="radio" value="2" name="mcht_flag" ${mcht_flag-2} onChange="radioOnChange()" />排除
+      	</span>
+      	<input type="Button" class="btnmcht" id="btnmcht"  value="特店代號" 
+               onClick="return buttonScreen('mcht','05')" >
+	</td>
+ </tr>
+ <input type="hidden" name="any_day" value="2">
+ <!-- <tr>
+ 	<td nowrap colspan="2" >&nbsp;消費報表計算產出日：
+ 		<span class="col_radio">
+	       <input type="radio" value="Y" name="process_flag" ${process_flag-Y} ${default-process_flag} />關賬年月
+	       <input type="radio" value="N" name="process_flag" ${process_flag-N} />日曆日：
+	       	每月
+			<select size=1 name="any_day" id="any_day" class="col_ddlb">
+		       <option value="1"> 01</option>
+		       <option value="2"> 02</option>
+		       <option value="3"> 03</option>
+		       <option value="4"> 04</option>
+		       <option value="5"> 05</option>
+		       <option value="6"> 06</option>
+		       <option value="7"> 07</option>
+		       <option value="8"> 08</option>
+		       <option value="9"> 09</option>
+		       <option value="10">10</option>
+		       <option value="11">11</option>
+		       <option value="12">12</option>
+		       <option value="13">13</option>
+		       <option value="14">14</option>
+		       <option value="15">15</option>
+		       <option value="16">16</option>
+		       <option value="17">17</option>
+		       <option value="18">18</option>
+		       <option value="19">19</option>
+		       <option value="20">20</option>
+		       <option value="21">21</option>
+		       <option value="22">22</option>
+		       <option value="23">23</option>
+		       <option value="24">24</option>
+		       <option value="25">25</option>
+		       <option value="26">26</option>
+		       <option value="27">27</option>
+		       <option value="28">28</option>
+		       <option value="29">29</option>
+		       <option value="30">30</option>
+		       <option value="31">31</option>
+    		</select>
+    		號
+      	</span>
+      	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(翌日產出查詢：聯名機構每月推卡統計報表)
+    	<br>
+ 	</td>
+ </tr> -->
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">
+   </td>
+  </tr>
+</table>
+<!-- -->
+<input type="hidden" name="data_k1" value="" />
+<input type="hidden" name="data_k2" value="" />
+<input type="hidden" name="data_k3" value="" />
+<input type="hidden" name="data_k4" value="" />
+
+
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_PGM" value="mktm0220">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ window.addEventListener("load", function(){
+  
+ })
+ 
+ var aprFlag = '${apr_flag}';
+ var projCode = '${proj_code}';
+ var anyDay = '${any_day}';
+ if (anyDay != '') {
+	 var sel=document.getElementById("any_day");
+	 for(i=0;i<sel.options.length;i++) {   
+	   if(sel.options[i].value == anyDay) {   
+		   sel.options[i].selected = true;
+	   }   
+	 }
+ }
+ 
+ radioOnChange();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode == 'A') {
+      
+    }
+
+    if (top.actionCode == 'A' || top.actionCode == 'U') {
+      if ( !checkData() ) {
+         return false;
+      }
+    }
+
+    return true;
+  }
+
+function buttonScreen(parm1,parm2) {
+   document.dataForm.data_k1.value = parm2;
+   
+   top.respLevel = 2;
+   top.respHtml  = "mktm0220_"+parm1;
+   top.submitControl("R2");
+   return true;
+}
+
+function radioOnChange() {
+	if (projCode == '') {
+		document.dataForm.btnactp.disabled = true;
+		document.dataForm.btncaty.disabled = true;
+		document.dataForm.btngpcd.disabled = true;
+		document.dataForm.btnmccc.disabled = true;
+		document.dataForm.btnmcht.disabled = true;
+		return;
+	}
+	if (aprFlag == 'Y') {
+		document.dataForm.btnactp.disabled = false;
+		document.dataForm.btncaty.disabled = false;
+		document.dataForm.btngpcd.disabled = false;
+		document.dataForm.btnmccc.disabled = false;
+		document.dataForm.btnmcht.disabled = false;
+		return;
+	}
+
+	// var  win_aud_type = document.forms["dataForm"]["aud_type"].value;
+	var acctTypeFlag0 = document.forms["dataForm"]["acct_type_flag"][0].checked;
+	var cardTypeFlag0 = document.forms["dataForm"]["card_type_flag"][0].checked;
+	var groupCodeFlag0 = document.forms["dataForm"]["group_code_flag"][0].checked;
+	var mccFlag0 = document.forms["dataForm"]["mcc_flag"][0].checked;
+	var mchtFlag0 = document.forms["dataForm"]["mcht_flag"][0].checked;
+	
+	document.dataForm.btnactp.disabled = acctTypeFlag0;
+	document.dataForm.btncaty.disabled = cardTypeFlag0;
+	document.dataForm.btngpcd.disabled = groupCodeFlag0;
+	document.dataForm.btnmccc.disabled = mccFlag0;
+	document.dataForm.btnmcht.disabled = mchtFlag0;
+}
+
+	function checkData() {
+		if (!document.forms["dataForm"]["debut_sup_flag_0"].checked 
+				&& !document.forms["dataForm"]["debut_sup_flag_1"].checked) {
+			alert("正卡/附卡:至少要選一項");
+			return false;
+		}
+
+		if (!document.forms["dataForm"]["debut_year_flag"][0].checked 
+				&& !document.forms["dataForm"]["debut_year_flag"][1].checked) {
+			alert("新申辦卡/全新戶:至少要選一項");
+			return false;
+		} else if (document.forms["dataForm"]["debut_year_flag"][0].checked) {
+			var debutMonth1 = document.forms["dataForm"]["debut_month1"].value;
+			if (debutMonth1 == undefined || debutMonth1 == "" || debutMonth1 <= 0) {
+				alert("[新申辦卡] 核卡日前N個月 必要大於0");
+				return false;
+			}
+		} else {
+			document.forms["dataForm"]["debut_month1"].value = "0";
+		}
+		
+		// 消費金額累積方式 consume_type
+		if (!document.forms["dataForm"]["consume_type"][0].checked 
+				&& !document.forms["dataForm"]["consume_type"][1].checked 
+				&& !document.forms["dataForm"]["consume_type"][2].checked) {
+			alert("消費金額累積方式:至少要選一項");
+			return false;
+		}
+		
+		//  消費金額本金類 
+		if (!document.forms["dataForm"]["consume_bl"].checked 
+				&& !document.forms["dataForm"]["consume_ca"].checked 
+				&& !document.forms["dataForm"]["consume_it"].checked 
+				&& !document.forms["dataForm"]["consume_ao"].checked 
+				&& !document.forms["dataForm"]["consume_id"].checked 
+				&& !document.forms["dataForm"]["consume_ot"].checked ) {
+			alert("消費金額本金類:至少要選一項");
+			return false;
+		}
+		
+		// 消費條件
+		var currPreDay = document.forms["dataForm"]["curr_pre_day"].value;
+		var currAmt = document.forms["dataForm"]["curr_amt"].value;
+		if (currPreDay == '' || currPreDay <= 0 ) {
+			alert("近N天內刷卡消費天數要大於0");
+			return false;
+		}
+		if (currAmt == '' || currAmt <= 0 ) {
+			alert("累積消費金額要大於0");
+			return false;
+		}
+		
+	    if (document.forms["dataForm"]["curr_tot_cond"].checked) {
+			var currTotCnt = document.forms["dataForm"]["curr_tot_cnt"].value;
+			if (currTotCnt == '' || currTotCnt <= 0 ) {
+				alert("累積消費筆數要大於0");
+				return false;
+			}
+		} else {
+			document.forms["dataForm"]["curr_tot_cnt"].value = "0";
+		}
+
+		if (document.forms["dataForm"]["online_cond"].checked) {
+			var onlineCnt = document.forms["dataForm"]["online_cnt"].value;
+			if (onlineCnt == '' || onlineCnt <= 0 ) {
+				alert("自動加值次數要大於0");
+				return false;
+			}
+		} else {
+			document.forms["dataForm"]["online_cnt"].value = "0";
+		}
+		
+		if (!document.forms["dataForm"]["feedback_type"][0].checked
+				&& !document.forms["dataForm"]["feedback_type"][1].checked) {
+			alert("回饋方式:必選其一");
+			return false;
+		} else if (document.forms["dataForm"]["feedback_type"][0].checked) {
+			document.forms["dataForm"]["feedback_amt"].value = "0";
+			var feedbackRate = document.forms["dataForm"]["feedback_rate"].value;
+			if (feedbackRate == '' || feedbackRate <= 0 ) {
+				alert("回饋金額比例需大於0.0000");
+				return false;
+			}
+		} else {
+			document.forms["dataForm"]["feedback_rate"].value = "0";
+			var feedbackAmt = document.forms["dataForm"]["feedback_amt"].value;
+			if (onlineCnt == '' || onlineCnt <= 0 ) {
+				alert("回饋金額需大於0");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+</script>

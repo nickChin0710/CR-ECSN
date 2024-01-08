@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <title>消費回饋聯名機構每月各本金消費統計表-107-09-26-V1.00.02-Andy-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=4>&nbsp;團體代碼:
+                        <select name="ex_groupcode" class="col_ddlb">
+                            ${dddw_groupcode}
+                        </select>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="radio" value="0" name="ex_purch_type" ${ex_purch_type-0}${DEFAULT-ex_purch_type} />依關帳年月
+                        <input type="radio" value="1" name="ex_purch_type" ${ex_purch_type-1} />依消費日
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=12>&nbsp;統計期間：
+                        <input type="text" class="col_any" name="ex_yymm1" value="${ex_yymm1}" zEdit="date,yyyymm" maxlength=6 size=6 />&nbsp;--
+                        <input type="text" class="col_any" name="ex_yymm2" value="${ex_yymm2}" zEdit="date,yyyymm" maxlength=6 size=6 />
+                    </td>                                     
+                </tr>               
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">團體代號</th>
+                <th nowrap class="list_th">特店群組</th>
+                <th nowrap class="list_th">總消費<br>筆&nbsp;&nbsp;數</th>
+                <th nowrap class="list_th">總消費<br>金&nbsp;&nbsp;額</th>
+                <th nowrap class="list_th">平&nbsp;&nbsp;&nbsp;&nbsp;均<br>消費金額</th>
+                <th nowrap class="list_th">須扣除之<br>例外金額</th>                
+                <th nowrap class="list_th">店&nbsp;&nbsp;&nbsp;&nbsp;內<br>消費金額</th>
+                <th nowrap class="list_th">店&nbsp;&nbsp;&nbsp;&nbsp;外<br>消費金額</th>
+                <th nowrap class="list_th">預借現金</th>
+                <th nowrap class="list_th">代收款</th>
+                <th nowrap class="list_th">餘額<br>代償</th>
+                <th nowrap class="list_th">店&nbsp;&nbsp;&nbsp;&nbsp;內<br>分期付款</th>
+                <th nowrap class="list_th">店&nbsp;&nbsp;&nbsp;&nbsp;外<br>分期付款</th>
+                <th nowrap class="list_th">其&nbsp;&nbsp;他<br>應收款</th>
+                <th nowrap class="list_th">排&nbsp;&nbsp;除<br>代繳稅</th>
+                <th nowrap class="list_th">店內合計消費<br>+分期付款</th>
+                <th nowrap class="list_th">店外合計消費<br>+分期付款</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll">${db_group_code}&nbsp;</td>
+                <td nowrap class="list_ll">${mcht_group_id}&nbsp;</td>
+                <td nowrap class="list_rr">&nbsp; ${db_total_purch_cnt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_total_purch_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_avg_purch_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_discount_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_bl_amt_in.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_bl_amt_out.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_ca_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_id_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_ao_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_it_amt_in.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_it_amt_out.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_ot_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_exp_tax_amt.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_bl_it_in.(999)} </td>
+                <td nowrap class="list_rr">&nbsp; ${db_bl_it_out.(999)} </td>
+                <input type="hidden" name="group_ct" value="${group_ct}">            
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+            <tr>
+                <td></td>
+                <td nowrap class="td_data" colspan="2" align="right">&nbsp;合計:</td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_total_purch_cnt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_total_purch_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_avg_purch_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_discount_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_bl_amt_in.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_bl_amt_out.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_ca_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_id_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_ao_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_it_amt_in.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_it_amt_out.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_ot_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_exp_tax_amt.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_bl_it_in.(999)}</span>
+                </td>
+                <td nowrap class="td_data" align="right">
+                    <span class="dsp_number">${sum_bl_it_out.(999)}</span>
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+//document.dataForm.ex_groupcode.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

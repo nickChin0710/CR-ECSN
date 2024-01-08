@@ -1,0 +1,214 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-11-24  V1.00.01  sunny          配合卡部要求，將「接聽」改為「受理」  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>各部門案件處理作業 V2019-1219</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"    value=" 存檔 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;  
+  <input type="Button"     value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;受理日期:
+      <span class="dsp_date">${case_date.YMD}</span>
+      <input type="hidden" name="case_date" value="${case_date}"/>
+   </td>
+   <td nowrap>&nbsp;案件流水號:
+      <span class="dsp_text">${case_seqno}</span>
+      <input type="hidden" name="case_seqno" value="${case_seqno}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;處理部門:
+      <span class="dsp_text">${proc_deptno}_${tt_proc_deptno}</span>
+      <input type="hidden" name="proc_deptno" value="${proc_deptno}"/>
+      <input type="hidden" name="tt_proc_deptno" value="${tt_proc_deptno}" />
+   </td>
+   <td nowrap>&nbsp;已覆核:
+      <span class="dsp_text">${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}"/>
+      　　
+      <span class="dsp_text">${wk_ugcall_flag}</span>
+      <input type="hidden" name="ugcall_flag" value="${ugcall_flag}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;卡號:
+      <span class="dsp_text">${card_no}</span>
+      <input type="hidden" name="card_no" value="${card_no}"/>
+   </td>
+   <td nowrap>&nbsp;案件卡人ID:
+      <span class="dsp_text">${case_idno}</span>
+      <input type="hidden" name="case_idno" value="${case_idno}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;受理經辦:
+      <span class="dsp_text">${case_user}_${tt_case_user}</span>
+      <input type="hidden" name="case_user" value="${case_user}"/>
+      <input type="hidden" name="tt_case_user" value="${tt_case_user}" />
+   </td>
+   <td nowrap>&nbsp;處理經辦:
+      <label class="dsp_text" id="crt_user" >${crt_user}</label>
+      _
+      <label class="dsp_text" id="tt_crt_user" >${tt_crt_user}</label>
+      <input type="hidden" id="crt_user" name="crt_user" value="${crt_user}" />
+      <input type="hidden" id="tt_crt_user" name="tt_crt_user" value="${tt_crt_user}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;實際回電日:
+      <input type="text" class="col_date" name="recall_date" value="${recall_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'recall_date'});
+	      </script>
+	      &nbsp;   
+	</td>
+   <td nowrap>&nbsp;預計回電日:
+      <span class="dsp_text">${eta_date}</span>
+      <input type="hidden" name="eta_date" value="${eta_date}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;回電電話:
+      <span class="dsp_text">${reply_phone}</span>
+      <input type="hidden" name="reply_phone" value="${reply_phone}"/>
+   </td>
+   <td nowrap>&nbsp;案件內容:
+      <span class="dsp_text">${case_desc}</span>
+      <input type="hidden" name="case_desc" value="${case_desc}"/>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;處理內容:
+      <select size="1" name="proc_id" class="col_ddlb">
+      	<option value="">--</option>
+      	${dddw_proc_id}
+      </select>      		
+      &nbsp;
+   </td>
+   <td nowrap>&nbsp;處理狀況:
+      <span class="col_radio">
+         <input type="radio" value="0" name="proc_result" ${proc_result-0} onClick="proc_result_click()" />未處理
+         <input type="radio" value="5" name="proc_result" ${proc_result-5} onClick="proc_result_click()" />處理中
+         <input type="radio" value="9" name="proc_result" ${proc_result-9} onClick="proc_result_click()" />處理完成         
+      </span>
+      &nbsp;
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;處理說明:
+      <input type="text" class="col_any" name="proc_desc" value="${proc_desc}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;處理說明:
+      <input type="text" class="col_any" name="proc_desc2" value="${proc_desc2}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;覆核日期:
+      <span class="dsp_text">${apr_date.YMD}</span>
+      <input type="hidden" name="apr_date" value="${apr_date}"/>
+   </td>
+   <td nowrap>&nbsp;覆核主管:
+      <span class="dsp_text">${apr_user}_${tt_apr_user}</span>
+      <input type="hidden" name="apr_user" value="${apr_user}"/>
+      <input type="hidden" name="tt_apr_user" value="${tt_apr_user}" />
+   </td>
+ </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="old_proc_result" value="${old_proc_result}" />
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="cmsm6030">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+  function proc_result_click() {
+    idCode = "1";    
+    var ls_proc_result = $("input[name=proc_result]:checked").val();        
+    if(ls_proc_result == '0'){
+        return false;
+    }
+    
+    resetJSON();    
+    processAJAX();
+
+    return true;
+
+ }
+ 
+    function ajaxResponse()
+ {
+   top.respHtml ="cmsm6030_detl";
+   top.requHtml ="cmsm6030_detl";
+    
+	if  ( idCode === '1') {
+      var usr_id =getJSONvalue("usr_id",0);
+      if (usr_id.length>0) { 
+      	$("#crt_user").text(usr_id);   
+      	$("#crt_user").val(usr_id);   
+        document.dataForm.crt_user.value = usr_id;
+      }      
+      
+      var usr_cname =getJSONvalue("usr_cname",0);
+      if (usr_cname.length>0) { 
+      	$("#tt_crt_user").text(usr_cname);   
+      	$("#tt_crt_user").val(usr_cname);   
+        document.dataForm.tt_crt_user.value = usr_cname;
+      }      
+            
+	}
+      
+	if ( idCode === '1')
+	{ return false; }
+ }
+  
+</script>

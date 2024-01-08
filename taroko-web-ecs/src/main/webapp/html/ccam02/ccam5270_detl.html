@@ -1,0 +1,213 @@
+<html>
+<head>
+<title>消費通知參數維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; 
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;卡片等級:
+       <select   size="1"  name="kk_card_note" class="col_ddlb">
+         <option value="">--</option>          
+         ${ddlb_card_note}
+         <option value="V" ${kk_card_note-V} >V_VD</option>
+      </select>
+   </td>
+   <td nowrap >&nbsp;entry Mode類別:
+      <select size="1" name="kk_entry_mode_type" class="col_ddlb" >
+         <option value="">--</option>         
+         ${dddw_kk_entry_mode_type}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;交易型態:
+   	<select   size="1"  name="kk_web3d_flag" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${kk_web3d_flag-1} >1.一般交易</option>
+         <option value="2" ${kk_web3d_flag-2} >2.網路3D交易</option>         
+         <option value="3" ${kk_web3d_flag-3} >3.網路非3D交易</option>         
+      </select>      
+   </td>
+   <td nowrap >&nbsp;風險類別:
+      <select size="1" name="kk_risk_type" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="*" ${kk_web3d_flag-*} >全部</option>
+         ${dddw_kk_risk_type}
+      </select>
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;卡片等級:
+      <span class="dsp_text">${tt_card_note}&nbsp;</span>
+      <input type="hidden" name="card_note" value="${card_note}" >
+      <input type="hidden" name="tt_card_note" value="${tt_card_note}" >
+      &nbsp;
+      <input type="Button" class="btOther"  value="明細維護" ${btnUpdate_disable} onClick="return detailScreen('MCC1')" >
+      &nbsp;
+   </td>
+   <td nowrap >&nbsp;Entry Mode類別:
+      <span class="dsp_text">${entry_mode_type}&nbsp;</span>
+      <input type="hidden" name="entry_mode_type" value="${entry_mode_type}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;交易類別:
+      <span class="dsp_text">${tt_web3d_flag}&nbsp;</span>
+      <input type="hidden" name="web3d_flag" value="${web3d_flag}">
+      <input type="hidden" name="tt_web3d_flag" value="${tt_web3d_flag}">
+   </td>
+   <td nowrap >&nbsp;風險類別:
+      <span class="dsp_text">${tt_risk_type}&nbsp;</span>
+      <input type="hidden" name="risk_type" value="${risk_type}">
+      <input type="hidden" name="tt_risk_type" value="${tt_risk_type}">
+   </td>
+</tr>
+<tr>
+	 <td nowrap >&nbsp;
+	 		<input type="checkbox" name="use_flag" value="Y" ${use_flag-Y}>使用旗標
+	 </td>
+   <td nowrap >&nbsp;簡訊代碼:
+   		<input type="text" class="col_text" name="msg_id1" value="${msg_id1}" maxlength="4" size="6" zEdit="alphanum,upper" >
+   		(簡訊內容修改，請至「smsm0020」版型管理)       
+   </td>
+</tr>
+
+<tr>
+   <td nowrap colspan="2">&nbsp;單筆金額門檻 >
+      <input type="text" class="col_number" name="tx_amt" value="${tx_amt}" maxlength="12" size="14" zEdit="number">$
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;排除Mcc Code:
+      <span class="dsp_text">${cond1_mcc}&nbsp;</span>
+      <input type="hidden" name="cond1_mcc" value="${cond1_mcc}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;排除特店:
+      <span class="dsp_text">${cond1_mcht}&nbsp;</span>
+      <input type="hidden" name="cond1_mcht" value="${cond1_mcht}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;排除風險類別:
+      <span class="dsp_text">${cond1_risk}&nbsp;</span>
+      <input type="hidden" name="cond1_risk" value="${cond1_risk}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2" >
+   	  <span class="col_key">請至 ccam8030 確認授權交易類別是否適用於消費簡訊</span>
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ccam5270">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+<input type=hidden name="data_k1" value="${card_note}" />
+<input type=hidden name="data_k2" value="${entry_mode_type}" />
+<input type=hidden name="data_k3" value="${web3d_flag}" />
+<input type=hidden name="data_k4" value="${risk_type}" />
+<input type=hidden name="data_k5" value="" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+  function detailScreen(parm) { 
+    //top.currRows  = serNum;
+	 if (parm==="MCC1") {
+		top.respHtml  = "ccam5270_mcc1";
+	 }
+	 else if (parm=="MCHT1") {
+		top.respHtml  = "ccam5270_mcht1";
+	 }
+	 else if (parm=="MCC2") {
+		top.respHtml  = "ccam5270_mcc2";
+	 }
+	 else if (parm=="MCHT2") {
+		top.respHtml  = "ccam5270_mcht2";
+	 }
+	 else if (parm=="CNTRY2") {
+		top.respHtml  = "ccam5270_country2";
+	 }
+    
+    //alert("parm="+parm);
+    //alert("respHtml="+top.respHtml);
+    top.respLevel = 2;
+	 //document.dataForm.data_k1.value = parm;
+	 document.dataForm.data_k5.value = parm;
+    top.submitControl("S2");
+    return true;
+  }    
+
+</script>

@@ -1,0 +1,246 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-20  V1.00.01    jh                                                -->
+<!-- 109-09-22  V1.00.02    JustinWu      hide upload                         -->
+<!-- 109-10-07  V1.00.01    JustinWu     add 團體代號+MCC CODE的按鈕           -->  
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡友權益資格參數維護-jh200922</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="return top.upperLevel()"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_off} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >權益代碼:
+		<span class="col_key">${item_no}&nbsp;${tt_item_no}</span>
+    	<input type=hidden name="item_no" value="${item_no}" />
+    	<input type=hidden name="tt_item_no" value="${tt_item_no}" />
+   </td>
+   <td nowrap >專案代號:
+   		<span class="col_key">${proj_code}</span>
+    	<input type=hidden name="proj_code" value="${proj_code}">
+  </tr>
+  <tr>
+   <td nowrap >參數類別:
+      <span class="dsp_text">團體代號+卡種</span>
+      <input type="hidden" name="data_type" value="02">
+   </td>
+   <td nowrap >已覆核:
+      <span class="col_key">${apr_flag}&nbsp;</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      <input type="Button"  value="01.帳戶類別" onclick="wf_detl_2page('01');" class="btAdd_detl" />
+      <input type="Button"  value="02.團體代號+卡種" onclick="wf_detl_2page('02');" disabled />
+      <input type="Button"  value="03.團體代號+卡種" onclick="wf_detl_2page('03');" class="btAdd_detl" />
+      <input type="Button"  value="05.團體代號" onclick="wf_detl_2page('05');" class="btAdd_detl" />
+      <input type="Button"  value="06.團體代號+MCC CODE" onclick="wf_detl_2page('06');" class="btAdd_detl" />
+      <br>
+      <!--  
+      <input type="Button"  value="07.團體代號+MCC CODE" onclick="wf_detl_2page('07');" class="btAdd_detl" />
+      <input type="Button"  value="08.團體代號+MCC CODE" onclick="wf_detl_2page('08');" class="btAdd_detl" />
+      -->
+   </td>
+  </tr>
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr style="display: none;">
+    <td nowrap colspan="2">&nbsp;匯入媒體檔:
+       <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any,canTw" />
+       <input type="button"  value="..." class="btOther" onclick="return upload_click()">
+       <input type="Button"  ${btnUpdate_off} value="資料匯入" onClick="return wf_import('C2')" class="btProcess" >&nbsp;
+    </td>
+   </tr>
+  <tr>
+   <td nowrap >團體代號：
+     <select size=1 name="ex_data_code" class="col_ddlb">
+       <option value=""></option>
+       ${dddw_group_code}
+     </select>
+   </td>
+   <td nowrap >&nbsp;卡種：
+   		<select size=1 name="ex_data_code2" class="col_ddlb">
+       <option value=""></option>
+       ${dddw_card_type}
+     </select>
+     &nbsp;
+     <input type="Button"  value="新增明細" ${btnUpdate_off} onClick="wf_insert()" class="btAdd_detl" />&nbsp;&nbsp;
+    &nbsp;<label id="ax_errmsg" style="color: red"> </label>
+   </td>
+  </tr>
+</table>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">團體代號</th>
+    <th nowrap class="list_cc">卡種</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag"></span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+      <input type="hidden" name="data_code2" value="${data_code2}">
+      <input type="hidden" name="tt_data_code" value="${tt_data_code}">
+      <input type="hidden" name="tt_data_code2" value="${tt_data_code2}">
+      <input type="hidden" name="wk_data" value="${wk_data}">
+    </td>
+    <td nowrap class="list_ll" >${data_code}_${tt_data_code} </td>
+    <td nowrap class="list_ll" >${data_code2}_${tt_data_code2} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+<input type="hidden"  name="upload_file" value="" />
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${item_no}" />
+<input type=hidden name="data_k2" value="" />
+<input type=hidden name="data_k3" value="" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="">
+
+</form>
+</body>
+</html>
+
+<script lang="javascript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('2');
+ top.pageRows ="9999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+  }
+
+	function wf_detl_2page(parm) {
+
+	 	if (parm==="01") {
+		top.respHtml  = "cmsm4210_detl_01";
+	 }
+	 else if (parm==="02") {
+		top.respHtml  = "cmsm4210_detl_02";
+	 }
+	 else if (parm=="03") {
+		top.respHtml  = "cmsm4210_detl_03";
+	 }
+	 else if (parm=="05") {
+		top.respHtml  = "cmsm4210_detl_05";
+	 }
+	 else if (parm=="06") {
+		top.respHtml  = "cmsm4210_detl_06";
+	 }
+   else if (parm=="07") {
+    top.respHtml  = "cmsm4210_detl_07";
+   }
+   else if (parm=="08") {
+    top.respHtml  = "cmsm4210_detl_08";
+   }
+
+    top.respLevel = 2;
+	document.dataForm.data_k3.value = parm;
+    top.submitControl("S2");
+    return true;
+ }
+ function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "cmsm03";
+    top.javaName    = "Cmsm4210";
+    top.requHtml    = "cmsm4210_detl_02";
+    top.respHtml    = "cmsm4210_detl_02";
+    return true;
+  }
+
+ function wf_uploadAfter() {
+   return;
+ }
+ function wf_import(par1) {
+   top.submitControl(par1);
+   top.spinner.stop();
+ }
+
+
+  function wf_insert() {
+   $("#ax_errmsg").html("");
+
+    var ls_item_no =$("input[name=item_no]").val();
+    var ls_proj_code =$("input[name=proj_code]").val();
+    var ls_data_type =$("input[name=data_type]").val();
+    var ls_code =$("select[name=ex_data_code]").val();
+    var ls_code2 =$("select[name=ex_data_code2]").val();
+
+    resetJSON();
+    addJSON("item_no", ls_item_no);
+    addJSON("proj_code", ls_proj_code);
+    addJSON("data_type", ls_data_type);
+    addJSON("apr_flag", "N");
+    addJSON("ex_data_code", ls_code);
+    addJSON("ex_data_code2", ls_code2);
+
+    processAJAX();
+}
+
+function ajaxResponse(){
+    top.respHtml ="cmsm4210_detl_02";
+    top.requHtml ="cmsm4210_detl_02";
+
+    var li_rc =getJSONvalue("ax_rc",0);
+    var ls_msg =getJSONvalue("ax_msg",0);
+    if (li_rc != 1) {
+      $("#ax_errmsg").html(ls_msg);
+      alert("新增失敗: "+ls_msg);
+    }
+    else {
+      $("#ax_errmsg").html("新增成功");
+      alert("新增成功");
+    }
+    return false;
+} 
+
+
+</script>

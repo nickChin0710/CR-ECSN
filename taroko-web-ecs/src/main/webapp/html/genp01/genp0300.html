@@ -1,0 +1,137 @@
+<html>
+
+<head>
+    <title>傳檔-V.2018-0309-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2">&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"  value="資料下載" onClick="return wf_downfile()" class="btAdd">&nbsp;&nbsp;                       
+                    </td>
+                </tr>
+                <th colspan="2">批次執行</th>
+                <tr>
+                    <td nowrap colspan=4>&nbsp;下載檔案:
+                        <input type="text" class="col_any" name="ex_fromfile" value="${ex_fromfile}" zEdit="any,canTw" maxlength=40 size=40 />
+                        <input id="myfile" name="myfile" type="file"  accept="text/plain, text/csv" />
+                        <input type="Button" class="btAdd_detl"  value="瀏覽" id="processList">
+                    </td>
+                </tr>
+                <td nowrap colspan=4>&nbsp;存放位置:
+                    <input type="text" class="col_any" id="ex_serverpath" name="ex_serverpath" value="${ex_serverpath}" zEdit="any,canTw" maxlength=100 size=40 />
+                </td>
+                <tr>
+                    <td nowrap>&nbsp;執行程式:
+                        <select size="1" name="ex_pgname" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="GenA001" ${ex_pgname-GenA001}>日結檢核作業(GenA001)</option>
+                            <option value="GenA002" ${ex_pgname-GenA002}>日結軋帳作業(GenA002)</option>
+                            <option value="GenA003" ${ex_pgname-GenA003}>會計分錄清單作業(GenA003)</option>
+                            <!-- <option value="GenA004" ${ex_pgname-GenA004}>R6自動啟帳會計分錄清單作業(GenA004)</option> -->
+                            <option value="GenA005" ${ex_pgname-GenA005}>日結還原作業(GneA005)</option>
+                        </select>
+                        &nbsp;&nbsp;&nbsp;<input type="Button"    value="執行" onClick="return top.submitControl('C1')" class="btAdd" >
+                    </td>
+                </tr>
+                <tr>
+			       <td nowrap>&nbsp;參數:
+			            <input type="text" class="col_any" name="ex_pra" value="${ex_pra}"
+			            zEdit="any" maxlength="30" size="30" />
+			       </td>
+                </tr>
+            </table>
+            <table width="70%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="70%">Process Message:&nbsp;
+                        <br>
+                        <textarea rows=15 cols=70 name="proc_mesg">${proc_mesg}</textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="genp0300">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_pgname.focus();
+
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "C") {
+
+    }
+    return true;
+}
+function wf_downfile() {
+   top.submitControl('C');
+   top.spinner.stop();
+   return true;
+}
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "genp0300_detl";
+    top.submitControl('S');
+    return true;
+}
+$("#myfile").hide();
+$("#processList").click(function() {
+    $("#myfile").click();
+})
+window.onload = function() {
+    document.getElementById('myfile').onchange = readFile;
+};
+
+function readFile() {
+    file = this.files[0];
+    var fReader = new FileReader();
+    var exclude_list_desc = "";
+    var buf = "";
+    fReader.onload = function(event) {
+        exclude_list_desc = event.target.result;
+        buf = exclude_list_desc.replace(/\r/g, ",");
+        top.submitControl('C2');
+        //document.getElementById('ex_fromfile').value = buf;
+    };
+    fReader.readAsText(file);
+}
+</script>

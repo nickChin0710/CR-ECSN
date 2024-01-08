@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>工作群組(子系統)資料維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;子系統代碼:
+      <input type="text" class="col_text" name="ex_group_id" value="${ex_group_id}" maxlength="10" size="12">
+   </td>
+   <td nowrap >&nbsp;群組名稱:
+      <input type="text" class="col_any" name="ex_group_name" value="${ex_group_name}" maxlength="50" size="52" zEdit="any,canTw" >
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="存檔" onClick="return top.submitControl('C')" class="btUpdate" ${btnUpdate_disable} />&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+ <div id="dataBlock">
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">刪除&nbsp;</th>
+    <th nowrap > 子系統代碼&nbsp;</th>
+    <th nowrap > 群組名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="group_id" value="${group_id}">
+      <input type="hidden" name="old_data" value="${old_data}">
+      <input type="hidden" name="rowid" value="${rowid}">
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${group_id}
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <input type="text" class="col_any" name="group_name" value="${group_name}" maxlength="50" size="52" zEdit="any,canTw">
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>子系統代碼:
+      <input type="text" class="col_any" id="aa_group_id" value="${aa_group_id}" maxlength="10" size="12" zEdit="any">
+     &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細"
+                 class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}
+      <input type="hidden" name="ind_num" value="${ind_num}">
+   </td>
+  </tr>
+ </table>
+
+ </div>
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ $("#detl_btnAdd").click(function(){
+
+	var ls_data_code =$("#aa_group_id").val().toUpperCase();;
+
+    if(ls_data_code ==''){
+        alert("子系統代碼:不可空白");
+        return ;
+    }
+
+   rowNum++;
+   ind++;
+
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+   var num = ind-1;
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ls_data_code+"' name='group_id' />"
+      +"<input type='hidden' value='' name='old_data' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code+"</td>"
+      +"<td nowrap class='list_ll'>"
+      +"<input type='text' class='col_any' name='group_name' value='' maxlength='50' size='52' zEdit='any,canTw' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#aa_group_id").val('');
+
+  });
+
+</script>

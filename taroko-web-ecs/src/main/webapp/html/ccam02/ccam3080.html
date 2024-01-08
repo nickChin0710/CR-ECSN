@@ -1,0 +1,199 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-18  V1.00.00  Justin Wu     Initial                               -->
+<!-- 108-12-25  V1.00.01  Justin Wu     remove risk_factor                    -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>免照會VIP維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶類別：
+      <select id="ex_acct_type" name="ex_acct_type" class="col_ddlb" onchange="acctTypeChange(this);">
+         ${dddw_acct_type}
+      </select>
+      <input type="hidden" id="ex_card_indicator" name="ex_card_indicator" value="">
+   </td>
+   <td nowrap id="ex_id_no_td" style="display: none;">&nbsp;正卡人ID：
+      <input type="text" class="col_text"  name="ex_id_no" value="${ex_id_no}"/>
+   </td>
+   <td nowrap id="ex_card_no_td" style="display: none;">&nbsp;商務卡卡號：
+      <input type="text" class="col_text"  name="ex_card_no" value="${ex_card_no}" />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;有效日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	  </script>
+      &nbsp;--&nbsp;
+      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">      	
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	  </script>
+   </td>
+   <td nowrap >&nbsp;異動人員:
+   	<input type="text" class="col_text" name="ex_mod_user" value="${ex_mod_user}" maxlength="10" size="12" >
+   	&nbsp;
+   	<span class="col_radio">   		
+   		<input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT-ex_apr_flag} />全部
+        <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y}  />已覆核
+        <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N}  />未覆核
+    </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th" >覆核</th>
+    <th nowrap class="list_th" >帳戶類別&nbsp;</th>
+    <th nowrap class="list_th" >正人卡ID/商務卡卡號&nbsp;</th>
+    <th nowrap class="list_th" >是否含附卡&nbsp;</th>
+    <!-- <th nowrap class="list_th" >風險係數&nbsp;</th> -->
+    <th nowrap class="list_th" >有效時間&nbsp;</th>
+    <th nowrap class="list_th" >異動人員&nbsp;</th>
+    <th nowrap class="list_th" >異動日期&nbsp;</th>
+    <th nowrap class="list_th" >異動時間&nbsp;</th>
+
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${acct_type}','${idorcard}','${card_indicator}','${rowid}','${current_code}','${temp_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>   
+   <td nowrap class="list_cc"> ${apr_temp}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_type}-${chin_name}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${idorcard}${current_code_desc}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${with_sup_card}&nbsp;</td>
+	 <!-- <td nowrap class="list_ll"> ${risk_factor}&nbsp;</td> -->
+	 <td nowrap class="list_cc"> ${start_date}~${end_date}&nbsp;</td>
+   <td nowrap class="list_ll"> ${mod_user}&nbsp;</td>
+   <td nowrap class="list_ll"> ${mod_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${mod_time2.TIME}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+ <input type="hidden"  name="data_k5" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+window.addEventListener("load", function(){
+  var ex_acct_type = document.getElementById("ex_acct_type");
+  acctTypeChange(ex_acct_type);
+ });
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam3080_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4, current_code,parm5) { 
+    if(parm3 == "2" && current_code != "0") return false;
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ccam3080_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+  function acctTypeChange(acct_type_ele){
+    var ex_id_no_td = document.getElementById("ex_id_no_td");
+    var ex_card_no_td = document.getElementById("ex_card_no_td");
+    var ex_card_indicator = document.getElementById("ex_card_indicator");
+
+    switch(acct_type_ele.value){
+      case "01":
+      ex_card_indicator.value = "1";
+      break;
+
+      case "03":
+      ex_card_indicator.value = "2";
+      break;
+      
+      case "06":
+      ex_card_indicator.value = "2";
+      break;
+      
+      default:
+      ex_card_indicator.value = "";
+      break;
+    }
+
+    switch(ex_card_indicator.value){
+      case "1":
+      ex_id_no_td.style.display = "";
+      ex_card_no_td.style.display = "none";
+      break;
+
+      case "2":
+      ex_id_no_td.style.display = "none";
+      ex_card_no_td.style.display = "";
+      break;
+      
+      default:
+      ex_id_no_td.style.display = "none";
+      ex_card_no_td.style.display = "none";
+      break;
+    }
+
+
+  }
+  
+</script>

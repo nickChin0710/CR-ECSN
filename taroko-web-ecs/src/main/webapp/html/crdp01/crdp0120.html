@@ -1,0 +1,235 @@
+<html>
+<head>
+<title>預約不續卡覆核作業.V-2017-0823-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!-- ${#PLUGIN:htmcomm_plugin.apr_user} -->
+<!--COND -->
+<table width="40%" border="0" cellspacing="0" cellpadding="4">
+
+  	<tr>
+    	<td nowrap >&nbsp;登錄日期:
+      		<input type="text" class="col_date" name="ex_date1" value="${ex_date1}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	  		</script>
+      		--
+      		<input type="text" class="col_date" name="ex_date2" value="${ex_date2}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	  		</script>&nbsp;
+    	</td>
+    	<td nowrap >&nbsp;  
+      		<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+    	</td>
+  	</tr>
+  	<tr>
+   		<td nowrap>&nbsp;經辦:
+    		<select size="1" name="ex_crt_user" class="col_ddlb">
+        		${ex_crt_user}
+      		</select>
+    	</td>
+   		<td nowrap>類別:
+      		<select   size="1"  name="ex_crdtype" class="col_ddlb">
+         		<option value="">全部</option>
+         		<option value="1" ${ex_crdtype-1} >線上續卡</option>
+         		<option value="2" ${ex_crdtype-2} >取消線上續卡</option>
+         		<option value="3" ${ex_crdtype-3} >系統續卡改不續卡 </option>
+      		</select>
+   		</td>
+  	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">
+      	<input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" ><font style="color:blue">放行&nbsp;</font></th>
+    	<th nowrap class="list_th">處理狀態</th>
+    	<th nowrap class="list_th">卡號</th>
+    	<th nowrap class="list_th">身分<br>證號碼</th>
+    	<th nowrap class="list_th">姓名</th>
+   	 	<th nowrap class="list_th">團代</th>
+    	<th nowrap class="list_th">法人編號</th>
+    	<th nowrap class="list_th">續卡註記</th>
+    	<th nowrap class="list_th">續卡狀態</th>
+    	<th nowrap class="list_th">原續<br>卡註記</th>
+    	<th nowrap class="list_th">不續<br>卡註記</th>
+    	<th nowrap class="list_th">不續<br>卡原因</th>
+    	<th nowrap class="list_th">新效期</th>
+    	<th nowrap class="list_th">舊效期</th>
+    	<th nowrap class="list_th">經辦</th>
+    	<th nowrap class="list_th">執行日期</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr >
+   		<td nowrap class="list_no">
+			<span class="col_key">${ok_flag}</span>
+			<input type="checkbox" name="opt" class="check"  value="${ser_num}" />${SER_NUM}&nbsp;
+ 			<input type="hidden" name="ser_num" value="${ser_num}" />
+			<input type="hidden" name="rowid" value="${rowid}"/>
+			<input type="hidden" name="tt_aprocess_kind" value="${tt_aprocess_kind}"/>
+			<input type="hidden" name="process_kind" value="${process_kind}"/>
+			<input type="hidden" name="card_no" value="${card_no}"/>
+			<input type="hidden" name="wk_id" value="${wk_id}"/>
+			<input type="hidden" name="id_no" value="${id_no}">
+			<input type="hidden" name="id_no_code" value="${id_no_code}"/>
+			<input type="hidden" name="chi_name" value="${chi_name}"/>
+			<input type="hidden" name="group_code" value="${group_code}"/>
+			<input type="hidden" name="corp_no" value="${corp_no}"/>
+			<input type="hidden" name="tt_expire_chg_flag" value="${tt_expire_chg_flag}"/>
+			<input type="hidden" name="expire_chg_flag" value="${expire_chg_flag}"/>
+			<input type="hidden" name="db_expire_reason" value="${db_expire_reason}"/>
+			<input type="hidden" name="expire_reason" value="${expire_reason}"/>
+			<input type="hidden" name="tt_change_reason" value="${tt_change_reason}"/>
+			<input type="hidden" name="change_reason" value="${change_reason}"/>
+			<input type="hidden" name="tt_change_status" value="${tt_change_status}"/>
+			<input type="hidden" name="change_status" value="${change_status}"/>
+			<input type="hidden" name="change_status2" value="${change_status2}"/>
+			<input type="hidden" name="tt_expire_chg_flag_old" value="${tt_expire_chg_flag_old}"/>
+			<input type="hidden" name="expire_chg_flag_old" value="${expire_chg_flag_old}"/>
+			<input type="hidden" name="db_expire_reason_old" value="${db_expire_reason_old}"/>
+			<input type="hidden" name="expire_reason_old" value="${expire_reason_old}"/>
+			<input type="hidden" name="cur_end_date" value="${cur_end_date}"/>
+			<input type="hidden" name="crt_user" value="${crt_user}"/>
+			<input type="hidden" name="crt_date" value="${crt_date}"/>
+			<input type="hidden" name="sup_flag" value="${sup_flag}"/>
+			<input type="hidden" name="major_card_no" value="${major_card_no}"/>
+			<input type="hidden" name="major_id_p_seqno" value="${major_id_p_seqno}"/>
+			<input type="hidden" name="new_end_date" value="${new_end_date}"/>
+			<input type="hidden" name="force_flag" value="${force_flag}"/>
+			<input type="hidden" name="combo_indicator" value="${combo_indicator}"/>
+			<input type="hidden" name="emboss_data" value="${emboss_data}"/>
+			<input type="hidden" name="id_p_seqno" value="${id_p_seqno}"/>
+			<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}"/>
+			<input type="hidden" name="card_type" value="${card_type}"/>
+			<input type="hidden" name="unit_code" value="${unit_code}"/>
+			<input type="hidden" name="member_note" value="${member_note}"/>
+			<input type="hidden" name="reg_bank_no" value="${reg_bank_no}"/>
+			<input type="hidden" name="ic_flag" value="${ic_flag}"/>
+			<input type="hidden" name="source_code" value="${source_code}"/>
+			<input type="hidden" name="crd_card_corp_no" value="${crd_card_corp_no}"/>
+			<input type="hidden" name="corp_no_code" value="${corp_no_code}"/>
+			<input type="hidden" name="acct_type" value="${acct_type}"/>
+			<input type="hidden" name="eng_name" value="${eng_name}"/>
+			<input type="hidden" name="new_beg_date" value="${new_beg_date}"/>
+    		<input type="hidden" name="kind_type" value="${kind_type}"/> 
+    		<input type="hidden" name="old_end_date" value="${old_end_date}"/> 
+    		<input type="hidden" name="tt_change_reason_old" value="${tt_change_reason_old}"/> 
+    		<input type="hidden" name="crd_card_mod_seqno" value="${crd_card_mod_seqno}"/> 
+    		<input type="hidden" name="crd_card_tmp_mod_seqno" value="${crd_card_tmp_mod_seqno}"/>
+    		<input type="hidden" name="cur_beg_date" value="${cur_beg_date}"/>  
+    		<input type="hidden" name="acct_key" value="${acct_key}"/> 
+    		<input type="hidden" name="bin_no" value="${bin_no}"/> 
+    		<input type="hidden" name="curr_code" value="${curr_code}"/> 
+   		</td>
+   		<td nowrap class="list_ll"> ${tt_aprocess_kind}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${wk_id}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${group_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${corp_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_change_reason}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_change_status}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_change_reason_old}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_expire_chg_flag}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${db_expire_reason}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${cur_end_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${old_end_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${crt_user}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${crt_date.YMD}&nbsp; </td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" />
+<input type="hidden"  name="data_k2" value="" />
+<input type="hidden"  name="data_k3" value="" />
+<input type="hidden"  name="MOD_PGM" value="crdp0120"/>
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}"/>
+<input type="hidden"  name="pageType"  value="cond"/>
+<input type="hidden"  name="ex_aprid"  value="${ex_aprid}"/>
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="99999";
+ 
+ document.dataForm.ex_date1.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行 放行作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "crdp0120_detl_notuse";
+    top.submitControl('S');
+    return true;
+  }
+
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+ }
+ 
+ function chkdata() {
+	 var agy =0;
+	 $("input[name=opt]").each(function (){
+		 if($(this).prop("checked")==true){
+			 agy++; 
+		 }
+	 })
+	 if(agy == 0){
+		 alert("未選取放行資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+</script>

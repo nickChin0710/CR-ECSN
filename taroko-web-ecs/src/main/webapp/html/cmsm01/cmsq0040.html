@@ -1,0 +1,130 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-30  V1.00.01                                                      -->
+<!-- 109-09-09  V1.00.02    JustinWu      將姓名、建立人員、覆核人員文字靠左      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>VIP 卡戶異動記錄查詢-V20200909</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_log_date1" value="${ex_log_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_log_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_log_date2" value="${ex_log_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_log_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;   
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      &nbsp;身分證字號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" zEedit="alphanum,upper" maxlength="10" size="12">　　　　　
+      &nbsp;帳戶類別:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+       <option value="">全部</option>
+       ${d_dddw_accttype}
+      </select>　　　　　
+   </td>    
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      &nbsp;異動經辦:
+      <input type="text" class="col_any" name="ex_mod_user" value="${ex_mod_user}" maxlength="10" size="12" zEdit="any,canTw">　　　　　
+      &nbsp;&nbsp;VIP Code:
+      <input type="text" class="col_text" name="ex_vip_code" value="${ex_vip_code}" maxlength="2" size="5" >
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;維護類別:
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_log_type" ${DEFAULT-ex_log_type} ${ex_log_type-0} />全部
+         <input type="radio" value="1" name="ex_log_type" ${ex_log_type-1} />人工
+         <input type="radio" value="2" name="ex_log_type" ${ex_log_type-2} />批次
+      </span>
+   </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >時間&nbsp;</th>
+    <th nowrap >類別&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap colspan="2" >帳戶帳號&nbsp;</th>
+    <th nowrap >VIP&nbsp;</th>
+    <th nowrap >備  註&nbsp;</th>
+    <th nowrap >建立人員&nbsp;</th>
+    <th nowrap >覆核人員&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${log_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${log_time.TIME}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_log_type}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${vip_code}&nbsp;</td>
+	<td nowrap class="list_ll"> ${vip_remark}&nbsp;</td>
+	<td nowrap class="list_ll"> ${wk_mod_user}&nbsp;</td>
+	<td nowrap class="list_ll"> ${wk_apr_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

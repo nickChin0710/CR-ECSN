@@ -1,0 +1,151 @@
+<html>
+<head>
+<title> 112/09/08 V1.00.01 Ryan Initial 台外幣現金回饋月份查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+   </td>
+ </tr>
+</table>
+<hr>
+<div id="dataBlock">
+<!-- Key data1 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="td_data"="%">查詢方式： 
+       <span class="dsp_text">${ex_select_type_tmp}</span>
+       <input type="hidden" name="ex_select_type_tmp" value="${ex_select_type_tmp}"/>
+       <input type="hidden" name="ex_select_type" value="${ex_select_type}"/>
+       <input type="hidden" name="ex_query_table" value="${ex_query_table}"/>
+       <input type="hidden" name="table_type" value="${table_type}"/>
+       <input type="hidden" name="ex_curr_code" value="${ex_curr_code}"/>
+   	   <input type="hidden" name="ex_acct_type" value="${ex_acct_type}"/>
+   	   <input type="hidden" name="ex_curr_code" value="${ex_curr_code}"/>
+     </td>
+    <td nowrap>&nbsp;身分證號:
+		<input type="text" class="col_any" zEdit="any" name="ex_id_no2" value="${ex_id_no2}"
+      		maxlength="10" size="12"/>(可模糊查詢)
+      	<input type="Button" value="查詢" onClick="return top.submitControl('Q2')" class="btQuery" >&nbsp;&nbsp;
+    </td>
+   </tr>
+   <tr>
+     <td nowrap colspan=2 class="td_data"="%">查詢日期： 
+       <span class="dsp_text">${list_tran_date.YMD}</span>
+       <input type="hidden" name="list_tran_date" value="${list_tran_date}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan=2 class="td_data"="%">幣別： 
+       <span class="dsp_text">${list_curr_code}</span>
+       <input type="hidden" name="list_curr_code" value="${list_curr_code}"/>
+     </td>
+   </tr>
+   <tr ${display}>
+     <td nowrap colspan=2 class="td_data"="%">帳戶類別： 
+       <span class="dsp_text">${list_acct_type}</span>
+       <input type="hidden" name="list_acct_type" value="${list_acct_type}"/>
+     </td>
+   </tr>
+ </table>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">帳戶類別</th>
+    <th nowrap class="list_th">身分證號</th>
+    <th nowrap class="list_th">幣別代碼</th>
+    <th nowrap class="list_th">現金回饋代碼</th>
+    <th nowrap class="list_th">最後回饋日</th>
+     <th nowrap class="list_th">原始回饋金額</th>
+    <th nowrap class="list_th">最新可用餘額</th>
+<!--     <th nowrap class="list_th">分期餘額</th> -->
+    <th nowrap class="list_th">3個月後到期</th>
+    <th nowrap class="list_th">6個月後到期</th>
+    <th nowrap class="list_th">最後交易日</th>
+    <th nowrap class="list_th">明細筆數</th>
+    <th nowrap class="list_th">流通卡</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${table_type}','${id_p_seqno}','${tran_date}','${fund_code}','${curr_code}')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${acct_type}-${comm_acct_type}</td>
+    <td nowrap class="list_ll"> ${id_no}</td>
+    <td nowrap class="list_ll"> ${curr_code}-${comm_curr_code}</td>
+    <td nowrap class="list_ll"> ${fund_code}-${comm_fund_code}</td>
+    <td nowrap class="list_ll"> ${tran_date.YMD}</td>
+    <td nowrap class="list_rr"> ${beg_tran_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${total_tran_amt.(999)}</td>
+<!--     <td nowrap class="list_rr"> ${res_tran_amt.(999)}</td> -->
+    <td nowrap class="list_rr"> ${tot_fail3_amt}</td>
+    <td nowrap class="list_rr"> ${tot_fail6_amt}</td>
+    <td nowrap class="list_ll"> ${last_tran_date.YMD}</td>
+    <td nowrap class="list_ll"> ${data_cnt}</td>
+    <td nowrap class="list_ll"> ${crd_current_code_0}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="ex_query_table" value="${ex_query_table}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 2;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    if(parm == 'MKT') 
+    	top.respHtml  = "mktq6310_dbro1";
+    if(parm == 'CYC') 
+    	top.respHtml  = "mktq6310_dbro2";
+    top.submitControl('S1');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

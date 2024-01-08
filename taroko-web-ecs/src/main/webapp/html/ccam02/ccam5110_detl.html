@@ -1,0 +1,126 @@
+<html>
+<head>
+<title>Exception代碼維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap> 卡別：
+      <select name="kk_bin_type" class="col_ddlb" onChange="wf_close()" >
+      <option value="">  </option>
+      <option value="NCCC" ${kk_bin_type-NCCC} >NCCC</option>
+　    <option value="VISA" ${kk_bin_type-VISA} >VISA</option>
+　    <option value="MAST" ${kk_bin_type-MAST} >MAST</option>
+　    <option value="JCB" ${kk_bin_type-JCB} >JCB</option>
+	<option value="FISC" ${kk_bin_type-FISC} >FISC</option>
+      </select>
+   </td>
+   <td nowrap> 原因碼：
+      <input type="text" class="col_text" name="kk_exc_code" value="${kk_exc_code}" maxlength=2 size=5 zEdit="alphanum,upper" ></td>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key" >卡別：
+      <span class="dsp_text">${bin_type}</span>
+      <input type="hidden" name="bin_type" value="${bin_type}"> 
+   </td>
+   <td nowrap class="col_key" >原因碼：
+      <span class="dsp_text">${exc_code}</span>
+      <input type="hidden" name="exc_code" value="${exc_code}"> 
+   </td>
+  <tr>
+   <td nowrap colspan="2"> 說明：
+      <input type="text" class="col_any" name="exc_desc" value="${exc_desc}" 
+         zEdit="any,canTW" zRequire="Y" maxlength="100" size="102">
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ function wf_close()
+ {
+ 	var ls_kk_bin_type = document.forms["dataForm"]["kk_bin_type"].value;
+ 	var ls_bin_type = document.forms["dataForm"]["bin_type"].value;
+ 	if(ls_bin_type != '' || ls_kk_bin_type ==''){
+ 		return ;
+ 	}
+ 	
+ 	if(ls_kk_bin_type == 'NCCC'){
+ 		document.getElementById("radio_1").disabled=false;
+ 		document.getElementById("radio_2").disabled=false;
+ 	}	else	{
+ 		document.getElementById("radio_1").disabled=true;
+ 		document.getElementById("radio_2").disabled=true;
+ 	}
+ 	
+ }
+</script>

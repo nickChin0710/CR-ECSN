@@ -1,0 +1,120 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-06-13  V1.00.00  jh             Initial                              -->
+<!-- 109-08-28  V1.00.01  JustinWu       hide autopay_id_code                 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>法人基本資料維護-CURR-200828-JustinWu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; 
+  <input type="Button"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+<!-- 輸入資料讀取條件  -->
+    <td nowrap>&nbsp;雙幣幣別:
+      <select size="1" name="kk_curr_code" class="col_ddlb" >
+         ${dddw_curr_code}
+      </select>
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2">&nbsp;雙幣幣別:
+      <span class="dsp_text">${curr_code}</span>
+      <input type="hidden" name="curr_code" value="${curr_code}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;自動扣繳指示碼:
+      <select   size="1"  name="autopay_indicator" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${autopay_indicator-1} >1.扣 TTL&nbsp;</option>
+         <option value="2" ${autopay_indicator-2} >2.扣 MP&nbsp;</option>
+      </select>
+   </td>
+   <td nowrap >&nbsp;自動扣繳帳戶行庫:
+      <input type="text" class="col_text" name="autopay_acct_bank" value="${autopay_acct_bank}" maxlength="4" size="6">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;自動扣繳帳戶帳號:
+      <input type="text" class="col_text" name="autopay_acct_no" value="${autopay_acct_no}" maxlength="16" size="18">
+   </td>
+   <td nowrap >&nbsp;扣繳帳號歸屬ID:
+      <input type="text" class="col_text" name="autopay_id" value="${autopay_id}" maxlength="10" size="12">
+      <input type="text" class="col_text" name="autopay_id_code" value="${autopay_id_code}" maxlength="1" size="5" style="display: none;">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;外幣存款不足轉扣台幣:
+      <span class="col_radio">
+         <input type="radio" value="Y" name="autopay_dc_flag" ${autopay_dc_flag-Y} />Y
+         <input type="radio" value="N" name="autopay_dc_flag" ${autopay_dc_flag-N} />N
+      </span>
+   </td>
+   <td nowrap >&nbsp;免收循環息帳外息:
+      <span class="dsp_text">${no_interest_flag}&nbsp;</span>
+      <input type="hidden" name="no_interest_flag" value="${no_interest_flag}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2" >&nbsp;免收循環息生效年月
+      <span class="dsp_text">${wk_no_int_month}</span>
+      <input type="hidden" name="wk_no_int_month" value="${wk_no_int_month}" />
+   </td>
+</table>
+</div>
+<br>
+
+<!-- -->
+<input type="hidden" name="acct_type" value="${acct_type}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

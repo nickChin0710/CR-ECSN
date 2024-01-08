@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>客服D檔調整匯入作業(Debit卡) V20191205</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;覆審批號:
+      <input type="text" class="col_text" name="ex_appr_no" value="${ex_appr_no}" maxlength="10" size="12" zRequire="C"/>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  ${btnUpdate_disable}  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+   <td nowrap class="list_no" width="10%">&nbsp;</td>
+   <td nowrap class="list_rr">總計金額:</td>
+   <td nowrap class="list_rr">${tl_adj_amt.(999)}&nbsp;
+      <input type="hidden" name="tl_adj_amt" value="${tl_adj_amt}">   
+   </td>
+  </tr>
+  <tr>
+     <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    匯入
+	 </th>    
+    <th nowrap >入帳日&nbsp;</th>
+    <th nowrap >交易參考號&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>    
+    <th nowrap >期末餘額&nbsp;</th>
+    <th nowrap >可D數餘額&nbsp;</th>
+    <th nowrap >D 檔金額&nbsp;</th>
+    <th nowrap >科目名稱&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+    <th nowrap >金融帳號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+   <tr>
+   <td nowrap class="list_no"> &nbsp;
+      <span class="dsp_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}" />
+ 	    ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	   <input type="hidden" name="rowid" value="${rowid}">	   
+	</td>
+   <td nowrap class="list_cc"> ${item_post_date.YMD}&nbsp;
+      <input type="hidden" name="item_post_date" value="${item_post_date}">   
+   </td>
+	<td nowrap class="list_cc"> ${reference_no}&nbsp;
+	   <input type="hidden" name="reference_no" value="${reference_no}">   
+	</td>
+	<td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;
+	   <input type="hidden" name="acct_type" value="${acct_type}">   
+	   <input type="hidden" name="acct_key" value="${acct_key}">   
+	</td>	
+	<td nowrap class="list_cc"> ${end_bal.(999)}&nbsp;
+	   <input type="hidden" name="end_bal" value="${end_bal}">   
+	</td>
+	<td nowrap class="list_cc"> ${d_avail_bal.(999)}&nbsp;
+	   <input type="hidden" name="d_avail_bal" value="${d_avail_bal}">   
+	</td>
+	<td nowrap class="list_cc"> ${adj_amt.(999)}&nbsp;
+	   <input type="hidden" name="adj_amt" value="${adj_amt}">   
+	</td>
+	<td nowrap class="list_cc"> ${acct_code}&nbsp;
+	   <input type="hidden" name="acct_code" value="${acct_code}">   
+	</td>
+	<td nowrap class="list_ll"> ${adj_remark}&nbsp;
+	   <input type="hidden" name="adj_remark" value="${adj_remark}">   
+	</td>
+	<td nowrap class="list_cc"> ${acct_no}&nbsp;
+	   <input type="hidden" name="acct_no" value="${acct_no}">   
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+   function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

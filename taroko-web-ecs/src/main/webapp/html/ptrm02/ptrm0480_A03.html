@@ -1,0 +1,169 @@
+<html>
+<head>
+<title>卡人等級參數設定[mcc]-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">計算順序：
+      <span class="dsp_text">1</span>
+      <input type=hidden name="seq_no" value="1" />
+   </td>
+   <td nowrap >TABLE_NAME：
+      <span class="dsp_text">PTR_VIP_CANCEL</span>
+      <input type=hidden name="table_name" value="PTR_VIP_CANCEL" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>明細類別：
+      <span class="dsp_date">A03</span>
+      <input type=hidden name="data_type" value="A03" />
+   </td>
+   <td nowrap class="col_key">已覆核：
+      <span class="col_key">${apr_flag}</span>
+      <input type=hidden name="apr_flag" value="${apr_flag}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">
+      <input type="Button" value="VIP code" onclick="wf_detl_2page('1');" class="btAdd_detl" />
+      <input type="Button" value="凍結碼" onclick="wf_detl_2page('2');" class="btAdd_detl" />
+      <input type="Button" value="風險分類" onclick="wf_detl_2page('3');" disabled />
+      <input type="Button" value="ACTION CODE"  onclick="wf_detl_2page('4');" class="btAdd_detl" />
+      <input type="Button" value="排除名單" onclick="wf_detl_2page('5');" class="btAdd_detl" />                                                                                          
+   </td>
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >風險分類：
+      <input type="text" class="col_text" id="ex_data_code" value="${ex_data_code}" maxlength="2" size="5">
+      <input type="text" style="display: none"/>   
+     &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}            
+   </td>
+  </tr>
+</table>  
+<hr>
+<table id="table1" width="60%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">風險分類 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}" />
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${data_code}</td>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ptrm0480">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="A03">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="999";
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+ }
+  
+  $("#detl_btnAdd").click(function(){
+
+	var ls_data_code =$("#ex_data_code").val().toUpperCase();;
+	
+	if(ls_data_code =='') {
+	   alert("風險分類: 不可空白");
+	   return ;
+	}
+
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ls_data_code+"' name='data_code' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_data_code").val('');
+  
+  });
+  
+ function wf_detl_2page(parm) { 
+    top.respLevel = 1;
+   if (parm === "1") {
+      top.respHtml ="ptrm0480_A01";
+   }
+   else if (parm === "2") {
+      top.respHtml ="ptrm0480_A02";
+   }
+   else if (parm === "3") {
+      top.respHtml ="ptrm0480_A03";
+   }
+   else if (parm === "4") {
+      top.respHtml ="ptrm0480_A04";
+   }
+   else if (parm === "5") {
+      top.respHtml ="ptrm0480_A05";
+   }
+   else {
+      return false;
+   }
+   top.submitControl("R2");
+   return true;
+ }
+</script>

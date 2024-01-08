@@ -1,0 +1,182 @@
+<html>
+<head>
+<title>黑名單卡號維護 V2020-0330</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;黑名單卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" />
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btConfirm" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	  </script>
+	  --
+	  <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	    new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	  </script>
+   </td>
+   <td nowrap >&nbsp;建檔方式:
+      <select   size="1"  name="ex_add_type" class="col_ddlb">        
+        <option value="">--</option>
+        <option value="1" ${ex_add_type-1} >人工建檔</option>
+        <option value="2" ${ex_add_type-2} >批次匯入</option>
+      </select>    
+   </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" >&nbsp;匯入媒體檔:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any" />
+      <input type="button" ${btnUpload} value="..." class="btProcess" onclick="return upload_click()">
+    </td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;備註:
+  		<span class="td_remark" >人工匯入檔為*.txt檔，layout：卡號(16),備註(30)</span>
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+     刪除
+	</th>
+    <th nowrap >黑名單卡號&nbsp;</th>
+    <th nowrap >建檔方式&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+    <th nowrap >匯入錯誤原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">    
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />	
+	<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${card_no}','','');" style="cursor:hand">
+   </td>
+   <td nowrap class="list_cc" >${card_no}
+    <input type="hidden" name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap class="list_cc" >${add_type}.${tt_add_type}
+    <input type="hidden" name="add_type" value="${add_type}" />
+    <input type="hidden" name="tt_add_type" value="${tt_add_type}" />
+   </td>
+   <td nowrap class="list_ll" >${card_remark}
+    <input type="hidden" name="card_remark" value="${card_remark}" />
+   </td>
+   <td nowrap class="list_ll" >${err_mesg}
+    <input type="hidden" name="err_mesg" value="${err_mesg}" />
+   </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <input type="hidden"  name="upload_file" value="" />  
+ <input type="hidden"  name="code_type" value="${code_type}" />
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm3310_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm3310_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+  function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "rskm03";
+    top.javaName    = "Rskm3310";
+    top.requHtml    = "rskm3310";
+    top.respHtml    = "rskm3310";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+ 	 top.submitControl('S1')
+   return;
+ } 
+ 
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+</script>

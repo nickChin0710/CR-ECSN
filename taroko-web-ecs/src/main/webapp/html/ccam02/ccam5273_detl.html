@@ -1,0 +1,296 @@
+<html>
+<head>
+<title>消費簡訊門檻參數設定</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+<!-- 輸入資料讀取條件  -->
+    <td nowrap>&nbsp;優先序:
+      <input type="text" class="col_text" name="kk_sms_priority" value="${kk_sms_priority}" maxlength="2" size="5" zEdit="number" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;優先序:
+      <span class="dsp_text">${sms_priority}</span>
+      <input type="hidden" name="sms_priority" value="${sms_priority}" />
+      &nbsp;&nbsp;
+      <input type="Button" class="btOther" value="參數明細維護" onClick="return detailScreen('COUNTRY')" ${btnUpdate_disable} />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;簡訊代號:
+      <input type="text" class="col_text" name="msg_id" value="${msg_id}" maxlength="4" size="6" zEdit="number" zRequire="Y" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;簡訊說明:
+      <input type="text" class="col_any" name="sms_remark" value="${sms_remark}" maxlength="50" size="80" zEdit="any,canTw" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;      
+      <span class="col_radio">         
+         <input type="radio" value="Y" name="spec_list" ${spec_list-Y} />指定名單
+         <input type="radio" value="N" name="spec_list" ${spec_list-N} ${DEFAULT-spec_list} />非指定名單
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;適用地區:
+      <span class="col_radio">         
+      	 <input type="radio" value="0" name="area_type" ${area_type-0} ${DEFAULT-area_type} />不檢核
+         <input type="radio" value="1" name="area_type" ${area_type-1} />國外
+         <input type="radio" value="2" name="area_type" ${area_type-2} />國內         
+      </span>
+    </td>
+  </tr>  
+  <tr>
+    <td nowrap >&nbsp;是否檢核國別:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_country" ${cond_country-0} ${DEFAULT-cond_country} />不檢核
+         <input type="radio" value="1" name="cond_country" ${cond_country-1} />指定
+         <input type="radio" value="2" name="cond_country" ${cond_country-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核幣別:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_curr" ${cond_curr-0} ${DEFAULT-cond_curr} />不檢核
+         <input type="radio" value="1" name="cond_curr" ${cond_curr-1} />指定
+         <input type="radio" value="2" name="cond_curr" ${cond_curr-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核BIN:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_bin" ${cond_bin-0} ${DEFAULT-cond_bin} />不檢核
+         <input type="radio" value="1" name="cond_bin" ${cond_bin-1} />指定
+         <input type="radio" value="2" name="cond_bin" ${cond_bin-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核團代:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_group" ${cond_group-0} ${DEFAULT-cond_group} />不檢核
+         <input type="radio" value="1" name="cond_group" ${cond_group-1} />指定
+         <input type="radio" value="2" name="cond_group" ${cond_group-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核特店:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_mcht" ${cond_mcht-0} ${DEFAULT-cond_mcht} />不檢核
+         <input type="radio" value="1" name="cond_mcht" ${cond_mcht-1} />指定
+         <input type="radio" value="2" name="cond_mcht" ${cond_mcht-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核MCC CODE:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_mcc" ${cond_mcc-0} ${DEFAULT-cond_mcc} />不檢核
+         <input type="radio" value="1" name="cond_mcc" ${cond_mcc-1} />指定
+         <input type="radio" value="2" name="cond_mcc" ${cond_mcc-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核POS ENTRY MODE:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_pos" ${cond_pos-0} ${DEFAULT-cond_pos} />不檢核
+         <input type="radio" value="1" name="cond_pos" ${cond_pos-1} />指定
+         <input type="radio" value="2" name="cond_pos" ${cond_pos-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核交易類別:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_trans_type" ${cond_trans_type-0} ${DEFAULT-cond_trans_type} />不檢核
+         <input type="radio" value="1" name="cond_trans_type" ${cond_trans_type-1} />指定
+         <input type="radio" value="2" name="cond_trans_type" ${cond_trans_type-2} />排除
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;是否檢核回覆碼:
+      <span class="col_radio">         
+         <input type="radio" value="0" name="cond_resp_code" ${cond_resp_code-0} ${DEFAULT-cond_resp_code} />不檢核
+         <input type="radio" value="1" name="cond_resp_code" ${cond_resp_code-1} />指定
+         <input type="radio" value="2" name="cond_resp_code" ${cond_resp_code-2} />排除
+      </span>
+    </td>
+  </tr>  
+  <tr>
+    <td nowrap >&nbsp;           
+      <span class="col_radio">         
+         <input type="radio" value="N" name="cond_success" ${cond_success-N} ${DEFAULT-cond_success-N} />不檢核
+         <input type="radio" value="Y" name="cond_success" ${cond_success-Y} />累計交易只計算佔額交易
+         <input type="radio" value="M" name="cond_success" ${cond_success-M} />累計單一MCC CODE
+         <input type="radio" value="A" name="cond_success" ${cond_success-A} />累計交易只計算佔額交易且單一MCC CODE
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;
+      <input type="checkbox" name="cond_amt" value="Y" ${cond_amt-Y}>檢核單筆消費金額 >= NT$
+      <input type="text" class="col_number" name="tx_amt" value="${tx_amt}" maxlength="9" size="11" zEdit="dignumber" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;
+      <input type="checkbox" name="cond_cnt1" value="Y" ${cond_cnt1-Y}>檢核近
+      <input type="text" class="col_number" name="tx_day" value="${tx_day}" maxlength="2" size="5" zEdit="number" />
+      日內累計消費超過
+      <input type="text" class="col_number" name="tx_dat_cnt" value="${tx_dat_cnt}" maxlength="2" size="5" zEdit="number" />
+      筆(含)      
+    </td>
+  </tr>
+  <tr>
+   	<td nowrap >&nbsp;
+   	  <input type="checkbox" name="cond_or_and1" value="Y" ${cond_or_and1-Y}>
+   	  累計交易金額 >= NT$
+   	  <input type="text" class="col_number" name="cond1_amt" value="${cond1_amt}" maxlength="9" size="11" zEdit="dignumber" />
+   	</td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;
+      <input type="checkbox" name="cond_cnt2" value="Y" ${cond_cnt2-Y}>檢核近
+      <input type="text" class="col_number" name="tx_hour" value="${tx_hour}" maxlength="2" size="5" zEdit="number" />
+      小時內累計消費超過
+      <input type="text" class="col_number" name="tx_hour_cnt" value="${tx_hour_cnt}" maxlength="2" size="5" zEdit="number" />
+      筆(含)      
+    </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;
+  	  <input type="checkbox" name="cond_or_and2" value="Y" ${cond_or_and2-Y}>
+   	  累計交易金額 >= NT$
+   	  <input type="text" class="col_number" name="cond2_amt" value="${cond2_amt}" maxlength="9" size="11" zEdit="dignumber" />
+  	</td>
+  </tr>
+  <tr>  	
+  	<td nowrap >
+   	  <span class="col_key">請至 ccam8030 確認授權交易類別是否適用於消費簡訊</span>
+   	</td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type=hidden name="data_k1" value="${sms_priority}" />
+<input type=hidden name="data_k2" value="" />
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ccam5273">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+  function detailScreen(parm) { 
+    //top.currRows  = serNum;     
+	 if (parm==="COUNTRY") {
+		top.respHtml  = "ccam5273_country";
+	 }
+	 else if (parm=="CURR") {
+		top.respHtml  = "ccam5273_curr";
+	 }
+	 else if (parm=="BIN") {
+		top.respHtml  = "ccam5273_bin";
+	 }
+	 else if (parm=="MCHT") {
+		top.respHtml  = "ccam5273_mcht";
+	 }
+	 else if (parm=="MCC") {
+		top.respHtml  = "ccam5273_mcc";
+	 }
+	 else if (parm=="POS") {
+		top.respHtml  = "ccam5273_pos";
+	 }
+	 else if (parm=="TRANS") {
+		top.respHtml  = "ccam5273_trans";
+	 }
+	 else if (parm=="RESP") {
+		top.respHtml  = "ccam5273_resp";
+	 }	 
+     else if (parm=="GROUP") {
+		top.respHtml  = "ccam5273_group";
+	 }	 
+
+    top.respLevel = 2;
+	document.dataForm.data_k2.value = parm;
+    top.submitControl("S2");
+    return true;
+  }  
+
+</script>

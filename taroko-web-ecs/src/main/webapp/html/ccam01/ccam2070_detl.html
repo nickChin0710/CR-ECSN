@@ -1,0 +1,305 @@
+<html>
+<head>
+<title>DEBIT卡臨時調整額度維護(adj_debit)-20191220 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">	
+	<tr> 	
+		<td width="100">&nbsp;</td>
+	 	<td> 
+	  	<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+	  	<input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+	  	<input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+	  	<input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;	  	
+	  	<input type="Button"   value="會簽單" ${btnUpdate_disable} onClick="detailScreen()" class="btQuery" >&nbsp;&nbsp;
+	  </td>
+	</tr> 
+</table>
+
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap>&nbsp;卡戶身分證:
+         <span class="dsp_text">${id_no}</span>
+         <input type="hidden" name="id_no" value="${id_no}">
+      </td>
+      <td nowrap>&nbsp;姓名:
+         <span class="dsp_text">${idno_name}</span>
+         <input type="hidden" name="idno_name" value="${idno_name}">
+      </td>
+      <td nowrap>&nbsp;金融卡帳戶號碼:
+         <span class="dsp_text">${acct_no}</span>
+         <input type="hidden" name="acct_no" value="${acct_no}"> 
+      </td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;金控利害關係人:
+         <span class="dsp_text">${rela_flag}</span>
+         <input type="hidden" name="rela_flag" value="${rela_flag}">
+      </td>
+      <td nowrap>&nbsp;消貸餘額:
+         <span class="dsp_text">${bond_amt.(999)}</span>
+         <input type="hidden" name="bond_amt" value="${bond_amt}"> 
+      </td>
+      <td nowrap>&nbsp;擔保品:
+         <span class="dsp_text">${asset_balance.(999)}</span>
+         <input type="hidden" name="asset_balance" value="${asset_balance}">
+      </td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;調高原因:
+         <select size="1" name="adj_reason" class="col_ddlb" zRequire="Y" >
+            <option value="">--</option>
+            ${dddw_adj_reason}
+         </select>
+      </td>
+      <td nowrap>&nbsp;適用地區別:
+         <select   size="1"  name="adj_area" class="col_ddlb" zRequire="Y" >         
+	         <option value="3" ${adj_area-3} >國內外</option>
+	         <option value="1" ${adj_area-1} >國外</option>
+	         <option value="2" ${adj_area-2} >國內</option>         
+      	 </select>
+      </td>
+      <td nowrap>&nbsp;原日限次:
+         <span class="dsp_text">${org_day_cnt.(999)}</span>
+         <input type="hidden" name="org_day_cnt" value="${org_day_cnt}"> 
+      </td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;原月限額:
+         <span class="dsp_text">${org_month_amt.(999)}</span>
+         <input type="hidden" name="org_month_amt" value="${org_month_amt}">
+      </td>
+      <td nowrap>&nbsp;原日限額:
+         <span class="dsp_text">${org_day_amt.(999)}</span>
+         <input type="hidden" name="org_day_amt" value="${org_day_amt}">
+      </td>
+      <td nowrap>&nbsp;原次限額:
+         <span class="dsp_text">${org_cnt_amt.(999)}</span>
+         <input type="hidden" name="org_cnt_amt" value="${org_cnt_amt}"> 
+      </td>
+  </tr>
+  <hr>
+  <tr>
+      <td nowrap>&nbsp;臨調放大比率:
+         <input type="text" class="col_number" name="tot_amt_month" value="${tot_amt_month}" maxlength="6" size="8" zEdit="dignumber" zRequire="Y" onChange="return top.submitControl('R2')" >
+         <span class="dsp_text">％</span>
+      </td>       
+      <td nowrap>&nbsp;調整後日限次:
+         <span class="dsp_text">${cur_day_cnt.(999)}</span>
+         <input type="hidden" name="cur_day_cnt" value="${cur_day_cnt}"> 
+      </td>
+      <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;調整後月限額:
+         <span class="dsp_text">${cur_month_amt.(999)}</span>
+         <input type="hidden" name="cur_month_amt" value="${cur_month_amt}">
+      </td>
+      <td nowrap>&nbsp;調整後日限額:
+         <span class="dsp_text">${cur_day_amt.(999)}</span>
+         <input type="hidden" name="cur_day_amt" value="${cur_day_amt}">
+      </td>
+      <td nowrap>&nbsp;調整後次限額:
+         <span class="dsp_text">${cur_cnt_amt.(999)}</span>
+         <input type="hidden" name="cur_cnt_amt" value="${cur_cnt_amt}"> 
+      </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;調高原因備註:
+      <input type="text" class="col_any" name="adj_remark" value="${adj_remark}" maxlength="30" size="32" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;有效日期:
+      <input type="text" class="col_date" name="adj_eff_date1" value="${adj_eff_date1}" zRequire="Y"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_eff_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="adj_eff_date2" value="${adj_eff_date2}" zRequire="Y" 
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_eff_date2'});
+	      </script>
+	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;異動時間:
+  		<span class="dsp_text">${adj_date.YMD}&nbsp;</span>
+  		<input type="hidden" name="adj_date" value="${adj_date}">
+  	</td>
+  	<td nowrap colspan="2" >&nbsp;異動經辦:
+  		<span class="dsp_text">${adj_user}&nbsp;</span>
+  		<input type="hidden" name="adj_user" value="${adj_user}">
+  	</td>
+  </tr>
+</table>
+<hr>
+</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >風險類別&nbsp;</th>
+    <th nowrap colspan="2">次限額 (%/元)&nbsp;</th>
+    <th nowrap colspan="2">日限額 (%/元)&nbsp;</th>
+    <th nowrap colspan="2">月限額 (%/元)&nbsp;</th>
+    <th nowrap colspan="2">日限次 (%/次)&nbsp;</th>
+    <th nowrap colspan="2">月限次 (%/次)&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+  <td nowrap class="list_no" bgcolor="#EFEFEF">&nbsp;      
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}" />
+      <input type="hidden" name="ori_cnt_amt" value="${ori_cnt_amt}">
+      <input type="hidden" name="ori_day_amt" value="${ori_day_amt}">
+      <input type="hidden" name="ori_month_amt" value="${ori_month_amt}">
+      <input type="hidden" name="ori_day_cnt" value="${ori_day_cnt}">
+      <input type="hidden" name="ori_month_cnt" value="${ori_month_cnt}">
+      <input type="hidden" name="ori_cnt_amt_pct" value="${ori_cnt_amt_pct}">
+      <input type="hidden" name="ori_day_amt_pct" value="${ori_day_amt_pct}">
+      <input type="hidden" name="ori_month_amt_pct" value="${ori_month_amt_pct}">
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${risk_type}      
+      <input type="hidden" name="risk_type" value="${risk_type}" />  
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="cnt_amt_pct"  value="${cnt_amt_pct}" maxlength="5" size="7" zEdit="dignumber" onChange="wf_xxx_pct('${ser_num}','cnt_amt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="cnt_amt"  value="${cnt_amt}" maxlength="10" size="12" zEdit="number" onChange="wf_xxx_amt('${ser_num}','cnt_amt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="day_amt_pct"  value="${day_amt_pct}" maxlength="5" size="7" zEdit="dignumber" onChange="wf_xxx_pct('${ser_num}','day_amt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="day_amt"  value="${day_amt}" maxlength="10" size="12" zEdit="number" onChange="wf_xxx_amt('${ser_num}','day_amt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="month_amt_pct"  value="${month_amt_pct}" maxlength="5" size="7" zEdit="dignumber" onChange="wf_xxx_pct('${ser_num}','month_amt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="month_amt"  value="${month_amt}" maxlength="10" size="12" zEdit="number" onChange="wf_xxx_amt('${ser_num}','month_amt');" />
+    </td>
+     <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="day_cnt_pct"  value="${day_cnt_pct}" maxlength="5" size="7" zEdit="dignumber" onChange="wf_xxx_pct('${ser_num}','day_cnt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="day_cnt"  value="${day_cnt}" maxlength="5" size="7" zEdit="number" onChange="wf_xxx_amt('${ser_num}','day_cnt');" />
+    </td>
+     <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="month_cnt_pct"  value="${month_cnt_pct}" maxlength="5" size="7" zEdit="dignumber" onChange="wf_xxx_pct('${ser_num}','month_cnt');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="month_cnt"  value="${month_cnt}" maxlength="5" size="7" zEdit="number" onChange="wf_xxx_amt('${ser_num}','month_cnt');" />
+    </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="card_acct_idx" value="${card_acct_idx}" />
+ <input type="hidden"  name="acno_p_seqno" value="${acno_p_seqno}" />
+ <input type="hidden"  name="id_p_seqno" value="${id_p_seqno}" />
+ <input type="hidden"  name="card_no" value="${card_no}" />
+ 
+ <input type="hidden"  name="chg" value="${chg}">
+ <input type="hidden"  name="org_reason" value="${org_reason}" />
+ <input type="hidden"  name="card_corp_id" value="${card_corp_id}" />
+ <input type="hidden"  name="org_adj_rate" value="${org_adj_rate}" />
+ <input type="hidden"  name="org_eff_end_date" value="${org_eff_end_date}" />
+ <input type="hidden"  name="org_remark" value="${org_remark}" />
+ <input type="hidden"  name="org_eff_start_date" value="${org_eff_start_date}" />
+ <input type="hidden"  name="org_area" value="${org_area}" />
+ <input type="hidden"  name="ori_eff_date1" value="${ori_eff_date1}">
+ <input type="hidden"  name="ori_eff_date2" value="${ori_eff_date2}">
+ <input type="hidden"  name="ori_tot_amt_month" value="${ori_tot_amt_month}">
+ 
+ <input type="hidden"  name="mod_seqno" value="${mod_seqno}" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="data">
+ 
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');	
+</script>
+<script language="javascript">
+
+
+ top.refreshButton2('1');
+ top.pageRows="999";
+
+function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+       
+    if (top.actionCode==='U') {
+      if (confirm("消費風險類同步調整, 要限制之消費須指定; 總消費不可大於月限額")==false) {
+         return false;
+      } 
+    }
+    return true;
+  }
+  
+function detailScreen() { 
+    top.respLevel = 2;        
+    top.respHtml  = "ccam2070_detl2";
+    top.submitControl('S2');
+    return true;
+} 
+
+function ind_2col(ii) {
+   //alert("ii="+ii);
+   var col =to_num(ii);
+   if (col >0) {
+      col =col -1;
+   }
+   //alert('ii='+ii+', col='+col);
+   return col;
+}
+function to_num(ss) {
+   if(ss.length==0)                                      
+   { return 0; }
+   if(isNaN(ss)) 
+   { return 0; }
+   return parseInt(ss);  
+}
+
+function wf_xxx_pct(ii,col) {
+   var cc =ind_2col(ii);
+   var amt =to_num($("input[name=ori_"+col+"]")[cc].value);
+   var pct =to_num($("input[name="+col+"_pct]")[cc].value);
+   var db_amt = (amt * pct) / 100;
+   $("input[name="+col+"]")[cc].value =Math.round(db_amt);
+   //alert('amt='+cnt_amt+', pct='+cnt_amt_pct+', db='+db_cnt_amt);
+}
+
+function wf_xxx_amt(ii,col) {
+   var cc =ind_2col(ii);
+   //var col='db_cnt_amt-'+ii;
+   var amt =to_num($("input[name=ori_"+col+"]")[cc].value);
+   var db_amt =to_num($("input[name="+col+"]")[cc].value);
+   var pct=0;
+   if (db_amt>0 && amt>0) {
+      pct = (db_amt / amt) * 100; //Math.round(3.14)
+   }
+   $("input[name="+col+"_pct]")[cc].value =Math.round(pct);
+}
+
+</script>

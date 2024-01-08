@@ -1,0 +1,115 @@
+<html>
+<head>
+<title>悠遊卡自動加值代行授權報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_report_type]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_report_type]").filter('[value=T]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;交易日期:
+      <input type="text" class="col_date" name="ex_tx_date1" value="${ex_tx_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_tx_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_tx_date2" value="${ex_tx_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_tx_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;代行類別:
+      <span class="col_radio">
+         <input type="radio" value="T" name="ex_report_type" ${ex_report_type-T} />悠遊卡
+         <input type="radio" value="I" name="ex_report_type" ${ex_report_type-I} />一卡通
+      </span>
+   </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="list_no" width="5%">&nbsp;</td>
+    <td nowrap class="list_rr" >合計:&nbsp;</td>
+    <td nowrap class="list_rr" >${tl_tot_cnt.(999)}&nbsp;
+      <input type="hidden" name="tl_tot_cnt" value="${tl_tot_cnt}">
+    </td>
+    <td nowrap class="list_rr" >${tl_unit_cnt.(999)}&nbsp;
+      <input type="hidden" name="tl_unit_cnt" value="${tl_unit_cnt}">
+    </td>
+    <td nowrap class="list_rr" >${tl_ok_pct.(999.0000)}&nbsp;
+      <input type="hidden" name="tl_ok_pct" value="${tl_ok_pct}">
+    </td>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >交易日期&nbsp;</th>
+    <th nowrap >總加值筆數<br>(連線交易，含代行)</th>
+    <th nowrap >代行成功筆數&nbsp;</th>
+    <th nowrap >代行率(%)&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tx_date.YMD}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_tot_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_unit_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${wk_ok_pct.(999.0000)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

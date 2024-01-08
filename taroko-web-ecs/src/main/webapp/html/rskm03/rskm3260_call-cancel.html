@@ -1,0 +1,239 @@
+<html>
+<head>
+<title>偽冒爭議款案件處理 - call</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+
+<body bgcolor="#FFFFFF">
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;Case No:
+      <span class="dsp_text">${case_no}&nbsp;</span>
+      <input type="hidden" name="case_no" value="${case_no}">
+   </td>
+   <td nowrap >&nbsp;Card No:
+      <span class="dsp_text">${card_no}&nbsp;</span>
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;ID:
+      <span class="dsp_text">${idno}&nbsp;</span>
+      <input type="hidden" name="idno" value="${idno}">
+   </td>
+   <td nowrap >&nbsp;ID Name:
+      <span class="dsp_text">${chi_name}&nbsp;</span>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;Address:
+      <span class="dsp_text">${zip_code}&nbsp;</span>
+      <input type="hidden" name="zip_code" value="${zip_code}">
+      <span class="dsp_text">${addr}&nbsp;</span>
+      <input type="hidden" name="addr" value="${addr}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;Tel No:(H) 
+      <span class="dsp_text">${db_telno_h}&nbsp;</span>
+      <input type="hidden" name="db_telno_h" value="${db_telno_h}">
+   </td>
+   <td nowrap >&nbsp;(O)
+      <span class="dsp_text">${db_telno_o}&nbsp;</span>
+      <input type="hidden" name="db_telno_o" value="${db_telno_o}">
+   </td>
+  </tr>
+</table>  
+<hr>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;記錄日期:
+    <input type="text" class="col_date" id="ex_call_date" name="ex_call_date" value="${ex_call_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_call_date'});
+	      </script>             
+   </td>
+   <td nowrap >&nbsp;時間:
+      <input type="text" class="col_text" id="ex_call_time" name="ex_call_time" value="${ex_call_time}" zEdit="number" maxlength="6" size="8" >
+   </td>
+   <td nowrap >&nbsp;電話:
+      <input type="text" class="col_any" id="ex_tel_no" name="ex_tel_no" value="${ex_tel_no}" zEdit="any,canTw" maxlength="20" size="22" >
+   </td>
+   <td nowrap >&nbsp;通話對象:
+      <input type="text" class="col_any" id="ex_attn_man" name="ex_attn_man" value="${ex_attn_man}" maxlength="20" size="22" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">&nbsp;內容:
+      <input type="text" class="col_any" id="ex_call_desc" name="ex_call_desc" value="${ex_call_desc}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">&nbsp;內容:
+      <input type="text" class="col_any" id="ex_call_desc2" name="ex_call_desc2" value="${ex_call_desc2}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="4">
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}   
+   </td>
+  </tr>
+</table>  
+</div>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">記錄日期</th>
+    <th nowrap class="list_cc">時間</th>
+    <th nowrap class="list_cc">電話</th>
+    <th nowrap class="list_cc">內容</th>
+    <th nowrap class="list_cc">通話對象 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="call_date" value="${call_date}">
+      <input type="hidden" name="call_time" value="${call_time}">
+      <input type="hidden" name="tel_no" value="${tel_no}">
+      <input type="hidden" name="call_desc" value="${call_desc}">
+      <input type="hidden" name="attn_man" value="${attn_man}">
+    </td>
+    <td nowrap class="list_cc" >${call_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc" >${call_time.TIME}&nbsp;</td>
+    <td nowrap class="list_cc" >${tel_no}&nbsp;</td>
+    <td nowrap class="list_ll" >${call_desc}&nbsp;</td>
+    <td nowrap class="list_cc" >${attn_man}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="" />
+<input type=hidden name="data_k2" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_accttype">
+<input type="hidden" name="assign_date" value="${assign_date}">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+        
+   return true;
+ }
+ 
+ $("#detl_btnAdd").click(function(){
+
+	var ls_call_date =$("#ex_call_date").val();
+	var ls_call_time =$("#ex_call_time").val();
+	var ls_tel_no =$("#ex_tel_no").val();
+	var ls_call_desc =$("#ex_call_desc").val();
+	var ls_call_desc2 =$("#ex_call_desc2").val();
+	var ls_attn_man =$("#ex_attn_man").val();
+	
+   if(ls_call_date=='' || ls_call_time==''){
+      alert("記錄日期/時間 不可空白");
+      return;  
+   }
+   
+   if(ls_tel_no=='' && (ls_call_desc=='' && ls_call_desc2=='') && ls_attn_man==''){
+      alert("[電話],[通話對象],[內容] 不可全部空白");
+      return;
+   }
+   
+   var ls_call_des3 = ls_call_desc + ls_call_desc2;
+   
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ls_call_date+"' name='call_date' />"
+      +"<input type='hidden' value='"+ls_call_time+"' name='call_time' />"
+      +"<input type='hidden' value='"+ls_tel_no+"' name='tel_no' />"
+      +"<input type='hidden' value='"+ls_call_des3+"' name='call_desc' />"
+      +"<input type='hidden' value='"+ls_attn_man+"' name='attn_man' />"      
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_call_date
+      +"</td>"
+       +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_call_time
+      +"</td>"
+       +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_tel_no
+      +"</td>"
+       +"</td>"
+      +"<td nowrap class='list_ll'>"+ls_call_des3
+      +"</td>"
+       +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_attn_man
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_call_date").val('');
+   $("#ex_call_time").val('');
+   $("#ex_tel_no").val('');
+   $("#ex_call_desc").val('');
+   $("#ex_call_desc2").val('');
+   $("#ex_attn_man").val('');
+  });  
+</script>

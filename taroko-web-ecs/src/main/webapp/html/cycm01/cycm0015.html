@@ -1,0 +1,128 @@
+<html>
+<head>
+<title>對帳單訊息設定作業-V.2018-0124-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+    	<td nowrap>&nbsp;帳單年月:
+    		 <input type="text" class="col_date" name="ex_msg_month" value="${ex_msg_month}"
+         	zeditType="date,yymm" MaxLength=6 size=6 />
+    	</td>
+    	<td nowrap>&nbsp;帳戶類別:
+            <select size="1" name="ex_acct_type" class="col_ddlb" >
+            <!--  <option value="">--</option>  -->
+            <!--  ${dddw_acct_type}  -->
+              <option value=""  >--</option>
+              <option value="01" ${ex_acct_type-01} >01_一般卡</option>
+              <option value="03" ${ex_acct_type-03} >03_商務卡</option>
+              <option value="06" ${ex_acct_type-06} >06_政府網路採購卡</option>
+              <option value="90" ${ex_acct_type-90} >90_Visa 金融卡</option>
+            </select>
+        </td>
+        <td nowrap rowspan="2">&nbsp;
+            <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+    <tr> 
+        <td nowrap>&nbsp;訊息類別:
+      		<select  size="1"  name="ex_msg_type" class="col_ddlb">
+         		<option value="">--</option>
+         		<option value="1" ${ex_msg_type-1} >1.Record04 (訊息項 FOR 簡訊前)</option>
+         		<option value="2" ${ex_msg_type-2} >2.Record05 (訊息項 FOR 簡訊後)</option>
+         		<option value="4" ${ex_msg_type-4} >4.Record04 (訊息項 FOR VD-訊息)</option>
+         		<option value="5" ${ex_msg_type-5} >5.Record06 (訊息項 FOR VD-紅利訊息)</option>
+      		</select>
+   		</td>
+   		<td nowrap>&nbsp;
+      		<span class="col_radio">
+         		<input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT_CHK} />全部
+         		<input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />Y.已覆核
+          		<input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />N.未覆核
+      		</span>
+   		</td>
+	</tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+     	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+     	<th nowrap class="list_th">帳單年月</th>
+     	<th nowrap class="list_th">帳戶類別</th>
+     	<th nowrap class="list_th">訊息類別</th>
+     	<th nowrap class="list_th">列印順序</th>
+     	<th nowrap class="list_th">覆核</th>
+     	<th nowrap class="list_th">訊息內容</th>
+     	<th nowrap class="list_th">建檔經辦</th> 
+ <!-- <th nowrap class="list_th">帳務週期</th> -->
+   	</tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+   <tr onclick="detailScreen('${SER_NUM}','${msg_month}','${acct_type}','${msg_code}','${apr_flag}')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_ll"> ${msg_month.YMD}&nbsp;</td>
+        <td nowrap class="list_ll"> ${acct_type}&nbsp;</td>
+        <td nowrap class="list_ll"> ${tt_msg_type}&nbsp;</td> 
+        <td nowrap class="list_ll"> ${msg_code}&nbsp;</td>
+        <td nowrap class="list_ll"> ${tt_apr_flag}&nbsp;</td>
+        <td nowrap class="list_ll" >${param1}<br>${param2}<br>${param3}<br>${param4}<br>${param5}&nbsp;</td>
+        <td nowrap class="list_ll"> ${crt_user}&nbsp;</td>
+   <!-- <td nowrap class="list_ll"> ${tt_stmt_cycle_parm}&nbsp;</td> -->
+   </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="data_k4" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_msg_month.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cycm0015_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "cycm0015_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

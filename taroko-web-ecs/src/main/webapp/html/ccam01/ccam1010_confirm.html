@@ -1,0 +1,280 @@
+<html>
+<head>
+<title>人工授權卡戶明細處理(auth_confirm)[V.190717]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript">
+$(document).ready(function(){
+var card_spec =$("input[name=cc_spec_status]").val();
+var acno_spec =$("input[name=aa_spec_status]").val();
+$('.tbl_spec_acno').hide();
+$('.tbl_spec_card').hide();
+if (card_spec.length >0) {
+   $('.tbl_spec_card').show();
+}
+if (acno_spec.length >0) {
+   $('.tbl_spec_acno').show();
+}
+
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>   
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;&nbsp;
+  <input type="Button" name="btnConfirm" value="核淮" ${btnAdd_disable} onClick="return top.submitControl('C21')" class="btProcess" >&nbsp;&nbsp;
+  <input type="Button" name="btnConfirm2" value="核詳細資料" onClick="wf_consume()" class="btQuery" />&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<div id="queryBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap ><span class="${tt_auth_color}">&nbsp;${tt_auth_text} ─ &nbsp<b>${iso_resp_code}&nbsp;${tt_auth_errmsg}</b></span>
+      <input type="hidden" name="iso_resp_code" value="${iso_resp_code}" />
+      <input type="hidden" name="tt_auth_text" value="${tt_auth_text}" />
+      <input type="hidden" name="tt_auth_errmsg" value="${tt_auth_errmsg}" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;卡號: <span class="dsp_text">${card_no}</span>
+      <input type="hidden" id="card_no" name="card_no" value="${card_no}" />
+   </td>
+   <td nowrap colspan="2" >&nbsp;授權號碼: <span class="col_key">${auth_no}</span>
+      <input type="hidden" id="auth_no" name="auth_no" value="${auth_no}" />
+   </td>   
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;卡人姓名:<span class="dsp_text">${chi_name}</span>
+      <input type="hidden" name="chi_name" value="${chi_name}" />
+   </td>
+   <td nowrap >&nbsp;卡人身分證:<span class="dsp_text">${id_no}</span>
+      <input type="hidden" name="id_no" value="${id_no}" />
+   </td>
+   <td nowrap >&nbsp;出生日期:<span class="dsp_date">${birthday.YMD}</span>
+      <input type="hidden" name="birthday" value="${birthday.YMD}" />
+   </td>
+   <td nowrap >&nbsp;團代:<span class="dsp_text">${group_code}</span>
+      <input type="hidden" name="group_code" value="${group_code}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;帳戶帳號:<span class="dsp_text">${acct_type}-${acct_key}</span>
+      <input type="hidden" name="acct_type" value="${acct_type}" />
+      <input type="hidden" name="acct_key" value="${acct_key}" />
+   </td>
+   <td nowrap >&nbsp;電話(H):<span class="dsp_text">${wk_telno_h}</span>
+      <input type="hidden" name="wk_telno_h" value="${wk_telno_h}" />
+   </td>
+   <td nowrap colspan=2>&nbsp;電話(O):<span class="dsp_text">${wk_telno_o}</span>
+      <input type="hidden" name="wk_telno_o" value="${wk_telno_o}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3" >&nbsp;公司及職稱:<span class="dsp_text">${wk_comp_name}</span>
+      <input type="hidden" name="wk_comp_name" value="${wk_comp_name}" />
+   </td>
+   <td nowrap >&nbsp;凍結碼:<span class="dsp_text">${wk_block_reason}&nbsp;${wk_spec_status}, ${card_spec_status}</span>
+      <input type="hidden" name="wk_block_reason" value="${wk_block_reason}" />      
+      <input type="hidden" name="wk_spec_status" value="${wk_spec_status}" />
+      <input type="hidden" name="card_spec_status" value="${card_spec_status}" />       
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3" >&nbsp;帳單地址:<span class="dsp_text">${wk_bill_addr}</span>
+      <input type="hidden" name="wk_bill_addr" value="${wk_bill_addr}" />
+   </td>
+   <td nowrap colspan="1" >&nbsp;VIP:<span class="dsp_text">${vip_code}</span>
+      <input type="hidden" name="vip_code" value="${vip_code}" />
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="4" >&nbsp;卡片註記:<span class="dsp_text">${wk_auth_remark}</span>
+      <input type="hidden" name="wk_auth_remark" value="${wk_auth_remark}" />
+   </td>
+</tr>
+</table>
+<br>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap >&nbsp;有效日期:<span class="dsp_date">${eff_date}</span>&nbsp;(月/年)
+         <input type="hidden" name="eff_date" value="${eff_date}" />
+      </td>
+      <td nowrap >&nbsp;卡片效期:<span class="dsp_date">${wk_effdate_mmyy}&nbsp;${old_effdate_mmyy}</span>&nbsp;(月/年)
+         <input type="hidden" name="wk_effdate_mmyy" value="${wk_effdate_mmyy}" />
+         <input type="hidden" name="old_effdate_mmyy" value="${old_effdate_mmyy}" />
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;NCCC特店代號/收單行代碼:
+         <span class="dsp_text">${mcht_no}</span>
+         <input type="hidden" name="mcht_no" value="${mcht_no}" />
+      &nbsp;商店名稱:<span class="dsp_text">${mcht_name}</span>
+         <input type="hidden" name="mcht_name" value="${mcht_name}" />
+         <input type="hidden" name="mcht_eng_name" value="${mcht_eng_name}"/>
+         <input type="hidden" name="acq_bank_id" value="${acq_bank_id}" />
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;風險等級(本行):<span class="dsp_text">${ncc_risk_level}</span>
+         <input type="hidden" name="ncc_risk_level" value="${ncc_risk_level}" />
+      </td>      
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;MCC:<span class="dsp_text">${mcc_code}</span>
+      &nbsp;<span class="dsp_text">${tt_mcc_code}</span>
+         <input type="hidden" name="mcc_code" value="${mcc_code}" />
+         <input type="hidden" name="tt_mcc_code" value="${tt_mcc_code}" />
+      </td>
+      <td nowrap >&nbsp;CVC2:<span class="dsp_text">${cvc2}</span>
+         <input type="hidden" name="cvc2" value="${cvc2}" />
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;消費地金額:
+        <span class="dsp_number">${amt0.(999.00)}&nbsp;</span>
+        <input type="hidden" name="amt0" value="${amt0}" />
+      </td>
+      <td nowrap >&nbsp;消費貨幣代碼:
+        <span class="dsp_text">${consume_curr}&nbsp;</span>
+        <input type="hidden" name="consume_curr" value="${consume_curr}" />
+        &nbsp;消費國家:
+        <span class="dsp_text">${mcht_country}</span>
+        <input type="hidden" name="mcht_country" value="${mcht_country}" />        
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;清算金額:
+         <span class="dsp_number">${amt1.(999.00)}&nbsp;</span>
+         <input type="hidden" name="amt1" value="${amt1}" />
+      </td>
+      <td nowrap >&nbsp;清算貨幣代碼:
+         <span class="dsp_text">${currency}</span>
+         <input type="hidden" name="currency" value="${currency}" />
+      </td>      
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;台幣(原消費)金額:<span class="dsp_number">${amt2.(999)}</span>
+         <input type="hidden" name="amt2" value="${amt2}" />
+      </td>   
+      <td nowrap>&nbsp;</td>
+   </tr>
+</table>
+<br>
+<table class="tbl_spec_acno" width="60%" border="0" cellspacing="0" cellpadding="4">
+<tr>
+   <td colspan="3" class="td_title"><b>戶特指</b></td>
+</tr>
+<tr>
+<td nowrap colspan="2">&nbsp;指示代碼:<span class="dsp_text">${aa_spec_status}&nbsp;${aa_tt_spec_status}</span>
+      <input type="hidden" name="aa_spec_status" value="${aa_spec_status}" />
+   </td>   
+   <td nowrap>&nbsp;刪除日期:&nbsp;<span class="dsp_date">${aa_spec_del_date.YMD}</span>
+         <input type="hidden" name="aa_spec_del_date" value="${aa_spec_del_date}" />
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;備註:<span class="dsp_text">${aa_spec_remark}</span>
+       <input type="hidden" name="aa_spec_remark" value="${aa_spec_remark}" />
+   </td>
+</tr>
+<tr>
+   <td nowrap>&nbsp;指示人員:
+      <span class="dsp_text">${aa_spec_user}</span>
+      <input type="hidden" name="aa_spec_user" value="${aa_spec_user}" />
+   </td>
+   <td nowrap>&nbsp;指示日期:
+      <span class="dsp_text">${aa_spec_date.YMD}</span>
+      <input type="hidden" name="aa_spec_date" value="${aa_spec_date}" />
+   </td>
+   <td nowrap>&nbsp;</td>
+</tr>
+</table>   
+<table class="tbl_spec_card" width="60%" border="0" cellspacing="0" cellpadding="4">
+<tr>   
+   <td colspan="3" class="td_title"><b>卡特指</b></td>
+</tr>
+<tr>
+<td nowrap colspan="2">&nbsp;指示代碼:<span class="dsp_text">${cc_spec_status}&nbsp;${cc_tt_spec_status}</span>
+      <input type="hidden" name="cc_spec_status" value="${cc_spec_status}" />
+   </td>   
+   <td nowrap>&nbsp;刪除日期:&nbsp;<span class="dsp_date">${cc_spec_del_date.YMD}</span>
+         <input type="hidden" name="cc_spec_del_date" value="${cc_spec_del_date}" />
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;備註:<span class="dsp_text">${cc_spec_remark}</span>
+       <input type="hidden" name="cc_spec_remark" value="${cc_spec_remark}" />
+   </td>
+</tr>
+<tr>
+   <td nowrap>&nbsp;指示人員:
+      <span class="dsp_text">${cc_spec_user}</span>
+      <input type="hidden" name="spec_user" value="${cc_spec_user}" />
+   </td>
+   <td nowrap>&nbsp;指示日期:
+      <span class="dsp_text">${cc_spec_date.YMD}</span>
+      <input type="hidden" name="cc_spec_date" value="${cc_spec_date}" />
+   </td>
+   <td nowrap>&nbsp;檢視部門:<span class="dsp_text">${cc_spec_dept_no}</span>
+         <input type="hidden" name="cc_spec_dept_no" value="${cc_spec_dept_no}" />
+   </td>
+</tr>
+</table>
+</div>
+<!-- -->
+<input type="hidden" name="kk_action" value="${kk_action}" />
+<input type="hidden" name="kk_auth_no" value="${kk_auth_no}" />
+<input type="hidden" name="new_end_date" value="${new_end_date}" />
+<input type="hidden" name="old_end_date" value="${old_end_date}" />
+<input type="hidden" name="combo_indicator" value="${combo_indicator}" />
+<input type="hidden" name="sup_flag" value="${sup_flag}" />
+<input type="hidden" name="cacu_amount" value="${cacu_amount}" />
+<input type="hidden" name="bit39_resp_code" value="${bit39_resp_code}" />
+<input type="hidden" name="bit39_adj_code" value="${bit39_adj_code}" />
+<input type="hidden" name="wk_flag" value="${wk_flag}" />
+<input type="hidden" name="current_code" value="${current_code}" />
+<input type="hidden" name="card_curr_code" value="${card_curr_code}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl_confirm" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+ top.refreshButton2('1');
+ top.pageRows="999";
+    
+ if (1==2 ${open_1010}) {
+   alert('授權成功, 授權碼=${auth_no}');
+   top.respLevel =0;
+   top.respHtml ="ccam1010";
+   top.submitControl('XXX');
+ }
+ 
+ function validateInput() {
+    
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+ }
+ function wf_consume() {
+   //核詳細資料
+   top.respLevel = 1;
+   top.respHtml  = "ccam1010_consume";
+   top.submitControl('S20');
+ }
+</script>  

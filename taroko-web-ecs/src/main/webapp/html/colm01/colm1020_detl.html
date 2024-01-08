@@ -1,0 +1,565 @@
+<html>
+<head>
+<title>各類協商狀態參數維護作業-detl-20231023</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<style>
+.col_red{
+	color:red;
+}
+.background_color{
+	background-color:#F0FFF0;
+	border-top:1px #66CDAA solid ;
+	border-right:1px #66CDAA solid ;
+	border-bottom:1px #66CDAA solid ;
+	border-left:1px #66CDAA solid ;
+}
+</style>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" >
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  			<input type="Button" id="btnQuery"    value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  			<input type="Button"     value=" 新增 " ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  			<input type="Button" value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  		</td>
+  	</tr>
+</table>
+<table width="40%" border="0" cellspacing="0" cellpadding="4"  class="background_color">
+<!-- 輸入資料讀取條件  -->
+  	<tr>
+   		<td nowrap>&nbsp;參數類別:
+      		<select size="1" name="kk_liab_type" class="col_ddlb" onchange="myFunction();itemChanged('liab_type')" id="mySelect" ${btnAdd_disable}>
+         		<option value="1" ${kk_liab_type-1} >1.債務協商</option>
+         		<option value="2" ${kk_liab_type-2} >2.前置協商</option>
+         		<option value="3" ${kk_liab_type-3} >3.更生</option>
+         		<option value="4" ${kk_liab_type-4} >4.清算</option>
+         		<option value="5" ${kk_liab_type-5} >5.個別協商</option>
+         		<option value="6" ${kk_liab_type-6} >6.消金無擔保展延</option>
+         		<option value="7" ${kk_liab_type-7} >7.前置調解</option>
+      		</select>
+        </td> 
+    	<td nowrap>&nbsp;參數類別狀態:
+      		<select size="1" name="kk_liab_status" class="col_ddlb" id="demo" onChange="itemChanged('kk_liab_status')" ${btnAdd_disable}>
+         		<option value="">--</option>
+         		<option value="1" ${kk_liab_status-1}>1.受理申請</option>
+    			<option value="2" ${kk_liab_status-2}>2.停催</option>
+    			<option value="3" ${kk_liab_status-3}>3.協商成功</option>
+    			<option value="4" ${kk_liab_status-4}>4.結案/復催</option>
+    			<option value="5" ${kk_liab_status-5}>5.結案/毀諾</option>
+    			<option value="6" ${kk_liab_status-6}>6.結案/結清</option>
+      		</select>    
+    	</td> 
+  	</tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="50%" border="0" cellspacing="0" cellpadding="4" class="background_color">
+	<tr>
+   		<td nowrap class="col_red" align="right">參數類別:
+   		</td>
+   		<td>
+   			<span class="col_text col_red">${tt_liab_type}</span>
+      		<input type="hidden" name="tt_liab_type" value="${tt_liab_type}">
+      		<input type="hidden" name="liab_type" value="${liab_type}">
+   		</td>
+  	</tr>
+ 	<tr>
+   		<td nowrap class="col_red"  align="right">參數類別狀態:
+   		</td>
+   		<td>
+   			<span class="col_text col_red">${tt_liab_status}</span>
+      		<input type="hidden" name="tt_liab_status" value="${tt_liab_status}">
+      		<input type="hidden" name="liab_status" value="${liab_status}">
+   		</td>
+  	</tr>
+    <tr>
+   		<td nowrap align="right">不列印帳戶對帳單旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="stat_unprint_flag" ${stat_unprint_flag-Y} ${DEFAULT_CHK}>Y
+         		<input type="radio" value="N" name="stat_unprint_flag" ${stat_unprint_flag-N} >N
+         	</span>
+   		</td>
+   	</tr>  
+ 	<tr>
+   		<td nowrap align="right">暫不電催旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_tel_coll_flag" ${no_tel_coll_flag-Y} ${DEFAULT_CHK}>Y
+         		<input type="radio" value="N" name="no_tel_coll_flag" ${no_tel_coll_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap align="right">暫不發簡訊旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_sms_flag" ${no_sms_flag-Y} ${DEFAULT_CHK}>Y 
+         		<input type="radio" value="N" name="no_sms_flag" ${no_sms_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap align="right">不轉逾旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_delinquent_flag" ${no_delinquent_flag-Y} ${DEFAULT_CHK}>Y 
+         		<input type="radio" value="N" name="no_delinquent_flag" ${no_delinquent_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap align="right">不轉催旗標 :
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_collection_flag" ${no_collection_flag-Y} ${DEFAULT_CHK}>Y
+         		<input type="radio" value="N" name="no_collection_flag" ${no_collection_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">不可強停旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_f_stop_flag" ${no_f_stop_flag-Y} ${DEFAULT_CHK}>Y 
+         		<input type="radio" value="N" name="no_f_stop_flag" ${no_f_stop_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">免收違約金旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_penalty_flag" ${no_penalty_flag-Y} ${DEFAULT_CHK} >Y 
+         		<input type="radio" value="N" name="no_penalty_flag" ${no_penalty_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">特殊固定MP旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="min_pay_flag" ${min_pay_flag-Y}>Y
+         		<input type="radio" value="N" name="min_pay_flag" ${min_pay_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap align="right">利率加減碼:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="revolve_rate_flag" ${revolve_rate_flag-Y} ${DEFAULT_CHK}>Y.要修改 
+         		<input type="radio" value="N" name="revolve_rate_flag" ${revolve_rate_flag-N} >N.不修改
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">終止帳戶自動扣繳旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="autopay_flag" ${autopay_flag-Y} ${DEFAULT_CHK}>Y 
+         		<input type="radio" value="N" name="autopay_flag" ${autopay_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">凍結碼旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio" onChange="itemChanged('block_flag')">
+         		<input type="radio" value="Y" name="block_flag" ${block_flag-Y} ${DEFAULT_CHK} >Y 
+         		<input type="radio" value="N" name="block_flag" ${block_flag-N} >N
+   			</span>
+   			&nbsp;&nbsp;&nbsp;&nbsp;註記一 :
+   			<input type="text" class="col_any" name="block_mark1" value="${block_mark1}" zEdit="any"   maxlength=2 size=2 />
+   			&nbsp;&nbsp;&nbsp;&nbsp;註記三:
+   			<input type="text" class="col_any" name="block_mark3" value="${block_mark3}" zEdit="any"   maxlength=2 size=2 />
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">分期還款戶旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio" onChange="itemChanged('pay_stage_flag')">
+         		<input type="radio" value="Y" name="pay_stage_flag" ${pay_stage_flag-Y} ${DEFAULT_CHK}>Y 
+         		<input type="radio" value="N" name="pay_stage_flag" ${pay_stage_flag-N} >N
+   			</span>
+   			&nbsp;&nbsp;&nbsp;&nbsp;註記:
+   			<span class="dsp_text" id="pay_stage_mark">${pay_stage_mark}</span>
+	  		<input type="hidden"   name="pay_stage_mark" value="${pay_stage_mark}">
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">送CS旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="send_cs_flag" ${send_cs_flag-Y} ${DEFAULT_CHK}>Y
+         		<input type="radio" value="N" name="send_cs_flag" ${send_cs_flag-N} >N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">計算D檔並執行:
+   		</td>
+   		<td>
+   			<span class="col_radio" id="d_bal_flag" >
+         		<input type="radio" value="Y" name="d_bal_flag" ${d_bal_flag-Y} >Y 
+         		<input type="radio" value="N" name="d_bal_flag" ${d_bal_flag-N} ${DEFAULT_CHK} >N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">JCIC繳評報送:
+   		</td>
+   		<td>
+   			<span class="col_radio" id="jcic_payrate_flag">
+         		<input type="radio" value="Y" name="jcic_payrate_flag" ${jcic_payrate_flag-Y}>Y 
+         		<input type="radio" value="N" name="jcic_payrate_flag" ${jcic_payrate_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">停卡註記:
+   		</td>
+   		<td>
+   			<span class="col_radio" id="oppost_flag" onChange="itemChanged('oppost_flag')">
+         		<input type="radio" value="Y" name="oppost_flag" ${oppost_flag-Y}>Y 
+         		<input type="radio" value="N" name="oppost_flag" ${oppost_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   			&nbsp;&nbsp;&nbsp;&nbsp;停卡原因:
+   			<span class="dsp_text" id="oppost_reason">${oppost_reason}</span>
+      		<input type="hidden" name="oppost_reason" value="${oppost_reason}" />
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">暫不抵消:
+   		</td>
+   		<td>
+   			<span class="col_radio" id="noauto_balance_flag">
+         		<input type="radio" value="Y" name="noauto_balance_flag" ${noauto_balance_flag-Y}>Y 
+         		<input type="radio" value="N" name="noauto_balance_flag" ${noauto_balance_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">免收利息:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="no_interest_flag" ${no_interest_flag-Y}>Y 
+         		<input type="radio" value="N" name="no_interest_flag" ${no_interest_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap align="right">結案旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="end_flag" ${end_flag-Y}>Y 
+         		<input type="radio" value="N" name="end_flag" ${end_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap align="right">結清D檔旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="end_d_bal_flag" ${end_d_bal_flag-Y}>Y 
+         		<input type="radio" value="N" name="end_d_bal_flag" ${end_d_bal_flag-N} ${DEFAULT_CHK}>N
+   			</span>
+   		</td>
+   	</tr>
+   <!-- 	<tr>
+   		<td nowrap align="right">協商有效旗標:
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="nego_effect_flag" ${nego_effect_flag-Y} ${DEFAULT_CHK}>Y 
+         		<input type="radio" value="N" name="nego_effect_flag" ${nego_effect_flag-N} >N
+   			</span>
+   		</td>
+   	</tr> -->
+</table>
+
+<br>
+<!-- -->
+<input type="hidden" name="rowid" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colm1020">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="USERID" value="${userId}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var liab_type="";
+var liab_status="";
+function myFunction() {
+	select();
+}
+
+function itemChanged(name){
+	liab_type = $("select[name=kk_liab_type]").val();
+	if(liab_type==''||liab_type==null){
+		liab_type = $("input[name=liab_type]").val();
+	}
+	liab_status = $("select[name=kk_liab_status]").val();
+	if(liab_status==''||liab_status==null){
+		liab_status = $("input[name=liab_status]").val();
+	}
+	var pay_stage_mark_text = $("#pay_stage_mark");
+	var pay_stage_mark_val = $("input[name=pay_stage_mark]");
+	var oppost_flag = $("input[name=oppost_flag]:checked").val();
+	var oppost_reason_text = $("#oppost_reason");
+	var oppost_reason_val = $("input[name=oppost_reason]");
+	var rowid = $("input[name=rowid]").val();
+	var block_flag = $("input[name=block_flag]:checked").val();
+	if(rowid!=''&&rowid!=null){
+		liab_type = $("input[name=liab_type]").val();
+	}
+	disabled();
+
+	switch(name){
+	case 'liab_type':
+		if(oppost_flag=="Y"){
+			if(liab_type=='2'){
+				oppost_reason_text.text("AX");
+				oppost_reason_val.val("AX");
+			}
+			if(liab_type=='3'||liab_type=='4'){
+				oppost_reason_text.text("AZ");
+				oppost_reason_val.val("AZ");
+			}
+			if(liab_type=='6'){
+				oppost_reason_text.text("A0");
+				oppost_reason_val.val("A0");
+			}
+			if(liab_type=='7'){
+				oppost_reason_text.text("AX");
+				oppost_reason_val.val("AX");
+			}
+		}else{
+			oppost_reason_text.text("");
+			oppost_reason_val.val("");
+		}
+		if(liab_type=='1'){
+			oppost_reason_text.text("");
+			oppost_reason_val.val("");
+		}
+		break;
+	case 'pay_stage_flag':
+		if(liab_type=="1"){
+			pay_stage_mark_text.text("NE");
+			pay_stage_mark_val.val("NE");
+		}
+		else if(liab_type=="2"){
+			pay_stage_mark_text.text("NF");
+			pay_stage_mark_val.val("NF");
+		}
+		else if(liab_type=="3"){
+			pay_stage_mark_text.text("NK");
+			pay_stage_mark_val.val("NK");
+		}
+		else if(liab_type=="4"){
+			pay_stage_mark_text.text("NO");
+			pay_stage_mark_val.val("NO");
+		}
+		else if(liab_type=="7"){
+			pay_stage_mark_text.text("NG");
+			pay_stage_mark_val.val("NG");
+		}
+		break;
+	case 'oppost_flag':
+		if(oppost_flag!='Y'){
+			oppost_reason_text.text("");
+			oppost_reason_val.val("");
+			break;
+		}
+		if(liab_type=='2'){
+			oppost_reason_text.text("AX");
+			oppost_reason_val.val("AX");
+		}
+		if(liab_type=='3'||liab_type=='4'){
+			oppost_reason_text.text("AZ");
+			oppost_reason_val.val("AZ");
+		}
+		if(liab_type=='6'){
+			oppost_reason_text.text("A0");
+			oppost_reason_val.val("A0");
+		}
+		if(liab_type=='7'){
+			oppost_reason_text.text("AX");
+			oppost_reason_val.val("AX");
+		}
+		break;
+	case 'block_flag':
+		if(block_flag=='N'){
+			$("input[name=block_mark1]").val('');
+			$("input[name=block_mark3]").val('');
+		}
+		break;
+	}
+}
+
+$(document).ready(function() {
+	liab_type = $("select[name=kk_liab_type]").val();
+	if(liab_type==''||liab_type==null){
+		liab_type = $("input[name=liab_type]").val();
+	}
+	liab_status = $("select[name=liab_status]").val();
+	if(liab_status==''||liab_status==null){
+		liab_status = $("input[name=liab_status]").val();
+	}
+	disabled();
+	select();
+})
+
+function disabled(){
+	/*if((liab_type=='2'&&liab_status=='3')||(liab_type=='7'&&liab_status=='3')){
+		$("input[name=d_bal_flag]").prop("disabled",false);
+	}else{
+		$("input[name=d_bal_flag][value='N']").prop("checked",true);
+		$("input[name=d_bal_flag]").prop("disabled",true);
+	}
+	
+	if(liab_type!='1'&&liab_type!='5'){
+		$("input[name=jcic_payrate_flag]").prop("disabled",false);
+	}else{
+		$("input[name=jcic_payrate_flag]").prop("disabled",true);
+	}
+	
+	if(liab_type!='1'&&liab_type!='5'){
+		$("input[name=oppost_flag]").prop("disabled",false);
+	}else{
+		$("input[name=oppost_flag]").prop("disabled",true);
+	}
+	
+	if(liab_type!='1'){
+		$("input[name=noauto_balance_flag]").prop("disabled",false);
+	}else{
+		$("input[name=noauto_balance_flag]").prop("disabled",true);
+	}
+	*/
+}
+
+function select(){
+	liab_type = $("select[name=kk_liab_type]").val();
+
+    if(liab_type=='1'){
+    	$("#demo").html(	
+    		'<option value="">--</option>'
+    		+'<option value="1" ${kk_liab_status-1}>1.受理申請</option>'
+    		+'<option value="2" ${kk_liab_status-2}>2.停催</option>'
+    		+'<option value="3" ${kk_liab_status-3}>3.簽約成功</option>'
+    		+'<option value="4" ${kk_liab_status-4}>4.結案/復催</option>'
+    		+'<option value="5" ${kk_liab_status-5}>5.結案/毀諾</option>'
+    		+'<option value="6" ${kk_liab_status-6}>6.結案/結清</option>')
+    }
+    if(liab_type=='2'){
+     	$("#demo").html(	
+        		'<option value="">--</option>'
+        		+'<option value="1" ${kk_liab_status-1}>1.受理申請</option>'
+        		+'<option value="2" ${kk_liab_status-2}>2.停催</option>'
+        		+'<option value="3" ${kk_liab_status-3}>3.簽約成功</option>'
+        		+'<option value="4" ${kk_liab_status-4}>4.結案/復催</option>'
+        		+'<option value="5" ${kk_liab_status-5}>5.結案/毀諾</option>'
+        		+'<option value="6" ${kk_liab_status-6}>6.結案/結清</option>')
+    }
+    if(liab_type=='3'){
+    	$("#demo").html(	 
+        	'<option value="">--</option>'
+       		+'<option value="1" ${kk_liab_status-1}>1.更生開始</option>'
+        	+'<option value="2" ${kk_liab_status-2}>2.更生撤回</option>'
+       		+'<option value="3" ${kk_liab_status-3}>3.更生認可</option>'
+        	+'<option value="4" ${kk_liab_status-4}>4.更生履行完畢</option>'
+        	+'<option value="5" ${kk_liab_status-5}>5.更生裁定免責</option>'
+        	+'<option value="6" ${kk_liab_status-6}>6.更生調查程序</option>'
+        	+'<option value="7" ${kk_liab_status-7}>7.更生駁回</option>')
+    }
+    if(liab_type=='4'){
+    	$("#demo").html(	 
+        	'<option value="">--</option>'
+       		+'<option value="1" ${kk_liab_status-1}>1.清算程序開始</option>'
+        	+'<option value="2" ${kk_liab_status-2}>2.清算程序終止</option>'
+       		+'<option value="3" ${kk_liab_status-3}>3.清算程序開始同時終止</option>'
+        	+'<option value="4" ${kk_liab_status-4}>4.清算撤銷免責</option>'
+        	+'<option value="5" ${kk_liab_status-5}>5.清算調查程序</option>'
+        	+'<option value="6" ${kk_liab_status-6}>6.清算駁回</option>'
+        	+'<option value="7" ${kk_liab_status-7}>7.清算撤回</option>'
+        	+'<option value="8" ${kk_liab_status-8}>8.清算復權</option>')
+    }
+    if(liab_type=='5'){
+    	$("#demo").html(	 
+        	'<option value="">--</option>'
+       		+'<option value="1" ${kk_liab_status-1}>1.達成個別協商</option>'
+        	+'<option value="2" ${kk_liab_status-2}>2.提前清償</option>'
+       		+'<option value="3" ${kk_liab_status-3}>3.毀諾</option>'
+        	+'<option value="4" ${kk_liab_status-4}>4.毀諾後清償</option>')
+    }
+    /*先取消
+    if(liab_type=='6'){
+    	$("#demo").html(	 
+        	'<option value="">--</option>'
+       		+'<option value="1" ${kk_liab_status-1}>1.受理申請</option>'
+        	+'<option value="2" ${kk_liab_status-2}>2.展延成功</option>'
+       		+'<option value="3" ${kk_liab_status-3}>3.取消或結案</option>')
+    }
+    */
+    if(liab_type=='7'){
+       	$("#demo").html(	
+        		'<option value="">--</option>'
+        		+'<option value="1" ${kk_liab_status-1}>1.受理申請</option>'
+        		+'<option value="2" ${kk_liab_status-2}>2.停催</option>'
+        		+'<option value="3" ${kk_liab_status-3}>3.簽約成功</option>'
+        		+'<option value="4" ${kk_liab_status-4}>4.結案/復催</option>'
+        		+'<option value="5" ${kk_liab_status-5}>5.結案/毀諾</option>'
+        		+'<option value="6" ${kk_liab_status-6}>6.結案/結清</option>')
+    } 
+}
+
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ //document.dataForm.kk_risk_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+	$("input[name=d_bal_flag]").prop("disabled",false);
+	$("input[name=jcic_payrate_flag]").prop("disabled",false);
+	$("input[name=oppost_flag]").prop("disabled",false);
+	$("input[name=noauto_balance_flag]").prop("disabled",false);
+    return true;
+  }
+
+</script>

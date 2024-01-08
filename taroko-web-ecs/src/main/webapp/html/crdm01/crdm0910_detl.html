@@ -1,0 +1,256 @@
+<html>
+
+<head>
+    <title>個人戶關係人資料維護-detl-V.2017-1207-yash-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                	<span style="color:red">(刪除才需要覆核)</span>
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <th colspan="2">被保證人資料</th>
+                <tr>
+                	<td nowrap colspan="2">&nbsp;關係:
+      					<select name="rela_type" class="col_ddlb" zRequire ="Y">
+      						<option value="">--</option>
+         					<option value="1" ${rela_type-1} >保證人</option>
+         					<option value="2" ${rela_type-2} >聯絡人</option>
+         					<option value="3" ${rela_type-3} >法定代理人</option>
+         					<option value="4" ${rela_type-4} >受輔助宣告人之監護人 </option>
+      					</select>
+   					</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">帳戶號碼：
+                        <select size="1" name="acct_type" class="col_ddlb" zRequire="Y">
+                            ${dddw_acct}
+                        </select>&nbsp;
+                        <input type="text" class="col_text" name="acct_key" value="${acct_key}" onChange="itemChanged()" zEdit="alphanum,upper" maxlength="11" size="13" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>中文姓名：
+                        <span class="dsp_text">${name}</span>
+                        <input type="hidden" name="name" value="${name}">
+                    </td>
+                    <td nowrap >帳戶ID：
+                        <span class="dsp_text">${id_no}</span>
+                        <input type="hidden" name="id_no" value="${id_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">卡號：
+                        <input type="text" class="col_text" name="card_no" value="${card_no}" onChange="itemChanged1()" zeditType="number" maxlength="19" size="21" />
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<th colspan="3">保證人資料</th>     
+	            <tr>
+	            	<td nowrap>保證責任種類:
+			            <select size="1" name="rela_duty_type" class="col_ddlb" zRequire="Y">
+			            	<option value="0" ${rela_duty_type-0} >--</option>
+			                <option value="1" ${rela_duty_type-1} >1.一般保證</option>
+			                <option value="2" ${rela_duty_type-2} >2.連帶保證</option>
+			            </select>  
+			                 
+			        </td> 
+			     </tr>
+	           
+
+                <tr>
+                    <td nowrap colspan="1">保證人 ID:&nbsp;
+                        <input type="text" class="col_text" name="rela_id" value="${rela_id}" zEdit="alphanum,upper" maxlength="10" size="12" zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="2">保證起迄:&nbsp;
+                        <input type="text" class="col_date" name="start_date" value="${start_date}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'start_date'});
+          </script>
+                        --
+                        <input type="text" class="col_date" name="end_date" value="${end_date}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'end_date'});
+          </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>保證人姓名:&nbsp;
+                        <input type="text" class="col_any" name="rela_name" value="${rela_name}" zEdit="any,canTW" maxlength="20" size="20" zRequire="Y" />
+                    </td>
+                    <td nowrap>性別:&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="1" name="sex" ${sex-1} ${DEFAULT_CHK} />男
+                            <input type="radio" value="2" name="sex" ${sex-2} />女
+                        </span>
+                    </td>
+                    <td nowrap>生日:&nbsp;
+                        <input type="text" class="col_date" name="birthday" value="${birthday}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'birthday'});
+          </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>公司名稱:&nbsp;
+                        <input type=text class="col_any" name="company_name" value="${company_name}" zEdit="any,canTW" maxlength="24" size="24" />
+                    </td>
+                    <td nowrap>任職職稱:&nbsp;
+                        <input type=text class="col_any" name="job_position" value="${job_position}" zEdit="any,canTW" maxlength="24" size="24" />
+                    </td>
+                    <td nowrap>年收入:&nbsp;
+                        <input type=text class="col_any" name="annual_income" value="${annual_income}" zEdit="number" maxlength="24" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">公司地址:&nbsp;
+                        <select size="1" name="company_zip" class="col_ddlb">
+                            ${dddw_zipcode}
+                        </select>&nbsp;
+                        <input type=text class="col_any" name="company_addr1" value="${company_addr1}" zEdit="any,canTW" maxlength="10" size="10" />
+                        縣市&nbsp;&nbsp;
+                        <input type=text class="col_any" name="company_addr2" value="${company_addr2}" zEdit="any,canTW" maxlength="10" size="10" />
+                        鄉鎮市區&nbsp;&nbsp;
+                        <input type=text class="col_any" name="company_addr3" value="${company_addr3}" zEdit="any,canTW" maxlength="12" size="12" />
+                        村里
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type=text class="col_any" name="company_addr4" value="${company_addr4}" zEdit="any,canTW" maxlength="12" size="12" />
+                        鄰&nbsp;&nbsp;
+                        <input type=text class="col_any" name="company_addr5" value="${company_addr5}" zEdit="any,canTW" maxlength="50" size="50" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">公司電話: 1.&nbsp;
+                        <input type=text class="col_any" name="office_area_code1" value="${office_area_code1}" zEdit="any" maxlength="4" size="4" />
+                        <input type=text class="col_any" name="office_tel_no1" value="${office_tel_no1}" zEdit="any" maxlength="10" size="10" />
+                        <input type=text class="col_any" name="office_tel_ext1" value="${office_tel_ext1}" zEdit="any" maxlength="10" size="10" />
+                        &nbsp;&nbsp;
+                        2.
+                        <input type=text class="col_any" name="office_area_code2" value="${office_area_code2}" zEdit="any" maxlength="4" size="4" />
+                        <input type=text class="col_any" name="office_tel_no2" value="${office_tel_no2}" zEdit="any" maxlength="10" size="10" />
+                        <input type=text class="col_any" name="office_tel_ext2" value="${office_tel_ext2}" zEdit="any" maxlength="10" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">住家電話: 1.&nbsp;
+                        <input type=text class="col_any" name="home_area_code1" value="${home_area_code1}" zEdit="any" maxlength="4" size="4" />
+                        <input type=text class="col_any" name="home_tel_no1" value="${home_tel_no1}" zEdit="any" maxlength="10" size="10" />
+                        <input type=text class="col_any" name="home_tel_ext1" value="${home_tel_ext1}" zEdit="any" maxlength="10" size="10" />
+                        &nbsp;&nbsp;
+                        2.
+                        <input type=text class="col_any" name="home_area_code2" value="${home_area_code2}" zEdit="any" maxlength="4" size="4" />
+                        <input type=text class="col_any" name="home_tel_no2" value="${home_tel_no2}" zEdit="any" maxlength="10" size="10" />
+                        <input type=text class="col_any" name="home_tel_ext2" value="${home_tel_ext2}" zEdit="any" maxlength="10" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">戶籍地址:&nbsp;
+                        <select size="1" name="resident_zip" class="col_ddlb">
+                            ${dddw_zipcode_r}
+                        </select>&nbsp;
+                        <input type=text class="col_any" name="resident_addr1" value="${resident_addr1}" zEdit="any,canTW" maxlength="10" size="10" />
+                        縣市&nbsp;&nbsp;
+                        <input type=text class="col_any" name="resident_addr2" value="${resident_addr2}" zEdit="any,canTW" maxlength="10" size="10" />
+                        鄉鎮市區&nbsp;&nbsp;
+                        <input type=text class="col_any" name="resident_addr3" value="${resident_addr3}" zEdit="any,canTW" maxlength="12" size="12" />
+                        村里
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type=text class="col_any" name="resident_addr4" value="${resident_addr4}" zEdit="any,canTW" maxlength="12" size="12" />
+                        鄰&nbsp;&nbsp;
+                        <input type=text class="col_any" name="resident_addr5" value="${resident_addr5}" zEdit="any,canTW" maxlength="50" size="50" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">通訊地址:&nbsp;
+                        <select size="1" name="mail_zip" class="col_ddlb">
+                            ${dddw_zipcode_m}
+                        </select>&nbsp;
+                        <input type=text class="col_any" name="mail_addr1" value="${mail_addr1}" zEdit="any,canTW" maxlength="10" size="10" />
+                        縣市&nbsp;&nbsp;
+                        <input type=text class="col_any" name="mail_addr2" value="${mail_addr2}" zEdit="any,canTW" maxlength="10" size="10" />
+                        鄉鎮市區&nbsp;&nbsp;
+                        <input type=text class="col_any" name="mail_addr3" value="${mail_addr3}" zEdit="any,canTW" maxlength="12" size="12" />
+                        村里
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type=text class="col_any" name="mail_addr4" value="${mail_addr4}" zEdit="any,canTW" maxlength="12" size="12" />
+                        鄰&nbsp;&nbsp;
+                        <input type=text class="col_any" name="mail_addr4" value="${mail_addr4}" zEdit="any,canTW" maxlength="50" size="50" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">大哥大號碼:&nbsp;
+                        <input type=text class="col_any" name="cellar_phone" value="${cellar_phone}" zEdit="any" maxlength="15" size="15" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="col_key" colspan="3">備註:保證人迄日為188/12/31者，係100/11/09前已徵提保證人核卡，保證責任無15年之效期問題。&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="crdm0910">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}">
+        <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.card_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function itemChanged(){
+	var acct_key = $("input[name = acct_key]");
+	if(acct_key.val().length==10){
+		acct_key.val(acct_key.val()+"0");
+	}
+	  top.submitControl('R2');
+}
+
+function itemChanged1(){
+	  top.submitControl('R3');
+}
+</script>

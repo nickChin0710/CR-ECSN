@@ -1,0 +1,190 @@
+<html>
+<head>
+<title>期中覆審ACTION參數主管覆核</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;ACTION 版本號碼:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+   <td nowrap colspan="2">&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;風險族群:
+      <input type="text" class="col_text" name="ex_risk_group" value="${ex_risk_group}" maxlength="2" size="5" >
+   </td>
+   <td nowrap>&nbsp;建檔經辦:
+      <select size="1" name="ex_crt_user" class="col_ddlb" >
+      <option value="">--</option>
+      ${dddw_crt_user}
+   		</select>
+   </td>
+   <td nowrap>&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	      </script>
+	      &nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+    <th nowrap >ACTION<br>版本號碼</th>
+    <th nowrap >版本說明&nbsp;</th>
+    <th nowrap >風險<br>族群</th>
+    <th nowrap >Action Code&nbsp;</th>
+    <th nowrap >降額<br>比率</th>
+    <th nowrap >降額<br>原因碼</th>
+    <th nowrap >簡訊<br>降額</th>
+    <th nowrap >凍結<br>碼[4]</th>
+    <th nowrap >凍結<br>碼[5]</th>
+    <th nowrap >戶特指&nbsp;</th>
+    <th nowrap >延遲<br>執行天數</th>
+    <th nowrap >延遲<br>簡訊</th>
+    <th nowrap >LOAN<br>覆審決策</th>
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >建檔經辦&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${batch_no}','${risk_group}');" style="cursor:hand">
+	</td>
+   <td nowrap class="list_cc"> ${batch_no}&nbsp;
+      <input type="hidden" name="batch_no" value="${batch_no}">   
+   </td>
+   <td nowrap class="list_ll"> ${batch_remark}&nbsp;
+      <input type="hidden" name="batch_remark" value="${batch_remark}">   
+   </td>
+   <td nowrap class="list_cc"> ${risk_group}&nbsp;
+      <input type="hidden" name="risk_group" value="${risk_group}">   
+   </td>
+   <td nowrap class="list_ll"> ${action_code}.${#JAVA:ecsfunc.DeCodeRsk.trialAction(action_code)}&nbsp;
+      <input type="hidden" name="action_code" value="${action_code}">   
+   </td>
+   <td nowrap class="list_cc"> ${adj_limit_rate}&nbsp;
+      <input type="hidden" name="adj_limit_rate" value="${adj_limit_rate}">   
+   </td>
+   <td nowrap class="list_cc"> ${adj_limit_reason}&nbsp;
+      <input type="hidden" name="adj_limit_reason" value="${adj_limit_reason}">   
+   </td>
+   <td nowrap class="list_cc"> ${msg_flag}&nbsp;
+      <input type="hidden" name="msg_flag" value="${msg_flag}">   
+   </td>
+   <td nowrap class="list_cc"> ${block_reason4}&nbsp;
+      <input type="hidden" name="block_reason4" value="${block_reason4}">   
+   </td>
+   <td nowrap class="list_cc"> ${block_reason5}&nbsp;
+      <input type="hidden" name="block_reason5" value="${block_reason5}">   
+   </td>
+   <td nowrap class="list_cc"> ${spec_status}&nbsp;
+      <input type="hidden" name="spec_status" value="${spec_status}">   
+   </td>
+   <td nowrap class="list_cc"> ${delay_action_day}&nbsp;
+      <input type="hidden" name="delay_action_day" value="${delay_action_day}">   
+   </td>
+   <td nowrap class="list_cc"> ${delay_msg_flag}&nbsp;
+      <input type="hidden" name="delay_msg_flag" value="${delay_msg_flag}">   
+   </td>
+   <td nowrap class="list_cc"> ${loan_flag}.${tt_loan_flag}&nbsp;
+      <input type="hidden" name="loan_flag" value="${loan_flag}">   
+      <input type="hidden" name="tt_loan_flag" value="${tt_loan_flag}">
+   </td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="list_cc"> ${crt_user}&nbsp;
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskp2060_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

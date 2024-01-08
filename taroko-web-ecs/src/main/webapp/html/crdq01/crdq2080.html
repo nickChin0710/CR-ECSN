@@ -1,0 +1,142 @@
+<html>
+
+<head>
+    <title>PP卡-續卡/不續卡覆核報表-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">            
+                <tr>
+                    <td nowrap colspan=4>&nbsp;放行前後:                        
+                        <input type="radio" value="0" name="ex_apr" ${ex_apr-0} ${DEFAULT-ex_apr} />放行前
+                        <input type="radio" value="1" name="ex_apr" ${ex_apr-1} />放行後
+                    </td>
+                    <td nowrap colspan=4>&nbsp;放行日期：
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date2'
+                        });
+                        </script>                        
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;類別:
+                        <br>
+                        <input type="radio" value="1" name="ex_kind" ${ex_kind-1} ${DEFAULT-ex_kind} />不續卡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不續卡處理項目&nbsp;&nbsp;:
+                        <select size="1" name="ex_expire_flag" class="col_ddlb">
+                            <option value="" >--</option>                            
+                            <option value="1" ${ex_expire_flag-1}>預約不續卡</option>
+                            <option value="4" ${ex_expire_flag-4}>人工不續卡</option>
+                            <option value="2" ${ex_expire_flag-2}>取消不續卡</option>
+                            <option value="3" ${ex_expire_flag-3}>系統不續卡改續卡</option>
+                            <option value="5" ${ex_expire_flag-5}>系統不續卡</option>
+                        </select>
+                        <br>
+                        <input type="radio" value="2" name="ex_kind" ${ex_kind-2} />提前續卡 &nbsp;&nbsp;提前續卡處理項目:
+                        <select size="1" name="ex_change_flag" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" {ex_change_flag-1}>線上續卡</option>
+                            <option value="2" {ex_change_flag-2}>取消線上續卡</option>
+                            <option value="3" {ex_change_flag-3}>系統續卡改不續卡</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>
+                        &nbsp;身分證號:
+                            <input type="text" class="col_any" name="ex_id_no" value="${ex_id_no}" zEdit="alphanum" maxlength=10 size="12">
+                        <br>
+                        &nbsp;卡&nbsp;&nbsp;&nbsp;&nbsp;號:
+                            <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" zEdit="alphanum" maxlength=19 size="21"> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">放行日</th>
+                <th nowrap class="list_th">身分證號</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">團代</th>
+                <th nowrap class="list_th">效期</th>
+                <th nowrap class="list_th">處理狀態</th>
+                <th nowrap class="list_th">續卡註記</th>
+                <th nowrap class="list_th">不續卡原因</th>
+                <th nowrap class="list_th">原續卡日期</th>
+                <th nowrap class="list_th">原續卡註記</th>
+                <th nowrap class="list_th">原不續卡日期</th>
+                <th nowrap class="list_th">原不續卡註記</th>
+                <th nowrap class="list_th">原不續卡原因</th>
+                <th nowrap class="list_th">經辦</th>
+                <th nowrap class="list_th">處理日期</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${apr_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_id_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${pp_card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${group_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${valid_to} &nbsp;</td>
+                <td nowrap class="list_ll"> ${db_process_kind}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_expire_chg_flag}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_expire_reason}&nbsp; </td>
+                <td nowrap class="list_ll"> ${change_date_old}&nbsp; </td>
+                <td nowrap class="list_ll"> ${change_reason_old}&nbsp; </td>
+                <td nowrap class="list_ll"> ${expire_chg_date_old}&nbsp; </td>
+                <td nowrap class="list_ll"> ${expire_chg_flag_old}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_expire_reason_old}&nbsp; </td>
+                <td nowrap class="list_ll"> ${crt_user}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_expire_chg_date}&nbsp; </td>
+                <input type="hidden" name="group_ct" value="${group_ct}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_date1.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

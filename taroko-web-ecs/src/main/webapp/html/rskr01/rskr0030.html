@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>問題交易新增登錄待覆核清單列印</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;結案登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="image" height="27" width="30" src="images/Pdf.jpg" onClick="top.submitControl('PDF');" style="cursor:hand; vertical-align: middle;" />&nbsp;&nbsp;
+      v22.0321
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;卡號:
+  		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" >
+  	</td>
+  	<td nowrap >&nbsp;控制流水號:
+  		<input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" >
+  	</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;結案登錄者:　
+      <input type="text" class="col_any" name="ex_id1" value="${ex_id1}" maxlength="10" size="12" zEdit="any,canTw">
+   &nbsp;&nbsp;交易類別:
+         <select   size="1"  name="ex_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="Q" ${ex_type-Q} >Q.問題交易</option>
+         <option value="S" ${ex_type-S} >S.特殊交易</option>
+         <option value="E" ${ex_type-E} >E.不合格帳單</option>
+         </select>
+         &nbsp;&nbsp;處理結果:
+         <input type="text" class="col_text" name="ex_clo_result" value="${ex_clo_result}" maxlength="2" size="5" />
+    </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_dbcard_flag" ${ex_dbcard_flag-0} ${default-ex_dbcard_flag} />全部
+         <input type="radio" value="1" name="ex_dbcard_flag" ${ex_dbcard_flag-1} />信用卡
+         <input type="radio" value="2" name="ex_dbcard_flag" ${ex_dbcard_flag-2} />VD 卡
+         <input type="radio" value="3" name="ex_dbcard_flag" ${ex_dbcard_flag-3} />悠遊卡加值
+      </span>
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${default-ex_apr_flag} />未覆核
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <div id="dataBlock">
+ <table id="table0" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+    <td nowrap class="list_rr" colspan="5">&nbsp;合計:</td>
+    <td nowrap class="list_rr">&nbsp;筆數 : 
+      <input type="text" readonly class="dsp_number" name="wk_cnt" value="${wk_cnt.(999)}" size="7"> 筆
+    </td>
+    <td nowrap class="list_rr">&nbsp;結算金額 : 
+      <input type="text" readonly class="dsp_number" name="wk_dest_amt" value="${wk_dest_amt.(999.00)}" size=12>
+    </td>
+    <td nowrap class="list_rr">&nbsp;問交結算金額 : 
+      <input type="text" readonly class="dsp_number" name="wk_prb_amt" value="${wk_prb_amt.(999.00)}" size="12">
+    </td>
+    <td nowrap class="list_rr">&nbsp;結案結算金額 : 
+      <input type="text" readonly class="dsp_number" name="wk_repay_amt" value="${wk_repay_amt.(999.00)}" size="12">
+    </td>
+    <td nowrap class="list_rr">&nbsp;差異數 : 
+      <input type="text" readonly class="dsp_number" name="wk_diff_amt" value="${wk_diff_amt.(999.00)}" size="12">
+    </td>
+  </tr>
+ </table>
+ </div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >持卡人&nbsp;</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >消費日&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap>結算問題金額&nbsp;</th>
+    <th nowrap >結案結算金額&nbsp;</th>
+    <th nowrap >差異數&nbsp;</th>
+    <th nowrap >處理結果&nbsp;</th>
+    <th nowrap >問交碼&nbsp;</th>
+    <th nowrap >結案登錄&nbsp;</th>
+
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+  <td nowrap class="list_rr"> ${dc_prb_amount.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_mcht_repay.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${wk_diff_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${clo_result}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prb_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${close_add_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

@@ -1,0 +1,216 @@
+<html>
+<head>
+<title> 109/03/24 V1.00.01 Allen Ho Initial IBON商品資料維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="12">
+   <tr>
+   <td nowrap>&nbsp;活動代號:
+      <input type="text" class="col_any" 
+          name="ex_prog_code" value="${ex_prog_code}"
+         zeditType="any"  maxlength=8 size=8 />
+   商品代號:
+      <input type="text" class="col_any" 
+          name="ex_gift_no" value="${ex_gift_no}"
+         zeditType="any"  maxlength=8 size=8 />
+     </td>
+   <td nowrap>&nbsp;是否專案:
+      <select  name="ex_prog_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="" ${ex_prog_flag-} ></option>
+         <option value="Y" ${ex_prog_flag-Y} >Y.是</option>
+         <option value="N" ${ex_prog_flag-N} >N.否</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;活動日期起區間:
+      <input type="text" class="col_date" 
+          name="ex_prog_s_date_s" value="${ex_prog_s_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_prog_s_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_prog_s_date_e" value="${ex_prog_s_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_prog_s_date_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;維護經辦:
+      <input type="text" class="col_any" 
+          name="ex_crt_user" value="${ex_crt_user}"
+         zeditType="any"  maxlength=10 size=10 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;上架日期區間:
+      <input type="text" class="col_date" 
+          name="ex_gift_s_date_s" value="${ex_gift_s_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_gift_s_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_gift_s_date_e" value="${ex_gift_s_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_gift_s_date_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" ${btnAdd_disable}  value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="10%">
+         <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >放行
+    </th>
+    <th nowrap class="list_th">異動狀態</th>
+    <th nowrap class="list_th">活動代號</th>
+    <th nowrap class="list_th">活動日期-起</th>
+    <th nowrap class="list_th">活動日期-迄</th>
+    <th nowrap class="list_th">商品代號</th>
+    <th nowrap class="list_th">上架日期</th>
+    <th nowrap class="list_th">下架日期</th>
+    <th nowrap class="list_th">專案註記</th>
+    <th nowrap class="list_th">商品零售價</th>
+    <th nowrap class="list_th">兌換點數</th>
+    <th nowrap class="list_th">維護經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr  style="cursor:hand">
+    <td nowrap class="list_no">
+      <span  class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}" />
+             ${SER_NUM}&nbsp;
+      <input type=hidden name="ser_num" value="${ser_num}" />
+      <img   src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${rowid}','','','','${aud_type}');" style="cursor:hand">
+             &nbsp;
+
+    </td>
+    <td  nowrap class="list_cc"> ${aud_type}.${commfunc_aud_type}
+      <input type=hidden name="aud_type" value="${aud_type}" />
+      <input type=hidden name="commfunc_aud_type" value="${commfunc_aud_type}" />
+    </td>
+    <td  nowrap class="list_ll"> ${prog_code}-${comm_prog_code}
+      <input type=hidden name="prog_code" value="${prog_code}" />
+      <input type=hidden name="comm_prog_code" value="${comm_prog_code}" />
+    </td>
+    <td  nowrap class="list_cc"> ${prog_s_date.YMD}
+      <input type=hidden name="prog_s_date" value="${prog_s_date}" />
+    </td>
+    <td  nowrap class="list_cc"> ${prog_e_date.YMD}
+      <input type=hidden name="prog_e_date" value="${prog_e_date}" />
+    </td>
+    <td  nowrap class="list_ll"> ${gift_no}-${comm_gift_no}
+      <input type=hidden name="gift_no" value="${gift_no}" />
+      <input type=hidden name="comm_gift_no" value="${comm_gift_no}" />
+    </td>
+    <td  nowrap class="list_cc"> ${gift_s_date.YMD}
+      <input type=hidden name="gift_s_date" value="${gift_s_date}" />
+    </td>
+    <td  nowrap class="list_cc"> ${gift_e_date.YMD}
+      <input type=hidden name="gift_e_date" value="${gift_e_date}" />
+    </td>
+    <td  nowrap class="list_cc"> ${prog_flag}
+      <input type=hidden name="prog_flag" value="${prog_flag}" />
+    </td>
+    <td  nowrap class="list_rr"> ${prd_price}
+      <input type=hidden name="prd_price" value="${prd_price}" />
+    </td>
+    <td  nowrap class="list_rr"> ${exchange_pnt}
+      <input type=hidden name="exchange_pnt" value="${exchange_pnt}" />
+    </td>
+    <td  nowrap class="list_cc"> ${crt_user}
+      <input type=hidden name="crt_user" value="${crt_user}" />
+    </td>
+    <input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+    <input type="hidden"  name="rowid" value="${rowid}">
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktp3120_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    if (parm5 == 'A') 
+       top.respHtml  = "mktp3120_detn";
+    else if (parm5 == 'D') 
+       top.respHtml  = "mktp3120_detd";
+    else 
+        top.respHtml  = "mktp3120_detl";
+    top.submitControl('S');
+    return true;
+  }
+ function selectAll()
+  {
+   var opt_select =document.dataForm.ex_selectAll.checked;
+   var aElements = document.dataForm.getElementsByTagName("input");
+   for (var i=0;i<aElements.length;i++)
+     if (aElements[i].type=="checkbox")
+        aElements[i].checked = opt_select;
+  }
+
+</script>
+<!-- ******************************************************************** -->

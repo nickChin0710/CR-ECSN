@@ -1,0 +1,601 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-11  V1.00.01                                                      -->
+<!-- 109-07-29  V1.00.02  Justin Wu      remove member_note                   -->
+<!-- 109-09-01  V1.00.03  Justin Wu      不比較indiv_inst_lmt, 正卡副卡radio button disabled, fix bugs of fee_code-->
+<!-- 109-12-16  V1.00.04  Justin Wu      add mod_col                          -->
+<!-- 110-01-06  V1.00.05  Justin Wu      updated for XSS                      -->
+<!-- 110-12-01  V1.00.06  Justin Wu      update update msg_flag and msg_purchase_amt  -->
+<!-- 110-12-27  V1.00.07  Sunny          增加顯示舊卡效期起迄日期資訊-->
+<!-- 111-01-21  V1.00.08  Sunny Ts       取消msg_flag-1面對面交易選項                           -->
+<!-- 111-01-24  V1.00.09  Justin         增加msg_flag and msg_purchase_amt判斷 -->
+<!-- 112-02-02  V1.00.10  Sunny Ts       子卡旗標調整為不可變更 -->
+<!-- 112-12-08  V1.00.11  Sunny Ts       取消年費月份不檢核為必填欄位 -->
+<!-- 112-12-25  V1.00.12  Ryan           調整/增加 推廣企業代號、推廣人員ID、推廣人員、推廣行員ID、推廣行員員編-->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人帳戶資料查詢 V20231208</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R3')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="修改取消" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap >&nbsp;卡號:
+			<input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}" maxlength="16" size="18" zEdit="number" >
+		</td>
+	</tr>
+</table>
+<hr>
+
+
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證號碼:
+      <span class="dsp_text">${wk_idno}</span>
+      <input type="hidden" name="wk_idno" value="${wk_idno}">
+   </td>
+   <td nowrap>&nbsp;出生日期:
+      <span class="dsp_text">${birthday.YMD}</span>
+      <input type="hidden" name="birthday" value="${birthday}">
+   </td>
+   <td nowrap>&nbsp;性別:
+      <span class="dsp_text">${sex}.${#JAVA:ecsfunc.DeCodeCrd.idnoSex(sex)}</span>
+      <input type="hidden" name="sex" value="${sex}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;中文姓名:
+      <span class="dsp_text">${chi_name}</span>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+</tr>
+ <tr>
+   <td nowrap >&nbsp;居留證號碼:
+      <span class="dsp_text">${resident_no}</span>
+      <input type="hidden" name="resident_no" value="${resident_no}">
+   </td>
+   <td nowrap colspan="2">&nbsp;外籍護照號碼:
+      <span class="dsp_text">${other_cntry_code}</span>
+      <input type="hidden" name="other_cntry_code" value="${other_cntry_code}">
+      -&nbsp;
+      <span class="dsp_text">${passport_no}</span>
+      <input type="hidden" name="passport_no" value="${passport_no}">
+   </td>
+</tr>
+      
+</table>
+</div>
+<hr>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">卡片資料一</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">卡片資料二</td>
+    </tr>
+  </table>
+</div>
+<div id="dataBlock">
+<!-----------持卡人卡片資料查詢(一)-------------->
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+  <tr>
+      <td nowrap colspan="3">&nbsp;卡號:
+         <span class="dsp_text">${card_no}</span>
+         <input type="hidden" name="card_no" value="${card_no}">
+      </td>
+      <td nowrap colspan="3">&nbsp;帳號:
+         <span class="dsp_text">${wk_acct}</span>
+         <input type="hidden" name="wk_acct" value="${wk_acct}">
+      </td>
+   </tr>
+  <tr>
+   <td nowrap class="td_titl" colspan="12">異動需主管覆核資料 </td>
+   
+  </tr>
+  <tr>
+   <td nowrap colspan="6">&nbsp;
+      <span style="${mod_eng_name}" >英文姓名:</span>
+      <input type="text" class="col_text" name="eng_name" value="${eng_name}" maxlength="25" size="27" zRequire="Y"  >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;來源代號:
+      <input type="text" class="col_text" name="source_code" value="${source_code}" maxlength="6" size="8" style="${mod_source_code}" >
+   </td>
+   <td nowrap colspan="2">&nbsp;受理行:
+      <select size="1" name="reg_bank_no" class="col_ddlb" style="${mod_reg_bank_no}" >
+         ${d_dddw_branch}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="6" >&nbsp;
+       <span style="${mod_card_fee_date}" >年費年月:</span>
+       <input type="text" class="col_date" name="card_fee_date" id="card_fee_date" value="${card_fee_date}" zEdit="date,yyyymm" maxlength="6" size="8" >
+       <input type="checkbox" id="setCardFeeDate" value="Z" onChange='CheckBoxs()' >
+        <span>終身免年費</span>         
+        <input type="hidden" name="fee_code" value="${fee_code}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;聯名機構會員碼:
+      <input type="text" class="col_text" name="member_id" value="${member_id}" maxlength="6" size="8" style="${mod_member_id}" >
+      <input type="hidden" name="member_id_memo" value="${member_id_memo}">
+   </td>
+   <td nowrap colspan="3" style="display:none">&nbsp;年費年月:
+      <input type="text" class="col_number" name="curr_fee_code" value="${curr_fee_code}" maxlength="1" size="5" style="${mod_curr_fee_code}" >
+   </td>
+   </tr>
+   <!--<td nowrap colspan="2">&nbsp;子卡旗標:
+      <select   size="1"  name="son_card_flag" class="col_ddlb" style="${mod_son_card_flag}" >
+         <option value="">--</option>
+         <option value="Y" ${son_card_flag-Y} >Y&nbsp;</option>
+         <option value="N" ${son_card_flag-N} >N&nbsp;</option>
+      </select>
+   </td> -->
+      <td nowrap colspan="2">&nbsp;子卡旗標:
+         <span class="dsp_text">${son_card_flag}</span>
+         <input type="hidden" name="son_card_flag" value="${son_card_flag}">
+      </td>
+   <td nowrap colspan="2">&nbsp;子卡總月限額:
+      <span class="dsp_text">${indiv_crd_lmt.(999)}&nbsp;</span>
+      <input type="hidden" name="indiv_crd_lmt" value="${indiv_crd_lmt}">
+   </td>
+   <td nowrap colspan="2">&nbsp;子卡分期付款限額%:
+      <span class="dsp_text" >${indiv_inst_lmt.(999.00)}&nbsp;</span>
+      <input type="hidden" name="indiv_inst_lmt" value="${indiv_inst_lmt}">
+   </td>
+   </tr>
+ </table>
+ <hr>
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >   
+  <tr>
+      <td nowrap class="td_titl" colspan="12"><b>異動不需覆核資料</b></td>
+   </tr>      
+   <tr>
+      <td nowrap colspan="3">
+         <span class="col_radio">
+            <input type="radio" value="0" name="sup_flag" ${sup_flag-0} disabled />正卡
+            <input type="radio" value="1" name="sup_flag" ${sup_flag-1} disabled />附卡
+         </span>
+      </td>
+      <td nowrap colspan="3">&nbsp;與正卡關係:
+         <select   size="1"  name="major_relation" class="col_ddlb" style="${mod_major_relation}">
+          <option value="">--</option>
+          <option value="1" ${major_relation-1} >1.配偶</option>
+          <option value="2" ${major_relation-2} >2.父母</option>
+          <option value="3" ${major_relation-3} >3.子女</option>
+          <option value="4" ${major_relation-4} >4.兄弟姊妹 </option>
+          <option value="5" ${major_relation-5} >5.法人</option>
+          <option value="6" ${major_relation-6} >6.其他</option>          
+          <option value="7" ${major_relation-7} >7.配偶父母  </option>
+         </select>
+      </td>
+      <td nowrap colspan="3">&nbsp;
+         <input type="checkbox" name="lost_fee_code" value="Y" ${lost_fee_code-Y}>
+         <span style="${mod_lost_fee_code}">是否免收掛失費</span>         
+      </td>
+      <td nowrap colspan="3">&nbsp;
+         <input type="checkbox" name="auto_installment" value="Y" ${auto_installment-Y}>
+         <span style="${mod_auto_installment}">是否自動分期</span>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;商務卡法人統編:
+         <span class="dsp_text">${corp_no}</span>
+         <input type="hidden" name="corp_no" value="${corp_no}">
+      </td>
+      <td nowrap colspan="6">&nbsp;名稱:
+         <span class="dsp_text">${db_cname_corp}</span>
+         <input type="hidden" name="db_cname_corp" value="${db_cname_corp}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;卡種:
+         <span class="dsp_text">${card_type}</span>
+         <input type="hidden" name="card_type" value="${card_type}">
+      </td>
+      <td nowrap colspan="3">&nbsp;團體代號:
+         <span class="dsp_text">${group_code}</span>
+         <input type="hidden" name="group_code" value="${group_code}">
+      </td>
+      <td nowrap colspan="3">&nbsp;認同集團碼:
+         <span class="dsp_text">${unit_code}</span>
+         <input type="hidden" name="unit_code" value="${unit_code}">
+      </td>
+      <td nowrap colspan="3">&nbsp;晶片卡:
+         <input type="checkbox" name="ic_flag" value="Y" ${ic_flag-Y} disabled  >
+      </td>
+   </tr>    
+   <tr>
+      <td nowrap colspan="6">&nbsp;正卡卡號:
+         <span class="dsp_text">${major_card_no}</span>
+         <input type="hidden" name="major_card_no" value="${major_card_no}">
+      </td>
+      <td nowrap colspan="6">&nbsp;正卡ID:
+         <span class="dsp_text">${major_id}&nbsp;${major_id_code}</span>
+         <input type="hidden" name="major_id" value="${major_id}">
+         <input type="hidden" name="major_id_code" value="${major_id_code}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="4">&nbsp;使用狀態:
+         <select   size="1"  name="current_code" class="col_ddlb" disabled  >
+          <option value="">--</option>
+          <option value="0" ${current_code-0} >0.正常</option>
+          <option value="1" ${current_code-1} >1.申停</option>
+          <option value="2" ${current_code-2} >2.掛失</option>
+          <option value="3" ${current_code-3} >3.強制</option>
+          <option value="4" ${current_code-4} >4.其他停用</option>
+          <option value="5" ${current_code-5} >5.偽卡</option>
+         </select>
+      </td>
+      <td nowrap colspan="4">&nbsp;本卡效期:
+         <span class="dsp_text">${new_beg_date.YMD}</span>
+         <input type="hidden" name="new_beg_date" value="${new_beg_date}">
+         --
+         <span class="dsp_text">${new_end_date.YMD}</span>
+         <input type="hidden" name="new_end_date" value="${new_end_date}">  
+	  </td>
+      <td nowrap colspan="4">&nbsp;舊卡效期:
+       <span class="dsp_text">${old_beg_date.YMD}</span>
+         <input type="hidden" name="old_beg_date" value="${old_beg_date}">
+         --
+         <span class="dsp_text">${old_end_date.YMD}</span>
+       </td>
+    
+   </tr>
+    <tr>
+      <td nowrap colspan="4">&nbsp;開卡日期:
+         <span class="dsp_text">${activate_date.YMD}</span>
+         <input type="hidden" name="activate_date" value="${activate_date}">
+      </td>
+      <td nowrap colspan="4">&nbsp;舊開卡日期:
+         <span class="dsp_text">${old_activate_date.YMD}</span>
+         <input type="hidden" name="old_activate_date" value="${old_activate_date}">
+      </td>
+      <td nowrap colspan="4">&nbsp;強制註記:
+         <span class="dsp_text">${force_flag}</span>
+         <input type="hidden" name="force_flag" value="${force_flag}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="6">&nbsp;停用日期:
+         <span class="dsp_text">${oppost_date.YMD}</span>
+         <input type="hidden" name="oppost_date" value="${oppost_date}">
+      </td>
+      <td nowrap colspan="6">&nbsp;停用原因:
+         <span class="dsp_text">${oppost_reason}${tt_oppost_reason}</span>
+         <input type="hidden" name="oppost_reason" value="${oppost_reason}">
+         <input type="hidden" name="tt_oppost_reason" value="${tt_oppost_reason}">
+      </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="4">&nbsp;消費簡訊
+      <span class="col_radio">
+         <input type="radio" value="Y" name="msg_flag" id="msg_flag_Y" ${DEFAULT-msg_flag} ${msg_flag-Y} />發
+         <input type="radio" value="N" name="msg_flag" id="msg_flag_N" ${msg_flag-N} />不發
+      </span>
+   </td>
+   <td nowrap colspan="8" >&nbsp;發簡訊消費金額:
+      <input type="text" class="col_number" name="msg_purchase_amt" id="msg_purchase_amt" value="${msg_purchase_amt}" maxlength="10" size="12" zEdit="number" onchange="onChangeMsgPurchaseAmt();">
+      <span class="col_key" > (當金額大於0，表示一律發送)  </span>
+   </td>
+   </tr>
+      	<tr>
+       <td nowrap colspan="3" >&nbsp;推廣企業代號(金控、聯名機構、行員):
+         <input type="text" class="col_any" zEdit="any" name="promote_dept" value="${promote_dept}"
+      		maxlength="11" size="13"/>
+      </td>
+     <td nowrap colspan="3" >&nbsp;推廣人員ID(金控、聯名機構):
+         <input type="text" class="col_any" zEdit="any" name="promote_emp_no" value="${promote_emp_no}"
+      	  maxlength="10" size="12"/>
+      </td>
+   </tr>   
+   <tr>
+      <td nowrap colspan="3" >&nbsp;推廣人員:(聯名機構員編、一般卡友ID):
+          <input type="text" class="col_any" zEdit="any" name="introduce_id" value="${introduce_id}"
+      	  maxlength="11" size="13"/>
+      </td>        
+      <td nowrap colspan="3" >&nbsp;推廣行員ID:
+         <input type="text" class="col_any" zEdit="any" name="clerk_id" value="${clerk_id}"
+      	  maxlength="10" size="12"/>
+      </td>
+      <td nowrap colspan="3" >&nbsp;推廣行員員編:
+         <input type="text" class="col_any" zEdit="any" name="introduce_emp_no" value="${introduce_emp_no}"
+      	  maxlength="10" size="12"/>
+      </td>
+   </tr> 
+   <tr>
+      <td nowrap colspan="3">&nbsp;凸字第四行:
+         <span class="dsp_text">${emboss_data}</span>
+         <input type="hidden" name="emboss_data" value="${emboss_data}">
+      </td>
+      <td nowrap colspan="3">&nbsp;
+         <input type="checkbox" name="combo_indicator" value="Y" ${combo_indicator-Y} disabled  >COMBO卡
+      </td>
+      <td nowrap colspan="3">&nbsp;金融卡帳號:
+         <span class="dsp_text">${combo_acct_no}</span>
+         <input type="hidden" name="combo_acct_no" value="${combo_acct_no}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;申請書編號:
+         <span class="dsp_text">${apply_no}</span>
+         <input type="hidden" name="apply_no" value="${apply_no}">
+      </td>
+      <td nowrap colspan="3">&nbsp;送製卡批號:
+         <span class="dsp_text">${batchno}</span>
+         <input type="hidden" name="batchno" value="${batchno}">
+      </td>
+      <td nowrap colspan="3">&nbsp;分行:
+         <span class="dsp_text">${branch}</span>
+         <input type="hidden" name="branch" value="${branch}">
+      </td>
+      <td nowrap colspan="3">&nbsp;附件一二:
+         <span class="dsp_text">${mail_attach1}</span>
+         <input type="hidden" name="mail_attach1" value="${mail_attach1}">
+         <span class="dsp_text">${mail_attach2}</span>
+         <input type="hidden" name="mail_attach2" value="${mail_attach2}">
+      </td>
+   </tr>
+   <tr style="display:none; ">
+      <td nowrap colspan="12" class="td_titl">ACS</td>
+   </tr>
+   <tr style="display:none; ">
+      <td nowrap colspan="4">&nbsp;NCCC傳檔異動日期:
+         <span class="dsp_text">${acs_date.YMD}</span>
+         <input type="hidden" name="acs_date" value="${acs_date}">
+      </td>
+      <td nowrap colspan="4">&nbsp;網路註冊類型:
+         <span class="dsp_text">${web_acs_type}</span>
+         <input type="hidden" name="web_acs_type" value="${web_acs_type}">
+      </td>
+      <td nowrap colspan="4">&nbsp;網路註冊日期:
+         <span class="dsp_text">${web_acs_date.YMD}</span>
+         <input type="hidden" name="web_acs_date" value="${web_acs_date}">
+      </td>
+   </tr>
+ </table>
+</div>
+<!-----------持卡人卡片資料查詢(二)-------------->
+<div id="tab-2" class="tabcontent" > 
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+ 	<tr>
+ 		<td nowrap >&nbsp;卡號:
+ 			<span class="dsp_text">${B_card_no}&nbsp;</span>
+ 			<input type="hidden" name="B_card_no" value="${B_card_no}">
+ 		</td>
+ 		<td nowrap >&nbsp;英文姓名:
+ 			<span class="dsp_text">${B_eng_name}&nbsp;</span>
+ 			<input type="hidden" name="B_eng_name" value="${B_eng_name}">
+ 		</td>
+ 	</tr>
+  <tr>
+   <!--td nowrap>&nbsp;
+      <input type="checkbox" name="urgent_flag" value="Y" ${urgent_flag-Y} disabled >緊急替代卡
+   </td-->
+   <!--td nowrap>&nbsp;
+      <input type="checkbox" name="emergent_flag" value="Y" ${emergent_flag-Y} disabled >緊急補發卡
+   </td-->
+   <td nowrap>&nbsp;緊急替代卡:<span class="dsp_text">${urgent_flag}</span>
+         <input type="hidden" name="urgent_flag" value="urgent_flag" />
+   </td>
+   <td nowrap>&nbsp;緊急補發卡:<span class="dsp_text">${emergent_flag}</span>
+         <input type="hidden" name="emergent_flag" value="emergent_flag" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;首次發卡日期:
+      <span class="dsp_text">${issue_date.YMD}</span>
+      <input type="hidden" name="issue_date" value="${issue_date}">
+   </td>
+   <td nowrap >&nbsp;重製原因:
+      <span class="dsp_text">${reissue_reason}${tt_reissue_reason}</span>
+      <input type="hidden" name="reissue_reason" value="${reissue_reason}">
+      <input type="hidden" name="tt_reissue_reason" value="${tt_reissue_reason}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;重製日期:
+      <span class="dsp_text">${reissue_date}</span>
+      <input type="hidden" name="reissue_date" value="${reissue_date}">
+   </td>
+   <td nowrap >&nbsp;重製狀態:
+      <span class="dsp_text">${reissue_status}${tt_reissue_status}</span>
+      <input type="hidden" name="reissue_status" value="${reissue_status}">
+      <input type="hidden" name="tt_reissue_status" value="${tt_reissue_status}">
+   </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;續卡狀態:
+         <span class="dsp_text">${change_status}${tt_change_status}</span>
+         <input type="hidden" name="change_status" value="${change_status}">
+         <input type="hidden" name="tt_change_status" value="${tt_change_status}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;續卡日期:
+         <span class="dsp_text">${change_date.YMD}</span>
+         <input type="hidden" name="change_date" value="${change_date}">
+      </td>
+      <td nowrap >&nbsp;不續卡日期:
+         <span class="dsp_text">${expire_chg_date.YMD}</span>
+         <input type="hidden" name="expire_chg_date" value="${expire_chg_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;續卡註記:
+         <span class="dsp_text">${change_reason}${tt_change_reason}</span>
+         <input type="hidden" name="change_reason" value="${change_reason}">
+         <input type="hidden" name="tt_change_reason" value="${tt_change_reason}">
+      </td>
+      <td nowrap >&nbsp;不續卡註記:
+         <span class="dsp_text">${expire_chg_flag}${tt_expire_chg_flag}</span>
+         <input type="hidden" name="expire_chg_flag" value="${expire_chg_flag}">
+         <input type="hidden" name="tt_expire_chg_flag" value="${tt_expire_chg_flag}"/>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;卡片昇級日期:
+         <span class="dsp_text">${upgrade_date.YMD}</span>
+         <input type="hidden" name="upgrade_date" value="${upgrade_date}">
+      </td>
+      <td nowrap >&nbsp;卡片昇級狀態:
+         <span class="dsp_text">${upgrade_status}</span>
+         <input type="hidden" name="upgrade_status" value="${upgrade_status}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;新卡卡號:
+         <span class="dsp_text">${new_card_no}</span>
+         <input type="hidden" name="new_card_no" value="${new_card_no}">
+      </td>
+      <td nowrap >&nbsp;舊卡卡號:
+         <span class="dsp_text">${old_card_no}</span>
+         <input type="hidden" name="old_card_no" value="${old_card_no}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;退件日期:
+         <span class="dsp_text">${mail_reject_date.YMD}</span>
+         <input type="hidden" name="mail_reject_date" value="${mail_reject_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;寄件別:
+         <span class="dsp_text">${mail_type}${tt_mail_type}</span>
+         <input type="hidden" name="mail_type" value="${mail_type}">
+      </td>
+      <td nowrap>&nbsp;掛號號碼:
+         <span class="dsp_text">${mail_no}</span>
+         <input type="hidden" name="mail_no" value="${mail_no}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;寄件分行:
+         <span class="dsp_text">${mail_branch}.${tt_mail_branch}</span>
+         <input type="hidden" name="mail_branch" value="${mail_branch}">
+         <input type="hidden" name="tt_mail_branch" value="${tt_mail_branch}">
+      </td>
+      <td nowrap >&nbsp;寄件處理日期:
+         <span class="dsp_text">${mail_proc_date.YMD}</span>
+         <input type="hidden" name="mail_proc_date" value="${mail_proc_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;申請預借現金密碼:
+         <span class="dsp_text">${apply_atm_flag}</spam>
+         <input type="hidden" name="apply_atm_flag" value="${apply_atm_flag}">
+      </td>
+   </tr>         
+ </table>
+</div>
+</div>
+<!-- -->
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="debit_flag" value="N" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ onChangeMsgPurchaseAmt();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == 'U') {
+     //20231208 取消年費月份不檢核為必填欄位
+     //if ( !isInputTimeCorrect())
+     //    { return false; }
+
+       checkMsgFlagAndMsgPurchaseAmt();
+    }
+    document.getElementById("msg_flag_Y").disabled = false;
+    document.getElementById("msg_flag_N").disabled = false;
+    return true;
+  }
+
+  function checkMsgFlagAndMsgPurchaseAmt(){
+   if (Number(document.getElementById("msg_purchase_amt").value) > 0 ) {
+      document.getElementById("msg_flag_Y").checked = true;  
+   }
+   return true;
+  }
+
+  function onChangeMsgPurchaseAmt(){
+   if (Number(document.getElementById("msg_purchase_amt").value) > 0 ) {
+      document.getElementById("msg_flag_Y").checked = true;
+      document.getElementById("msg_flag_Y").disabled = true;
+      document.getElementById("msg_flag_N").disabled = true;
+   }else{
+      document.getElementById("msg_flag_Y").disabled = false;
+      document.getElementById("msg_flag_N").disabled = false;
+   }
+  }
+
+ function CheckBoxs() {
+	    if (document.getElementById('setCardFeeDate').checked) {
+	         document.getElementById("card_fee_date").value="299912";
+	         document.getElementById("card_fee_date").readOnly = true;
+	         document.getElementById("card_fee_date").style.backgroundColor = "#dddddd";
+	       
+	    } else {
+	      
+	    	document.getElementById("card_fee_date").value = "0";
+	        document.getElementById("card_fee_date").readOnly =false;
+	        document.getElementById("card_fee_date").style.backgroundColor = "#FFFFFF";
+	    }
+	}
+
+  function isInputTimeCorrect(){
+    //獲取完整的日期
+    var date=new Date;
+    var year=date.getFullYear(); 
+    var month=date.getMonth()+1;
+    month =(month<10 ? "0"+month:month); 
+    var mydate = (year.toString()+month.toString());
+    // 獲取輸入的時間
+    var mydate2 = document.getElementById("card_fee_date").value;
+
+    if(mydate2 <  mydate){
+     alert("輸入時間必須大於等於當前時間！");
+     return false;
+    }
+
+    return true;
+  }
+</script>

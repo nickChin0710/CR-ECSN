@@ -1,0 +1,318 @@
+<html>
+<head>
+<title>對帳單訊息參數維護-detl-V.2018-0124-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+  <tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+          <input type="Button" name="btnQuery"   value="讀取"  onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+          <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+     </td>
+  </tr>
+</table>
+
+<div id="dataBlock">
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+	<tr>
+     	<td nowrap>&nbsp;<span style="color:red">帳單年月:</span>
+    		 <input type="text" class="col_date" name="kk_msg_month" value="${kk_msg_month}"
+         	zeditType="date,yymm" MaxLength=6 size=6 zRequire ="k","C" ${btnAdd_disable}/>
+    	</td>
+    	<td nowrap>&nbsp;帳戶類別:
+            <select size="1" name="kk_acct_type" class="col_ddlb" zRequire ="k","C" ${btnAdd_disable}>
+            <!--  <option value="">--</option>  -->
+            <!--  ${dddw_acct_type}  -->
+              <option value=""  >--</option>
+              <option value="01" ${kk_acct_type-01} >01_一般卡</option>
+              <option value="03" ${kk_acct_type-03} >03_商務卡</option>
+              <option value="06" ${kk_acct_type-06} >06_政府網路採購卡</option>
+              <option value="90" ${kk_acct_type-90} >90_Visa 金融卡</option>
+            </select>
+        </td>
+  	</tr>
+  	<tr>
+  		 <td nowrap>&nbsp;訊息類別:
+      		<select  size="1"  name="kk_msg_type" class="col_ddlb" zRequire ="k","C" ${btnAdd_disable}>
+         		<option value="">--</option>
+         		<option value="1" ${kk_msg_type-1} >1.Record04 (訊息項 FOR 簡訊前)</option>
+         		<option value="2" ${kk_msg_type-2} >2.Record05 (訊息項 FOR 簡訊後)</option>
+         		<option value="4" ${ex_msg_type-4} >4.Record04 (訊息項 FOR VD-訊息)</option>
+         		<option value="5" ${ex_msg_type-5} >5.Record06 (訊息項 FOR VD-紅利訊息)</option>
+      		</select>
+   		</td>
+   		<td nowrap >&nbsp;<span style="color:red">列印順序:</span>
+			<input type="text" class="col_number" zEdit="number" name="kk_msg_code" value="${kk_msg_code}"
+      		maxlength="5" size="5" zRequire ="k","C" ${btnAdd_disable}/>
+		</td>
+  	</tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+      	<td nowrap class="colKey" >&nbsp;<span style="color:red">帳單年月:</span>
+        	<span class="dsp_text">${msg_month}</span>
+        	<input type="hidden" name="msg_month" value="${msg_month}" >
+      	</td>
+      	<td nowrap class="colKey" >&nbsp;帳戶類別:
+        	<span class="dsp_text">${tt_acct_type}</span>
+        	<input type="hidden" name="acct_type" value="${acct_type}" >
+        	<input type="hidden" name="tt_acct_type" value="${tt_acct_type}" >
+        	<span class="dsp_text" style="color:red">${tt_apr_flag}</span>
+        	<input type="hidden" name="apr_flag" value="${apr_flag}" >
+        	<input type="hidden" name="tt_apr_flag" value="${tt_apr_flag}" >
+      	</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="colKey" >&nbsp;訊息類別:
+        	<span class="dsp_text">${tt_msg_type}</span>
+        	<input type="hidden" name="msg_type" id="msg_type" value="${msg_type}" >
+        	<input type="hidden" name="msg_type2" id="msg_type2" value="${msg_type2}" >
+        	<input type="hidden" name="tt_msg_type" value="${tt_msg_type}" >
+<!--
+        	<input type="Button" class="btOther" id="btnCard" name="btnCard"  value="卡別" ${btnUpdate_disable} 
+            onClick="return detailCard('${msg_month}','${acct_type}','${msg_code}','${apr_flag}')" >
+   			<input type="Button" class="btOther" id="btnGroup" name="btnGroup"  value="團體代號" ${btnUpdate_disable} 
+            onClick="return detailGroup('${msg_month}','${acct_type}','${msg_code}','${apr_flag}')" >
+            <input type="Button" class="btOther" id="btnZip" name="btnZip"  value="郵遞區號" ${btnUpdate_disable} 
+            onClick="return detailZip('${msg_month}','${acct_type}','${msg_code}','${apr_flag}')" >
+-->
+      	</td>
+      	<td nowrap class="colKey" >&nbsp;<span style="color:red">列印順序:</span>
+        	<span class="dsp_text">${msg_code}</span>
+        	<input type="hidden" name="msg_code" value="${msg_code}" >
+      	</td>
+   	</tr>
+<!--
+   	<tr>
+   		<td nowrap>&nbsp;帳務週期CYCLE別:
+      		<span class="col_radio">
+         		<input type="radio" value="01" name="cycle_type" ${cycle_type-01} ${DEFAULT_CHK}/>指定
+         		<input type="radio" value="02" name="cycle_type" ${cycle_type-02} />排除
+      		</span>
+   		</td>
+   		<td nowrap>&nbsp;帳務週期:
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_3" ${stmt_cycle_parm_3-Y} ${checked}>3
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_6" ${stmt_cycle_parm_6-Y} ${checked}>6
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_9" ${stmt_cycle_parm_9-Y} ${checked}>9
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_12" ${stmt_cycle_parm_12-Y} ${checked}>12
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_15" ${stmt_cycle_parm_15-Y} ${checked}>15
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_18" ${stmt_cycle_parm_18-Y} ${checked}>18
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_21" ${stmt_cycle_parm_21-Y} ${checked}>21
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_24" ${stmt_cycle_parm_24-Y} ${checked}>24
+   			<input type="checkbox" value="Y" name="stmt_cycle_parm_27" ${stmt_cycle_parm_27-Y} ${checked}>27
+   		</td>
+   	</tr>
+-->
+   	<tr nowrap>
+   		<td rowspan="6">&nbsp;訊息內容:
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+      		<span class="dsp_text" id="param1" ${color1}>${param1}</span>
+      		<input type="hidden" name="param1" value="${param1}">
+		</td>
+   	</tr>
+   	<tr>
+   		<td>
+      		<span class="dsp_text" id="param2" ${color2}>${param2}</span>
+      		<input type="hidden" name="param2" value="${param2}">
+   		</td>
+   	</tr>
+   		<tr>
+   		<td>
+      		<span class="dsp_text" id="param3" ${color3}>${param3}</span>
+      		<input type="hidden" name="param3" value="${param3}">
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+      		<span class="dsp_text" id="param4" ${color4}>${param4}</span>
+      		<input type="hidden" name="param4" value="${param4}">
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+      		<span class="dsp_text" id="param5" ${color1}>${param5}</span>
+      		<input type="hidden" name="param5" value="${param5}">
+   		</td>
+   	</tr>
+</table>
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+     	<td nowrap>&nbsp;建檔人員：
+        	<span class="dsp_text">${crt_user}</span>
+        	<input type="hidden" name="crt_user" value="${crt_user}" >
+     	</td>
+     	<td nowrap>&nbsp;主管覆核：
+        	<span class="dsp_text">${apr_user}</span>
+        	<input type="hidden" name="apr_user" value="${apr_user}" >
+     	</td>
+   	</tr>
+   	<tr>
+     	<td nowrap>&nbsp;鍵檔日期:
+         	<span class="dsp_text">${crt_date.YMD}</span>
+         	<input type="hidden" name="crt_date" value="${crt_date}" >
+     	</td>
+     	<td nowrap>&nbsp;覆核日期:
+         	<span class="dsp_text">${apr_date.YMD}</span>
+         	<input type="hidden" name="apr_date" value="${apr_date}" >
+     	</td>
+   	</tr>
+   	<tr>
+   		<td>
+   			<input type="Button" class="btOther" name="button" id="btn1"  value="貼到訊息內容"  >
+   		</td>
+   		<td>
+      		 <textarea rows=8 cols=112 name="wk_param" id="wk_param"  style="white-space:pre-wrap;resize:none;">${wk_param}</textarea>
+   		</td>
+   	</tr>
+<!--
+   	<tr>
+   		<td colspan="2">
+   			<span style='color:red'>訊息內容每行字的前20個字元，不可放特殊字元(如:/.*)，因為會影響billhunter系統資料判讀</span>
+   		</td>
+   	</tr>
+-->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="mesg_month_kk" value="">
+<input type="hidden" name="acct_type_kk" value="">
+<input type="hidden" name="mesg_code_kk" value="">
+<input type="hidden" name="apr_flag_kk" value="">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="cycm0015">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ document.dataForm.kk_msg_month.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+	return true;
+}
+
+ function detailCard(parm,parm2,parm3,parm4) { 
+    top.respLevel = 2;
+    document.dataForm.mesg_month_kk.value = parm;
+    document.dataForm.acct_type_kk.value = parm2;
+    document.dataForm.mesg_code_kk.value = parm3;
+    document.dataForm.apr_flag_kk.value = parm4;
+    top.respHtml  = "cycm0015_card";
+    top.submitControl("SC");
+  return true;
+ }
+ 
+  function detailGroup(parm,parm2,parm3,parm4) { 
+    top.respLevel = 2;
+    document.dataForm.mesg_month_kk.value = parm;
+    document.dataForm.acct_type_kk.value = parm2;
+    document.dataForm.mesg_code_kk.value = parm3;
+    document.dataForm.apr_flag_kk.value = parm4;
+    top.respHtml  = "cycm0015_group";
+    top.submitControl("SG");
+  return true;
+ }
+  
+  function detailZip(parm,parm2,parm3,parm4) { 
+	    top.respLevel = 2;
+	    document.dataForm.mesg_month_kk.value = parm;
+	    document.dataForm.acct_type_kk.value = parm2;
+	    document.dataForm.mesg_code_kk.value = parm3;
+	    document.dataForm.apr_flag_kk.value = parm4;
+	    top.respHtml  = "cycm0015_zip";
+	    top.submitControl("SZ");
+	  return true;
+	 }
+  
+
+	$(document).ready(function() {
+		var deleteOK = '${deleteOK}'
+		if(deleteOK=='Y'){
+			$(".btClear").click();
+		}
+		$("#btnCard").css("display","none");
+		$("#btnGroup").css("display","none");
+		$("#btnZip").css("display","none");
+		var msg_type = $("#msg_type").val();
+		var apr_flag = $("#apr_flag").val();
+		if(apr_flag!='Y'){
+			switch(msg_type){
+			case "2":
+				$("#btnCard").css("display","");
+				break;
+			case "3":
+				$("#btnGroup").css("display","");
+				break;
+			case "4":
+				$("#btnZip").css("display","");
+			}
+		}
+		$("#btn1").click(function() {
+			$("input[name='param1']").val("");
+			$("#param1").text("");
+			$("input[name='param2']").val("");
+			$("#param2").text("");
+			$("input[name='param3']").val("");
+			$("#param3").text("");
+			$("input[name='param4']").val("");
+			$("#param4").text("");
+			$("input[name='param5']").val("");
+			$("#param5").text("");
+			var wk_param = $("#wk_param").val().replace(/[\r\n]/g,"");
+			console.log(wk_param);
+			var x=1;
+			for(var i=0;i<wk_param.length;i+=56){
+				
+				$("input[name='param"+x+"']").val(wk_param.substr(i,56));
+				$("#param"+x).text(wk_param.substr(i,56));
+				x++;
+				if(x>5) return;
+			}
+			
+		});
+		var insertok = '${insertok}';
+		var msg_type = $("#msg_type").val();
+		if(insertok=='A'){
+			switch(msg_type){
+			case "2":
+				$("#btnCard").click();
+				break;
+			case "3":
+				$("#btnGroup").click();
+				break;
+			case "4":	
+				$("#btnZip").click();
+			}
+		}
+	});
+
+</script>

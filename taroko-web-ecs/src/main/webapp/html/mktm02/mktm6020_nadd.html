@@ -1,0 +1,670 @@
+<html>
+<head>
+<title> 108/12/12 V1.00.01 Allen Ho Initial 高階卡友參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>團體代號:&nbsp;
+       <select name="group_code" class="col_ddlb" zRequire="K","C" />
+               ${dddw_group_code}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>卡種:&nbsp;
+       <select name="card_type" class="col_ddlb" />
+               ${dddw_card_type}
+       </select>
+              ***卡種: 不可空白及'有值' 同時設定
+     </td>
+   </tr>
+ </table>
+ 
+ <!--
+  <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;
+     	<font color="red"> 
+     		備註:  <br>
+     		     **頂級卡- 優質客戶8萬免年費 <br>
+     		     **無限卡- 行員可享消費6萬免年費
+     	</font>
+     </td>
+   </tr>
+ </table>
+ -->
+ 
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>實收年費:　　正卡&nbsp; 
+       <input type="text" class="col_number" name="card_fee" value="${card_fee}"
+              zEdit="number" maxlength="8" size="8" />
+              元
+         附卡 
+       <input type="text" class="col_number" name="sup_card_fee" value="${sup_card_fee}"
+              zEdit="number" maxlength="8" size="8" />
+              元
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="mer_cond" ${mer_cond-Y} >&nbsp;
+         A:前十二個月歷史消費紀錄中曾於下列特店刷卡者免年費 
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　消費金額本金類&nbsp; 
+          
+      <input type="checkbox" value="Y" name="mer_bl_flag" ${mer_bl_flag-Y} >
+              簽帳款(BL)　
+          
+      <input type="checkbox" value="Y" name="mer_ca_flag" ${mer_ca_flag-Y} >
+              預借現金(CA)
+          
+      <input type="checkbox" value="Y" name="mer_it_flag" ${mer_it_flag-Y} >
+              分期付款(IT)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　&nbsp;
+      <input type="checkbox" value="Y" name="mer_ao_flag" ${mer_ao_flag-Y} >
+              餘額代償(AO)
+          
+      <input type="checkbox" value="Y" name="mer_id_flag" ${mer_id_flag-Y} >
+              代收款(ID)　
+          
+      <input type="checkbox" value="Y" name="mer_ot_flag" ${mer_ot_flag-Y} >
+              其他應收款(OT)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　免年費對象　　&nbsp; 
+          
+      <input type="checkbox" value="Y" name="major_flag" ${major_flag-Y} >
+              正卡刷，免正卡
+         　 
+      <input type="checkbox" value="Y" name="sub_flag" ${sub_flag-Y} >
+              附卡刷，免附卡
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　&nbsp;
+      <input type="checkbox" value="Y" name="major_sub" ${major_sub-Y} >
+              正附卡有一卡刷，正附卡都免　　　　
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店代號:&nbsp;
+       <input type="radio" value="0" name="a_merchant_sel" ${a_merchant_sel-0} checked  onChange="columnOnChange('1')" />全部
+       <input type="radio" value="1" name="a_merchant_sel" ${a_merchant_sel-1} onChange="columnOnChange('1')" />指定
+        <input type="Button" class="btOther"  id="btnaaa1"  value="特店代號" ${btnaaa1_disable}
+               onClick="return buttonScreen('2','aaa1','data_type','1')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店群組:&nbsp;
+       <input type="radio" value="0" name="a_mcht_group_sel" ${a_mcht_group_sel-0} checked  onChange="columnOnChange('2')" />全部
+       <input type="radio" value="1" name="a_mcht_group_sel" ${a_mcht_group_sel-1} onChange="columnOnChange('2')" />指定
+        <input type="Button" class="btOther"  id="btnaaa2"  value="特店群組" ${btnaaa2_disable}
+               onClick="return buttonScreen('3','aaa2','data_type','2')" >
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="cnt_cond" ${cnt_cond-Y} >&nbsp;
+         B:刷卡次數類別: 
+       <input type="radio" value="1" name="cnt_select" ${cnt_select-1} checked  />每月刷卡次數達
+          
+       <input type="text" class="col_number" name="month_cnt" value="${month_cnt}"
+              zEdit="number" maxlength="8" size="8" />
+              次(含)以上
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　　　 　　　&nbsp;
+       <input type="radio" value="2" name="cnt_select" ${cnt_select-2} />累計刷卡次數達
+          
+       <input type="text" class="col_number" name="accumlate_cnt" value="${accumlate_cnt}"
+              zEdit="number" maxlength="8" size="8" />
+              次(含)以上
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　消費金額本金類&nbsp; 
+          
+      <input type="checkbox" value="Y" name="cnt_bl_flag" ${cnt_bl_flag-Y} >
+              簽帳款(BL)　
+          
+      <input type="checkbox" value="Y" name="cnt_ca_flag" ${cnt_ca_flag-Y} >
+              預借現金(CA)
+          
+      <input type="checkbox" value="Y" name="cnt_it_flag" ${cnt_it_flag-Y} >
+              分期付款(IT)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　&nbsp;
+      <input type="checkbox" value="Y" name="cnt_ao_flag" ${cnt_ao_flag-Y} >
+              餘額代償(AO)
+          
+      <input type="checkbox" value="Y" name="cnt_id_flag" ${cnt_id_flag-Y} >
+              代收款(ID)　
+          
+      <input type="checkbox" value="Y" name="cnt_ot_flag" ${cnt_ot_flag-Y} >
+              其他應收款(OT)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　免年費對象　　&nbsp; 
+          
+      <input type="checkbox" value="Y" name="cnt_major_flag" ${cnt_major_flag-Y} >
+              正卡刷，免正卡
+         　 
+      <input type="checkbox" value="Y" name="cnt_sub_flag" ${cnt_sub_flag-Y} >
+              附卡刷，免附卡
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　&nbsp;
+      <input type="checkbox" value="Y" name="cnt_major_sub" ${cnt_major_sub-Y} >
+              正附卡有一卡刷，正附卡都免
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店類別:&nbsp;
+       <input type="radio" value="0" name="b_mcc_code_sel" ${b_mcc_code_sel-0} checked  onChange="columnOnChange('3')" />全部
+       <input type="radio" value="2" name="b_mcc_code_sel" ${b_mcc_code_sel-2} onChange="columnOnChange('3')" />排除
+        <input type="Button" class="btOther"  id="btnbbb1"  value="特店類別" ${btnbbb1_disable}
+               onClick="return buttonScreen('3','bbb1','data_type','3')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店代號:&nbsp;
+       <input type="radio" value="0" name="b_merchant_sel" ${b_merchant_sel-0} checked  onChange="columnOnChange('4')" />全部
+       <input type="radio" value="2" name="b_merchant_sel" ${b_merchant_sel-2} onChange="columnOnChange('4')" />排除
+        <input type="Button" class="btOther"  id="btnbbb2"  value="特店代號" ${btnbbb2_disable}
+               onClick="return buttonScreen('2','bbb2','data_type','4')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店群組:&nbsp;
+       <input type="radio" value="0" name="b_mcht_group_sel" ${b_mcht_group_sel-0} checked  onChange="columnOnChange('8')" />全部
+       <input type="radio" value="2" name="b_mcht_group_sel" ${b_mcht_group_sel-2} onChange="columnOnChange('8')" />排除
+        <input type="Button" class="btOther" name="btnbbb3" id="btnbbb3"  value="特店群組" ${btnbbb3_disable}
+               onClick="return buttonScreen('3','bbb3','data_type','5')" >
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="amt_cond" ${amt_cond-Y} >&nbsp;
+         C:累積消費金額達 
+       <input type="text" class="col_number" name="accumlate_amt" value="${accumlate_amt}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              元(含)以上
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　消費金額本金類&nbsp; 
+          
+      <input type="checkbox" value="Y" name="amt_bl_flag" ${amt_bl_flag-Y} >
+              簽帳款(BL)　
+          
+      <input type="checkbox" value="Y" name="amt_ca_flag" ${amt_ca_flag-Y} >
+              預借現金(CA)
+          
+      <input type="checkbox" value="Y" name="amt_it_flag" ${amt_it_flag-Y} >
+              分期付款(IT)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　&nbsp;
+      <input type="checkbox" value="Y" name="amt_ao_flag" ${amt_ao_flag-Y} >
+              餘額代償(AO)
+          
+      <input type="checkbox" value="Y" name="amt_id_flag" ${amt_id_flag-Y} >
+              代收款(ID)　
+          
+      <input type="checkbox" value="Y" name="amt_ot_flag" ${amt_ot_flag-Y} >
+              其他應收款(OT)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　免年費對象　　&nbsp; 
+          
+      <input type="checkbox" value="Y" name="amt_major_flag" ${amt_major_flag-Y} >
+              正卡刷，免正卡
+         　 
+      <input type="checkbox" value="Y" name="amt_sub_flag" ${amt_sub_flag-Y} >
+              附卡刷，免附卡
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　&nbsp;
+      <input type="checkbox" value="Y" name="amt_major_sub" ${amt_major_sub-Y} >
+              正附卡有一卡刷，正附卡都免
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店類別:&nbsp;
+       <input type="radio" value="0" name="c_mcc_code_sel" ${c_mcc_code_sel-0} checked  onChange="columnOnChange('5')" />全部
+       <input type="radio" value="2" name="c_mcc_code_sel" ${c_mcc_code_sel-2} onChange="columnOnChange('5')" />排除
+        <input type="Button" class="btOther"  id="btnccc1"  value="特店類別" ${btnccc1_disable}
+               onClick="return buttonScreen('3','ccc1','data_type','6')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店代號:&nbsp;
+       <input type="radio" value="0" name="c_merchant_sel" ${c_merchant_sel-0} checked  onChange="columnOnChange('6')" />全部
+       <input type="radio" value="2" name="c_merchant_sel" ${c_merchant_sel-2} onChange="columnOnChange('6')" />排除
+        <input type="Button" class="btOther"  id="btnccc2"  value="特店代號" ${btnccc2_disable}
+               onClick="return buttonScreen('2','ccc2','data_type','7')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　特店群組:&nbsp;
+       <input type="radio" value="0" name="c_mcht_group_sel" ${c_mcht_group_sel-0} checked  onChange="columnOnChange('7')" />全部
+       <input type="radio" value="2" name="c_mcht_group_sel" ${c_mcht_group_sel-2} onChange="columnOnChange('7')" />排除
+        <input type="Button" class="btOther"  id="btnccc3"  value="特店群組" ${btnccc3_disable}
+               onClick="return buttonScreen('3','ccc3','data_type','8')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>D.最後一期M code為&nbsp;
+       <select name="mcode" class="col_ddlb"  >
+       <option value="  ">--</option>
+       <option value="0" ${mcode-0} >0</option>
+       <option value="1" ${mcode-1} >1</option>
+       <option value="2" ${mcode-2} >2</option>
+       <option value="3" ${mcode-3} >3</option>
+       <option value="4" ${mcode-4} >4</option>
+       <option value="5" ${mcode-5} >5</option>
+       <option value="6" ${mcode-6} >6</option>
+       <option value="7" ${mcode-7} >7</option>
+       <option value="8" ${mcode-8} >8</option>
+       <option value="9" ${mcode-9} >9</option>
+       <option value="10" ${mcode-10} >10</option>
+       <option value="11" ${mcode-11} >11</option>
+       <option value="12" ${mcode-12} >12</option>
+       <option value="13" ${mcode-13} >13</option>
+       <option value="14" ${mcode-14} >14</option>
+       <option value="15" ${mcode-15} >15</option>
+       <option value="16" ${mcode-16} >16</option>
+       <option value="17" ${mcode-17} >17</option>
+       <option value="18" ${mcode-18} >18</option>
+       <option value="19" ${mcode-19} >19</option>
+       <option value="20" ${mcode-20} >20</option>
+       <option value="21" ${mcode-21} >21</option>
+       <option value="22" ${mcode-22} >22</option>
+       <option value="23" ${mcode-23} >23</option>
+       <option value="24" ${mcode-24} >24</option>
+       </select>
+              則免年費
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="email_nopaper_flag" ${email_nopaper_flag-Y} >&nbsp;
+         E.已申辦電子帳單且無紙本帳單戶旗標 
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="miner_half_flag" ${miner_half_flag-Y} >&nbsp;
+         F.附卡免年費條件減半 
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="g_cond_flag" ${g_cond_flag-Y} >&nbsp;
+         G.優質客戶累積消費金額達
+      <input type="text" class="col_number" name="g_accumlate_amt" value="${g_accumlate_amt}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              元(含)以上 
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="h_cond_flag" ${h_cond_flag-Y} >&nbsp;
+         H.行員身份累積消費金額達
+      <input type="text" class="col_number" name="h_accumlate_amt" value="${h_accumlate_amt}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              元(含)以上 
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm6020">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktm6020_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+
+ function columnOnChange(ps1)
+  {
+   var  win_aud_type = document.forms["dataForm"]["aud_type"].value;
+   var  win_a_merchant_sel0 = document.forms["dataForm"]["a_merchant_sel"][0].checked;
+   var  win_a_mcht_group_sel0 = document.forms["dataForm"]["a_mcht_group_sel"][0].checked;
+   var  win_b_mcc_code_sel0 = document.forms["dataForm"]["b_mcc_code_sel"][0].checked;
+   var  win_b_merchant_sel0 = document.forms["dataForm"]["b_merchant_sel"][0].checked;
+   var  win_b_mcht_group_sel0 = document.forms["dataForm"]["b_mcht_group_sel"][0].checked;
+   var  win_c_mcc_code_sel0 = document.forms["dataForm"]["c_mcc_code_sel"][0].checked;
+   var  win_c_merchant_sel0 = document.forms["dataForm"]["c_merchant_sel"][0].checked;
+   var  win_c_mcht_group_sel0 = document.forms["dataForm"]["c_mcht_group_sel"][0].checked;
+
+   idCode = ps1;
+   if ( idCode == '1' )
+      {
+       if (win_a_merchant_sel0 == true)
+           {
+            document.getElementById("btnaaa1").disabled = true;
+            document.getElementById("btnaaa1").style.backgroundColor = "lightgray";
+            document.getElementById("uplaaa1").disabled = true;
+           }
+        else
+           {
+            document.getElementById("btnaaa1").disabled = false;
+            document.getElementById("btnaaa1").style.backgroundColor = "green";
+            document.getElementById("uplaaa1").disabled = false;
+           }
+      }
+
+   if ( idCode == '2' )
+      {
+       if (win_a_mcht_group_sel0 == true)
+           {
+            document.getElementById("btnaaa2").disabled = true;
+            document.getElementById("btnaaa2").style.backgroundColor = "lightgray";
+           }
+        else
+           {
+            document.getElementById("btnaaa2").disabled = false;
+            document.getElementById("btnaaa2").style.backgroundColor = "green";
+           }
+      }
+
+   if ( idCode == '3' )
+      {
+       if (win_b_mcc_code_sel0 == true)
+           {
+            document.getElementById("btnbbb1").disabled = true;
+            document.getElementById("btnbbb1").style.backgroundColor = "lightgray";
+           }
+        else
+           {
+            document.getElementById("btnbbb1").disabled = false;
+            document.getElementById("btnbbb1").style.backgroundColor = "green";
+           }
+      }
+
+   if ( idCode == '4' )
+      {
+       if (win_b_merchant_sel0 == true)
+           {
+            document.getElementById("btnbbb2").disabled = true;
+            document.getElementById("btnbbb2").style.backgroundColor = "lightgray";
+            document.getElementById("uplbbb2").disabled = true;
+           }
+        else
+           {
+            document.getElementById("btnbbb2").disabled = false;
+            document.getElementById("btnbbb2").style.backgroundColor = "green";
+            document.getElementById("uplbbb2").disabled = false;
+           }
+      }
+
+   if ( idCode == '8' )
+      {
+       if (win_b_mcht_group_sel0 == true)
+           {
+            document.getElementById("btnbbb3").disabled = true;
+            document.getElementById("btnbbb3").style.backgroundColor = "lightgray";
+           }
+        else
+           {
+            document.getElementById("btnbbb3").disabled = false;
+            document.getElementById("btnbbb3").style.backgroundColor = "green";
+           }
+      }
+
+   if ( idCode == '5' )
+      {
+       if (win_c_mcc_code_sel0 == true)
+           {
+            document.getElementById("btnccc1").disabled = true;
+            document.getElementById("btnccc1").style.backgroundColor = "lightgray";
+           }
+        else
+           {
+            document.getElementById("btnccc1").disabled = false;
+            document.getElementById("btnccc1").style.backgroundColor = "green";
+           }
+      }
+
+   if ( idCode == '6' )
+      {
+       if (win_c_merchant_sel0 == true)
+           {
+            document.getElementById("btnccc2").disabled = true;
+            document.getElementById("btnccc2").style.backgroundColor = "lightgray";
+            document.getElementById("uplccc2").disabled = true;
+           }
+        else
+           {
+            document.getElementById("btnccc2").disabled = false;
+            document.getElementById("btnccc2").style.backgroundColor = "green";
+            document.getElementById("uplccc2").disabled = false;
+           }
+      }
+
+   if ( idCode == '7' )
+      {
+       if (win_c_mcht_group_sel0 == true)
+           {
+            document.getElementById("btnccc3").disabled = true;
+            document.getElementById("btnccc3").style.backgroundColor = "lightgray";
+           }
+        else
+           {
+            document.getElementById("btnccc3").disabled = false;
+            document.getElementById("btnccc3").style.backgroundColor = "green";
+           }
+      }
+
+
+ }
+
+  $(document).ready(function()
+   {
+    var ls_a_merchant_sel = $("input[name=a_merchant_sel]:checked").val();
+    if (ls_a_merchant_sel != 0 )
+       {
+        document.getElementById("btnaaa1").disabled = false;
+        document.getElementById("btnaaa1").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnaaa1").disabled = true;
+        document.getElementById("btnaaa1").style.backgroundColor = "lightgray";
+       }
+
+    var ls_a_mcht_group_sel = $("input[name=a_mcht_group_sel]:checked").val();
+    if (ls_a_mcht_group_sel != 0 )
+       {
+        document.getElementById("btnaaa2").disabled = false;
+        document.getElementById("btnaaa2").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnaaa2").disabled = true;
+        document.getElementById("btnaaa2").style.backgroundColor = "lightgray";
+       }
+
+    var ls_b_mcc_code_sel = $("input[name=b_mcc_code_sel]:checked").val();
+    if (ls_b_mcc_code_sel != 0 )
+       {
+        document.getElementById("btnbbb1").disabled = false;
+        document.getElementById("btnbbb1").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnbbb1").disabled = true;
+        document.getElementById("btnbbb1").style.backgroundColor = "lightgray";
+       }
+
+    var ls_b_merchant_sel = $("input[name=b_merchant_sel]:checked").val();
+    if (ls_b_merchant_sel != 0 )
+       {
+        document.getElementById("btnbbb2").disabled = false;
+        document.getElementById("btnbbb2").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnbbb2").disabled = true;
+        document.getElementById("btnbbb2").style.backgroundColor = "lightgray";
+       }
+
+    var ls_b_mcht_group_sel = $("input[name=b_mcht_group_sel]:checked").val();
+    if (ls_b_mcht_group_sel != 0 )
+       {
+        document.getElementById("btnbbb3").disabled = false;
+        document.getElementById("btnbbb3").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnbbb3").disabled = true;
+        document.getElementById("btnbbb3").style.backgroundColor = "lightgray";
+       }
+
+    var ls_c_mcc_code_sel = $("input[name=c_mcc_code_sel]:checked").val();
+    if (ls_c_mcc_code_sel != 0 )
+       {
+        document.getElementById("btnccc1").disabled = false;
+        document.getElementById("btnccc1").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnccc1").disabled = true;
+        document.getElementById("btnccc1").style.backgroundColor = "lightgray";
+       }
+
+    var ls_c_merchant_sel = $("input[name=c_merchant_sel]:checked").val();
+    if (ls_c_merchant_sel != 0 )
+       {
+        document.getElementById("btnccc2").disabled = false;
+        document.getElementById("btnccc2").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnccc2").disabled = true;
+        document.getElementById("btnccc2").style.backgroundColor = "lightgray";
+       }
+
+    var ls_c_mcht_group_sel = $("input[name=c_mcht_group_sel]:checked").val();
+    if (ls_c_mcht_group_sel != 0 )
+       {
+        document.getElementById("btnccc3").disabled = false;
+        document.getElementById("btnccc3").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnccc3").disabled = true;
+        document.getElementById("btnccc3").style.backgroundColor = "lightgray";
+       }
+
+   });
+
+function upload_click(parm1,parm2)
+ {
+  document.dataForm.zz_file_name.value = "";
+
+  document.dataForm.sys_upload_type.value = parm1;
+  document.dataForm.sys_upload_alias.value = parm2;
+  var parmHtml    = "TarokoUpload";
+  var parmName    = "upload_file,zz_file_name";
+  var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+  top.packageName = "taroko.com";
+  top.javaName    = "TarokoUpload";
+  top.methodName  = "showScreen";
+  top.openWindow("",parmHtml,parmName,windowSize);
+
+  top.packageName = "mktm02";
+  top.javaName    = "Mktm6020";
+  top.requHtml    = "mktm6020_nadd";
+  top.respHtml    = "mktm6020_nadd";
+  return true;
+ }
+
+function wf_uploadAfter()
+ {
+  var ss=document.dataForm.zz_file_name.value.trim();
+  if (ss.length>0)  top.submitControl('UPLOAD2');
+ }
+
+</script>
+<!-- ******************************************************************** -->

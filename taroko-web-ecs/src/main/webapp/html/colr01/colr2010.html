@@ -1,0 +1,85 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-07-08  V1.00.01    ryan                                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>信用卡呆卡恢復動用率報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  <td nowrap >&nbsp;統計年份:
+  	  <input type="text" class="col_text" zEdit="number" name="ex_in_year" value="${ex_in_year}" maxlength="4" size="6" zRequire ="k"/>(YYYY)
+   </td>  
+   <td nowrap >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td> 
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+     <th nowrap width="5%">No&nbsp;</th>
+     <th nowrap >統計年份&nbsp;</th>
+     <th nowrap >年初呆卡戶數</br>(A)&nbsp;</th>
+     <th nowrap >年底呆卡至年底恢復</br>(B)&nbsp;</th>
+     <th nowrap >恢復動用率%</br>(C=B/A)&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${in_year}&nbsp;</td>
+	<td nowrap class="list_cc"> ${in_stop_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${in_active_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${in_percent.(999.00)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+ 	<td colspan="3"></td>
+ 	<td nowrap align="center">三年平均率 :&nbsp;</td>
+    <td nowrap align="center"> ${in_percent_average.(999.00)}&nbsp;</td>
+ </tr>
+ </table>
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ document.dataForm.ex_in_year.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

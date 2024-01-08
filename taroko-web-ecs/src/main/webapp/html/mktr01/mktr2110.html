@@ -1,0 +1,159 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-1-4  V1.00.01     馬超         新增功能: mktr2110各營業單位招攬信用卡月報表                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>各營業單位招攬信用卡月報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+      
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="6">
+            <tr>
+                <td nowrap>&nbsp;查詢年月：
+                    <input type="text" class="col_date" name="ex_acct_month" value="${ex_acct_month}"
+                           zeditType="date,yyyymm" maxlength=6 size=6 zRequire="k"/>
+                (每月6日產出前一月份資料，例如：201905月份資料，201907後才開放查詢)  
+                &nbsp;&nbsp;帳戶類別：
+                    <select size="1" name="ex_acct_type" class="col_ddlb" zRequire="k">
+                        ${dddw_acct_type}
+                    </select>
+                </td>
+                <td nowrap rowspan="2">&nbsp;  
+      		<input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" 
+            onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    	</td>
+            </tr>
+            <tr>
+                    <td nowrap colspan=8>&nbsp;分行代號:
+                        <select name="ex_branch_s" class="col_ddlb">
+                            ${dddw_branch_s}
+                        </select>&nbsp;--
+                        <select name="ex_branch_e" class="col_ddlb">
+                            ${dddw_branch_e}
+                        </select>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;行員代碼: 
+   	  				<input type="text" class="col_date" name="ex_introduce_emp_no" value="${ex_introduce_emp_no}"  MaxLength=6 size=6  />
+                    </td>
+            </tr>
+        </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+    <tr>
+        <th nowrap class="list_th" colspan="20" style="text-align: center;">新增卡數指首次發卡(非補/換/續卡)</th>
+    </tr>
+    <tr>
+        <th nowrap class="list_th" rowspan="2" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th" rowspan="2">受理行</th>
+        <th nowrap class="list_th" colspan="4">當月新增卡數</th>
+        <th nowrap class="list_th" colspan="4">當年度累積卡數</th>
+        <th nowrap class="list_th" colspan="4">近一年度累積卡數</th>
+        <th nowrap class="list_th" rowspan="2">本月消費總金額</th>
+        <th nowrap class="list_th" rowspan="2">近一年度消費總金額</th>
+    </tr>
+    <tr>
+        <th nowrap class="list_th">已開卡</th>
+        <th nowrap class="list_th">未開卡</th>
+        <th nowrap class="list_th">停卡</th>
+        <th nowrap class="list_th">合計</th>
+        <th nowrap class="list_th">已開卡</th>
+        <th nowrap class="list_th">未開卡</th>
+        <th nowrap class="list_th">停卡</th>
+        <th nowrap class="list_th">合計</th>
+        <th nowrap class="list_th">已開卡</th>
+        <th nowrap class="list_th">未開卡</th>
+        <th nowrap class="list_th">停卡</th>
+        <th nowrap class="list_th">合計</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr onclick="detailScreen('${SER_NUM}','${rowid}','${tt_branch}')" style="cursor:hand">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="rowid" value="${rowid}"/>
+            </td>
+            <td nowrap class="list_cc"> ${tt_branch}</td>
+            <td nowrap class="list_ll"> ${m_act_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${m_noact_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${m_stop_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${m_sum_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_act_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_noact_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_stop_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${y_sum_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_act_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_noact_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_stop_card_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${h_sum_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${sum_fees.(999)}</td>
+            <td nowrap class="list_rr"> ${sum_year_fees.(999)}</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+</table>
+<!-- hidden ************************************************************** -->
+    <input type="hidden" name="WPROWID" value="${wprowid}">
+    <input type="hidden" name="control_tab_name" value="${control_tab_name}">
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="data_k4" value="">
+    <input type="hidden" name="data_k5" value="">
+
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+    top.refreshButton2('0');
+    top.pageRows = "20";
+
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+
+        if (top.actionCode == "X") {
+            top.respLevel = 1;
+            top.respHtml = "mktr2110_detl";
+        }
+        return true;
+    }
+
+    function detailScreen(serNum, parm, parm2, parm3, parm4, parm5) {
+        top.respLevel = 1;
+        top.currRows = serNum;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        document.dataForm.data_k4.value = parm4;
+        document.dataForm.data_k5.value = parm5;
+        top.respHtml = "mktr2110_detl";
+        top.submitControl('S');
+        return true;
+    }
+
+</script>
+<!-- ******************************************************************** -->

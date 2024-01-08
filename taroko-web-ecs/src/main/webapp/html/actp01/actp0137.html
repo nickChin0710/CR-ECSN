@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>Payment Reversal 覆核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_apr_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_apr_flag]").filter('[value=N]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+   		<select size="1" name="ex_acct_type" class="col_ddlb" >   			
+      		${dddw_acct_type}
+   		</select>
+			<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" zEdit="alphanum,upper" >
+	 </td>
+	 <td nowrap >&nbsp;登錄人員:
+  		<input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw" >
+  	</td>
+   <td nowrap rowspan="2">&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;執行狀況:
+  		<span class="col_radio">   			 
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+      </span>
+    </td>
+    <td nowrap >&nbsp;結算幣別:
+	 	  <select size="1" name="ex_curr_code" class="col_ddlb" >
+   			<option value="">--</option>
+      		${dddw_current_code}
+   		</select>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+		 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+	    執行
+	  </th>
+	  <th nowrap >帳戶號碼&nbsp;</th>
+	  <th nowrap >姓名(公司)&nbsp;</th>
+	  <th nowrap >入帳日期&nbsp;</th>
+	  <th nowrap >繳款日期&nbsp;</th>
+	  <th nowrap >結算<br>幣別</th>
+	  <th nowrap >繳款<br>沖回金額</th>
+	  <th nowrap >繳款金額&nbsp;</th>
+	  <th nowrap >已沖回金額&nbsp;</th>
+	  <th nowrap >繳款類別&nbsp;</th>
+	  <th nowrap >調整原因碼&nbsp;</th>
+	  <th nowrap >調整備註欄&nbsp;</th>
+<!--
+	  <th nowrap >銷帳鍵值&nbsp;</th>
+	  <th nowrap >貸方科目&nbsp;</th>
+-->
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >登錄人員&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+		<span class="dsp_flag">${ok_flag}</span>
+		<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} />
+	 	 ${SER_NUM}&nbsp;
+    <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+		<input type="hidden" name="ser_num" value="${ser_num}" />		
+		<input type="hidden" name="rowid" value="${rowid}" />
+		<input type="hidden" name="mod_seqno" value="${mod_seqno}" />	
+		<input type="hidden" name="apr_flag" value="${apr_flag}">
+	 </td>
+	 <td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;
+	 		<input type="hidden" name="acct_type" value="${acct_type}">
+	 		<input type="hidden" name="acct_key" value="${acct_key}">
+	 </td>
+	 <td nowrap class="list_cc"> ${db_cname}&nbsp;
+	 		<input type="hidden" name="db_cname" value="${db_cname}">
+	 </td>
+	 <td nowrap class="list_cc"> ${acct_date.YMD}&nbsp;
+	 		<input type="hidden" name="acct_date" value="${acct_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${interest_date.YMD}&nbsp;
+	 		<input type="hidden" name="interest_date" value="${interest_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${curr_code}&nbsp;
+	 		<input type="hidden" name="curr_code" value="${curr_code}">
+	 </td>
+	 <td nowrap class="list_rr"> ${this_reversal_amt.(999.00)}&nbsp;
+	 		<input type="hidden" name="this_reversal_amt" value="${this_reversal_amt}">
+	 </td>
+	 <td nowrap class="list_rr"> ${wk_trans_amt.(999.00)}&nbsp;
+	 		<input type="hidden" name="wk_trans_amt" value="${wk_trans_amt}">
+	 </td>
+	 <td nowrap class="list_rr"> ${payment_rev_amt.(999.00)}&nbsp;
+	 		<input type="hidden" name="payment_rev_amt" value="${payment_rev_amt}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tran_type}&nbsp;
+	 		<input type="hidden" name="tran_type" value="${tran_type}">
+	 </td>
+	 <td nowrap class="list_cc"> ${adj_reason_code}&nbsp;
+	 		<input type="hidden" name="adj_reason_code" value="${adj_reason_code}">
+	 </td>
+	 <td nowrap class="list_cc"> ${adj_comment}&nbsp;
+	 		<input type="hidden" name="adj_comment" value="${adj_comment}">
+	 </td>
+<!--
+	 <td nowrap class="list_cc"> ${c_debt_key}&nbsp;
+	 		<input type="hidden" name="c_debt_key" value="${c_debt_key}">
+	 </td>
+	 <td nowrap class="list_cc"> ${cr_item}&nbsp;
+	 		<input type="hidden" name="cr_item" value="${cr_item}">
+	 </td>
+-->
+	 <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;
+	 		<input type="hidden" name="crt_date" value="${crt_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${crt_user}&nbsp;
+	 		<input type="hidden" name="crt_user" value="${crt_user}">
+	 </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+</script>

@@ -1,0 +1,102 @@
+
+<html>
+<head>
+<title>分期付款額度參數檔維護-V.2017-0504-David FU-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<!-- <body bgcolor="#FFFFFF" background="./WebData/work/0000.png" > -->
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+	   <td nowrap>&nbsp;分期付款種類:&nbsp;
+	      <input type="text" class="col_text" name="ex_installment_type" value="${ex_installment_type}"
+	         zEdit="any" maxlength=8 size=8 />
+	   </td>
+	   <td nowrap rowspan=3>&nbsp;  
+	      <input type="Button"  value="瀏覽" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+	      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+	      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+	   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">分期付款種類</th>
+    <th nowrap class="list_th">分期付款額度 </th>
+    <th nowrap class="list_th">放行超過天數</th>
+    <th nowrap class="list_th">分期付款帳齡</th>
+    <th nowrap class="list_th">鍵檔人員</th>
+    <th nowrap class="list_th">鍵檔日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${installment_type}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+    </td>
+    <td nowrap class="list_cc">&nbsp;${installment_type}</td>
+    <td nowrap class="list_rr">&nbsp;${installment_limit}</td>
+    <td nowrap class="list_rr">&nbsp;${confirm_over_day}</td>
+    <td nowrap class="list_rr">&nbsp;${inst_m_code} </td>
+    <td nowrap class="list_cc">&nbsp;${crt_user} </td>
+    <td nowrap class="list_cc">&nbsp;${crt_date.YMD} </td>
+    </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+/*  tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc'); */
+    tigra_tables('table1', 1, 0, '', '','#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20"; ///999代表不分頁
+ 
+ document.dataForm.ex_installment_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0060_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0060_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

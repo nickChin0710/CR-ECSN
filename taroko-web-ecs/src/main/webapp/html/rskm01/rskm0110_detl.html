@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>調單作業維護-detl-jh-190618</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層">&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<hr>
+
+<!--TAB Process---------------------------- -->
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')">調單維護</td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-2')">帳單資料</td>
+    </tr>
+  </table>
+</div>
+
+<div id="tab-1" class="tabcontent"> 
+<div id="dataBlock">   
+ <table id="table1" width="80%" class="sortable" border="0" >
+    <tr>
+      <td nowrap colspan="2" >&nbsp;調單流水號:
+         <span class="dsp_text">${ctrl_seqno}</span>&nbsp;
+         <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+         <span class="dsp_text">${rept_seqno}</span>
+         <input type="hidden" name="rept_seqno" value="${rept_seqno}">
+      </td>
+      <td nowrap colspan="2" >&nbsp;卡別:
+         <span class="dsp_text">${bin_type}</span>&nbsp;
+         <input type="hidden" name="bin_type" value="${bin_type}">
+         Debit卡:
+         <span class="dsp_text">${debit_flag}</span>
+         <input type="hidden" name="debit_flag" value="${debit_flag}">
+      </td>
+      <td nowrap>&nbsp;狀態碼:
+         <span class="dsp_text">${rept_status}.${#JAVA:ecsfunc.DeCodeRsk.reptStatus(rept_status)}</span>
+         <input type="hidden" name="rept_status" value="${rept_status}">
+      </td>
+    </tr>
+    <tr>
+      <td nowrap colspan="2" >&nbsp;消費卡號:
+         <span class="dsp_text">${card_no}</span>
+         <input type="hidden" name="card_no" value="${card_no}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;持卡人姓名:
+         <span class="dsp_text">${db_chi_name}</span>
+         <input type="hidden" name="db_chi_name" value="${db_chi_name}">
+      </td>
+    </tr>
+    <tr>
+      <td nowrap colspan="2" >&nbsp;調單類別:
+         <select size="1" name="rept_type" class="col_ddlb" >
+          <option value="1" ${rept_type-1} >1.影本</option>
+          <option value="2" ${rept_type-2} >2.正本</option>
+          <option value="4" ${rept_type-4} >4.微縮影片</option>
+         </select>
+      </td>
+      <td nowrap colspan="3" >&nbsp;理由碼:
+         <input type="text" class="col_text" name="db_reason_code" value="${db_reason_code}"
+            maxlength="4" size="6" zEdit="alphanum" >
+         <select size="1" name="reason_code" class="col_ddlb" >
+          ${dddw_reason_code}
+         </select>
+      </td>
+    </tr>
+    <tr>
+      <td nowrap colspan="2" >&nbsp;入帳日期:
+         <span class="dsp_text">${post_date.YMD}</span>
+         <input type="hidden" name="post_date" value="${post_date}">
+      </td>
+      <td nowrap colspan="2" >&nbsp;消費日期:
+         <span class="dsp_text">${purchase_date.YMD}</span>
+         <input type="hidden" name="purchase_date" value="${purchase_date}">
+      </td>
+      <td nowrap colspan="1" >&nbsp;微縮影NO:
+         <span class="dsp_text">${film_no}</span>
+         <input type="hidden" name="film_no" value="${film_no}">
+      </td>
+    </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;最遲到單日:
+         <span class="dsp_text">${last_return_date.YMD}</span>
+         <input type="hidden" name="last_return_date" value="${last_return_date}">
+      </td>
+      <td nowrap colspan="2" >&nbsp;實際到單日:
+         <span class="dsp_text">${recv_date.YMD}</span>
+         <input type="hidden" name="recv_date" value="${recv_date}">
+      </td>
+      <td nowrap colspan="1" >&nbsp;待傳送日期:
+         <span class="dsp_text">${send_date.YMD}</span>&nbsp;
+         <input type="hidden" name="send_date" value="${send_date}">
+         <span class="dsp_text">${send_flag}</span>
+         <input type="hidden" name="send_flag" value="${send_flag}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;退件重送註記:
+         <span class="dsp_text">${reject_mark}</span>&nbsp;
+         <input type="hidden" name="reject_mark" value="${reject_mark}">
+         <span class="dsp_text">${reject_date.YMD}</span>
+         <input type="hidden" name="reject_date" value="${reject_date}">
+      </td>
+      <td nowrap colspan="2" >&nbsp;調單結果:
+         <span class="dsp_text">${proc_result}.${#JAVA:ecsfunc.DeCodeRsk.reptProcResult(proc_result)}</span>
+         <input type="hidden" name="proc_result" value="${proc_result}">
+      </td>
+      <td nowrap colspan="1" >&nbsp;文件碼:
+         <span class="dsp_text">${ae_doc_code}</span>
+         <input type="hidden" name="ae_doc_code" value="${ae_doc_code}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;新增登錄:
+         <span class="dsp_text">${add_user}</span>&nbsp;
+         <input type="hidden" name="add_user" value="${add_user}">
+         <span class="dsp_text">${add_date.YMD}</span>
+         <input type="hidden" name="add_date" value="${add_date}">
+      </td>
+      <td nowrap colspan="3" >&nbsp;結案登錄:
+         <span class="dsp_text">${close_add_user}</span>&nbsp;
+         <input type="hidden" name="close_add_user" value="${close_add_user}">
+         <span class="dsp_text">${close_add_date.YMD}</span>
+         <input type="hidden" name="close_add_date" value="${close_add_date}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;交易帳單流水號:
+         <span class="dsp_text">${reference_no}</span>
+         <input type="hidden" name="reference_no" value="${reference_no}">
+      </td>
+       <td nowrap colspan="2" >&nbsp;原始帳單流水號:
+         <span class="dsp_text">${reference_no_ori}</span>
+         <input type="hidden" name="reference_no_ori" value="${reference_no_ori}">
+      </td>
+      <td nowrap colspan="1" >&nbsp;合約編號:
+         <span class="dsp_text">${contract_no}</span>
+         <input type="hidden" name="contract_no" value="${contract_no}">
+      </td>
+   </tr>
+</table>
+<input type="hidden" name="reference_seq" value="${reference_seq}">
+</div>
+</div>
+<!--rskp0010-->
+<div id="tab-2" class="tabcontent"> 
+<div id="queryBlock">      
+ ${#PLUGIN:htmcomm_plugin.bil_bill_data} 
+</div>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

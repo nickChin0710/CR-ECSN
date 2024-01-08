@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>停掛原因碼維護[exc_reason_code]-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;本行停掛原因碼：
+      <input type="text" class="col_text" name="ex_opp_status" value="${ex_opp_status}"
+       maxlength=2 size=5 />
+   </td>
+   <td nowrap>&nbsp;停掛類別：
+      <select name="ex_opp_type" class="col_ddlb">
+       <option value="">--</option>  
+       ${ddw_ex_opp_type}
+      </select> 
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+    <th nowrap class="list_th" > &nbsp; </th>
+    <th nowrap class="list_th" colspan="3" > 本行類別 &nbsp </th>
+    <th nowrap class="list_th" colspan="2" > NCCC &nbsp </th>
+    <th nowrap class="list_th" colspan="8" > &nbsp; </th>
+   </tr>
+   <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th" >類別&nbsp;</th>
+    <th nowrap class="list_th" >原因碼&nbsp;</th>
+    <th nowrap class="list_th" >控卡碼&nbsp;</th>
+    <th nowrap class="list_th" >類別&nbsp;</th>
+    <th nowrap class="list_th" >原因碼&nbsp;</th>
+    <th nowrap class="list_th" >FISC&nbsp;</th>
+    <th nowrap class="list_th" >JCIC&nbsp;</th>
+    <th nowrap class="list_th" >VISA&nbsp;</th>
+    <th nowrap class="list_th" >Master&nbsp;</th>
+    <th nowrap class="list_th" >JCB&nbsp;</th>
+    <th nowrap class="list_th" >說明&nbsp;</th>
+    <th nowrap class="list_th" >異動日期&nbsp;</th>
+    <th nowrap class="list_th" >異動經辦&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${opp_status}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll"> ${onus_opp_type}.${#JAVA:ecsfunc.DeCodeCcas.onusOpptype(onus_opp_type)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${opp_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${ctrl_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${ncc_opp_type}.${#JAVA:ecsfunc.DeCodeCcas.ncccOpptype(ncc_opp_type)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${neg_opp_reason}&nbsp;</td>
+   <td nowrap class="list_cc"> ${fisc_opp_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${jcic_opp_reason}&nbsp;</td>
+   <td nowrap class="list_cc"> ${vis_excep_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mst_auth_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${jcb_excp_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${opp_remark}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5160_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5160_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

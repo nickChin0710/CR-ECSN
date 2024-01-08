@@ -1,0 +1,143 @@
+<html> 
+<head>
+<title>當期自動扣繳餘額調整-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+	                <td nowrap>&nbsp;帳戶帳號：
+	                    <select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+	                    <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 zRequire ="k"/>
+											<input type="hidden" name="q_acct_type" value="${q_acct_type}" />
+											<input type="hidden" name="q_acct_key" value="${q_acct_key}" />
+	                </td>
+<!--              <td nowrap>&nbsp;暫存（即未放行）：${temp_yn}
+	                </td>
+-->
+                  <td nowrap>&nbsp;暫存(即未放行)：
+                    <span style="color:red; font-weight:bold;">&nbsp;${temp_yn}
+                      <input type="hidden" name="temp_yn" value="${temp_yn}">
+                    </span>
+                  </td>
+				</tr>
+				<tr>
+	                <td nowrap>&nbsp;雙幣幣別：
+	                    <select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+											<input type="hidden" name="q_curr_code" value="${q_curr_code}" />
+	                </td>
+					<td>&nbsp;姓名/公司名稱：${q_id_cname}
+					</td>
+				</tr>
+                <tr>
+                    <td nowrap colspan=2>
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="存檔" onClick="return top.submitControl('U')" class="btUpdate">
+						&nbsp;&nbsp;
+          				<input type="Button" name="btnDelete" ${btnDelete_disable} value="刪除" onClick="return top.submitControl('D')" class="btDelete" >
+          				&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+       <div id="dataBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+			   		<td nowrap class="td_text" width="150">帳戶現狀碼：</td>
+			   		<td nowrap class="td_data" width="100">
+			      		<span class="dsp_text"> ${q_acct_status} </span>
+			      		<input type="hidden" name="q_acct_status" value="${q_acct_status}">
+			      		<input type="hidden" name="h_acct_status" value="${h_acct_status}">
+			      	</td>
+			   		<td nowrap class="td_text" width="200">帳戶對帳單週期：</td>
+			   		<td nowrap class="td_data" width="500">
+			      		<span class="dsp_text"> ${q_stmt_cycle} </span>
+			      		<input type="hidden" name="q_stmt_cycle" value="${q_stmt_cycle}">
+			      		關帳年月:
+			      		<span class="dsp_text"> ${q_this_acct_month} </span>
+			      		<input type="hidden" name="q_this_acct_month" value="${q_this_acct_month}">
+			      		<input type="hidden" name="h_this_acct_month" value="${h_this_acct_month}">			      		
+			      		<input type="hidden" name="q_p_seqno" value="${q_p_seqno}">
+			      		<input type="hidden" name="curr_code" value="${curr_code}">
+			      	</td>
+                </tr>
+            </table>
+            <hr>
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">目前欠款總餘額：</td>
+                    <td nowrap>${dc_acct_jrnl_bal.(999.00)}</td>
+                    <td nowrap><input type="hidden" name="dc_acct_jrnl_bal" value="${dc_acct_jrnl_bal}"/></td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey">最低應繳款餘額：</td>
+                    <td nowrap>${dc_min_pay_bal.(999.00)}</td>
+                    <td nowrap><input type="hidden" id="dc_min_pay_bal" name="dc_min_pay_bal" value="${dc_min_pay_bal}"/></td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey">自動扣繳期初金額：</td>
+                    <td nowrap>${dc_autopay_beg_amt.(999.00)}</td>
+                    <td nowrap><input type="hidden" name="dc_autopay_beg_amt" value="${dc_autopay_beg_amt}"/></td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey">自動扣繳餘額：</td>
+                    <td nowrap>${dc_autopay_bal.(999.00)} >> 
+                               <input type="hidden" name="dc_autopay_bal" value="${dc_autopay_bal}"/></td>
+                    <td nowrap>
+                    	<input type="text" class="col_number" id="txt_autopay_bal" name="txt_autopay_bal" value="${txt_autopay_bal}" zEdit="dignumber" maxlength=15 size=15 />	
+											<input type="hidden" name="q_dc_autopay_bal" value="${q_dc_autopay_bal}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="actm0070">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat())
+     {return false;}
+    
+    if (top.actionCode=='U') {    	
+    	 var li_dc_min_pay_bal = Number($("#dc_min_pay_bal").val());
+    	 var li_txt_autopay_bal = Number($("#txt_autopay_bal").val());
+    	 
+    	 
+    	 if(li_dc_min_pay_bal>li_txt_autopay_bal){
+    	 		if(confirm("自動扣繳餘額小於本期最低應繳款餘額("+li_dc_min_pay_bal+"),是否繼續")==false){
+    	 			return false;
+    	 		}	
+    	 }
+    	 
+    	 
+    }
+    
+    return true;
+}
+
+</script>

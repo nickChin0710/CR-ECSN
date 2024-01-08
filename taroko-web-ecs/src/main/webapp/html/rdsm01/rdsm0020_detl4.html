@@ -1,0 +1,358 @@
+<html>
+<head>
+<title>線上持卡人信用額度調整-Update</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>  
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="update()" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+   <td nowrap >&nbsp;異動日期:
+      <span class="dsp_text">${rd_moddate.YMD}&nbsp;</span>
+      <input type="hidden" name="rd_moddate" value="${rd_moddate}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;登錄序號:
+      <span class="dsp_text">${rd_seqno}&nbsp;</span>
+      <input type="hidden" name="rd_seqno" value="${rd_seqno}">
+   </td>   
+ </tr>
+ <tr>
+<!--    <td nowrap >&nbsp;卡號:
+      <span class="dsp_text">${card_no}&nbsp;</span>
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td> -->
+   <input type="hidden" name="card_no" value="${card_no}">
+   <td nowrap colspan="3" >&nbsp;身分證號:
+      <span class="dsp_text">${rd_carmanid}&nbsp;</span>
+      <input type="hidden" name="rd_carmanid" value="${rd_carmanid}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;申請卡號:
+      <span class="dsp_text">${appl_card_no}&nbsp;</span>
+      <input type="hidden" name="appl_card_no" value="${appl_card_no}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;團體代號:
+      <span class="dsp_text">${group_code}.${group_name}&nbsp;</span>
+      <input type="hidden" name="group_code" value="${group_code}">
+      <input type="hidden" name="group_name" value="${group_name}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;救援類別:
+      <select   size="1"  name="rd_type" class="col_ddlb">         
+         <option value="F" ${rd_type-F} >&nbsp;F.免費 &nbsp;</option>
+         <!-- 20200113 移除 Ru -->
+         <!--<option value="E" ${rd_type-E} >&nbsp;E.自費 &nbsp;</option>-->         
+      </select>
+   </td>
+   <td nowrap colspan="2" >&nbsp;道路救援有效期限:
+      <input type="text" class="col_date" name="rd_validdate" value="${rd_validdate}" maxlength="6" size="8" zEdit="date,yyyymm">
+	</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;目前狀態:
+      <span class="dsp_text">${rm_status}.${tt_rm_status}&nbsp;</span>
+      <input type="hidden" name="rm_status" value="${rm_status}">
+      <input type="hidden" name="tt_rm_status" value="${tt_rm_status}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;異動狀態:
+      <select   size="1"  name="rd_status" id="rd_status" class="col_ddlb">         
+         <option value="1" ${rd_status-1} >&nbsp;1.新增車號 &nbsp;</option>
+         <option value="2" ${rd_status-2} >&nbsp;2.變更車號 &nbsp;</option>         
+         <option value="3" ${rd_status-3} >&nbsp;3.取消車號 &nbsp;</option>
+         <option value="0" ${rd_status-0} >&nbsp;0.停用 &nbsp;</option>         
+      </select>
+      &nbsp;
+      <span class="col_key"> (取消車號, 不會變更 [狀態] )</span>      
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;車號:
+      <span class="dsp_text">${rd_carno}&nbsp;</span>
+      <input type="hidden" name="rd_carno" value="${rd_carno}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;新車號:
+      <input type="text" class="col_any" name="rd_newcarno" value="${rd_newcarno}" maxlength="7" size="9" zEdit="any" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;車主姓名:
+      <input type="text" class="col_any" name="rd_carmanname" value="${rd_carmanname}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap colspan="2">&nbsp;優惠別:
+      <input type="text" readonly class="dsp_text" name="rds_pcard" value="${rds_pcard}" size="3" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;停用日期:
+      <input type="text" class="col_date" name="rd_stopdate" value="${rd_stopdate}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'rd_stopdate'});
+	      </script>
+	</td>
+	<td nowrap colspan="2" >&nbsp;停用原因:
+	   <select   size="1"  name="rd_stoprsn" id="rd_stoprsn" class="col_ddlb">       
+	   		 <option value=""></option>  
+         <option value="1" ${rd_stoprsn-1} >&nbsp;1.到期不續購 &nbsp;</option>
+         <option value="2" ${rd_stoprsn-2} >&nbsp;2.消費不足暫停服務 &nbsp;</option>         
+         <option value="3" ${rd_stoprsn-3} >&nbsp;3.卡片已為無效卡 &nbsp;</option>
+         <option value="4" ${rd_stoprsn-4} >&nbsp;4.卡友來電要求停用 &nbsp;</option>         
+         <option value="5" ${rd_stoprsn-5} >&nbsp;5.金卡提升為白金卡 &nbsp;</option>         
+         <option value="6" ${rd_stoprsn-6} >&nbsp;6.未達年度續用標準 &nbsp;</option>         
+         <option value="7" ${rd_stoprsn-7} >&nbsp;7.無車號且非自動登錄卡 &nbsp;</option>
+         <option value="8" ${rd_stoprsn-8} >&nbsp;8.更換卡號(停用此卡) &nbsp;</option>         
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;上次收費金額:
+      <span class="dsp_text">${rm_payamt.(999)}&nbsp;</span>
+      <input type="hidden" name="rm_payamt" value="${rm_payamt}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;此次收費金額:
+      <input type="text" class="col_number" name="rd_payamt" value="${rd_payamt}" maxlength="5" size="7" zEdit="number" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;上次請款日期:
+      <span class="dsp_text">${rm_paydate.YMD}&nbsp;</span>
+      <input type="hidden" name="rm_paydate" value="${rm_paydate}">
+   </td>
+   <td nowrap colspan="2" >&nbsp;此次請款日期:
+      <span class="dsp_text">${rd_paydate.YMD}&nbsp;</span>
+      <input type="hidden" name="rd_paydate" value="${rd_paydate}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;未繳最低應繳金額:
+      <span class="dsp_text">${outstanding_yn}&nbsp;</span>
+      <input type="hidden" name="outstanding_yn" value="${outstanding_yn}">
+      <span>(註:Y:卡友不可享有此項服務)</span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;登錄者:
+      <span class="dsp_text">${crt_user}&nbsp;</span>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+   <td nowrap >&nbsp;登錄日期:
+      <span class="dsp_text">${crt_date.YMD}&nbsp;</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+   </td>
+   <td nowrap >&nbsp;覆核日期:
+      <span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+   </td>
+  </tr>  
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;免費檢核專案代號:
+      <span class="dsp_text">${proj_no}&nbsp;</span>
+      <input type="hidden" name="proj_no" value="${proj_no}">
+   </td>
+   <td nowrap >&nbsp;卡友適用條件:
+      <span class="dsp_text">${cardholder_type}&nbsp;</span>
+      <input type="hidden" name="cardholder_type" value="${cardholder_type}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;累計消費金額:
+      <span class="dsp_text">${purch_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="purch_amt" value="${purch_amt}">
+   </td>
+   <td nowrap >&nbsp;累計消費筆數:
+      <span class="dsp_text">${purch_cnt.(999)}&nbsp;</span>
+      <input type="hidden" name="purch_cnt" value="${purch_cnt}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;去年累計消費金額:
+      <span class="dsp_text">${purch_amt_lyy.(999)}&nbsp;</span>
+      <input type="hidden" name="purch_amt_lyy" value="${purch_amt_lyy}">
+   </td>
+   <td nowrap>&nbsp;未繳最低應繳金額不適用:
+      <span class="dsp_text">${outstanding_cond}&nbsp;</span>
+      <input type="hidden" name="outstanding_cond" value="${outstanding_cond}">
+   </td>
+  </tr>      
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="rm_mod_seqno" value="${rm_mod_seqno}">
+<input type="hidden" name="rm_rowid" value="${rm_rowid}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+<input type="hidden" name="conf_flag1" value="${conf_flag1}">
+<input type="hidden" name="conf_flag2" value="${conf_flag2}">
+<input type="hidden" name="conf_flag3" value="${conf_flag3}">
+<input type="hidden" name="conf_flag4" value="${conf_flag4}">
+<input type="hidden" name="conf_flag5" value="${conf_flag5}">
+<input type="hidden" name="conf_flag6" value="${conf_flag6}">
+<input type="hidden" name="conf_mesg" value="${conf_mesg}">
+<input type="hidden" name="conf_type" value="${conf_type}">
+<input type="hidden" name="rd_htelno1" value="${rd_htelno1}">
+<input type="hidden" name="rd_htelno2" value="${rd_htelno2}">
+<input type="hidden" name="rd_htelno3" value="${rd_htelno3}">
+<input type="hidden" name="rd_otelno1" value="${rd_otelno1}">
+<input type="hidden" name="rd_otelno2" value="${rd_otelno2}">
+<input type="hidden" name="rd_otelno3" value="${rd_otelno3}">
+<input type="hidden" name="cellar_phone" value="${cellar_phone}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ if (1==2 ${conf_on}) { 
+   var mesg  = document.dataForm.conf_mesg.value;
+   var conf_type  = document.dataForm.conf_type.value;
+   if(confirm(mesg) == true){
+   		if(conf_type == '1'){
+   			document.dataForm.conf_flag1.value="Y";
+   			top.submitControl('U');
+   		}	else if(conf_type == '2'){
+   			document.dataForm.conf_flag2.value="Y";
+   			top.submitControl('U');
+   		}	else if(conf_type == '3'){
+   			document.dataForm.conf_flag3.value="Y";
+   			top.submitControl('U');
+   		}	else if(conf_type == '4'){
+   			document.dataForm.conf_flag4.value="N";   			
+   		}	else if(conf_type == '5'){
+   			document.dataForm.conf_flag5.value="Y";   
+   			top.submitControl('U');			
+   		}	else if(conf_type == '6'){
+   			document.dataForm.conf_flag6.value="Y";   	
+   			top.submitControl('U');		
+   		}
+   		
+   }	else	{
+   		if(conf_type == '1'){
+   			document.dataForm.conf_flag1.value="N";
+   		}	else if(conf_type == '2'){
+   			document.dataForm.conf_flag2.value="N";
+   		}	else if(conf_type == '3'){
+   			document.dataForm.conf_flag3.value="N";
+   		}	else if(conf_type == '4'){
+   			document.dataForm.conf_flag4.value="Y";
+   			top.submitControl('U');	
+   		}	else if(conf_type == '5'){
+   			document.dataForm.conf_flag5.value="N";
+   		}	else if(conf_type == '6'){
+   			document.dataForm.conf_flag6.value="N";
+   		}
+   }      
+ } 
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ function update() {
+     //判斷停用原因及異動狀態
+     var rdStoprsn = document.getElementById("rd_stoprsn");
+     var rdStatus = document.getElementById("rd_status");  
+
+     if (rdStoprsn.value == "8" && rdStatus.value != "0") {
+      alert("異動狀態未改成0停用，不可存檔");
+      return false;
+     }
+
+     if (rd_status.value == "0") {
+      
+      if (rdStoprsn.value.trim().length == 0) {
+        alert("車輛停用,需要選取[停用原因]");
+        return false;
+      }
+
+      if (rdStoprsn.value != "8") {
+        var isConfirm = confirm("車輛停用,確定要存檔");
+        if (isConfirm == false) {return false;};
+      }
+
+     }
+
+     //判斷租賃車
+     var carno = document.getElementsByName("rd_newcarno")[0].value;
+     var length = carno.length;
+     var isRental = "N";
+     if (length==6 && (carno[0]==carno[1] || carno[length-1]==carno[length-2])) {
+         isRental = "Y";
+     } else if (length==7 && (carno[0]=="R" || carno[0]=="r")) {
+         isRental = "Y";
+     } else {
+         isRental = "N";
+     }
+     
+     if (isRental == "Y") {
+         var r = confirm("車號是租賃車號，確定存檔!!");
+         if (r) {
+             //document.getElementsByName("rds_pcard")[0].value = "L";
+             top.submitControl('U');
+         }
+     } else {
+         //document.getElementsByName("rds_pcard")[0].value = "";
+         top.submitControl('U');
+     }
+ }
+
+</script>

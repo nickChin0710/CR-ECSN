@@ -1,0 +1,263 @@
+<html>
+<head>
+<title>程式子系統權限維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm"  method="post" action="">
+
+<div id="dataBlock">
+	${#PLUGIN:htmcomm_plugin.apr_user}
+</div>
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+   <td nowrap >&nbsp;使用者層級:
+      <select size="1" name="ex_user_level" class="col_ddlb" zRequire="C">
+         ${dddw_user_level}
+      </select>
+   </td>
+   <td nowrap >&nbsp;
+   	<input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  	<input type="Button" value="存檔" onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  	<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;程式代號：
+      <input type="text" class="col_any" name="ex_winid" value="${ex_winid}" zRequire="K"
+       zEdit="any" maxlength=20 size=20 onChange="winidChange('1')"; />
+   </td>
+   <td nowrap>&nbsp;程式名稱：
+		<label class="dsp_text" id="wf_name" >${wf_name}</label>
+		<input type=hidden name="wf_name" value="${wf_name}" />
+		<input type=hidden name="wf_update" value="${wf_update}" />
+		<input type=hidden name="wf_approve" value="${wf_approve}" />
+		<input type=hidden name="wf_print" value="${wf_print}" />
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+<table id="table1" width="60%" border="0" cellspacing="1" cellpadding="4">
+  <tr>
+    <!-- <th nowrap class="list_th">序號 </th> -->
+    <th nowrap class="list_th">執行 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >
+	 </th>
+    <th nowrap class="list_th">子系統 </th>
+    <th nowrap class="list_th">使用者層級 </th>
+    <th nowrap class="list_th">查詢
+	 <input type="checkbox" name="ex_selectQuery" value="Y" onChange="selectQuery();" >
+	 </th>
+    <th nowrap class="list_th">維護
+	 <input type="checkbox" name="ex_selectUpdate" value="Y" onChange="selectUpdate();" >
+	 </th>
+    <th nowrap class="list_th">覆核
+	 <input type="checkbox" name="ex_selectApprove" value="Y" onChange="selectApprove();" >
+	 </th>
+    <th nowrap class="list_th">列印
+	 <input type="checkbox" name="ex_selectPrint" value="Y" onChange="selectPrint();" >
+	 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+    	<span class="col_key">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}" ${opt_C} />
+			${SER_NUM}&nbsp;
+			<input type=hidden name="ser_num" value="${ser_num}" />    
+    </td>
+    <td nowrap class="list_ll"> ${group_id}_${group_name}
+      <input type=hidden name="group_id" value="${group_id}" />
+      <input type=hidden name="group_name" value="${group_name}" />
+    </td>
+    <td nowrap class="list_cc"> ${user_level}.${tt_user_level}
+      <input type=hidden name="user_level" value="${user_level}" />
+      <input type=hidden name="tt_user_level" value="${tt_user_level}" />
+    </td>
+    <td nowrap class="list_td">
+			<input type="checkbox" name="aut_query" value="${ser_num}" ${wk_aut_query} />
+    </td>
+    <td nowrap class="list_td">
+			<span style="display:${disp_update}">    
+			<input type="checkbox" name="aut_update" value="${ser_num}" ${wk_aut_update} />
+			<input type="hidden" name="disp_update" value="${disp_update}" >
+		</span>
+    </td>
+    <td nowrap class="list_td">    
+			<span style="display:${disp_approve}">    
+			<input type="checkbox" name="aut_approve" value="${ser_num}" ${wk_aut_approve} />
+			<input type="hidden" name="disp_approve" value="${disp_approve}" >
+		</span>
+    </td>
+    <td nowrap class="list_td">
+			<span style="display:${disp_print}">    
+			<input type="checkbox" name="aut_print" value="${ser_num}" ${wk_aut_print} />
+			<input type="hidden" name="disp_print" value="${disp_print}">
+		</span>
+    </td>
+  </tr>  
+  <!-- END DYNAMIC : DETAIL -->
+  </tr>
+ </table>
+
+<input type="hidden" name="mod_pgm" value="secm0032">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="data">
+
+</form>
+</body>
+</html>
+
+</form>
+</body>
+</html>
+
+
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ 
+ top.refreshButton2('0');
+ top.pageRows="9999";  
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+
+ function winidChange(ps1)
+ {
+	var  win_id =document.forms["dataForm"]["ex_winid"].value;
+//	alert("--winid="+win_id);
+	
+	if ( win_id === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode === '1' ) { 
+		//clearListObj(document.getElementById("card_no"));
+		top.methodName = "wf_ajax_winid";
+		//listObjName ="card_no";
+   }
+
+	resetJSON();
+	addJSON("ax_winid",win_id);
+	processAJAX();
+ }
+  
+/*--
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+--*/  
+ function ajaxResponse()
+ {
+	top.respHtml ="secm0032";
+   top.requHtml ="secm0032";
+
+/*--	
+ 	var len = 0;
+	var listObj = document.getElementById(listObjName);
+	len = getJSONlength("OPTION_TEXT");
+--*/
+	if  ( idCode === '1' ) {
+		document.getElementById("wf_name").innerHTML =getJSONvalue("wf_name",0);
+		//document.forms["dataForm"]["wf_name"].value =getJSONvalue("wf_name",0);
+	}
+
+	if ( idCode === '1' )
+	{ return false; }
+ }   
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+   
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" && aElements[i].name == "opt") {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+  function selectUpdate() {
+	 var opt_select =document.dataForm.ex_selectUpdate.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+   
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" && aElements[i].name == "aut_update") {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+  function selectApprove() {
+	 var opt_select =document.dataForm.ex_selectApprove.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+   
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" && aElements[i].name == "aut_approve") {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+  function selectPrint() {
+	 var opt_select =document.dataForm.ex_selectPrint.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+   
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" && aElements[i].name == "aut_print") {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+   function selectQuery() {
+	 var opt_select =document.dataForm.ex_selectQuery.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+   
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" && aElements[i].name == "aut_query") {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+
+</script>

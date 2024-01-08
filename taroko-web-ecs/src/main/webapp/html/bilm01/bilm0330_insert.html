@@ -1,0 +1,321 @@
+<html>
+
+<head>
+    <title>NCCC特店參數複製作業-add-108-11-29-V1.00.02-Amber-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript">
+  
+function wf_addrow() {
+    // debugger;計算畫面筆數從標題列起算
+    var ind = document.getElementById('table1').rows.length -4;
+    var rowNum = document.getElementById('table1').rows.length -1;
+    var colNum = 0;
+    var fi = 0;
+    //console.log("a:"+ind);
+    var num = '${ser_num}';
+//    if(num==''){
+//        ind=document.getElementById( 'table1' ).rows.length-3;
+//    }
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) {
+        serNo = "0" + ind;
+    } else {
+        serNo = "" + ind;
+    }
+    fi++;
+
+    var con = document.createElement('span');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var ip2 = document.createElement('input');
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild(ip2);
+
+    //mcht_no_cpy======================================
+    var sel_merchant = document.getElementById("cc_merchant").value;
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mcht_no_cpy = document.createElement('input');
+    mcht_no_cpy.setAttribute('class', 'col_text');
+    mcht_no_cpy.type = 'text';
+    mcht_no_cpy.name = 'mcht_no_cpy';
+    mcht_no_cpy.maxLength = 15;
+    mcht_no_cpy.size = 15;
+    mcht_no_cpy.value = sel_merchant;
+    myCell.appendChild(mcht_no_cpy);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td"; 
+}
+</script>
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td colspan="12">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('S3')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="匯入" onClick="return upload_click()" class="btClear" >&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td colspan="12" style="color:blue;">Source特店</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">&nbsp;特店代號:
+                        <input class="field_style" type="text" name="kk_merchant" size="15" maxlength="15" value="${kk_merchant}" zRequire="Y" >&nbsp;&nbsp;
+                        <input type="Button"   value="..." onclick="processVendorCode('kk_merchant')" class="btAdd_detl" />
+                    </td>
+                </tr>               
+                <input type="hidden" name="mcht_type" value="${mcht_type}">
+                <input type="hidden" name="seq_no" value="${seq_no}">
+            </table>
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+                <tr>
+                    <td colspan="12" style="color:red;">Destination特店</td>
+                </tr>
+                <!--List -->
+                <td nowrap colspan="12">&nbsp;特店代號:
+                    <input class="field_style" type="text" id="cc_merchant" name="cc_merchant" size="15" maxlength="15" value="${cc_merchant}" zRequire="k">&nbsp;&nbsp;
+                    <input type="Button"   value="..." onclick="processVendorCode('cc_merchant')" class="btAdd_detl" />
+                    <input type="Button"   value="新增明細" onclick="wf_addrow()" class="btAdd_detl" />                    
+                </td>
+                <tr>
+                    <th nowrap class="list_th">刪除</th>
+                    <th nowrap class="list_th">特店代號</th>
+                    <th nowrap class="list_th">失敗原因</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no">
+                        <span class="col_key">${ok_flag}</span> ${SER_NUM}
+                        <input type="checkbox" name="opt" value="${ser_num}" />
+                        <input type="hidden" name="ser_num" value="${ser_num}" />
+                        <input type="hidden" name="rowid" value="${rowid}">
+                    </td>
+                    <td nowrap class="list_ll">
+                        <input type="text" class="col_text" name="mcht_no_cpy" value="${mcht_no_cpy}" zEdit="alphanum" maxlength=15 size=17 zRequire="Y" />
+                    </td>
+                    <td nowrap class="list_ll" style="color:red"> ${err_mesg}</td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+
+            <!-- 動態 BLOCK 視窗控制 -->
+            <div id="disDiv" class="disScreen"></div>
+            <div id="popDiv" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">特店代號：</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="merchant_2" id="merchant_2">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('kk_merchant','merchant_2'); top.hideBlock('popDiv');" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- 動態 BLOCK 視窗控制 -->
+            <div id="disDiv" class="disScreen"></div>
+            <div id="popDiv2" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv2')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">特店代號：</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="merchant_3" id="merchant_3">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('cc_merchant','merchant_3'); top.hideBlock('popDiv2');" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!--List -->
+            <!-- END DYNAMIC : DETAIL -->
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0330">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="text" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" readonly />
+        <input type="hidden"  name="upload_file" value="" /> 
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+//document.dataForm.mcht_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+ /* 處理　PUPOP BLOCK */
+ function processVendorCode(type)
+  { 
+    if(type == 'kk_merchant'){
+        var vendorNo   = document.dataForm.kk_merchant.value;
+        if ( vendorNo.length < 2 )
+           { alert("請輸入至少兩碼"); return false; }
+        resetJSON();
+        autoJSON = false;
+        addJSON("kk_merchant",vendorNo);
+        top.actionCode = "AJAX";
+        top.methodName = "actionFunction";
+        addJSON("ajax_type",type);
+        processAJAX();
+        return true;
+    }
+    
+    if(type == 'cc_merchant'){
+        var vendorNo   = document.dataForm.cc_merchant.value;        
+        if ( vendorNo.length < 2 )
+           { alert("請輸入至少兩碼"); return false; }
+        resetJSON();
+        autoJSON = false;
+        addJSON("cc_merchant",vendorNo);
+        top.actionCode = "AJAX";
+        top.methodName = "actionFunction";
+        addJSON("ajax_type",type);
+        processAJAX();
+        return true;
+    }
+  }
+ 
+
+ 
+ function ajaxResponse()
+ { 
+     
+   var ajtype =  getJSONvalue("ajtype",0);
+   if(ajtype == 'kk_merchant'){
+   var vendorNo   = document.dataForm.kk_merchant.value;
+   var vendorList = document.getElementById("merchant_2");
+   
+   for( var i = vendorList.length - 1; i>=0; i--)
+      { vendorList.remove(i);  }
+      
+   var len = getJSONlength("OPTION_TEXT");
+   for ( var i=0; i<len; i++)
+       { 
+         vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT",i),getJSONvalue("OPTION_VALUE",i)));
+         if    (   vendorList.options[i].value == vendorNo && vendorNo.length > 0 )
+                       {   vendorList.options[i].selected = true;  }
+               }
+
+      top.popupBlock('popDiv');
+   }
+   
+   if(ajtype == 'cc_merchant'){
+       var vendorNo   = document.dataForm.cc_merchant.value;
+       var vendorList = document.getElementById("merchant_3");
+       
+       for( var i = vendorList.length - 1; i>=0; i--)
+          { vendorList.remove(i);  }
+          
+       var len = getJSONlength("OPTION_TEXT");
+       for ( var i=0; i<len; i++)
+           { 
+             vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT",i),getJSONvalue("OPTION_VALUE",i)));
+             if    (   vendorList.options[i].value == vendorNo && vendorNo.length > 0 )
+                           {   vendorList.options[i].selected = true;  }
+                   }
+
+          top.popupBlock('popDiv2');
+       }
+ }
+function upload_click() {
+    // var key_no = document.getElementById('ex_key').value ;
+    // if(key_no ==''){
+    //    alert("請輸入登錄批號!!");
+    //    return false;     
+    // }
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "bilm01";
+    top.javaName    = "Bilm0330";
+    //methodName  = "actionFunction";
+    top.requHtml    = "bilm0330_insert";
+    top.respHtml    = "bilm0330_insert";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ } 
+</script>

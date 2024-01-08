@@ -1,0 +1,125 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>帳戶利息、利率折扣查詢作業-jh20220415</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+    <div id="condBlock">
+        <!-- query key *************************************************************-->
+        <table width="60%" border="0" cellspacing="0" cellpadding="2">
+            <tr>
+                <td nowrap>&nbsp;身份證字號
+                    <input type="text" class="col_text"
+                           name="ex_id_no" value="${ex_id_no}"
+                           zeditType="any,upper"  maxlength=10 size=10 />
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+                    v22.0415
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- browse ************************************************************** -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+        <tr>
+            <th nowrap width="5%">No&nbsp;</th>
+            <th nowrap>帳戶類別</th>
+            <th nowrap>身分證號</th>
+            <th nowrap>異動日期</th>
+            <th nowrap>資料來源</th>
+            <th nowrap>加減指示碼</th>
+            <th nowrap>加減利率(%)</th>
+            <th nowrap>生效起月</th>
+            <th nowrap>生效迄月</th>
+            <th nowrap>期數</th>
+            <th nowrap>N期減碼利率</th>
+            <th nowrap>應繳款餘額</th>
+            <th nowrap>餘額減碼利率</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="rowid" value="${rowid}"/>
+                <input type="hidden" name="p_seqno" value="${p_seqno}"/>
+            </td>
+            <td  nowrap class="list_ll"> ${acct_type}-${comm_acct_type}</td>
+            <td  nowrap class="list_cc"> ${id_no}${comm_id_no}</td>
+            <td nowrap class="list_cc"> ${mod_date.YMD}</td>
+            <td nowrap class="list_cc"> ${from_type}</td>
+            <td nowrap class="list_cc"> ${revolve_int_sign}</td>
+            <td nowrap class="list_rr"> ${revolve_int_rate}</td>
+            <td nowrap class="list_cc"> ${revolve_rate_s_month.YMD}</td>
+            <td nowrap class="list_cc"> ${revolve_rate_e_month.YMD}</td>
+            <td nowrap class="list_cc"> ${n_cycle}</td>
+            <td nowrap class="list_rr"> ${n_sub_int_rate}</td>
+            <td nowrap class="list_rr"> ${min_pay_bal.(999)}</td>
+            <td nowrap class="list_rr"> ${bal_sub_int_rate}</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <!-- hidden ************************************************************** -->
+    <input type="hidden" name="WPROWID" value="${wprowid}">
+    <input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+    <input type="hidden" name="data_k4" value="" >
+    <input type="hidden" name="data_k5" value="" >
+
+    <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+    <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+    top.refreshButton2('0');
+
+    function validateInput()
+    {
+        if ( !top.checkFormat() )
+        { return false; }
+
+        if ( top.actionCode == "X" ) {
+            top.respLevel = 1;
+            top.respHtml = "cycq2010_detl";
+        }
+        return true;
+    }
+
+    function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+    {
+        top.respLevel = 1;
+        top.currRows  = serNum;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        document.dataForm.data_k4.value = parm4;
+        document.dataForm.data_k5.value = parm5;
+        top.respHtml  = "cycq2010_detl";
+        top.submitControl('S');
+        return true;
+    }
+
+</script>
+<!-- ******************************************************************** -->

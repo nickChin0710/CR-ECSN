@@ -1,0 +1,1680 @@
+<html>
+<head>
+<title>關帳統報表 -107-12-06-V1.00.01-Jack </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<body background="${water_mark}">
+   <div id="disDiv" class="disScreen"></div>
+<form name="dataForm" method="post" action="">
+
+ <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+ <!-- Button **************************************************************-->
+   <tr>
+      <td width="100">&nbsp;</td>
+      <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+          <input type="Button" name="btnAdd"   value="存檔" ${btnupdate_disable} onClick="return save_function()" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" ${DIS_CLEAR} >&nbsp;&nbsp;
+          <input type="Button" name="btProc1"  value="執行篩選"   ${btnupdate_disable} onClick="return call_batch('S')"  class="btProcess" ${DIS_SEL} >&nbsp;&nbsp;
+          <input type="Button" name="btProc2"  value="產生篩選檔" ${btnupdate_disable} onClick="return call_batch('G')"  class="btUpdate"  ${DIS_GEN} >&nbsp;&nbsp;
+          <input type="Button" name="btProc3"  value="下載篩選檔" ${btnupdate_disable} onClick="return top.submitControl('DL')" class="btDelete" ${DIS_GEN} >&nbsp;&nbsp;
+       </td>
+   </tr>
+  </table>
+
+ <div id="condBlock">
+
+   <table width="80%" border="0" cellspacing="0" cellpadding="3">
+     <tr>
+       <td width="20%" >名單批號:&nbsp;
+         <input type="text" class="col_any" name="ex_batch_no" value="${ex_batch_no}"  zRequire="Y" maxlength="10" size="10"  />
+         &nbsp;&nbsp;組別碼:
+             <select name="ex_batch_group" class="col_ddlb" onChange="groupChange(); groupChange2();" >
+                 <option value="A" ${ex_batch_group-A}>A&nbsp;</option>
+                 <option value="B" ${ex_batch_group-B}>B&nbsp;</option>
+                 <option value="C" ${ex_batch_group-C}>C&nbsp;</option>
+                 <option value="D" ${ex_batch_group-D}>D&nbsp;</option>
+                 <option value="E" ${ex_batch_group-E}>E&nbsp;</option>
+             </select>
+         &nbsp;&nbsp;
+       </td>
+       <td width="10%" nowrap >檔案格式:&nbsp;</td>
+       <td width="30%">
+           <input type="radio" value="T" name="file_mode" id="file_mode" ${file_mode-T} ${DEFAULT_CHK} />文字檔
+           <input type="radio" value="E" name="file_mode" id="file_mode" ${file_mode-E}  />EXCEL檔
+       </td>
+       <td width="10%" nowrap >&nbsp;連結方式:&nbsp;</td>
+       <td width="30%">
+           <input type="radio" value="U" name="merg_code" id="merg_code" ${merg_code-U} ${DEFAULT_CHK} " />聯集
+           <input type="radio" value="M" name="merg_code" id="merg_code" ${merg_code-M} />排除
+       </td>
+      </tr>
+   </table>
+
+   <table width="80%" border="0" cellspacing="0" cellpadding="3">
+     <tr>
+       <td nowrap>名單批號說明:&nbsp;
+          <input type="text" class="col_any" name="batch_desc" value="${batch_desc}" zEdit="any,canTW" zRequire="Y" maxlength="70" size="70" />
+       </td>
+     </tr>
+   </table>
+
+   <table width="80%" border="0" cellspacing="0" cellpadding="3">
+     <td nowrap >活動期間:</td>
+     <td>
+        <input type="text" class="col_date" name="active_date_s" value="${active_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+         <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'active_date_s'}); </script> ~
+        <input type="text" class="col_date" name="active_date_e" value="${active_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+         <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'active_date_e'}); </script>
+     </td>
+   </table>
+
+</div>
+
+<hr>
+
+<!-- TABS 顯示區 -->
+<div class="tab">
+ <table>
+    <tr>
+        <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')">卡片條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-2')">卡人ID條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-3')">帳戶條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-4')">帳務條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-5')">消費條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-6'); display_type_query();">多選條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-7'); display_import(); ">匯入條件</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-8')">產出格式設定</td>
+        <td class="tablinks" onclick="tabControl(event, 'tab-9')">篩選分析</td>
+    </tr>
+ </table>
+</div>
+
+<!-- 卡片條件 ================= -->
+<div id="tab-1" class="tabcontent">
+  <div id="dataBlock">
+   <table width="50%" border="0" cellspacing="0" cellpadding="4">
+
+    <tr>
+     <td  width="20%" nowrap >01.簽帳卡: </td>　
+      <td width="80%">
+        <input type="checkbox" value="V"  name="vd_card" ${vd_card-V}  onClick="bin_type_change('1');" /> VISA DEBIT 卡
+      </td>
+    </tr>
+
+    <tr>
+     <td  width="20%" nowrap >02.卡別: </td>　
+      <td width="80%">
+        <input type="checkbox" value="ALL" name="bin_type" onClick="bin_type_change('2'); all_change('C','bin_type');" /> <b>全部</b>
+        <input type="checkbox" value="V"  name="bin_type" ${bin_type-V}  onClick="bin_type_change('2');" /> VISA卡
+        <input type="checkbox" value="M"  name="bin_type" ${bin_type-M}  onClick="bin_type_change('2');" /> MAST卡
+        <input type="checkbox" value="J"  name="bin_type" ${bin_type-J}  onClick="bin_type_change('2');" /> JCB卡
+      </td>
+    </tr>
+
+    <tr>
+     <td nowrap >03.正附卡:</td>　
+     <td>
+       <input type="checkbox" value="ALL" name="sup_flag" onClick="all_change('C','sup_flag');" /> <b>全部</b>
+       <input type="checkbox" value="0" name="sup_flag" ${sup_flag-0} /> 正卡
+       <input type="checkbox" value="1" name="sup_flag" ${sup_flag-1} /> 附卡
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >04.幣別:</td>　
+     <td>
+        <input type="checkbox" value="ALL" name="curr_code" onClick="all_change('C','curr_code');" /> <b>全部</b>
+        <input type="checkbox" value="901" name="curr_code" ${curr_code-901} /> 台幣
+        <input type="checkbox" value="840" name="curr_code" ${curr_code-840} /> 美金
+        <input type="checkbox" value="392" name="curr_code" ${curr_code-392} /> 日幣
+        <input type="checkbox" value="156" name="curr_code" ${curr_code-156} /> 人民幣
+        <input type="checkbox" value="978" name="curr_code" ${curr_code-978} /> 歐元
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >05.卡片等級:</td>　
+     <td>
+        <input type="checkbox" value="ALL" name="card_note" onClick="all_change('C','card_note');" /> <b>全部</b>
+        <input type="checkbox" value="C" name="card_note" ${card_note-C} /> 普卡
+        <input type="checkbox" value="G" name="card_note" ${card_note-G} /> 金卡
+        <input type="checkbox" value="P" name="card_note" ${card_note-P} /> 白金卡
+        <input type="checkbox" value="S" name="card_note" ${card_note-S} /> 卓越卡
+        <input type="checkbox" value="I" name="card_note" ${card_note-I} /> 頂級卡
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >06.電子票證:</td>
+     <td>
+        <input type="checkbox" value="ALL" name="electronic_code" onClick="all_change('C','electronic_code');" /> <b>全部</b>
+        <input type="checkbox" value="00" name="electronic_code" ${electronic_code-00} /> 一般卡
+        <input type="checkbox" value="01" name="electronic_code" ${electronic_code-01} /> 悠遊卡
+        <input type="checkbox" value="02" name="electronic_code" ${electronic_code-02} /> 一卡通
+        <input type="checkbox" value="03" name="electronic_code" ${electronic_code-03} /> 愛金卡
+        <input type="checkbox" value="04" name="electronic_code" ${electronic_code-04} /> HAPPY GO
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >07.卡片狀態:</td>
+     <td>
+        <input type="checkbox" value="ALL" name="curr_status" onClick="all_change('C','curr_status');" /> <b>全部</b>
+        <input type="checkbox" value="0" name="curr_status" ${curr_status-0} /> 有效卡
+        <input type="checkbox" value="1" name="curr_status" ${curr_status-1} /> 停用卡
+        <input type="checkbox" value="0" name="first_apply" ${first_apply-0} /> 首次申辦
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >08.開卡狀態:</td>
+     <td>
+        <input type="checkbox" value="ALL" name="activate_flag" onClick="all_change('C','activate_flag');" /> <b>全部</b>
+        <input type="checkbox" value="1"   name="activate_flag" ${activate_flag-1} /> 未開卡
+        <input type="checkbox" value="2"   name="activate_flag" ${activate_flag-2} /> 已開卡
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >09.發卡期間:</td>　
+     <td>
+        <input type="text" class="col_date" name="issue_date_s" value="${issue_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+         <script language="JavaScript">  new tcal ({'formname': 'dataForm','controlname': 'issue_date_s'}); </script> ~
+        <input type="text" class="col_date" name="issue_date_e" value="${issue_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+         <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'issue_date_e'}); </script>
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >10.進件期間:</td>　
+     <td>
+        <input type="text" class="col_date" name="apply_no_s" value="${apply_no_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'apply_no_s'}); </script> ~
+        <input type="text" class="col_date" name="apply_no_e" value="${apply_no_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'apply_no_e'}); </script>
+     </td>
+    </tr>
+
+    <tr>
+     <td nowrap >11.TPAN&nbsp;下載日:</td>　
+     <td>
+       <input type="text" class="col_date" name="tpan_date_s" value="${tpan_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'tpan_date_s'}); </script> ~
+       <input type="text" class="col_date" name="tpan_date_e" value="${tpan_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'tpan_date_e'}); </script>&nbsp;&nbsp;
+       <input type="radio" value="0" name="tpan_dw_code" ${tpan_dw_code-0} ${DEFAULT_CHK} />首次下載
+       <input type="radio" value="1" name="tpan_dw_code" ${tpan_dw_code-1}  />最近一次下載
+     </td>
+    </tr>
+
+   <tr>
+     <td nowrap >12.JCIC&nbsp;徵審評分:</td>　
+     <td>
+        <input type="text" class="col_any" name="jcic_score_s" value="${jcic_score_s}" zEdit="number" maxlength="5" size="5" />&nbsp;~&nbsp;
+        <input type="text" class="col_any" name="jcic_score_e" value="${jcic_score_e}" zEdit="number" maxlength="5" size="5" />
+     </td>
+   </tr>
+
+   </table>
+ </div>
+</div>
+
+<!-- 卡人ID條件 ================= -->
+<div id="tab-2" class="tabcontent">
+   <div id="dataBlock">
+      <table width="50%" border="0" cellspacing="0" cellpadding="4">
+
+          <tr>
+             <td  width="20%" nowrap >01.性別: </td>　
+             <td width="80%">
+                <input type="checkbox" value="ALL" name="sex" onClick="all_change('C','sex');" /> <b>全部</b>
+                <input type="checkbox" value="1" name="sex" ${sex-1} /> 男性
+                <input type="checkbox" value="2" name="sex" ${sex-2} /> 女性
+             </td>
+          </tr>
+
+          <tr>
+             <td nowrap >02.學歷: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="education" onClick="all_change('C','education');" /> <b>全部</b>
+                <input type="checkbox" value="1" name="education" ${education-1} /> 小學
+                <input type="checkbox" value="2" name="education" ${education-2} /> 國中
+                <input type="checkbox" value="3" name="education" ${education-3} /> 高中
+                <input type="checkbox" value="4" name="education" ${education-4} /> 大學
+                <input type="checkbox" value="5" name="education" ${education-5} /> 碩士
+                <input type="checkbox" value="6" name="education" ${education-6} /> 博士
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >03.生日月分限制: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="birth_month" onClick="all_change('C','birth_month');" /> <b>全部</b>
+                <input type="checkbox" value="01" name="birth_month" ${birth_month-01} /> 01
+                <input type="checkbox" value="02" name="birth_month" ${birth_month-02} /> 02
+                <input type="checkbox" value="03" name="birth_month" ${birth_month-03} /> 03
+                <input type="checkbox" value="04" name="birth_month" ${birth_month-04} /> 04
+                <input type="checkbox" value="05" name="birth_month" ${birth_month-05} /> 05
+                <input type="checkbox" value="06" name="birth_month" ${birth_month-06} /> 06
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap ></td>
+             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" value="07" name="birth_month" ${birth_month-07} /> 07
+                <input type="checkbox" value="08" name="birth_month" ${birth_month-08} /> 08
+                <input type="checkbox" value="09" name="birth_month" ${birth_month-09} /> 09
+                <input type="checkbox" value="10" name="birth_month" ${birth_month-10} /> 10
+                <input type="checkbox" value="11" name="birth_month" ${birth_month-11} /> 11
+                <input type="checkbox" value="12" name="birth_month" ${birth_month-12} /> 12
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >04.國籍: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="nation" onClick="all_change('C','nation');" /> <b>全部</b>
+                <input type="checkbox" value="1" name="nation" ${nation-1} /> 本國
+                <input type="checkbox" value="2" name="nation" ${nation-2} /> 外國
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >05.婚姻狀態: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="marriage" onClick="all_change('C','marriage');" /> <b>全部</b>
+                <input type="checkbox" value="1" name="marriage" ${marriage-1} /> 已婚
+                <input type="checkbox" value="2" name="marriage" ${marriage-2} /> 未婚
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >06.行銷選項: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="accept" onClick="all_change('C','accept');" /> <b>全部</b>
+                <input type="checkbox" value="DM"  name="accept_dm"  ${accept_dm-DM}   /> 接受行銷(DM)
+                <input type="checkbox" value="MB"  name="accept_mb"  ${accept_mb-MB}   /> 接受月訊
+                <input type="checkbox" value="SMS" name="accept_sms" ${accept_sms-SMS} /> 接受簡訊訊息
+                <input type="checkbox" value="TEL" name="accept_tel" ${accept_tel-TEL} /> 接受電話行銷
+                <input type="checkbox" value="EN"  name="accept_en"  ${accept_en-EN}   /> 接受電子報
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >07.年齡區間:</td>　
+             <td>
+                <input type="text" class="col_any" name="age_s" value="${age_s}" zEdit="number" maxlength="3" size="3" />&nbsp;~&nbsp;
+                <input type="text" class="col_any" name="age_e" value="${age_e}" zEdit="number" maxlength="3" size="3" />
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >08.卡友選擇:</td>
+             <td>
+                <input type="checkbox" value="ALL" name="new_card" onClick="all_change('C','new_card');" /> <b>全部</b>
+                <input type="checkbox" value="N" name="new_card" ${new_card-N} /> 全新卡友
+                <input type="checkbox" value="O" name="new_card" ${new_card-O} /> 舊卡友
+             </td>
+        </tr>
+
+         <tr>
+             <td nowrap >09.核卡選項:</td>
+             <td> 近
+                <input type="text" class="col_any" name="iss_chk_year" value="${iss_chk_year}" zEdit="number" maxlength="2" size="3" />&nbsp;年已核發&nbsp;
+                <input type="text" class="col_any" name="iss_chk_cnt"  value="${iss_chk_cnt}"  zEdit="number" maxlength="2" size="3" />&nbsp;卡以上
+             </td>
+        </tr>
+
+     </table>
+   </div>
+</div>
+
+<!-- 帳戶條件================= -->
+<div id="tab-3" class="tabcontent">
+  <div id="dataBlock">
+     <table width="50%" border="0" cellspacing="0" cellpadding="4">
+
+         <tr>
+             <td nowrap >01.帳戶類別: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="acct_type" onClick="all_change('C','acct_type');" /> <b>全部</b>
+                <input type="checkbox" value="01" name="acct_type" ${acct_type-01} /> 一般卡
+                <input type="checkbox" value="03" name="acct_type" ${acct_type-03} /> 商務卡
+                <input type="checkbox" value="05" name="acct_type" ${acct_type-05} /> 商務(電子採購)
+                <input type="checkbox" value="06" name="acct_type" ${acct_type-06} /> 政府網路採購卡
+                <input type="checkbox" value="90" name="acct_type" ${acct_type-90} /> Visa金融卡
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >02.關帳週期: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="stmt_cycle" onClick="all_change('C','stmt_cycle');" /> <b>全部</b>
+           <!-- <input type="checkbox" value="03" name="stmt_cycle" ${stmt_cycle-03} /> 03
+                <input type="checkbox" value="06" name="stmt_cycle" ${stmt_cycle-06} /> 06
+                <input type="checkbox" value="09" name="stmt_cycle" ${stmt_cycle-09} /> 09
+                <input type="checkbox" value="12" name="stmt_cycle" ${stmt_cycle-12} /> 12
+                <input type="checkbox" value="15" name="stmt_cycle" ${stmt_cycle-15} /> 15
+                <input type="checkbox" value="18" name="stmt_cycle" ${stmt_cycle-18} /> 18
+                <input type="checkbox" value="21" name="stmt_cycle" ${stmt_cycle-21} /> 21
+                <input type="checkbox" value="24" name="stmt_cycle" ${stmt_cycle-24} /> 24
+                <input type="checkbox" value="27" name="stmt_cycle" ${stmt_cycle-27} /> 27
+                -->
+                <input type="checkbox" value="01"  name="stmt_cycle" ${stmt_cycle-01} /> 01
+                <input type="checkbox" value="20"  name="stmt_cycle" ${stmt_cycle-20} /> 20
+                <input type="checkbox" value="25"  name="stmt_cycle" ${stmt_cycle-25} /> 25
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >03.繳款類別: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="acno_flag" onClick="all_change('C','acno_flag');" /> <b>全部</b>
+                <input type="checkbox" value="Y" name="acno_flag" ${acno_flag-Y} /> 總繳
+                <input type="checkbox" value="3" name="acno_flag" ${acno_flag-3} /> 個繳
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >04.自動扣繳戶: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="auto_pay" onClick="all_change('C','auto_pay');" /> <b>全部</b>
+                <input type="checkbox" value="Y" name="auto_pay" ${auto_pay-Y} /> 是
+                <input type="checkbox" value="N" name="auto_pay" ${auto_pay-N} /> 否
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >05.允用循環息: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="rc_use" onClick="all_change('C','rc_use');" /> <b>全部</b>
+                <input type="checkbox" value="Y" name="rc_use" ${rc_use-Y} /> 是
+                <input type="checkbox" value="N" name="rc_use" ${rc_use-N} /> 否
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >06.COMBO卡: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="combo" onClick="all_change('C','combo');" /> <b>全部</b>
+                <input type="checkbox" value="Y" name="combo" ${combo-Y} /> 是
+                <input type="checkbox" value="N" name="combo" ${combo-N} /> 否
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >07.存款戶: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="deposit_flag" onClick="all_change('C','deposit_flag');" /> <b>全部</b>
+                <input type="checkbox" value="Y" name="deposit_flag" ${deposit_flag-Y} /> 是
+                <input type="checkbox" value="N" name="deposit_flag" ${deposit_flag-N} /> 否
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >08.授信戶: </td>　
+             <td>
+                <input type="checkbox" value="ALL" name="loan_flag" onClick="all_change('C','loan_flag');" /> <b>全部</b>
+                <input type="checkbox" value="Y" name="loan_flag" ${loan_flag-Y} /> 是
+                <input type="checkbox" value="N" name="loan_flag" ${loan_flag-N} /> 否
+             </td>
+         </tr>
+
+         <tr>
+             <td nowrap >09.循環信用額度:</td>　
+             <td>
+               <input type="text" class="col_any" name="credit_amt_s" value="${credit_amt_s}" zEdit="number" maxlength="9" size="9" />&nbsp;~&nbsp;
+               <input type="text" class="col_any" name="credit_amt_e" value="${credit_amt_e}" zEdit="number" maxlength="9" size="9" />
+            </td>
+         </tr>
+
+         <tr>
+             <td nowrap >10.信用狀況:</td>　
+             <td>&nbsp;近
+               <input type="text" class="col_any" name="rate_months" value="${rate_months}" zEdit="number" maxlength="2" size="2" />&nbsp;個月內， 繳款評等
+                <select name="rate_months_op" class="col_ddlb"  >
+                  <option value="X"  ${rate_months_op-X} >--</option>
+                  <option value="="  ${rate_months_op-=} >=</option>
+                  <option value=">=" ${rate_months_op->=}>>=</option>
+                  <option value="<=" ${rate_months_op-<=}><=</option>
+               </select>&nbsp;
+              <input type="text" class="col_any" name="pay_rate" value="${pay_rate}" zEdit="alphanum" maxlength="2" size="2" />
+            </td>
+        </tr>
+
+     </table>
+ </div>
+</div>
+
+<!-- 帳務條件================= -->
+<div id="tab-4" name="tab-4" class="tabcontent">
+  <div id="dataBlock">
+
+   <table width="50%" border="0" cellspacing="0" cellpadding="4">
+
+      <tr>
+         <td nowrap >01.&nbsp;總欠款餘額:</td>
+         <td>
+           <input type="text" class="col_any" name="ttl_amt_bal_s" value="${ttl_amt_bal_s}" zEdit="" maxlength="8" size="8" />
+           <input type="text" class="col_any" name="ttl_amt_bal_e" value="${ttl_amt_bal_e}" zEdit="" maxlength="8" size="8" />
+         </td>
+      </tr>
+
+      <tr>
+         <td nowrap >02.&nbsp;紅積點數結餘：</td>
+         <td>
+           <input type="text" class="col_any" name="net_bonus_s" value="${net_bonus_s}" zEdit="" maxlength="8" size="8" />~
+           <input type="text" class="col_any" name="net_bonus_e" value="${net_bonus_e}" zEdit="" maxlength="8" size="8" />
+         </td>
+      </tr>
+
+      <tr>
+         <td nowrap >03.&nbsp;現金回饋結餘:</td>
+         <td>
+           <input type="text" class="col_any" name="net_fund_s"  value="${net_fund_s}" zEdit="" maxlength="8" size="8" />~
+           <input type="text" class="col_any" name="net_fund_e"  value="${net_fund_e}" zEdit="" maxlength="8" size="8" />
+         </td>
+      </tr>
+
+   </table>
+
+ </div>
+</div>
+
+<!-- 消費條件================= -->
+<div id="tab-5" class="tabcontent">
+  <div id="dataBlock">
+   <table width="60%" border="0" cellspacing="0" cellpadding="4">
+
+    <tr>
+       <td nowrap width="20%" >01.&nbsp;消費區間查核:</td>
+       <td width="80%" ></td>
+    </tr>
+
+    <tr>
+       <td nowrap  >&nbsp;&nbsp;&nbsp;<input type="radio" value="N" name="purc_check" ${purc_check-N} ${DEFAULT_CHK} />&nbsp;無需查核:</td>
+       <td ></td>
+    </tr>
+
+    <tr>
+       <td nowrap >&nbsp;&nbsp;&nbsp;<input type="radio" value="Y" name="purc_check" ${purc_check-Y}  />&nbsp;交易期間:</td>&nbsp;
+       <td >
+         <input type="text" class="col_date" name="purc_date_s" value="${purc_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'purc_date_s'}); </script> ~
+        <input type="text" class="col_date" name="purc_date_e" value="${purc_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript"> new tcal ({'formname': 'dataForm','controlname': 'purc_date_e'}); </script>&nbsp;&nbsp;
+          ( 消費資料僅含最近 13 個月 )
+       </td>
+    </tr>
+
+    <tr>
+       <td nowrap >02.&nbsp;核卡消費期間：</td>&nbsp;
+       <td>
+           &nbsp;核卡後 &nbsp;<input type="text" class="col_any" name="purc_date_i" value="${purc_date_i}" maxlength="3" size="5" zEdit="number" />&nbsp; 天
+       </td>
+    </tr>
+
+    <tr>
+       <td nowrap >03.&nbsp;消費類別: </td>　
+       <td>
+          <input type="checkbox" value="ALL" name="acct_code" onClick="all_change('C','acct_code');" /> <b>全部</b>
+          <input type="checkbox" value="BL" name="acct_code" ${acct_code-BL} /> 簽帳
+          <input type="checkbox" value="ID" name="acct_code" ${acct_code-ID} /> 代收
+          <input type="checkbox" value="OT" name="acct_code" ${acct_code-OT} /> 其他應收
+          <input type="checkbox" value="CA" name="acct_code" ${acct_code-CA} /> 預借現金
+          <input type="checkbox" value="AO" name="acct_code" ${acct_code-AO} /> 餘額代償
+       </td>
+    </tr>
+
+    <tr>
+       <td nowrap >&nbsp;</td>　
+       <td>
+          <input type="checkbox" value="IT" name="acct_code"  ${acct_code-IT} /> 分期交易&nbsp;&nbsp;&nbsp;
+          <input type="radio" value="SIN" name="contract_amt" ${contract_amt-SIN} ${DEFAULT_CHK} />分期單筆
+          <input type="radio" value="TOT" name="contract_amt" ${contract_amt-TOT} />分期總額
+       </td>
+    </tr>
+
+    <tr>
+       <td nowrap >&nbsp;</td>　
+       <td>
+          <input type="checkbox" value="EASY" name="easy_tx" ${easy_tx-EASY} /> 悠遊卡加值消費
+       </td>
+    </tr>
+
+    <tr>
+       <td nowrap >04.&nbsp;消費國別: </td>　
+       <td>
+          <input type="checkbox" value="ALL" name="mcht_country" onClick="all_change('C','mcht_country');" /> <b>全部</b>
+          <input type="checkbox" value="TW" name="mcht_country" ${mcht_country-TW} /> 國內
+          <input type="checkbox" value="OV" name="mcht_country" ${mcht_country-OV} /> 國外
+       </td>
+    </tr>
+
+   <tr>
+       <td nowrap >05.&nbsp;單筆消費金額：</td>
+       <td >
+         <input type="text" class="col_date" name="single_amt_s" value="${single_amt_s}" zEdit="" maxlength="8" size="8" />~
+         <input type="text" class="col_date" name="single_amt_e" value="${single_amt_e}" zEdit="" maxlength="8" size="8" />
+       </td>
+   </tr>
+
+   <tr>
+       <td nowrap >06.&nbsp;累積消費金額：</td>
+       <td >
+         <input type="text" class="col_date" name="accu_amt_s" value="${accu_amt_s}" zEdit="" maxlength="8" size="8" />~
+         <input type="text" class="col_date" name="accu_amt_e" value="${accu_amt_e}" zEdit="" maxlength="8" size="8" />
+       </td>
+   </tr>
+
+   <tr>
+       <td nowrap >07.&nbsp;累積消費筆數：</td>
+       <td >
+         <input type="text" class="col_date" name="accu_cnt_s" value="${accu_cnt_s}" zEdit="" maxlength="8" size="8" />~
+         <input type="text" class="col_date" name="accu_cnt_e" value="${accu_cnt_e}" zEdit="" maxlength="8" size="8" />
+       </td>
+   </tr>
+
+    <tr>
+       <td nowrap >08.&nbsp;消費選項: </td>　
+       <td>
+          <input type="checkbox" value="NB" name="no_bill" ${no_bill-NB} /> 無消費 &nbsp;&nbsp; <b>[ 排除 符合以上消費條件之資料 ]</b>
+       </td>
+    </tr>
+
+  </table>
+ </div>
+</div>
+
+<!-- 多選條件================= -->
+<div id="tab-6" class="tabcontent">
+   <br>
+   <div id="dataBlock">
+   <table border="0" cellspacing="0" width="50%" style="margin-left:20px;">
+     <tr>
+        <th width="20%" nowrap>篩選類別：</th>
+        <td nowrap width="30%" >&nbsp;
+            <input type="radio"  value="A" name="ex_exclude_type" id="ex_exclude_type" ${ex_exclude_type-A} onChange="excludeChange();" />指定
+            <input type="radio"  value="E" name="ex_exclude_type" id="ex_exclude_type" ${ex_exclude_type-E} onChange="excludeChange();" />排除
+        </td>
+        <td nowrap width="30%" class="EditData" >&nbsp;
+          <select  size="1" name="typeListName" id="typeListName" onChange="optionChange('1','leftListName','rightListName');" >
+            <option value="9">--</option>
+            <option value="610">卡片種類</option>
+            <option value="620">團體代號</option>
+            <option value="630">來源代號</option>
+            <option value="640">CARD BIN</option>
+            <option value="650">郵遞區號</option>
+            <option value="660">帳戶卡人等級</option>
+            <option value="670">VIP等級</option>
+            <option value="680">違約預測評等</option>
+            <option value="690">消費地區</option>
+            <option value="710">特店類別(MCC)</option>
+            <option value="720">合庫銀行-(分行) </option>
+            <option value="730">合庫金控-(子公司)</option>
+            <option value="740">帳單科目 </option>
+            <option value="750">凍結原因</option>
+            <option value="760">特店群組</option>
+            <option value="770">刷卡模式(POS_ENTRY)</option>
+          </select>
+        </td>
+        <td nowrap width="20%" >&nbsp;
+            <input type="Button" name="btnProc" value="確定" onClick="typeConfirm(); " class="btConfirm" style="height:20pt;">
+        </td>
+     </tr>
+   </table>
+  </div>
+<br>
+
+<table cellspacing="0" width="95%" style="margin-left:20px;">
+  <tr>
+     <td nowrap width="30%" align="center"><font style="color:blue;">未選項目</font></td>
+     <td nowrap width="10%" align="center"></td>
+     <td nowrap width="30%" align="center"><font style="color:blue;">已選項目</font></td>
+     <td nowrap width="5%" align="center"><font style="color:blue;"></font></td>
+     <td nowrap width="25%" align="center"><font style="color:blue;">已選篩選類別</font></td>
+  </tr>
+  <tr>
+     <td nowrap  class="EditData" >
+        <select name="leftListName" id="leftListName" multiple="multiple"  size="30" style="width:320px; background-color: #FFFFE1;">
+        </select>
+     </td>
+     <td nowrap align="center">
+        <a href="javascript:moveSelectItem('A1','leftListName','rightListName');"><img src="images/arrow_right.png" border="0" /></a>
+        <br><br>
+        <a href="javascript:moveSelectItem('A2','rightListName','leftListName');"><img src="images/arrow_left.png" border="0" /></a>
+     </td>
+     <td nowrap class="EditData" >
+        <select name="rightListName" id="rightListName" multiple="multiple" size="30" style="width:320px; background-color: #FFFFE1;">
+        </select>
+     </td>
+     <td nowrap ></td>
+     <td nowrap valign="top" >
+         <table id="sel_type" width="100%" border="0" cellspacing="0" cellpadding="0" >
+           <tr>
+             <th nowrap  width="30%">指定排除</th>
+             <th nowrap  width="70%">篩選類別</th>
+           </tr>
+           <tr id="sel_type_row">
+             <td nowrap class="list_cc" style="" >&nbsp;</td>
+             <td nowrap class="list_ll" style="" >&nbsp;</td>
+           </tr>
+         </table>
+     </td>
+  </tr>
+  <tr>
+     <td nowrap   >
+        <a href="javascript:selectAllItem('leftListName','S');">全選</a>
+     </td>
+     <td nowrap  align="center" >
+     </td>
+     <td nowrap   >
+        <a href="javascript:selectAllItem('rightListName','S');">全選</a>
+     </td>
+  </tr>
+ </table>
+</div>
+
+<!-- 匯入條件================= -->
+
+<div id="tab-7" class="tabcontent">
+  <div id="dataBlock">
+
+  <table width="60%" border="0" cellspacing="0" >
+    <tr>
+       <td nowrap width="20%" >
+           <input type="radio" value="A" name="ex_exclude_import"  ${DEFAULT_CHK} />指定
+           <input type="radio" value="E" name="ex_exclude_import"  />排除
+       </td>
+       <td nowrap width="50%" >&nbsp;
+           <input type="text" class="dsp_text" name="zz_file_name" value="${zz_file_name}" readonly size="43" zEdit="any" />
+           <input type="hidden" name="upload_file" value="" />&nbsp;
+       </td>
+       <td width="30%">
+           <input type="Button" name="btnProc"  value="資料匯入"  class="btConfirm" onClick="return upload_click();" >&nbsp;&nbsp;
+           <input type="Button" name="btnProc"  value="刪除匯入"  class="btDelete"  onClick="process_import('ID');" >
+       </td>
+    </tr>
+  </table>
+
+  <table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td nowrap  >&nbsp;匯入選項:
+         <input type="text" class="dsp_text" name="imp_field_desc" value="" size="70" readonly />
+      </td>
+    </tr>
+  </table>
+
+  <table width="40%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td  width="8%" class="btUpdate" onClick="imp_list('S','特店代號','MCHT_NO');" >&nbsp;特店代號 </td>
+      <td  width="8%" class="btUpdate" onClick="imp_list('S','身分證字號','ID_NO');" >&nbsp;身分證字號 </td>
+      <td  width="8%" class="btUpdate" onClick="imp_list('S','卡人統一編號','BUSINESS_ID');" >&nbsp;卡人統一編號 </td>
+      <td  width="8%" class="btUpdate" onClick="imp_list('S','P_SEQNO','P_SEQNO');" >&nbsp;P_SEQNO </td>
+      <td  width="8%">
+         <input type="Button" name="btnClear" value="清除" class="btClear" style="height:25;" onClick="imp_list('C','','');" >
+      </td>
+    </tr>
+  </table>
+
+  <table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td nowrap  >&nbsp;查詢條件:
+         <input type="text" class="dsp_text" name="ex_query_data" value="${ex_query_data}" size="20" zEdit="any" />
+         <input type="Button" name="btnQuery" value="查詢匯入資料" onClick="import_query();" class="btQuery" >&nbsp;&nbsp;
+      </td>
+    </tr>
+  </table>
+
+ </div>
+ <hr>
+
+  <table id="disp_imp" width="25%" border="0" cellspacing="0" cellpadding="0" align="right" style="margin-right:250px; margin-top:10px;" >
+     <tr>
+        <th nowrap  width="30%">指定排除</th>
+        <th nowrap  width="70%">匯入類別</th>
+     </tr>
+     <tr id="disp_imp_row">
+             <td nowrap class="list_cc" style="" >&nbsp;</td>
+             <td nowrap class="list_ll" style="" >&nbsp;</td>
+     </tr>
+  </table>
+
+</div>
+
+<!-- 產出格式設定================= -->
+<div id="tab-8" class="tabcontent">
+   <br>
+   <div id="dataBlock">
+
+   <table border="0" cellspacing="0" width="50%" style="margin-left:100px;">
+     <tr>
+        <th width="20%" nowrap>格式類別：</th>
+        <td nowrap width="30%" class="EditData" >&nbsp;
+          <select  size="1" name="formatListName" id="formatListName" onChange="optionChange('3','leftListName2','rightListName2');"  >
+             <option value="9" >--</option>
+			 <option value="0" ${formatListName-0} >自訂格式&nbsp; </option>
+			 <option value="A" ${formatListName-A} >抽獎格式&nbsp;</option>
+			 <option value="B" ${formatListName-B} >計績格式&nbsp;</option>
+			 <option value="C" ${formatListName-C} >電銷格式&nbsp;</option>
+			 <option value="D" ${formatListName-D} >月訊格式&nbsp;</option>
+			 <!--     <option value="E" ${formatListName-E} >雍興格式&nbsp; </option>     -->
+			 <option value="F" ${formatListName-F} >簡訊格式&nbsp;</option>
+			 <option value="G" ${formatListName-G} >現金回饋格式&nbsp;</option>
+<!--         <option value="G" ${formatListName-G} >OCR格式 &nbsp;</option>      -->
+          </select>
+        </td>
+        <td nowrap width="10%" >&nbsp;
+            <input type="Button" name="btnProc" value="確定" onClick="optionChange('4','leftListName2','rightListName2');" class="btConfirm" style="height:20pt;">
+        </td>
+     </tr>
+   </table>
+
+  </div>
+  <br>
+  <table  cellspacing="0" width="60%" style="margin-left:20px;">
+    <tr>
+       <td nowrap width="45%" align="center"><font style="color:blue;">未選擇</font></td>
+       <td nowrap width="10%" align="center"></td>
+       <td nowrap width="45%" align="center"><font style="color:blue;">已選擇</font></td>
+    </tr>
+    <tr>
+       <td nowrap  class="EditData" >
+          <select name="leftListName2" id="leftListName2" multiple="multiple"  size="30" style="width:320px; background-color: #FFFFE1;">
+          </select>
+       </td>
+       <td nowrap align="center">
+          <a href="javascript:moveSelectItem('B1','leftListName2','rightListName2');"><img src="images/arrow_right.png" border="0" /></a>
+          <br><br>
+          <a href="javascript:moveSelectItem('B2','rightListName2','leftListName2');"><img src="images/arrow_left.png" border="0" /></a>
+       </td>
+       <td nowrap class="EditData" >
+          <select name="rightListName2" id="rightListName2" multiple="multiple" size="30" style="width:320px; background-color: #FFFFE1;">
+          </select>
+       </td>
+    </tr>
+    <tr>
+      <td nowrap >
+         <a href="javascript:selectAllItem('leftListName2','S');">全選</a>
+      </td>
+      <td nowrap  align="center" >
+      </td>
+      <td nowrap >
+         <a href="javascript:selectAllItem('rightListName2','S');">全選</a>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+<!-- 篩選分析================= -->
+<div id="tab-9" class="tabcontent">
+   <br>
+   <table id="stats" width="40%" border="0" cellspacing="0" cellpadding="4">
+    <input type="Button" name="btnQuery" value="篩選分析資料" onClick="stats_query();" class="btQuery" >&nbsp;&nbsp;
+    <tr>
+       <th nowrap  width="10%" >No&nbsp;</th>
+       <th nowrap  width="30%">篩選條件</th>
+       <th nowrap  width="30%">篩選筆數</th>
+       <th nowrap  width="30%">通過筆數</th>
+    </tr>
+    <tr id="stats_row" style="cursor:hand">
+       <td nowrap class="list_no"  >&nbsp;</td>
+       <td nowrap class="list_ll" style="background: linear-gradient(#C0D8C0, white)" >&nbsp;</td>
+       <td nowrap class="list_rr" style="" >&nbsp;</td>
+       <td nowrap class="list_rr" style="" >&nbsp;</td>
+    </tr>
+   </table>
+</div>
+
+<div id="popDiv" class="popup1" style="top:200px; left:100px; width:300px; height:700px; overflow-y:auto; margin-top:-1px; " >
+  <table id="popup2" width=300px;  >
+     <tr style="position:fixed;top:200px;" ><td nowrap colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+     <tr ><td nowrap colspan="2">&nbsp;</td></tr>
+     <tr>
+       <th nowrap >欄位說明&nbsp;</th>
+       <th nowrap >匯入資料&nbsp;</th>
+     </tr>
+     <tr  id="ajax_row" >
+       <td nowrap class="list_ll" > ${import_desc}&nbsp;</td>
+       <td nowrap class="list_ll" > ${import_data}&nbsp;</td>
+     </tr>
+  </table>
+</div>
+
+ <input type="hidden" name="HIDE"      value="${HIDE_DATA}">
+ <input type="hidden" name="imp_field_code" value="" >
+ <input type="hidden" name="data_k1"   value="" >
+ <input type="hidden" name="data_k2"   value="" >
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript"> tigra_tables('stats'); </script>
+<script language="javascript">
+
+ var  jdCode="",exclude_import="";
+ var  list_desc="",list_field="";
+ var  list_pnt=0;
+ var  init_flag ="Y";
+ top.refreshButton2('1');
+
+ all_display();
+ groupChange();
+
+ function validateInput() {
+
+   if ( !top.checkFormat() )
+      {  return false;  }
+      
+   return true;
+ }
+
+ function save_function()
+  {
+    var bill_check = document.dataForm.purc_check;
+
+    if (  bill_check[1].checked == true )
+       {
+         if ( document.dataForm.purc_date_s.value.length == 0 || document.dataForm.purc_date_e.value.length == 0 )
+            { alert(' 請輸入 交易期間啟迄'); return false; }
+
+         if ( document.dataForm.purc_date_i.value.length > 0 && document.dataForm.issue_date_s.value.length == 0 )
+            { alert(' 請輸入 發卡期間啟迄'); return false; }
+
+         if ( document.dataForm.single_amt_s.value.length == 0 &&
+              document.dataForm.accu_amt_s.value.length == 0   &&
+              document.dataForm.accu_cnt_s.value.length == 0   &&
+              document.dataForm.no_bill.checked == false  )
+            { alert('請輸入 單筆消費金額 ,累積消費金額 ,累積消費筆數 其中一項'); return false; }
+       }
+
+    all_display();
+    top.respLevel = 2;
+    top.respHtml  = "mktm0110_nadd";
+    top.submitControl('A');
+    return true;
+  }
+
+ // 全部選項顯示處理
+ function all_display()
+  { 
+    var allName = "",elemName ="";
+    var elment = document.dataForm.getElementsByTagName("input");
+    var k =0;
+
+    for ( var j = 0; j < elment.length; j++)  {
+
+          if ( elment[j].type != "checkbox" )
+             { continue; }
+
+          if ( elment[j].value == "ALL"  ) {
+               allName = elment[j].name; 
+               elment[j].checked = true;
+               k = j;
+               continue;
+             }
+
+          elemName = elment[j].name;
+          if ( elemName.length >= 6 && elemName.substring(0,6) == "accept" ) 
+          	 { elemName = elemName.substring(0,6); }
+
+          if ( elemName == allName &&  elment[j].checked == true )
+             { elment[k].checked = false; }
+
+        }
+    all_change("D","");
+    return;
+  }
+
+ // 全部選項變更處理
+ function all_change(chgCode,chkName)
+  {
+    var allFlag = "",allName="",elemName="";
+    var elment = document.dataForm.getElementsByTagName("input");
+
+    for ( var i = 0; i < elment.length; i++)  {
+          if ( elment[i].type != "checkbox" )
+             { continue; }
+
+          elemName = elment[i].name;
+          if ( elemName.length >= 6 && elemName.substring(0,6) == "accept" ) 
+          	 { elemName = elemName.substring(0,6); }
+
+          if ( chgCode == "C" && elemName != chkName )
+             { continue; }
+
+          if ( elment[i].value == "ALL" && elment[i].checked == true )
+             { allFlag = "Y";  allName = elment[i].name;  continue;  }
+
+
+          if ( elemName != allName )
+             { allFlag = ""; }
+
+          if ( allFlag == "Y"  ) {
+               elment[i].checked  = false; 
+               elment[i].disabled = true; 
+             }
+          else
+             { elment[i].disabled = false; }
+        }
+    return;
+  }
+
+ function selectAllItem(listName,actFlag)
+  {
+    selectListItem  = document.getElementById(listName);
+    for( i=0; i<selectListItem.length; i++ )
+       {
+         if ( actFlag == 'S' )
+            { selectListItem.options[i].selected = true;  }
+         else
+            { selectListItem.options[i].selected = false; }
+       }
+    return;
+  }
+
+ function groupChange()
+  {
+    var radios = document.dataForm.merg_code;
+    var iLen=radios.length;
+    if ( document.dataForm.ex_batch_group.value == 'A' )
+       {
+         for ( var i=0;  i<iLen; i++)
+             {  radios[i].disabled = true; radios[i].checked = false; }
+       }
+    else
+       {
+         for ( var i=0;  i<iLen; i++)
+             { radios[i].disabled = false;  }
+       }
+    return;
+  }
+
+ function groupChange2()
+  {
+    document.dataForm.data_k1.value = document.dataForm.ex_batch_no.value;
+    document.dataForm.data_k2.value = document.dataForm.ex_batch_group.value;
+    top.submitControl('S');
+    return;
+  }
+
+  //篩選類別變更
+ function excludeChange()
+  {
+    optionChange('1','leftListName','rightListName');
+    return;
+  }
+
+ // 多選條件變更,確定  ,產出格式變更,確定
+ function optionChange(parmCode,leftName,rightName)
+  {
+    var check_batch = document.dataForm.ex_batch_no.value;
+    if ( check_batch.length == 0 )
+       { alert('請輸入批號'); return false; }
+
+   if ( document.dataForm.ex_batch_group.value != 'A' && parmCode == '4' )
+      { alert('組別碼 非 A '); return false; }
+
+    var  leftListItem  = document.getElementById(leftName);
+    var  rightListItem = document.getElementById(rightName);
+    var  fi_code = "";
+
+    jdCode = parmCode;
+
+    // 多選條件變更  ,產出格式變更
+    if ( jdCode == '1' || jdCode == '3' ) {
+         clearListItem(leftListItem);
+         clearListItem(rightListItem);
+    }
+
+    // 產出格式 (確定)
+    if ( jdCode == '4' && document.dataForm.formatListName.value == '9' )
+       { alert('請選擇格式類別'); return false; }
+
+    resetJSON();
+
+    // 多選條件變更  ,多選條件確定
+    if ( jdCode == '1' || jdCode == '2' ) {
+         fi_code = document.dataForm.typeListName.value;
+         addJSON("EX_FIELD_CODE",fi_code);
+       }
+    else // 產出格式變更  ,產出格式確定
+    if ( jdCode == '3' || jdCode == '4' ) {
+         fi_code = document.dataForm.formatListName.value;
+         addJSON("FORMAT_TYPE",fi_code);
+       }
+    else
+       { return false; }
+
+    if ( fi_code == "9" )
+       { return false; }
+
+         // 多選條件確定, 產出格式確定
+    if ( jdCode == '2' || jdCode == '4' ) {
+         for( i=0; i<rightListItem.length; i++) {
+              var rightValue = rightListItem.options[i].value;
+              addJSON("OPTION_VALUE_R",rightValue);
+          }
+       }
+
+    var exclude_val="";
+    for ( var i=0; i < document.dataForm.ex_exclude_type.length; i++ )
+        {
+          if ( document.dataForm.ex_exclude_type[i].checked == true )
+             { exclude_val = document.dataForm.ex_exclude_type[i].value; }
+        }
+
+    var file_mode="";
+    for ( var i=0; i < document.dataForm.file_mode.length; i++ )
+        {
+          if ( document.dataForm.file_mode[i].checked == true )
+             { file_mode = document.dataForm.file_mode[i].value; }
+        }
+
+    var merg_code="";
+    for ( var i=0; i < document.dataForm.merg_code.length; i++ )
+        {
+          if ( document.dataForm.merg_code[i].checked == true )
+             { merg_code = document.dataForm.merg_code[i].value; }
+        }
+
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE", jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    addJSON("EX_BATCH_GROUP",document.dataForm.ex_batch_group.value);
+    addJSON("ACTIVE_DATE_S",document.dataForm.active_date_s.value);
+    addJSON("ACTIVE_DATE_E",document.dataForm.active_date_e.value);
+    addJSON("EX_EXCLUDE_CODE",exclude_val);
+    addJSON("BATCH_DESC",document.dataForm.batch_desc.value);
+    addJSON("FILE_MODE",file_mode);
+    addJSON("MERG_CODE",merg_code);
+
+    processAJAX();
+    return false;
+  }
+
+ function bin_type_change(opFlag)
+  {
+   if ( opFlag == '1' && document.dataForm.vd_card.checked == true )
+      { // VISA DEBIT 無帳務選項
+        document.dataForm.bin_type[0].checked = false;
+        document.dataForm.bin_type[1].checked = false;
+        document.dataForm.bin_type[2].checked = false;
+        document.dataForm.bin_type[3].checked = false;
+        document.dataForm.ttl_amt_bal_s.disabled = true;
+        document.dataForm.ttl_amt_bal_e.disabled = true;
+        document.dataForm.net_bonus_s.disabled   = true;
+        document.dataForm.net_bonus_e.disabled   = true;
+        document.dataForm.net_fund_s.disabled    = true;
+        document.dataForm.net_fund_e.disabled    = true;
+      }
+   else
+      {
+        document.dataForm.vd_card.checked = false;
+        document.dataForm.ttl_amt_bal_s.disabled = false;
+        document.dataForm.ttl_amt_bal_e.disabled = false;
+        document.dataForm.net_bonus_s.disabled   = false;
+        document.dataForm.net_bonus_e.disabled   = false;
+        document.dataForm.net_fund_s.disabled    = false;
+        document.dataForm.net_fund_e.disabled    = false;
+      }
+   return;
+  }
+
+ // 執行篩選 ,產生篩選檔
+ function call_batch(parm_code)
+  {
+    if ( parm_code == "S" ) {
+         if ( confirm("確定要執行篩選 !!") == false ) {
+            return false;
+        }
+     }
+
+    if ( parm_code == "G" ) {
+         if ( confirm("確定要產生篩選檔 !!") == false ) {
+            return false;
+         }
+     }
+
+    controlButton(parm_code);
+
+    jdCode = parm_code;
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE",jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    processAJAX();
+    return false;
+  }
+
+ // 多選條件確定
+ function typeConfirm()
+  {
+    if ( document.dataForm.typeListName.value == '9' )
+       { alert('請選擇篩選類別'); return false; }
+
+    if (
+         document.dataForm.ex_exclude_type[0].checked != true &&
+         document.dataForm.ex_exclude_type[1].checked != true
+       )
+       { alert('請選擇指定 ,排除 '); return false; }
+
+    selectAllItem('rightListName','S');
+    top.respLevel = 2;
+    top.respHtml  = "mktm0110_nadd";
+    top.submitControl('TC');
+    selectAllItem('rightListName','D');
+
+    window.setTimeout( function() { display_type_query(); },2000);
+
+    return true;
+  }
+
+ // 檔案上傳
+ function upload_click() {
+
+    if ( document.dataForm.imp_field_desc.value.length == 0 )
+       { alert('請選擇匯入選項'); return false; }
+
+    document.dataForm.zz_file_name.value = "";
+
+    var methodName2 = top.methodName;
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=500, left=700, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("", parmHtml, parmName, windowSize);
+    top.packageName = "mktm01";
+    top.javaName    = "Mktm0110";
+    top.methodName  =  methodName2;
+    top.requHtml    = "mktm0110_nadd";
+    top.respHtml    = "mktm0110_nadd";
+    return true;
+ }
+
+ function  wf_uploadAfter() {
+
+     /* if (confirm("確定匯入資料 !!") == false) {
+            return false;
+        } */
+    process_import('IM');
+    return true;
+ }
+
+ //處理 資料匯入 'IM' ,刪除匯入 'ID'
+ function process_import(pCode) {
+
+    if ( document.dataForm.imp_field_desc.value.length == 0 )
+       { alert('請選擇匯入類別'); return false; }
+
+    jdCode = pCode;
+    if ( check_import() == false )
+       { return false; }
+
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE",jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    addJSON("EX_BATCH_GROUP",document.dataForm.ex_batch_group.value);
+    addJSON("EX_FIELD_CODE",document.dataForm.imp_field_code.value);
+    addJSON("EX_EXCLUDE_IMPORT",exclude_import);
+    addJSON("zz_file_name",document.dataForm.zz_file_name.value);
+    processAJAX();
+
+    window.setTimeout( function() { display_import(); },2000);
+
+    return false;
+  }
+
+ // 匯入選項
+ function imp_list(opCode,parm1,parm2)
+  {
+   if ( opCode == 'C') {
+        document.dataForm.imp_field_desc.value = "";
+        document.dataForm.imp_field_code.value = "";
+        list_pnt=0;
+        return false;
+      }
+
+   if ( opCode == 'A') {
+        list_pnt=0;
+        add_import_item("IA");
+        return false;
+      }
+
+   if ( list_pnt > 5 )
+      { alert('欄位數超過'); return false; }
+
+   if ( list_pnt == 0 ) {
+        list_desc  = parm1;
+        list_field = parm2;
+      } else {
+        list_desc  = list_desc+","+parm1;
+        list_field = list_field+","+parm2;
+      }
+
+   list_pnt++;
+   document.dataForm.imp_field_desc.value = list_desc;
+   document.dataForm.imp_field_code.value = list_field;
+   return false;
+  }
+
+ /* 顯示 已選篩選類別 */
+ function display_type_query()
+  {
+    jdCode = "SD";
+    var check_batch = document.dataForm.ex_batch_no.value;
+    if ( check_batch.length == 0 )
+       { return false; }
+
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE",jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    addJSON("EX_BATCH_GROUP",document.dataForm.ex_batch_group.value);
+    processAJAX();
+    return false;
+  }
+
+ /* 顯示 已匯入類別 */
+ function display_import()
+  {
+    jdCode = "IS";
+    var check_batch = document.dataForm.ex_batch_no.value;
+    if ( check_batch.length == 0 )
+       { return false; }
+
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE",jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    addJSON("EX_BATCH_GROUP",document.dataForm.ex_batch_group.value);
+    processAJAX();
+    return false;
+  }
+
+
+ // 匯入資料查詢
+ function import_query()
+  {
+    if ( document.dataForm.imp_field_code.value.length == 0 )
+       { alert('請選擇匯入類別'); return false; }
+    jdCode = "Q2";
+    if ( check_import() == false )
+       { return false; }
+
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE",jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    addJSON("EX_BATCH_GROUP",document.dataForm.ex_batch_group.value);
+    addJSON("EX_FIELD_CODE",document.dataForm.imp_field_code.value);
+    addJSON("EX_EXCLUDE_IMPORT",exclude_import);
+    addJSON("EX_QUERY_DATA",document.dataForm.ex_query_data.value);
+    addJSON("IMPORT_FIELD_CODE",document.dataForm.imp_field_code.value);
+    processAJAX();
+    return false;
+  }
+
+ //篩選分析查詢
+ function stats_query()
+  {
+    jdCode = "Q3";
+    top.actionCode = "AJAX";
+    addJSON("JD_CODE",jdCode);
+    addJSON("EX_BATCH_NO",document.dataForm.ex_batch_no.value);
+    addJSON("EX_BATCH_GROUP",document.dataForm.ex_batch_group.value);
+    processAJAX();
+
+    return false;
+  }
+
+ // 匯入選項查核
+ function check_import()
+  {
+    var check_batch = document.dataForm.ex_batch_no.value;
+    if ( check_batch.length == 0 )
+       { alert('請輸入批號'); return false; }
+
+    var  check_field = document.dataForm.imp_field_code.value;
+    if ( check_field.length == 0 )
+       { alert("請選擇資料類別"); return false; }
+
+    var  check_file = document.dataForm.zz_file_name.value;
+    if ( check_file.length == 0 && jdCode == 'IM' )
+       { alert('請先上傳檔案'); return false; }
+
+    resetJSON();
+
+    exclude_import="";
+    for ( var i=0; i < document.dataForm.ex_exclude_import.length; i++ )
+        {
+          if ( document.dataForm.ex_exclude_import[i].checked == true )
+             { exclude_import = document.dataForm.ex_exclude_import[i].value; }
+        }
+
+    return true;
+  }
+
+ // AJAX 回覆處理
+ function ajaxResponse()  {
+
+    if ( jdCode == 'IM' ) //資料匯入
+       { alert('資料匯入完成'); resetJSON(); top.normalEffect(); return false; }
+
+    if ( jdCode == 'ID' ) //刪除匯入
+       { alert('刪除匯入完成'); resetJSON(); top.normalEffect(); return false; }
+
+    if ( jdCode == 'SD' ) // 顯示 已選篩選類別
+       { sel_type_resp();     resetJSON();   top.normalEffect(); return false; }
+
+    if ( jdCode == 'IS' ) // 顯示 已匯入項目
+       { import_disp_resp();  resetJSON();   top.normalEffect(); return false; }
+
+    if ( jdCode == 'Q2' ) //匯入資料查詢
+       { import_query_resp(); resetJSON();   top.normalEffect(); return false; }
+
+    if ( jdCode == 'Q3' ) //篩選分析查詢
+       { stats_query_resp();  resetJSON();   top.normalEffect(); return false; }
+
+    if ( jdCode == '4' || jdCode == 'S' || jdCode == 'G' )
+       { alert(getJSONvalue("RESP_MESG",0)); resetJSON(); top.normalEffect(); return false; }
+
+    if ( jdCode == 'IA' ) //新增匯入選項
+       { showImportField(); resetJSON(); top.normalEffect(); return false; }
+
+
+    var  leftName  = "leftListName";
+    var  rightName = "rightListName";
+
+    if ( jdCode == '3' ||  jdCode == '4' ) {
+         leftName  = "leftListName2";
+         rightName = "rightListName2";
+       }
+
+    var  leftListItem   = document.getElementById(leftName);
+    len = getJSONlength("OPTION_TEXT_L");
+    if (len == undefined || len == 0) {
+        len = 0;
+    }
+    for ( var i=0; i<len; i++)
+        { 
+    	leftListItem.options.add(new Option(getJSONvalue("OPTION_TEXT_L",i),getJSONvalue("OPTION_VALUE_L",i)));  }
+
+    var  rightListItem  = document.getElementById(rightName);
+    len = getJSONlength("OPTION_TEXT_R");
+    if (len == undefined || len == 0) {
+        len = 0 ;
+    }
+    for ( var i=0; i<len; i++)
+        { rightListItem.options.add(new Option(getJSONvalue("OPTION_TEXT_R",i),getJSONvalue("OPTION_VALUE_R",i))); }
+
+    resetJSON();
+    top.normalEffect();
+
+    return false;
+  }
+ 
+ // 匯入刪除驗證
+ function del_import_resp()
+ {
+	    if(getJSONvalue("RESP_MESG",0)=='查無資料'){
+	    //	alert('查無資料');
+	    }else{
+	    	alert('刪除匯入完成');
+	    	resetJSON();
+	    	top.normalEffect(); 
+	    	return false;
+	    }
+ }
+
+ // 匯入資料 回覆處理
+ function import_query_resp()
+ {
+  var len = getJSONlength("IMPORT_DATA");
+  if (len == undefined || len == 0) {
+      len = 0 ;
+      return;
+  }
+
+  var tables = document.getElementById("popup2");
+  var curRow = document.getElementById("ajax_row");
+  var rowCount = tables.rows.length;
+  for ( var i = rowCount - 1; i>=3; i--)
+      { tables.deleteRow(i);  }
+  if  ( getJSONvalue("PROC_CODE",0) != '00' )
+      { top.normalEffect(); return false; }
+
+  for ( var i=0; i<len; i++)
+      {
+        var rows = curRow.cloneNode(true);
+        if ( i == 0  )
+           { rows = curRow; }
+        rows.cells[0].innerHTML = getJSONvalue("IMPORT_DESC",i);
+        rows.cells[1].innerHTML = getJSONvalue("IMPORT_DATA",i);
+        tables.appendChild(rows);
+      }
+
+   top.popupBlock('popDiv');
+ }
+ 
+ // 顯示 已選篩選類別
+ function sel_type_resp()
+ {
+   var len = getJSONlength("DISP_TYPE_1");
+   if (len == undefined || len == 0) {
+       return;
+   }
+
+   var tables   = document.getElementById("sel_type");
+   var curRow   = document.getElementById("sel_type_row");
+   var rowCount = tables.rows.length;
+
+   tables.rows[1].cells[0].innerHTML ="";
+   tables.rows[1].cells[1].innerHTML ="";
+
+   for ( var i = rowCount - 1; i>=2; i--)
+       { tables.deleteRow(i); }
+
+   for ( var i=0; i<len; i++)
+       {
+        var rows = curRow.cloneNode(true);
+        if ( i == 0  )
+           { rows = curRow; }
+        rows.cells[0].innerHTML = getJSONvalue("DISP_TYPE_1",i);
+        rows.cells[1].innerHTML = getJSONvalue("DISP_TYPE_2",i);
+        tables.appendChild(rows);
+      }
+   return;
+ }
+
+ // 顯示 已匯入項目
+ function import_disp_resp()
+ {
+   var len = getJSONlength("DISP_IMP_1");
+   if (len == undefined || len == 0) {
+       return;
+   }
+
+   var tables   = document.getElementById("disp_imp");
+   var curRow   = document.getElementById("disp_imp_row");
+   var rowCount = tables.rows.length;
+
+   tables.rows[1].cells[0].innerHTML ="";
+   tables.rows[1].cells[1].innerHTML ="";
+
+   for ( var i = rowCount - 1; i>=2; i--)
+       { tables.deleteRow(i); }
+
+   for ( var i=0; i<len; i++)
+       {
+        var rows = curRow.cloneNode(true);
+        if ( i == 0  )
+           { rows = curRow; }
+        rows.cells[0].innerHTML = getJSONvalue("DISP_IMP_1",i);
+        rows.cells[1].innerHTML = getJSONvalue("DISP_IMP_2",i);
+        tables.appendChild(rows);
+      }
+   return;
+ }
+
+ // 篩選分析 回覆處理
+ function stats_query_resp()
+ {
+  var len = getJSONlength("STATS_ITEM");
+  if (len == undefined || len == 0) {
+      return;
+  }
+
+  var tables   = document.getElementById("stats");
+  var curRow   = document.getElementById("stats_row");
+  var rowCount = tables.rows.length;
+
+  for ( var k = 0; k<=3; k++ )
+      { tables.rows[1].cells[k].innerHTML =""; }
+
+  for ( var i = rowCount - 1; i>=2; i--)
+      { tables.deleteRow(i); }
+
+  var procCode = getJSONvalue("PROC_CODE",0);
+
+  if  ( getJSONvalue("PROC_CODE",0) == '1' )
+      { alert('執行篩選,處理中.....');   resetJSON(); return false;  }
+  else
+  if  ( getJSONvalue("PROC_CODE",0) == '2' )
+      { alert('產生篩選檔,處理中.....'); resetJSON(); return false; }
+  else
+  if  ( getJSONvalue("PROC_CODE",0) == '9' )
+      { alert('無篩選分析資料.....');    resetJSON(); controlButton(procCode); return false; }
+  else
+  if  ( getJSONvalue("PROC_CODE",0) == 'X' )
+      { alert('處理錯誤.....');          resetJSON(); controlButton(procCode); return false; }
+  else
+  if  ( getJSONvalue("PROC_CODE",0) == 'SE' )
+      { alert('執行篩選,處理完成.....');   controlButton(procCode); }
+  else
+  if  ( getJSONvalue("PROC_CODE",0) == 'GE' )
+      { alert('產生篩選檔,處理完成.....'); controlButton(procCode); }
+
+  for ( var i=0; i<len; i++)
+      {
+        var rows = curRow.cloneNode(true);
+        if ( i == 0  )
+           { rows = curRow; }
+        var k = i+1;
+        if ( i < 9 )
+           { k = '0'+k; }
+        rows.cells[0].innerHTML = k;
+        rows.cells[1].innerHTML = getJSONvalue("STATS_ITEM",i);
+        rows.cells[2].innerHTML = getJSONvalue("CHECK_COUNT",i);
+        rows.cells[3].innerHTML = getJSONvalue("PASS_COUNT",i);
+        tables.appendChild(rows);
+     }
+
+   return;
+ }
+
+ //新增匯入選項 顯示處理
+ function showImportField()
+ {
+    var  listItem   = document.getElementById("import_field_code");
+    clearListItem(listItem);
+    len = getJSONlength("OPTION_TEXT");
+    if (len == undefined || len == 0) {
+        return;
+    }
+    for ( var i=0; i<len; i++)
+        { listItem.options.add(new Option(getJSONvalue("OPTION_TEXT",i),getJSONvalue("OPTION_VALUE",i)));  }
+
+   return;
+ }
+
+ // 多選條件, 產出格式設定  選項清除處理
+ function clearListItem(clsItem)
+  {
+    for( var i = clsItem.length - 1; i>=0; i--)
+       { clsItem.remove(i);  }
+    return;
+  }
+
+ // 多選條件, 產出格式設定  選項移動處理
+ function moveSelectItem(itemCode,leftList,rightList)
+  {
+    var  leftListItem  =  document.getElementById(leftList);
+    var  rightListItem =  document.getElementById(rightList);
+    var  svValue       =  new Array();
+    var  svText        =  new Array();
+    var  i=0,j=0,svCnt=0;
+
+    for( i=0; i<rightListItem.length; i++) {
+         svValue[i] = rightListItem.options[i].value;
+         svText[i]  = rightListItem.options[i].text;
+       }
+
+    svCnt = rightListItem.options.length;
+    rightListItem.options.length = 0;
+    i=0; j=0;
+
+    while( i < leftListItem.length )
+      {
+        if( leftListItem.options[i].selected )
+          {
+            var optionText  = leftListItem.options[i].text;
+            var optionValue = leftListItem.options[i].value;
+            if ( j >= svCnt )
+               { rightListItem.options.add(new Option(optionText,optionValue)); i++; }
+            else
+            if ( optionValue < svValue[j] && itemCode != 'B1' )
+               { rightListItem.options.add(new Option(optionText,optionValue)); i++; }
+            else
+               { rightListItem.options.add(new Option(svText[j],svValue[j]));   j++; }
+          }
+        else
+          { i++; }
+       }
+
+    for( i=j; i < svCnt; i++ )
+       { rightListItem.options.add(new Option(svText[i],svValue[i])); }
+
+    for( i = leftListItem.length - 1; i>=0; i--)  {
+         if( leftListItem.options[i].selected )
+           { leftListItem.remove(i); }
+       }
+
+    return;
+  }
+
+ function controlButton(parm)
+  {
+    document.dataForm.btProc1.disabled = true;
+    document.dataForm.btProc2.disabled = true;
+    document.dataForm.btProc3.disabled = true;
+
+    if ( parm == "S" || parm == "G" )  {
+         document.dataForm.btProc1.disabled = true;
+       }
+    else
+    if ( parm != "1" && parm != "2" )  {
+         document.dataForm.btProc1.disabled = false;
+       }
+
+    if ( parm == "SE" )  {
+         document.dataForm.btProc2.disabled = false;
+       }
+    if ( parm == "GE" )  {
+         document.dataForm.btProc3.disabled = false;
+       }
+
+    return;
+  }
+  var  format_code='${format_flag}';
+  if ( format_code == 'Y' )
+     { optionChange('3','leftListName2','rightListName2'); }
+
+</script>

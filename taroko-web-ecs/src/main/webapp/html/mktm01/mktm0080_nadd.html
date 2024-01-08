@@ -1,0 +1,426 @@
+<html>
+<head>
+<title> 109/08/28 V1.00.06 Allen Ho Initial 紅利利率轉換檔維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=ie11">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>活動年度:&nbsp; 
+       <input type="text" class="col_any" name="years" value="${years}"
+              zEdit="any" zRequire="K","C" maxlength="4" size="4" />
+     </td>
+     <td  nowrap  >放行狀態: 
+       <input      class="dsp_text" type="text" name="aud_type" value="${aud_type}" readonly/>
+       <input    type="hidden" name="commfunc_aud_type" value="${commfunc_aud_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">紅利代碼:&nbsp;
+       <select name="bonus_type" class="col_ddlb" />
+               ${dddw_bonus_type}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">帳戶類別:&nbsp;
+       <select name="acct_type" class="col_ddlb" zRequire="K","C" />
+               ${dddw_acct_type}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>科目類別:&nbsp;
+       <select name="item_code" class="col_ddlb"  >
+       <option value="1" ${item_code-1} >1.除預借現金之消費</option>
+       <option value="2" ${item_code-2} >2.預借現金</option>
+       <option value="3" ${item_code-3} >3.循環利息</option>
+       </select>
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>需排除科目&nbsp;
+      <input type="checkbox" value="Y" name="other_item" ${other_item-Y} >其他消費款&nbsp;
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>有效期限月數&nbsp; 
+       <input type="text" class="col_number" name="effect_months" value="${effect_months}"
+              zEdit="number" maxlength="4" size="4" />
+              月(0 表永久有效)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >特店代號&nbsp;
+       <input type="radio" value="0" name="merchant_sel" ${merchant_sel-0} checked  onChange="columnOnChange('A')" />全部
+       <input type="radio" value="1" name="merchant_sel" ${merchant_sel-1} onChange="columnOnChange('A')" />指定
+       <input type="radio" value="2" name="merchant_sel" ${merchant_sel-2} onChange="columnOnChange('A')" />排除
+        <input type="Button" class="btOther" name="btnmccd" id="btnmccd"  value="特店代號" ${btnmccd_disable}
+               onClick="return buttonScreen('3','mccd','data_type','1')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >特店群組&nbsp;
+       <input type="radio" value="0" name="mcht_group_sel" ${mcht_group_sel-0} checked  onChange="columnOnChange('B')" />全部
+       <input type="radio" value="1" name="mcht_group_sel" ${mcht_group_sel-1} onChange="columnOnChange('B')" />指定
+       <input type="radio" value="2" name="mcht_group_sel" ${mcht_group_sel-2} onChange="columnOnChange('B')" />排除
+        <input type="Button" class="btOther" name="btnmcgp" id="btnmcgp"  value="特店群組" ${btnmcgp_disable}
+               onClick="return buttonScreen('2','mcgp','data_type','4')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >團代卡種&nbsp;
+       <input type="radio" value="0" name="group_card_sel" ${group_card_sel-0} checked  onChange="columnOnChange('C')" />全部
+       <input type="radio" value="1" name="group_card_sel" ${group_card_sel-1} onChange="columnOnChange('C')" />指定
+       <input type="radio" value="2" name="group_card_sel" ${group_card_sel-2} onChange="columnOnChange('C')" />排除
+        <input type="Button" class="btOther" name="btngpcd" id="btngpcd"  value="團代卡種" ${btngpcd_disable}
+               onClick="return buttonScreen('3','gpcd','data_type','2')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >團代特店&nbsp;
+       <input type="radio" value="0" name="group_merchant_sel" ${group_merchant_sel-0} checked  onChange="columnOnChange('D')" />全部
+       <input type="radio" value="1" name="group_merchant_sel" ${group_merchant_sel-1} onChange="columnOnChange('D')" />指定
+       <input type="radio" value="2" name="group_merchant_sel" ${group_merchant_sel-2} onChange="columnOnChange('D')" />排除
+        <input type="Button" class="btOther" name="btngpmc" id="btngpmc"  value="團代特店" ${btngpmc_disable}
+               onClick="return buttonScreen('3','gpmc','data_type','3')" >
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap colspan="5">積點比率:&nbsp; 
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>區間編號&nbsp; 
+     </td>
+     <td nowrap>　　　　　　區間範圍(元)&nbsp; 
+     </td>
+     <td nowrap>積點兌換率(元/點)&nbsp; 
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　一.&nbsp; 
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="limit_1_beg" value="${limit_1_beg}"
+              zEdit="dignumber" maxlength="9" size="9" />
+         　 
+       <input type="text" class="col_number" name="limit_1_end" value="${limit_1_end}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('1')"/>
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="exchange_1" value="${exchange_1}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　二.&nbsp; 
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="limit_2_beg" value="${limit_2_beg}"
+              zEdit="dignumber" maxlength="9" size="9" />
+         　 
+       <input type="text" class="col_number" name="limit_2_end" value="${limit_2_end}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('2')"/>
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="exchange_2" value="${exchange_2}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　三.&nbsp; 
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="limit_3_beg" value="${limit_3_beg}"
+              zEdit="dignumber" maxlength="9" size="9" />
+         　 
+       <input type="text" class="col_number" name="limit_3_end" value="${limit_3_end}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('3')"/>
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="exchange_3" value="${exchange_3}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　四.&nbsp; 
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="limit_4_beg" value="${limit_4_beg}"
+              zEdit="dignumber" maxlength="9" size="9" />
+         　 
+       <input type="text" class="col_number" name="limit_4_end" value="${limit_4_end}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('4')"/>
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="exchange_4" value="${exchange_4}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　五.&nbsp; 
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="limit_5_beg" value="${limit_5_beg}"
+              zEdit="dignumber" maxlength="9" size="9" />
+         　 
+       <input type="text" class="col_number" name="limit_5_end" value="${limit_5_end}"
+              zEdit="dignumber" maxlength="9" size="9" />
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="exchange_5" value="${exchange_5}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　六.&nbsp; 
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="limit_6_beg" value="${limit_6_beg}"
+              zEdit="dignumber" maxlength="9" size="9" />
+         　 
+       <input type="text" class="col_number" name="limit_6_end" value="${limit_6_end}"
+              zEdit="dignumber" maxlength="9" size="9" />
+     </td>
+     <td nowrap>　&nbsp; 
+       <input type="text" class="col_number" name="exchange_6" value="${exchange_6}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm0080">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+<input type="hidden" name="apr_flag" value="N">
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktm0080_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+
+ function columnOnChange(ps1)
+  {
+   var  win_aud_type = document.forms["dataForm"]["aud_type"].value;
+   var  win_merchant_sel0 = document.forms["dataForm"]["merchant_sel"][0].checked;
+   var  win_mcht_group_sel0 = document.forms["dataForm"]["mcht_group_sel"][0].checked;
+   var  win_group_card_sel0 = document.forms["dataForm"]["group_card_sel"][0].checked;
+   var  win_group_merchant_sel0 = document.forms["dataForm"]["group_merchant_sel"][0].checked;
+   var  win_limit_1_end = document.forms["dataForm"]["limit_1_end"].value;
+   var  win_limit_2_end = document.forms["dataForm"]["limit_2_end"].value;
+   var  win_limit_3_end = document.forms["dataForm"]["limit_3_end"].value;
+   var  win_limit_4_end = document.forms["dataForm"]["limit_4_end"].value;
+
+   idCode = ps1;
+   if ( idCode == 'A' )
+      {
+       if (win_merchant_sel0 == true)
+           {
+            document.getElementById("btnmccd").disabled = true;
+            document.getElementById("btnmccd").style.backgroundColor = "lightgray";
+            document.getElementById("uplaaa1").disabled = true;
+           }
+      }
+
+   if ( idCode == 'B' )
+      {
+       if (win_mcht_group_sel0 == true)
+           {
+            document.getElementById("btnmcgp").disabled = true;
+            document.getElementById("btnmcgp").style.backgroundColor = "lightgray";
+           }
+      }
+
+   if ( idCode == 'C' )
+      {
+       if (win_group_card_sel0 == true)
+           {
+            document.getElementById("btngpcd").disabled = true;
+            document.getElementById("btngpcd").style.backgroundColor = "lightgray";
+           }
+      }
+
+   if ( idCode == 'D' )
+      {
+       if (win_group_merchant_sel0 == true)
+           {
+            document.getElementById("btngpmc").disabled = true;
+            document.getElementById("btngpmc").style.backgroundColor = "lightgray";
+           }
+      }
+
+   if ( idCode == '1' )
+      {
+       if (win_limit_1_end < 99999999) 
+          document.dataForm.limit_2_beg.value = +win_limit_1_end + 1;
+      }
+
+   if ( idCode == '2' )
+      {
+       if (win_limit_2_end < 99999999) 
+          document.dataForm.limit_3_beg.value = +win_limit_2_end + 1;
+      }
+
+   if ( idCode == '3' )
+      {
+       if (win_limit_3_end < 99999999) 
+          document.dataForm.limit_4_beg.value = +win_limit_3_end + 1;
+      }
+
+   if ( idCode == '4' )
+      {
+       if (win_limit_4_end < 99999999) 
+          document.dataForm.limit_5_beg.value = +win_limit_4_end + 1;
+      }
+
+
+ }
+
+  $(document).ready(function()
+   {
+    var ls_merchant_sel = $("input[name=merchant_sel]:checked").val();
+    if (ls_merchant_sel != 0 )
+       {
+        document.getElementById("btnmccd").disabled = false;
+        document.getElementById("btnmccd").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnmccd").disabled = true;
+        document.getElementById("btnmccd").style.backgroundColor = "lightgray";
+       }
+
+    var ls_mcht_group_sel = $("input[name=mcht_group_sel]:checked").val();
+    if (ls_mcht_group_sel != 0 )
+       {
+        document.getElementById("btnmcgp").disabled = false;
+        document.getElementById("btnmcgp").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnmcgp").disabled = true;
+        document.getElementById("btnmcgp").style.backgroundColor = "lightgray";
+       }
+
+    var ls_group_card_sel = $("input[name=group_card_sel]:checked").val();
+    if (ls_group_card_sel != 0 )
+       {
+        document.getElementById("btngpcd").disabled = false;
+        document.getElementById("btngpcd").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btngpcd").disabled = true;
+        document.getElementById("btngpcd").style.backgroundColor = "lightgray";
+       }
+
+    var ls_group_merchant_sel = $("input[name=group_merchant_sel]:checked").val();
+    if (ls_group_merchant_sel != 0 )
+       {
+        document.getElementById("btngpmc").disabled = false;
+        document.getElementById("btngpmc").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btngpmc").disabled = true;
+        document.getElementById("btngpmc").style.backgroundColor = "lightgray";
+       }
+
+   });
+
+function upload_click(parm1,parm2)
+ {
+  document.dataForm.zz_file_name.value = "";
+
+  document.dataForm.sys_upload_type.value = parm1;
+  document.dataForm.sys_upload_alias.value = parm2;
+  var parmHtml    = "TarokoUpload";
+  var parmName    = "upload_file,zz_file_name";
+  var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+  top.packageName = "taroko.com";
+  top.javaName    = "TarokoUpload";
+  top.methodName  = "showScreen";
+  top.openWindow("",parmHtml,parmName,windowSize);
+
+  top.packageName = "mktm01";
+  top.javaName    = "Mktm0080";
+  top.requHtml    = "mktm0080_nadd";
+  top.respHtml    = "mktm0080_nadd";
+  return true;
+ }
+
+function wf_uploadAfter()
+ {
+  var ss=document.dataForm.zz_file_name.value.trim();
+  if (ss.length>0)  top.submitControl('UPLOAD2');
+ }
+
+</script>
+<!-- ******************************************************************** -->

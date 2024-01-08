@@ -1,0 +1,192 @@
+<html>
+<head>
+<title>格式查核錯誤維護作業-V.2017-0627-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;卡號:
+          	<input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" 
+        	zEdit="any" maxlength="16" size="18" />
+      	</td>
+		<td nowrap>&nbsp;參考號碼:
+          	<input type="text" class="col_any" name="ex_reference_no" value="${ex_reference_no}" 
+        	zEdit="any" maxlength="10" size="10" />
+      	</td>
+      	<td rowspan="2" nowrap>&nbsp;  
+      		<input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"     value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+    	</td>
+	</tr>
+  	<tr>
+  	  	<td nowrap>&nbsp;請款單位:
+          	<select size="1" name="ex_batch_unit" class="col_ddlb">
+            	<option value="">--</option>
+            	${dddw_liab_type}
+          	</select>    
+      	</td>
+  		<td nowrap>&nbsp;請款批號:
+        	<input type="text" class="col_any" name="ex_batch_no" value="${ex_batch_no}" 
+        	zEdit="any" maxlength="14" size="14" />   
+      	</td> 
+  	</tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="40%">
+ 	<tr>
+    	<th nowrap class="list_th" width="5%">
+      		<input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >刪除&nbsp;</th>
+    	<th nowrap class="list_th" >交易卡號</th>
+    	<th nowrap class="list_th" >批次號碼</th>
+    	<th nowrap class="list_th" >交易日期</th>
+    	<th nowrap class="list_th" >微縮影編號</th>
+    	<th nowrap class="list_th" >目的地幣別</th>
+    	<th nowrap class="list_th" >目的地金額</th>
+    	<th nowrap class="list_th" >原始金額</th>
+    	<th nowrap class="list_th" >原始幣別</th>
+    	<th nowrap class="list_th" >錯誤碼</th> 
+    	<th nowrap class="list_th" >參考號碼</th>
+    	<th nowrap class="list_th" >msg</th>
+    	<th nowrap class="list_th" >原因</th>
+    	<th nowrap class="list_th" >分期類別</th>
+    	<th nowrap class="list_th" >總期數</th>
+    	<th nowrap class="list_th" >首期金額</th>
+    	<th nowrap class="list_th" >每期金額</th>         
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr>
+   		<td nowrap class="list_no" >
+	  		<span class="dsp_flag">${ok_flag}</span>
+        	${SER_NUM}
+      		<input type="checkbox" name="opt" value="${ser_num}" ${check}>
+      		<input type="hidden" name="ser_num" value="${ser_num}">
+      		<input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+   		</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="card_no" value="${card_no}">${card_no}
+    	</td> 
+    	<td nowrap class="list_ll"> 
+      	<input type="hidden" name="batch_no" value="${batch_no}"/>${batch_no}
+    	</td>
+ 		<td nowrap class="list_ll">  
+      		<input type="text" class="col_date" name="purchase_date" value="${purchase_date}" zEdit="date,yyyymmdd"  maxlength=8 size=8 />
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="text" class="col_any" name="film_no" value="${film_no}" zEdit="any"  maxlength=23 size=23 />
+    	</td>
+     	<td nowrap class="list_ll">  
+      		<input type="text" class="col_any" name="dest_curr" value="${dest_curr}" zEdit="any"  maxlength=3 size=3 />
+    	</td>
+    	<td nowrap class="list_rr" >  
+      		<input type="hidden" name="dest_amt" value="${dest_amt}">${dest_amt.(999)}
+    	</td>
+    	<td nowrap class="list_rr">  
+      		<input type="hidden" name="source_amt" value="${source_amt}"/>${source_amt.(999)}
+   		</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="source_curr" value="${source_curr}"/>${source_curr}
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="doubt_type" value="${doubt_type}"/>${doubt_type}
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="reference_no" value="${reference_no}"/>${reference_no}
+    	</td>
+    	    <td nowrap class="list_ll">  
+      		<font style="color:red">${errmsg}</font>
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="rsk_rsn" value="${rsk_rsn}"/>${rsk_rsn}
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="payment_type" value="${payment_type}"/>${payment_type}
+    	</td>
+    	<td nowrap class="list_ll">  
+    		<input type="text" class="col_number" name="install_tot_term" value="${install_tot_term}" zEdit="number"  maxlength=2 size=4 />
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="install_first_amt" value="${install_first_amt}"/>${install_first_amt.(999)}
+    	</td>
+    	<td nowrap class="list_ll">  
+      		<input type="hidden" name="install_per_amt" value="${install_per_amt}"/>${install_per_amt.(999)}
+    	</td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="h_std_vouch_desc" value="${std_vouch_desc}" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows="20";
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "S2" ) {
+    	if (chkdata() ) { 
+        	if (confirm("是否刪除指定資料?") === false) {
+                return false;
+            } 
+    	} 
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "bilm0020_detl";
+    top.submitControl('S');
+    return true;
+}
+
+function chkdata() {
+	 var agy =0;
+	 $("input[name=opt]").each(function (){
+		 if($(this).prop("checked")==true){
+			 agy++; 
+		 } 
+	 })
+	 if(agy == 0){
+		 return false;
+	 }
+	 return true;
+}
+//全選
+function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+}
+</script>

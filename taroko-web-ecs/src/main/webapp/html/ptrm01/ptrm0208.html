@@ -1,0 +1,93 @@
+
+<html>
+<head>
+<title>商務卡類公司年費參數維護-V.2017-0505-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;統一編號:&nbsp;
+            <select name="ex_corp_no" class="col_ddlb" >
+				   ${dddw_corp_no}
+			  </select>
+        </td>
+        <td nowrap>&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th">統一編號</th>
+		<th nowrap class="list_th">中文名稱</th>
+		<th nowrap class="list_th">卡種</th>
+		<th nowrap class="list_th">第一年年費</th>
+		<th nowrap class="list_th">第二年以後年費</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr onclick="detailScreen('${SER_NUM}','${corp_no}','${card_type}','')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_ll"> ${corp_no}</td>
+		<td nowrap class="list_ll"> ${chi_name}</td>
+		<td nowrap class="list_ll"> ${card_type}</td>
+		<td nowrap class="list_rr"> ${first_fee_amt}</td>
+		<td nowrap class="list_rr"> ${other_fee_amt}</td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+document.dataForm.ex_corp_no.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0208_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0208_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

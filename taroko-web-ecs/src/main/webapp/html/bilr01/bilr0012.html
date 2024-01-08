@@ -1,0 +1,151 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>分期付款未到期總表-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">            
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;特店代號:
+                        <input class="field_style" type="text" name="ex_merchant" size="21" maxlength="20" value="${ex_merchant}" onChange="ItemChange()" >&nbsp;&nbsp;
+                        <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />
+                    </td>                 
+                    <td nowrap colspan=6>&nbsp;
+                        <input type="Button"   ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"   ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=12 class="list_ll">&nbsp;商品代號:
+                        <select name="ex_product_no" class="col_ddlb">
+                            ${dddw_product_no}
+                        </select>&nbsp;
+                    </td>
+                </tr>                
+            </table>
+        </div>
+        <hr>
+        <!-- 動態 BLOCK 視窗控制 -->
+        <div id="disDiv" class="disScreen"></div>
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">特店代號：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('ex_merchant','merchant_2'); top.hideBlock('popDiv');ItemChange();" class="btConfirm">&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">特店代號</th>
+                <th nowrap class="list_th">特店中文名稱</th>    
+                <th nowrap class="list_th">商品代號</th>
+                <th nowrap class="list_th">商品名稱</th>
+                <th nowrap class="list_th">總金額</th>
+                <th nowrap class="list_th">未到期金額</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${mcht_no} </td>
+                <td nowrap class="list_ll"> ${mcht_chi_name} </td>
+                <td nowrap class="list_cc"> ${product_no} </td>
+                <td nowrap class="list_ll"> ${product_name} </td>
+                <td nowrap class="list_rr"> ${db_tot_amt.(999)} </td> 
+                <td nowrap class="list_rr"> ${db_rem.(999)} </td>                               
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">            
+        <input type="hidden" name="user_id" value="${user_id}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+//document.dataForm.ex_mcht_no.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.ex_merchant.value;
+
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("ex_merchant", vendorNo);
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    var vendorNo = document.dataForm.ex_merchant.value;
+    var vendorList = document.getElementById("merchant_2");
+
+    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+    }
+
+    top.popupBlock('popDiv');
+}
+function ItemChange() {
+    top.submitControl('ItemChange');
+    return true;
+}
+</script>

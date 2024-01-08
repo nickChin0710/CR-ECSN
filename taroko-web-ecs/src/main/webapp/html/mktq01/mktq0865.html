@@ -1,0 +1,182 @@
+<html>
+<head>
+    <title> 112/05/06 V1.00.00 Yang Bo Initial 通路活動回饋產檔作業</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <!-- Approve *************************************************************-->
+            ${#PLUGIN:htmcomm_plugin.apr_user}
+        </table>
+        <!-- query key *************************************************************-->
+        <table width="60%" border="0" cellspacing="0" cellpadding="10">
+            <tr>
+                <td nowrap>&nbsp;活動代號:
+                    <select size="1" name="ex_active_code" class="col_ddlb">
+                        ${dddw_active_code}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;產檔格式:
+                    <select size="1" name="ex_doc_type" class="col_ddlb" onchange="docTypeChange(this.value)">
+                        ${dddw_doc_type}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;檔名:
+                    <input type="text" class="col_text" readonly name="bb_down_file_name"
+                           value="${bb_down_file_name}" zeditType="any" maxlength=60 size=60/>
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')"
+                           class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnAdd" value="產生媒體檔"
+                           onClick="return top.submitControl('MEDIAFILE')" class="btAdd">&nbsp;&nbsp;
+                    <a ${zz_full_media_file} style="cursor:hand;">
+                        <img ${img_display}/>
+                    </a>
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')"
+                           class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- browse ************************************************************** -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">活動代號</th>
+            <th nowrap class="list_th">活動說明</th>
+            <th nowrap class="list_th">身分證號</th>
+            <th nowrap class="list_th">姓名</th>
+            <th nowrap class="list_th">紅利點數</th>
+            <th nowrap class="list_th">紅利<BR>回饋日期</th>
+            <th nowrap class="list_th">現金<BR>回饋金額</th>
+            <th nowrap class="list_th">現金<BR>回饋日期</th>
+            <th nowrap class="list_th">贈品件數</th>
+            <th nowrap class="list_th">名單筆數</th>
+            <th nowrap class="list_th">名單類型</th>
+            <th nowrap class="list_th">贈品/名單<BR>回饋日期</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr style="cursor:default">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="ser_num" value="${ser_num}"/>
+                <input type="hidden" name="rowid" value="${rowid}"/>
+            </td>
+            <td nowrap class="list_cc"> ${active_code}
+                <input type="hidden" name="active_code" value="${active_code}"/>
+            </td>
+            <td nowrap class="list_cc"> ${active_name}
+                <input type="hidden" name="active_name" value="${active_name}"/>
+            </td>
+            <td nowrap class="list_cc"> ${id_no}
+                <input type="hidden" name="id_no" value="${id_no}"/>
+            </td>
+            <td nowrap class="list_cc"> ${chi_name}
+                <input type="hidden" name="chi_name" value="${chi_name}"/>
+            </td>
+            <td nowrap class="list_rr"> ${bonus_pnt.(999)}
+                <input type="hidden" name="bonus_pnt" value="${bonus_pnt}"/>
+            </td>
+            <td nowrap class="list_cc"> ${bonus_date.YMD}
+                <input type="hidden" name="bonus_date" value="${bonus_date}"/>
+            </td>
+            <td nowrap class="list_rr"> ${fund_amt.(999)}
+                <input type="hidden" name="fund_amt" value="${fund_amt}"/>
+            </td>
+            <td nowrap class="list_cc"> ${fund_date.YMD}
+                <input type="hidden" name="fund_date" value="${fund_date}"/>
+            </td>
+            <td nowrap class="list_rr"> ${gift_int.(999)}
+                <input type="hidden" name="gift_int" value="${gift_int}"/>
+            </td>
+            <td nowrap class="list_rr"> ${lottery_int.(999)}
+                <input type="hidden" name="lottery_int" value="${lottery_int}"/>
+            </td>
+            <td nowrap class="list_cc"> ${lottery_type}.${comm_lottery_type}
+                <input type="hidden" name="lottery_type" value="${lottery_type}"/>
+                <input type="hidden" name="comm_lottery_type" value="${comm_lottery_type}"/>
+            </td>
+            <td nowrap class="list_cc"> ${proc_date.YMD}
+                <input type="hidden" name="proc_date" value="${proc_date}"/>
+            </td>
+            <td nowrap style="visibility:hidden;"> ${acct_type}
+                <input type="hidden" name="acct_type" value="${acct_type}"/>
+            </td>
+            <td nowrap style="visibility:hidden;"> ${vd_flag}
+                <input type="hidden" name="vd_flag" value="${vd_flag}"/>
+            </td>
+            <td nowrap style="visibility:hidden;"> ${id_p_seqno}
+                <input type="hidden" name="id_p_seqno" value="${id_p_seqno}"/>
+            </td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <!-- hidden ************************************************************** -->
+    <input type="hidden" name="WPROWID" value="${wprowid}">
+    <input type="hidden" name="control_tab_name" value="${control_tab_name}">
+    <input type="hidden" name="sys_date" value="${sys_date}">
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="data_k4" value="">
+    <input type="hidden" name="data_k5" value="">
+
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1')
+</script>
+<!-- script2 ************************************************************* -->
+<script language="javascript">
+
+  top.refreshButton2('0')
+  top.pageRows = '20'
+
+
+  function validateInput() {
+    if (!top.checkFormat()) {
+      return false
+    }
+
+    if (top.actionCode == 'X') {
+      top.respLevel = 1
+      top.respHtml = 'mktq0865_detl'
+    }
+    return true
+  }
+
+  function detailScreen(serNum, parm, parm2, parm3, parm4, parm5) {
+    top.respLevel = 1
+    top.currRows = serNum
+    document.dataForm.data_k1.value = parm
+    document.dataForm.data_k2.value = parm2
+    document.dataForm.data_k3.value = parm3
+    document.dataForm.data_k4.value = parm4
+    document.dataForm.data_k5.value = parm5
+    top.respHtml = 'mktq0865_detl'
+    top.submitControl('S')
+    return true
+  }
+
+  function docTypeChange(val) {
+    let sysDate = document.dataForm.sys_date.value
+    var fileName = val.toUpperCase().replaceAll('YYYYMMDD', sysDate).replaceAll('YYYMMDD', (sysDate.substring(0, 4) - 1911) + sysDate.substring(4))
+    fileName = fileName.toUpperCase().replaceAll('YYYYMM', sysDate.substring(0,6));
+    document.dataForm['bb_down_file_name'].setAttribute('value', fileName);
+  }
+</script>
+<!-- ******************************************************************** -->

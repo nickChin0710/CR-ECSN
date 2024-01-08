@@ -1,0 +1,175 @@
+<html>
+<head>
+<title> 108/12/12 V1.00.01 Allen Ho Initial </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"    value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data3 ************************************************************ -->
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  >活動代碼： 
+       <span class="dsp_text">${active_code}-${active_name}</span>
+       <input type="hidden" name="active_code" value="${active_code}"/>
+     </td>
+   </tr>
+ </table>
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;團體代號：
+       <select size="1" id="sel_data_code" name="sel_data_code" class="col_ddlb" >
+               ${dddw_group_code3}
+       </select>
+     </td>
+     <td align="right">${ex_total_cnt}
+       <input type="Button"  value="新增明細" ${newDetail_disable}
+             id="wf_addrow"  class="btAdd_detl" />
+     </td>
+   </tr>
+ </table>
+<! browsButton ****************************************************************>
+ <table id="table1" width="50%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">團體代號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : BUTTON18 -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${data_code}-${comm_data_code}</span>
+      <input type="hidden" name="data_code" value="${data_code}" >
+      <input type="hidden" name="comm_data_code" value="${comm_data_code}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>
+<!-- trail ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm6240">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('2');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+function upload_click(parm1,parm2)
+ {
+  document.dataForm.zz_file_name.value = "";
+
+  document.dataForm.sys_upload_type.value = parm1;
+  document.dataForm.sys_upload_alias.value = parm2;
+  var parmHtml    = "TarokoUpload";
+  var parmName    = "upload_file,zz_file_name";
+  var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+  top.packageName = "taroko.com";
+  top.javaName    = "TarokoUpload";
+  top.methodName  = "showScreen";
+  top.openWindow("",parmHtml,parmName,windowSize);
+
+  top.packageName = "mktm02";
+  top.javaName    = "Mktm6240";
+  top.requHtml    = "mktm6240_smsa";
+  top.respHtml    = "mktm6240_smsa";
+  return true;
+ }
+
+function wf_uploadAfter()
+ {
+  var ss=document.dataForm.zz_file_name.value.trim();
+  if (ss.length>0)  top.submitControl('UPLOAD1');
+ }
+
+</script>
+<!-- ******************************************************************** -->
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#wf_addrow").click(function(){
+
+   var ex_data_code = $("#sel_data_code").val(); 
+
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+        { serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"<input type='hidden' value='' name='mod_seqno' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_data_code
+      +"<input type='hidden' value='"+ex_data_code+"' name='data_code'/>"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_data_code").val('');
+  });
+
+});
+</script>

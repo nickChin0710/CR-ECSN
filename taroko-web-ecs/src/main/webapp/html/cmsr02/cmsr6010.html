@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>話務類別統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;統計期間:
+         <input type="text" class="col_date" name="ex_cms_date_s" value="${ex_cms_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_s'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_cms_date_e" value="${ex_cms_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_e'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;值機人員:
+   	 <select size="1" name="ex_user" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_user}
+     </select>	   
+	</td>
+	</tr>
+	<tr>
+	<td nowrap >&nbsp;問題類別:
+	   <select size="1" name="ex_casetype1" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_casetype1}
+      </select>
+      --
+      <select size="1" name="ex_casetype2" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_casetype2}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;
+      <input type="checkbox" name="ex_type_a" value="Y" ${ex_type_a-Y}>A.權益 &nbsp;
+      <input type="checkbox" name="ex_type_b" value="Y" ${ex_type_b-Y}>B.年費/利息/其他費用&nbsp;
+      <input type="checkbox" name="ex_type_c" value="Y" ${ex_type_c-Y}>C.行銷活動/分期業務 &nbsp;
+      <input type="checkbox" name="ex_type_d" value="Y" ${ex_type_d-Y}>D.卡片使用/開卡/停卡/掛失/可用餘額 &nbsp;
+      <input type="checkbox" name="ex_type_z" value="Y" ${ex_type_z-Y}>Z.授權組業務 &nbsp;
+      <br>&nbsp;
+      <input type="checkbox" name="ex_type_e" value="Y" ${ex_type_e-Y}>E.申請業務 &nbsp;
+      <input type="checkbox" name="ex_type_f" value="Y" ${ex_type_f-Y}>F.帳務/帳單 &nbsp;
+      <input type="checkbox" name="ex_type_g" value="Y" ${ex_type_g-Y}>G.產品功能/補寄資料/分行查詢/保險/申訴/其他 &nbsp;
+      <input type="checkbox" name="ex_type_h" value="Y" ${ex_type_h-Y}>H.銀行業務 &nbsp;
+      <input type="checkbox" name="ex_type_i" value="Y" ${ex_type_i-Y}>I.非值機組使用 &nbsp;      
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="list_rr" colspan="2"><span class="dsp_text">合計:</span></td>
+    <td nowrap class="list_rr"><span class="dsp_text">${sum_total.(999)}</span></td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >案件類別&nbsp;</th>
+    <th nowrap >通數&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_ll"> ${case_type}_${case_desc}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_count.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

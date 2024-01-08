@@ -1,0 +1,178 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+	<title>印對帳單作業-[含雙幣卡]_detl-V.2018-0129-ryan-[Initial]</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+	<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+	<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+		<tr>
+			<td width="100">&nbsp;</td>
+			<td>
+				<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+				<!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;  -->
+				<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+			</td>
+		</tr>
+	</table>
+	<div id="dataBlock">
+		<!-- Detail data================================= -->
+		<table width="90%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td colspan="2">
+					<h1>兆豐國際商業銀行</h1>
+				</td>
+				<td colspan="2" class="list_rr" rowspan="2">
+					<font size="3"><span class="dsp_text">${tt_acct_type}</span>/繳款通知</font><br>
+					<font size="2">信用卡服務專線:(02)8982-0000</font>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="dsp_text">${zip_code_chin}</span>
+				</td>
+				<td class="list_rr" colspan="2">
+					<span class="dsp_number">${cti_seq}</span>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="2">
+					<span class="dsp_text">${wk_addr}</span>
+				</td>
+				<td nowrap colspan="5" class="list_rr">序號:
+					<span class="dsp_text">${tt_stmt_cycle}</span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan="5" class="list_rr">結帳日期:
+					<span class="dsp_text">${cycle_date}</span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan="4" class="list_rr">信用額度:$
+					<span class="dsp_number">${credit_limit.(999)}</span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan="2" >
+					<span class="dsp_text">${wk_cname}</span>收
+				</td>
+				<td nowrap class="list_rr">
+					<!--    			<span id="desc">您尚未辦妥自動轉款，請依其它繳款方式繳款</span> -->
+					<span>${wk_desc}</span>
+				</td>
+			</tr>
+		</table>
+		<!--List -->
+		<table width="90%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<th>幣別</th>
+				<th>自動轉帳帳號</th>
+				<th>自動轉帳預定扣款金額</th>
+				<th>自動轉帳預定扣款日</th>
+			</tr>
+			<!-- BEGIN DYNAMIC : DETAIL -->
+			<tr>
+				<td nowrap class="list_ll"><span class="dsp_text">${db_curr_code}</span></td>
+				<td nowrap class="list_ll"><span class="dsp_text" id="tt1_acct_no">${tt1_acct_no}</span></td>
+				<td nowrap class="list_ll"><span class="dsp_number">${tt1_pay_amt_name} $${tt1_pay_amt.(999.00)}</span></td>
+				<td nowrap class="list_ll"><span class="dsp_text">${autopay_date}</span></td>
+			</tr>
+			<!-- END DYNAMIC : DETAIL -->
+		</table>
+		<!--List -->
+		<table width="90%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<th>幣別</th>
+				<th>上期待繳總額</th>
+				<td></td>
+				<th>已繳金額</th>
+				<td></td>
+				<th>本期調整金額</th>
+				<td></td>
+				<th>本期新增款項</th>
+				<td></td>
+				<th>本期待繳總額</th>
+				<th>最低應繳金額</th>
+				<th>繳款截止日</th>
+			</tr>
+			<!-- BEGIN DYNAMIC : DETAIL -->
+			<tr>
+				<td nowrap class="list_ll"><span class="dsp_text">${db_curr_code}</span></td>
+				<td nowrap class="list_rr"><span class="dsp_number">${dc_last_ttl_amt.(999.00)}</span></td>
+				<td>-</td>
+				<td nowrap class="list_rr"><span class="dsp_number">${dc_payment_amt.(999.00)}</span></td>
+				<td>+</td>
+				<td nowrap class="list_rr"><span class="dsp_number">${dc_adjust_amt.(999.00)}</span></td>
+				<td>+</td>
+				<td nowrap class="list_rr"><span class="dsp_number">${dc_new_amt.(999.00)}</span></td>
+				<td>=</td>
+				<td nowrap class="list_rr"><span class="dsp_number">${dc_this_ttl_amt.(999.00)}</span></td>
+				<td nowrap class="list_rr"><span class="dsp_number">${dc_this_minimum_pay.(999.00)}</span></td>
+				<td nowrap class="list_ll"><span class="dsp_text">${lastpay_date}</span></td>
+			</tr>
+			<!-- END DYNAMIC : DETAIL -->
+		</table>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<textarea style="font-family: 標楷體;width:90%;" rows="100" cols="200">
+${print_desc}
+</textarea>
+
+
+	</div>
+	<br>
+	<!-- -->
+	<input type="hidden"  name="ROWID" value="${rowid}">
+	<input type="hidden"  name="MOD_PGM" value="cycr0022">
+	<input type="hidden"  name="p_seqno" value="${p_seqno}">
+	<input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden"  name="HIDE" value="${HIDE_DATA}">
+	<input type="hidden"  name="pageType" value="detl">
+	<input type="hidden"  name="cti_seq" value="${cti_seq}">
+	<input type="hidden"  name="tt1_pay_amt" value="${tt1_pay_amt}">
+	<input type="hidden"  name="tt1_acct_no" value="${tt1_acct_no}">
+	<input type="hidden"  name="db_curr_code" value="${db_curr_code}">
+	<input type="hidden"  name="wk_desc" value="${wk_desc}">
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+	top.refreshButton2('1');
+
+	//document.dataForm.acct_key.focus();
+
+	function validateInput()
+	{
+		if ( !top.checkFormat() )
+		{ return false; }
+
+		return true;
+	}
+	$(document).ready(function() {
+// 	 var tt1 = $("input[name=tt1_pay_amt]").val();
+// 	console.log("tt1"+tt1);
+// 	 var tt1_acno = $("input[name=tt1_acct_no]").val();
+// 		console.log("tt1_acct_no"+tt1_acno);
+// 		if(tt1_acno != ''){
+// 			$("#desc").text("");
+// 		}
+	});
+
+
+	//  $(document).ready(function() {
+	// 	 alert(${tt1_pay_amt});
+	//  });
+
+</script>

@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>卡友權益試算-V 20191205</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;身分證ID:
+   	<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" />
+   </td>
+   <td nowrap >&nbsp;卡號:
+   	<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" />
+   </td>
+   <td nowrap rowspan="2" colspan="2">&nbsp;
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+      <input type="Button"   value="計算權益" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btProcess" />&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;姓名:
+  		<span class="dsp_text">${ex_chi_name}</span>
+  		<input type="hidden" name="ex_chi_name" value="${ex_chi_name}" />
+  	</td>
+  	<td nowrap >&nbsp;卡友身分:
+  		<span class="dsp_text">${tt_card_hldr_flag}</span>
+  		<input type="hidden" name="tt_card_hldr_flag" value="${tt_card_hldr_flag}" />
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="queryBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  	<td nowrap colspan="4">&nbsp;前一年消費金額:
+  		<span class="dsp_number">${wk_last_consume.(999)}&nbsp;—&nbsp;${wk_last_use.(999)}
+				&nbsp;＝&nbsp;
+				<input type="text" class="dsp_text" name="wk_last_net" value="${wk_last_net}" size=12 readonly />
+			</span>
+  		<input type="hidden" name="wk_last_consume" value="${wk_last_consume}" />
+  		<input type="hidden" name="wk_last_use" value="${wk_last_use}" />
+  	</td>
+  	<td nowrap  colspan="4">&nbsp;當年度消費金額:
+  		<span class="dsp_number">${wk_this_consume.(999)}&nbsp;—&nbsp;${wk_this_use.(999)}
+				&nbsp;＝&nbsp;
+				<input type="text" class="dsp_text" name="wk_this_net" value="${wk_this_net}" size=12 readonly />
+			</span>
+			<input type="hidden" name="wk_this_consume" value="${wk_this_consume}" />
+			<input type="hidden" name="wk_this_use" value="${wk_this_use}" />
+  	</td>
+  </tr>
+	<tr>
+	 <td nowrap class="td_titl" colspan="2"><b>機場接送</b></td>
+	 <td nowrap class="td_titl" colspan="2"><b>機場停車</b></td>
+	 <td nowrap class="td_titl" colspan="2"><b>摩爾貴賓室</b></td>
+	 <td nowrap class="td_titl" colspan="2"><b>新貴通貴賓室</b></td>
+	</tr>
+	<tr>
+		<td nowrap class="list_ll">可用: <span class="dsp_number">${wk_cnt08}</span></td>
+		<td nowrap class="list_ll">已用: <span class="dsp_number">${wk_use08}</span></td>
+		<td nowrap class="list_ll">可用: <span class="dsp_number">${wk_cnt09}</span></td>
+		<td nowrap class="list_ll">已用: <span class="dsp_number">${wk_use09}</span></td>
+		<td nowrap class="list_ll">可用: <span class="dsp_number">${wk_cnt10}</span></td>
+		<td nowrap class="list_ll">已用: <span class="dsp_number">${wk_use10}</span></td>
+		<td nowrap class="list_ll">可用: <span class="dsp_number">${wk_cnt13}</span></td>
+		<td nowrap class="list_ll">已用: <span class="dsp_number">${wk_use13}</span></td>
+	 </tr>
+ </table>
+</div>
+<table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號</th>
+    <th nowrap >團體代號</th>
+    <th nowrap >卡種</th>
+    <th nowrap >權益代碼</th>
+    <th nowrap >專案代碼</th>
+    <th nowrap >免費原因</th>
+    <th nowrap >可用次數</th>
+    <th nowrap >已用次數</th>
+    <th nowrap >試算次數</th>
+    <th nowrap >每次扣抵金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc">${card_no}
+	 	  <input type="hidden" name="card_no" value="${card_no}" />
+	 </td>
+	 <td nowrap class="list_cc">${group_code}
+		<input type="hidden" name="card_type" value="${card_type}" /></td>
+   <td nowrap class="list_cc">${card_type}
+	 	  <input type="hidden" name="card_type" value="${card_type}" /></td>
+	 <td nowrap class="list_ll">${item_no}.${tt_item_no}
+	 	  <input type="hidden" name="item_no" value="${item_no}" />
+      <input type="hidden" name="tt_item_no" value="${tt_item_no}" /></td>
+	 <td nowrap class="list_cc">${proj_code}
+	 		<input type="hidden" name="proj_code" value="${proj_code}" /></td>
+	 <td nowrap class="list_ll">${free_type}.${tt_free_type}
+			 <input type="hidden" name="free_type" value="${free_type}" />
+			 <input type="hidden" name="tt_free_type" value="${tt_free_type}" />
+		</td>
+	 <td nowrap class="list_rr">${free_cnt.(999)}
+	 		<input type="hidden" name="free_cnt_08" value="${free_cnt_08}" /></td>
+	 <td nowrap class="list_rr">${use_cnt.(999)}
+	 		<input type="hidden" name="use_cnt" value="${use_cnt}" /></td>
+	 <td nowrap >
+	 		<input type="text" class="col_number" name="cal_cnt" value="${cal_cnt}" maxlength="2" size="4" zEdit="number" >
+	 </td>
+	 <td nowrap class="list_rr">${free_per_amt.(999)}
+	 		<input type="hidden" name="free_per_amt" value="${free_per_amt}" />
+	 </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

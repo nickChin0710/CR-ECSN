@@ -1,0 +1,9 @@
+
+connect to CR;
+
+
+GRANT CONNECT ON DATABASE TO USER crap1, USER dcdbmod, USER emdap41, USER emdap42;
+
+
+CONNECT RESET;
+TERMINATE;

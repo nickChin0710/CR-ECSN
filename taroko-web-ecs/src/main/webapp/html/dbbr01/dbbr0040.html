@@ -1,0 +1,115 @@
+<html>
+<head>
+    <title>DeBitCard消費扣款紀錄查詢報表-V.2018-0806-yash-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr> 
+                    <td nowrap >&nbsp;登錄批號：
+                        <input type="text" class="col_any" name="ex_key_no" value="${ex_key_no}" zEdit="any" maxlength="15" size="15" />
+                    </td>
+                    <td nowrap >&nbsp;登錄人員：
+                        <input type="text" class="col_any" name="ex_user" value="${ex_user}" zEdit="any" maxlength="15" size="15" />
+                    </td>
+                    <td nowrap >&nbsp;身分證字號：
+                        <input type="text" class="col_text" name="ex_id" value="${ex_id}" zEdit="alphanum,upper"  maxlength="10" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                   <td nowrap >&nbsp;登入日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="K" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8"  />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                        </script>
+                    </td>  
+                    <td nowrap >
+			            <span id="span1" class="col_radio">&nbsp;總筆數：
+			            <span class="col_key">${ls_qty.(999)}</span>
+			              &nbsp;總金額：
+			            <span class="col_key">${ls_amt.(999)}</span>
+			            </span>
+                    </td>  
+                    <td nowrap >&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>                                    
+                </tr>                
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">帳號類別</th>
+                <th nowrap class="list_th">正卡身分證字號</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">加檔項目</th>
+                <th nowrap class="list_th">加檔卡號</th>
+                <th nowrap class="list_th">金  額</th>
+                <th nowrap class="list_th">消費日期</th>
+                <th nowrap class="list_th">對帳單文字</th>
+                <th nowrap class="list_th">覆核人員</th>
+                <th nowrap class="list_th">登錄人員</th>
+                <th nowrap class="list_th">登錄批號</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${acct_type} </td>
+                <td nowrap class="list_cc"> ${acct_holder_id} </td>              
+                <td nowrap class="list_cc"> ${chi_name} </td>
+                <td nowrap class="list_cc"> ${add_item} </td>
+                <td nowrap class="list_cc"> ${card_no} </td>
+                <td nowrap class="list_rr"> ${dest_amt.(999)} </td>
+                <td nowrap class="list_cc"> ${purchase_date} </td>
+                <td nowrap class="list_cc"> ${bill_desc} </td>
+                <td nowrap class="list_cc"> ${apr_user} </td>
+                <td nowrap class="list_cc"> ${mod_user} </td>
+                <td nowrap class="list_cc"> ${key_no} </td>
+                <input type="hidden" name="qty" value="${qty}"> 
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}"> 
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

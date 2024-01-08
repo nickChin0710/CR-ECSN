@@ -1,0 +1,309 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-02-12  V1.00.01  yash           Initial                              -->
+<!-- 112-07-11  V1.00.02  Simon          set default ex_apr applied to TCB constraint-->
+<!-- 112-07-22  V1.00.03  Simon           1.取消全部覆核                      -->
+<!--                                      2.取消銷帳鍵值、借方科目            -->
+<!--                                      3.取消利息指示碼                    -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>科目明細調整覆核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+    <tr>   
+	    <td nowrap>帳戶帳號:
+		      <select  name="ex_actype" class="col_ddlb">
+             <option value="">--</option>
+		         ${dddw_actype}
+		      </select>
+	      <input type="text" class="col_text" name="ex_ackey" value="${ex_ackey}" zEdit="alphanum,upper" maxlength="19" size="19" />
+	    </td>    
+	    <td nowrap>登錄人員:
+		      <select  name="ex_crtuser" class="col_ddlb" >
+	             ${dddw_user}
+	          </select>
+	    </td>	    
+	    <td nowrap rowspan="2">&nbsp;
+            <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button" name="btnAdd" value="執行" onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+    <tr>
+        <td nowrap>結算幣別:
+              <select  name="ex_curr_code" class="col_ddlb" >
+                 ${dddw_curr}
+              </select>
+        </td>
+        <td nowrap>
+		      <span class="col_radio">
+		    <!-- <input type="radio" value="1" name="ex_apr" ${ex_apr-1} ${DEFAULT_CHK} />未放行 -->
+		         <input type="radio" value="1" name="ex_apr" ${ex_apr-1} 
+		         ${DEFAULT-ex_apr} />未放行
+		         <input type="radio" value="2" name="ex_apr" ${ex_apr-2} />已放行
+		      </span>
+          <input type="hidden" name="save_ex_apr" value="${save_ex_apr}">
+        </td>        
+    </tr>
+    <tr>
+    	<td nowrap colspan="3">&nbsp;
+    		<span class="dsp_text">${ex_acct_code1}</span>
+    		<input type="hidden" name="ex_acct_code1" value="${ex_acct_code1}">
+    		<br>&nbsp;
+    		<span class="dsp_text">${ex_acct_code2}</span>
+    		<input type="hidden" name="ex_acct_code2" value="${ex_acct_code2}">
+    	</td>
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	  <tr>
+	  	<td nowrap class="list_cc" colspan="3" >&nbsp;</td>
+	  	<td nowrap class="list_rr" >筆數: ${t1_cnt.(999)}
+        <input type="hidden" name="t1_cnt" value="${t1_cnt}" >
+	  	</td>
+	  	<td nowrap class="list_cc" colspan="1" >&nbsp;</td>
+	  	<td nowrap class="list_cc" >&nbsp;${tl_curr}
+	  		<input type="hidden" name="tl_curr" value="${tl_curr}">	
+	  	</td>
+	  	<td nowrap class="list_rr" >&nbsp;${tl_dr_amt.(999.00)}
+	  		<input type="hidden" name="tl_dr_amt" value="${tl_dr_amt}">
+	  	</td>
+	  	<td nowrap class="list_rr" >&nbsp;${tl_cr_amt.(999.00)}
+	  		<input type="hidden" name="tl_cr_amt" value="${tl_cr_amt}">
+	  	</td>
+<!--	<td nowrap class="list_cc" colspan="10" >&nbsp;</td>  -->
+<!--
+      <td nowrap class="list_ll" colspan="10" >&nbsp;
+        <input type="Button" id="btnProc3" value="全部覆核" ${btnproc3_off} onClick="return wf_approve('C3')" class="btConfirm">
+      </td>
+-->
+	  </tr>
+    <tr>
+        <th nowrap class="list_th" width="5%">
+           <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">執行&nbsp;
+        </th>
+        <th nowrap class="list_th">待(解)放行</th>
+        <th nowrap class="list_th">帳戶帳號</th>
+        <th nowrap class="list_th">中文姓名</th>
+        <th nowrap class="list_th">調整類別</th>
+        <th nowrap class="list_th">科目代號</th>
+        <th nowrap class="list_th">結算幣別</th>
+        <th nowrap class="list_th">借方金額</th>
+        <th nowrap class="list_th">貸方金額</th>
+        <th nowrap class="list_th">正卡ID</th>
+        <th nowrap class="list_th">科目名稱</th>
+<!--
+        <th nowrap class="list_th">借貸方科目</th>
+-->
+        <th nowrap class="list_th">入帳日</th>
+        <th nowrap class="list_th">起息日</th>
+<!--
+        <th nowrap class="list_th">銷帳鍵值</th>
+        <th nowrap class="list_th">利息指示碼</th>
+-->
+        <th nowrap class="list_th">原始金額</th>
+        <th nowrap class="list_th">目前餘額</th>
+        <th nowrap class="list_th">最新金額</th>        
+        <th nowrap class="list_th">目前可D數</th>
+        <th nowrap class="list_th">最新可D數</th>
+        <th nowrap class="list_th">交易<br>參考號</th>
+        <th nowrap class="list_th">卡號</th>
+        <th nowrap class="list_th">調整原因</th>
+        <th nowrap class="list_th">調整備註</th>
+        <th nowrap class="list_th">修改人員</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+     <tr>
+        <td nowrap class="list_no" >
+		  <span class="dsp_flag">${ok_flag}</span>
+			${SER_NUM}
+		  <input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} />
+      <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+		  <input type="hidden" name="ser_num" value="${ser_num}"/>
+		  <input type="hidden" name="rowid" value="${rowid}"/>
+		  <input type="hidden" name="mod_seqno" value="${mod_seqno}"/>
+		</td>
+        <td nowrap class="list_cc"> ${apr_name} </td>
+        <td nowrap class="list_ll"> ${wk_acct_key} </td>
+        <td nowrap class="list_ll"> ${chi_name} </td>
+        <td nowrap class="list_cc"> ${adjust_type} </td>
+        <td nowrap class="list_cc"> ${acct_code} </td>
+        <td nowrap class="list_cc"> ${curr_code} </td>
+        <td nowrap class="list_rr"> ${dr_amt.(999.00)} </td>
+        <td nowrap class="list_rr"> ${cr_amt.(999.00)} </td>
+        <td nowrap class="list_ll"> ${id_no} </td>
+        <td nowrap class="list_cc"> ${debt_chi} </td>
+<!--
+        <td nowrap class="list_ll"> ${debit_item} </td>
+-->
+        <td nowrap class="list_ll"> ${post_date.YMD} </td>
+        <td nowrap class="list_ll"> ${interest_date.YMD} </td>
+<!--
+        <td nowrap class="list_ll"> ${c_debt_key} </td>
+        <td nowrap class="list_cc"> ${tt_value_type} </td>
+-->
+        <td nowrap class="list_rr"> ${orginal_amt.(999.00)} </td>
+        <td nowrap class="list_rr"> ${bef_amt.(999.00)} </td>
+        <td nowrap class="list_rr"> ${aft_amt.(999.00)} </td>        
+        <td nowrap class="list_cc"> ${bef_d_amt.(999.00)} </td>
+        <td nowrap class="list_cc"> ${aft_d_amt.(999.00)} </td>
+        <td nowrap class="list_cc"> ${reference_no} </td>
+        <td nowrap class="list_cc"> ${card_no} </td>
+        <td nowrap class="list_cc"> ${adj_reason_code} </td>        
+        <td nowrap class="list_ll"> ${adj_comment} </td>
+        <td nowrap class="list_cc"> ${update_user} </td>
+        <input type="hidden" name="apr_name" value="${apr_name}"/>
+        <input type="hidden" name="wk_acct_key" value="${wk_acct_key}"/>
+        <input type="hidden" name="chi_name" value="${chi_name}"/>
+        <input type="hidden" name="acct_code" value="${acct_code}"/>
+        <input type="hidden" name="curr_code" value="${curr_code}"/>
+        <input type="hidden" name="dr_amt" value="${dr_amt}"/>
+        <input type="hidden" name="cr_amt" value="${cr_amt}"/>
+        <input type="hidden" name="id_no" value="${id_no}"/>
+        <input type="hidden" name="debt_chi" value="${debt_chi}"/>
+        <input type="hidden" name="debit_item" value="${debit_item}"/>
+        <input type="hidden" name="post_date" value="${post_date}"/>
+        <input type="hidden" name="interest_date" value="${interest_date}"/>
+        <input type="hidden" name="c_debt_key" value="${c_debt_key}"/>
+        <input type="hidden" name="value_type" value="${value_type}"/>
+        <input type="hidden" name="tt_value_type" value="${tt_value_type}">
+        <input type="hidden" name="orginal_amt" value="${orginal_amt}"/>
+        <input type="hidden" name="bef_amt" value="${bef_amt}"/>
+        <input type="hidden" name="aft_amt" value="${aft_amt}"/>
+        <input type="hidden" name="reference_no" value="${reference_no}"/>
+        <input type="hidden" name="apr_flag" value="${apr_flag}"/>
+        <input type="hidden" name="bef_d_amt" value="${bef_d_amt}"/>
+        <input type="hidden" name="aft_d_amt" value="${aft_d_amt}"/>
+        <input type="hidden" name="adjust_type" value="${adjust_type}">
+        <input type="hidden" name="card_no" value="${card_no}">
+        <input type="hidden" name="adj_reason_code" value="${adj_reason_code}">
+        <input type="hidden" name="adj_comment" value="${adj_comment}">
+        <input type="hidden" name="mod_user" value="${mod_user}">
+      </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="MOD_PGM" value="actp0010">
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+//top.pageRows="20";
+
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "actp0010_detl";
+    }
+/*
+    if ( top.actionCode == "S2" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行作業?!") === false) {
+            return false;
+         } 
+    }
+*/
+    return true;
+}
+
+/*
+function wf_approve(parm1) {
+    if (confirm("是否執行全部覆核") == false) { return false; }
+    top.submitControl(parm1);
+    return true;
+}  
+*/
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "actp0010_detl";
+    top.submitControl('S');
+    return true;
+}
+
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.dataForm.opt;
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 if (agy.checked){ seq++; }
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			 if(agy[i].checked){
+				 seq++;
+				 
+			 }
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 //alert("請至少勾選一筆資料!");
+		 alert("未選取執行資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+ 
+//全選
+ function selectAll() {
+
+    /***
+     var aElements = document.dataForm.getElementsByTagName("input");
+     for (var i = 0; i < aElements.length; i++) {
+         if (aElements[i].type == "checkbox") {
+             aElements[i].checked = document.dataForm.ex_selectAll.checked;
+         }
+     }
+    ***/
+
+	  var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+	  	if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+		  	aElems[i].checked = opt_select;
+		  }
+    }
+
+    return;
+ }
+
+
+</script>

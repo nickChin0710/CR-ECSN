@@ -1,0 +1,199 @@
+<html>
+<head>
+<title>特店風險註記維護-排除卡號</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0;fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#detl_btnAdd").click(function(){
+   
+	var ex_db_card_no =$("#ex_db_card_no").val();
+	var ex_auth_date1 =$("#ex_auth_date1").val();
+	var ex_auth_date2 =$("#ex_auth_date2").val();
+	var ex_card_tot_amt =$("#ex_card_tot_amt").val();
+	
+    
+    rowNum++;
+    ind++;
+    var serNo ="";
+    if ( ind < 10 )
+      { serNo = "0"+ind; }
+    else
+   	{ serNo = ""+ind;  }
+    
+    $("#table1").append( 
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +" <input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +" <input type='hidden' value='"+ex_db_card_no+"' name='db_card_no' />"
+      +" <input type='hidden' value='"+ex_auth_date1+"' name='auth_date1' />"
+      +" <input type='hidden' value='"+ex_auth_date2+"' name='auth_date2' />"
+      +" <input type='hidden' value='"+ex_card_tot_amt+"' name='card_tot_amt' />"
+      +" <input type='hidden' value='' name='old_data' />"
+      +" <input type='hidden' value='' name='rowid' />"
+      +"</td>"  
+      +"<td nowrap class='list_cc'>"+ex_db_card_no+"</td>"
+      +"<td nowrap class='list_cc'>"+ex_auth_date1+"--"+ex_auth_date2+"</td>"
+      +"<td nowrap class='list_cc'>"+ex_card_tot_amt+"</td>"
+      +"</tr>"
+      );
+      
+      //-clear-
+      $("#ex_db_card_no").val('');
+      $("#ex_auth_date1").val('');
+      $("#ex_auth_date2").val('');
+      $("#ex_card_tot_amt").val('');
+     
+  });
+});
+
+</script>
+
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">&nbsp;收單行：
+      <span class="dsp_text">${acq_bank_id}</span>
+      <input type="hidden" name="acq_bank_id" value="${acq_bank_id}" />
+   </td>
+   <td nowrap class="col_key">特店代碼：
+      <span class="dsp_text">${mcht_no}</span>
+      <input type="hidden" name="mcht_no" value="${mcht_no}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >特店名稱：
+      <span class="dsp_text" >${mcht_name}</span>
+      <input type="hidden" name="mcht_name" value="${mcht_name}" />
+   </td>
+   <td nowrap >住址：
+      <span class="dsp_text">${mcht_addr}</span>
+      <input type="hidden" name="mcht_addr" value="${mcht_addr}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >本行風險代碼：
+      <span class="dsp_text">${mcht_risk_code}</span>
+      <input type="hidden" name="mcht_risk_code" value="${mcht_risk_code}">
+   </td>
+   <td nowrap >管制日期：
+      <span class="dsp_text">${risk_start_date.YMD}</span>
+      <input type="hidden" name="risk_start_date" value="${risk_start_date}">
+      --
+      <span class="dsp_text">${risk_end_date.YMD}</span>
+      <input type="hidden" name="risk_end_date" value="${risk_end_date}">
+   </td>
+  </tr>
+</table>
+<!--新增明細-->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >卡號：
+      <input type="text" class="col_text" id="ex_db_card_no" maxlength="16" size="18" value="" 
+         zEdit="any" >
+   </td>
+   <td nowrap >管制期間：
+         <input type="text" class="col_date" id="ex_auth_date1" value=""
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_auth_date1'});
+	    </script>
+	    --
+	     <input type="text" class="col_date" id="ex_auth_date2" value=""
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_auth_date2'});
+	    </script>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >日累計金額:
+      <input type="text" class="col_number" id="ex_card_tot_amt" maxlength="12" size="14" value="" 
+         zEdit="number" />
+   </td>
+   <td>
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />&nbsp;IND_NUM=${ind_num}
+   </td>
+   </tr>
+</table>  
+<hr>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap width="5%">刪除 </th>
+    <th nowrap>卡號 </th>
+    <th nowrap>管制期間 </th>
+    <th nowrap>日累計金額 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" >      
+      <input type="hidden" name="db_card_no" value="${db_card_no}" >
+      <input type="hidden" name="auth_date1" value="${auth_date1}">
+      <input type="hidden" name="auth_date2" value="${auth_date2}">
+      <input type="hidden" name="card_tot_amt" value="${card_tot_amt}">
+      <input type="hidden" name="old_data" value="${db_card_no},${auth_date1},${auth_date2},${card_tot_amt}">
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${db_card_no}</td>
+    <td nowrap class="list_cc" >&nbsp;${auth_date1.YMD}--${auth_date2.YMD}</td>  
+    <td nowrap class="list_cc" >&nbsp;${card_tot_amt}</td>
+   </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ccam3050">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="cancel">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+  top.refreshButton2('2');
+ 
+ function validateInput()
+  {
+    top.allow_spec_char = true;
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

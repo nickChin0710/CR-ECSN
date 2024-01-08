@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>免費使用道路救援參數維護-V.2018-0416-ryan[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="/js/jquery.js"></script>
+
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+   		<td nowrap>&nbsp;專案代號:
+      		<input  zEdit="any" class="col_any" type="text" size="10" MaxLength="10" name="ex_proj_no" value="${ex_proj_no}"></input>  
+   		</td>
+   		<td nowrap >&nbsp;  
+      		<input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   		</td>  
+   	</tr>  
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">專案代號</th>
+    	<th nowrap class="list_th">專案說明</th>   
+    	<th nowrap class="list_th">有效截止日</th>   
+    	<th nowrap class="list_th">消費金額累積方式</th>   
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr onclick="detailScreen('${SER_NUM}','${proj_no}','','','')" style="cursor:hand">
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${proj_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${proj_desc}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${valid_end_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_amt_sum_flag}&nbsp; </td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="data_k4" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="MOD_PGM" value="rdsm0050">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript" >
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_proj_no.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rdsm0050_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "rdsm0050_detl" ;
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

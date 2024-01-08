@@ -1,0 +1,296 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                Initial                               -->
+<!-- 109-01-03  V1.00.01  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>愛金卡黑名單人工指定作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=black_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=black_flag]").filter('[value=1]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;愛金卡卡號:
+      <input type="text" class="col_text" name="kk_ich_card_no" value="${kk_ich_card_no}" maxlength="20" size="22" zEdit="number" onChange="cardChange('1')" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="2" >&nbsp;愛金卡卡號:
+			<span class="dsp_text">${ich_card_no}&nbsp;</span>
+			<input type="hidden" name="ich_card_no" value="${ich_card_no}">
+		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;黑名單狀態:
+ 			<span class="col_radio">
+         <input type="radio" value="1" name="black_flag" ${black_flag-1} ${DEFAULT_CHK} />1.強制報送
+         <input type="radio" value="2" name="black_flag" ${black_flag-2} />2.黑名單
+         <input type="radio" value="3" name="black_flag" ${black_flag-3} />3.不報送
+         <input type="radio" value="4" name="black_flag" ${black_flag-4} />4.強制報送-已餘轉
+      </span>
+		</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;強制/不報送期間:
+ 		<input type="text" class="col_date" name="send_date_s" value="${send_date_s}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'send_date_s'});
+	    </script>
+	    --
+	  <input type="text" class="col_date" name="send_date_e" value="${send_date_e}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'send_date_e'});
+	    </script>
+	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;信用卡卡號:
+ 		<label class="dsp_text" id="card_no" >${card_no}</label>
+  	<input type="hidden" name="card_no" value="${card_no}"> 		
+ 	</td>
+ 	<td nowrap >&nbsp;最近異動管道:
+ 		<span class="dsp_text">${tt_from_type}</span>
+ 		<input type="hidden" name="from_type" value="${from_type}">
+ 		<input type="hidden" name="tt_from_type" value="${tt_from_type}">
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;信用卡狀態:
+ 		<label class="dsp_text" id="current_code" >${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</label>
+  	<input type="hidden" name="current_code" value="${current_code}"> 		
+ 	</td>
+ 	<td nowrap >&nbsp;信用卡效期:
+ 		<label class="dsp_text" id="new_end_date" >${new_end_date.YMD}</label>
+  	<input type="hidden" name="new_end_date" value="${new_end_date}"> 	 		
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;指定日期:
+ 		<span class="dsp_text">${black_date.YMD}</span>
+ 		<input type="hidden" name="black_date" value="${black_date}">
+ 	</td>
+ 	<td nowrap >&nbsp;設定經辦:
+ 		<span class="dsp_text">${black_user_id}</span>
+ 		<input type="hidden" name="black_user_id" value="${black_user_id}">
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;備註:
+ 		<input type="text" class="col_any" name="black_remark" value="${black_remark}" maxlength="60" size="62" zEdit="any,canTw">
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;覆核日期:
+ 		<span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+ 		<input type="hidden" name="apr_date" value="${apr_date}">
+ 	</td>
+ 	<td nowrap >&nbsp;覆核人員:
+ 		<span class="dsp_text">${apr_user}&nbsp;</span>
+ 		<input type="hidden" name="apr_user" value="${apr_user}">
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" class="col_key" >
+ 		&nbsp;愛金卡黑名單共同條件(非掛失＆未屆期＆非黑名單＆無鎖卡日＆無退卡日)<br><br> 		
+ 		&nbsp;1.黑名單狀態:"黑名單"無須設定期間(系統僅報送至信用卡效期止)<br>
+ 		&nbsp;2.若強制/不報送期間迄日大於信用卡效期，系統僅報送至信用卡效期止<br>
+ 		&nbsp;3.愛金卡上黑名單後若遭鎖卡，系統將自動取消黑名單報送 		
+ 	</td>
+ </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+
+<input type="hidden" name="ajax_code" value="${ajax_code}">
+<input type="hidden" id="return_date" name="return_date" value="${return_date}">
+<input type="hidden" id="lock_date" name="lock_date" value="${lock_date}">
+<input type="hidden" id="blacklt_s_date" name="blacklt_s_date" value="${blacklt_s_date}">
+<input type="hidden" id="blacklt_e_date" name="blacklt_e_date" value="${blacklt_e_date}">
+<input type="hidden" id="no_ich_card_no" name="no_ich_card_no" value="${no_ich_card_no}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ichm0050">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+		
+		var  no_ich_card_no =document.forms["dataForm"]["no_ich_card_no"].value;
+		if(no_ich_card_no =='N'){
+			alert("愛金卡號不存在 !!");
+			return false;
+		}
+		var  lock_date =document.forms["dataForm"]["lock_date"].value;
+		if (top.actionCode=='D' && lock_date !='') {
+			if(confirm("已鎖卡 是否刪除黑名單")==false){
+				return false;
+			}
+		}
+		
+		var  blacklt_s_date =document.forms["dataForm"]["blacklt_s_date"].value;
+		var  blacklt_e_date =document.forms["dataForm"]["blacklt_e_date"].value;
+		if(top.actionCode=='A' || top.actionCode=='U'){
+			if(blacklt_s_date !='' && blacklt_e_date !=''){
+				if(confirm("愛金卡已列黑名單, 是否再指定")==false){
+					return false;
+				}
+			}
+		}
+		
+    return true;
+  }
+ 
+   function cardChange(ps1)
+ {
+ 	var  ich_card_no =document.forms["dataForm"]["kk_ich_card_no"].value.toUpperCase();
+	var  ajax_code =document.forms["dataForm"]["ajax_code"].value;
+	if ( ich_card_no === '' || ajax_code !='' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+/*   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_key";
+   }*/ // 20200102 updated for archit.  change
+
+	resetJSON();
+	addJSON("ax_ich_card_no",ich_card_no);	
+	processAJAX();
+ }
+ 
+   function ajaxResponse()
+ {
+	 top.respHtml ="ichm0050_detl";
+   top.requHtml ="ichm0050_detl";
+
+	if  ( idCode === '1') {
+      var card_no =getJSONvalue("card_no",0);
+      if (card_no.length>0) { 
+      	$("#card_no").text(card_no);   
+      	$("#card_no").val(card_no);   
+      }      
+      
+      var current_code =getJSONvalue("current_code",0);
+      if (current_code.length>0) { 
+      	$("#current_code").text(current_code);   
+      	$("#current_code").val(current_code);   
+      }      
+      
+      var new_end_date =getJSONvalue("new_end_date",0);
+      if (new_end_date.length>0) { 
+      	$("#new_end_date").text(new_end_date);   
+      	$("#new_end_date").val(new_end_date);   
+      } 
+      
+      var return_date =getJSONvalue("return_date",0);
+      if (return_date.length>0) {       	
+      	$("#return_date").val(return_date);   
+      }
+      
+      var lock_date =getJSONvalue("lock_date",0);
+      if (lock_date.length>0) {       	
+      	$("#lock_date").val(lock_date);   
+      }
+      
+      var blacklt_s_date =getJSONvalue("blacklt_s_date",0);
+      if (blacklt_s_date.length>0) {       	
+      	$("#blacklt_s_date").val(blacklt_s_date);   
+      }
+      
+      var blacklt_e_date =getJSONvalue("blacklt_e_date",0);
+      if (blacklt_e_date.length>0) {       	
+      	$("#blacklt_e_date").val(blacklt_e_date);   
+      }   
+      
+      var no_ich_card_no =getJSONvalue("no_ich_card_no",0);
+      if (no_ich_card_no.length>0) {       	
+      	$("#no_ich_card_no").val(no_ich_card_no);   
+      }     
+	}
+      
+	if ( idCode === '1')
+	{ return false; }
+ }
+ 
+</script>

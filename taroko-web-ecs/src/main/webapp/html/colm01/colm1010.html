@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>債協基本資料維護作業-107-01-31-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2">&nbsp;  
+      <input type="Button"  id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!-- <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp; -->
+   </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;身分證字號：
+      <input type="text" class="col_text" name="exId" value="${exId}" 
+        zEdit="alphanum,upper" maxlength="10" size="12" />
+    </td>
+    <td nowrap >&nbsp;類別：
+      <select size="1" name="exLiabStatus" class="col_ddlb">
+         <option value="0" ${exLiabStatus-0} >0.全部</option>
+         <option value="1" ${exLiabStatus-1} >1.停催</option>
+         <option value="2" ${exLiabStatus-2} >2.復催</option>
+         <option value="3" ${exLiabStatus-3} >3.協商成功</option>
+      </select> 
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;通報日期：
+      <input type="text" class="col_date" name="exNotifyDateS" value="${exNotifyDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exNotifyDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exNotifyDateE" value="${exNotifyDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="10" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exNotifyDateE'});
+	  </script>
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">身分證字號</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">債權銀行名稱</th>
+    <th nowrap class="list_th">債協狀態</th>
+    <th nowrap class="list_th">通報日期</th>
+    <th nowrap class="list_th">收件日期</th>
+    <th nowrap class="list_th">復催日期</th>
+    <th nowrap class="list_th">停催日期</th>
+    <th nowrap class="list_th">債協備註</th>
+    <th nowrap class="list_th">協成-信用卡金額</th>
+    <th nowrap class="list_th">協成-信貸金額</th>
+    <th nowrap class="list_th">協成-利率</th>
+    <th nowrap class="list_th">協成-冊號</th>
+    <th nowrap class="list_th">協成-分期簽檔號</th>
+    <th nowrap class="list_th">協成月份</th>
+    <th nowrap class="list_th">債務協商序號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','${mod_seqno}','${liab_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+	</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+   <td nowrap class="list_ll"> ${bank_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_liab_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${notify_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${receive_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${recol_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${stop_notify_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${liab_remark}&nbsp;</td>
+   <td nowrap class="list_rr"> ${succ_total_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${succ_credit_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${succ_year_int_rate}&nbsp;</td>
+   <td nowrap class="list_cc"> ${volume_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${install_sign_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${succ_month.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${liab_seqno}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ document.dataForm.exId.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colm1010_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "colm1010_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

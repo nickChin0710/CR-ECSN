@@ -1,0 +1,128 @@
+<html>
+<head>
+<title>公共運輸旅平險卡片等級參數維護-108-1206-V1.00.01-Amber-[Initial]
+					   -111-1007-V1.00.02-ryan-[移除資料類別篩選條件 ]
+					   -111-1011-V1.00.03-ryan-[調整按鈕位置]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="/js/jquery.js"></script>
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<!-- <td nowrap colspan="2">&nbsp;資料類別：
+      		<span class="col_radio">
+         		<input type="radio" value="5" name="ex_key_type" ${ex_key_type-5} ${DEFAULT-ex_key_type} />團體代號+卡種
+         		&nbsp;&nbsp;&nbsp;
+         		<input type="radio" value="2" name="ex_key_type" ${ex_key_type-2} />卡種
+      		</span>
+   		</td> -->
+   		<!-- <td nowrap rowspan="2">&nbsp;  
+      		<input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   		</td>    -->
+  	</tr>
+  	<tr>
+  		<td nowrap style="display:${ex_card_type}">&nbsp;卡種:
+   			<select size="1" name="ex_card_type" class="col_ddlb"   >
+      			${dddw_card_type}
+   			</select> &nbsp;&nbsp;
+   		</td>
+		<td nowrap style="display:${ex_group_code}">&nbsp;團體代號:
+   			<select size="1" name="ex_group_code" class="col_ddlb"  >
+      			${dddw_group_code}
+   			</select>
+		   </td>
+		<td nowrap >&nbsp;  
+      		<input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   		</td>  
+  	</tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">卡種</th>   
+    	<th nowrap class="list_th">團體代號</th>  
+    	<th nowrap class="list_th">卡片等級</th>   
+    	<th nowrap class="list_th">待覆核</th>
+    	<th nowrap class="list_th">建檔經辦</th>
+    	<th nowrap class="list_th">建檔日期</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr  onclick="detailScreen('${SER_NUM}','${rowid}','${db_temp}','','','','')" style="cursor:hand">
+   		<td nowrap class="list_no" > ${SER_NUM}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_card_type}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_group_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${rank_seq}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${db_temp}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${crt_user}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${crt_date.YMD}&nbsp; </td>
+	</tr>	
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="data_k4" value="" >
+<input type="hidden"  name="data_k5" value="" >
+<input type="hidden"  name="data_k6" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="group_code"  value="${group_code}">
+   		<input type="hidden"  name="apr_user"  value="${apr_user}">
+		<input type="hidden"  name="apr_date"  value="${apr_date}">
+<input type="hidden"  name="MOD_PGM" value="mktm4205">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc'); 
+</script>
+
+<script language="javascript" >
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ document.dataForm.ex_item_no.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm4205_add"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5,parm6) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    document.dataForm.data_k6.value = parm6;
+    top.respHtml  = "mktm4205_detl" ;
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

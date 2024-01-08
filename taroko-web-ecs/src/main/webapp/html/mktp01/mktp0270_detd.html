@@ -1,0 +1,641 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/11/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+  <title> 109/10/07 V1.00.02 Allen Ho Initial 紅利積點兌換贈品登錄檔覆核</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=ie11">
+  <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+  <link rel="stylesheet" href="js/Calendar/calendar.css">
+  <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+  <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+    <!-- Button **************************************************************-->
+    <tr>
+      <td width="100">&nbsp;</td>
+      <td colspan="4">
+        <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+      </td>
+    </tr>
+  </table>
+  <div id="dataBlock">
+    <!-- review key ********************************************************* -->
+    <table width="60%" border="" cellspacing="" cellpadding="">
+      <tr>
+        <td nowrap class="td_data"="%">放行狀態</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">維護經辦</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${crt_user}</span>
+        -${comm_crt_user}
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">卡號</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${card_no}</span>
+        <input   type="hidden" name="card_no" value="${card_no}" />
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">身分證號</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${id_no}</span>
+        <input   type="hidden" name="id_no" value="${id_no}" />
+        <span class="dsp_text">${chi_name}</span>
+        <input   type="hidden" name="chi_name" value="${chi_name}" />
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">贈品代碼</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${gift_no}</span>
+        <input   type="hidden" name="gift_no" value="${gift_no}" />
+        -${comm_gift_no}
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">廠商代碼</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${vendor_no}</span>
+        <input   type="hidden" name="vendor_no" value="${vendor_no}" />
+        -${comm_vendor_no}
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">紅利類別</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${bonus_type}</span>
+        <input   type="hidden" name="bonus_type" value="${bonus_type}" />
+        -${comm_bonus_type}
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">覆核類別</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${proc_flag}</span>
+        <input   type="hidden" name="proc_flag" value="${proc_flag}" />
+        -${comm_proc_flag}
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="td_data"="%">交易序號</td>
+        <td nowrap  class="td_data" ">
+        <span class="dsp_text">${tran_seqno}</span>
+        <input   type="hidden" name="tran_seqno" value="${tran_seqno}" />
+        </td>
+      </tr>
+    </table>
+  </div>
+  <!-- Review data********************************************************* -->
+  <div id="condBlock">
+    <table width="60%" border="" cellspacing="" cellpadding="">
+      <tr>
+        <td nowrap  class="td_data">
+          <span class="dsp_text">註記　欄位說明</span>
+        </td>
+        <td nowrap  class="td_data">
+          <span class="dsp_text">==> 刪除前 <==</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_gift_type" ${opt_gift_type-Y} >贈品類別</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_gift_type}</span>
+          (${comm_bef_gift_type})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_cash_value" ${opt_cash_value-Y} >贈品價格</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_cash_value.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_total_pt" ${opt_total_pt-Y} >累計應扣點數</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_total_pt.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exchg_pt" ${opt_exchg_pt-Y} >單位應扣點數</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_exchg_pt.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exchg_amt" ${opt_exchg_amt-Y} >單位自付額</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_exchg_amt.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_end_tran_bp" ${opt_end_tran_bp-Y} >兌換時點數餘額</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_end_tran_bp.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_fund_code" ${opt_fund_code-Y} >基金代碼</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_fund_code}</span>
+          (${comm_bef_fund_code})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_tran_date" ${opt_tran_date-Y} >兌換日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_tran_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_from_mark" ${opt_from_mark-Y} >　　管道</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_from_mark}</span>
+          (${comm_bef_from_mark})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exchg_cnt" ${opt_exchg_cnt-Y} >　　數量</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_exchg_cnt.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exchg_mark" ${opt_exchg_mark-Y} >　　註記</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_exchg_mark}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exg_gl_date" ${opt_exg_gl_date-Y} >　　起帳日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_exg_gl_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exg_apr_user" ${opt_exg_apr_user-Y} >　　覆核人員</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_exg_apr_user}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_exg_apr_date" ${opt_exg_apr_date-Y} >　　覆核日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_exg_apr_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_chi_name" ${opt_chi_name-Y} >收件人姓名</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_chi_name}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_cellar_phone" ${opt_cellar_phone-Y} >　　手機號碼</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_cellar_phone}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_home_area_code1" ${opt_home_area_code1-Y} >　　電話區碼(H)</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_home_area_code1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_home_tel_no1" ${opt_home_tel_no1-Y} >　　電話</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_home_tel_no1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_home_tel_ext1" ${opt_home_tel_ext1-Y} >　　分機</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_home_tel_ext1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_office_area_code1" ${opt_office_area_code1-Y} >　　電話區碼(O)</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_office_area_code1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_office_tel_no1" ${opt_office_tel_no1-Y} >　　電話</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_office_tel_no1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_office_tel_ext1" ${opt_office_tel_ext1-Y} >　　分機</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_office_tel_ext1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_bill_sending_zip" ${opt_bill_sending_zip-Y} >　　郵遞區號</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_bill_sending_zip}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_bill_sending_addr1" ${opt_bill_sending_addr1-Y} >　　地址-縣市</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_bill_sending_addr1}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_bill_sending_addr2" ${opt_bill_sending_addr2-Y} >　　地址-鄉鎮市區</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_bill_sending_addr2}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_bill_sending_addr3" ${opt_bill_sending_addr3-Y} >　　地址-村里</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_bill_sending_addr3}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_bill_sending_addr4" ${opt_bill_sending_addr4-Y} >　　地址-鄰</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_bill_sending_addr4}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_bill_sending_addr5" ${opt_bill_sending_addr5-Y} >　　地址-明細</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_bill_sending_addr5}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ecoupon_bno" ${opt_ecoupon_bno-Y} >電子商品批號</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_ecoupon_bno}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ecoupon_date_s" ${opt_ecoupon_date_s-Y} >　　有效起日</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ecoupon_date_s.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ecoupon_date_e" ${opt_ecoupon_date_e-Y} >　　有效迄日</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ecoupon_date_e.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ecoupon_date" ${opt_ecoupon_date-Y} >　　給號日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ecoupon_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ecoupon_ret_date" ${opt_ecoupon_ret_date-Y} >　　屆期回沖日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ecoupon_ret_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ecoupon_gl_date" ${opt_ecoupon_gl_date-Y} >　  回沖啟帳日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ecoupon_gl_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_sms_flag" ${opt_sms_flag-Y} >　　簡訊旗標</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_sms_flag}</span>
+          (${comm_bef_sms_flag})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_sms_date" ${opt_sms_date-Y} >　　簡訊發送日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_sms_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_unpay_cnt" ${opt_unpay_cnt-Y} >　　未請款數量:</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_unpay_cnt.(999)}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_sms_resend_desc" ${opt_sms_resend_desc-Y} >　　簡訊重送備註</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_sms_resend_desc}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_air_type" ${opt_air_type-Y} >航空公司</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_air_type}</span>
+          (${comm_bef_air_type})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_cal_mile" ${opt_cal_mile-Y} >　　換算哩程數</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_cal_mile}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_cal_dfpno" ${opt_cal_dfpno-Y} >　　會員編號</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_cal_dfpno}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_passport_name" ${opt_passport_name-Y} >　　護照姓名</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_passport_name}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_passport_surname" ${opt_passport_surname-Y} >　　護照姓</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_passport_surname}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_send_date" ${opt_send_date-Y} >　　送檔日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_send_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_send_time" ${opt_send_time-Y} >　　送檔時間</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_send_time}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_recv_date" ${opt_recv_date-Y} >　　收檔日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_recv_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_recv_time" ${opt_recv_time-Y} >　　收檔時間</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_recv_time}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_air_birthday" ${opt_air_birthday-Y} >　　出生日期</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_air_birthday}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_air_id_no" ${opt_air_id_no-Y} >　　身分證號</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_air_id_no}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_air_apr_user" ${opt_air_apr_user-Y} >　　覆核人員</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_air_apr_user}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_air_apr_date" ${opt_air_apr_date-Y} >　　覆核日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_air_apr_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_rjct_proc_code" ${opt_rjct_proc_code-Y} >　　退件處理</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_rjct_proc_code}</span>
+          (${comm_bef_rjct_proc_code})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_rjct_proc_remark" ${opt_rjct_proc_remark-Y} >　　退件處理說明</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_rjct_proc_remark}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_out_date" ${opt_out_date-Y} >出貨日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_out_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_out_batchno" ${opt_out_batchno-Y} >　　單號</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_out_batchno}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_register_no" ${opt_register_no-Y} >　　掛號號碼</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_register_no}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_out_mark" ${opt_out_mark-Y} >　　備註</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_out_mark}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_out_apr_user" ${opt_out_apr_user-Y} >　　覆核人員</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_out_apr_user}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_out_apr_date" ${opt_out_apr_date-Y} >　　覆核日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_out_apr_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_pay_date" ${opt_pay_date-Y} >請款日期</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_pay_date}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_pay_gl_date" ${opt_pay_gl_date-Y} >　　起帳日期</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_pay_gl_date}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_pay_apr_user" ${opt_pay_apr_user-Y} >　　覆核人員</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_pay_apr_user}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_pay_apr_date" ${opt_pay_apr_date-Y} >　　覆核日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_pay_apr_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_return_date" ${opt_return_date-Y} >退貨日期</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_return_date}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_return_reason" ${opt_return_reason-Y} >　　原因</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_return_reason}</span>
+          (${comm_bef_return_reason})
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_return_mark" ${opt_return_mark-Y} >　　說明</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_return_mark}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ret_apr_user" ${opt_ret_apr_user-Y} >　　覆核人員</td>
+        <td nowrap>
+          <span class="dsp_text">${bef_ret_apr_user}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ret_apr_date" ${opt_ret_apr_date-Y} >　　覆核日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ret_apr_date.YMD}</span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <input type="checkbox" value="Y" name="opt_ret_gl_date" ${opt_ret_gl_date-Y} >　　起帳日期</td>
+        <td nowrap>
+          <span class="dsp_date">${bef_ret_gl_date.YMD}</span>
+        </td>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <!-- trail ************************************************************** -->
+  <input type="hidden" name="a.id_p_seqno" value="${a.id_p_seqno}">
+  <input type="hidden" name="aud_type" value="${aud_type}">
+  <input type="hidden" name="data_k1" value="" >
+  <input type="hidden" name="data_k2" value="" >
+  <input type="hidden" name="data_k3" value="" >
+  <input type="hidden" name="data_k4" value="" >
+  <input type="hidden" name="data_k5" value="" >
+  <input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+  <input type="hidden" name="ROWID" value="${rowid}">
+  <input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+  <input type="hidden" name="MOD_PGM" value="mktp0270">
+  <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+  <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+  <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+  <input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+  top.refreshButton2('1');
+
+  function validateInput()
+  {
+    if ( !top.checkFormat() )
+    { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

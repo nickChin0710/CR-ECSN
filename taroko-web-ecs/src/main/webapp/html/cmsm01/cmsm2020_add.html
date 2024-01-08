@@ -1,0 +1,1028 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-12-25  V1.00.01                                                      -->
+<!-- 109-02-12  V1.00.02  JustinWu       add new columns and some methods     -->
+<!-- 109-02-25  V1.00.03  JustinWu       add validator for corp_no, and 境外公司戶->境外公司JCIC統編 -->
+<!-- 109-05-29  V1.00.04  JustinWu       charge_id and charge_name are required -->
+<!-- 109-06-24  V1.00.05    tanwei       隱藏字段                             -->
+<!-- 109-06-24  V1.00.06    zuwei       隱藏授信帳號字段                       -->
+<!-- 109-08-11  V1.00.07    JustinWu       舊繳款代號隱藏                        -->
+<!-- 110-08-19  V1.00.08    Sunny Ts       修改姓名欄位的size maxlength:50 size:92-->
+<!-- 110-08-19  V1.00.09    Sunny Ts       修改地址maxlength:5-5-6-6-28，共計50個中文字-->
+<!-- 110-08-19  V1.00.10    Sunny Ts       修改電話區碼-電話-分機均僅能輸入數字 -->
+<!-- 110-08-19  V1.00.10    Sunny Ts       增加檢核email格式 -->
+<!-- 110-08-20  V1.00.11    JustinWu       chi_name and abbr_name: half width -> full width -->
+<!-- 110-09-08  V1.00.12    Sunny Ts       charge_name: half width -> full width -->
+<!-- 110-10-08  V1.00.13    JustinWu       add zip2                           -->
+<!-- 111-02-27  V1.00.14    Sunny          公司帳單註記(bill_apply_flag)改為4改2，5改3       -->
+<!-- 112-05-10  V1.00.15    Sunny          限制只能選擇公司個繳(disable總繳選項)-->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>法人相關新資料登錄-2021-10-08</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user3}  
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+</table>
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+  <input type="Button" id="btnAdd"     value=" 新增 " ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" id="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+   <table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+   <tr>
+      <td nowrap >&nbsp;統一編號:
+         <input type="text" class="col_text" id="corp_no" name="corp_no" value="${corp_no}" maxlength=11 size="13" zEdit="alphanum,upper" zRequire="Y" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;公司中文名稱:
+         <input type="text" class="col_any" name="chi_name" value="${chi_name}" maxlength="40" size="42" zEdit="any,canTw" zRequire="Y" onchange="top.convertInputToFullWidth(this)">
+      </td>
+   </tr>
+</table>
+</div>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">基本資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">帳戶資料</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-3')">聯絡人資料</td>
+    </tr>
+  </table>
+</div>
+<div id="dataBlock">
+<!-----------基本資料-------------->
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+<tr>
+   <td colspan="3" nowrap>&nbsp;法人行業分類:
+      <select size="1"  name="empoly_type" class="col_ddlb" zRequire="Y">
+         <option value="">--</option>
+         <option value="1" ${empoly_type-1}>1.法人卡－民營</option>
+         <option value="2" ${empoly_type-2}>2.法人卡－公營</option>
+         <option value="3" ${empoly_type-3}>3.法人卡－政府</option>
+         <option value="4" ${empoly_type-4}>4.法人卡－金融</option>
+         <option value="5" ${empoly_type-5}>5.法人卡－其他</option>
+      </select>
+   </td>
+   <td nowrap colspan="3">&nbsp;境外公司JCIC統編:
+      <input type="text" class="col_any" name="obu_id" value="${obu_id}" maxlength="11" size="13">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;最早往來日:
+      <span class="dsp_text">${card_since.YMD}</span>
+      <input type="hidden" name="card_since" value="${card_since}">
+   </td>
+   <td nowrap colspan="3">&nbsp;商務繳款種類:
+      <span class="col_radio">
+         <input type="radio" value="1" name="corp_act_type" ${corp_act_type-1} disabled>總繳
+         <input type="radio" value="2" name="corp_act_type" ${corp_act_type-2} ${DEFAULT_CHK} zRequire="Y">個繳
+      </span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;中文簡稱:
+      <input type="text" class="col_any" name="abbr_name" value="${abbr_name}" 
+         zRequire="Y" maxlength="20" size="22" zEdit="any,canTw" onchange="top.convertInputToFullWidth(this)">
+   </td>
+   <td nowrap colspan="2">&nbsp;強制註記:
+      <input type="text" class="col_text" name="force_flag" value="${force_flag}" maxlength="1" size="5" >
+   </td>
+   <td nowrap colspan="2">&nbsp;機關代碼:
+      <input type="text" class="col_text" name="organ_id" value="${organ_id}" maxlength="10" size="12">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;英文名稱:
+      <input type="text" class="col_any" name="eng_name" value="${eng_name}" maxlength="25" size="27" zEdit="any">
+   </td>
+   <td nowrap colspan="3">&nbsp;擔保品放款值:
+      <input type="text" class="col_number" name="assure_value" value="${assure_value}" maxlength="11" size="13" zEdit="number">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;凸字第四行:
+      <input type="text" class="col_any" name="emboss_data" value="${emboss_data}" maxlength="20" size="22" zEdit="any,canTw">
+   </td>
+   <td nowrap colspan="2">&nbsp;設立日期:
+      <input type="text" class="col_date" name="setup_date" value="${setup_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'setup_date'});
+	      </script>
+	</td>
+	<td nowrap colspan="2">&nbsp;資本額:
+	   <input type="text" class="col_number" name="capital" value="${capital}" maxlength="12" size="15" zEdit="number">
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;行業別:
+      <select size="1" name="business_code" class="col_ddlb">
+         <option value="">--</option>
+         ${d_dddw_bus_code}
+      </select>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;負責人ID:
+      <input type="text" class="col_text" name="charge_id" value="${charge_id}" 
+         maxlength="10" size="12" zRequire="Y">
+   </td>
+   <td nowrap colspan="3">&nbsp;負責人姓名:
+      <input type="text" class="col_any" name="charge_name" value="${charge_name}" 
+         maxlength="20" size="22" zEdit="any,canTw" zRequire="Y" onchange="top.convertInputToFullWidth(this)">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;負責人電話:
+      <input type="text" class="col_text" name="charge_tel_zone" value="${charge_tel_zone}" maxlength="4" size="4" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="charge_tel_no" value="${charge_tel_no}" maxlength="10" size="12" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="charge_tel_ext" value="${charge_tel_ext}" maxlength="6" size="6" zEdit="number">
+      &nbsp;
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;公司登記地址:
+      <br><br>&nbsp;
+      <select size="1" name="reg_zip" id="reg_zip" class="col_ddlb" onChange="zipChange('1')" zRequire="Y">
+         <option value="">--</option>
+         ${dddw_reg_zip}
+      </select>
+      <input type="text" class="col_any" id="reg_zip2" name="reg_zip2" value="${reg_zip2}" maxlength="3" size="6" zEdit="number" onChange="billApplyOnChange();">
+      &nbsp;
+      <span class="dsp_text" id="reg_addr1_text" >${reg_addr1}</span>
+      <input type="hidden" name="reg_addr1" id="reg_addr1" value="${reg_addr1}" maxlength="5" size="12" zRequire="Y">
+      縣市
+      <span class="dsp_text" id="reg_addr2_text">${reg_addr2}</span>
+      <input type="hidden" name="reg_addr2" id="reg_addr2" value="${reg_addr2}" maxlength="5" size="12">
+      鄉鎮市區
+      <input type="text" class="col_any" name="reg_addr3" id="reg_addr3" value="${reg_addr3}" maxlength="6" size="14" zEdit="any,canTw" onChange="billApplyOnChange();">
+      村里
+      <br><br>&nbsp;
+      <input type="text" class="col_any" name="reg_addr4" id="reg_addr4" value="${reg_addr4}" maxlength="6" size="14" zEdit="any,canTw" onChange="billApplyOnChange();">
+      鄰
+      <input type="text" class="col_any" name="reg_addr5" id="reg_addr5" value="${reg_addr5}" maxlength="28" size="58" zEdit="any,canTw" onChange="billApplyOnChange();" zRequire="Y">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;公司通訊地址:
+      <input type="checkbox" name="copy_reg_addr" onClick="copyRegAddr();">同公司登記地址
+      <span id="comm_span">
+         <br><br>&nbsp;
+         <select size="1" name="comm_zip" id="comm_zip" class="col_ddlb" onChange="zipChange('2')" zRequire="Y">
+            <option value="">--</option>
+            ${dddw_comm_zip}
+         </select>
+         <input type="text" class="col_any" id="comm_zip2" name="comm_zip2" value="${comm_zip2}" maxlength="3" size="6" zEdit="number" onChange="billApplyOnChange();">
+         &nbsp;
+         <span class="dsp_text" id="comm_addr1_text">${comm_addr1}</span>
+         <input type="hidden" name="comm_addr1" id="comm_addr1" value="${comm_addr1}" maxlength="5" size="12" zRequire="Y">
+         縣市
+         <span class="dsp_text" id="comm_addr2_text">${comm_addr2}</span>
+         <input type="hidden" name="comm_addr2" id="comm_addr2" value="${comm_addr2}" maxlength="5" size="12">
+         鄉鎮市區
+         <input type="text" class="col_any" name="comm_addr3" id="comm_addr3" value="${comm_addr3}" maxlength="6" size="14" zEdit="any,canTw" onChange="billApplyOnChange();">
+         村里
+         <br><br>&nbsp;
+         <input type="text" class="col_any" name="comm_addr4" id="comm_addr4" value="${comm_addr4}" maxlength="6" size="14" zEdit="any,canTw" onChange="billApplyOnChange();">
+         鄰
+         <input type="text" class="col_any" name="comm_addr5" id="comm_addr5" value="${comm_addr5}" maxlength="28" size="58" zEdit="any,canTw"    onChange="billApplyOnChange();" zRequire="Y">
+      </span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;公司電話:&nbsp;1.
+      <input type="text" class="col_text" name="corp_tel_zone1" value="${corp_tel_zone1}" maxlength="4" size="6" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_no1" value="${corp_tel_no1}" maxlength="10" size="12" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_ext1" value="${corp_tel_ext1}" maxlength="6" size="8" zEdit="number">
+   </td>
+   <td nowrap colspan="3">&nbsp;2.
+      <input type="text" class="col_text" name="corp_tel_zone2" value="${corp_tel_zone2}" maxlength="4" size="6" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_no2" value="${corp_tel_no2}" maxlength="10" size="12" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="corp_tel_ext2" value="${corp_tel_ext2}" maxlength="6" size="8" zEdit="number">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6">&nbsp;E-Mail:
+      <input type="text" class="col_any" name="e_mail_addr" value="${e_mail_addr}" maxlength="50" size="52" zEdit="mail">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;E-Mail最後異動管道:
+      <span class="dsp_text">${e_mail_from_mark}&nbsp;</span>
+      <input type="hidden" name="e_mail_from_mark" value="${e_mail_from_mark}">
+   </td>
+   <td nowrap colspan="3">&nbsp;E-Mail最後異動日期:
+      <span class="dsp_text">${e_mail_chg_date.YMD}&nbsp;</span>
+      <input type="hidden" name="e_mail_chg_date" value="${e_mail_chg_date}">
+   </td>
+</tr>
+ </table>
+</div>
+<!-----------帳戶資料-------------->
+<div id="tab-2" class="tabcontent" > 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+   <td nowrap colspan="3">&nbsp;帳戶帳號:
+      <select size="1" name="acct_type" class="col_ddlb" zRequire="Y">
+         ${d_dddw_accttype}
+      </select>
+      -
+      <span class="dsp_text">${acct_key}&nbsp;</span>
+      <input type="hidden" name="acct_key" value="${acct_key}">
+   </td>
+   <td nowrap colspan="3" style="display:none">&nbsp;授信帳號:
+      <span class="dsp_text">${credit_act_no}&nbsp;</span>
+      <input type="hidden" name="credit_act_no" value="${credit_act_no}">
+   </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;往來狀態:
+         <span class="dsp_text">${acct_status}&nbsp;</span>
+         <input type="hidden" name="acct_status" value="${acct_status}">
+      </td>
+      <td nowrap colspan="2">&nbsp;狀態日期:
+         <span class="dsp_text">${status_change_date.YMD}&nbsp;</span>
+         <input type="hidden" name="status_change_date" value="${status_change_date}">
+      </td>
+      <td nowrap colspan="2">&nbsp;帳務週期:
+         <select size="1" name="stmt_cycle" class="col_ddlb">
+            ${d_dddw_cycle}
+         </select>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;
+         <input type="checkbox" name="stop_status" value="Y" ${stop_status-Y} disabled >&nbsp;強停
+      </td>
+      <td nowrap colspan="3">&nbsp;原因:
+         <span class="dsp_text">${stop_reason}&nbsp;</span>
+         <input type="hidden" name="stop_reason" value="${stop_reason}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;凍結:
+         <span class="dsp_text">${block_status}&nbsp;</span>
+         <input type="hidden" name="block_status" value="${block_status}">
+      </td>
+      <td nowrap colspan="3">&nbsp;原因:
+         <span class="dsp_text">${block_reason1}&nbsp;</span>
+         <input type="hidden" name="block_reason1" value="${block_reason1}">
+         <span class="dsp_text">${block_reason2}&nbsp;</span>
+         <input type="hidden" name="block_reason2" value="${block_reason2}">
+         <span class="dsp_text">${block_reason3}&nbsp;</span>
+         <input type="hidden" name="block_reason3" value="${block_reason3}">
+         <span class="dsp_text">${block_reason4}&nbsp;</span>
+         <input type="hidden" name="block_reason4" value="${block_reason4}">
+         <span class="dsp_text">${block_reason5}&nbsp;</span>
+         <input type="hidden" name="block_reason5" value="${block_reason5}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;
+         <input type="checkbox" name="no_interest_flag" value="Y" ${no_interest_flag-Y}>&nbsp;免收RC息
+      </td>
+      <td nowrap colspan="3">&nbsp;起迄:
+         <input type="text" class="col_text" name="no_interest_s_month" value="${no_interest_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+	      --
+	      <input type="text" class="col_text" name="no_interest_e_month" value="${no_interest_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="3">&nbsp;
+	      <input type="checkbox" name="no_penalty_flag" value="Y" ${no_penalty_flag-Y}>&nbsp;免收違約金
+	   </td>
+	   <td nowrap colspan="3">&nbsp;起迄:
+         <input type="text" class="col_text" name="no_penalty_s_month" value="${no_penalty_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+	      --
+	      <input type="text" class="col_text" name="no_penalty_e_month" value="${no_penalty_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+	   </td>
+	</tr>
+	<tr style="display:none">
+	   <td nowrap colspan="2" style="display:none">&nbsp;
+	      <input type="checkbox" name="lawsuit_mark" value="Y" ${lawsuit_mark-Y}>&nbsp;訴追註記
+	   </td>
+	   <td nowrap colspan="2">&nbsp;
+	      <span class="dsp_text">${lawsuit_mark_date.YMD}&nbsp;</span>
+	      <input type="hidden" name="lawsuit_mark_date" value="${lawsuit_mark_date}">
+	   </td>
+	   <td nowrap colspan="2">&nbsp;
+	      <span class="dsp_text" style="display:none">處理情形: ${lawsuit_process_log}&nbsp;</span>
+	      <input type="hidden" name="lawsuit_process_log" value="${lawsuit_process_log}">
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;總月限額:
+	      <input type="text" class="col_number" name="line_of_credit_amt" value="${line_of_credit_amt}" 
+            maxlength="9" size="11" zRequire="Y">
+	   </td>
+	   <td nowrap colspan="2">&nbsp;分期還款戶:
+	      <span class="dsp_text">${pay_by_stage_flag}&nbsp;</span>
+	      <input type="hidden" name="pay_by_stage_flag" value="${pay_by_stage_flag}">
+	   </td>
+	   <td nowrap colspan="2">&nbsp;帳戶等級:
+	      <span class="dsp_text">${class_code}&nbsp;</span>
+	      <input type="hidden" name="class_code" value="${class_code}">
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="2">&nbsp;RC利率加減碼:
+         <select   size="1"  name="revolve_int_sign" class="col_ddlb">
+            <option value="+" ${revolve_int_sign-+} >+</option>
+            <option value="-" ${revolve_int_sign--} >-</option>        
+         </select>
+         <input type="text" class="col_number" name="revolve_int_rate" value="${revolve_int_rate}" maxlength="9" size="11" zEdit="number">    
+      </td>
+      <td nowrap colspan="4">&nbsp;起迄:
+         <input type="text" class="col_text" name="revolve_rate_s_month" value="${revolve_rate_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+         --
+         <input type="text" class="col_text" name="revolve_rate_e_month" value="${revolve_rate_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;特殊M/P百分比:
+         <span class="dsp_text">${min_pay_rate.(999.00)}</span>
+         <input type="hidden" name="min_pay_rate" value="${min_pay_rate}">
+      </td>
+      <td nowrap colspan="2">&nbsp;起迄:
+         <input type="text" class="col_text" name="min_pay_rate_s_month" value="${min_pay_rate_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+         --
+         <input type="text" class="col_text" name="min_pay_rate_e_month" value="${min_pay_rate_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+      </td>
+      <td nowrap colspan="2">&nbsp;分期付款限額:
+         <span class="dsp_text">${inst_auth_loc_amt.(999)}&nbsp;</span>
+         <input type="hidden" name="inst_auth_loc_amt" value="${inst_auth_loc_amt}">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;風險行:
+         <select size="1" name="risk_bank_no" class="col_ddlb" >
+         <option value="">--</option>
+            ${dddw_risk_bank_no}
+         </select>
+      </td>
+      <td nowrap colspan="3">&nbsp;受理行:
+         <select size="1" name="reg_bank_no" class="col_ddlb" >
+            ${dddw_reg_bank_no}
+         </select>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">&nbsp;自動扣款指示碼:
+         <select   size="1"  name="autopay_indicator" class="col_ddlb">
+             <option value="">--</option>
+             <option value="1" ${autopay_indicator-1} >1.TTL</option>
+             <option value="2" ${autopay_indicator-2} >2.M/P</option>
+             <option value="3" ${autopay_indicator-3} >3.其它</option>
+         </select>
+      </td>
+      <td nowrap colspan="2">&nbsp;比率:
+         <input type="text" class="col_number" name="autopay_rate" value="${autopay_rate}" maxlength="9" size="11" zEdit="dig_number">
+      </td>
+      <td nowrap colspan="2">&nbsp;定額 $:
+         <input type="text" class="col_number" name="autopay_fix_amt" value="${autopay_fix_amt}" maxlength="9" size="11" zEdit="number">
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;行庫:
+         <select size="1" name="autopay_acct_bank" class="col_ddlb" >
+         <option value="">--</option>
+             ${d_dddw_bankcode}
+         </select>
+      </td>
+      <td nowrap colspan="3">&nbsp;帳號:
+         <input type="text" class="col_text" name="autopay_acct_no" value="${autopay_acct_no}" maxlength="16" size="18" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="3">&nbsp;自動扣款帳號ID:
+         <input type="text" class="col_text" name="autopay_id" value="${autopay_id}" maxlength="20" size="22">
+         <input type="text" class="col_text" name="autopay_id_code" value="${autopay_id_code}" maxlength="1" size="5">         
+      </td>
+      <td nowrap colspan="3">&nbsp;自動扣繳起迄:
+         <input type="text" class="col_date" name="autopay_acct_s_date" value="${autopay_acct_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'autopay_acct_s_date'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="autopay_acct_e_date" value="${autopay_acct_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'autopay_acct_e_date'});
+	      </script>
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="3" >&nbsp;繳款評等:
+	      <span class="dsp_text">${payment_rate1}&nbsp;</span>
+	      <input type="hidden" name="payment_rate1" value="${payment_rate1}">
+	      <span class="dsp_text">${payment_rate2}&nbsp;</span>
+	      <input type="hidden" name="payment_rate2" value="${payment_rate2}">
+	      <span class="dsp_text">${payment_rate3}&nbsp;</span>
+	      <input type="hidden" name="payment_rate3" value="${payment_rate3}">
+	      <span class="dsp_text">${payment_rate4}&nbsp;</span>
+	      <input type="hidden" name="payment_rate4" value="${payment_rate4}">
+	      <span class="dsp_text">${payment_rate5}&nbsp;</span>
+	      <input type="hidden" name="payment_rate5" value="${payment_rate5}">
+	      <span class="dsp_text">${payment_rate6}&nbsp;</span>
+	      <input type="hidden" name="payment_rate6" value="${payment_rate6}">
+	      <span class="dsp_text">${payment_rate7}&nbsp;</span>
+	      <input type="hidden" name="payment_rate7" value="${payment_rate7}">
+	      <span class="dsp_text">${payment_rate8}&nbsp;</span>
+	      <input type="hidden" name="payment_rate8" value="${payment_rate8}">
+	      <span class="dsp_text">${payment_rate9}&nbsp;</span>
+	      <input type="hidden" name="payment_rate9" value="${payment_rate9}">
+	      <span class="dsp_text">${payment_rate10}&nbsp;</span>
+	      <input type="hidden" name="payment_rate10" value="${payment_rate10}">
+	      <span class="dsp_text">${payment_rate11}&nbsp;</span>
+	      <input type="hidden" name="payment_rate11" value="${payment_rate11}">
+	      <span class="dsp_text">${payment_rate12}&nbsp;</span>
+	      <input type="hidden" name="payment_rate12" value="${payment_rate12}">
+	   </td>
+	   <td nowrap colspan="3">&nbsp;最差Mcode:
+	      <span class="dsp_text">${worse_mcode}&nbsp;</span>
+	      <input type="hidden" name="worse_mcode" value="${worse_mcode}">
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap colspan="3">&nbsp;VIP:
+	      <span class="dsp_text">${vip_code}&nbsp;</span>
+	      <input type="hidden" name="vip_code" value="${vip_code}">
+	   </td>
+	   <td nowrap colspan="3">&nbsp;最近變更帳單地址日:
+	      <span class="dsp_text">${chg_addr_date.YMD}</span>
+	      <input type="hidden" name="chg_addr_date" value="${chg_addr_date}">
+	   </td>
+	   <td nowrap colspan="2"  style="display:none">&nbsp;舊繳款代號:
+	      <span class="dsp_text">${no_acct_no}</span>
+	      <input type="hidden" name="no_acct_no" value="${no_acct_no}">
+	   </td>
+	</tr>
+      <td nowrap colspan="6">&nbsp;帳單註記:
+         <select name="bill_apply_flag" id="bill_apply_flag" class="col_ddlb" ${mod_bill_apply_flag} onChange="billApplyOnChange();" zRequire="Y">
+            <option value="">--</option>
+            <option value="2" ${bill_apply_flag-2}>同公司通訊地(法人)</option>
+            <option value="3" ${bill_apply_flag-3}>同公司登記地(法人)</option>          
+         </select>
+      </td>   
+<tr>
+   <td nowrap colspan="6">&nbsp;帳單寄送地址:
+      <br><br>&nbsp;
+      <span class="dsp_text" id="bill_sending_zip_text">${bill_sending_zip}</span>
+      <input type="hidden" name="bill_sending_zip" value="${bill_sending_zip}" id="bill_sending_zip">
+      <span class="dsp_text" id="bill_sending_zip2_text">${bill_sending_zip2}</span>
+      <input type="hidden" name="bill_sending_zip2" value="${bill_sending_zip2}" id="bill_sending_zip2">
+      &nbsp;
+      <span class="dsp_text" id="bill_sending_addr1_text">${bill_sending_addr1}</span>
+      <input type="hidden" name="bill_sending_addr1" id="bill_sending_addr1" value="${bill_sending_addr1}" zEdit="any,canTw" zRequire="Y">
+      縣市
+      <span class="dsp_text" id="bill_sending_addr2_text">${bill_sending_addr2}</span>
+      <input type="hidden" name="bill_sending_addr2" id="bill_sending_addr2" value="${bill_sending_addr2}">
+      鄉鎮市區
+      <span class="dsp_text" id="bill_sending_addr3_text">${bill_sending_addr3}</span>
+      <input type="hidden" name="bill_sending_addr3" id="bill_sending_addr3" value="${bill_sending_addr3}">
+      村里
+      <br><br>&nbsp;
+      <span class="dsp_text" id="bill_sending_addr4_text">${bill_sending_addr4}</span>
+      <input type="hidden" name="bill_sending_addr4" id="bill_sending_addr4" value="${bill_sending_addr4}">
+      鄰
+      <span class="dsp_text" id="bill_sending_addr5_text">${bill_sending_addr5}</span>
+      <input type="hidden" name="bill_sending_addr5" id="bill_sending_addr5" value="${bill_sending_addr5}" zEdit="any,canTw" zRequire="Y">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;特殊事項:
+      <input type="text" class="col_any" name="special_comment" value="${special_comment}" maxlength="40" size="42" zEdit="any,canTw">
+   </td>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="accept_dm" value="Y" ${accept_dm-Y}>是否接受DM
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;特殊對帳單指示碼:
+      <select   size="1"  name="special_stat_code" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${special_stat_code-1} >1.航空</option>
+         <option value="2" ${special_stat_code-2} >2.掛號</option>
+         <option value="3" ${special_stat_code-3} >3.人工處理</option>
+         <option value="4" ${special_stat_code-4} >4.行員 </option>
+         <option value="5" ${special_stat_code-5} >5.其他  </option>
+      </select>
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_text" name="special_stat_s_month" value="${special_stat_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+      --
+      <input type="text" class="col_text" name="special_stat_e_month" value="${special_stat_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="stat_unprint_flag" value="Y" ${stat_unprint_flag-Y}>不列印對帳單
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_text" name="stat_unprint_s_month" value="${stat_unprint_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+      --
+      <input type="text" class="col_text" name="stat_unprint_e_month" value="${stat_unprint_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;對帳單寄送方式:
+      <input type="checkbox" name="stat_send_paper" value="Y" ${stat_send_paper-Y} zRequire="Y"> Paper
+   </td>
+   <td nowrap colspan="3">&nbsp;生效年月:
+      <input type="text" class="col_text" name="stat_send_s_month" value="${stat_send_s_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+      --
+      <input type="text" class="col_text" name="stat_send_e_month" value="${stat_send_e_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3" disabled >&nbsp;
+      <input type="checkbox" name="stat_send_internet" value="Y" ${stat_send_internet-Y}> Internet(網路)
+   </td>
+   <td nowrap colspan="3">&nbsp;生效年月:
+      <span class="dsp_text">${stat_send_s_month2.YMD}&nbsp;</span>
+      <input type="hidden" name="stat_send_s_month2" value="${stat_send_s_month2}" >
+      --
+      <span class="dsp_text">${stat_send_e_month2.YMD}&nbsp;</span>
+      <input type="hidden" name="stat_send_e_month2" value="${stat_send_e_month2}" >
+   </td>
+</tr>
+<tr style="display:none">
+   <td nowrap colspan="3" disabled >&nbsp;
+      <input type="checkbox" name="no_cancel_debt_flag" value="Y" ${no_cancel_debt_flag-Y}> 呆帳戶不自動銷帳
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <span class="dsp_text">${no_cancel_debt_s_date.YMD}&nbsp;</span>
+      <input type="hidden" name="no_cancel_debt_s_date" value="${no_cancel_debt_s_date}" >
+      --
+      <span class="dsp_text">${no_cancel_debt_e_date.YMD}&nbsp;</span>
+      <input type="hidden" name="no_cancel_debt_e_date" value="${no_cancel_debt_e_date}" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="no_tel_coll_flag" value="Y" ${no_tel_coll_flag-Y} >暫不電催
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_date" name="no_tel_coll_s_date" value="${no_tel_coll_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_tel_coll_s_date'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="no_tel_coll_e_date" value="${no_tel_coll_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_tel_coll_e_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="no_per_coll_flag" value="Y" ${no_per_coll_flag-Y} >暫不語催
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_date" name="no_per_coll_s_date" value="${no_per_coll_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_per_coll_s_date'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="no_per_coll_e_date" value="${no_per_coll_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_per_coll_e_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="no_delinquent_flag" value="Y" ${no_delinquent_flag-Y} >暫不轉逾放
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_date" name="no_delinquent_s_date" value="${no_delinquent_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_delinquent_s_date'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="no_delinquent_e_date" value="${no_delinquent_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_delinquent_e_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="no_collection_flag" value="Y" ${no_collection_flag-Y} >暫不轉催收
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_date" name="no_collection_s_date" value="${no_collection_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_collection_s_date'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="no_collection_e_date" value="${no_collection_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_collection_e_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;法定逾期代碼:
+      <span class="dsp_text">${legal_delay_code}&nbsp;</span>
+      <input type="hidden" name="legal_delay_code" value="${legal_delay_code}">
+   </td>
+   <td nowrap colspan="3">&nbsp;發生日:
+      <span class="dsp_text">${legal_delay_code_date.YMD}&nbsp;</span>
+      <input type="hidden" name="legal_delay_code_date" value="${legal_delay_code_date}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;追索債權註記:
+      <span class="dsp_text">${recourse_mark}&nbsp;</span>
+      <input type="hidden" name="recourse_mark" value="${recourse_mark}">
+   </td>
+   <td nowrap colspan="3">&nbsp;發生日:
+      <span class="dsp_text">${recourse_mark_date.YMD}&nbsp;</span>
+      <input type="hidden" name="recourse_mark_date" value="${recourse_mark_date}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="no_adj_loc_high" value="Y" ${no_adj_loc_high-Y} >不可調高額度
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_date" name="no_adj_loc_high_s_date" value="${no_adj_loc_high_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_high_s_date'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="no_adj_loc_high_e_date" value="${no_adj_loc_high_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_high_e_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="no_adj_loc_low" value="Y" ${no_adj_loc_low-Y} >不可調低額度
+   </td>
+   <td nowrap colspan="3">&nbsp;起迄:
+      <input type="text" class="col_date" name="no_adj_loc_low_s_date" value="${no_adj_loc_low_s_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_low_s_date'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="no_adj_loc_low_e_date" value="${no_adj_loc_low_e_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'no_adj_loc_low_e_date'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="6" disabled>&nbsp;
+      <input type="checkbox" name="bank_rel_flag" value="Y" ${bank_rel_flag-Y}>利害關係人
+   </td>
+</tr>
+ </table>
+</div>
+
+<!-----------聯絡人資料-------------->
+<div id="tab-3" class="tabcontent"> 
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap >&nbsp;姓名:
+         <input type="text" class="col_any" name="contact_name" value="${contact_name}" maxlength="20" size="22" zEdit="any,canTw">
+      </td>
+	</tr>
+	<tr>
+	   <td nowrap >&nbsp;聯絡人電話:
+	      <input type="text" class="col_text" name="contact_area_code"  value="${contact_area_code}" maxlength="4" size="6" zEdit="number">&nbsp;
+	      <input type="text" class="col_text" name="contact_tel_no"  value="${contact_tel_no}" maxlength="10" size="12" zEdit="number">&nbsp;
+	      <input type="text" class="col_text" name="contact_tel_ext"  value="${contact_tel_ext}" maxlength="6" size="8" zEdit="number">
+	   </td>
+	</tr>
+	<tr>
+	   <td nowrap >&nbsp;聯絡人住址:
+	      <select size="1" name="contact_zip" class="col_ddlb" >
+         <option value="">--</option>
+             ${d_dddw_contact_zip}
+         </select>
+         <input type="text" class="col_any" name="contact_zip2" value="${contact_zip2}" maxlength="3" size="6" zEdit="number">
+         &nbsp;
+         <input type="text" class="col_any" name="contact_addr1" value="${contact_addr1}" maxlength="10" size="12" zEdit="any,canTw">
+         縣市
+         <input type="text" class="col_any" name="contact_addr2" value="${contact_addr2}" maxlength="10" size="12" zEdit="any,canTw">
+         鄉鎮市區
+         <input type="text" class="col_any" name="contact_addr3" value="${contact_addr3}" maxlength="12" size="14" zEdit="any,canTw">
+         村里
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;
+         <input type="text" class="col_any" name="contact_addr4" value="${contact_addr4}" maxlength="12" size="14" zEdit="any,canTw">
+         鄰
+         <input type="text" class="col_any" name="contact_addr5" value="${contact_addr5}" maxlength="56" size="58" zEdit="any,canTw">
+      </td>
+   </tr>
+ </table>
+</div>
+</div>
+<!-- -->
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="conf_flag" value="">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+ var isCopyRegAddrChecked = false;
+ top.refreshButton2('1');
+ 
+ if (1==2 ${conf_cond}) { 
+   //var resp  = confirm("是否要執行");
+   //-統一編號錯誤, 是否重新輸入-
+   var resp =confirm('${conf_mesg}');
+   if ( resp == false ) { 
+      document.dataForm.conf_flag.value="Y";
+      top.submitControl('A');
+   }
+   else { 
+      document.dataForm.conf_flag.value="N";
+      alert("統一編號錯誤, 請重新輸入");   
+   }
+ } 
+ 
+ function validateInput()
+  {
+    //if isCopyRegAddrChecked is ture, copy reg_addr to comm_addr
+    if(isCopyRegAddrChecked){
+      isCopyRegAddrChecked = false;
+      copyRegAddr();
+    }
+
+    if(! checkCorpNo(document.getElementById("corp_no").value) ){
+      return false;
+    }
+
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    return true;
+  }
+
+  function copyRegAddr(){
+   var comm_arr = ["comm_zip", "comm_zip2", "comm_addr1", "comm_addr2", "comm_addr3", "comm_addr4", "comm_addr5"];
+   var reg_arr = ["reg_zip", "reg_zip2", "reg_addr1","reg_addr2","reg_addr3", "reg_addr4", "reg_addr5"];
+   var comm_span = document.getElementById("comm_span");
+
+   if(isCopyRegAddrChecked){
+      comm_span.style.display = "inline";
+      isCopyRegAddrChecked = false;
+   }else{
+      for (var i = 0; i < comm_arr.length; i++) {
+         comm_ele = document.getElementById(comm_arr[i]);
+         comm_ele.value = document.getElementById(reg_arr[i]).value;
+      }
+      comm_span.style.display = "none";
+      billApplyOnChange();
+      isCopyRegAddrChecked = true;
+   }
+  }
+
+ function billApplyOnChange(){
+   var bill_apply = document.getElementById("bill_apply_flag");
+   var bill_apply_value = bill_apply.value;
+   var copy_column;
+   var addr_arr = ["zip", "zip2", "addr1", "addr2", "addr3", "addr4", "addr5"];
+   var addr_content = [];
+   var reg_arr = ["reg_zip","reg_zip2", "reg_addr1","reg_addr2","reg_addr3","reg_addr4","reg_addr5"];
+   var comm_arr = ["comm_zip","comm_zip2","comm_addr1","comm_addr2","comm_addr3","comm_addr4","comm_addr5"];
+   var bill_sending_arr = ["bill_sending_zip","bill_sending_zip2","bill_sending_addr1","bill_sending_addr2","bill_sending_addr3","bill_sending_addr4","bill_sending_addr5"]
+
+   //if the checkbox copy_reg_addr is checked, copy reg_addr to bill_sending_addr 
+   if(bill_apply_value.length!=0 && isCopyRegAddrChecked){
+      bill_apply_value = "3";
+   }
+   if (bill_apply_value == "3") {
+      copy_column = "公司登記地址";
+      for (var i = 0; i < reg_arr.length; i++) {
+         // addr_arr[i] = document.getElementById(reg_arr[i]); 
+         addr_content[addr_arr[i]] = document.getElementById(reg_arr[i]); 
+      }
+   }else if(bill_apply_value == "2"){
+      copy_column = "公司通訊地址";
+      for (var i = 0; i < comm_arr.length; i++) {
+         // addr_arr[i] = document.getElementById(comm_arr[i]);   
+         addr_content[addr_arr[i]] = document.getElementById(comm_arr[i]);     
+      }
+   }else{
+      for (var i = 0; i < bill_sending_arr.length; i++) {
+         document.getElementById(bill_sending_arr[i]).value = "";
+         document.getElementById(bill_sending_arr[i] + "_text").innerHTML = "";
+      }
+      return;
+   }
+
+   if (addr_content["zip"].value.trim().length == 0 || addr_content["addr5"].value.trim().length == 0) {
+      bill_apply.value = "";
+      for (var i = 0; i < bill_sending_arr.length; i++) {
+         document.getElementById(bill_sending_arr[i]).value = "";
+         document.getElementById(bill_sending_arr[i] + "_text").innerHTML = "";
+      }
+      alert("選擇此選項需輸入" + copy_column + "的必輸欄位");
+      return;
+   }
+   for (var i = 0; i < bill_sending_arr.length; i++) {
+      document.getElementById(bill_sending_arr[i]).value = addr_content[addr_arr[i]].value;
+      document.getElementById(bill_sending_arr[i] + "_text").innerHTML = addr_content[addr_arr[i]].value;
+   }
+  }
+
+function zipChange(idCode)
+ {
+  var zip_code;
+  if(idCode === '1'){
+    zip_code =document.forms["dataForm"]["reg_zip"].value.toUpperCase();
+    if ( zip_code === '') {
+      $("#reg_addr1_text").text("");   
+      $("#reg_addr1").val("");  
+      $("#reg_addr2_text").text("");   
+      $("#reg_addr2").val("");
+      billApplyOnChange();
+      return false
+    }
+  }else
+  if(idCode === '2'){
+    zip_code =document.forms["dataForm"]["comm_zip"].value.toUpperCase(); 
+    if ( zip_code === '') {
+      $("#comm_addr1_text").text("");   
+      $("#comm_addr1").val(""); 
+      $("#comm_addr2_text").text("");   
+      $("#comm_addr2").val("");
+      billApplyOnChange();
+      return false;
+    }
+  }
+
+   top.actionCode = "AJAX";
+
+   resetJSON();
+   addJSON("idCode",idCode);  
+   addJSON("ax_zip_code",zip_code);
+   processAJAX();
+ } 
+ 
+    function ajaxResponse()
+ {
+   top.respHtml ="cmsm2020_add";
+   top.requHtml ="cmsm2020_add";
+   var addr1 =getJSONvalue("addr1",0);
+   var addr2 =getJSONvalue("addr2",0);
+   var idCode=getJSONvalue("idCode",0);
+   if  ( idCode === '1') {
+      if (addr1.length>0) { 
+         $("#reg_addr1").text(addr1);   
+         $("#reg_addr1").val(addr1);
+         $("#reg_addr1_text").text(addr1);
+
+      }       
+      if (addr2.length>0) { 
+         $("#reg_addr2").text(addr2);   
+         $("#reg_addr2").val(addr2);
+         $("#reg_addr2_text").text(addr2);   
+      }                
+   }
+    if  ( idCode === '2') {
+      if (addr1.length>0) { 
+        $("#comm_addr1").text(addr1);   
+        $("#comm_addr1").val(addr1);
+        $("#comm_addr1_text").text(addr1);  
+      }            
+      if (addr2.length>0) { 
+        $("#comm_addr2").text(addr2);   
+        $("#comm_addr2").val(addr2);
+        $("#comm_addr2_text").text(addr2);   
+      }                 
+  }
+  if (isCopyRegAddrChecked) {
+   isCopyRegAddrChecked = false;
+   copyRegAddr();
+  }
+  
+  billApplyOnChange();
+ }
+
+
+ function checkCorpNo(s_corp_no) {
+   /*
+   check 統一編號
+      ->Rule: X1 + X2 + X3 + X4 + X5 + X6 + X7 + X8
+         *     1    2    1    2    1    2    4    1
+        SUM = (值之數字相加)
+        MOD(SUM,10) = 0
+   EX: 05100226 --> 1+0+1+4+8+6 = 20 is OK 
+    * */
+   var ls_corpno =s_corp_no.trim();
+   if (ls_corpno.length == 0) {
+      alert("統一編號不可為空");
+      return false;
+   }
+
+   if (ls_corpno.length < 8 || ls_corpno.length > 11) {
+      alert("統一編號需介於8到11碼");
+      return false;
+   }
+   
+//20230510 sunny add
+
+   if (ls_corpno.length==10 && ls_corpno.substring(0,3)!='BUA') {
+	   alert("統一編號若為10碼，格式需要為BUA+7碼數值。");
+	   return false;
+	
+	 }
+
+   if(ls_corpno.length==8){
+      if (top.isNumber(ls_corpno)==false){
+         alert("8碼的統一編號需為數字");
+         return false;
+      }
+      var li_num=0;
+      var s1="", s2="";
+      var num1=0;
+      //1x1
+      li_num +=parseInt(ls_corpno.substring(0,1));
+      //2x2
+      num1 = parseInt(ls_corpno.substring(1,2)) * 2;
+      if (num1>=10) {
+         li_num +=parseInt((""+num1).substring(0,1));
+         li_num +=parseInt((""+num1).substring(1,2));
+      }
+      else li_num +=num1;
+      //3x1
+      li_num +=parseInt(ls_corpno.substring(2,3));
+      //4x2
+      num1 = parseInt(ls_corpno.substring(3,4)) * 2;
+      if (num1>=10) {
+         li_num +=parseInt((""+num1).substring(0,1));
+         li_num +=parseInt((""+num1).substring(1,2));
+      }
+      else li_num +=num1;
+      //5x1
+      li_num +=parseInt(ls_corpno.substring(4,5));
+      //6x2
+      num1 =parseInt(ls_corpno.substring(5,6)) * 2;
+      if (num1>=10) {
+         li_num +=parseInt((""+num1).substring(0,1));
+         li_num +=parseInt((""+num1).substring(1,2));
+      }
+      else li_num +=num1;
+      //7x4
+      num1 = parseInt(ls_corpno.substring(6,7)) * 4;
+      if (num1>=10) {
+         li_num +=parseInt((""+num1).substring(0,1));
+         li_num +=parseInt((""+num1).substring(1,2));
+      }
+      else li_num +=num1;
+      //8x1
+      li_num +=parseInt(ls_corpno.substring(7,8));
+
+      if ((li_num % 10)!=0) {
+         alert("統一編號不符合規則");
+         return false;
+      }
+   }
+   return true;
+}
+
+</script>

@@ -1,0 +1,285 @@
+<html>
+
+<head>
+  <title>ccam3050_detl-jh2023-1219</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+  <script language="JavaScript" src="js/jquery.js"></script>
+  <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+  <form name="dataForm" method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user}
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 10px;">
+      <tr>
+        <td width="100">&nbsp;</td>
+        <td><img height="30" src="images/upperLevel.gif" style="cursor: hand;" onClick="top.upperLevel()" ; alt="回上層" ; onmouseout="top.light_img(this);" ; onmouseover="top.dark_img(this);">&nbsp;
+          <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+          <input type="Button" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+          <input type="Button" value="管制設定" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+          <input type="Button" value="取消管制" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+          <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+          <span class="col_key">新增不需主管覆核</span>
+        </td>
+      </tr>
+    </table>
+
+    <div id="dataBlock">
+      <table width="60%" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+          <td nowrap>&nbsp;收單行：
+            <input type="text" class="col_text" name="kk_acq_bank_id" value="${kk_acq_bank_id}" maxlength="8" size="10">
+          </td>
+          <td nowrap>&nbsp;Mcc Code: <input type="text" class="col_text" name="kk_mcc_code" value="${kk_mcc_code}" maxlength="4" size="6"> &nbsp; <span class="col_key">&nbsp;註：Mcc Code為 「*」
+							，表示函蓋所有Mcc Code</span>
+          </td>
+        </tr>
+        <tr>
+          <td nowrap colspan="2">&nbsp;特店代碼：
+            <input type="text" class="col_text" name="kk_mcht_no" value="${kk_mcht_no}" maxlength="15" size="17">
+            <input type="Button" value="..." onclick="processVendorCode('action')" class="btAdd_detl" />&nbsp;
+            <span class="col_key">註：下拉選單是參照ccam3070(清算檔國內特店資料維護)</span>
+          </td>
+        </tr>
+      </table>
+      <hr>
+      <table width="80%" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+          <td nowrap colspan="2">&nbsp;收單行： <span class="dsp_text">${acq_bank_id}</span>
+            <input type="hidden" name="acq_bank_id" value="${acq_bank_id}">
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;特店代號： <span class="dsp_text">${mcht_no}</span>
+            <input type="hidden" name="mcht_no" value="${mcht_no}">
+          </td>
+          <td nowrap>&nbsp;特店名稱： <input type="text" class="col_any" name="mcht_name" value="${mcht_name}" zEdit="any,canTw" maxlength="50" size="52">
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;城市： <span class="dsp_text">${zip_city}</span>
+            <input type="hidden" name="zip_city" value="${zip_city}">
+          </td>
+          <td nowrap>&nbsp;郵遞區號： <span class="dsp_text">${zip_code}</span>
+            <input type="hidden" name="zip_code" value="${zip_code}">
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;地址： <span class="dsp_text">${mcht_addr}</span>
+            <input type="hidden" name="mcht_addr" value="${mcht_addr}">
+          </td>
+          <td nowrap>&nbsp;MCC CODE： <input type="text" class="col_text" name="mcc_code" value="${mcc_code}" maxlength="4" size="6">
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;本行風險代碼： <select size="1" name="mcht_risk_code" class="col_ddlb" zRequire="Y">
+							<option value="">--</option> ${dddw_mcht_risk_code}
+						</select>
+          </td>
+          <td nowrap>&nbsp;管制期間： <input type="text" class="col_date" name="risk_start_date" value="${risk_start_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y" />
+            <script language="JavaScript">
+              new tcal({
+                'formname': 'dataForm',
+                'controlname': 'risk_start_date'
+              });
+            </script> -- <input type="text" class="col_date" name="risk_end_date" value="${risk_end_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y" />
+            <script language="JavaScript">
+              new tcal({
+                'formname': 'dataForm',
+                'controlname': 'risk_end_date'
+              });
+            </script>
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;單筆可使用金額區間： <input type="text" class="col_number" name="auth_amt_s" value="${auth_amt_s}" maxlength="7" size="9" zEdit="number">&nbsp; -- <input type="text" class="col_number" name="auth_amt_e" value="${auth_amt_e}" maxlength="7" size="9"
+              zEdit="number">
+          </td>
+          <td nowrap>&nbsp;風險係數： <input type="text" class="col_any" name="risk_factor" value="${risk_factor}" zEdit="number" maxlength="3" size="3">(000~999)
+          </td>
+        </tr>
+        <tr>
+          <td nowrap>&nbsp;日累積限制筆數： <input type="text" class="col_number" name="day_limit_cnt" value="${day_limit_cnt}" maxlength="7" size="9" zEdit="number">
+          </td>
+          <td nowrap>&nbsp;端未機編號： <input type="text" class="col_text" name="edc_pos_no1" value="${edc_pos_no1}" maxlength="8" size="10">
+            <input type="text" class="col_text" name="edc_pos_no2" value="${edc_pos_no2}" maxlength="8" size="10">
+            <input type="text" class="col_text" name="edc_pos_no3" value="${edc_pos_no3}" maxlength="8" size="10">
+            <input type="Button" value="排除卡號" onclick="detailScreen('${mcht_no}','${acq_bank_id}');" ${btnUpdate_disable} class="btAdd_detl" />
+          </td>
+        </tr>
+        <tr>
+          <td nowrap colspan="2">&nbsp;備註: <input type="text" class="col_any" name="risk_remark" value="${risk_remark}" maxlength="60" size="62" zEdit="any,canTw">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px">
+      <tr>
+        <td nowrap class="td_text" width="20%">產生日期：</td>
+        <td nowrap class="td_data" width="30%"><span class="dsp_date">${crt_date.YMD}</span>
+          <input type="hidden" name="crt_date" value="${crt_date}">
+        </td>
+        <td nowrap class="td_text" width="20%">產生人員：</td>
+        <td nowrap class="td_data" width="30%"><span class="dsp_text">
+						${crt_user} </span> <input type="hidden" name="crt_user" value="${crt_user}"></td>
+      </tr>
+      <tr>
+        <td nowrap class="td_text" width="20%">異動日期：</td>
+        <td nowrap class="td_data" width="30%"><span class="dsp_date">${mod_date.YMD}</span>
+          <input type="hidden" name="mod_date" value="${mod_date}">
+        </td>
+        <td nowrap class="td_text" width="20%">異動人員：</td>
+        <td nowrap class="td_data" width="30%"><span class="dsp_text">
+						${mod_user} </span> <input type="hidden" name="mod_user" value="${mod_user}"></td>
+      </tr>
+    </table>
+
+    <!-- 動態 BLOCK 視窗控制 -->
+    <div id="disDiv" class="disScreen"></div>
+    <div id="popDiv" class="popup1">
+      <table id="popup2" style="top: -400px; left: 350px; width: 300px; height: 100px;">
+        <tr>
+          <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+        </tr>
+        <tr>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <th nowrap style="width: 40%;">特店代號：</th>
+          <td nowrap style="width: 60%;">
+            <select size="1" name="mcht_no2" id="mcht_no2"> ${OPTION_LIST_2}
+						</select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"><input type="Button" value=" ok " onClick="top.setBlockValue('kk_mcht_no','mcht_no2');setName();top.hideBlock('popDiv'); " class="btConfirm">
+          </td>
+          <!-- onClick="top.setBlockValue('kk_mcht_no','mcht_no2');setName();processVendorCode('bank'); top.hideBlock('popDiv'); " -->
+        </tr>
+      </table>
+    </div>
+
+    <!-- -->
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="ROWID" value="${rowid}">
+    <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="detl">
+    <input type="hidden" name="old_mcc_code" value="${old_mcc_code}">
+
+  </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+  top.refreshButton2('1');
+
+  function validateInput() {
+    top.allow_spec_char = true;
+    if (!top.checkFormat()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function detailScreen(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml = "ccam3050_card";
+    top.submitControl("R2");
+    return true;
+  }
+
+  function processVendorCode(type) {
+    if (type == 'action') {
+      var vendorNo = document.dataForm.kk_mcht_no.value;
+      var vendorNo2 = document.dataForm.kk_acq_bank_id.value;
+      if (vendorNo.length < 4) {
+        alert("特店代號請輸入至少四碼");
+        return false;
+      }
+      idCode = "1";
+      resetJSON();
+      autoJSON = false;
+      addJSON("kk_mcht_no2", vendorNo);
+      addJSON("kk_acq_bank_id", vendorNo2);
+      top.actionCode = "AJAX";
+      processAJAX();
+      return true;
+    } else if (type == 'bank') {
+      var vendorNo = document.dataForm.kk_mcht_no.value;
+      if (vendorNo.length < 4) {
+        alert("特店代號請輸入至少四碼");
+        return false;
+      }
+      idCode = "2";
+      resetJSON();
+      autoJSON = false;
+      addJSON("kk_mcht_no3", vendorNo);
+      top.actionCode = "AJAX";
+      processAJAX();
+      return true;
+    }
+  }
+
+  function ajaxResponse() {
+    if (idCode == '1') {
+      var vendorNo = document.dataForm.kk_mcht_no.value;
+      var vendorList = document.getElementById("mcht_no2");
+
+      for (var i = vendorList.length - 1; i >= 0; i--) {
+        vendorList.remove(i);
+      }
+
+      var len = getJSONlength("OPTION_TEXT");
+      for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(
+          getJSONvalue("OPTION_TEXT", i), getJSONvalue(
+            "OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo &&
+          vendorNo.length > 0) {
+          vendorList.options[i].selected = true;
+        }
+      }
+
+      top.popupBlock('popDiv');
+    } else if (idCode == '2') {
+      var acqNo = document.dataForm.kk_acq_bank_id.value;
+      var acqList = document.getElementById("kk_acq_bank_id2");
+      for (var i = acqList.length - 1; i >= 0; i--) {
+        acqList.remove(i);
+      }
+      var len = getJSONlength("OPTION_TEXT2");
+      for (var i = 0; i < len; i++) {
+        alert("I=" + i + ", text=" + getJSONvalue("OPTION_TEXT2", i) +
+          ", val=" + getJSONvalue("OPTION_VALUE2", i));
+        acqList.options.add(new Option(
+          getJSONvalue("OPTION_TEXT2", i), getJSONvalue(
+            "OPTION_VALUE2", i)));
+        if (acqList.options[i].value == acqNo &&
+          acqNo.length > 0) {
+          acqList.options[i].selected = true;
+        }
+      }
+    }
+
+  }
+
+  function setName() {
+    var tt_mcht_no = $("#mcht_no2 option:selected").text();
+    var name_array = new Array();
+    var name_array = tt_mcht_no.split("_");
+    document.dataForm.mcht_name.value = name_array[2];
+    var ls_bank_id = document.dataForm.kk_acq_bank_id.value;
+    if (ls_bank_id.length == 0) {
+      document.dataForm.kk_acq_bank_id.value = name_array[1];
+    }
+  }
+</script>

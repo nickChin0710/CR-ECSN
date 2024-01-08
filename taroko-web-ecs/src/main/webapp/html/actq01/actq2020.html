@@ -1,0 +1,132 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/23  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!-- 112-01-17  V1.00.02  Simon          批號繳款來源說明更新                 -->
+<!-- 112-06-29  V1.00.03  Simon          批號繳款來源他行代償、還額檔繳款、全國繳費網繳款說明更新-->
+<!--**************************************************************************-->
+<html>
+<head>
+	<title>繳款批次查詢-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+	<div id="condBlock">
+		<table width="80%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap colspan=2>&nbsp;繳款來源:
+					<select size="1" name="ex_bank" class="col_ddlb">
+						<option value=" " ${ex_bank- }>--</option>
+            <option value="1001" ${ex_bank-1001}>1001 [他行代償]</option>
+            <option value="1002" ${ex_bank-1002}>1002 [他行自動繳款回饋]</option>
+            <option value="1003" ${ex_bank-1003}>1003 [同業代收繳款]</option>
+            <option value="1005" ${ex_bank-1005}>1005 [債務協商入帳]</option>
+            <option value="1006" ${ex_bank-1006}>1006 [前置協商入帳]</option>
+            <option value="5555" ${ex_bank-5555}>5555 [還額檔繳款]</option>
+            <option value="5556" ${ex_bank-5556}>5556 [全國繳費網繳款]</option>
+            <option value="9001" ${ex_bank-9001}>9001 [TCB 自動繳款回饋]</option>
+            <option value="9002" ${ex_bank-9002}>9002 [花農卡 自動繳款回饋]</option>
+            <option value="9007" ${ex_bank-9007}>9007 [退貨]</option>
+            <option value="9999" ${ex_bank-9999}>9999 [Dummy Record]</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap>&nbsp;結算幣別:
+					<select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+				</td>
+				<td nowrap>&nbsp;
+					<span class="col_radio">
+							<input type="radio" value="1" name="ex_apr_typ" ${ex_apr_typ-1} />已放行
+							<input type="radio" value="2" name="ex_apr_typ" ${ex_apr_typ-2} />未放行
+							<input type="radio" value="0" name="ex_apr_typ" ${ex_apr_typ-0} ${DEFAULT_CHK}/>全部
+						</span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan=2>&nbsp;
+					<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;&nbsp;
+					<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;&nbsp;
+					<img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr>
+	<!-- 明細============================ -->
+	<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<th nowrap class="list_th" width="5%">No&nbsp;</th>
+			<th nowrap class="list_th">批次號碼</th>
+			<th nowrap class="list_th">超商繳款來源</th>
+			<th nowrap class="list_th">繳款來源</th>
+			<th nowrap class="list_th">結算幣別</th>
+			<th nowrap class="list_th">總筆數</th>
+			<th nowrap class="list_th">總金額</th>
+			<th nowrap class="list_th">試算人員</th>
+			<th nowrap class="list_th">試算日期</th>
+			<th nowrap class="list_th">試算時間</th>
+			<th nowrap class="list_th">放行人員</th>
+			<th nowrap class="list_th">放行日期</th>
+			<th nowrap class="list_th">放行時間</th>
+		</tr>
+		<!-- BEGIN DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+			<td nowrap class="list_ll"> ${batch_no}</td>
+			<td nowrap class="list_ll"> ${from_desc}</td>
+			<td nowrap class="list_ll"> ${bank_name}</td>
+			<td nowrap class="list_cc"><span style="color:#930093; font-weight:bold;"> ${tt_curr_code}</span></td>
+			<td nowrap class="list_rr">&nbsp;${batch_tot_cnt.(999)}</td>
+			<td nowrap class="list_rr">&nbsp;${wk_dc_amt.(999.00)}</td>
+			<td nowrap class="list_ll"> ${trial_user}</td>
+			<td nowrap class="list_cc"> ${trial_date.YMD}&nbsp;</td>
+			<td nowrap class="list_cc"> ${trial_time.TIME}&nbsp;</td>
+			<td nowrap class="list_ll"> ${confirm_user}&nbsp;</td>
+			<td nowrap class="list_cc"> ${confirm_date.YMD}&nbsp;</td>
+			<td nowrap class="list_cc"> ${confirm_time.TIME}&nbsp;</td>
+		</tr>
+		<!-- END DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap colspan="5" class="list_rr" style="color:blue">批數合計：</td>
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_cnt.(999)}</td>
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_amt.(999.00)}</td>
+			<td nowrap colspan="6" class="list_ll">&nbsp;</td>
+		</tr>
+	</table>
+
+	<!--保留功能-->
+	<input type="hidden"  name="data_k1" value="" >
+	<input type="hidden"  name="data_k2" value="" >
+	<input type="hidden"  name="data_k3" value="" >
+	<input type="hidden"  name="data_k4" value="" >
+	<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+	<input type="hidden" name="pageType" value="cond">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+	top.refreshButton2('0');
+	top.pageRows = "20";
+
+	//document.dataForm.ex_risk_type.focus();
+
+	function validateInput() {
+		if (!top.checkFormat()) {return false;}
+
+		return true;
+	}
+
+
+</script>

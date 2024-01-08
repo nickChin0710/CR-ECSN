@@ -1,0 +1,231 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-08-06  V1.00.01  RAY Ho        Update                                -->
+<!-- 109-01-06  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!-- 109-07-20  V1.00.05  jiangyigndong  change alter message           			-->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>市區免費停車統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="16">
+   <tr>
+   <td nowrap>&nbsp;廠商代碼：
+      <select size="1" name="ex_park_vendor" class="col_ddlb" onChange="columnItemChange('2')" >
+         ${dddw_park_vendow}
+      </select>
+   卡號:
+      <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}"
+         zeditType="any"  maxlength=19 size=19 />
+     </td>
+   <td nowrap>&nbsp;處理狀況:
+      <select  name="ex_err_code_chk1" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_err_code_chk1-Y} >成功</option>
+         <option value="N" ${ex_err_code_chk1-N} >失敗</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;每小時停車費用 ：
+      <select size="1" name="ex_charge_hr_amt" class="col_ddlb" id="ajaxh_charge_hr_amt"  >
+         ${dddw_charge_hr_amt}
+      </select>
+   扣點加檔結果
+      <select  name="ex_err_code_chk" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_err_code_chk-Y} >已處理</option>
+         <option value="N" ${ex_err_code_chk-N} >未處理</option>
+         <option value="1" ${ex_err_code_chk-1} >已處理_扣點</option>
+         <option value="2" ${ex_err_code_chk-2} >已處理加檔</option>
+       </select>
+     </td>
+<!--    <td nowrap>&nbsp;來原類別: -->
+   <td nowrap>&nbsp;來源類別:
+      <select  name="ex_pass_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_pass_type-1} >自動過卡</option>
+         <option value="2" ${ex_pass_type-2} >手KEY</option>
+         <option value="3" ${ex_pass_type-3} >匯入</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;出場日期：
+      <input type="text" class="col_date" name="ex_park_date_e_s" value="${ex_park_date_e_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_e_s'});
+      </script>
+      --
+      <input type="text" class="col_date" name="ex_park_date_e_e" value="${ex_park_date_e_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_e_e'});
+      </script>
+   審核結果：
+      <select  name="ex_verify_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_verify_flag-1} >正常交易</option>
+         <option value="2" ${ex_verify_flag-2} >本行吸收</option>
+         <option value="3" ${ex_verify_flag-3} >廠商吸收</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">廠商代碼</th>
+    <th nowrap class="list_th">來源類別</th>
+    <th nowrap class="list_th">審核結果</th>
+    <th nowrap class="list_th">筆數</th>
+    <th nowrap class="list_th">(免費Ａ)<br>卡友權益<br>兌換時數</th>
+    <th nowrap class="list_th">(扣點Ｂ)<br>卡友權益<br>兌換時數</th>
+    <th nowrap class="list_th">(Ｃ)<br>卡友現場<br>自費時數</th>
+    <th nowrap class="list_th">D=A+B+C<br>停車<br>總時數</th>
+    <th nowrap class="list_th">(免費Ｅ)<br>兌換時數<br>支出費用</th>
+    <th nowrap class="list_th">(扣點Ｆ)<br>兌換時數<br>支出費用</th>
+    <th nowrap class="list_th">(G=E+Ｆ)<br>應<br>支出費用</th>
+    <th nowrap class="list_th">　<br>扣抵<br>紅利點數</th>
+    <th nowrap class="list_th">　<br><br>加檔金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${park_vendor}-${comm_park_vendor}</td>
+    <td nowrap class="list_ll"> ${pass_type}-${comm_pass_type}</td>
+    <td nowrap class="list_cc"> ${verify_flag}-${comm_verify_flag}</td>
+    <td nowrap class="list_rr"> ${total_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${free_hr.(999)}</td>
+    <td nowrap class="list_rr"> ${use_bonus_hr.(999)}</td>
+    <td nowrap class="list_rr"> ${use_fee_hr.(999)}</td>
+    <td nowrap class="list_rr"> ${park_hr.(999)}</td>
+    <td nowrap class="list_cc"> ${free_charge_amt.(999.00)}</td>
+    <td nowrap class="list_rr"> ${use_charge_amt.(999.00)}</td>
+    <td nowrap class="list_rr"> ${pay_charge_amt.(999.00)}</td>
+    <td nowrap class="list_rr"> ${use_point.(999)}</td>
+    <td nowrap class="list_rr"> ${act_charge_amt.(999)}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="cond_flag" value="${cond_flag}">
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktr1030_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktr1030_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function columnItemChange(ps1)
+  {
+   var  win_park_vendor =document.forms["dataForm"]["ex_park_vendor"].value;
+
+   idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+/*   if ( idCode == '2' )
+      {*/
+   clearListObj(document.getElementById("ajaxh_charge_hr_amt"));
+       // top.methodName = "wf_ajax_func_2"; // 20200102 updated for archit.  change
+   resetJSON();
+   addJSON("ax_win_park_vendor",win_park_vendor);
+      // }
+
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktr1030";
+
+  if (idCode == '2' )
+     {
+      var listObj = document.getElementById("ajaxh_charge_hr_amt");
+      len = getJSONlength("ajaxj_charge_hr_amt");
+      for ( var ii=0; ii<len; ii++)
+          listObj.options.add(new Option(getJSONvalue("ajaxj_charge_hr_amt",ii)
+                                        +" "+getJSONvalue("ajaxj_db_desc",ii)
+                                        ,getJSONvalue("ajaxj_charge_hr_amt",ii)));
+      return false;
+     }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,640 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-02  V1.00.03  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>郵購/分期付款特約商店基本資料維護作業-detl-108-11-27-V1.00.02-Amber-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層">&nbsp;
+                    <!-- <input type="Button"  value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp; -->
+                    <input type="Button"   value=" 新增 " ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"   value=" 刪除 " ${btnDelete_disable} ${d_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"   value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap>&nbsp;特店代號:
+                        <input type="text" class="col_text" name="kk_mcht_no" value="${kk_mcht_no}" zEdit="number" maxlength=15 size=15 zRequire="Y" onBlur="itemChange(this.value,'kk_mcht_no')"/>
+                        &nbsp;&nbsp;
+                        <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />&nbsp;
+                        &nbsp;<span style="background-color:#FFFF33" class="dsp_text2" id="valid_mchtno" name="valid_mchtno" />
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <div id="popDiv" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">特店代號：</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="merchant_2" id="merchant_2">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('kk_mcht_no','merchant_2'); top.hideBlock('popDiv');mcht_no_focus();" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Detail data================================= -->
+            <table id="table1" width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey" colspan="3">特店代號:
+                        <span class="dsp_text">${mcht_no}</span>
+                        <input type="hidden" name="mcht_no" value="${mcht_no}" />
+                    </td>
+                    <td nowrap colspan="3">統一編號:
+                        <input type="text" class="col_any" name="uniform_no" value="${uniform_no}" zEdit="number" maxlength=8 size=8 zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="3">強制註記:
+                        <select size="1" name="forced_flag" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="A" ${forced_flag-A}>A</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="3" color="blue">放行狀態:
+                        <span class="dsp_text">${apr_flag}</span>
+                        <input type="hidden" name="apr_flag" id="apr_flag" value="${apr_flag}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">*特店英文名稱:
+                        <input type="text" class="col_any" name="mcht_eng_name" value="${mcht_eng_name}" ${st} zEdit="alphanum" maxlength=25 size=25 />
+                    </td>
+                    <td nowrap colspan="4">*簽約日期:
+                        <input type="text" class="col_date" name="sign_date" value="${sign_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'sign_date'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap colspan="4">對帳單分期註記:
+                        <select size="1" name="stmt_inst_flag" class="col_ddlb">
+                            <option value="N" ${stmt_inst_flag-N}>N</option>
+                            <option value="Y" ${stmt_inst_flag-Y}>Y</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">特店登記名稱:
+                        <input type="text" class="col_any" name="mcht_chi_name" value="${mcht_chi_name}" zEdit="any,canTW" maxlength=40 size=40 zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="4">解約日期:
+                        <input type="text" class="col_date" id="broken_date" name="broken_date" value="${broken_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" onblur="check3();" onClick="check3();" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'broken_date'
+                        });
+                        </script>
+                    </td>
+                    <td nowrap colspan="4">
+                        <font color="red">分期入帳時間:</font>
+                        <select size="1" id="installment_delay" name="installment_delay" class="col_ddlb" zRequire="Y">
+                            <option value="Y" ${installment_delay-Y}>當期</option>
+                            <option value="N" ${installment_delay-N}>次期</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">特店類別：
+                        <input type="radio" value="0" name="mcht_type" ${mcht_type-0} onChange="check1();" />0.自行收單
+                        <input type="radio" value="1" name="mcht_type" ${mcht_type-1} onChange="check1();" />1.郵購
+                        <input type="radio" value="2" name="mcht_type" ${mcht_type-2} ${DEFAULT_CHK} onChange="check1();" />2.NCCC
+                        <input type="radio" value="3" name="mcht_type" ${mcht_type-3} onChange="check1();" />3.財金
+                    </td>
+                    <td nowrap colspan="4">貸款特店旗標：
+                        <select size="1" id="loan_flag" name="loan_flag" class="col_ddlb"  onChange="check2();">
+                            <option value="Y" ${loan_flag-Y} ${DEFAULT-loan_flag}>Y</option>
+                            <option value="N" ${loan_flag-N}>N</option>
+                            <option value="C" ${loan_flag-C}>C</option>
+                        </select>
+                        <span id="loan_flag1" class="dsp_text">Y</span>
+                    </td>
+                    <td nowrap colspan="4">轉換機制送JCIC旗標:
+                        <select size="1" name="trans_flag" class="col_ddlb">
+                            <option value="N" ${trans_flag-N}>N</option>
+                            <option value="Y" ${trans_flag-Y}>Y</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="8">*特店登記地址:
+                        <input type="text" class="col_any" name="mcht_zip" value="${mcht_zip}" zEdit="number" maxlength=5 size=5 />
+                        <input type="text" class="col_any" name="mcht_address" value="${mcht_address}" zEdit="any,canTW" maxlength=60 size=60 />
+                    </td>
+                    <td nowrap colspan="4">是否為網路特店:
+                        <select size="1" name="chk_online" class="col_ddlb">
+                            <option value="N" ${chk_online-N}>N</option>
+                            <option value="Y" ${chk_online-Y}>Y</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">負責人姓名:
+                        <input type="text" class="col_any" name="owner_name" value="${owner_name}" zEdit="any,canTW" maxlength=10 size=10 />
+                    </td>
+                    <td nowrap colspan="4">*ID:
+                        <input type="text" class="col_text" name="owner_id" value="${owner_id}" zEdit="alphanum,Upper" maxlength=10 size=12 />
+                    </td>
+                    <td nowrap colspan="4">連絡人姓名:
+                        <input type="text" class="col_any" name="contract_name" value="${contract_name}" zEdit="any,canTW" maxlength=10 size=10 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">特店電話(一):
+                        <input type="text" class="col_any" name="mcht_tel1" value="${mcht_tel1}" zEdit="number" maxlength=4 size=4 />
+                        <input type="text" class="col_any" name="mcht_tel1_1" value="${mcht_tel1_1}" zEdit="number" maxlength=10 size=10 />
+                        <input type="text" class="col_any" name="mcht_tel1_2" value="${mcht_tel1_2}" zEdit="number" maxlength=6 size=6 />
+                    </td>
+                    <td nowrap colspan="6">特店電話(二):
+                        <input type="text" class="col_any" name="mcht_tel2" value="${mcht_tel2}" zEdit="number" maxlength=4 size=4 />
+                        <input type="text" class="col_any" name="mcht_tel2_1" value="${mcht_tel2_1}" zEdit="number" maxlength=10 size=10 />
+                        <input type="text" class="col_any" name="mcht_tel2_2" value="${mcht_tel2_2}" zEdit="number" maxlength=6 size=6 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">特店傳真(一):
+                        <input type="text" class="col_any" name="mcht_fax1" value="${mcht_fax1}" zEdit="number" maxlength=4 size=4 />
+                        <input type="text" class="col_any" name="mcht_fax1_1" value="${mcht_fax1_1}" zEdit="number" maxlength=10 size=10 />
+                    </td>
+                    <td nowrap colspan="6">特店傳真(二):
+                        <input type="text" class="col_any" name="mcht_fax2" value="${mcht_fax2}" zEdit="number" maxlength=4 size=4 />
+                        <input type="text" class="col_any" name="mcht_fax2_1" value="${mcht_fax2_1}" zEdit="number" maxlength=10 size=10 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">E-mail:
+                        <input type="text" class="col_any" name="e_mail" value="${e_mail}" zEdit="any,canTW" maxlength=50 size=50 />
+                    </td>
+                    <td nowrap colspan="6">Mcc_code:
+                        <input type="text" class="col_any" name="mcc_code" value="${mcc_code}" zEdit="alphanum" maxlength=4 size=4 zRequire="Y" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">本行分行名稱:
+                        <input type="text" class="col_any" name="bank_name" value="${bank_name}" zEdit="any,canTW" maxlength=20 size=20 />
+                    </td>
+                    <td nowrap colspan="6">本行指定帳號:
+                        <input type="text" class="col_any" name="assign_acct" value="${assign_acct}" zEdit="number" maxlength=14 size=14 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">他行匯款行庫:
+                        <input type="text" class="col_any" name="oth_bank_name" value="${oth_bank_name}" zEdit="any,canTW" maxlength=20 size=20 />
+                    </td>
+                    <td nowrap colspan="6">他行匯款帳號:
+                        <input type="text" class="col_any" name="oth_bank_id" value="${oth_bank_id}" zEdit="number" maxlength=3 size=3 />
+                        <input type="text" class="col_any" name="oth_bank_acct" value="${oth_bank_acct}" zEdit="number" maxlength=14 size=14 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">當期分期款納入最低應繳金額比例:
+                        <input type="text" class="col_any" id="mp_rate" name="mp_rate" value="${mp_rate}" zEdit="number" maxlength=3 size=3 zRequire="Y"/>%
+                        <span class="dsp_text" style="color:8608FB">
+                            ptrm0140當期消費最大本金應繳%&nbsp;${db_mp_rate}%
+                        </span>
+                        <input type="hidden" name="db_mp_rate" value=" ${db_mp_rate}">
+                    </td>
+                    <td nowrap colspan="6">解款行代號:
+                        <input type="text" class="col_any" name="clr_bank_id" value="${clr_bank_id}" zEdit="number" maxlength=7 size=7 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">特店戶名:
+                        <input type="text" class="col_any" name="mcht_acct_name" value="${mcht_acct_name}" zEdit="any,canTW" maxlength=30 size=30 />
+                    </td>
+                    <td nowrap colspan="6">主管覆核註記:${confirm_flag}</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">特店城市:
+                        <input type="text" class="col_any" name="mcht_city" value="${mcht_city}" zEdit="any,canTW" maxlength=13 size=13 zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="6">特店國別:
+                        <input type="text" class="col_any" name="mcht_country" value="${mcht_country}" zEdit="any,canTW" maxlength=3 size=3 zRequire="Y" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">特店州別:
+                        <input type="text" class="col_any" name="mcht_state" value="${mcht_state}" zEdit="any,canTW" maxlength=3 size=3 zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="6">特店狀態:
+                        <input type="radio" value="1" name="mcht_status" ${mcht_status-1}${DEFAULT_CHK} onChange="check4();" />1.正常
+                        <input type="radio" value="2" name="mcht_status" ${mcht_status-2} onChange="check4();" />2.解約
+                        <input type="radio" value="3" name="mcht_status" ${mcht_status-3} onChange="check4();" />3.移轉
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">*特店招牌名稱:
+                        <input type="text" class="col_any" name="mcht_board_name" value="${mcht_board_name}" zEdit="any,canTW" maxlength=50 size=50 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">*特店營業地址:
+                        <input type="text" class="col_any" name="mcht_open_addr" value="${mcht_open_addr}" zEdit="any,canTW" maxlength=70 size=70 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">特店資本額:
+                        <input type="text" class="col_number" name="mcht_capital" value="${mcht_capital}" zEdit="number" maxlength=15 size=15 />
+                    </td>
+                    <td nowrap colspan="6">*特店設立日期:
+                        <input type="text" class="col_date" name="mcht_setup_date" value="${mcht_setup_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                            new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'mcht_setup_date'
+                        });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">*是否有銷售預付型商品:
+                        <select size="1" name="advance_flag" class="col_ddlb">
+                            <option value="Y" ${advance_flag-Y}>Y</option>
+                            <option value="N" ${advance_flag-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="6">*交易型態:
+                        <input type="text" class="col_any" name="tx_type" value="${tx_type}" zEdit="number" maxlength=4 size=4 />
+                        <span class="dsp_text" style="color:108CFC">&nbsp;&nbsp;1.一般&nbsp;2.分期&nbsp;3.郵購&nbsp;4.網路&nbsp;</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">連鎖店加盟或直營:
+                        <select size="1" name="chain_type" class="col_ddlb">
+                            <option value="1" ${chain_type-1}>連鎖</option>
+                            <option value="2" ${chain_type-2}>加盟</option>
+                            <option value="3" ${chain_type-3}>連鎖或加盟</option>
+                            <option value="" ${chain_type}>非連鎖</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="6">*特店屬性:
+                        <select size="1" name="mcht_property" class="col_ddlb">
+                            <option value="M" ${mcht_property-M}>主特店</option>
+                            <option value="S" ${mcht_property-S}>次特店</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">*是否安裝電子簽帳端末機:
+                        <select size="1" name="pos_flag" class="col_ddlb">
+                            <option value="Y" ${pos_flag-Y}>Y</option>
+                            <option value="N" ${pos_flag-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="6">是否安裝錄影設備:
+                        <select size="1" name="video_flag" class="col_ddlb">
+                            <option value="Y" ${video_flag-Y}>Y</option>
+                            <option value="N" ${video_flag-N}>N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">*受理信用卡別名稱:
+                        <input type="text" class="col_text" name="card_type_name" value="${card_type_name}" zEdit="alpha,upper" maxlength=9 size=9 />
+                        <span class="dsp_text" style="color:108CFC">&nbsp;&nbsp;A:AE(信)&nbsp;D:大來&nbsp;E:AE(簽)&nbsp;G:奇異&nbsp; J:JCB&nbsp;M:萬事達&nbsp;N:聯合&nbsp;V:VISA&nbsp;O:其他</span>
+                    </td>
+                </tr>
+                <tr id="rsecind">
+                    <td nowrap colspan="6">解約種類:
+                        <select name="rsecind_kind" class="col_ddlb" onChange="rsecind_flag_select(this.value)">
+                            ${dddw_rsecind_kind}
+                        </select>
+                    </td>
+                    <td id="rsecind_flag" nowrap colspan="6">原因:
+                        <select name="rsecind_flag" class="col_ddlb">
+                            ${dddw_rsecind_flag}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6">傳輸媒體檔名:
+                        <input type="text" class="col_any" name="gift_file_name" value="${gift_file_name}" zEdit="any,canTW" maxlength=30 size=30 />
+                    </td>
+                    <td nowrap colspan="6">傳輸媒體密碼:
+                        <input type="password" autocomplete="off" class="col_any" name="gift_file_passwd" zEdit="any,canTW" maxlength=20 size=20 />
+                        <br>
+                        <br>
+                                                               驗證密碼:&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="password" autocomplete="off" class="col_any" name="gift_file_passwd1" zEdit="any,canTW" maxlength=20 size=20 />
+                        <br>
+                        <br>
+                        <span class="dsp_text" style="color:8608FB">(未指定媒體檔名及媒體密碼時，預設為特店代碼10碼)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12">傳輸參考代碼:
+                        <input type="text" class="col_any" name="gift_file_dir" value="${gift_file_dir}" zEdit="any,canTW" maxlength=100 size=80 />
+                        <br>
+                        <!--  
+                        <span class="dsp_text" style="color:8608FB">(傳輸參考代碼：請維護ptrm3020設定之參考代碼)</span>
+                         -->
+                    </td>
+                </tr>
+            </table>
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="6" font color="blue">[特店類別] = 自行收單(CPS)、郵購(郵購分期)、NCCC(NCCC收單)。
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6" font color="blue">[貸款特店旗標] = N(CCAS佔額)、Y(ECS佔額)、C(卡繳稅已佔額)。
+                    </td>
+                </tr>
+                <!--  
+                <tr>
+                    <td nowrap colspan="12" style="color:red">[ 特店統編+特店類別] = [78506552+6010] 時，表示分期專案，如卡優貸，全面分期還款將不回饋紅利積點。
+                        <br> [ 特店統編+特店類別] = [78506552+4814] 時，表示分期專案，如魔力代償將不回饋紅利積點。
+                    </td>
+                </tr>
+                -->
+                <tr>
+                    <td nowrap colspan="6" style="color:green">[ 特店類別] 郵購 若不須報送財政部財稅中心請至 bilm0820 畫面維護。
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6" style="color:8608FB">[ * 號欄位] 郵購特店報送JCIC必要欄位。
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px">
+            <tr>
+                <td nowrap class="td_text" width="20%">鍵檔人員：</td>
+                <td nowrap class="td_data" width="30%">
+                    <span class="dsp_text"> ${crt_user} </span>
+                    <input type="hidden" name="crt_user" value="${crt_user}">
+                </td>
+                <td nowrap class="td_text" width="20%">鍵檔日期：</td>
+                <td nowrap class="td_data" width="30%">
+                    <span class="dsp_date">${crt_date.YMD}</span>
+                    <input type="hidden" name="crt_date" value="${crt_date}">
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="td_text" width="20%">覆核主管：</td>
+                <td nowrap class="td_data" width="30%">
+                    <span class="dsp_text"> ${apr_user} </span>
+                    <input type="hidden" name="apr_user" value="${apr_user}">
+                </td>
+                <td nowrap class="td_text" width="20%">覆核日期：</td>
+                <td nowrap class="td_data" width="30%">
+                    <span class="dsp_date">${apr_date.YMD}</span>
+                    <input type="hidden" name="apr_date" value="${apr_date}">
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="td_text" width="20%">更新人員：</td>
+                <td nowrap class="td_data" width="30%">
+                    <span class="dsp_text"> ${mod_user} </span>
+                    <input type="hidden" name="mod_user" value="${mod_user}">
+                </td>
+                <td nowrap class="td_text" width="20%">更新日期：</td>
+                <td nowrap class="td_data" width="30%">
+                    <span class="dsp_date">${mod_date.YMD}</span>
+                    <input type="hidden" name="mod_date" value="${mod_date}">
+                </td>
+            </tr>
+        </table>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0070">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="h_confirm_flag" value=" ${confirm_flag}">
+        <input type="hidden" name="h_contract_head" value=" ${contract_head}">
+        <input type="hidden" name="h_borrow_flag" value=" ${borrow_flag}">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+//document.dataForm.kk_mcht_no.focus();
+check0();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    if (top.actionCode == "S2") {
+        if (!chkdata()) {
+            if (confirm("當期分期款納入最低應繳金額比例 = 100%，銷帳時當期分期款優先且起息日為繳款截止日。是否存檔?!") === false) {
+                return false;
+            }
+        }
+        // if (confirm("是否執行作業?!") === false) {
+        //     return false;
+        // }
+    }
+    return true;
+}
+
+function chkdata() {
+    var ss = $("#mp_rate").val();
+    if (ss == 100) {
+        return false;
+    }
+    return true;
+}
+
+function check0() {
+    var ss = $('input[name*=mcht_type]:checked').val();
+    if (ss == "0") {
+        $("#loan_flag").hide();
+        $("#loan_flag1").show();
+    }
+    if (ss == "1") {
+        $("#loan_flag").show();
+        $("#loan_flag1").hide();
+    }
+    if (ss == "2") {
+        $("#loan_flag").hide();
+        $("#loan_flag1").show();
+    }
+    if (ss == "3") {
+        $("#loan_flag").hide();
+        $("#loan_flag1").show();
+    }
+}
+
+
+function check1() {
+    var ss = $('input[name*=mcht_type]:checked').val();
+    if (ss == "0") {
+        $("#loan_flag").val("Y");
+        $("#loan_flag").hide();
+        $("#loan_flag1").show();
+    }
+    if (ss == "1") {
+        $("#loan_flag").val("Y");
+        $("#loan_flag").show();
+        $("#loan_flag1").hide();
+    }
+    if (ss == "2") {
+        $("#loan_flag").val("Y");
+        $("#loan_flag").hide();
+        $("#loan_flag1").show();
+    }
+    if (ss == "3") {
+        $("#loan_flag").val("Y");
+        $("#loan_flag").hide();
+        $("#loan_flag1").show();
+    }
+}
+
+function check2() {
+    var ss = $("#loan_flag").val();
+    if (ss == "Y") {
+        alert("分期不送 CCAS 佔額 !!!");
+    }
+    if (ss == "C") {
+        alert("卡繳稅不送CCAS 佔額(一般交易時已送CCAS佔額) !!!");
+    }
+}
+
+function check3() {
+    var ss = $("#broken_date").val();
+    if (ss != "") {
+        $("input[name*='mcht_status'][value='2']").prop("checked", true);
+    } else {
+        $("input[name*='mcht_status'][value='1']").prop("checked", true);
+    }
+}
+
+function check4() {
+    var ss = $('input[name*=mcht_status]:checked').val();
+    if (ss != "2") {
+        $("#broken_date").val("");
+    }
+}
+
+function rsecind_flag_select(rsecind_kind) {
+    idCode = "1";
+    //20200102 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "rsecind_flag_select");
+    addJSON("rsecind_kind", rsecind_kind);
+    addJSON("ID_CODE", "1");
+    //addJSON("tot_term",$("select[name=tot_term]").val());
+    processAJAX();
+
+    return true;
+
+}
+
+function itemChange(val, name) {
+	
+	//20200102 modify AJAX
+	//top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("val", val);
+    addJSON("ajaxName", name);
+    addJSON("ID_CODE", "1");
+    
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    top.respHtml = "bilm0070_detl";
+    top.requHtml = "bilm0070_detl";
+    if (idCode == "1") {
+        if (getJSONvalue("dddw_rsecind_flag", 0) != null) {
+            $("#table1 #rsecind #rsecind_flag select option").remove();
+            $("#table1 #rsecind #rsecind_flag select").append(getJSONvalue("dddw_rsecind_flag", 0));
+        }
+    }
+
+}
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.kk_mcht_no.value;
+
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("kk_mcht_no", vendorNo);
+    top.actionCode = "AJAX";
+    //20200102 modify AJAX
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+	if (getJSONvalue("ex", 0) == 'j_mcht_no') {
+		var vendorNo = document.dataForm.kk_mcht_no.value;
+	    var vendorList = document.getElementById("merchant_2");
+
+	    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+	    var len = getJSONlength("OPTION_TEXT");
+	    for (var i = 0; i < len; i++) {
+	        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+	        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+	    }
+
+	    top.popupBlock('popDiv');
+	}
+	
+	if(ajaxName == "kk_mcht_no"){
+		var kk_mcht_no = getJSONvalue("kk_mcht_no", 0);
+        var valid_mchtno = getJSONvalue("valid_mchtno", 0);
+        $('input[name=kk_mcht_no]').val(kk_mcht_no);
+        $('input[name=valid_mchtno]').val(valid_mchtno);
+	}
+ 
+}
+
+function mcht_no_focus() {
+    document.dataForm.kk_mcht_no.focus();
+}
+</script>

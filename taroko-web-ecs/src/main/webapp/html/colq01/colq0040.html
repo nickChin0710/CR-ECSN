@@ -1,0 +1,598 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112/01/06  V1.00.01  sunny          copy from actq0040                   -->
+<!-- 112/02/06  V1.00.02  Ryan           modify                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>外帳流水帳務明細查詢</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.css" />
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <script language="JavaScript" src="js/jquery-ui.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <style type="text/css">
+        .tabcontent {
+            width:98%;
+            height:800px;
+            overflow:scroll;
+            top:auto;
+            bottom:auto;
+            left:0;
+            right:0;
+        }
+    </style>
+    ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+    <div id="condBlock">
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >&nbsp;身份證字號/統編:
+                    <!-- select size="1" id="ex_acct_type" name="ex_acct_type" class="col_ddlb" >
+                        ${dddw_acct_type}
+                    </select>&nbsp;-->
+                    <input type="text" class="col_text" name="ex_id_corp_no" value="${ex_id_corp_no}" maxlength="11" size="13" zRequire ="k" >
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+                    <span class="dsp_text" style="color:blue;" >依您本次條件查詢，流水明細總覽實際筆數：</span>
+                    <span class="dsp_text" style="color:blue;" id="ex_scope_cnt">${ex_scope_cnt.(999)}</span>
+                    <input type="hidden" name="ex_scope_cnt" value="${ex_scope_cnt}">
+                </td>
+                </td>
+            </tr>
+            <tr>
+                <!--td nowrap >&nbsp;卡號:
+                    <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+                </td -->
+                <td nowrap >&nbsp;帳戶名稱:
+                    <!-- <input type="text" class="dsp_text" id="ex_acno_name" name="ex_acno_name" value="${ex_acno_name}" zEdit="any,canTw" readonly >  -->
+                    <span class="dsp_text" id="ex_acno_name">${ex_id_crop_name}</span>
+                    <input type="hidden" name="ex_id_crop_name" value="${ex_id_crop_name}">
+                </td>
+            </tr>
+            <!--tr>
+                <td id='td1' nowrap class="list_ll">&nbsp;比對/相似的銷帳編號:&nbsp;<span id='td11' >${ex_pay_no}</span>
+                    <input type="hidden" name="ex_pay_no" id="ex_pay_no" value="${ex_pay_no}" />
+                </td>
+                <td nowrap>&nbsp;輸入繳款編號:
+                    <input type="text" class="col_text" name="ex_pay_no_1" id="ex_pay_no_1" value="${ex_pay_no_1}" maxlength="14" size="16"
+                           onchange="chkPayno(this.value);" />
+                </td>
+            </tr-->
+            <tr>
+                <td nowrap  >&nbsp;入帳起迄日期:
+                    <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+                    </script>
+                </td>
+                <td nowrap ><!--&nbsp;結算幣別:
+                    <select size="1" name="ex_curr_code" class="col_ddlb" >
+                        <option value="">--</option>
+                        ${dddw_curr_code}
+                    </select>-->
+                    &nbsp;&nbsp;&nbsp;帳務週期:
+                    <input type="text" class="dsp_text" id="ex_stmt" name="ex_stmt" value="${ex_stmt}" readonly>
+                </td>
+            </tr>
+        </table>
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <span class="dsp_text" style="color:red;">備註：</span><br>
+            <span class="dsp_text" style="color:red;">1.可查詢客戶近一年帳務明細資料，建議輸入「入帳起訖日期」查詢(未輸入，系統自動以距查詢日往前一年之日期為起日查詢)。</span><br>
+            <span class="dsp_text" style="color:red;">2.「流水明細總覽」頁籤最大顯示1500筆資料，且為起日起之1500筆資料，總資料逾1500筆時，須分段查詢。</span>
+        </table>
+    </div>
+    ${#plugin:htmcomm_plugin.vip_color}
+    <hr>
+
+    <div class="tab">
+        <table>
+            <tr>
+                <td class="tablinks" id="${a_click_9}" onclick="wfClick('9'); return tabControl(event, 'tab-9')">流水明細總覽</td>
+                <!--td class="tablinks" id="${a_click_1}" onclick="wfClick('1'); return tabControl(event, 'tab-1')">總應繳款流水明細</td -->
+                <td class="tablinks" id="${a_click_2}" onclick="wfClick('2'); return tabControl(event, 'tab-2')">加檔</td>
+                <td class="tablinks" id="${a_click_3}" onclick="wfClick('3'); return tabControl(event, 'tab-3')">D檔</td>
+                <td class="tablinks" id="${a_click_4}" onclick="wfClick('4'); return tabControl(event, 'tab-4')">繳款</td>
+                <!-- td class="tablinks" id="${a_click_5}" onclick="wfClick('5'); return tabControl(event, 'tab-5')">還款(含Payment Rev 及Refund)</td -->
+                <!-- td class="tablinks" id="${a_click_6}" onclick="wfClick('6'); return tabControl(event, 'tab-6')">溢付款提領/轉帳</td-->
+                <!-- td class="tablinks" id="${a_click_7}" onclick="wfClick('7'); return tabControl(event, 'tab-7')">溢付款圈存/解圈</td -->
+                <!-- td class="tablinks" id="${a_click_8}" onclick="wfClick('8'); return tabControl(event, 'tab-8')">帳外息調整</td -->
+     
+            </tr>
+        </table>
+    </div>
+
+    <!-----------總應繳款流水明細-------------->
+    <div id="tab-1" class="tabcontent">
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >原始交易<br>入帳日期</th>
+                <th nowrap >科目代號&nbsp;</th>
+                <th nowrap >借貸別<br>(+/-)</th>
+                <!--th nowrap >結算<br>幣別</th-->
+                <!--th nowrap >原幣金額&nbsp;</th-->
+                <th nowrap >台幣金額&nbsp;</th>
+                <th nowrap >欠款<br>總餘額</th>
+                <!--th nowrap >交易<br>參考號</th -->
+                <th nowrap >科目餘額</th>
+                <th nowrap >起息日期&nbsp;</th>
+                <th nowrap >利率&nbsp;</th>
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+                <th nowrap >備註&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_item_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_tt_acct_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A1_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A1_curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${A1_dc_transaction_amt.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_rr"> ${A1_transaction_amt.(999)}&nbsp;</td>
+                <td nowrap class="list_rr"> <span class="${A1_bal_style}">${A1_jrnl_bal.(999.00)}&nbsp;</span></td>
+                <!--td nowrap class="list_cc"> ${A1_reference_no}&nbsp;</td-->
+                <td nowrap class="list_rr"> ${A1_item_bal.(999.00)}&nbsp;</td>
+                <td nowrap class="list_cc"> ${interest_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_int_rate}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_crt_time.TIME}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A1_memo}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------消費(含費用)-------------->
+    <div id="tab-2" class="tabcontent" style="display:none">
+        <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >科目代號&nbsp;</th>
+                <th nowrap >原始交易<br>入帳日期</th>
+                <th nowrap >起息日期&nbsp;</th>
+                <th nowrap >借貸別<br>(+/-)</th>
+                <!--th nowrap >結算<br>幣別</th -->
+                <!--th nowrap >原幣金額&nbsp;</th -->
+                <th nowrap >台幣金額&nbsp;</th>
+                <th nowrap >原幣本筆<br>帳單餘額</th>
+                <!--th nowrap >交易參考號&nbsp;</th -->
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_tt_acct_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_item_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_interest_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A2_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A2_curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${A2_dc_transaction_amt.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_rr"> ${A2_transaction_amt.(999)}&nbsp;</td>
+                <td nowrap class="list_rr"> ${A2_item_bal.(999.00)}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A2_reference_no}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${A2_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A2_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------D檔(含Payment Reversal)-------------->
+    <div id="tab-3" class="tabcontent" >
+        <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >科目代號&nbsp;</th>
+                <th nowrap >利息<br>起算日</th>
+                <th nowrap >借貸別<br>(+/-)</th>
+                <!--th nowrap >結算<br>幣別</th -->
+                <!--th nowrap >原幣金額&nbsp;</th -->
+                <th nowrap >台幣金額&nbsp;</th>
+                <th nowrap >原幣本筆<br>帳單餘額</th>
+                <!--th nowrap >原幣<br>可D數餘額</th -->
+                <th nowrap >交易參考號&nbsp;</th>
+                <th nowrap >原始交易<br>入帳日期</th>
+                <!--th nowrap >借方科目&nbsp;</th -->
+                <!--th nowrap >銷帳鍵值&nbsp;</th -->
+                <!--th nowrap> 繳款沖回<br>註記 </th-->
+                <!--th nowrap> 繳款沖回<br>金額 </th-->
+                <th nowrap >調整<br>原因碼</th>
+                <th nowrap >調整備註欄&nbsp;</th>
+                <!--th nowrap >利息起算日<br>指示碼</th -->
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_tt_acct_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_interest_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A3_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A3_curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${A3_dc_transaction_amt.(999.00)}&nbsp;</td-->
+                <td nowrap class="list_rr"> ${A3_transaction_amt.(999)}&nbsp;</td>
+                <td nowrap class="list_rr"> ${A3_item_bal.(999.00)}&nbsp;</td>
+                <!--td nowrap class="list_rr"> ${A3_dc_item_d_bal.(999.00)}&nbsp;</td-->
+                <!--td nowrap class="list_cc"> ${A3_reference_no}&nbsp;</td-->
+                <td nowrap class="list_cc"> ${A3_item_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_debit_item}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_c_debt_key}&nbsp;</td>
+                <!-- td nowrap class="list_cc"> ${A3_reversal_flag}&nbsp;</td -->
+                <!-- td nowrap class="list_rr"> ${A3_payment_rev_amt.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${A3_adj_reason_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_adj_comment}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A3_value_type}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${A3_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A3_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------銷帳(含Refund及基金)-------------->
+    <div id="tab-4" class="tabcontent" >
+        <table id="table4" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >科目代號&nbsp;</th>
+                <th nowrap >繳款<br>來源</th>
+                <th nowrap >借貸別<br>(+/-)</th>
+                <!--th nowrap >結算<br>幣別</th-->
+                <!--th nowrap >原幣金額&nbsp;</th-->
+                <th nowrap >台幣金額&nbsp;</th>
+                <th nowrap >原幣本筆<br>帳單餘額</th>
+                <!-- th nowrap >交易參考號&nbsp;</th -->
+                <th nowrap >原始交易<br>入帳日期</th>
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A4_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A4_tt_acct_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A4_tran_type}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A4_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A4_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A4_curr_code)}&nbsp;</td -->
+                 <td nowrap class="list_rr"> ${A4_transaction_amt.(999)}&nbsp;</td>
+                <!--td nowrap class="list_rr"> ${A4_dc_transaction_amt.(999.00)}&nbsp;</td-->
+                <td nowrap class="list_rr"> ${A4_item_bal.(999.00)}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A4_reference_no}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${A4_item_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A4_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A4_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------還款(含Payment Rev 及Refund)-------------->
+    <div id="tab-5" class="tabcontent" >
+        <table id="table5" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >借貸別<br>(+/-)</th>
+                <!--th nowrap >結算幣別&nbsp;</th -->
+                <!--th nowrap >原幣金額&nbsp;</th -->
+                <th nowrap >原幣<br>淨還款金額</th>
+                <th nowrap >還/退款來源&nbsp;</th>
+                <th nowrap >回收金額<br>註記</th>
+                <th nowrap >繳款沖回<br>註記</th>
+                <th nowrap >繳款沖回<br>金額</th>
+                <th nowrap >交易參考號&nbsp;</th>
+                <th nowrap >繳款日期&nbsp;</th>
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A5_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A5_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A5_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A5_curr_code)}&nbsp;</td -->
+                <td nowrap class="list_rr"> ${A5_transaction_amt.(999)}&nbsp;</td>
+                <!--td nowrap class="list_rr"> ${A5_dc_transaction_amt.(999.00)}&nbsp;</td-->
+                <td nowrap class="list_rr"> ${A5_wk_amt.(999.00)}&nbsp;</td>
+                <td nowrap class="list_ll"> ${A5_tt_tran_type}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A5_db_lgd_coll_flag}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A5_reversal_flag}&nbsp;</td>
+                <td nowrap class="list_rr"> ${A5_payment_rev_amt.(999.00)}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A5_reference_no}&nbsp;</td-->
+                <td nowrap class="list_cc"> ${A5_interest_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A5_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A5_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------溢付款提領/轉帳-------------->
+    <div id="tab-6" class="tabcontent" >
+        <table id="table6" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >入帳日期&nbsp;</th>
+                <th nowrap >提領<br>轉帳</th>
+                <th nowrap >結算<br>幣別</th>
+                <th nowrap >原幣金額&nbsp;</th>
+                <th nowrap >溢付款餘額<br>未圈存原幣金額</th>
+                <th nowrap >溢付款餘額<br>已圈存原幣金額</th>
+                <th nowrap >支票號碼或帳號<br>轉出帳戶帳號</th>
+                <th nowrap >溢付款<br>提領型態</th>
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A6_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A6_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A6_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A6_curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${A6_dc_transaction_amt.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_rr"> ${A6_item_bal.(999.00)}&nbsp;</td>
+                <!--td nowrap class="list_rr"> ${A6_dc_item_d_bal.(999.00)}&nbsp;</td -->
+                <!--td nowrap class="list_cc"> ${A6_wk_trans_key}&nbsp;</td -->
+                <!--td nowrap class="list_cc"> ${A6_tt_cash_type}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${A6_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A6_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------溢付款圈存/解圈-------------->
+    <div id="tab-7" class="tabcontent" >
+        <table id="table7" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >圈存/解圈<br>(+/-)</th>
+                <th nowrap >結算<br>幣別</th>
+                <th nowrap >原幣金額&nbsp;</th>
+                <th nowrap >台幣金額&nbsp;</th>
+                <th nowrap >未圈存<br>原幣金額</th>
+                <th nowrap >已圈存<br>原幣金額</th>
+                <th nowrap >圈存起日&nbsp;</th>
+                <th nowrap >圈存迄日&nbsp;</th>
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A7_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A7_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A7_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A7_curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${A7_dc_transaction_amt.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_rr"> ${A7_transaction_amt.(999)}&nbsp;</td>
+                <td nowrap class="list_rr"> ${A7_item_bal.(999.00)}&nbsp;</td>
+                <!--td nowrap class="list_rr"> ${A7_dc_item_d_bal.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${A7_item_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A7_interest_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A7_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A7_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------帳外息調整-------------->
+    <div id="tab-8" class="tabcontent" >
+        <table id="table8" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >借貸別<br>(+/-)</th>
+                <th nowrap >結算<br>幣別</th>
+                <th nowrap >原幣金額&nbsp;</th>
+                <th nowrap >台幣金額&nbsp;</th>
+                <th nowrap >帳外息<br>原幣餘額</th>
+                <th nowrap >帳外息<br>原幣可D數</th>
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A8_acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A8_tt_dr_cr}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${A8_curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(A8_curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${A8_dc_transaction_amt.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_rr"> ${A8_transaction_amt.(999)}&nbsp;</td>
+                <td nowrap class="list_rr"> ${A8_item_bal.(999.00)}&nbsp;</td>
+                <td nowrap class="list_rr"> ${A8_item_d_bal.(999.00)}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A8_crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${A8_crt_time.TIME}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+    <!-----------流水明細總覽-------------->
+    <div id="tab-9" class="tabcontent" >
+        <table id="table9" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap width="5%">No&nbsp;</th>
+                <th nowrap >交易日期&nbsp;</th>
+                <th nowrap >交易<br>種類</th>
+                <th nowrap >交易<br>明細</th>
+                <th nowrap >科目<br>代號</th>
+                <th nowrap >借貸<br>別</th>
+                <!--th nowrap >結算<br>幣別</th -->
+                <!--th nowrap >原幣金額&nbsp;</th -->
+                <th nowrap >台幣金額&nbsp;</th>              
+                <th nowrap >科目餘額</th>         
+                <th nowrap >原幣欠款<br>總餘額</th>
+                <th nowrap >科目<br>入帳日期</th>
+                <th nowrap >起息日期&nbsp;</th>
+                <!--th nowrap >利率&nbsp;</th -->
+                <th nowrap>調整原因碼</th>
+                <!--th nowrap >繳款<br>沖回註記</th-->
+                <!--th nowrap >繳款<br>沖回金額</th-->
+                <!--nowrap >交易參考號&nbsp;</th -->
+                <!-- th nowrap >原幣<br>可D 數餘額</th-->
+                <th nowrap >繳款帳號&nbsp;</th>
+                <!--th nowrap >溢付款<br>提領型態</th-->
+                <!--th nowrap >溢付款<br>轉帳帳號</th-->
+                <!--th nowrap >利息起算日<br>指示碼</th-->
+                <th nowrap >調整備註欄&nbsp;</th>
+                <!--th nowrap >銷帳鍵值&nbsp;</th -->
+                <!--th nowrap >借方科目&nbsp;</th -->
+                <th nowrap >建檔日期&nbsp;</th>
+                <th nowrap >建檔時間&nbsp;</th>
+                <!-- th nowrap >Jrnl Seqno&nbsp;</th-->
+                <!--th nowrap >備註&nbsp;</th -->
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+                <td nowrap class="list_cc"> ${acct_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${tran_class}.${tt_tran_class}&nbsp;</td>
+                <td nowrap class="list_cc"> ${tran_type}&nbsp;</td>
+                <td nowrap class="list_cc"> ${tt_acct_code}&nbsp;</td>
+                <td nowrap class="list_cc"> ${tt_dr_cr}&nbsp;</td>
+                <!-- td nowrap class="list_cc"> ${curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(curr_code)}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${dc_transaction_amt.(999.00)}&nbsp;</td-->
+                <td nowrap class="list_rr"> ${transaction_amt.(999)}&nbsp;</td>                
+                <td nowrap class="list_rr"> ${item_bal.(999.00)}&nbsp;</td>
+                <td nowrap class="list_rr"> <span class="${bal_style}">${jrnl_bal.(999.00)}&nbsp;</span></td>
+                <td nowrap class="list_cc"> ${item_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${interest_date.YMD}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${int_rate}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${adj_reason_code}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${reversal_flag}&nbsp;</td -->
+                <!--td nowrap class="list_rr"> ${payment_rev_amt.(999.00)}&nbsp;</td -->
+                <!--td nowrap class="list_cc"> ${reference_no}&nbsp;</td-->
+                <!--td nowrap class="list_rr"> ${dc_item_d_bal.(999.00)}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${pay_id}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${cash_type}&nbsp;</td -->
+                <!--td nowrap class="list_cc"> ${wk_trans_key}&nbsp;</td -->
+                <!--td nowrap class="list_cc"> ${value_type}&nbsp;</td-->
+                <td nowrap class="list_cc"> ${adj_comment}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${c_debt_key}&nbsp;</td -->
+                <!--td nowrap class="list_cc"> ${debit_item}&nbsp;</td -->
+                <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc"> ${crt_time.TIME}&nbsp;</td>
+                <!--td nowrap class="list_cc"> ${jrnl_seqno}&nbsp;</td-->
+                <!--td nowrap class="list_cc"> ${memo}&nbsp;</td-->
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <input type="hidden"  name="tab_click" value="${tab_click}">
+
+    <input type="hidden"  id="ex_p_seqno" name="ex_p_seqno" value="${ex_p_seqno}" >
+    <input type="hidden"  name="data_k1" value="" >
+    <input type="hidden"  name="data_k2" value="" >
+    <input type="hidden"  name="data_k3" value="" >
+
+    <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+    <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+    tigra_tables('table2');
+    tigra_tables('table3');
+    tigra_tables('table4');
+    tigra_tables('table5');
+    tigra_tables('table6');
+    tigra_tables('table7');
+    tigra_tables('table8');
+    tigra_tables('table9');
+</script>
+
+<script language="javascript">
+
+    top.refreshButton2('0');
+    top.pageRows="1499";
+
+    function validateInput()
+    {
+        if ( !top.checkFormat() )
+        { return false; }
+        return true;
+    }
+
+    function wfClick(parm) {
+        document.dataForm.tab_click.value = parm;
+    }
+
+    function chkPayno(payment_no_1) {
+
+        idCode = '1';
+        top.actionCode = "Q";
+        top.methodName = "ajaxChkPayno";
+        resetJSON();
+        addJSON("aj_payment_no_1", payment_no_1);
+        //alert("payment_no_1 :"+payment_no_1);
+        processAJAX();
+        //alert("end-idCode :"+idCode);
+
+        //return true;
+
+    }
+
+    function ajaxResponse() {
+        top.respHtml = "actq0040";
+        top.requHtml = "actq0040";
+
+        if  ( idCode === '1') {
+            var js_payno_flag = getJSONvalue("ax_payno_flag",0);
+            var js_payment_no = getJSONvalue("ax_payment_no",0);
+            //alert("js_payno_flag :"+js_payno_flag);
+            //alert("js_payment_no :"+js_payment_no);
+
+            $("#td1 span").empty();
+            $("input[name=ex_pay_no]").val("");
+
+            if ( js_payno_flag == 'Y' )
+            {   return false; }
+
+            if (js_payment_no == "" ) {
+                //alert("無此繳款編號資料,且搜尋無相近的銷帳編號！");
+                return false;
+            }
+
+            if (confirm("無此繳款編號資料,僅搜尋到相近的銷帳編號=" + js_payment_no + "是否繼續？") == false) {
+                return false;
+            }
+
+            $("#td1 span").append(js_payment_no);
+            $("input[name=ex_pay_no]").val(js_payment_no);
+
+        }
+
+        //return true;
+        //if ( idCode === '1' || idCode === '2' || idCode === '3' )
+        //{ return false; }
+    }
+
+
+</script>

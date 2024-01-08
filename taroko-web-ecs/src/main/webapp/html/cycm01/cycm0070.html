@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>利害關係人匯入及維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;利害關係人ID:
+      <input type="text" class="col_text" name="ex_correlate_id" value="${ex_correlate_id}" maxlength="10" size="12" zEdit="any,upper" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button" value="整批匯入利害關係人ID" onClick="return top.submitControl('B1')" class="btQuery" >&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >利害關係人ID&nbsp;</th>
+    <th nowrap >銀行法_FLAG&nbsp;</th>
+    <th nowrap >金控法_FLAG&nbsp;</th>
+    <th nowrap >授信餘額&nbsp;</th>
+    <th nowrap >無擔保授信額度&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >帳戶流水號&nbsp;</th>
+    <th nowrap >公司帳戶流水號&nbsp;</th>
+    <th nowrap >利害關係情形&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${CRT_DATE}','${CORRELATE_ID}','${CORRELATE_ID_CODE}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${CORRELATE_ID}-${CORRELATE_ID_CODE}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${BK_FLAG}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${FH_FLAG}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${NON_ASSET_BALANCE}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${NON_CREDIT_AMT}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${ACCT_TYPE}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${P_SEQNO}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${CORP_P_SEQNO}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${TT_RELATE_STATUS}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "cycm0070_detl"; 
+    }
+    if (top.actionCode == "B1") {
+        top.respLevel = 1;
+        top.respHtml = "cycm0070_batch";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cycm0070_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

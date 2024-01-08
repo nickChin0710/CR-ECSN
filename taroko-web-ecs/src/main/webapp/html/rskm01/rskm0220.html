@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>扣款作業結案維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4" width="60%" >
+  <tr>
+   <td nowrap>&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" 
+         maxlength="10" size="12" >
+   </td>   
+   <td nowrap >&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>  
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" />&nbsp;
+   </td> 
+   <td nowrap>&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" />&nbsp;
+   </td>
+  </tr>
+  <tr>
+  	<td nowrap>&nbsp;消費年月:
+      <input type="text" class="col_text" name="ex_acct_month" value="${ex_acct_month}" maxlength="6" size="8" zEdit="date,yyyymm">&nbsp;
+   </td>
+   <td nowrap >&nbsp;
+   		<span class="col_radio">
+         <input type="radio" value="0" name="ex_debit" ${ex_debit-0} />全部
+         <input type="radio" value="1" name="ex_debit" ${ex_debit-1} ${default-ex_debit} />信用卡
+         <input type="radio" value="2" name="ex_debit" ${ex_debit-2} />VD卡
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No.</th>
+    <th nowrap >流水號</th>
+    <th nowrap >卡號</th>
+    <th nowrap >Debit</th>
+    <th nowrap >主階段</th>
+    <th nowrap >子階段</th>
+    <th nowrap >次別</th>
+    <th nowrap >扣款登錄日</th>
+    <th nowrap >撥款覆核日</th>
+    <th nowrap >再提示登錄日</th>
+    <th nowrap >總結案註記</th>
+    <th nowrap >參考號碼</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${reference_no}','${reference_seq}','${debit_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="rowid" value="${rowid}">
+	</td>
+	<td nowrap class="list_cc">${bin_type}-${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbChgStage(chg_stage)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${sub_stage}.${#JAVA:ecsfunc.DeCodeRsk.chgbSubStage(sub_stage)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_times}&nbsp;</td>
+	<td nowrap class="list_cc"> ${fst_add_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${fst_disb_apr_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rep_add_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${final_close}.${#JAVA:ecsfunc.DeCodeRsk.chgbFinalClose(final_close)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${reference_no}-${reference_seq}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm0220_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

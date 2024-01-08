@@ -1,0 +1,130 @@
+<html>
+<head>
+<title> 109/04/07 V1.00.01 Allen Ho Initial 紅利贈品廠商維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="6">
+   <tr>
+   <td nowrap>&nbsp;廠商代號:
+      <input type="text" class="col_any" 
+          name="ex_vendor_no" value="${ex_vendor_no}"
+         zeditType="any"  maxlength=8 size=8 />
+   廠商名稱:
+      <input type="text" class="col_any" 
+          name="ex_vendor_name" value="${ex_vendor_name}"
+         zeditType=""any,canTW" zedit="any,canTW""  maxlength=10 size=10 />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >主管覆核:&nbsp;
+       <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} checked  />(全部:不含新增)
+       <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="新增" onclick="modifyScreen('${SER_NUM}','','','','')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">廠商代號</th>
+    <th nowrap class="list_th">廠商名稱</th>
+    <th nowrap class="list_th">負責人姓名</th>
+    <th nowrap class="list_th">負責人ID</th>
+    <th nowrap class="list_th">廠商電話</th>
+    <th nowrap class="list_th">聯絡人姓名</th>
+    <th nowrap class="list_th">覆核日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+       <span class="dsp_flag">${ok_flag}</span> 
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${vendor_no}</td>
+    <td nowrap class="list_ll"> ${vendor_name}</td>
+    <td nowrap class="list_ll"> ${name}</td>
+    <td nowrap class="list_ll"> ${id_no}</td>
+    <td nowrap class="list_ll"> ${tel_no}</td>
+    <td nowrap class="list_ll"> ${contact_id}</td>
+    <td nowrap class="list_cc"> ${apr_date.YMD}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+ <input type="hidden"  name="data_apr_flag" value="${ex_apr_flag}" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm0260_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function modifyScreen(serNum,parm,parm2,parm3,parm4)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "mktm0260_nadd";
+    top.submitControl('I');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

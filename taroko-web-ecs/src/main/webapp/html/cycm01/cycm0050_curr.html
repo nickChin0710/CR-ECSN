@@ -1,0 +1,271 @@
+<html>
+<head>
+<title> 110/11/16 V1.00.10 Allen Ho Initial 雙幣卡一般帳務參數</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key button data3 ********************************************************* -->
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  >帳戶類別: 
+       <span class="dsp_text">${acct_type}-${comm_acct_type}</span>
+       <input type="hidden" name="acct_type" value="${acct_type}"/>
+     </td>
+   </tr>
+ </table>
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;幣別:
+       <select size="1" id="sel_curr_code" name="sel_curr_code" class="col_ddlb"  onChange="columnItemChange('2')">
+               ${dddw_curr_code}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap  width="50%">消費本金小於此值一律免息&nbsp;
+       <input type="data" class="col_any" id="sel_purch_bal_wave" name="sel_purch_bal_wave" value="${sel_purch_bal_wave}"
+              zEdit="dignumber" maxlength="11" size="11" />
+     </td>
+     <td nowrap  width="50%">幣別總應繳款小於此值免息&nbsp;
+       <input type="data" class="col_any" id="sel_total_bal" name="sel_total_bal" value="${sel_total_bal}"
+              zEdit="dignumber" maxlength="11" size="11" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap  width="50%">消費本金大於此值依參數&nbsp;
+       <input type="data" class="col_any" id="sel_purch_bal_parm" name="sel_purch_bal_parm" value="${sel_purch_bal_parm}"
+              zEdit="dignumber" maxlength="11" size="11" />
+     </td>
+     <td nowrap  width="50%">最低付款額之最低款金額&nbsp;
+       <input type="text" class="col_any" id="sel_min_payment" name="sel_min_payment" value="${sel_min_payment}"
+              zEdit="dignumber" maxlength="11" size="11" />
+     </td>
+     <td align="right">${ex_total_cnt}
+       <input type="Button" name="detl_btnAdd" value="新增明細" ${newDetail_disable}
+             id="wf_addrow"  class="btAdd_detl" />
+     </td>
+   </tr>
+ </table>
+<! browsButton ****************************************************************>
+ <table id="table1" width="50%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">幣別</th>
+    <th nowrap class="list_th">消費本金小於…</th>
+    <th nowrap class="list_th">總應繳款小於…</th>
+    <th nowrap class="list_th">消費本金大於…</th>
+    <th nowrap class="list_th">最低款金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : BUTTON2 -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${curr_code}-${comm_curr_code}</span>
+      <input type="hidden" name="curr_code" value="${curr_code}" >
+      <input type="hidden" name="comm_curr_code" value="${comm_curr_code}" >
+    </td>
+    <td nowrap class="list_rr" >&nbsp;
+      <span class="dsp_text">${purch_bal_wave.(999)}</span>
+      <input type="hidden" name="purch_bal_wave" value="${purch_bal_wave}" >
+    </td>
+    <td nowrap class="list_rr" >&nbsp;
+      <span class="dsp_text">${total_bal.(999)}</span>
+      <input type="hidden" name="total_bal" value="${total_bal}" >
+    </td>
+    <td nowrap class="list_rr" >&nbsp;
+      <span class="dsp_text">${purch_bal_parm.(999)}</span>
+      <input type="hidden" name="purch_bal_parm" value="${purch_bal_parm}" >
+    </td>
+    <td nowrap class="list_rr" >&nbsp;
+      <span class="dsp_text">${min_payment.(999)}</span>
+      <input type="hidden" name="min_payment" value="${min_payment}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="kk_acct_type" value="${kk_acct_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="cycm0050">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('2');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_curr_code =document.forms["dataForm"]["sel_curr_code"].value;
+   var  win_acct_type =document.forms["dataForm"]["acct_type"].value;
+
+   idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode == '2' )
+      {
+       top.methodName = "wf_ajax_func_2";
+       resetJSON();
+       addJSON("ax_win_curr_code",win_curr_code);
+       addJSON("ax_win_acct_type",win_acct_type);
+      }
+
+   processAJAX();
+ }
+
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="cycm0050_curr";
+
+ }
+</script>
+<!-- ******************************************************************** -->
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#wf_addrow").click(function(){
+
+   var ex_curr_code = $("#sel_curr_code").val(); 
+   var ex_purch_bal_wave = $("#sel_purch_bal_wave").val(); 
+   var ex_total_bal = $("#sel_total_bal").val(); 
+   var ex_purch_bal_parm = $("#sel_purch_bal_parm").val(); 
+   var ex_min_payment = $("#sel_min_payment").val(); 
+
+   if (ex_purch_bal_wave.length==0) ex_purch_bal_wave ="0";
+   if (isNaN(ex_purch_bal_wave))
+      {
+       alert("[消費本金小於此值一律免息]必須為數值");
+       return false;
+      }
+   ex_purch_bal_wave= +ex_purch_bal_wave;
+   if (ex_total_bal.length==0) ex_total_bal ="0";
+   if (isNaN(ex_total_bal))
+      {
+       alert("[幣別總應繳款小於此值免息]必須為數值");
+       return false;
+      }
+   ex_total_bal= +ex_total_bal;
+   if (ex_purch_bal_parm.length==0) ex_purch_bal_parm ="0";
+   if (isNaN(ex_purch_bal_parm))
+      {
+       alert("[消費本金大於此值依參數]必須為數值");
+       return false;
+      }
+   ex_purch_bal_parm= +ex_purch_bal_parm;
+   if (ex_min_payment.length==0) ex_min_payment ="0";
+   if (isNaN(ex_min_payment))
+      {
+       alert("[最低付款額之最低款金額]必須為數值");
+       return false;
+      }
+   ex_min_payment= +ex_min_payment;
+
+   if (ex_curr_code.length==0) 
+      {
+       alert("幣別必須選取！");
+       return false;
+      }
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+        { serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_curr_code
+      +"<input type='hidden' value='"+ex_curr_code+"' name='curr_code'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_purch_bal_wave
+      +"<input type='hidden' value='"+ex_purch_bal_wave+"' name='purch_bal_wave'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_total_bal
+      +"<input type='hidden' value='"+ex_total_bal+"' name='total_bal'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_purch_bal_parm
+      +"<input type='hidden' value='"+ex_purch_bal_parm+"' name='purch_bal_parm'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_min_payment
+      +"<input type='hidden' value='"+ex_min_payment+"' name='min_payment'/>"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_curr_code").val('');
+   $("#ex_purch_bal_wave").val('');
+   $("#ex_total_bal").val('');
+   $("#ex_purch_bal_parm").val('');
+   $("#ex_min_payment").val('');
+  });
+
+});
+</script>

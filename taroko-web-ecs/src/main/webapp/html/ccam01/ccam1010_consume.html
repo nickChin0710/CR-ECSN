@@ -1,0 +1,900 @@
+<html>
+<head>
+<title>人工授權卡戶明細處理(auth_consume)[jh-190723]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<style>
+.zz_data
+{
+	border-style: none;
+  padding-left: 6px; 
+  padding-right: 4px; 	
+	color:  Black;
+  FONT-FAMILY: "Consolas", "Microsoft Sans Serif" , "Arial", "新細明體", "DFKai-SB";
+  FONT-SIZE:  12pt;  
+  FONT-WEIGHT: 100;
+	background-color: White;
+}
+.zz_text
+{
+	FONT-WEIGHT: bold;
+	color:  Blue;
+}
+.zz_textR
+{
+	FONT-WEIGHT: bold;
+	color:  Blue;
+	text-align: right;
+}
+.zz_titl
+{
+  background-color: #808080;
+  color: blue;
+	border: #acc7a5 1px solid;
+	letter-spacing: 1px;
+	line-height: 130%;
+	padding: 3px;
+  FONT-FAMILY: "Consolas", "Microsoft Sans Serif" , "Arial", "新細明體", "DFKai-SB";
+  FONT-SIZE:  12pt;
+  FONT-WEIGHT: 100;
+	text-align: center;
+}
+</style>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>   
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="wf_upperLevel_0()"; alt="回上層"; />&nbsp;&nbsp;
+  <input type="Button" name="btnProc"  value="執行" ${btn_appr_disable} onClick="wf_consu_approve('C31')" class="btProcess" />&nbsp;&nbsp;
+  <input type="Button" name="btnClose"  value="結束" onClick="wf_upperLevel_0()" class="btProcess" />&nbsp;&nbsp;
+ </td>
+</tr>
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 	 
+   <input type="Button" name="btnTxn" value="查詢本卡交易明細" onClick="detailScreen4()" class="btQuery" >&nbsp;
+   <input type="Button" name="btnAcct" value="查詢臨調內容" onClick="detailScreen6('${debit_flag}')" class="btQuery" >&nbsp;
+   <input type="Button" name="btnRisk" value="查詢風險性交易" onClick="detailScreen8()" class="btQuery" >&nbsp;
+   <input type="Button" name="btnSpecCard" value="查詢卡特指內容" onClick="detailScreen9()" class="btQuery" >&nbsp;  
+   <input type="Button" name="btnRecord" value="備註記錄查詢" onClick="detailScreen17()" class="btQuery" >&nbsp;
+ </td>
+</tr>
+</table>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+   <td nowrap class="zz_text">&nbsp;消費地金額:
+     <span class="zz_data">${amt0.(999.00)}</span>
+     <input type="hidden" name="amt0" value="${amt0}" />
+   </td>
+   <td nowrap class="zz_text">&nbsp;消費地貨幣代碼:
+     <span class="zz_data">${consume_curr}</span>
+     <input type="hidden" name="consume_curr" value="${consume_curr}" />
+   </td>
+   <td nowrap class="zz_text">&nbsp;清算金額:
+     <span class="zz_data">${amt1.(999.00)}</span>
+     <input type="hidden" name="amt1" value="${amt1}" />
+   </td>
+   <td nowrap class="zz_text">&nbsp;清算貨幣代碼:
+     <span class="zz_data">${currency}</span>
+     <input type="hidden" name="currency" value="${currency}" />
+   </td>
+ </tr>
+ <tr>   
+   <td nowrap class="zz_text">&nbsp;台幣(原消費)金額:
+     <span class="zz_data">${amt2.(999)}</span>
+     <input type="hidden" name="amt2" value="${amt2}" />
+   </td>
+   <td nowrap class="zz_text" colspan="2">&nbsp;MCC:<span class="zz_data">${mcc_code}&nbsp;${tt_mcc_code}</span>
+     <input type="hidden" name="mcc_code" value="${mcc_code}" />
+     <input type="hidden" name="tt_mcc_code" value="${tt_mcc_code}" />
+   </td>   
+   <td nowrap>&nbsp;效期:<span class="dsp_text">${eff_date}</span>
+     <input type="hidden" name="eff_date" value="${eff_date}" />
+    </td>   
+ </tr>
+ <tr>
+   <td nowrap colspan=4 class="zz_text">&nbsp;NCCC特店代號/收單行代碼:<span class="zz_data">${mcht_no}</span>
+      <input type="hidden" name="mcht_no" value="${mcht_no}" />
+   &nbsp;商店名稱:<span class="zz_data">${mcht_name}</span>
+      <input type="hidden" name="mcht_name" value="${mcht_name}" />
+      <input type="hidden" name="mcht_eng_name" value="${mcht_eng_name}" />
+      <input type="hidden" name="acq_bank_id" value="${acq_bank_id}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan=3 class="zz_text">&nbsp;授權留言:
+     <input type="text" class="col_any" name="ex_auth_remark" value="${ex_auth_remark}" zEdit="any,canTW" maxlength=60 size=62 />
+   </td>   
+   <td nowrap>&nbsp;
+    <input type="hidden" name="kk_action" value="${kk_action}" />
+   </td>   
+ </tr>
+ <tr>
+   <td nowrap class="zz_text">&nbsp;授權號碼:<span class="col_key">${ex_auth_no}</span>
+     <input type="hidden" name="ex_auth_no" value="${ex_auth_no}" />
+   </td>   
+   <td nowrap class="zz_text">&nbsp;授權結果:
+     <select   size="1"  name="ex_auth_resp" class="col_ddlb">
+         <option value="">--</option>
+         <option value="A" ${ex_auth_resp-A} >A.核准</option>
+         <option value="F" ${ex_auth_resp-F} >F.強制授權</option>         
+         <option value="R" ${ex_auth_resp-R} >R.人工拒絕</option>         
+      </select>     
+   </td>   
+   <td nowrap class="zz_text">&nbsp;檢查人員:
+     <input type="text" class="col_text" name="ex_apr_user" value="${ex_apr_user}" maxlength=10 size=12 />
+   </td>   
+   <td nowrap class="zz_text">&nbsp;放行密碼:
+     <input type="password" autocomplete="off" class="col_any" name="ex_apr_passwd" value="" maxlength=10 size=12 />
+   </td>   
+ </tr>
+</table>
+<input type="hidden" name="mcht_country" value="${mcht_country}" />
+<input type="hidden" name="wk_effdate_mmyy" value="${wk_effdate_mmyy}" />
+<input type="hidden" name="old_effdate_mmyy" value="${old_effdate_mmyy}" />
+<input type="hidden" name="cvc2" value="${cvc2}" />
+<input type="hidden" name="currency" value="${currency}" />
+<input type="hidden" name="bit39_resp_code" value="${bit39_resp_code}" />
+<input type="hidden" name="bit39_adj_code" value="${bit39_adj_code}" />
+<input type="hidden" name="wk_flag" value="${wk_flag}" />
+</div>
+<hr>
+<!-- query-data============================================================ -->
+<div id="queryBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;卡號:
+ 			<span class="zz_data" >${card_no}</span>
+   		<input type="hidden" name="card_no" value="${card_no}" />
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;卡片效期:
+ 			<span class="zz_data" >${new_end_date.YMD}</span>
+   		<input type="hidden" name="new_end_date" value="${new_end_date}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;卡特指:
+ 			<span class="col_key" >${card_spec_status}</span>
+   		<input type="hidden" name="card_spec_status" value="${card_spec_status}">
+   	</td>   	   	
+   	<td nowrap class="zz_text" >&nbsp;凍結碼:
+ 			<span class="col_key">${wk_block_reason}</span>
+    <input type="hidden" name="wk_block_reason" value="${wk_block_reason}" />
+   	</td>
+   	<td nowrap class="zz_text">&nbsp;戶特指:
+       <span class="col_key">${wk_spec_status}</span>
+    <input type="hidden" name="wk_spec_status" value="${wk_spec_status}" />
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;姓名:
+ 			<span class="zz_data" >${chi_name}</span>
+   		<input type="hidden" name="chi_name" value="${chi_name}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;卡片旗標:
+ 			<span class="col_key" >${sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(sup_flag)}</span>
+   		<input type="hidden" name="sup_flag" value="${sup_flag}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;子卡:
+ 			<span class="col_key" >${son_card_flag}</span>
+   		<input type="hidden" name="son_card_flag" value="${son_card_flag}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;卡片狀態:
+ 			<span class="${current_code_color}" >${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</span>
+   		<input type="hidden" name="current_code" value="${current_code}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;停掛原因:
+ 			<span class="col_key" >${oppost_reason}</span>
+   		<input type="hidden" name="oppost_reason" value="${oppost_reason}">
+   	</td>
+  </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;生日:
+ 			<span class="zz_data" >${birthday.YMD}</span>
+   		<input type="hidden" name="birthday" value="${birthday}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;持卡人ID:
+ 			<span class="zz_data" >${id_no}</span>
+   		<input type="hidden" name="id_no" value="${id_no}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;正卡戶ID:
+ 			<span class="zz_data" >${major_idno}</span>
+   		<input type="hidden" name="major_idno" value="${major_idno}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;最早往來日:
+ 			<span class="zz_data" >${card_since.YMD}</span>
+   		<input type="hidden" name="card_since" value="${card_since}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;停掛日期:
+ 			<span class="zz_data" >${oppost_date.YMD}</span>
+   		<input type="hidden" name="oppost_date" value="${oppost_date}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;年齡:
+ 			<span class="zz_data" >${wk_id_age}</span>
+   		<input type="hidden" name="wk_id_age" value="${wk_id_age}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;電話(O):
+ 			<span class="zz_data" >${wk_office_tel}</span>
+   		<input type="hidden" name="wk_office_tel" value="${wk_office_tel}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;電話(M):
+ 			<span class="zz_data" >${cellar_phone}</span>
+   		<input type="hidden" name="cellar_phone" value="${cellar_phone}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;電話(H):
+ 			<span class="zz_data" >${wk_home_tel}</span>
+   		<input type="hidden" name="wk_home_tel" value="${wk_home_tel}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;電話(F):
+ 			<span class="zz_data">${fore_tel_no}</span>
+ 			<input type="hidden" name="fore_tel_no" value="${fore_tel_no}" />
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;生肖:
+ 			<span class="zz_data" >${birth_rule}</span>
+   		<input type="hidden" name="birth_rule" value="${birth_rule}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;正卡公司:
+ 			<span class="zz_data" >${maj_corp_name}</span>
+   		<input type="hidden" name="maj_corp_name" value="${maj_corp_name}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;正卡職稱:
+ 			<span class="zz_data" >${job_position}</span>
+   		<input type="hidden" name="job_position" value="${job_position}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;違約評等:
+ 			<span class="zz_data" >${curr_pd_rating}</span>
+   		<input type="hidden" name="curr_pd_rating" value="${curr_pd_rating}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;英文姓名:
+ 			<span class="zz_data" >${eng_name}</span>
+   		<input type="hidden" name="eng_name" value="${eng_name}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;帳單地址:
+ 			<span class="zz_data" >${bill_sending_zip}&nbsp;${wk_addr}</span>
+   		<input type="hidden" name="bill_sending_zip" value="${bill_sending_zip}">
+   		<input type="hidden" name="wk_addr" value="${wk_addr}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;E-MAIL:
+ 			<span class="zz_data" >${e_mail_addr}</span>
+   		<input type="hidden" name="e_mail_addr" value="${e_mail_addr}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;本卡額度:
+ 			<span class="zz_data" >${line_of_credit_amt.(999)}</span>
+   		<input type="hidden" name="line_of_credit_amt" value="${line_of_credit_amt}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;帳戶額度:
+ 			<span class="zz_data" >${idno_of_credit_amt.(999)}</span>
+   		<input type="hidden" name="idno_of_credit_amt" value="${idno_of_credit_amt}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;團體代號:
+ 			<span class="zz_data" >${group_code}.${tt_group_code}</span>
+   		<input type="hidden" name="group_code" value="${group_code}">
+   		<input type="hidden" name="tt_group_code" value="${tt_group_code}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;商務卡統編:
+ 			<span class="zz_data" >${corp_no}</span>
+   		<input type="hidden" name="corp_no" value="${corp_no}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;有效卡數:
+ 			<span class="zz_data" >${wk_valid_cnt.(999)}</span>
+   		<input type="hidden" name="wk_valid_cnt" value="${wk_valid_cnt}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;授權卡人等級:
+ 			<span class="zz_data" >${class_code}</span>
+   		<input type="hidden" name="class_code" value="${class_code}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;VIP CODE:
+ 			<span class="col_key" >${vip_code}</span>
+   		<input type="hidden" name="vip_code" value="${vip_code}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;帳戶別:
+ 			<span class="zz_data" >${acct_type}</span>
+   		<input type="hidden" name="acct_type" value="${acct_type}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;自動扣繳銀行:
+ 			<span class="zz_data" >${autopay_acct_bank}.${tt_autopay_acct_bank}</span>
+   		<input type="hidden" name="autopay_acct_bank" value="${autopay_acct_bank}">
+   		<input type="hidden" name="tt_autopay_acct_bank" value="${tt_autopay_acct_bank}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;扣繳帳號:
+ 			<span class="zz_data" >${autopay_acct_no}</span>
+   		<input type="hidden" name="autopay_acct_no" value="${autopay_acct_no}">
+   	</td>
+   	<td nowrap class="zz_text" colspan="3" >&nbsp;備註:
+ 			<span class="zz_data" >${auth_remark}</span>
+ 			<input type="hidden" name="auth_remark" value="${auth_remark}" />
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;繳款編號:
+ 			<span class="zz_data" >${payment_no}</span>
+   		<input type="hidden" name="payment_no" value="${payment_no}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;預借現金額度:
+ 			<span class="zz_data" >${line_of_credit_amt_cash.(999)}</span>
+   		<input type="hidden" name="line_of_credit_amt_cash" value="${line_of_credit_amt_cash}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;擔保品:
+ 			<span class="zz_data" >${asset_value}</span>
+   		<input type="hidden" name="asset_value" value="${asset_value}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;利害關係人:
+ 			<span class="zz_data" >${fh_flag}</span>
+   		<input type="hidden" name="fh_flag" value="${fh_flag}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;發簡訊消費金額:
+ 			<span class="zz_data" >${msg_purchase_amt.(999)}</span>
+   		<input type="hidden" name="msg_purchase_amt" value="${msg_purchase_amt}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;自動加值開啟:
+ 			<span class="zz_data" >${tsc_autoload_flag}</span>
+   		<input type="hidden" name="tsc_autoload_flag" value="${tsc_autoload_flag}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen15()" style="cursor:hand">帳單寄送方式</a>
+   	</td>
+   	<td nowrap ></td>
+   	<td nowrap class="zz_text" >&nbsp;開戶帳號:
+ 			<span class="zz_data" >${combo_acct_no}</span>
+   		<input type="hidden" name="combo_acct_no" value="${combo_acct_no}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen18()" style="cursor:hand">覆審結果</a>	
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_titl"  >&nbsp;累計消費額</td>
+ 		<td nowrap class="zz_titl" >&nbsp;單月消費金額</td>
+ 		<td nowrap class="zz_titl" >&nbsp;當期帳款(已結帳)</td>
+ 		<td nowrap class="zz_titl" >&nbsp;下期帳款(未結帳)</td>
+ 		<td nowrap class="zz_titl" >&nbsp;最近一次結帳</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;本年累計:
+ 			<span class="zz_data" >${tot_due.(999)}</span>
+   		<input type="hidden" name="tot_due" value="${tot_due}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen1('0')" style="cursor:hand">前1月</a>:
+ 			<span class="zz_data" >${consume_1.(999)}</span>
+   		<input type="hidden" name="consume_1" value="${consume_1}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;呆帳:
+ 			<span class="zz_data" >${paid_annual_fee.(999)}</span>
+   		<input type="hidden" name="paid_annual_fee" value="${paid_annual_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;呆帳:
+ 			<span class="zz_data" >${unpaid_annual_fee.(999)}</span>
+   		<input type="hidden" name="unpaid_annual_fee" value="${unpaid_annual_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;結帳日期 :
+ 			<span class="zz_data" >${this_close_date.YMD}</span>
+   		<input type="hidden" name="" value="${this_close_date}" />
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;近一年累計:
+ 			<span class="zz_data" >${tot_limit_amt.(999)}</span>
+   		<input type="hidden" name="tot_limit_amt" value="${tot_limit_amt}" />
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen1('1')" style="cursor:hand">前2月</a>:
+ 			<span class="zz_data" >${consume_2.(999)}</span>
+   		<input type="hidden" name="consume_2" value="${consume_2}" />
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;費用:
+ 			<span class="zz_data" >${paid_srv_fee.(999)}</span>
+   		<input type="hidden" name="paid_srv_fee" value="${paid_srv_fee}" />
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;費用:
+ 			<span class="zz_data" >${unpaid_srv_fee.(999)}</span>
+   		<input type="hidden" name="unpaid_srv_fee" value="${unpaid_srv_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;繳款截止日 :
+ 			<span class="zz_data" >${this_lastpay_date.YMD}</span>
+   		<input type="hidden" name="" value="${this_lastpay_date}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;近一年最高消費月份:
+ 			<span class="zz_data" >${max_consume_date.YMD}</span>
+   		<input type="hidden" name="max_consume_date" value="${max_consume_date}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen1('2')" style="cursor:hand">前3月</a>:
+ 			<span class="zz_data" >${consume_3.(999)}</span>
+   		<input type="hidden" name="consume_3" value="${consume_3}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;催收:
+ 			<span class="zz_data" >${paid_law_fee.(999)}</span>
+   		<input type="hidden" name="paid_law_fee" value="${paid_law_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;催收:
+ 			<span class="zz_data" >${unpaid_law_fee.(999)}</span>
+   		<input type="hidden" name="unpaid_law_fee" value="${unpaid_law_fee}">
+   	</td>
+   	<td nowrap >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;近一年最高消費金額 :
+ 			<span class="zz_data" >${max_consume_amt.(999)}</span>
+   		<input type="hidden" name="max_consume_amt" value="${max_consume_amt}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen1('3')" style="cursor:hand">前4月</a>:
+ 			<span class="zz_data" >${consume_4.(999)}</span>
+   		<input type="hidden" name="consume_4" value="${consume_4}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;違約金 :
+ 			<span class="zz_data" >${billed_end_bal.(999)}</span>
+   		<input type="hidden" name="billed_end_bal" value="${billed_end_bal}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;違約金 :
+ 			<span class="zz_data" >${unbill_end_bal.(999)}</span>
+   		<input type="hidden" name="unbill_end_bal" value="${unbill_end_bal}">
+   	</td>
+   	<td nowrap class="zz_titl" >最近一次付款</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;</td>
+ 		<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen1('4')" style="cursor:hand">前5月</a>:
+ 			<span class="zz_data" >${consume_5.(999)}</span>
+   		<input type="hidden" name="consume_5" value="${consume_5}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;循環息:
+ 			<span class="zz_data" >${paid_interest_fee.(999)}</span>
+   		<input type="hidden" name="paid_interest_fee" value="${paid_interest_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;循環息:
+ 			<span class="zz_data" >${unpaid_interest_fee.(999)}</span>
+   		<input type="hidden" name="unpaid_interest_fee" value="${unpaid_interest_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;最近繳款日期 :
+ 			<span class="zz_data" >${lastpay_date.YMD}</span>
+   		<input type="hidden" name="lastpay_date" value="${lastpay_date}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;退卡處理狀況 :
+ 			<span class="zz_data" >${tt_proc_status}</span>
+   		<input type="hidden" name="tt_proc_status" value="${tt_proc_status}">
+   	</td>
+ 		<td nowrap class="zz_text" >&nbsp;
+   		<a href="#" onClick="detailScreen1('5')" style="cursor:hand">前6月</a>:
+ 			<span class="zz_data" >${consume_6.(999)}</span>
+   		<input type="hidden" name="consume_6" value="${consume_6}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;消費:
+ 			<span class="zz_data" >${paid_consume_fee.(999)}</span>
+   		<input type="hidden" name="paid_consume_fee" value="${paid_consume_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;消費:
+ 			<span class="zz_data" >${unpaid_consume_fee.(999)}</span>
+   		<input type="hidden" name="unpaid_consume_fee" value="${unpaid_consume_fee}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;最近繳款金額:
+ 			<span class="zz_data" >${jrnl_lastpay_amt.(999)}</span>
+   		<input type="hidden" name="jrnl_lastpay_amt" value="${jrnl_lastpay_amt}">
+   	</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;</td>
+ 		<td nowrap >&nbsp;</td>
+ 		<td nowrap class="zz_text" >&nbsp;預借:
+ 			<span class="zz_data" >${paid_precash.(999)}</span>
+   		<input type="hidden" name="paid_precash" value="${paid_precash}">
+   	</td>
+   	<td nowrap class="zz_text" >&nbsp;預借:
+ 			<span class="zz_data" >${unpaid_precash.(999)}</span>
+   		<input type="hidden" name="unpaid_precash" value="${unpaid_precash}">
+   	</td>
+   	<td nowrap >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;</td>
+ 		<td nowrap >&nbsp;</td>
+ 		<td nowrap >&nbsp;</td>
+ 		<td nowrap class="zz_text" >&nbsp;分期未POSTING金額:	 			
+ 			<a href="#" onClick="detailScreen3()" style="cursor:hand">${db_inst_unpost.(999)}</a>
+   		<input type="hidden" name="db_inst_unpost" value="${db_inst_unpost}">
+ 		</td>
+ 		<td nowrap >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="5" class="zz_text" >&nbsp;
+ 			<a href="#" onClick="detailScreen2()" style="cursor:hand">近一年繳款評等</a>:
+ 			<span class="zz_data">${payment_rate1}&nbsp;</span>
+      <input type="hidden" name="payment_rate1" value="${payment_rate1}">         
+      <span class="zz_data">${payment_rate2}&nbsp;</span>
+      <input type="hidden" name="payment_rate2" value="${payment_rate2}">         
+      <span class="zz_data">${payment_rate3}&nbsp;</span>
+      <input type="hidden" name="payment_rate3" value="${payment_rate3}">         
+      <span class="zz_data">${payment_rate4}&nbsp;</span>
+      <input type="hidden" name="payment_rate4" value="${payment_rate4}">         
+      <span class="zz_data">${payment_rate5}&nbsp;</span>
+      <input type="hidden" name="payment_rate5" value="${payment_rate5}">         
+      <span class="zz_data">${payment_rate6}&nbsp;</span>
+      <input type="hidden" name="payment_rate6" value="${payment_rate6}">         
+      <span class="zz_data">${payment_rate7}&nbsp;</span>
+      <input type="hidden" name="payment_rate7" value="${payment_rate7}">         
+      <span class="zz_data">${payment_rate8}&nbsp;</span>
+      <input type="hidden" name="payment_rate8" value="${payment_rate8}">         
+      <span class="zz_data">${payment_rate9}&nbsp;</span>
+      <input type="hidden" name="payment_rate9" value="${payment_rate9}">         
+      <span class="zz_data">${payment_rate10}&nbsp;</span>
+      <input type="hidden" name="payment_rate10" value="${payment_rate10}">         
+      <span class="zz_data">${payment_rate11}&nbsp;</span>
+      <input type="hidden" name="payment_rate11" value="${payment_rate11}">         
+      <span class="zz_data">${payment_rate12}&nbsp;</span>
+      <input type="hidden" name="payment_rate12" value="${payment_rate12}">    
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;
+ 			<a href="#" onClick="detailScreen5()" style="cursor:hand">近三次繳款方式</a>
+ 		</td>
+ 		<td nowrap class="zz_text" >&nbsp;</td>
+ 		<td nowrap class="zz_text" >&nbsp;臨調後額度:
+ 			<span ${color_tot_amt_month}>${tot_amt_month.(999)}</span>
+      <input type="hidden" name="tot_amt_month" value="${tot_amt_month}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;商務卡實際可用餘額:
+ 			<span class="zz_data">${ex_corp_limit.(999)}&nbsp;</span>
+      <input type="hidden" name="ex_corp_limit" value="${ex_corp_limit}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;商務卡總額度:
+   	  <span class="zz_data">${ex_corp_tot_limit.(999)}&nbsp;</span>
+      <input type="hidden" name="ex_corp_tot_limit" value="${ex_corp_tot_limit}">
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;催呆戶:
+ 			<span class="${color_acct_status}">${acct_status}.${#JAVA:ecsfunc.DeCodeAct.acctStatus(acct_status)}&nbsp;</span>
+      <input type="hidden" name="acct_status" value="${acct_status}">
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_titl" >&nbsp;授權</td>
+    <td nowrap class="zz_titl" >&nbsp;可用餘額</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;應繳總額:
+ 			<span class="zz_text">${acct_jrnl_bal.(999)}&nbsp;</span>
+      <input type="hidden" name="acct_jrnl_bal" value="${acct_jrnl_bal}">
+    </td>
+    <td nowrap class="zz_textR" >&nbsp;總結</td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${tot_amt_consume.(999)}&nbsp;</span>
+      <input type="hidden" name="tot_amt_consume" value="${tot_amt_consume}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${remain_tot.(999)}&nbsp;</span>
+      <input type="hidden" name="remain_tot" value="${remain_tot}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;本期MP餘額:
+ 			<span class="col_key">${min_pay_bal.(999)}&nbsp;</span>
+      <input type="hidden" name="min_pay_bal" value="${min_pay_bal}">    
+    </td>
+     <td nowrap class="zz_textR" >&nbsp;預現</td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${tot_amt_precash.(999)}&nbsp;</span>
+      <input type="hidden" name="tot_amt_precash" value="${tot_amt_precash}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${remain_cash.(999)}&nbsp;</span>
+      <input type="hidden" name="remain_cash" value="${remain_cash}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;Curr.Mode:
+ 			<span class="zz_data">${int_rate_mcode}&nbsp;</span>
+      <input type="hidden" name="int_rate_mcode" value="${int_rate_mcode}">    
+    </td>
+    <td nowrap class="zz_textR" >&nbsp;一般</td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${wk_tot_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="wk_tot_amt" value="${wk_tot_amt}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" colspan="5" >&nbsp;payment未銷:
+ 			<span class="zz_data">${pay_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="pay_amt" value="${pay_amt}">    
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;溢繳款:
+ 			<span class="zz_data">${wk_oplk.(999)}&nbsp;</span>
+      <input type="hidden" name="wk_oplk" value="${wk_oplk}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_titl" >&nbsp;子卡</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;爭議:
+ 			<span class="zz_data">${tl_prb_amount.(999)}&nbsp;</span>
+      <input type="hidden" name="tl_prb_amount" value="${tl_prb_amount}">    
+    </td>
+    <td nowrap class="zz_textR" >&nbsp;額度</td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${indiv_crd_lmt.(999)}&nbsp;</span>
+      <input type="hidden" name="indiv_crd_lmt" value="${indiv_crd_lmt}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;總未付本金:
+ 			<span class="zz_data">${ttl_amt_bal.(999)}&nbsp;</span>
+      <input type="hidden" name="ttl_amt_bal" value="${ttl_amt_bal}">    
+    </td>
+    <td nowrap class="zz_textR" >&nbsp;授權</td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${son_tot_amt_consume.(999)}&nbsp;</span>
+      <input type="hidden" name="son_tot_amt_consume" value="${son_tot_amt_consume}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr>
+ <tr>
+ 		<td nowrap class="zz_text" >&nbsp;逾期未繳金額:
+ 			<span class="zz_data">${unpay_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="unpay_amt" value="${unpay_amt}">    
+    </td>
+    <td nowrap class="zz_textR" >&nbsp;餘額</td>
+    <td nowrap class="zz_text" >&nbsp;
+ 			<span class="zz_data">${son_remain_tot.(999)}&nbsp;</span>
+      <input type="hidden" name="son_remain_tot" value="${son_remain_tot}">    
+    </td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+    <td nowrap class="zz_text" >&nbsp;</td>
+ </tr> 
+</table>
+</div>
+
+<table id="table_txlog" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="9" class="td_titl" >&nbsp;卡戶近五筆授權</td>
+  </tr>   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡片後四碼&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >消費時間&nbsp;</th>
+    <th nowrap >MCC&nbsp;</th>
+    <th nowrap >ENTRY_MODE&nbsp;</th>
+    <th nowrap >消費金額&nbsp;</th>
+    <th nowrap >回覆碼&nbsp;</th>
+    <th nowrap >比對旗標</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr ${color_txlog}>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}" />
+	</td>
+	<td nowrap class="list_cc" ${bk_color}> 
+		<span ${font_color} > ${T1-card_no_4}&nbsp;</span>
+	   <input type="hidden" name="T1-card_no_4" value="${T1-card_no_4}" />
+	</td>
+	<td nowrap class="list_cc"> ${T1-tx_date.YMD}&nbsp;
+	   <input type="hidden" name="T1-tx_date" value="${T1-tx_date}" />
+	</td>
+	<td nowrap class="list_cc"> ${T1-tx_time.TIME}&nbsp;
+	   <input type="hidden" name="T1-tx_time" value="${T1-tx_time}" />
+	</td>
+	<td nowrap class="list_cc"> ${T1-mcc_code}&nbsp;
+	   <input type="hidden" name="T1-mcc_code" value="${T1-mcc_code}" />
+	</td>
+	<td nowrap class="list_cc"> ${T1-pos_mode}&nbsp;
+	   <input type="hidden" name="T1-pos_mode" value="${T1-pos_mode}" />
+	</td>
+	<td nowrap class="list_rr"> 
+		 <span ${color_nt}> ${T1-nt_amt.(999)} </span>&nbsp;
+	   <input type="hidden" name="T1-nt_amt" value="${T1-nt_amt}" />
+	</td>
+	<td nowrap class="list_cc"> ${T1-auth_status_code}&nbsp;
+	   <input type="hidden" name="T1-auth_status_code" value="${T1-auth_status_code}" />
+	</td>
+	<td nowrap class="list_cc"> ${T1-mtch_flag}&nbsp;
+	   <input type="hidden" name="T1-mtch_flag" value="${T1-mtch_flag}" />
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+<input type="hidden" name="kk_auth_no" value="${kk_auth_no}" />
+<input type="hidden" name="debit_flag" value="${debit_flag}" />
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+<input type="hidden" name="acctp_seqno" value="${acctp_seqno}" />
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+<input type="hidden" name="card_acct_idx" value="${card_acct_idx}" />
+<input type="hidden" name="major_id_p_seqno" value="${major_id_p_seqno}" />
+<input type="hidden" name="stmt_cycle" value="${stmt_cycle}" />
+<input type="hidden" name="acct_month" value="${acct_month}" />
+
+<input type="hidden"  name="data_k1" value="" />
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ccam1010" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl_consume" />
+<input type="hidden" name="card_curr_code" value="${card_curr_code}" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="999";
+ 
+  function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function detailScreen1(parm) {
+    //前N消費
+   top.respLevel = 2;
+   document.dataForm.data_k1.value = parm;
+   top.respHtml = "ccam2090_1_detl";
+   top.submitControl('S01');
+   return true;
+  }
+ 
+ function detailScreen2() {
+   top.respLevel = 2;
+   top.respHtml  = "ccam2090_2_detl";
+   top.submitControl('S02');
+   return true;
+ }
+  function detailScreen3() {
+    //分期未POSTING--
+  top.respLevel = 2;
+  top.respHtml = "ccam2090_3_detl";
+  top.submitControl('S03');
+  return true;
+  }
+  function detailScreen4() {
+   //查詢本卡交易明細
+    top.respLevel = 2;
+    top.respHtml  = "ccam2090_4_detl";
+    top.submitControl('S22');
+    return true;
+  }
+
+  function detailScreen5() {
+ //近三次繳款方式-
+ top.respLevel = 2;
+ top.respHtml ="ccam2090_5_detl";
+ top.submitControl('S05');
+ return true;
+ }
+
+  function detailScreen6(parm) {
+   //查詢臨調內容
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    if (parm==='N'){
+      top.respHtml  = "ccam2090_6_detl";
+    } else if (parm==='Y'){
+      //top.respHtml  = "ccam2090_7_detl";
+      alert("VD臨調內容未處理");
+      return true;
+    }    
+    top.submitControl('S22');
+    return true;
+  }
+  function detailScreen8() {
+   //查詢風險性交易
+    top.respLevel = 2;
+    top.respHtml  = "ccam2090_8_detl";
+    top.submitControl('S22');
+    return true;
+  } 
+  function detailScreen9() {
+	var card_spec =$("input[name=card_spec_status]").val();
+	if (card_spec.trim().length ==0) {
+	  alert("未指定 卡片特指");
+	  return false;
+	}
+   //查詢卡特指內容
+    top.respLevel = 2;
+    top.respHtml  = "ccam2090_9_detl";
+    top.submitControl('S22');
+    return true;
+  } 
+
+  function detailScreen12() {
+   //歸戶餘額查詢   
+    top.respLevel = 2;
+    top.respHtml  = "ccam2090_12_detl";
+    top.submitControl('S22');
+    return true;
+  } 
+   function detailScreen15() {
+    top.respLevel = 2;
+    top.respHtml = "ccam2090_15_detl";
+    top.submitControl('S15');
+    return true;
+    }
+
+  function detailScreen16(parm) {
+  if(parm=='N'){
+  alert("無第三授權人資料");
+  return;
+  }
+  top.respLevel = 1;
+  top.respHtml = "ccam2090_16_detl";
+  top.submitControl('S16');
+  return true;
+  }
+  function detailScreen17() { 
+   //alert("備註記錄查詢: 17_detl");
+    top.respLevel = 2;
+    top.respHtml  = "ccam2090_17_detl";
+    top.submitControl('S22');
+    return true;
+  }
+  function detailScreen18() {
+  //覆審總評分數
+  top.respLevel = 2;
+  top.respHtml = "ccam2090_18_detl";
+  top.submitControl('S18');
+  return true;
+  }
+  function wf_upperLevel_0() {
+    var k = top.frameIndex() - 1;
+    var ls_auth_no =document.dataForm.ex_auth_no.value;
+    top.dataFrame.frames[k].document.dataForm.auth_no =ls_auth_no;
+    top.dataFrame.frames[k].wf_upper_return(1);
+    top.upperLevel_0();
+  }
+ function wf_consu_approve(parm1) {
+    // //-C31-
+    // var lm_remain_tot =$("input[name=remain_tot]").val();
+    // alert("remain=" + lm_remain_tot);
+    // var ls_auth_resp = $("input[name=ex_auth_resp]").val();
+    // alert("remain=" + lm_remain_tot + ", resp=" + ls_auth_resp);
+    // var ls_aprid =$("input[name=ex_apr_user]").val();
+    // var ls_aprhd = $("input[name=ex_apr_passwd]").val();
+    // alert("remain=" + lm_remain_tot+", user="+ls_aprid+"/"+ls_aprhd);
+    // if (ls_auth_resp.trim()=='A' && Number(lm_remain_tot)<0) {
+    //   if (ls_aprhd.trim().length ==0 || ls_aprid.trim().length==0) {
+    //     alert("[檢查人員,密碼] 不可空白");
+    //     return false;
+    //   }
+    // }
+    return top.submitControl(parm1);
+  }
+</script>

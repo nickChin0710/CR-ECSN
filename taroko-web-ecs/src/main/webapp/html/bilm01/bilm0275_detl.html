@@ -1,0 +1,413 @@
+<html>
+
+<head>
+    <title>公共事業費用代繳授權書維護作業-detl-109-06-16-V2.00.01-Amber-[Update]
+    -109-0716-V2.00.02-Amber-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+<!--                     <input type="Button" name="btnUpdate" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp; -->
+					<input type="Button" name="btnUpdate" value="存檔" ${btnUpdate_disable} onClick="checkRun();" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">電話(用戶)號碼：
+                        <span class="dsp_text">${telephone_no}</span>
+                        <input type="hidden" id="telephone_no" name="telephone_no" value="${telephone_no}">
+                    </td>
+                    <td nowrap style="color: red">已放行：
+                        <span class="dsp_text">${db_tmp}</span>
+                        <input type="hidden" name="db_tmp" value="${db_tmp}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>機構代號：&nbsp;
+                        <span class="dsp_text">${office_m_code} ${office_m_code_desc}</span>
+                        <input type="hidden" id="office_m_code" name="office_m_code" value="${office_m_code}">
+                        <input type="hidden" name="office_m_code_desc" value="${office_m_code_desc}">
+                    </td>
+                    <td nowrap>分支機構：&nbsp;
+                        <span class="dsp_text">${office_code} ${office_code_desc}</span>
+                        <input type="hidden" id="office_code" name="office_code" value="${office_code}">
+                        <input type="hidden" name="office_code_desc" value="${office_code_desc}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>身分證號：&nbsp;
+                        <input type=text class="col_text" name="id_no" value="${id_no}" zeditType="alphanum,upper" maxlength="10" size="12" onChange="return top.submitControl('itemchanged2')" />
+                        <input type=text class="col_number" name="id_code" value="${id_code}" zeditType="number" maxlength="1" size="1" />
+                    </td>
+                    <td nowrap>號碼檢驗不符：
+                        <span class="dsp_text">${tel_chkmark}</span>
+                        <input type="hidden" name="tel_chkmark" value="${tel_chkmark}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>卡號：&nbsp;
+                        <input type=text class="col_any" name="card_no" value="${card_no}" zeditType="any" maxlength="19" size="21" onChange="return top.submitControl('itemchanged1')" />
+                        <span style="background-color:#FFFF33" class="dsp_text2" id="card_desp" />
+                    </td>
+                    <td nowrap>姓名：
+                        <span class="dsp_text">${id_name}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap id="td_1">作業代號：&nbsp;
+                        <select id="db_action" name="db_action" class="col_ddlb">
+                            <!-- ${option_val} -->
+                            <option value="1" ${db_action-1}>1:新增</option>
+                            <option value="2" ${db_action-2}>2:修改</option>
+                            <option value="3" ${db_action-3}>3:終止</option>
+                        </select>
+                        <input type="hidden" name="db_action" value="${db_action}">
+                        <span id="db_action_span" style="color:red;">&nbsp;(停車費只能設定 3:終止) </span>
+                    </td>
+                    <td nowrap id="td_2">作業代號：&nbsp;
+                        <select id="db_action" name="db_action" class="col_ddlb">
+                            <!-- ${option_val} -->
+<!--                             <option value="1" ${db_action-1}>1:新增</option> -->
+<!--                             <option value="2" ${db_action-2}>2:修改</option> -->
+                            <option value="3" ${db_action-3}>3:終止</option>
+                        </select>
+                        <input type="hidden" name="db_action" value="${db_action}">
+                        <span id="db_action_span" style="color:red;">&nbsp;(停車費只能設定 3:終止) </span>
+                    </td>
+                    <td nowrap>電腦編號：
+                        <span class="dsp_text">${computer_no}</span>
+                        <input type="hidden" name="computer_no" value="${computer_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>異動碼：
+                        <span class="dsp_text">${transaction_type}</span>
+                        <input type="hidden" name="transaction_type" value="${transaction_type}">
+                    </td>
+                    <td nowrap>登入日期：
+                        <span class="dsp_text">${mod_date.YMD}</span>
+                        <input type="hidden" name="mod_date" value="${mod_date}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap disabled="disabled">主管放行註記：
+                        <span class="col_radio">
+                            <input type="radio" value="Y" name="db_confirm_flag" ${db_confirm_flag-Y}/>是
+                            <input type="radio" value="N" name="db_confirm_flag" ${db_confirm_flag-N} />否
+                        </span>
+                    </td>
+                    <td nowrap>放行日期：
+                        <span class="dsp_text">${confirm_date.YMD}</span>
+                        <input type="hidden" name="confirm_date" value="${confirm_date}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>傳送日期：
+                        <span class="dsp_text">${feed_back_date.YMD}</span>
+                        <input type="hidden" name="feed_back_date" value="${feed_back_date}">
+                    </td>
+                    <td nowrap>失敗碼：
+                        <select name="error_code1" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" ${error_code1-1}>1.分支機構代號或用戶號碼錯誤</option>
+                            <option value="2" ${error_code1-2}>2.與用戶原申請帳號不同</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>有效日期：
+                        <span class="dsp_text">${effc_date.YMD}</span>
+                        <input type="hidden" name="effc_date" value="${effc_date}">
+                    </td>
+                    <td nowrap>縣市別：
+                        <span class="dsp_text">${uniform_no}&nbsp;&nbsp; ${uniform_chi_name}</span>
+                        <input type="hidden" name="uniform_no" value="${uniform_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;備註 :
+                        <input type="text" class="col_any" name="remark" value="${remark}" zEdit="any,canTW" maxlength="40" size="40" />
+                    </td>
+                </tr>
+                <input type="hidden" name="feed_back_tx_flag" value="${feed_back_tx_flag}">
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0275">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="pageType" value="detl">               
+        <input type="hidden" name="id_p_seqno" id="id_p_seqno" value="${id_p_seqno}">     
+        <input type="hidden" name="db_tmp" value="N"><!-- Y -->
+        <input type="hidden" name="error_code" value="${error_code}">
+        <input type="hidden" name="bank_no" id="bank_no" value="${bank_no}">
+        <input type="hidden" name="confirm_date" value="${confirm_date}">
+        <input type="hidden" name="confirm_flag" value="${confirm_flag}">
+        <input type="hidden" name="feed_back_date" value="${feed_back_date}">
+        <input type="hidden" name="feed_back_tx_flag" value="${feed_back_tx_flag}">
+        <input type="hidden" name="master_rowid" value="${master_rowid}">
+        <input type="hidden" name="tel_chkmark" value="${tel_chkmark}">
+        <input type="hidden" name="effc_date" value="${effc_date}">
+        <input type="hidden" name="city_x160" value="${city_x160}">
+        <input type="hidden" name="uniform_no" value="${uniform_no}">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.telephone_no.focus();
+$("#db_action_span").hide();
+$(document).ready(function() {
+	 func1();
+})
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    var office_m_code =  $("#office_m_code").val();
+	if(office_m_code == "CHTR" ){
+		$("#db_action_span").show();
+	}else{
+		$("#db_action_span").hide();
+	}
+    $("input[name*='db_action']").val("3");
+    return true;
+}
+
+function func1() {
+	var office_m_code =  $("#office_m_code").val();
+	if(office_m_code == "CHTR" ){
+		$("#db_action").val(3);
+		$("#td_1").hide();
+		$("#td_2").show();
+// 		$("#db_action").attr("disabled",true); 
+		$("#db_action_span").show();
+	}else{
+		$("#td_2").hide();
+		$("#td_1").show();
+		$("#db_action_span").hide();
+	}
+}
+
+//20200616 java_of_validation move here(CHTG,TE,TW,CC)
+function checkRun() {
+	var ck_office_m_code =  $("#office_m_code").val();
+	var ck_telephone_no =  $("#telephone_no").val(); 
+	var ck_office_code = $("#office_code").val();
+	var ck_db_action = $("#db_action").val();
+	
+	if(ck_db_action != '3'){
+		if(ck_office_m_code == "CHTG"){
+			var regex = /\d{9}/; //	 	var regex = /^[0-9]{9} .?[0-9]*/;
+			if (!regex.test(ck_telephone_no)){
+				alert("機構代碼為CHTG,用戶號碼必須為9碼數字");
+			}else{
+				var li_1 = parseInt(ck_telephone_no.substring(0,1));
+				var li_2 = parseInt(ck_telephone_no.substring(1,2));
+				var li_3 = parseInt(ck_telephone_no.substring(2,3));
+				var li_4 = parseInt(ck_telephone_no.substring(3,4));
+				var li_5 = parseInt(ck_telephone_no.substring(4,5));
+				var li_6 = parseInt(ck_telephone_no.substring(5,6));
+				var li_7 = parseInt(ck_telephone_no.substring(6,7));
+				var li_8 = parseInt(ck_telephone_no.substring(7,8));
+				var li_9 = parseInt(ck_telephone_no.substring(8,9));
+				var li_0 = (li_1 * 8 + li_2 * 7 + li_3 * 6 + li_4 * 5 + li_5 * 4 + li_6 * 3 + li_7 * 2 + li_8 * 1);
+				var li_0 = (11 - li_0 % 11) % 10;
+				
+//	 			console.log(li_1+","+li_2+","+li_3+","+li_4+","+li_5+","+li_6+","+li_7+","+li_8+","+li_9);
+//	 			console.log(li_0);	
+				
+				if (li_0 != li_9) {
+					alert("此資料檢查碼錯誤!!");
+				}else{
+					top.submitControl('U');
+				}
+			}
+			
+		}else if(ck_office_m_code == "TE"){
+			wf_chk_tel("TE", ck_office_code, ck_telephone_no);
+		}else if(ck_office_m_code == "TW"){
+			wf_chk_tel("TW", ck_office_code, ck_telephone_no);
+		}else if(ck_office_m_code == "CC"){
+			wf_chk_tel("CC", ck_office_code, ck_telephone_no);
+		}else{
+			top.submitControl('U');
+		}
+	}else{
+		top.submitControl('U');
+	}
+
+}
+
+function wf_chk_tel(as_mcode,as_code,as_tel){
+	var ll_tel = new Array();//var ll_tel = [];
+	var ls_tmp = "",ls_tmp2 = "";
+	if (as_mcode == "TE") {
+		as_code = (as_code + as_tel).substring(0, 10);
+		var ll_sum = 0;
+		for (var i = 0; i < 10; i++) {
+			ll_tel[i] = parseInt(as_code.substring(i, i + 1));
+			if(i % 2 == 0){
+				ll_sum += ll_tel[i];
+			}else{
+				if ((ll_tel[i] * 2) >= 10) {
+					ll_sum += parseInt((ll_tel[i] * 2).toString().substring(0, 1));
+					ll_sum += ((ll_tel[i] * 2) - 10);
+				}else{
+					ll_sum += (ll_tel[i]) * 2;
+				}
+			}
+		}
+		ls_tmp = ll_sum.toString().substring(ll_sum.toString().length - 1);
+// 		console.log("ls_tmp="+ls_tmp);
+// 		console.log("if="+as_tel.substring(as_tel.length - 1));
+
+		if(as_tel.substring(as_tel.length - 1 )!= ls_tmp){
+			var resp = confirm("公用事業~費用代繳之用戶號碼檢核不符,是否強制輸入?");
+	        if (resp == true) {
+	        	top.submitControl('U');
+	        } else {
+	            return;
+	        }
+		}else{
+			top.submitControl('U');
+		}
+
+	}else if(as_mcode == "TW"){
+		as_code = (as_tel).substring(0, 6);
+		var ll_sum = 0;
+		for (var i = 0; i < 6; i++) {
+			ll_tel[i] = parseInt(as_code.substring(i, i + 1));
+			if (i % 2 == 0) {
+				ll_sum += ll_tel[i];
+			}else {
+				ll_sum += (ll_tel[i] * 2);
+			}
+		}
+		ls_tmp = (10 - (ll_sum % 10)).toString();
+// 		console.log("ls_tmp="+ls_tmp);
+
+		if (as_tel.substring(as_tel.length - 1) != ls_tmp) {
+			var resp = confirm("公用事業~費用代繳之用戶號碼檢核不符,是否強制輸入?");
+	        if (resp == true) {
+	        	top.submitControl('U');
+	        } else {
+	            return;
+	        }
+		}else{
+			top.submitControl('U');
+		}
+	}else{//CC
+		var ls_cc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var ls_cc2 ="12345678912345678912345678";
+		
+		for (var i = 0; i < 2; i++) {
+			var ll_sum = 0;
+
+			if (as_code.substring(i, i + 1) <= 9) {
+				continue;
+			}else{
+				ls_tmp = as_code.substring(i, i + 1);
+			}
+			
+			
+			// 轉abc=123
+			if (!ls_tmp == "0") {
+				for (var j = 0; j < 26; j++) {
+					ls_tmp2 = ls_cc.substring(j, j + 1);
+					if (ls_tmp == ls_tmp2) {
+						ls_tmp = ls_cc2.substring(j, j + 1);
+					}
+				}
+			}
+			
+			if (i == 0) {
+				as_code = ls_tmp + as_code.substring(i + 1);
+			}
+			
+			if (i == 1) {
+				as_code = as_code.substring(0, 1) + ls_tmp + as_code.substring(i + 1);
+			}
+			
+		}
+		
+		// goto TAG_cc
+		as_code = (as_code + as_tel).substring(0, 10);
+		var ll_sum = 0;
+		var j = 0,k = 0;
+		
+		for(var i = 0; i < 10; i++){
+			ll_tel[i] = parseInt(as_code.substring(i, i + 1));
+			if(i+1 < 5){ // 權數k
+				k = i;
+			}else {
+				j += 1;
+				k = 11 - j;
+			}
+			ll_sum += (ll_tel[i] * k);
+		}
+		
+		
+		j = parseInt(ll_sum % 11); // 餘數
+		if (j == 0) {
+			ls_tmp = "0";
+		}else if (j == 1) {
+			ls_tmp = "K";
+		}else {
+			ls_tmp = (11 - (ll_sum % 11)).toString(); // 省水查核碼.求11的補數
+			
+		}
+
+		if(as_tel.substring(as_tel.toString().length - 1 ) != ls_tmp){
+			var resp = confirm("公用事業~費用代繳之用戶號碼檢核不符,是否強制輸入?");
+	        if (resp == true) {
+	        	top.submitControl('U');
+	        } else {
+	            return;
+	        }
+		}else{
+			top.submitControl('U');
+		}
+	}
+	
+}
+
+//有問題停用20200518
+// if (1==2 ${conf_cond}) { 
+
+//     var resp =confirm('${conf_mesg}');
+//     if ( resp == false ) { 
+
+//     }
+//     else { 
+//        document.dataForm.conf_flag.value="Y";
+//        var tmp =document.dataForm.db_tmp.value;
+
+//        if(tmp == 'N'){
+//         top.submitControl('A');
+//        }else if(tmp == 'Y'){
+//         top.submitControl('U');
+//        }
+
+//     }
+// }
+</script>

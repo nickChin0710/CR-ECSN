@@ -1,0 +1,678 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-09              JustinWu   add six new columns and new selection of card_hldr_flag-->
+<!-- 109-01-13              JustinWu   modify it_1_type and it_2_type radio buttons display -->
+<!-- 109-05-29              JustinWu   acct_type_flag's value "1" -> "Y"      -->       
+<!-- 109-10-07              JustinWu   change display and add 累積刷卡金額 驗證-->        
+<!-- 109-10-08              JustinWu   modify the display of the website and fix bugs of 累積刷卡金額 驗證 --> 
+<!-- 112-03-20				Kirin modify 改字串刷卡後 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡友權益資格參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.del_apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" />
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;權益代碼:
+      <select size="1" name="kk_item_no" id="kk_item_no" class="col_ddlb" >
+      	<option value="">--</option>
+       ${dddw_item_no}
+      </select>
+    </td>
+    <td nowrap >&nbsp;專案代碼:
+    	<input type="text" class="col_text" name="kk_proj_code" id="kk_proj_code" value="${kk_proj_code}" maxlength="10" size="12" zEdit="alphanum,upper" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  	<td nowrap >&nbsp;權益代碼:
+  		<span class="col_key">${item_no}&nbsp;${tt_item_no}</span>
+  		<input type="hidden" name="item_no" value="${item_no}">
+  		<input type="hidden" name="tt_item_no" value="${tt_item_no}">
+  	</td>
+  	<td nowrap >&nbsp;覆核:
+  		<span class="dsp_text">${apr_flag}&nbsp;</span>
+  		<input type="hidden" name="apr_flag" value="${apr_flag}">
+      &nbsp;&nbsp;
+      <input type="Button"  value="異動處理" ${btnProc_off} onClick="return top.submitControl('C')" class="btProcess" />
+  	</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;專案代碼:
+ 			<span class="col_key">${proj_code}&nbsp;</span>
+ 			<input type="hidden" name="proj_code" value="${proj_code}">
+ 		</td>
+ 		<td nowrap >&nbsp;專案狀態:
+ 			<span class="col_radio">
+         <input type="radio" value="Y" name="active_status" ${active_status-Y} ${default-active_status} />有效
+         <input type="radio" value="N" name="active_status" ${active_status-N} />取消
+      </span>
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;專案別說明:
+ 			<input type="text" class="col_any" name="proj_desc" value="${proj_desc}" maxlength="60" size="62" zEdit="any,canTw" zRequire="Y" >
+ 		</td>
+ </tr>
+ <tr>
+  <td nowrap colspan="2">&nbsp;權益專案生效日：
+    <input type="text" class="col_date" id="proj_date_s" name="proj_date_s" value="${proj_date_s}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+    <script language="JavaScript">
+      new tcal({ 'formname': 'dataForm', 'controlname': 'proj_date_s' });
+    </script>
+    &nbsp;~&nbsp;
+    <input type="text" class="col_date" id="proj_date_e" name="proj_date_e" value="${proj_date_e}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+    <script language="JavaScript">
+      new tcal({ 'formname': 'dataForm', 'controlname': 'proj_date_e' });
+    </script>
+  </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" class="td_title">&nbsp;權益參數&nbsp;
+ 			<input type="Button" class="btOther"  value="參數明細維護" onClick="return detailScreen('01')" ${btnDelete_disable} />
+ 		</td>
+ </tr>
+  <!-- <tr>
+  <td nowrap colspan="2">&nbsp;第二年起權益年月參數：
+    <input type="text" class="col_date" id="item_month_s" name="item_month_s" value="${item_month_s}" zEdit="date,yyyymm" maxlength="6" size="6"/>
+    &nbsp;~&nbsp;
+    <input type="text" class="col_date" id="item_month_e" name="item_month_e" value="${item_month_e}" zEdit="date,yyyymm" maxlength="6" size="6"/>
+  </td>
+ </tr> -->
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;卡友身分:
+ 			<span class="col_radio">
+         <input type="radio" value="1" name="card_hldr_flag" ${card_hldr_flag-1}  />行員
+         <input type="radio" value="2" name="card_hldr_flag" ${card_hldr_flag-2} ${default-card_hldr_flag} />非行員(全部卡友)
+         <!-- <input type="radio" value="3" name="card_hldr_flag" ${card_hldr_flag-3} />全部 -->
+      </span>
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;
+ 			<span class="col_radio">
+         <input type="checkbox" name="acct_type_flag" value="Y" ${acct_type_flag-Y} ${DEFAULT-acct_type_flag}>帳戶類別
+      </span>
+      <span style="color: white; background-color: green;">　01.帳戶類別　</span>
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;
+ 			<span class="col_radio"><input type="checkbox" name="group_card_flag" value="Y" ${group_card_flag-Y}>卡種+團體代號:</span>
+ 			<span style="color: white; background-color: green;">　02.團體代號+卡種　</span>
+ 		</td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;使用次數限制：<span class="col_radio">
+        <input type="radio" value="Y" name="use_cnt_cond" ${use_cnt_cond-Y} ${DEFAULT-use_cnt_cond} />年
+   <!--      <input type="radio" value="S" name="use_cnt_cond" ${use_cnt_cond-S} />季   -->
+        <input type="radio" value="M" name="use_cnt_cond" ${use_cnt_cond-M} />月
+        <input type="text" class="col_number" name="use_max_cnt" value="${use_max_cnt}" maxlength="6" size="7" zEdit="number">次
+        <!--  (註：每季區間為1-3月、4-6月、7-9月及10-12月)--> 
+      </span>
+   </td>
+ </tr>
+ <tr>
+		<td nowrap colspan="2" >&nbsp;首年認定：檢核順序為新發卡→首辦卡→舊卡友&nbsp;
+			<input type="checkbox" name="debut_sup_flag_0" value="Y" ${debut_sup_flag_0-Y}>正卡&nbsp;
+			<input type="checkbox" name="debut_sup_flag_1" value="Y" ${debut_sup_flag_1-Y}>附卡&nbsp;
+			<span style="color: white; background-color: green;">　03.(首年)團體代號　</span>
+			<input type="hidden" name="debut_group_cond" value="${debut_group_cond}" />
+      <span class="col_radio">
+        <input type="radio" value="0" name="debut_group_cond" ${debut_group_cond-0} ${DEFAULT-debut_group_cond} />0.不檢核
+        <input type="radio" value="1" name="debut_group_cond" ${debut_group_cond-1} />1.指定
+        <input type="radio" value="2" name="debut_group_cond" ${debut_group_cond-2} />2.排除
+      </span>
+			<br>&nbsp;　　　　
+			<span class="col_radio">
+      <input type="radio" value="1" name="debut_year_flag" ${debut_year_flag-1} ${defult-debut_year_flag} />
+      </span>
+      新發卡:核卡日前
+      <input type="text" class="col_number" name="debut_month1" value="${debut_month1}" maxlength="2" size="3" zEdit="number" >
+      個月至本年度從未持有本行該群組任一信用卡
+			<br>&nbsp;　　　　
+			<span class="col_radio">
+         <input type="radio" value="2" name="debut_year_flag" ${debut_year_flag-2} />
+      </span>
+      首辦卡:前一年度第
+      <input type="text" class="col_number" name="debut_month2" value="${debut_month2}" maxlength="2" size="3" zEdit="number" >
+      個月至本年度從未持有本行該群組任一信用卡
+			<br>&nbsp;　　　　
+			<span class="col_radio">
+         <input type="radio" value="3" name="debut_year_flag" ${debut_year_flag-3} />
+      </span>
+      舊卡友:持卡第二年起
+      <br>&nbsp;　　　　
+      <span class="col_radio">
+         <input type="radio" value="0" name="debut_year_flag" ${debut_year_flag-0} />
+      </span>
+      不檢核首年
+		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;消費金額累積方式:
+ 			<span class="col_radio">
+         <input type="radio" value="0" name="consume_type" ${consume_type-0} />0.不計算消費
+         <input type="radio" value="1" name="consume_type" ${consume_type-1} ${DEFAULT-consume_type} />1.By 正卡ID計算
+         <input type="radio" value="2" name="consume_type" ${consume_type-2} />2.正附卡合併計算
+         <input type="radio" value="3" name="consume_type" ${consume_type-3} />3.正附卡分開計算
+      </span>
+      <br>＿＿＿＿＿＿＿＿＿　不計算消費金額可使用&nbsp;
+      <input type="text" class="col_number" name="consume_00_cnt" value="${consume_00_cnt}" zEdit="number" maxlength="3" size="3" 
+      Style="background-color:${consume_00_cnt_pink}"/>
+      &nbsp;次/天數[1]
+ 		</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;消費金額本金類:
+ 		<input type="checkbox" name="consume_bl" value="Y" ${consume_bl-Y}>簽帳款(BL)&nbsp;&nbsp;
+ 		<input type="checkbox" name="consume_ca" value="Y" ${consume_ca-Y}>預借現金(CA)&nbsp;&nbsp;
+ 		<input type="checkbox" id="consume_it" name="consume_it" value="Y" ${consume_it-Y} onchange="itOnChange(this);">分期付款(IT)&nbsp;&nbsp;
+    <span id="it_1_type_span" class="col_radio">
+         <input type="radio" value="1" name="it_1_type" ${it_1_type-1} />每期金額
+         <input type="radio" value="2" name="it_1_type" ${it_1_type-2} ${default-it_1_type} />總金額
+    </span>
+ 		<br>&nbsp;&nbsp;　　　　　　　
+ 		<input type="checkbox" name="consume_ao" value="Y" ${consume_ao-Y}>餘額代償(AO)
+ 		<input type="checkbox" name="consume_id" value="Y" ${consume_id-Y}>代收款(ID)&nbsp;&nbsp;　
+ 		<input type="checkbox" name="consume_ot" value="Y" ${consume_ot-Y}>其他應收款(OT)&nbsp;&nbsp;
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >
+ 		&nbsp;&nbsp;<input type="checkbox" name="curr_cond" value="Y" ${curr_cond-Y} />當年消費門檻:
+ 		<br>&nbsp;&nbsp;指定刷卡期間：
+ 		<input type="radio" value="1" name="choose_cond" ${choose_cond-1}  />1.上一年度
+ 		<select   size="1"  name="curr_pre_month" class="col_number">
+         <option value="">0</option>         
+         <option value="1" ${curr_pre_month-1} >1</option>
+         <option value="2" ${curr_pre_month-2} >2</option>
+		 <option value="3" ${curr_pre_month-3} >3</option>
+         <option value="4" ${curr_pre_month-4} >4</option>
+         <option value="5" ${curr_pre_month-5} >5</option>
+         <option value="6" ${curr_pre_month-6} >6</option>
+         <option value="7" ${curr_pre_month-7} >7</option>
+         <option value="8" ${curr_pre_month-8} >8</option>
+         <option value="9" ${curr_pre_month-9} >9</option>
+         <option value="10" ${curr_pre_month-10} >10</option>         
+         <option value="11" ${curr_pre_month-11} >11</option>
+         <option value="12" ${curr_pre_month-12} >12</option>                                    
+      </select>月(含)至本年度12月底刷卡消費
+        <input type="radio" value="2" name="choose_cond" ${choose_cond-2} />2.近
+        <input type="text" class="col_number" name="last_mm" value="${last_mm}" zEdit="number" maxlength="12" size="3" />個月刷卡消費,單筆最低金額：
+        <input type="text" class="col_number" name="curr_min_amt" value="${curr_min_amt}" zEdit="number" maxlength="9" size="9" />元(含)以上,且符合下列二項任一條件
+ 		<br>　　　　　　　
+ 		<input type="checkbox" name="curr_amt_cond" value="Y" ${curr_amt_cond-Y}>累積刷卡金額達
+ 		<input type="text" class="col_number" name="curr_amt" value="${curr_amt}" zEdit="number" maxlength="9" size="9" />元(含)以上
+ 		<br>　　　　　　
+ 		或<input type="checkbox" name="curr_cnt_cond" value="Y" ${curr_cnt_cond-Y}>累積消費筆數達
+ 		<input type="text" class="col_number" name="curr_tot_cnt" value="${curr_tot_cnt}" zEdit="number" maxlength="12" size="3" />筆(含)以上,享有
+		<input type="text" class="col_number" name="curr_cnt" value="${curr_cnt}" zEdit="number" maxlength="3" size="3" 
+		Style="background-color:${curr_cnt_pink}"/>次/日[2]
+ 	</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;
+ 			<input type="checkbox" name="last_cond" value="Y" ${last_cond-Y}>&nbsp;
+ 			前一年消費門檻(舊卡友)[3]
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;&nbsp;&nbsp;&nbsp;(1)累積刷卡金額達
+ 			<input type="text" class="col_number" name="last_amt1" id="last_amt1" value="${last_amt1}" maxlength="12" size="14" zEdit="number">
+ 			元(含)以上，享有
+ 			<input type="text" class="col_number" name="last_cnt1" id="last_cnt1" value="${last_cnt1}" maxlength="3" size="3" zEdit="number" >
+ 			次/日
+      <span name="last_amt_span" style="color:red; font-family:標楷體;"></span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;&nbsp;&nbsp;&nbsp;(2)累積刷卡金額達
+ 			<input type="text" class="col_number" name="last_amt2" id="last_amt2" value="${last_amt2}" maxlength="12" size="14" zEdit="number" >
+ 			元(含)以上，享有
+ 			<input type="text" class="col_number" name="last_cnt2" id="last_cnt2" value="${last_cnt2}" maxlength="3" size="3" zEdit="number">
+ 			次/日
+      <span name="last_amt_span" style="color:red; font-family:標楷體;"></span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;&nbsp;&nbsp;&nbsp;(3)累積刷卡金額達
+ 			<input type="text" class="col_number" name="last_amt3" id="last_amt3" value="${last_amt3}" maxlength="12" size="14" >
+ 			元(含)以上，享有
+ 			<input type="text" class="col_number" name="last_cnt3" id="last_cnt3" value="${last_cnt3}" maxlength="3" size="3" >
+ 			次/日
+      <span name="last_amt_span" style="color:red; font-family:標楷體;"></span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;&nbsp;&nbsp;&nbsp;(4)累積刷卡金額達
+ 			<input type="text" class="col_number" name="last_amt4" id="last_amt4" value="${last_amt4}" maxlength="12" size="14" >
+ 			元(含)以上，享有
+ 			<input type="text" class="col_number" name="last_cnt4" id="last_cnt4" value="${last_cnt4}" maxlength="3" size="3" >
+ 			次/日
+      <span name="last_amt_span" style="color:red; font-family:標楷體;"></span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;&nbsp;&nbsp;&nbsp;(5)累積刷卡金額達
+ 			<input type="text" class="col_number" name="last_amt5" id="last_amt5" value="${last_amt5}" maxlength="12" size="14" >
+ 			元(含)以上，享有
+ 			<input type="text" class="col_number" name="last_cnt5" id="last_cnt5" value="${last_cnt5}" maxlength="3" size="3" >
+ 			次/日
+      <span name="last_amt_span" style="color:red; font-family:標楷體;"></span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;&nbsp;&nbsp;&nbsp;(6)累積刷卡金額達
+ 			<input type="text" class="col_number" name="last_amt6" id="last_amt6" value="${last_amt6}" maxlength="12" size="14" >
+ 			元(含)以上，享有
+ 			<input type="text" class="col_number" name="last_cnt6" id="last_cnt6" value="${last_cnt6}" maxlength="3" size="3" >
+ 			次/日
+      <span name="last_amt_span" style="color:red; font-family:標楷體;"></span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;
+ 			<input type="checkbox" name="cond_per" value="Y" ${cond_per-Y} />
+ 			&nbsp;刷卡金額每增加
+ 			<input type="text" class="col_number" name="per_amt" value="${per_amt}" maxlength="12" size="14" zEdit="number" />
+ 			&nbsp;元，再多享
+ 			<input type="text" class="col_number" name="per_cnt" value="${per_cnt}" maxlength="2" size="4" zEdit="number" />
+ 			&nbsp;次/日[4]&nbsp;
+ 			<span style="color: white; background-color: green;">　05.團體代號　</span>
+ 		</td>
+ </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;
+ 			<input type="checkbox" name="air_cond" value="Y" ${air_cond-Y} />
+ 			&nbsp;
+ 			<span style="color: white; background-color: green;">　06.團體代號+MCC CODE　</span>
+ 			&nbsp;
+ 			<input type="checkbox" name="air_sup_flag_0" value="Y" ${air_sup_flag_0-Y}>正卡&nbsp;
+			<input type="checkbox" name="air_sup_flag_1" value="Y" ${air_sup_flag_1-Y}>附卡，刷卡後
+			<input type="text" class="col_number" name="air_day" value="${air_day}" maxlength="3" size="3" zEdit="number" >
+			<span style="color: white; background-color: green;">日內(含使用當月)刷團費或機票 (MCC Code)</span>
+<!-- 			
+      <select size="1" name="air_mcc_group07" class="col_ddlb" >
+        <option value="">--</option>
+        ${dddw_mcc_group07}
+      </select> 
+-->
+			<br>＿＿＿＿＿＿消費金額:
+			<span class="col_radio">
+         <input type="radio" value="1" name="air_amt_type" ${air_amt_type-1} ${default-air_amt_type} />1.單筆金額
+         <input type="radio" value="2" name="air_amt_type" ${air_amt_type-2} />2.累積金額
+      </span>
+      達
+      <input type="text" class="col_number" name="air_amt" value="${air_amt}" maxlength="12" size="14" zEdit="number" >
+      (含)元以上，享有
+      <input type="text" class="col_number" name="air_cnt" value="${air_cnt}" maxlength="2" size="3" zEdit="number" >次/日[6]
+
+	<br>
+	&nbsp;&nbsp;<input type="checkbox" name="price_cond" value="Y" ${price_cond-Y} />&nbsp;優惠價
+ 	<input type="text" class="col_number" name="price" value="${price}" maxlength="12" size="10" zEdit="number" >元
+ 		</td>
+ </tr>
+ 
+ <!-- 
+ 
+ <tr>
+ 		<td nowrap colspan="2" class="td_title">&nbsp;請款比對使用條件</td>
+ </tr>
+ <tr>
+ 	<td nowrap width="5%" >&nbsp;
+ 		<input type="checkbox" name="a_use_cond" value="Y" ${a_use_cond-Y}>&nbsp;A
+ 	</td>
+ 	<td nowrap >&nbsp;
+ 		近
+ 		<input type="text" class="col_text" name="a_last_month" value="${a_last_month}" maxlength="2" size="3" zEdit="number" >
+ 		個月刷團費或機票消費金額
+ 		<span class="col_radio">
+      <input type="radio" value="1" name="a_use_amt_type" ${a_use_amt_type-1} ${default-a_use_amt_type} />1.單筆金額
+      <input type="radio" value="2" name="a_use_amt_type" ${a_use_amt_type-2} />2.累積金額達
+    </span>
+    <input type="text" class="col_number" name="a_use_amt" value="${a_use_amt}" maxlength="12" size="14" zEdit="number" >
+    (含)元以上
+    <br>&nbsp;消費金額累積方式:
+    <span class="col_radio">
+      <input type="radio" value="1" name="a_use_type" ${a_use_type-1} ${default-a_use_type} />1.正附卡合併計算
+      <input type="radio" value="2" name="a_use_type" ${a_use_type-2} />2.正附卡分開計算
+    </span>
+    <br>
+    &nbsp;
+    <input type="checkbox" name="a_air_right" value="Y" ${a_air_right-Y}>&nbsp;
+    刷機票或團費次數≧權益使用次數　　
+    <span style="color: white; background-color: green;">07.團體代號+MCC CODE(A):&nbsp;</span>
+!--     <select size="1" name="a_mcc_group" class="col_ddlb" >
+        <option value="">--</option>
+        ${dddw_a_mcc_group}
+    </select> --
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;
+ 		<input type="checkbox" name="b_use_cond" value="Y" ${b_use_cond-Y}>&nbsp;B
+ 	</td>
+ 	<td nowrap >&nbsp;近
+ 		<input type="text" class="col_text" name="b_last_month" value="${b_last_month}" maxlength="2" size="3" zEdit="number">
+ 		個月累積消費金額達
+ 		<input type="text" class="col_number" name="b_use_amt" value="${b_use_amt}" maxlength="12" size="14" zEdit="number" >
+ 		元(含)以上
+ 		<br>&nbsp;消費金額累積方式
+ 		<span class="col_radio">
+      <input type="radio" value="1" name="b_use_amt_type" ${b_use_amt_type-1} ${default-b_use_amt_type} />1.正附卡合併計算
+      <input type="radio" value="2" name="b_use_amt_type" ${b_use_amt_type-2} />2.正附卡分開計算
+    </span>
+    <br>&nbsp;消費金額本金類:
+    <input type="checkbox" name="b_use_bl" value="Y" ${b_use_bl-Y}>簽帳款(BL)&nbsp;&nbsp;
+ 		<input type="checkbox" name="b_use_ca" value="Y" ${b_use_ca-Y}>預借現金(CA)&nbsp;&nbsp;
+ 		<input type="checkbox" id="b_use_it" name="b_use_it" value="Y" ${b_use_it-Y}  onchange="itOnChange(this);">分期付款(IT)&nbsp;&nbsp;
+    <span id="it_2_type_span" class="col_radio">
+         <input type="radio" value="1" name="it_2_type" ${it_2_type-1} />每期金額
+         <input type="radio" value="2" name="it_2_type" ${it_2_type-2} ${default-it_2_type} />總金額
+    </span>
+ 		<br>&nbsp;　　　　　　　　
+ 		<input type="checkbox" name="b_use_ao" value="Y" ${b_use_ao-Y}>餘額代償(AO)
+ 		<input type="checkbox" name="b_use_id" value="Y" ${b_use_id-Y}>代收款(ID)&nbsp;&nbsp;　
+ 		<input type="checkbox" name="b_use_ot" value="Y" ${b_use_ot-Y}>其他應收款(OT)&nbsp;&nbsp;
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;
+ 		<input type="checkbox" name="c_use_cond" value="Y" ${c_use_cond-Y}>&nbsp;C
+ 	</td>
+ 	<td nowrap >&nbsp;使用日期已超出新貴通PP卡有效期限</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;
+ 		<input type="checkbox" name="d_use_cond" value="Y" ${d_use_cond-Y}>&nbsp;D
+ 	</td>
+ 	<td nowrap >&nbsp;
+    <span style="color: white; background-color: green;">08.團體代號+MCC CODE(D):&nbsp;</span>
+!-- 
+    <select size="1" name="d_mcc_group" class="col_ddlb" >
+        <option value="">--</option>
+        ${dddw_d_mcc_group}
+    </select>
+     --
+ 		<br>&nbsp;當年度權益服務二選一
+ 		<span class="col_radio">
+      <input type="radio" value="1" name="d_use_right" ${d_use_right-1} />使用機場接送免費服務，不再享有機場停車免費服務
+      <input type="radio" value="2" name="d_use_right" ${d_use_right-2} />使用機場停車免費服務，不再享有機場接送免費服務
+    </span>
+ 	</td>
+ </tr>
+ <tr>
+ 	<td nowrap >&nbsp;
+ 		<input type="checkbox" name="e_use_cond" value="Y" ${e_use_cond-Y}>&nbsp;E
+ 	</td>
+ 	<td nowrap >&nbsp;有效卡(卡片停用日期大於使用日期)</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" class="td_remark">&nbsp;註:依批號順序計算判斷</td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" class="td_remark">&nbsp;註:信用卡先扣免費次數，再扣除理財次數</td>
+ </tr>
+ 
+ 
+  -->
+ 
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">
+   </td>
+  </tr>
+</table>
+<!-- -->
+<input type="hidden" name="data_k1" value="" />
+<input type="hidden" name="data_k2" value="" />
+<input type="hidden" name="data_k3" value="" />
+<input type="hidden" name="data_k4" value="" />
+
+
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ window.addEventListener("load", function(){
+  var consume_it = document.getElementById("consume_it");
+  var b_use_it = document.getElementById("b_use_it");
+  itOnChange(consume_it);
+  itOnChange(b_use_it);
+ })
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode == 'A') {
+      if ( ! checkPKey()) {
+        return false;
+      }
+    }
+
+    if (top.actionCode == 'A' || top.actionCode == 'U') {
+      if ( !checkLastAmt() ) {
+         return false;
+      }
+      if ( !checkCurrCond() ) {
+    	  return false;
+      }
+    }
+
+    
+
+    return true;
+  }
+
+	function detailScreen(parm) {
+		top.respHtml  = "cmsm4210_detl_01";
+    top.respLevel = 2;
+	 	document.dataForm.data_k3.value = parm;
+    top.submitControl("S2");
+    return true;
+  }
+
+  function itOnChange(changeEle){
+    var childrenEle = changeEle.nextElementSibling.children;
+    if(changeEle.checked == true){
+      for(var i=0; i < childrenEle.length ; i++){
+        childrenEle[i].disabled = false;
+      }
+    }else{
+      for(var i=0; i < childrenEle.length ; i++){
+        childrenEle[i].disabled = true;
+      }
+    }
+    
+  }
+
+  function checkLastAmt(){
+
+    var lastAmtSpanArr = document.getElementsByName("last_amt_span");
+
+    for (var i = 0; i < lastAmtSpanArr.length; i++) {
+      lastAmtSpanArr[i].textContent = "";
+    }
+
+    var prevEle = document.getElementById("last_amt1");
+    var firstCntEle = document.getElementById("last_cnt1");
+    var amtFinalEle = -1;
+
+    if ( Number(prevEle.value) > 0) {
+      if ( ! checkLastCntGt0(firstCntEle, 1)) {
+        return false;
+      }
+    }else{
+      if ( ! checkLastCntEq0(firstCntEle, 1)) {
+        return false;
+      }
+      amtFinalEle = 1;
+    }
+
+    for (var i = 2; i <= 6; i++) {
+      var currentEle = document.getElementById("last_amt" + i );
+      var currentCntEle = document.getElementById("last_cnt" + i );
+
+      // 尚未找到最後一筆非0元資料
+      if (amtFinalEle == -1) {
+        if (Number(currentEle.value) != 0) {
+          if (Number(prevEle.value) >= Number(currentEle.value) ) {
+            alert("前一年消費門檻(舊卡友)：(" + i +")累積刷卡金額需大於前一筆");
+            currentEle.nextElementSibling.nextElementSibling.textContent= "累積刷卡金額需大於前一筆";
+            currentEle.style.background = "pink";
+            return false;
+          }
+
+          if (! checkLastCntGt0(currentCntEle, i)) {
+            return false;
+          }
+          
+        }else{
+          amtFinalEle = i;
+        }
+      }
+      // 已找到最後一筆非0元資料
+      else{
+        if (Number(currentEle.value) != 0 ) {
+          alert("前一年消費門檻(舊卡友)：(" + i +")累積刷卡金額請填入(" + amtFinalEle +")累積刷卡金額");
+          currentEle.nextElementSibling.nextElementSibling.textContent= "累積刷卡金額請填入("+ amtFinalEle +")累積刷卡金額"
+          currentEle.style.background = "pink";
+          return false;
+        }else{
+          if ( ! checkLastCntEq0(currentCntEle, i)) {
+             return false;
+          }
+        }
+
+      }
+
+      prevEle = currentEle;
+
+    }
+    return true;
+  }
+
+  function checkLastCntGt0(cntEle, eleNo){
+    if (Number(cntEle.value) <= 0) {
+      alert("前一年消費門檻(舊卡友)：(" + eleNo +")享有次/日次數需大於0");
+      cntEle.nextElementSibling.textContent= "前一年消費門檻(舊卡友)：(" + eleNo +")享有次/日次數需大於0";
+      cntEle.style.background = "pink";
+      return false;
+    }
+    return true;
+  }
+
+  function checkLastCntEq0(cntEle, eleNo){
+    if ( Number(cntEle.value) != 0) {
+         alert("前一年消費門檻(舊卡友)：(" + eleNo +")享有次/日次數需為0");
+         cntEle.nextElementSibling.textContent= "前一年消費門檻(舊卡友)：(" + eleNo +")享有次/日次數需為0"
+         cntEle.style.background = "pink";
+         return false;
+    } 
+    return true;
+  }
+
+  function checkPKey(){
+    var kkItemNo = document.getElementById("kk_item_no");
+    var kkProjCode = document.getElementById("kk_proj_code");
+
+    if (kkItemNo.value.length <= 0) {
+      alert("權益代碼為必填欄位");
+      kkItemNo.style.background = "pink";
+      return false;
+    }else{
+      kkItemNo.style.background = "white";
+    }
+
+    if (kkProjCode.value.length <= 0) {
+      alert("專案代碼為必填欄位");
+      kkProjCode.style.background = "pink";
+      return false;
+    }else{
+      kkProjCode.style.background = "white";
+    }
+
+    return true;
+  }
+  
+  function checkCurrCond() {
+	  var currCondChecked = document.forms["dataForm"]["curr_cond"].checked;
+	  var currCnt = document.forms["dataForm"]["curr_cnt"].value;
+//	  if (currCondChecked != true) {
+//		  alert("當年消費門檻必勾選");
+//		  return false;
+//	  }
+	  if ( currCnt == '' || currCnt <= 0) {
+		  alert("當年消費檻享有次數需大於0");
+		  return false;
+	  }
+	  return true;
+  }
+  
+
+</script>

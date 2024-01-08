@@ -1,0 +1,168 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-01-22  V1.00.01  ryan           Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>帳戶允用RC碼異動維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<body background="${water_mark}" > 
+<form name="dataForm"  method="post" action="">
+<table  border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<!-- <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp; -->
+  			<input type="Button"     value=" 讀取 " onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+  			<!--<input type="Button"       value=" 新增 " ${add_disabled} id="${A}"   onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;  -->
+  			<input type="Button"    id="btnUpdate"   value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btUpdate" >&nbsp;&nbsp;
+  			<input type="Button"    id="btnDelete"   value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  			<input type="Button"     value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+	<th colspan="2">請先輸入帳號</th>
+  	<tr>
+   		<td nowrap rowspan="2">&nbsp;帳戶帳號:
+   			<select size="1" name="ex_acct_type" class="col_ddlb" >
+      			${dddw_ex_acct_type}
+   			</select>
+   			<input type="text" class="col_any" zEdit="any" name="ex_acct_key" value="${ex_acct_key}"
+      		maxlength="11" size="13" zRequire ="k"/>
+   		</td>
+   		<td nowrap>&nbsp;中文姓名:
+      		<span class="dsp_text">${ex_cname}</span>
+			<input type="hidden" name="ex_cname" value="${ex_cname}">
+		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap>&nbsp;公司名稱:
+      		<span class="dsp_text">${ex_corp_name}</span>
+			<input type="hidden" name="ex_corp_name" value="${ex_corp_name}">
+		</td>
+  	</tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th>調整前允用RC狀態碼</th>
+		<th>允用RC狀態碼</th>
+	</tr>
+   	<tr>
+   		<td nowrap rowspan="2">&nbsp;調整前允用RC狀態碼:<br>
+      		<span class="col_radio">
+         		<input type="radio" value="1" name="ex_rc_use_b_adj" ${ex_rc_use_b_adj-1} disabled/>正常允用RC
+         		<input type="radio" value="2" name="ex_rc_use_b_adj" ${ex_rc_use_b_adj-2} disabled/>例外允用RC
+      			<input type="radio" value="3" name="ex_rc_use_b_adj" ${ex_rc_use_b_adj-3} disabled/>不得使用RC
+      		</span>
+      		<input type="hidden"  name="ex_rc_use_b_adj"  value="${ex_rc_use_b_adj}">
+   		</td>
+   		<td nowrap>&nbsp;變更後允用RC狀態碼:<br>
+      		<span class="col_radio">
+         		<input type="radio" value="1" name="ex_rc_use_indicator" ${ex_rc_use_indicator-1} />正常允用RC
+         		<input type="radio" value="2" name="ex_rc_use_indicator" ${ex_rc_use_indicator-2} />例外允用RC
+      			<input type="radio" value="3" name="ex_rc_use_indicator" ${ex_rc_use_indicator-3} />不得使用RC
+      		</span>
+   		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap>&nbsp;生效起迄年月:
+  			<input type="text" class="col_date" name="ex_rc_use_s_date" value="${ex_rc_use_s_date}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_rc_use_s_date'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_rc_use_e_date" value="${ex_rc_use_e_date}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_rc_use_e_date'});
+	    	</script>
+  		</td>
+  	</tr>
+  	<tr>
+  		<th colspan="2">重要訊息</th>
+  	</tr>
+  	<tr>
+  		<td nowrap >&nbsp;帳戶現狀碼:
+      		<span class="dsp_text">${tt_ex_acct_status}</span>
+			<input type="hidden" name="ex_acct_status" value="${ex_acct_status}">
+			<input type="hidden" name="tt_ex_acct_status" value="${tt_ex_acct_status}">
+		</td>
+		<td nowrap >&nbsp;暫存(即未放行):
+      		<span class="dsp_text">${ex_dual_flag}</span>
+			<input type="hidden" id = "ex_dual_flag" name="ex_dual_flag" value="${ex_dual_flag}">
+		</td>
+  	</tr>
+</table>
+</div>
+<br>
+
+<!-- -->
+<input type="hidden"  name="ROWID" value="${rowid}">
+<input type="hidden"  name="MOD_PGM" value="actm2100">
+<input type="hidden"  name="p_seqno" value="${p_seqno}">
+<input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+<input type="hidden"  name="pageType" value="detl">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="acct_type"  value="${acct_type}">
+<input type="hidden"  name="acct_key"  value="${acct_key}">
+<input type="hidden"  name="rc_use_indicator"  value="${ex_rc_use_indicator}">
+<input type="hidden"  name="rc_use_s_date"  value="${ex_rc_use_s_date}">
+<input type="hidden"  name="rc_use_e_date"  value="${ex_rc_use_e_date}">
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ document.dataForm.ex_acct_key.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+
+    if ( top.actionCode == "Q" ||top.actionCode == "S2"||top.actionCode == "D"||top.actionCode == "L" ) {
+		var ex_acct_key =  $("input[name = ex_acct_key]").val();
+		if(ex_acct_key.length==10){
+			ex_acct_key = ex_acct_key+"0";
+		}
+		if(ex_acct_key.length==8){
+			ex_acct_key = ex_acct_key+"000";
+		}
+		$("input[name = ex_acct_key]").val(ex_acct_key);
+    }
+    
+    return true;
+  }
+$(document).ready(function() {
+	$("input[id='btnDelete']").prop("disabled",true);
+	$("input[id='btnUpdate']").prop("disabled",true);
+	if($("#ex_dual_flag").val()=="Y"){
+		$("input[id='btnDelete']").prop("disabled",false);
+		$("input[id='btnUpdate']").prop("disabled",false);
+	}
+	if($("#ex_dual_flag").val()=="N"){
+		$("input[id='btnUpdate']").prop("disabled",false);
+	}
+});
+</script>

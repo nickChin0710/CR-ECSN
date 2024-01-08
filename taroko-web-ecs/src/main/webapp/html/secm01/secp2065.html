@@ -1,0 +1,316 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-27   V1.00.01  JH                              .                  -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>程式子系統權限設定</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+  show_ckbox();
+  list_ckbox();
+
+$("#detl_btnAdd").click(function(){
+   var  ex_winid =document.forms["dataForm"]["ex_winid"].value;
+   var  ex_user_level =document.forms["dataForm"]["ex_user_level"].value;
+   var  kk_winid =document.forms["dataForm"]["kk_winid"].value;
+   var  kk_user_level =document.forms["dataForm"]["kk_user_level"].value;
+
+   if(kk_winid =='' || kk_user_level ==''){
+   		alert("程式代碼 , 使用者層級不可空白 請先按查詢");
+   		return ;
+   }
+
+   if(kk_winid !=ex_winid || kk_user_level !=ex_user_level){
+   		alert("查詢及存檔key值不同 , 請重新查詢 !");
+   		return ;
+  }
+
+   var ex_group_id =$("#ex_group_id").val().toUpperCase().trim();
+   var ex_group_tt =$("#ex_group_id option:selected").text();
+   if (ex_group_id=='') {
+      alert('子系統: 不可空白');
+      return;
+   }
+
+    rowNum++;
+    ind++;
+    var serNo ="";
+    if ( ind < 10 )
+      { serNo = "0"+ind; }
+    else
+   	{ serNo = ""+ind;  }
+
+   var ls_query ="";
+   var ls_update ="";
+   var ls_approve ="";
+   var ls_print ="";
+   ls_query ="<input type='checkbox' name='aut_query' value='"+serNo+"'";
+   var ls_on_query ="<input type='hidden' name='on_query' value='' />";
+   if ($("#ex_query").is(':checked')) {
+      ls_query +=" checked";
+      ls_on_query ="<input type='hidden' name='on_query' value='checked' />";
+   }
+   ls_query +=" />";
+
+   ls_update = "<input type='checkbox' name='aut_update' value='"+serNo+"' disabled />";
+   var ls_on_update = "<input type='hidden' name='on_update' value='' />";
+   if ($("#wf_update").val()=='Y') {
+      ls_update ="<input type='checkbox' name='aut_update' value='"+serNo+"'";
+      if ($("#ex_update").is(':checked')) {
+         ls_update +=" checked";
+         ls_on_update = "<input type='hidden' name='on_update' value='checked' />";
+      }
+      ls_update +=" />";
+   }
+
+   ls_approve = "<input type='checkbox' name='aut_approve' value='"+serNo+"' disabled />";
+   var ls_on_approve = "<input type='hidden' name='on_approve' value='' />";
+   if ($("#wf_approve").val()=='Y') {
+      ls_approve ="<input type='checkbox' name='aut_approve' value='"+serNo+"'";
+      if ($("#ex_approve").is(':checked')) {
+         ls_approve +=" checked";
+         ls_on_approve = "<input type='hidden' name='on_approve' value='checked' />";
+      }
+      ls_approve +=" />";
+   }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' checked />"
+      +serNo+"&nbsp;"
+      +" <input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_group_tt
+      +" <input type='hidden' value='"+ex_group_id+"' name='group_id' /></td>"
+      +"<td nowrap class='list_cc'>"+ls_query+" "+ls_on_query+" </td>"
+      +"<td nowrap class='list_cc'>"+ls_update+" "+ls_on_update+" </td>"
+      +"<td nowrap class='list_cc'>"+ls_approve+" "+ls_on_approve+" </td>"
+      +"</tr>"
+      );
+
+      //-clear-
+      $("#ex_group_id").val('');
+      $("input[name=ind_num]").val(serNo);
+      $("#ex_query").prop("checked",false);
+      $("#ex_update").prop("checked",false);
+      $("#ex_approve").prop("checked",false);
+  });
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;程式代號:
+      <input type="text" class="col_any" name="ex_winid" value="${ex_winid}" maxlength="30" size="32" zEdit="any,lower" onChange="windChange('1')" zRequire="C">
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;程式名稱:
+      <input type="text" class="dsp_text" id="ex_win_name" value="${ex_win_name}" size="30" readonly />
+   </td>
+   <td nowrap >&nbsp;使用者層級:
+       <select size="1" name="ex_user_level" class="col_ddlb" zRequire="C">
+         ${dddw_user_level}
+      </select>
+   </td>
+ </table>
+</div>
+<hr>
+ <div id="dataBlock">
+ 	<table border="0" cellspacing="0" cellpadding="4">
+ 		<tr>
+    	<td nowrap>程式代碼:&nbsp;
+    	<span class="dsp_text">${kk_winid}</span>&nbsp;
+	      <input type="hidden" name="kk_winid" value="${kk_winid}" />
+  		<td nowrap class="list_cc" >&nbsp;使用者層級:&nbsp;
+    	<span class="dsp_text">${kk_user_level}</span>&nbsp;
+      	<input type="hidden" name="kk_user_level" value="${kk_user_level}" />
+  		</td>
+  		<td nowrap class="key_text" >&nbsp;當權限全部沒有勾選表示刪除</td>
+  	</tr>
+ 	</table>
+ </div>
+<div id="data2Block">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >子系統:
+   		<select size=1 id="ex_group_id" class="col_ddlb">
+   			<option value="" >--</option>
+       ${dddw_group_id}
+     </select>
+
+   </td>
+   <td nowrap>查詢:
+      <input type="checkbox" class="col_ckbox" id="ex_query" value="Y" />
+   </td>
+   <td nowrap>維護: 
+      <input type="checkbox" class="col_ckbox" id="ex_update" value="Y" />
+      <input type="text" class="dsp_text" id="wf_update" name="wf_update" value="${wf_update}" readonly size="2" />
+   </td>
+   <td nowrap>線上覆核: 
+      <input type="checkbox" class="col_ckbox" id="ex_approve" value="Y" />
+      <input type="text" class="dsp_text" id="wf_approve" name="wf_approve" value="${wf_approve}" readonly size="2" />
+   </td>
+   <td>
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}
+      <input type="hidden" name="ind_num" value="${ind_num}" />
+   </td>
+ </tr>
+</table>
+</div>
+ <table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap >修改&nbsp;</th>
+    <th nowrap >子系統&nbsp;</th>
+    <th nowrap >查詢&nbsp;</th>
+    <th nowrap >維護&nbsp;</th>
+    <th nowrap >線上覆核&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> &nbsp;
+      <span class="dsp_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+	   ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	</td>
+	<td nowrap class="list_cc"> ${group_id}_${tt_group_id}&nbsp;
+	   <input type="hidden" name="group_id" value="${group_id}">
+	   <input type="hidden" name="tt_group_id" value="${tt_group_id}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;
+      <input type="checkbox"  name="aut_query" value="${ser_num}" ${on_query} />
+      <input type="hidden" name="on_query" value="${on_query}" />
+    </td>
+   <td nowrap class="list_cc">&nbsp;
+ 		<input type="checkbox" name="aut_update" value="${ser_num}" ${on_update} >
+  	<input type="hidden" name="disp_update" value="${disp_update}" />
+    <input type="hidden" name="on_update" value="${on_update}" />
+  </td>
+   <td nowrap class="list_cc">&nbsp;
+   	  <input type="checkbox" name="aut_approve" value="${ser_num}" ${on_approve} />
+       <input type="hidden" name="disp_approve" value="${disp_approve}">
+       <input type="hidden" name="on_approve" value="${on_approve}" />
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function windChange(ps1) {
+   $("#ex_win_name").val("");
+   $("#wf_update").val("N");
+   $("#wf_approve").val("N");
+
+	var  winid =$("input[name=ex_winid]").val();
+	if ( winid.trim() === '' ) {
+		return false;
+	}
+	idCode = ps1;
+	resetJSON();
+	addJSON("ax_wind",winid);
+	processAJAX();
+ }
+
+ function ajaxResponse() {
+	top.respHtml ="secp2065";
+  top.requHtml ="secp2065";
+
+  var ss =getJson("ax_win_name");
+  $("#ex_win_name").val(ss);
+  var ss =getJson("ax_update");
+  $("#wf_update").val(ss);
+  ss =getJson("ax_approve");
+  $("#wf_approve").val(ss);
+
+  show_ckbox();  
+
+	if ( idCode === '1' )
+	{ return false; }
+ }
+
+ function show_ckbox() {
+   var ls_update =$("#wf_update").val();
+   var ls_appr =$("#wf_approve").val();
+
+   if (ls_update == 'Y') {
+     $("#ex_update").removeAttr("disabled");
+   } else {
+     $("#ex_update").attr("disabled",true);
+   }
+   if (ls_appr == 'Y') {
+     $("#ex_approve").removeAttr("disabled");
+   } else {
+     $("#ex_approve").attr("disabled",true);
+   }
+ }
+
+ function list_ckbox() {
+   var ls_update =$("#wf_update").val();
+   var ls_appr =$("#wf_approve").val();
+   //var group_id =document.getElementsByName("group_id");
+   //alert("group.num="+group_id.length);
+   $("input[name=aut_update]").each(function(){
+     if (ls_update == 'Y') {
+       $(this).removeAttr("disabled");
+     } else {
+       $(this).attr("disabled",true);
+     }
+   })
+   $("input[name=aut_approve]").each(function(){
+     if (ls_appr == 'Y') {
+       $(this).removeAttr("disabled");
+     } else {
+       $(this).attr("disabled",true);
+     }
+   })
+ }
+
+</script>

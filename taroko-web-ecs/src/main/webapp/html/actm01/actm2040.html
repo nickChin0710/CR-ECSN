@@ -1,0 +1,208 @@
+<html> 
+<head>
+<title>帳戶免收違約金/循環息維護作業-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+	                <td nowrap>&nbsp;帳戶帳號:
+	                    <select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+		          			  <input type="hidden" name="chk_ex_acct_type" value="${chk_ex_acct_type}">
+	                    <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" zRequire ="k"/>
+		          			  <input type="hidden" name="chk_ex_acct_key" value="${chk_ex_acct_key}">
+	                </td>
+	                <td nowrap>
+						<input type="radio" value="1" name="ex_modify_select" ${ex_modify_select-1} ${ex_mod_s1_attr} onClick="btnControl();" />取消帳號
+						<input type="radio" value="2" name="ex_modify_select" ${ex_modify_select-2} ${ex_mod_s2_attr} onClick="btnControl();" ${DEFAULT_CHK} />修改參數
+					  <input type="hidden" name="kp_ex_modify_select" value="${kp_ex_modify_select}">
+	                </td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;帳戶姓名/名稱:${ex_cname}
+					  <input type="hidden" name="ex_cname" value="${ex_cname}"></td>
+					<td nowrap>&nbsp;雙幣幣別:<span style="color:#930093; font-weight:bold;">${tt_curr_code}</span>
+					  <input type="hidden" name="ex_curr_code" value="${ex_curr_code}">
+					  <input type="hidden" name="tt_curr_code" value="${tt_curr_code}"></td>
+				</tr>
+                <tr>
+                    <td nowrap colspan=2>
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="存檔" onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+						<input type="Button" name="btnDelete" ${btnDelete_disable} value="刪除" onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+        <div id="queryBlock">
+  <table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td nowrap colspan="2" style="color:#930093; font-weight:bold;">自動扣繳戶資料訊息</td>
+      <td nowrap colspan="2" style="color:#00CC00; font-weight:bold;">自動扣繳戶資料調整</td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;扣繳行庫代號：</td>
+      <td nowrap>&nbsp;${ex_autopay_acct_bank}
+        <input type="hidden" name="ex_autopay_acct_bank" value="${ex_autopay_acct_bank}">
+      </td>
+      <td nowrap>&nbsp;自動扣繳指示碼：</td>
+      <td nowrap>
+        <input type="radio" value="1" name="ex_autopay_indicator" ${ex_autopay_indicator-1} />扣TTL&nbsp;&nbsp;
+        <input type="radio" value="2" name="ex_autopay_indicator" ${ex_autopay_indicator-2} />扣MP&nbsp;&nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;自動扣繳帳號：</td>
+      <td nowrap>&nbsp;${ex_autopay_acct_no}
+        <input type="hidden" name="ex_autopay_acct_no" value="${ex_autopay_acct_no}">
+      </td>
+      <td colspan=2>
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;自動扣繳生效日期：</td>
+      <td nowrap>&nbsp;${ex_autopay_acct_s_date.YMD} -- 
+<!--
+        <input type="text" class="col_date" id="ex_autopay_acct_e_date" name="ex_autopay_acct_e_date" value="${ex_autopay_acct_e_date}" 
+          zEdit="date,yyyymmdd" maxlength="8" size="10"  ${ex_autopay_acct_e_date_attr} />
+-->
+        <input type="text" class="col_date" id="ex_autopay_acct_e_date" name="ex_autopay_acct_e_date" value="${ex_autopay_acct_e_date}" 
+          zEdit="date,yyyymmdd" ${zReq_attr} maxlength="8" size="10"   />
+        <script language="JavaScript">
+		  new tcal ({'formname': 'dataForm','controlname': 'ex_autopay_acct_e_date'});
+	    </script>
+        <input type="hidden" name="ex_autopay_acct_s_date" value="${ex_autopay_acct_s_date}">
+      </td>
+      <td colspan=2>
+      </td>
+    </tr>
+    <tr>
+      <td nowrap colspan="4" style="color:#CC0000; font-weight:bold;">重要訊息</td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;扣繳帳號歸屬的ID：</td>
+      <td nowrap colspan="3">&nbsp;${ex_autopay_id}
+        <input type="hidden" name="ex_autopay_id" value="${ex_autopay_id}">
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;帳戶現狀碼：</td>
+      <td nowrap>&nbsp;${tt_acct_status}
+        <input type="hidden" name="ex_acct_status" value="${ex_acct_status}">
+        <input type="hidden" name="tt_acct_status" value="${tt_acct_status}">
+      </td>
+      <td nowrap>&nbsp;暫存(即未放行)：</td>
+      <td nowrap style="color:red; font-weight:bold;">&nbsp;${ex_dual_flag}
+        <input type="hidden" name="ex_dual_flag" value="${ex_dual_flag}">
+      </td>
+    </tr>
+  </table>
+        </div>
+        
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="actm2040">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" name="acct_type" value="${acct_type}">
+        <input type="hidden" name="acct_key" value="${acct_key}">
+        <input type="hidden" name="chk_ex_autopay_acct_e_date" value="${chk_ex_autopay_acct_e_date}">
+        <input type="hidden" name="chk_ex_autopay_indicator" value="${chk_ex_autopay_indicator}">
+        <input type="hidden" name="breakpoint_1" value="${breakpoint_1}">
+        <input type="hidden" name="breakpoint_2" value="${breakpoint_2}">
+        <input type="hidden"  name="kp_ex_autopay_acct_e_date" value="${kp_ex_autopay_acct_e_date}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_acct_key.focus();
+
+btnControl();
+
+function btnControl(){
+  var dt=new Date();
+  var ls_ymd_10 = dt.toISOString().substring(0,10); //例如 2020-07-23
+  var ls_ymd_09 = ls_ymd_10.replace('-', '');
+  var ls_ymd_08 = ls_ymd_09.replace('-', '');
+  var ls_autopay_acct_no = document.dataForm.ex_autopay_acct_no.value;
+
+
+	if (document.getElementsByName("ex_modify_select")[1].checked == true) {
+		//document.getElementById('ex_autopay_acct_e_date').disabled = true;
+    document.getElementById('ex_autopay_acct_e_date').setAttribute("style","");
+		//document.getElementById('ex_autopay_acct_e_date').readOnly = true;
+		//document.getElementById("ex_autopay_acct_e_date").onkeydown = function(e) { return false; }
+	} else {
+		//document.getElementById('ex_autopay_acct_e_date').disabled = false;
+  //document.getElementById('ex_autopay_acct_e_date').setAttribute("style","background-color:rgb(255,255,206);");
+    document.getElementById('ex_autopay_acct_e_date').style.background = "#ffffce";
+    if ( ls_autopay_acct_no.length > 0 ) {
+      document.dataForm.ex_autopay_acct_e_date.value = ls_ymd_08;
+    } 
+		//document.getElementById('ex_autopay_acct_e_date').readOnly = false;
+		//document.getElementById('ex_autopay_acct_e_date').onkeydown = true;
+	}
+}
+
+////exec breakpoint////
+$(document).ready(function() {
+	var bkpt = '${breakpoint}';
+	if (bkpt == 1) {
+		if (confirm("扣繳百分比小於系統標準MP百分比,請確認") === false) {
+    		return false;
+		} else {
+			document.dataForm.breakpoint_1.value = 'Y';
+			top.submitControl('U');
+			return true;
+		}
+	}
+	if (bkpt == 2) {
+		if (confirm("此帳戶不準允用RC,請確認") === false) {
+			document.dataForm.breakpoint_1.value = '';  //清之前的所有breakpoint_x
+    		return false;
+		} else {
+			document.dataForm.breakpoint_2.value = 'Y';
+			top.submitControl('U');
+			return true;
+		}
+	}
+})
+////end  breakpoint////
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    
+    if ( top.actionCode == "U" ) {
+    	if (document.getElementsByName("ex_modify_select")[0].checked == true){
+    		var chk = document.getElementById('ex_autopay_acct_e_date').value;
+    		if(chk == "") {
+    			alert("自扣生效日期不可為空值!");
+    			return false;
+    		}
+    	}
+    }
+    
+    return true;
+}
+
+</script>

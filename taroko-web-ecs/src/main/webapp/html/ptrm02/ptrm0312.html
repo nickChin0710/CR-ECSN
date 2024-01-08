@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>卡人等級參數設定-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶類別：
+      <select size="1" name="ex_acct_type" class="col_ddlb" zRequire="C" >
+      ${d_dddw_accttype}
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap class="td_remark" colspan="2">
+      1.不管新舊卡戶,金控關係人一律設為 M　　　　　　　　　　　6.新卡戶參照"新卡戶卡人等級參數維護" (ptrm0073)
+      <br>
+      2.新卡戶滿&nbsp;<span class="dsp_number">${ex_newcard_day}</span>
+      <input type="hidden" name="ex_newcard_day" value="${ex_newcard_day}" />天才進行卡人等級評比
+      <input type="Button" id="btnParm" value="新卡戶存檔" onClick="wf_page_parm('C');" class="btUpdate" >&nbsp;&nbsp;&nbsp;&nbsp;
+      　　7.本程式排除"卡人等級例外檔維護作業"(actm2130)設定之帳戶
+      <br>
+      3.不符合卡人等級參數者一律設為 J　  　　　　　　　　　　　8.請 Double Click 欲修改之卡人等級欄位開啟修改畫面
+      <br>
+      4.卡人等級可設為 A~Z, 1~9　　　　　　　　　　　　　　　&nbsp;9.參數異動時,請考量CCAM5051,CCAM5053系統參數是否一併修改
+      <br>
+      5.本程式執行順序固定為商務卡戶-->一般卡,各族群再依"判斷Priority"之順序執行；當Priority設定相同時,則先依卡人等級代碼之數字順序,然後再依英文字母順序執行
+    </td>
+    </tr>  
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap> 卡人等級&nbsp;</th>
+    <th nowrap> 已覆核&nbsp;</th>
+    <th nowrap> 對象類別&nbsp;</th>
+    <th nowrap> 判斷<br>Priority&nbsp;</th>
+    <th nowrap> 持卡年限<br>between X1 and X2&nbsp;</th>
+    <th nowrap colspan="2"> 近 N1 個月內有<br>M_code?N2&nbsp;</th>
+    <th nowrap colspan="2"> 最近M_code?N3<br>且本金結欠>=N31&nbsp;</th>
+    <th nowrap> RC 動用率<br>between N4 and N5&nbsp;</th>
+    <th nowrap> 額度<br>between N4 and N5&nbsp;</th>
+    <th nowrap colspan="2"> 近 N8 月平均額度動用率<br>between N9 and N10&nbsp;</th>
+    <th nowrap colspan="2"> 近 N11(M - N) 月累積消費<br>between N12 and N13<br>(不含MODEL II)&nbsp;</th>
+    <th nowrap colspan="2"> 近 X3 月Payment Ratio<br>between X4 and X5&nbsp;</th>
+    <th nowrap> 近 X6 月高風險交易<br>MCC Code&nbsp;</th>    
+    <th nowrap> VIP<br>Code&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${acct_type}','${class_code}','${apr_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+   <input type="hidden" name="acct_type" value="${acct_type}">
+   </td>
+	<td nowrap class="list_cc"> ${class_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cond_type}.${#JAVA_ecsfunc.idTab_ptr.classCode_type(cond_type)} </td>
+   <td nowrap class="list_cc"> ${check_seqno}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_card_year}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_mcode_mm}</td>
+   <td nowrap class="list_cc"> ${wk_mcode}</td>
+   <td nowrap class="list_ll"> ${wk_curr_mcode}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_curr_mcode_amt}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_rc_rate}&nbsp; </td>
+   <td nowrap class="list_ll"> ${wk_credit_limit}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_limit_use_mm}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_limit_use}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_dest_amt_n11}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_dest_amt}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_pay_ratio_x3}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_pay_ratio}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mcc_code_x6}&nbsp;</td>
+   <td nowrap class="list_cc"> ${vip_code_cond}&nbsp;</td> 
+   </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0312_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ptrm0312_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+ function wf_page_parm(parm) {
+    top.respLevel = 1;
+    top.respHtml = "ptrm0312_parm";
+    top.submitControl('S2');
+    return true;
+ }
+ 
+</script>

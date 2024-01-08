@@ -1,0 +1,616 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-01-16  V1.00.01     Ryan       Initial                               -->
+<!-- 112-06-09  V1.00.02     Ryan       增加姓名欄位                                                                                     -->
+<!-- 112-07-17  V1.00.03     Ryan       增加客戶類型                                                                                     -->
+<!-- 112-10-27  V1.00.04     Ryan       增加試算月付金額功能                                                                     -->
+<!-- 112-11-27  V1.00.05     Ryan       修正系統現欠餘額未帶出金額問題                                                  -->
+<!-- 112-12-12  V1.00.06     Ryan       試算期數增加背景顏色顯示                                                                 -->
+<!-- 112-12-15  V1.00.07     Ryan       回報債權金額輸入金額帶入信用卡本金(A)              -->
+<!-- 112-12-19  V1.00.08     Ryan       帳戶狀態改抓act_acno新增協商時帳戶狀態                                                            -->
+<!-- 112-12-21  V1.00.09     Ryan       modify 首期繳款日,債權計算截止日,目前應繳期數(含簽約當月)(計算) 欄位 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.min.css" />
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <!-- <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+      -->
+          <input type="Button"  value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+     <td nowrap colspan="2">&nbsp;客戶編號:
+        <input type="text" class="col_any" zEdit="any" name="kk_id_corp_no" value="${kk_id_corp_no}"
+      		maxlength="10" size="12" zRequire="Y" onChange="return top.submitControl('S1')" ${btnAdd_disable}/>
+     </td>
+     <td >&nbsp;類型:
+  		<input type="radio" value="1" name="kk_id_corp_type" ${kk_id_corp_type-1} ${DEFAULT_CHK}>個人
+  		<input type="radio" value="2" name="kk_id_corp_type" ${kk_id_corp_type-2}>公司
+     </td>
+</table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;客戶編號:
+         <span class="dsp_text">${id_corp_no}</span>
+        <input type="hidden" name="id_corp_no" value="${id_corp_no}" />
+     </td>
+     <td nowrap colspan="2">&nbsp;客戶姓名:
+         <span class="dsp_text">${chi_name}</span>
+        <input type="hidden" name="chi_name" value="${chi_name}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;帳務類別: 
+         <span class="dsp_text">${cpbdue_acct_type}.${#JAVA:ecsfunc.DeCodeCol.cpbdueAcctType(cpbdue_acct_type)}</span>
+        <input type="hidden" name="cpbdue_acct_type" value="${cpbdue_acct_type}" />
+     </td>
+     <td nowrap colspan="1">&nbsp;帳戶狀態:
+        <span class="dsp_text">${acct_status}.${#JAVA:ecsfunc.DeCodeCol.cpbdueAcctStatus(acct_status)}</span>
+        <input type="hidden" name="acct_status" value="${acct_status}" />
+     </td>
+     <td nowrap colspan="1">&nbsp;帳戶狀態日期:
+        <span class="dsp_text">${status_change_date.YMD}</span>
+        <input type="hidden" name="status_change_date" value="${status_change_date}" />
+
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;最大債權銀行代號: 
+         <input type="text" class="col_any" zEdit="any" name="cpbdue_owner_bank" value="${cpbdue_owner_bank}"
+      		maxlength="3" size="5"/>
+     </td>
+     <td nowrap>&nbsp;分行別: 
+         <input type="text" class="col_any" zEdit="any" name="cpbdue_branch" value="${cpbdue_branch}"
+      		maxlength="4" size="6"/>
+     </td>
+     <td nowrap colspan="1">&nbsp;協商時帳戶狀態:
+        <span class="dsp_text">${cpbdue_apply_acct_status}.${#JAVA:ecsfunc.DeCodeCol.cpbdueAcctStatus(cpbdue_apply_acct_status)}</span>
+        <input type="hidden" name="cpbdue_apply_acct_status" value="${cpbdue_apply_acct_status}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;目前協商方式: 
+       <select name="cpbdue_type" class="col_ddlb" zRequire="Y">
+         <option value="">--</option>
+         <option value="1" ${cpbdue_type-1} >1.公會協商</option>
+         <option value="2" ${cpbdue_type-2} >2.個別協商</option>
+         <option value="3" ${cpbdue_type-3} >3.前置調解</option>
+       </select>
+     </td>
+     <td nowrap colspan="2">&nbsp;目前協商狀態:
+       <select name="cpbdue_curr_type" class="col_ddlb" zRequire="Y">
+         <option value="">--</option>
+         <option value="0" ${cpbdue_curr_type-0} >0.取消</option>
+         <option value="1" ${cpbdue_curr_type-1} >1.受理</option>
+         <option value="2" ${cpbdue_curr_type-2} >2.停催</option>
+         <option value="3" ${cpbdue_curr_type-3} >3.協商成立</option>
+         <option value="4" ${cpbdue_curr_type-4} >4.復催</option>
+         <option value="5" ${cpbdue_curr_type-5} >5.毀諾</option>
+         <option value="6" ${cpbdue_curr_type-6} >6.還清</option>
+       </select>
+       <input type="hidden" name="ori_cpbdue_curr_type" value="${ori_cpbdue_curr_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;公會協商狀態:
+     [<span class="dsp_text">${cpbdue_bank_type}</span>]&nbsp;
+       <select name="cpbdue_bank_type" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="0" ${cpbdue_bank_type-0} >0.取消</option>
+         <option value="1" ${cpbdue_bank_type-1} >1.受理</option>
+         <option value="2" ${cpbdue_bank_type-2} >2.停催</option>
+         <option value="3" ${cpbdue_bank_type-3} >3.協商成立</option>
+         <option value="4" ${cpbdue_bank_type-4} >4.復催</option>
+         <option value="5" ${cpbdue_bank_type-5} >5.毀諾</option>
+         <option value="6" ${cpbdue_bank_type-6} >6.還清</option>
+       </select>	
+      <input type="hidden" name="ori_cpbdue_bank_type" value="${ori_cpbdue_bank_type}" />
+     </td>
+     <td nowrap>&nbsp;個別協商狀態: 
+      [<span class="dsp_text">${cpbdue_tcb_type}</span>]&nbsp;
+       <select name="cpbdue_tcb_type" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="0" ${cpbdue_tcb_type-0} >0.取消</option>
+         <option value="1" ${cpbdue_tcb_type-1} >1.受理</option>
+         <option value="2" ${cpbdue_tcb_type-2} >2.停催</option>
+         <option value="3" ${cpbdue_tcb_type-3} >3.協商成立</option>
+         <option value="4" ${cpbdue_tcb_type-4} >4.復催</option>
+         <option value="5" ${cpbdue_tcb_type-5} >5.毀諾</option>
+         <option value="6" ${cpbdue_tcb_type-6} >6.還清</option>
+       </select>
+        <input type="hidden" name="ori_cpbdue_tcb_type" value="${ori_cpbdue_tcb_type}" />
+     </td>
+     <td nowrap>&nbsp;前調協商狀態: 
+      [<span class="dsp_text">${cpbdue_medi_type}</span>]&nbsp;	
+       <select name="cpbdue_medi_type" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="0" ${cpbdue_medi_type-0} >0.取消</option>
+         <option value="1" ${cpbdue_medi_type-1} >1.受理</option>
+         <option value="2" ${cpbdue_medi_type-2} >2.停催</option>
+         <option value="3" ${cpbdue_medi_type-3} >3.協商成立</option>
+         <option value="4" ${cpbdue_medi_type-4} >4.復催</option>
+         <option value="5" ${cpbdue_medi_type-5} >5.毀諾</option>
+         <option value="6" ${cpbdue_medi_type-6} >6.還清</option>
+       </select>
+        <input type="hidden" name="ori_cpbdue_medi_type" value="${ori_cpbdue_medi_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">&nbsp;協議書債權總額:
+         <input type="text" class="col_number" zEdit="number" name="cpbdue_total_amt" value="${cpbdue_total_amt}"
+      	  maxlength="9" size="11"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;協商時的MCODE:
+         <input type="text" class="col_number" zEdit="number" name="int_rate_mcode" value="${int_rate_mcode}"
+      	  maxlength="9" size="9"/>
+     </td>
+     <td nowrap>&nbsp;協商時逾期天數:
+        <span class="dsp_text">${cpbdue_over_days}</span>
+        <input type="hidden" name="cpbdue_over_days" value="${cpbdue_over_days}" />
+     </td>
+     <td nowrap>&nbsp;喘息期數設定:
+		<input type="text" class="col_number" zEdit="number" name="cpbdue_brk_times" value="${cpbdue_brk_times}"
+      		maxlength="2" size="4"/>
+	 </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">&nbsp;手機號碼:
+        <span class="dsp_text">${cellar_phone}</span>
+        <input type="hidden" name="cellar_phone" value="${cellar_phone}" />
+     </td>
+   </tr>
+   <tr>
+    <td nowrap >&nbsp;公司電話:
+      1.<span class="dsp_text">${office_area_code1}</span>
+        <input type="hidden" name="office_area_code1" value="${office_area_code1}">
+        <span class="dsp_text">${office_tel_no1}</span>
+        <input type="hidden" name="office_tel_no1" value="${office_tel_no1}">
+        <span class="dsp_text">${office_tel_ext1}</span>
+        <input type="hidden" name="office_tel_ext1" value="${office_tel_ext1}">
+    </td>
+    <td nowrap colspan="2">&nbsp;2.
+        <span class="dsp_text">${office_area_code2}</span>
+        <input type="hidden" name="office_area_code2" value="${office_area_code2}">
+        <span class="dsp_text">${office_tel_no2}</span>
+        <input type="hidden" name="office_tel_no2" value="${office_tel_no2}">
+        <span class="dsp_text">${office_tel_ext2}</span>
+        <input type="hidden" name="office_tel_ext2" value="${office_tel_ext2}">
+    </td>
+   </tr>
+   <tr>
+    <td nowrap c>&nbsp;住家電話:
+      1.<span class="dsp_text">${home_area_code1}</span>
+        <input type="hidden" name="home_area_code1" value="${home_area_code1}">
+        <span class="dsp_text">${home_tel_no1}</span>
+        <input type="hidden" name="home_tel_no1" value="${home_tel_no1}">
+        <span class="dsp_text">${home_tel_ext1}</span>
+        <input type="hidden" name="home_tel_ext1" value="${home_tel_ext1}">
+    </td>
+    <td nowrap colspan="2">&nbsp;2.
+        <span class="dsp_text">${home_area_code2}</span>
+        <input type="hidden" name="home_area_code2" value="${home_area_code2}">
+        <span class="dsp_text">${home_tel_no2}</span>
+        <input type="hidden" name="home_tel_no2" value="${home_tel_no2}">
+        <span class="dsp_text">${home_tel_ext2}</span>
+        <input type="hidden" name="home_tel_ext2" value="${home_tel_ext2}">
+    </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">&nbsp;戶籍地址:
+		 <span class="dsp_text">${resident_zip}</span>
+      <input type="hidden" name="resident_zip" value="${resident_zip}">
+      <span class="dsp_text">${resident_addr1}</span>
+      <input type="hidden" name="resident_addr1" value="${resident_addr1}">
+      縣市
+      <span class="dsp_text">${resident_addr2}</span>
+      <input type="hidden" name="resident_addr2" value="${resident_addr2}">
+      鄉鎮市區
+      <span class="dsp_text">${resident_addr3}</span>
+      <input type="hidden" name="resident_addr3" value="${resident_addr3}">
+      村里
+	 </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="3" >&nbsp;
+      <span class="dsp_text">${resident_addr4}&nbsp;</span>
+      <input type="hidden" name="resident_addr4" value="${resident_addr4}">
+      鄰
+      <span class="dsp_text">${resident_addr5}&nbsp;</span>
+      <input type="hidden" name="resident_addr5" value="${resident_addr5}">
+   </td>
+ </tr>
+   <tr>
+     <td nowrap colspan="3">&nbsp;通訊地址:
+      <span class="dsp_text">${mail_zip}&nbsp;</span>
+      <input type="hidden" name="resident_zip" value="${resident_zip}">
+      <span class="dsp_text">${mail_addr1}&nbsp;</span>
+      <input type="hidden" name="resident_addr1" value="${resident_addr1}">
+      縣市
+      <span class="dsp_text">${mail_addr2}&nbsp;</span>
+      <input type="hidden" name="resident_addr2" value="${resident_addr2}">
+      鄉鎮市區
+      <span class="dsp_text">${mail_addr3}&nbsp;</span>
+      <input type="hidden" name="resident_addr3" value="${resident_addr3}">
+      村里
+	 </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="3" >&nbsp;
+      <span class="dsp_text">${mail_addr4}&nbsp;</span>
+      <input type="hidden" name="resident_addr4" value="${resident_addr4}">
+      鄰
+      <span class="dsp_text">${mail_addr5}&nbsp;</span>
+      <input type="hidden" name="resident_addr5" value="${resident_addr5}">
+   </td>
+</tr>
+   <tr>
+     <td nowrap colspan="3">&nbsp;公司地址:
+      <span class="dsp_text">${company_zip}&nbsp;</span>
+      <input type="hidden" name="resident_zip" value="${resident_zip}">
+      <span class="dsp_text">${company_addr1}&nbsp;</span>
+      <input type="hidden" name="resident_addr1" value="${resident_addr1}">
+      縣市
+      <span class="dsp_text">${company_addr2}&nbsp;</span>
+      <input type="hidden" name="resident_addr2" value="${resident_addr2}">
+      鄉鎮市區
+      <span class="dsp_text">${company_addr3}&nbsp;</span>
+      <input type="hidden" name="resident_addr3" value="${resident_addr3}">
+      村里
+	 </td>
+   </tr>
+   <tr>
+    <td nowrap colspan="3" >&nbsp;
+      <span class="dsp_text">${company_addr4}&nbsp;</span>
+      <input type="hidden" name="resident_addr4" value="${resident_addr4}">
+      鄰
+      <span class="dsp_text">${company_addr5}&nbsp;</span>
+      <input type="hidden" name="resident_addr5" value="${resident_addr5}">
+    </td>
+   </tr>
+   <tr>
+   	 <td nowrap>&nbsp;序號: 
+         <input type="text" class="col_any" zEdit="canTW" name="cpbdue_seqno" value="${cpbdue_seqno}"
+      		maxlength="10" size="12"/>
+     </td>
+     <td nowrap >&nbsp;簽約日期:
+       <input type="text" class="col_date" name="cpbdue_begin_date" value="${cpbdue_begin_date}" 
+           zeditType="date,yyyymmdd" size=10 maxlength=8 />
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'cpbdue_begin_date'});
+       </script>
+     </td>
+     <td nowrap>&nbsp;每月應繳款日:
+		<input type="text" class="col_number" zEdit="number" name="cpbdue_pay_month_dte" value="${cpbdue_pay_month_dte}"
+      		maxlength="2" size="4"/>
+	 </td>
+   </tr>
+   <tr>
+     <td nowrap >&nbsp;回報債權金額:
+		<input type="text" class="col_number" zEdit="number" name="cpbdue_amt" value="${cpbdue_amt}"
+      		maxlength="9" size="11"/>
+	 </td>
+	 <td nowrap >&nbsp;債權計算截止日:&nbsp;
+
+     </td>
+      <td nowrap >&nbsp;首期繳款日:&nbsp;
+       <input type="text" class="col_date" name="cpbdue_amt_exp_dte" value="${cpbdue_amt_exp_dte}" 
+           zeditType="date,yyyymmdd" size=10 maxlength=8"/>
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'cpbdue_amt_exp_dte'});
+       </script>
+     </td>
+   </tr>  
+   <tr>
+  <td nowrap >&nbsp;信用卡本金(A):
+		<input type="text" class="col_number" zEdit="number" ${card_principal_pink} name="card_principal" value="${card_principal}"
+      		maxlength="9" size="11"/><br>&nbsp;(線上試算，不儲存)
+	 </td>
+	 <td nowrap >&nbsp;協商年利率(B):
+		<input type="text" class="col_number" zEdit="dignumber" ${cpbdue_rate_pink} name="cpbdue_rate" value="${cpbdue_rate}"
+      		maxlength="6" size="8"/>%
+	 </td>
+	 <td nowrap >
+	         當輸入本金(A)、利率(B)、期數(D)<BR>
+       <input type="Button" class="btOther" value="試算月付金額" onClick="dialogOpen(1)">
+  	 </td>		
+   </tr>
+   <tr>
+    <td nowrap >&nbsp;每月應繳金額-信用卡(C):
+		<input type="text" class="col_number" zEdit="number" ${cpbdue_due_card_amt_pink} name="cpbdue_due_card_amt" value="${cpbdue_due_card_amt}"
+      		maxlength="9" size="11"/>
+	 </td>
+	 <td nowrap >&nbsp;協商期數(D):
+		<input type="text" class="col_number" zEdit="number" ${cpbdue_period_pink} name="cpbdue_period" value="${cpbdue_period}"
+      		maxlength="3" size="5"/>
+	 </td>
+    <td nowrap >
+		當輸入本金(A)、利率(B)、月付金額(C)<BR>
+        <input type="Button" class="btOther" value="試算期數"  onClick="dialogOpen(2)"> 
+	 </td>	
+      </tr>
+    <tr>
+     <td nowrap >&nbsp;每月應繳金額-消金:
+		<input type="text" class="col_number" zEdit="number" name="cpbdue_due_pc_amt" value="${cpbdue_due_pc_amt}"
+      		maxlength="9" size="11"/>
+	 </td>
+	 <td nowrap colspan="2">&nbsp;尾期金額:
+		<input type="text" class="col_number" zEdit="number" name="cpudue_remd_amt" value="${cpbdue_remd_amt}"
+      		maxlength="9" size="11"/>
+	 </td>
+   </tr>
+      <tr>
+     <td nowrap colspan="3">&nbsp;備註1:&nbsp; 
+         <input type="text" class="col_any" zEdit="canTW" name="cpbdue_memo_1" value="${cpbdue_memo_1}"
+      		maxlength="30" size="32"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="3">&nbsp;備註2:&nbsp; 
+         <input type="text" class="col_any" zEdit="canTW" name="cpbdue_memo_2" value="${cpbdue_memo_2}"
+      		maxlength="30" size="32"/>
+     </td>
+   </tr>
+   <tr>
+   	<td nowrap>&nbsp;當月繳款金額:
+        <input type="text" class="col_number" zEdit="number" name="cpbdue_pay_month_amt" value="${cpbdue_pay_month_amt}"
+        maxlength="9" size="11"/>
+   	</td>
+   	<td nowrap>&nbsp;最近繳款日期:
+   	    <input type="text" class="col_number" zEdit="number" name="cpbdue_lst_pay_dte" value="${cpbdue_lst_pay_dte}"
+        maxlength="8" size="10"/>
+        <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'cpbdue_lst_pay_dte'});
+        </script>
+   	</td>
+   	<td nowrap>&nbsp;目前應繳期數(含簽約當月)(計算):
+   		<span class="dsp_text">${online_computing_1}&nbsp;</span>
+   			<input    type="hidden" name="online_computing_1" value="${online_computing_1}" />
+         <!-- <input type="text" class="col_number" zEdit="number" name="xxxx" value="${xxxx}"
+         maxlength="9" size="11"/> -->
+   	</td>
+   </tr>
+   <tr>
+   	<td nowrap>&nbsp;當月欠款金額:
+   	    <input type="text" class="col_number" zEdit="number" name="cpbdue_month_dueamt" value="${cpbdue_month_dueamt}"
+        maxlength="9" size="11"/>
+   	</td>
+   	<td nowrap>&nbsp;累計欠款金額:
+   	   	<input type="text" class="col_number" zEdit="number" name="cpbdue_total_dueamt" value="${cpbdue_total_dueamt}"
+        maxlength="9" size="11"/>
+   	</td>
+   	<td nowrap>&nbsp;累計繳滿期數(計算):
+   		<span class="dsp_text">${online_computing_2}&nbsp;</span>
+   		<input    type="hidden" name="online_computing_2" value="${online_computing_2}" />
+   	   	<!--  <input type="text" class="col_number" zEdit="number" name="xxxx" value="${xxxx}"
+        maxlength="9" size="11"/>-->
+   	</td>
+   </tr>
+   <tr>
+   	<td nowrap>&nbsp;前期累計繳款金額:
+        <input type="text" class="col_number" zEdit="number" name="cpbdue_lst_payamt" value="${cpbdue_lst_payamt}"
+        maxlength="9" size="11"/>
+   	</td>
+   	<td nowrap>&nbsp;累計繳款金額:
+   	    <input type="text" class="col_number" zEdit="number" name="cpbdue_total_payamt" value="${cpbdue_total_payamt}"
+        maxlength="9" size="11"/>
+   	</td>
+   	<td nowrap>&nbsp;免列報註記(計算):
+   		<span class="dsp_text">${online_computing_3}&nbsp;</span>
+   		<input    type="hidden" name="online_computing_3" value="${online_computing_3}" />
+        <!-- <input type="text" class="col_number" zEdit="number" name="xxxx" value="${xxxx}"
+        maxlength="9" size="11"/> -->
+   	</td>
+   </tr>
+   <tr>
+    <td nowrap>&nbsp;債權餘額:
+    	<span class="dsp_text">${online_computing_4.(999)}&nbsp;</span>
+    	<input    type="hidden" name="online_computing_4" value="${online_computing_4}" />
+        <!-- <input type="text" class="col_number" zEdit="canMinus" name="cpbdue_balance_amt" value="${cpbdue_balance_amt}"
+        maxlength="9" size="11"/>-->
+   	</td>
+   	 <td nowrap>&nbsp;系統現欠餘額:  
+   	 <span class="dsp_text">${cpbdue_balance_amt.(999)}&nbsp;</span>  	
+   	   <input    type="hidden" name="cpbdue_balance_amt" value="${cpbdue_balance_amt}" />
+        <!-- <input type="text" class="col_number" zEdit="canMinus" name="cpbdue_balance_amt" value="${cpbdue_balance_amt}"
+        maxlength="9" size="11"/>-->
+   	</td>
+   	<td nowrap>&nbsp;最近協商狀態維護日期:
+   	    <input type="text" class="col_number" zEdit="number" name="cpbdue_lst_upt_dat_dte" value="${cpbdue_lst_upt_dat_dte}"
+        maxlength="8" size="10"/>
+        <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'cpbdue_lst_upt_dat_dte'});
+        </script>
+   	</td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >&nbsp;異動日期: 
+       <span class="dsp_date">${mod_date.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_date" value="${mod_date}" />
+     </td>
+     <td  nowrap  >&nbsp;異動人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >&nbsp;覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="10"  type="hidden" name="apr_date" value="${apr_date}" />
+     </td>
+     <td  nowrap  >&nbsp;覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+   </tr>
+ </table>
+</div>
+<div id="dialog_count" style="display: none;">
+    <table id="table_count" width="80%" border="0" cellspacing="0" cellpadding="4">
+      	<tr>
+        	<th nowrap class="list_th">期數</th>
+        	<th nowrap class="list_th">每月<br>應付金額</th>
+        	<th nowrap class="list_th">每月應付<br>利息金額</th>
+  			<th nowrap class="list_th">每月應還<br>本金金額</th>
+        	<th nowrap class="list_th">本金餘額</th>
+      	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_rr" ${background_yellow}>${SER_NUM}</td> 
+			<td nowrap class="list_rr" ${background_yellow}>${avpay_p.(999)}</td> 
+			<td nowrap class="list_rr" ${background_yellow}>${avpay_i.(999)}</td> 
+			<td nowrap class="list_rr" ${background_yellow}>${avpay_m.(999)}</td> 
+			<td nowrap class="list_rr" ${background_yellow}>${total_sub.(999)}</td> 
+			<td nowrap id="total_sub2">${total_sub2}</td> 
+		</tr>
+<!-- END DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_rr">總計:</td>
+			<td nowrap class="list_rr">${total_p.(999)}</td> 
+			<td nowrap class="list_rr">${total_i.(999)}</td> 
+			<td nowrap class="list_rr">${total_m.(999)}</td> 
+			<td nowrap class="list_rr"></td> 
+		</tr>
+		<tr>
+			<td nowrap colspan="4">※本試算表僅供參考</td>			
+		</tr>
+    </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="cpbdue_id_p_seqno" value="${cpbdue_id_p_seqno}">
+<input type="hidden" name="cpbdue_due_card_amt_tmp" value="${cpbdue_due_card_amt_tmp}">
+<input type="hidden" name="cpbdue_period_tmp" value="${cpbdue_period_tmp}">
+<input type="hidden" name="list_count" value="${list_count}">
+<input type="hidden" name="total_sub2_tmp" value="${total_sub2_tmp}">
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ $(document).ready(function(){
+	$("input[name=kk_id_corp_type],select[name=cpbdue_type]").change(function(){
+	 var cpbdueType = $("select[name=cpbdue_type]").val();
+	 var $cpbdueBankType = $("select[name=cpbdue_bank_type]");
+	 var $cpbdueTcbType = $("select[name=cpbdue_tcb_type]");
+	 var $cpbdueMediType = $("select[name=cpbdue_medi_type]");
+	 $cpbdueBankType.prop("disabled",false); 
+	 $cpbdueTcbType.prop("disabled",false); 
+	 $cpbdueMediType.prop("disabled",false); 
+	 if(cpbdueType=='1'){
+		 $cpbdueBankType.val(""); 
+		 $cpbdueBankType.prop("disabled",true); 
+	 }
+	 if(cpbdueType=='2'){
+		 $cpbdueTcbType.val(""); 
+		 $cpbdueTcbType.prop("disabled",true); 
+	 }
+	 if(cpbdueType=='3'){
+		 $cpbdueMediType.val(""); 
+		 $cpbdueMediType.prop("disabled",true); 
+	 }
+	 
+	 var kkIdCorpType = $("input[name=kk_id_corp_type]:checked").val();
+	 if(kkIdCorpType == '2'){
+		 $("select[name=cpbdue_type] option[value='2']").prop("selected",true);
+		 $("select[name=cpbdue_type] option[value='1']").prop("disabled",true);
+		 $("select[name=cpbdue_type] option[value='3']").prop("disabled",true);
+	 }else{
+		 $("select[name=cpbdue_type] option").prop("disabled",false);
+	 }
+	 
+ }).trigger('change');
+	
+	$("input[name=cpbdue_amt]").change(function(){
+		$("input[name=card_principal]").val($(this).val());
+	})
+	
+ })
+ 
+ function dialogOpen(n) {
+	if(n == 1)
+ 		return top.submitControl('S2');
+	if(n == 2)
+ 		return top.submitControl('S3');
+ }
+ $(document).ready(function(){
+	 if("${dialog_falg}" == "Y")
+		$("#dialog_count").dialog("open");
+ })
+
+ $("#dialog_count").dialog({
+     title: "${countamt_falg}" == 'Y'?'本息平均攤還試算_月付金額':'本息平均攤還試算_期數',
+     autoOpen: false,
+     resizable: true,
+     modal: true,
+     height: 600,
+     width: 600,
+     buttons: {
+         "確定": function() {
+        	 if("${countamt_falg}" == 'Y')
+        			$("input[name=cpbdue_due_card_amt]").val($("input[name=cpbdue_due_card_amt_tmp]").val());
+        	 if("${countperiod_falg}" == 'Y'){
+     			$("input[name=cpbdue_period]").val($("input[name=cpbdue_period_tmp]").val());
+        		$("input[name=cpudue_remd_amt]").val($("input[name=total_sub2_tmp]").val());
+        	 }
+             $(this).dialog("close");
+         },
+         "取消": function () {
+             $(this).dialog("close");
+         }
+     }
+ });
+</script>
+<!-- ******************************************************************** -->

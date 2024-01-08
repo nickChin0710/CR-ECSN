@@ -1,0 +1,120 @@
+<html>
+<head>
+<title> 108/07/22 V1.00.01 RAY Ho Initial 幣別資料參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <td nowrap>&nbsp;幣別代碼:
+      <input type="text" class="col_any" name="ex_curr_code" value="${ex_curr_code}"
+         zeditType="any,lower"  maxlength=3 size=3 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;對帳單幣別排列順序:
+      <select  name="ex_chk_sort_seq" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_chk_sort_seq-Y} >有</option>
+         <option value="N" ${ex_chk_sort_seq-N} >無</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">幣別</th>
+    <th nowrap class="list_th">英文名稱</th>
+    <th nowrap class="list_th">中文名稱</th>
+    <th nowrap class="list_th">會計幣別碼</th>
+    <th nowrap class="list_th">國家簡碼</th>
+    <th nowrap class="list_th">對帳單幣別</th>
+    <th nowrap class="list_th">對帳單順序</th>
+    <th nowrap class="list_th">小數點數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${curr_code}</td>
+    <td nowrap class="list_cc"> ${curr_eng_name}</td>
+    <td nowrap class="list_ll"> ${curr_chi_name}</td>
+    <td nowrap class="list_cc"> ${curr_code_gl}</td>
+    <td nowrap class="list_cc"> ${country_code}</td>
+    <td nowrap class="list_cc"> ${bill_curr_code}</td>
+    <td nowrap class="list_cc"> ${bill_sort_seq}</td>
+    <td nowrap class="list_cc"> ${curr_amt_dp}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm0210_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ptrm0210_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

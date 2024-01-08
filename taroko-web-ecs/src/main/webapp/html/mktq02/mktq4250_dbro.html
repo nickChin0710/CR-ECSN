@@ -1,0 +1,137 @@
+<html>
+<head>
+<title> 108/08/06 V1.00.01 RAY Ho Initial 影城訂票記錄明細</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data1 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <tr>
+     <td nowrap class="td_data"="%">交易日期: 
+       <span class="dsp_date">${tran_date.YMD}</span>
+       <input type="hidden" name="tran_date" value="${tran_date}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">活動代號: 
+       <span class="dsp_text">${active_code}-${comm_active_code}</span>
+       <input type="hidden" name="active_code" value="${active_code}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">團代: 
+       <span class="dsp_text">${group_code}-${comm_group_code}</span>
+       <input type="hidden" name="group_code" value="${group_code}"/>
+   </tr>
+ </table>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">VD卡</th>
+    <th nowrap class="list_th">帳戶類別</th>
+    <th nowrap class="list_th">卡友自付</th>
+    <th nowrap class="list_th">訂票張數</th>
+    <th nowrap class="list_th">退票張數</th>
+    <th nowrap class="list_th">實際張數</th>
+    <th nowrap class="list_th">扣抵點數</th>
+    <th nowrap class="list_th">退回點數</th>
+    <th nowrap class="list_th">實際點數</th>
+    <th nowrap class="list_th">加檔金額</th>
+    <th nowrap class="list_th">退回金額</th>
+    <th nowrap class="list_th">實際加檔金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','${active_code}','${group_code}','${tran_date}','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${card_no}</td>
+    <td nowrap class="list_cc"> ${vd_flag}</td>
+    <td nowrap class="list_ll"> ${acct_type}-${comm_acct_type}</td>
+    <td nowrap class="list_rr"> ${selfpay_amt}</td>
+    <td nowrap class="list_rr"> ${tran_cnt}</td>
+    <td nowrap class="list_rr"> ${return_cnt}</td>
+    <td nowrap class="list_rr"> ${actual_cnt}</td>
+    <td nowrap class="list_rr"> ${deduct_bp}</td>
+    <td nowrap class="list_rr"> ${return_bp}</td>
+    <td nowrap class="list_rr"> ${actual_bp}</td>
+    <td nowrap class="list_rr"> ${deduct_amt}</td>
+    <td nowrap class="list_rr"> ${return_amt}</td>
+    <td nowrap class="list_rr"> ${actual_amt}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="ROWID" value="${rowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 2;
+        top.respHtml = "mktq4250_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 2;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq4250_detl";
+    top.submitControl('T');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

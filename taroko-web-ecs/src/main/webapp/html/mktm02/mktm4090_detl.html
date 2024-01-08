@@ -1,0 +1,227 @@
+<html>
+
+<head>
+    <title>紅利積點扣抵參數維護_detl-V.2018-0302-ryan-[Initial]
+    -V.2020-0911-Andy-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+    <script language="JavaScript" src="js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<style>
+    font{
+  color:red;
+}
+</style>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+                    <!--<input type="Button" name="btnQuery"   value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;  -->
+                    <!-- <input type="Button" name="btnAdd"     value=" 新增 " ${btnAdd_disable}  onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp; -->
+                    <!--<input type="Button" name="btnUpdate"  value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp; -->
+                    <input type="Button" name="btnUpdate" ${btnUpdate_disable} value=" 存檔 " onClick="return top.submitControl('A')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" ${btnUpdate_disable} id="btnDelete" value=" 刪除 " onClick="return top.submitControl('SD')" class="btDelete">&nbsp;&nbsp;
+                    <!-- <input type="Button" name="btnClear"   value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp; -->
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <!-- Detail data================================= -->
+            <table width="90%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;<font>特店代號:</font>
+                        <span class="dsp_text">${rdm_mchtno}</span>
+                        <input type="hidden" name="rdm_mchtno" value="${rdm_mchtno}">
+                    </td>
+                    <td nowrap>&nbsp;<font>序號:</font>
+                        <span class="dsp_text">${rdm_seqno}</span>
+                        <input type="hidden" name="rdm_seqno" value="${rdm_seqno}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;特店名稱:
+                        <span class="dsp_text">${db_mchtname}</span>
+                        <input type="hidden" name="db_mchtname" value="${db_mchtname}">
+                    </td>
+                    <td nowrap color="blue">&nbsp;放行狀態:
+                        <span class="dsp_text">${tt_db_temp}</span>
+                        <input type="hidden" name="db_temp" id="db_temp" value="${db_temp}" />
+                        <input type="hidden" name="tt_db_temp" id="tt_db_temp" value="${tt_db_temp}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;活動期間：
+                        <input type="text" class="col_date" name="rdm_strdate" value="${rdm_strdate}" zeditType="date,ymd" MaxLength=8 size=8 zRequire="Y" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'rdm_strdate'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="rdm_enddate" value="${rdm_enddate}" zeditType="date,ymd" MaxLength=8 size=8 zRequire="Y" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'rdm_enddate'});
+                        </script>
+                    </td>
+                    <td nowrap>&nbsp;特店類別:
+                        <span class="dsp_text">${db_mchttype}</span>
+                        <input type="hidden" name="db_mchttype" value="${db_mchttype}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;最高扣抵比例:
+                        <select name="rdm_discratefg" class="col_ddlb">
+                            <option value="<=" ${rdm_discratefg-1}>&lt;=</option>
+                            <option value="=" ${rdm_discratefg-2}>=</option>
+                        </select>
+                        <input type="text" class="col_number" zEdit="dignumber" id="rdm_discrate" name="rdm_discrate" value="${rdm_discrate}" maxlength="8" size="8" onChange="rdmDestamt()" />&nbsp;%
+                    </td>
+                    <td nowrap>&nbsp;最高扣抵金額:
+                        <input type="text" class="col_number" zEdit="number" name="rdm_discamt" value="${rdm_discamt}" maxlength="9" size="9" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;每
+                        <input type="text" class="col_number" zEdit="number" id="rdm_unitpoint" name="rdm_unitpoint" value="${rdm_unitpoint}" size="10" zRequire="Y" />點，兌換
+                        <input type="text" class="col_number" zEdit="number" id="rdm_unitamt" name="rdm_unitamt" value="${rdm_unitamt}" maxlength="9" size="9" zRequire="Y" onChange="rdmDestamt()" />元
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;最低交易金額:
+                        <input type="text" class="col_number" zEdit="number" id="rdm_destamt" name="rdm_destamt" value="${rdm_destamt}" maxlength="9" size="9" zRequire="Y" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;特店隸屬群組:
+                        <span class="dsp_text">${db_mcht_group}</span>
+                        <input type="hidden" name="db_mcht_group" value="${db_mcht_group}">
+                    </td>
+                    <td>
+                        <input type="Button" class="btOther" id="btnMcht" name="btnMcht" value="同群組特店" ${btnUpdate_disable} onClick="return detailMcht('${rdm_mchtno}','${rdm_seqno}','${db_mcht_group}','${crt_no}')">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;使用者:
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}">
+                    </td>
+                    <td nowrap>&nbsp;建檔日期:
+                        <span class="dsp_text">${crt_date}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date}">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;
+                        <input type="Button" class="btOther" id="btnAcct" name="btnAcct" value="帳戶類別" ${btnUpdate_disable} onClick="return detailAcct('${rdm_mchtno}','${rdm_seqno}','','')">
+                        <input type="Button" class="btOther" id="btnGroup" name="btnGroup" value="團體代號" ${btnUpdate_disable} onClick="return detailGroup('${rdm_mchtno}','${rdm_seqno}','','')">
+                        <input type="Button" class="btOther" id="btnCard" name="btnCard" value="卡種" ${btnUpdate_disable} onClick="return detailCard('${rdm_mchtno}','${rdm_seqno}','','')">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="mktm4090">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="mcht_no_kk" value="${mcht_no_kk}">
+        <input type="hidden" name="dtl_kind_kk" value="${dtl_kind_kk}">
+        <input type="hidden" name="seq_no_kk" value="${seq_no_kk}">
+        <input type="hidden" name="crt_no_kk" value="${crt_no_kk}">
+        <input type="hidden" name="db_mcht_group_kk" value="${db_mcht_group_kk}">
+        <input type="hidden" name="crt_no" value="${crt_no}">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.rdm_mchtno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "SD") {
+
+        if (confirm("是否刪除異動資料?!") === false) {
+            return false;
+        }
+    }
+    if (top.actionCode == "A") {
+        return top.submitControl("S2");
+    }
+    return true;
+}
+
+function detailAcct(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.mcht_no_kk.value = parm;
+    document.dataForm.seq_no_kk.value = parm2;
+    //document.dataForm.dtl_kind_kk.value = 'ACCT-TYPE;
+    top.respHtml = "mktm4090_acct";
+    top.submitControl("SA");
+    return true;
+}
+
+function detailGroup(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.mcht_no_kk.value = parm;
+    document.dataForm.seq_no_kk.value = parm2;
+    document.dataForm.dtl_kind_kk.value = 'GROUP-CODE';
+    top.respHtml = "mktm4090_group";
+    top.submitControl("SCG");
+    return true;
+}
+
+function detailCard(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.mcht_no_kk.value = parm;
+    document.dataForm.seq_no_kk.value = parm2;
+    document.dataForm.dtl_kind_kk.value = 'CARD-TYPE';
+    top.respHtml = "mktm4090_card";
+    top.submitControl("SCG");
+    return true;
+}
+
+function detailMcht(parm, parm2, parm3, parm4) {
+    top.respLevel = 2;
+    document.dataForm.mcht_no_kk.value = parm;
+    document.dataForm.seq_no_kk.value = parm2;
+    document.dataForm.db_mcht_group_kk.value = parm3;
+    document.dataForm.crt_no_kk.value = parm4;
+    document.dataForm.dtl_kind_kk.value = 'MCHT-GROUP';
+    top.respHtml = "mktm4090_mcht";
+    top.submitControl("SM");
+    return true;
+}
+
+$(document).ready(function() {
+    var db_temp = $("#db_temp").val();
+    if (db_temp == 'N') {
+        $("#btnDelete").attr('disabled', true);
+        $("#btnDelete").css('background-color', 'lightgray');
+        $("#btnMcht").attr('disabled', true);
+        $("#btnMcht").css('background-color', 'lightgray');
+    }
+    // rdmDestamt();
+});
+
+function rdmDestamt() {
+    var rdm_discrate = $("#rdm_discrate").val();
+    var rdm_unitamt = $("#rdm_unitamt").val();
+    var rdm_destamt = 0;
+    rdm_destamt = 100 / Number(rdm_discrate);
+    rdm_destamt = Number(rdm_unitamt) * Number(rdm_destamt);
+    $("#rdm_destamt").val(Math.round(rdm_destamt));
+}
+</script>

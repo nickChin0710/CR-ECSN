@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>扣款覆核後送NCCC/國際組織文件-jh2020-0430</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" />
+   </td>
+   <td nowrap >&nbsp;卡別:
+      <select   size="1"  name="ex_bin_type" class="col_ddlb" zRequire="C" >
+         <option value="V" ${ex_bin_type-V} >V</option>
+         <option value="M" ${ex_bin_type-M} >M</option>
+         <option value="J" ${ex_bin_type-J} >J</option>
+      </select>
+      &nbsp;
+      VISA 列印格式:
+      <select   size="1"  name="ex_print_form" class="col_ddlb" >
+         <option value="" >--</option>
+         <option value="2E1" ${ex_print_form-2E1} >2E1</option>
+         <option value="2E2" ${ex_print_form-2E2} >2E2</option>
+         <option value="2E3" ${ex_print_form-2E3} >2E3</option>
+         <option value="2E4" ${ex_print_form-2E4} >2E4</option>
+         <option value="2E5" ${ex_print_form-2E5} >2E5</option>
+         <option value="2E6" ${ex_print_form-2E6} >2E6</option>
+      </select>
+   </td>
+   <td nowrap rowspan="2" >&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnUpdate"  value="列印完成確認" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap  >&nbsp;扣款覆核日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;資料列印:
+      <span class="col_radio">
+         <input type="radio" value="1" name="ex_print" ${ex_print-1} ${default-ex_print} />1.未列印
+         <input type="radio" value="2" name="ex_print" ${ex_print-2} />2.已列印
+         <input type="radio" value="0" name="ex_print" ${ex_print-0} />全部列印
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <th nowrap width="10%">
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    列印</th>
+   <th nowrap >列印<br>過否</th>
+   <th nowrap >卡別&nbsp;</th>
+   <th nowrap >Debit卡&nbsp;</th>
+   <th nowrap >控制流水號&nbsp;</th>
+   <th nowrap >入帳日期&nbsp;</th>
+   <th nowrap >消費卡號&nbsp;</th>
+   <th nowrap >持卡人姓名&nbsp;</th>
+   <th nowrap >消費日期&nbsp;</th>
+   <th nowrap >消費金額&nbsp;</th>
+   <th nowrap >理由碼&nbsp;</th>
+   <th nowrap >TPAN No&nbsp;</th>
+   <th nowrap >微縮影編號</th>
+   <th nowrap >特店英文名稱&nbsp;</th>
+   <th nowrap >特店中文名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="ok_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="rowid" value="${rowid}" />
+    <input type="hidden" name="visa_form" value="${visa_form}" />
+	</td>
+   <td nowrap class="list_cc"> ${fst_doc_mark}&nbsp;
+      <input type="hidden" name="fst_doc_mark" value="${fst_doc_mark}" /> </td>
+	<td nowrap class="list_cc"> ${bin_type}&nbsp;${visa_form}
+	   <input type="hidden" name="bin_type" value="${bin_type}" /> </td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;
+	   <input type="hidden" name="debit_flag" value="${debit_flag}" /> </td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;
+	   <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" /> </td>
+	<td nowrap class="list_cc"> ${post_date.YMD}&nbsp;
+	   <input type="hidden" name="post_date" value="${post_date}" /> </td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}" /> </td>
+	<td nowrap class="list_cc"> ${idno_name}&nbsp;
+	   <input type="hidden" name="idno_name" value="${idno_name}" /> </td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;
+	   <input type="hidden" name="purchase_date" value="${purchase_date}" /> </td>
+	<td nowrap class="list_rr"> ${dest_amt.(999)}&nbsp;
+	   <input type="hidden" name="dest_amt" value="${dest_amt}" /> </td>
+	<td nowrap class="list_cc"> ${fst_reason_code}&nbsp;
+	   <input type="hidden" name="fst_reason_code" value="${fst_reason_code}" /> </td>
+	<td nowrap class="list_cc"> ${v_card_no}&nbsp;
+	   <input type="hidden" name="v_card_no" value="${v_card_no}" /> </td>
+	<td nowrap class="list_cc"> ${film_no}&nbsp;
+	   <input type="hidden" name="film__no" value="${film_no}" /> </td>
+	<td nowrap class="list_ll"> ${mcht_eng_name}&nbsp;
+	   <input type="hidden" name="mcht_eng_name" value="${mcht_eng_name}" /> </td>
+	<td nowrap class="list_ll"> ${mcht_chi_name}&nbsp;
+	   <input type="hidden" name="mcht_chi_name" value="${mcht_chi_name}" /> </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="hh_bin_type" value="${ex_bin_type}" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  name="print_form" value="${print_form}" />
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

@@ -1,0 +1,212 @@
+<html>
+<head>
+<title>帳戶VIP設定參數維護-卡人等級 V20191230</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">計算順序：
+      <span class="dsp_text">${seq_no}</span>
+      <input type=hidden name="seq_no" value="${seq_no}" />
+   </td>
+   <td nowrap >VIP Code：
+      <span class="dsp_text">${vip_code}</span>
+      <input type=hidden name="vip_code" value="${vip_code}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>明細類別：
+      <span class="dsp_date">I01</span>
+      <input type=hidden name="data_type" value="I01" />
+   </td>
+   <td nowrap class="col_key">已覆核：
+      <span class="dsp_text">${apr_flag}</span>
+      <input type=hidden name="apr_flag" value="${apr_flag}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">篩選條件：
+      <input type="Button" value="卡人等級"  
+                onclick="wf_detl_2page('1');" disabled />
+      <input type="Button" value="近 N 個月違約預測評等" 
+                onclick="wf_detl_2page('2');" class="btAdd_detl" />
+      <input type="Button" value="近期違約預測評等" 
+                onclick="wf_detl_2page('3');" class="btAdd_detl" />
+      <input type="Button" value="近 N 個月繳款評等" 
+                onclick="wf_detl_2page('4');" class="btAdd_detl" />
+      <input type="Button" value="近期繳款評等" 
+                onclick="wf_detl_2page('5');" class="btAdd_detl" />
+      <input type="Button" value="指定名單" 
+                onclick="wf_detl_2page('6');" class="btAdd_detl" />
+      <input type="Button" value="指定-團體代號" 
+                onclick="wf_detl_2page('7');" class="btAdd_detl" />
+      <br>排除條件：
+      <input type="Button" value="凍結碼" onclick="wf_detl_2page('9');" class="btAdd_detl" />
+      <input type="Button" value="例外凍結碼" onclick="wf_detl_2page('13');" class="btAdd_detl" />                                                                                          
+      <input type="Button" value="風險分類" onclick="wf_detl_2page('10');" class="btAdd_detl" />
+      <input type="Button" value="例外調降額度理由碼" onclick="wf_detl_2page('8');" class="btAdd_detl" />            
+      <input type="Button" value="action_code" onclick="wf_detl_2page('11');" class="btAdd_detl" />
+      <input type="Button" value="排除名單" onclick="wf_detl_2page('12');" class="btAdd_detl" />
+      
+   </td>
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >卡人等級：
+      <input type="text" class="col_text" id="ex_data_code" value="${ex_data_code}" maxlength="1" size="3">
+      <input type="text" style="display: none"/>
+     &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" disabled style='background: lightgray;' />
+      &nbsp;IND_NUM=${ind_num}            
+   </td>
+  </tr>
+</table>  
+<hr>
+<table id="table1" width="60%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">卡人等級 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}" />
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${data_code}</td>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ptrm0470">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="I01">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ top.pageRows="999";
+
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+ }
+ 
+ $("#detl_btnAdd").click(function(){
+
+	var ls_data_code =$("#ex_data_code").val().toUpperCase();;
+	
+	if(ls_data_code =='') {
+	   alert("卡人等級: 不可空白");
+	   return ;
+	}
+
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ls_data_code+"' name='data_code' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_data_code").val('');
+  
+  });
+ 
+ function wf_detl_2page(parm) { 
+    top.respLevel = 2;
+   if (parm === "1") {
+      top.respHtml ="ptrm0470_I01";
+   }
+   else if (parm === "2") {
+      top.respHtml ="ptrm0470_I02";
+   }
+   else if (parm === "3") {
+      top.respHtml ="ptrm0470_I03";
+   }
+   else if (parm === "4") {
+      top.respHtml ="ptrm0470_I04";
+   }
+   else if (parm === "5") {
+      top.respHtml ="ptrm0470_I05";
+   }
+   else if (parm === "6") {
+      top.respHtml ="ptrm0470_I06";
+   }
+   else if (parm === "7") {
+      top.respHtml ="ptrm0470_I07";
+   }
+   else if (parm === "8") {
+      top.respHtml ="ptrm0470_I09";
+   }
+   else if (parm === "9") {
+      top.respHtml ="ptrm0470_E01";
+   }
+   else if (parm === "10") {
+      top.respHtml ="ptrm0470_E02";
+   }
+   else if (parm === "11") {
+      top.respHtml ="ptrm0470_E03";
+   }
+   else if (parm === "12") {
+      top.respHtml ="ptrm0470_E04";
+   }
+   else if (parm === "13") {
+      top.respHtml ="ptrm0470_E05";
+   }
+   else {
+      return false;
+   }
+   top.submitControl("R2");
+   return true;
+ }
+</script>

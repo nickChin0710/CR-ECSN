@@ -1,0 +1,143 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 105-12-27  V1.00.00  yash           Initial                              -->
+<!-- 109-02-04  V1.00.01  Justin Wu      cancel require id_no, and 線上->批號  -->
+<!-- 109-03-03  V1.00.02  Justin Wu      更正-> 指定                           -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>新製卡指定卡號作業</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>批號:
+                        <input type="text" class="col_any" name="ex_batchno" value="${ex_batchno}" zEdit="any"  maxlength="10" size="11">
+                    </td>
+                    <td nowrap>&nbsp;身分證號:
+                        <input type="text" class="col_text" name="ex_id_no" class="col_ddlb" zEdit="alphanum,upper" maxlength="10" size="12"></input>
+                    </td>
+                    <td nowrap>&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" id="btnAdd" value="執行" onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">指定</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">卡種</th>
+                <th nowrap class="list_th">團代</th>
+                <th nowrap class="list_th">身分證號碼</th>
+                <th nowrap class="list_th">生日</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">正卡身分證</th>
+                <th nowrap class="list_th">錯誤訊息</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no" rowspan="2">
+                    <span class="dsp_flag">${ok_flag}</span> 
+                    ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="list_ll">
+                    <input type="text" class="col_any" name="card_no" value="${card_no}" zEdit="number" maxlength="16" size="16" />
+                </td>
+                <td nowrap class="list_ll"> ${db_batchno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${card_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${group_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${apply_id}&nbsp; </td>
+                <td nowrap class="list_ll"> ${birthday}&nbsp; </td>
+                <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${pm_id}&nbsp; </td> 
+                <td nowrap class="list_ll"> ${ls_errmsg}&nbsp;</td>             
+                <input type="hidden" name="batchno" value="${batchno}">
+                <input type="hidden" name="db_batchno" value="${db_batchno}">
+                <input type="hidden" name="card_type" value="${card_type}">
+                <input type="hidden" name="group_code" value="${group_code}">
+                <input type="hidden" name="apply_id" value="${apply_id}">
+                <input type="hidden" name="birthday" value="${birthday}">
+                <input type="hidden" name="chi_name" value="${chi_name}">
+                <input type="hidden" name="pm_id" value="${pm_id}">
+                <input type="hidden" name="unit_code" value="${unit_code}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="mod_pgm" value="crdm0060">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0060_detl";
+    }
+    return true;
+}
+
+// function detailScreen(serNum, parm, parm2, parm3) {
+//     top.respLevel = 1;
+//     top.currRows = serNum;
+//     document.dataForm.data_k1.value = parm;
+//     document.dataForm.data_k2.value = parm2;
+//     document.dataForm.data_k3.value = parm3;
+//     top.respHtml = "crdm0060_detl";
+//     top.submitControl('S');
+//     return true;
+// }
+function chkdata() {
+    var seq = 0;
+    var agy = document.dataForm.opt;
+    var ll = agy.length;
+    if (typeof ll === 'undefined') {
+        if (agy.checked) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (agy[i].checked) {
+                seq++;
+            }
+        }
+    }
+}
+</script>

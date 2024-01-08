@@ -1,0 +1,140 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-10-30  V1.00.00  AndyLiu            Initial                          -->
+<!-- 109-01-02  V1.00.01  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡號檢查碼查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="20%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap colspan="2">&nbsp;
+			<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+			<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+		</td>
+	</tr>
+	<tr>        
+		<td nowrap>卡種:
+   			<select size="1" name="ex_card_type" class="col_ddlb" >
+      			${dddw_card_type}
+   			</select>
+   		</td>
+   		<td nowrap>團代:
+   			<select size="1" name="ex_group_code" class="col_ddlb" >
+      			${dddw_group_code}
+   			</select>
+   		</td>
+   		<!--
+   		<td nowrap>已使用註記:     
+	       <select   name="ex_reserve" class="col_ddlb"  >
+	         <option value=""  >--</option>
+	         <option value="N">N</option>
+	         <option value="Y">Y</option>
+	       </select>
+         </td>
+         -->
+	</tr>
+	<tr>
+		<td nowrap>BIN NO:
+			<input type=text class="col_number" name="ex_bin_no" value="${ex_bin_no}" zeditType="number" maxlength="12" size="12" zRequire ="k"/>
+		</td>
+		<td nowrap >流水號區間:
+            <input type=text class="col_number" name="ex_seqnos" value="${ex_seqnos}" zeditType="number" maxlength="10" size="10" />
+              --
+            <input type=text class="col_number" name="ex_seqnoe" value="${ex_seqnoe}" zeditType="number" maxlength="10" size="10" />
+        </td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">BIN NO </th>
+    	<th nowrap class="list_th">流水號</th>
+    	<th nowrap class="list_th">團體代號</th>
+    	<th nowrap class="list_th">卡片種類</th>
+    	<!--<th nowrap class="list_th">已使用註記</th>-->
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+ 	<tr>
+    	<td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+    	<td nowrap class="list_ll">${bin_no}&nbsp;</td>
+    	<td nowrap class="list_ll">${seqno}&nbsp;</td>
+    	<td nowrap class="list_ll">${group_code}&nbsp;</td>
+    	<td nowrap class="list_ll">${card_type}&nbsp;</td>
+    	<!--<td nowrap class="list_ll">${reserve}&nbsp;</td>-->
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="crdq0030">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="ex_aprid"  value="${ex_aprid}">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_card_type.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    return true;
+}
+
+function detailCard_no(data_card_no) { 
+	 //idCode = "1" ;
+  // 20200102 updated for archit.  change
+	top.actionCode = "AJAX";
+	// top.methodName = "itemchanged";
+	resetJSON();
+    addJSON("data_card_no",data_card_no);
+    processAJAX();
+   
+   
+	return true;
+	 
+}
+
+function ajaxResponse()
+{
+	top.respHtml ="crdq0030";
+	top.requHtml ="crdq0030";
+	 $("#ex_ckno").text(getJSONvalue("ex_ckno",0));
+	 console.log("ex_ckno:"+$("#ex_ckno").text());
+	 return false;
+}
+
+
+</script>

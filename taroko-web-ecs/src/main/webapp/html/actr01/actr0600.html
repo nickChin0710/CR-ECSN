@@ -1,0 +1,246 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-12-12  V1.00.00  Max Lin        Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>自動扣款帳號驗印明細表-V20221020</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <div id="condBlock">
+            <table width="120%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+<!--                <td nowrap colspan=12>&nbsp;    -->
+                    <td nowrap width="40%">&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+<!--                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+-->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                   	<td nowrap width="40%">
+                        <input type="radio" value="0" name="ex_vip" ${ex_vip-0} ${DEFAULT_CHK} />全部卡友
+                        <input type="radio" value="1" name="ex_vip" ${ex_vip-1} />一般卡友
+                        <input type="radio" value="2" name="ex_vip" ${ex_vip-2} />VIP 卡友
+                   	</td>
+                   	<td width="30%">
+                   	</td>
+
+                </tr>
+            </table>
+            
+            <table width="120%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                   <td nowrap width="40%">&nbsp;*提出驗印日期:
+                        <input type="text" class="col_date" name="ex_date_S" value="${ex_date_S}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_S'
+                        });
+                        </script>
+						--
+                        <input type="text" class="col_date" name="ex_date_E" value="${ex_date_E}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_E'
+                        });
+                        </script>
+                    </td>
+				   
+<!--
+                   	<td nowrap width="30%">
+                        <input type="radio" value="0" name="ex_vip" ${ex_vip-0} ${DEFAULT_CHK} />全部卡友
+                        <input type="radio" value="1" name="ex_vip" ${ex_vip-1} />一般卡友
+                        <input type="radio" value="2" name="ex_vip" ${ex_vip-2} />VIP 卡友
+                   	</td>
+-->
+                   <td nowrap width="40%">&nbsp;*驗印提回日期:
+                        <input type="text" class="col_date" name="ex_date2_S" value="${ex_date2_S}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date2_S'
+                        });
+                        </script>
+						--
+                        <input type="text" class="col_date" name="ex_date2_E" value="${ex_date2_E}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date2_E'
+                        });
+                        </script>
+                    </td>
+				   
+                   	<td nowrap width="30%" rowspan="3" style="color:blue">
+						&nbsp;注意：<br>
+						&nbsp;&nbsp;&nbsp;1.提出驗印日期為建檔之次營業日<br>
+						&nbsp;&nbsp;&nbsp;2.狀態為"刪除"，系統不予發送簡訊
+                   	</td>
+				</tr>
+					
+                <tr>
+                    <td nowrap>&nbsp;帳戶類別:
+                        <select name="ex_acct_type" class="col_ddlb">
+                            ${dddw_acct_type}
+                        </select>
+                        <input type="hidden" name="ex_acct_type_t" value="">  
+                    </td>
+					
+                    <td nowrap>&nbsp;正卡 ID/統編:
+                        <input type="text" class="col_text" zEdit ="alphanum,upper" name="ex_acct_key" value="${ex_acct_key}" maxlength="10" size="15" />
+                    </td>
+				</tr>
+					
+                <tr>
+                    <td nowrap>&nbsp;銀行代號:
+                        <select name="ex_bank_id" class="col_ddlb">
+                            ${dddw_bank_id}
+                        </select>
+                        <input type="hidden" name="ex_bank_id_t" value="">  
+                    </td>
+					
+                    <td nowrap>&nbsp;來源類別:
+                        <select name="ex_from_mark" class="col_ddlb">
+                        		<option value="0" >全部</option>
+                        		<option value="1" ${ex_from_mark-1}>新製卡</option>
+                        		<option value="2" ${ex_from_mark-2}>授權書-新申請</option>
+                        		<option value="3" ${ex_from_mark-3}>授權書-修改帳號</option>
+                          	<option value="4" ${ex_from_mark-4}>雲端櫃台-04</option>
+                          	<option value="5" ${ex_from_mark-5}>網銀-W</option>
+<!--                     		<option value="4" ${ex_from_mark-4}>官網-eDDA</option>    -->
+                        </select>
+                    </td>
+                </tr>
+					
+                <tr>
+                    <td nowrap>&nbsp;簡訊發送狀態:
+                        <select name="ex_sms_flag"  class="col_ddlb">
+                        		<option value="0" >全部</option>
+                        		<option value="1" ${ex_sms_flag-1}>已傳送</option>
+                        		<option value="2" ${ex_sms_flag-2}>無法傳送</option>
+                        		<option value="3" ${ex_sms_flag-3}>不須傳送</option>
+                        </select>
+                    </td>
+					
+                    <td nowrap>&nbsp;回覆狀態:
+                        <select name="ex_rtn_status"  class="col_ddlb">
+                        		<option value="0" >全部</option>
+                        		<option value="1" ${ex_rtn_status-1}>成功</option>
+                        		<option value="2" ${ex_rtn_status-2}>失敗</option>
+                        		<option value="3" ${ex_rtn_status-3}>未回覆</option>
+                        		<option value="4" ${ex_rtn_status-4}>免驗印</option>
+                        </select>
+                    </td>
+					
+                    <td nowrap>&nbsp;授扣款帳號狀態:
+                        <select name="ex_ad_mark" class="col_ddlb">
+                       		<option value="0" >全部</option>
+                       		<option value="A" ${ex_ad_mark-A}>新增</option>
+                       		<option value="D" ${ex_ad_mark-D}>刪除</option>
+                         </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr width="125%">
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">資料筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">VIP</th>
+                <th nowrap class="list_th">提出驗印日</th>
+                <th nowrap class="list_th">帳號狀態</th>
+                <th nowrap class="list_th">帳戶類別</th>
+                <th nowrap class="list_th">正卡 ID/統編</th>
+                <th nowrap class="list_th">流水序號</th>
+                <th nowrap class="list_th">帳務週期</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">銀行名稱</th>
+                <th nowrap class="list_th">扣繳帳號</th>
+                <th nowrap class="list_th">帳號歸屬 ID</th>
+		        		<th nowrap class="list_th">扣繳指示碼</th>
+                <th nowrap class="list_th">來源類別</th>
+                <th nowrap class="list_th">回覆狀態</th>
+                <th nowrap class="list_th">驗印提回日</th>
+                <th nowrap class="list_th">生效日</th>
+                <th nowrap class="list_th">簡訊發送狀態</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${vip_code} </td>
+                <td nowrap class="list_cc"> ${process_date.YMD} </td>
+                <td nowrap class="list_cc"> ${tt_ad_mark} </td>
+                <td nowrap class="list_cc"> ${acct_type} </td>
+                <td nowrap class="list_cc"> ${acct_key} </td>
+                <td nowrap class="list_cc"> ${p_seqno} </td>
+                <td nowrap class="list_cc"> ${stmt_cycle} </td>
+                <td nowrap class="list_cc"> ${chi_name} </td>
+                <td nowrap class="list_cc"> ${bank_name} </td>
+                <td nowrap class="list_cc"> ${autopay_acct_no} </td>
+                <td nowrap class="list_cc"> ${autopay_id} </td>
+			       	  <td nowrap class="list_cc"> ${tt_autopay_indicator} </td>
+			       	  <td nowrap class="list_cc"> ${tt_from_mark} </td>
+                <td nowrap class="list_cc"> ${rtn_description} </td>
+                <td nowrap class="list_cc"> ${rtn_date.YMD} </td>
+                <td nowrap class="list_cc"> ${effc_date.YMD} </td>
+                <td nowrap class="list_cc"> ${sms_flag} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_post_amt" value="${sum_post_amt}">  
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    if ( top.actionCode == "PDF" ) {
+    	$("input[name=ex_bank_id_t]").val($("select[name=ex_bank_id] :selected").text());
+    	$("input[name=ex_acct_type_t]").val($("select[name=ex_acct_type] :selected").text());
+    }
+    return true;
+}
+</script>

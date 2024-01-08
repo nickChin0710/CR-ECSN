@@ -1,0 +1,289 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.01                                                      -->
+<!-- 109-10-07  V1.00.02    JustinWu     add 卡種,MccCode,團體代號+MCC CODE的按鈕-->  
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡友權益資格參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<!-- <script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#list_btnAdd").click(function(){
+
+	var ex_mcc =$("#ex_mcc_code").val();
+   var tt_mcc =$("#ex_mcc_code option:selected").text();
+	if (ex_mcc.trim()==='') {
+	   alert("MCC CODE: 不可空白");
+	   return false;
+	}
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ex_mcc+"' name='data_code' />"
+      +"<input type='hidden' value='"+tt_mcc+"' name='tt_data_code' />"
+      +"<input type='hidden' value='' name='data_code2' />"
+      +"<input type='hidden' value='' name='data_code3' />"
+      +"<input type='hidden' value='"+ex_mcc+"' name='wk_data' />"
+      +"</td>"      
+      +"<td nowrap class='list_ll'>"+tt_mcc+"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_mcc_code").val('');
+  });   
+
+});
+</script> -->
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="return top.upperLevel()"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_Key" >權益代碼:
+      <span class="col_key">${item_no}&nbsp;${tt_item_no}</span>
+      <input type=hidden name="item_no" value="${item_no}" />
+      <input type=hidden name="tt_item_no" value="${tt_item_no}" />
+   </td>
+   <td nowrap class="col_key" >專案代號:
+   		<span class="dsp_text">${proj_code}</span>
+    	<input type=hidden name="proj_code" value="${proj_code}">
+  </tr>
+  <tr>
+   <td nowrap class="col_Key" >參數類別:
+      <span class="dsp_text">07.團體代號+MCC CODE</span>
+      <input type="hidden" name="data_type" value="07">      
+   </td>
+   <td nowrap class="col_key" >已覆核:
+      <span class="dsp_text">${apr_flag}&nbsp;</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      <input type="Button"   value="01.帳戶類別" onclick="wf_detl_2page('01');" class="btAdd_detl" />
+      <input type="Button"   value="02.團體代號+卡種" onclick="wf_detl_2page('02');" class="btAdd_detl" />
+      <input type="Button"   value="03.團體代號+卡種" onclick="wf_detl_2page('03');" class="btAdd_detl" />
+      <input type="Button"   value="05.團體代號" onclick="wf_detl_2page('05');" class="btAdd_detl" />
+      <br>
+      <input type="Button"  value="06.團體代號+MCC CODE" onclick="wf_detl_2page('06');" class="btAdd_detl" />
+      <input type="Button"  value="07.團體代號+MCC CODE" onclick="wf_detl_2page('07');" disabled />
+      <input type="Button"  value="08.團體代號+MCC CODE" onclick="wf_detl_2page('08');" class="btAdd_detl" />   
+   </td>   
+  </tr>
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;團體代號：
+     <select size=1 name="ex_data_code" id="ex_group_code" class="col_ddlb" >
+       <option value=""></option>
+       ${dddw_group_code}
+     </select>
+     &nbsp;
+   </td>
+   <td nowrap >&nbsp;卡種：
+      <select size=1 name="ex_data_code2" class="col_ddlb">
+       <option value=""></option>
+       ${dddw_card_type}
+     </select>
+     &nbsp;
+     <input type="Button"  value="新增明細" ${btnUpdate_off} onClick="wf_insert()" class="btAdd_detl" />&nbsp;&nbsp;
+    &nbsp;<label id="err_msg" style="color: red"> </label>
+   </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;特店類別：
+     <select size=1 name="ex_data_code3" class="col_ddlb">
+       <option value=""></option>
+       ${dddw_mcc_code}
+     </select>
+     &nbsp;
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>   
+    <th nowrap >團體代號</th>
+    <th nowrap >卡種</th>
+    <th nowrap >特定類別</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag"></span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+      <input type="hidden" name="data_code2" value="${data_code2}">
+      <input type="hidden" name="data_code3" value="${data_code3}">
+      <input type="hidden" name="tt_data_code" value="${tt_data_code}">
+      <input type="hidden" name="tt_data_code2" value="${tt_data_code2}">
+      <input type="hidden" name="tt_data_code3" value="${tt_data_code3}">
+      <input type="hidden" name="wk_data" value="${wk_data}">
+    </td>    
+    <td nowrap class="list_ll" >${data_code}_${tt_data_code} </td>
+    <td nowrap class="list_ll" >${data_code2}_${tt_data_code2} </td>
+    <td nowrap class="list_ll" >${data_code3}_${tt_data_code3} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${item_no}" />
+<input type=hidden name="data_k2" value="" />
+<input type=hidden name="data_k3" value="" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="MOD_PGM" value="cmsm4210">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('2');
+ top.pageRows ="9999";
+ 
+ //document.dataForm.ex_acct_type.focus();
+
+  function checkGroupCode(){
+    var groupCode = document.getElementById("ex_group_code");
+    if (ex_group_code.value.trim().length == 0) {
+      groupCode.style.backgroundColor = "pink";
+      alert("團體代號為必輸欄位");
+      return false;
+    }
+    groupCode.style.backgroundColor = "white";
+    return true;
+  }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }        
+    
+   return true;
+  }	
+ 
+ function wf_detl_2page(parm) {
+
+	 	if (parm==="01") {
+		top.respHtml  = "cmsm4210_detl_01";
+	 }
+	 else if (parm==="02") {
+		top.respHtml  = "cmsm4210_detl_02";
+	 }
+	 else if (parm=="03") {
+		top.respHtml  = "cmsm4210_detl_03";
+	 }
+	 else if (parm=="04") {
+		top.respHtml  = "cmsm4210_detl_04";
+	 }
+	 else if (parm=="05") {
+		top.respHtml  = "cmsm4210_detl_05";
+	 }
+	 else if (parm=="06") {
+		top.respHtml  = "cmsm4210_detl_06";
+	 }
+	 else if (parm=="07") {
+		top.respHtml  = "cmsm4210_detl_07";
+	 }
+	 else if (parm=="08") {
+		top.respHtml  = "cmsm4210_detl_08";
+	 }
+	 
+    top.respLevel = 2;
+	  document.dataForm.data_k3.value = parm;
+    top.submitControl("S2");
+    return true;
+ }
+
+  function wf_insert() {
+   $("#err_msg").html("");
+
+    if ( !checkGroupCode()) {
+      return false;
+    }
+
+    var ls_item_no =$("input[name=item_no]").val();
+    var ls_proj_code =$("input[name=proj_code]").val();
+    var ls_data_type =$("input[name=data_type]").val();
+    var ls_code =$("select[name=ex_data_code]").val();
+    var ls_code2 =$("select[name=ex_data_code2]").val();
+    var ls_code3 =$("select[name=ex_data_code3]").val();
+
+    resetJSON();
+    addJSON("item_no", ls_item_no);
+    addJSON("proj_code", ls_proj_code);
+    addJSON("data_type", ls_data_type);
+    addJSON("apr_flag", "N");
+    addJSON("ex_data_code", ls_code);
+    addJSON("ex_data_code2", ls_code2);
+    addJSON("ex_data_code3", ls_code3);
+
+    processAJAX();
+}
+
+function ajaxResponse(){
+    top.respHtml ="cmsm4210_detl_07";
+    top.requHtml ="cmsm4210_detl_07";
+
+    var li_rc =getJSONvalue("ax_rc",0);
+    var ls_msg =getJSONvalue("ax_msg",0);
+    if (li_rc != 1) {
+      $("#err_msg").html(ls_msg);
+      alert("新增失敗: "+ls_msg);
+    }
+    else {
+      $("#err_msg").html("新增成功");
+      alert("新增成功");
+    }
+    return false;
+}
+ 	
+</script>

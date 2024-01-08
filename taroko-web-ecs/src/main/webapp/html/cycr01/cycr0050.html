@@ -1,0 +1,593 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>關帳統報表 -107-12-06-V1.00.01-Jack</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+
+    <div id="condBlock">
+        <table width="50%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>&nbsp;幣別選項:
+                    <select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+                </td>
+
+                <td nowrap>&nbsp;帳戶帳號:
+                    <select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>&nbsp;&nbsp; 統計年度
+                    <input type="text" class="col_text" name="stat_year" value="${stat_year}" maxlength=4 size=6 zRequire ="K" />
+                </td>
+            <tr>
+                <td nowrap colspan="2">&nbsp;
+                    <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button" name="btnQuery" ${btnQuery_disable} value="讀取" onClick="return data_read()" class="btQuery">&nbsp;&nbsp;
+                    <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">
+
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <hr>
+
+    <div class="tab">
+        <table>
+            <tr>
+                <td class="tablinks" id="tab_active" onclick="tab_select('aopt'); tabControl(event, 'tab-1')">一月</td>
+                <td class="tablinks" onclick="tab_select('bopt'); tabControl(event, 'tab-2')">二月</td>
+                <td class="tablinks" onclick="tab_select('copt'); tabControl(event, 'tab-3')">三月</td>
+                <td class="tablinks" onclick="tab_select('dopt'); tabControl(event, 'tab-4')">四月</td>
+                <td class="tablinks" onclick="tab_select('eopt'); tabControl(event, 'tab-5')">五月</td>
+                <td class="tablinks" onclick="tab_select('fopt'); tabControl(event, 'tab-6')">六月</td>
+                <td class="tablinks" onclick="tab_select('gopt'); tabControl(event, 'tab-7')">七月</td>
+                <td class="tablinks" onclick="tab_select('hopt'); tabControl(event, 'tab-8')">八月</td>
+                <td class="tablinks" onclick="tab_select('iopt'); tabControl(event, 'tab-9')">九月</td>
+                <td class="tablinks" onclick="tab_select('jopt'); tabControl(event, 'tab-10')">十月</td>
+                <td class="tablinks" onclick="tab_select('kopt'); tabControl(event, 'tab-11')">十一月</td>
+                <td class="tablinks" onclick="tab_select('lopt'); tabControl(event, 'tab-12')">十二月</td>
+                <td class="tablinks" onclick="tab_select('mopt'); tabControl(event, 'tab-13')">${YYY} 年度</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 一月================= -->
+    <div id="tab-1" class="tabcontent">
+        <table width="98%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${jan_BG_COLOR} > ${jan_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${jan_BG_COLOR} > &nbsp;${jan_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 二月================= -->
+    <div id="tab-2" class="tabcontent">
+        <table width="98%" id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${feb_BG_COLOR} > ${feb_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${feb_BG_COLOR} > &nbsp;${feb_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 三月================= -->
+    <div id="tab-3" class="tabcontent">
+        <table width="98%" id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${mar_BG_COLOR} > ${mar_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${mar_BG_COLOR} > &nbsp;${mar_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 四月================= -->
+    <div id="tab-4" class="tabcontent">
+        <table width="98%" id="table4" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${apr_BG_COLOR} > ${apr_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${apr_BG_COLOR} > &nbsp;${apr_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 五月================= -->
+    <div id="tab-5" class="tabcontent">
+        <table width="98%" id="table5" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${may_BG_COLOR} > ${may_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${may_BG_COLOR} > &nbsp;${may_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 六月================= -->
+    <div id="tab-6" class="tabcontent">
+        <table width="98%" id="table6" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${jun_BG_COLOR} > ${jun_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${jun_BG_COLOR} > &nbsp;${jun_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 七月================= -->
+    <div id="tab-7" class="tabcontent">
+        <table width="98%" id="table7" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${jul_BG_COLOR} > ${jul_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${jul_BG_COLOR} > &nbsp;${jul_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 八月================= -->
+    <div id="tab-8" class="tabcontent">
+        <table width="98%" id="table8" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${aug_BG_COLOR} > ${aug_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${aug_BG_COLOR} > &nbsp;${aug_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 九月================= -->
+    <div id="tab-9" class="tabcontent">
+        <table width="98%" id="table9" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${sep_BG_COLOR} > ${sep_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${sep_BG_COLOR} > &nbsp;${sep_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 十月================= -->
+    <div id="tab-10" class="tabcontent">
+        <table width="98%" id="table10" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${oct_BG_COLOR} > ${oct_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${oct_BG_COLOR} > &nbsp;${oct_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 十一月================= -->
+    <div id="tab-11" class="tabcontent">
+        <table width="98%" id="table11" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${nov_BG_COLOR} > ${nov_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${nov_BG_COLOR} > &nbsp;${nov_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- 十二月================= -->
+    <div id="tab-12" class="tabcontent">
+        <table width="98%" id="table12" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">03 cycle</th>
+                <th nowrap class="list_th" width="8%">06 cycle</th>
+                <th nowrap class="list_th" width="8%">09 cycle</th>
+                <th nowrap class="list_th" width="8%">12 cycle</th>
+                <th nowrap class="list_th" width="8%">15 cycle</th>
+                <th nowrap class="list_th" width="8%">18 cycle</th>
+                <th nowrap class="list_th" width="8%">21 cycle</th>
+                <th nowrap class="list_th" width="8%">24 cycle</th>
+                <th nowrap class="list_th" width="8%">27 cycle</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll" ${dec_BG_COLOR} > ${dec_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_03.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_06.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_09.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_12.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_15.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_18.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_21.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_24.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_27.(999)} </td>
+                <td nowrap class="list_rr" ${dec_BG_COLOR} > &nbsp;${dec_stat_data_tt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!--年度================= -->
+    <div id="tab-13" class="tabcontent">
+        <table width="100%" id="table13" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" width="15%">帳單類別</th>
+                <th nowrap class="list_th" width="8%">一月</th>
+                <th nowrap class="list_th" width="8%">二月</th>
+                <th nowrap class="list_th" width="8%">三月</th>
+                <th nowrap class="list_th" width="8%">四月</th>
+                <th nowrap class="list_th" width="8%">五月</th>
+                <th nowrap class="list_th" width="8%">六月</th>
+                <th nowrap class="list_th" width="8%">七月</th>
+                <th nowrap class="list_th" width="8%">八月</th>
+                <th nowrap class="list_th" width="8%">九月</th>
+                <th nowrap class="list_th" width="8%">十月</th>
+                <th nowrap class="list_th" width="8%">十一月</th>
+                <th nowrap class="list_th" width="8%">十二月</th>
+                <th nowrap class="list_th" width="8%">合計</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM_TOT}&nbsp;</td>
+                <td nowrap class="list_ll" ${yyy_BG_COLOR} > ${tot_bill_desc}&nbsp; </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${jan_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${feb_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${mar_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${apr_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${may_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${jun_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${jul_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${aug_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${sep_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${oct_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${nov_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${dec_stat_data_yy.(999)} </td>
+                <td nowrap class="list_rr" ${yyy_BG_COLOR} > &nbsp;${tot_stat_data_yy.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+    <input type="hidden" name="optname" value="">
+    <input type="hidden" name="p_seqno" value="${p_seqno}">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+    tigra_tables('table2');
+    tigra_tables('table3');
+    tigra_tables('table4');
+    tigra_tables('table5');
+    tigra_tables('table6');
+    tigra_tables('table7');
+    tigra_tables('table8');
+    tigra_tables('table9');
+    tigra_tables('table10');
+    tigra_tables('table11');
+    tigra_tables('table12');
+    tigra_tables('table13');
+</script>
+
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows = "9999";
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+        return true;
+    }
+
+    function tab_select(optname) {
+        document.dataForm.optname.value = optname;
+    }
+
+
+    function data_read() {
+        if ( document.dataForm.ex_curr_code.value == '840' )
+        { top.respHtml = "cycr0050_840"; }
+        else
+        { top.respHtml  = "cycr0050"; }
+        return top.submitControl('Q');
+
+    }
+
+
+</script>
+
+

@@ -1,0 +1,513 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-07-28  V1.00.00  ryan          Initial                               -->
+<!-- 108-12-27  V1.00.01  Justin Wu     set proc_status to a required input   -->
+<!-- 109-01-14  V1.00.02  Justin Wu     modify return_type's options          -->
+<!-- 109-01-15  V1.00.03  Justin Wu     fix a bug when changing proc_status to 3 or 6  -->
+<!-- 109-01-15  V1.00.04  Justin Wu     PP卡 -> 貴賓卡                        -->
+<!-- 111-09-16  V1.00.05  Ryan          調整寄件別、卡片寄送地址                                                                    *   -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>貴賓卡退卡登錄維護作業_detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="javascript">
+</script>
+<body background="${water_mark}" > 
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+    <td colspan="4">
+        <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+        <input type="Button" id="btnQuery" value="讀取" ${btnQuery_disable} onClick="return top.submitControl('C')" class="btQuery">&nbsp;&nbsp;
+        <input type="Button" id="btnAdd"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+        <input type="Button" id="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+        <!-- <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp; -->
+        <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+    </td>
+	</tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+  	<tr id="cond_tr">
+<!--    		<td nowrap width="50%">貴賓卡號:&nbsp;
+     		<input type="text" class="col_any" name="kk_pp_card_no" value="${kk_pp_card_no}"
+      		maxlength="19" size="20" />
+		  </td> -->
+       <td nowrap>
+        <select size="1" name="cond" class="col_ddlb" zRequire ="Y" ${con_disable}>
+          <option value="1" ${cond-1}>貴賓卡號</option>
+<!--           <option value="2" ${cond-2}>掛號號碼</option> -->
+          <option value="3" ${cond-3}>掛號條碼</option>
+        </select>
+        <input type="text" class="col_any" id="kk_cond_val" name="kk_cond_val" value="${kk_cond_val}" ${con_disable} zEdit="any" maxlength="21" size="23" zRequire="k" />
+       </td>
+  	</tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap  class="colKey" colspan="4">貴賓卡號:   
+        <input type="hidden" name="pp_card_no" value="${pp_card_no}">
+        <span class="dsp_text">${pp_card_no}</span>
+   		</td>
+    	<td nowrap   class="colKey" colspan="4" >退卡日期:
+          <span class="dsp_text"></span>
+        	<input type="text" class="col_date" id="return_date" name="return_date" value="${return_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="Y" />
+          <script language="JavaScript">
+            new tcal ({'formname': 'dataForm','controlname': 'return_date'});
+          </script>
+          <input type="hidden" name="old_return_date" value="${old_return_date}">
+   		</td>
+      <td nowrap id="return_seqno_td" colspan="4">退卡編號:
+          <input type="hidden" name="return_seqno" value="${return_seqno}">
+          <span class="dsp_text">${return_seqno}</span>
+      </td> 
+  </tr>
+   	<tr>
+    	<td nowrap  class="colKey" colspan="4">身份證字號:
+    		<input type="hidden" name="id_no" value="${id_no}" id = "id_no">
+        <span class="dsp_text">${id_no}</span>
+      		<input type="hidden" name="id_no_code" value="${id_no_code}">
+          <span class="dsp_text">${id_no_code}</span>
+   		</td> 
+  		<td nowrap colspan="8">姓名:
+    		<input type="hidden" name="chi_name" value="${chi_name}">
+        <span class="dsp_text">${chi_name}</span>
+   		</td>
+   	</tr>
+	  <tr>
+   		<td nowrap colspan="12">團體代號:
+      	<input type="hidden" name="group_code" value="${group_code}">
+        <input type="hidden" name="db_group_code" value="${db_group_code}">
+        <span class="dsp_text">${db_group_code}</span>
+   		</td>
+   	</tr>
+   	<tr>
+    	<td nowrap colspan="12">卡片效期:
+          <span class="dsp_text">${beg_date}</span>
+      		<input type="hidden" class="col_date" id="beg_date" name="beg_date" value="${beg_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" />
+<!--       		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'beg_date'});
+	  		</script> -->
+      		--
+          <span class="dsp_text">${end_date}</span>
+      		<input type="hidden" class="col_date" id="end_date" name="end_date" value="${end_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" />
+<!--       		<script language="JavaScript">
+				    new tcal ({'formname': 'dataForm','controlname': 'end_date'});
+	  		  </script>&nbsp; -->
+    	</td>
+   	</tr>
+   	<tr>
+   		<td nowrap colspan="4">寄件別:
+          <span class="dsp_text"></span>
+        	<select size="1" id="mail_type"  name="mail_type" class="col_ddlb"  onChange="mailTypeChg()"
+          style="display: none;">
+        		<option value="" >--</option>
+              ${dddw_mail_type}
+      		</select>
+   		</td>
+   		<td nowrap colspan="8">寄件分行:
+        <span class="dsp_text"></span>
+   			<select size="1" id="mail_branch" name="mail_branch" class="col_ddlb" style="display: none;" onChange="mailBranchChg()">
+   				<option value="">--</option>
+      				${dddw_mail_branch}
+   			</select>
+   		</td>
+   	</tr>
+   	<tr>
+      	<td nowrap colspan="4">退卡性質別:
+       		<select   size="1"  name="return_type" class="col_ddlb">
+       			<option value="">--</option>
+         		<option value="1" ${return_type-1} >1.新製卡</option>
+         		<option value="2" ${return_type-2} >2.續卡</option>
+            <option value="3" ${return_type-3} >3.毀損重製</option>
+      		</select>
+   		</td>
+ 		<td nowrap colspan="8">退卡原因:
+        <span class="dsp_text"></span>
+    		<select size="1" id="reason_code"  name="reason_code" class="col_ddlb">
+         		<option value="">--</option>
+         		<option value="01" ${reason_code-01} >01.查無此公司</option>
+         		<option value="02" ${reason_code-02} >02.查無此人</option>
+         		<option value="03" ${reason_code-03} >03.遷移不明</option>
+         		<option value="04" ${reason_code-04} >04.地址欠詳</option>
+         		<option value="05" ${reason_code-05} >05.查無此址</option> 
+         		<option value="06" ${reason_code-06} >06.收件人拒收</option>   
+         		<option value="07" ${reason_code-07} >07.招領逾期</option>   
+         		<option value="08" ${reason_code-08} >08.分行退件</option>   
+         		<option value="09" ${reason_code-09} >09.其他</option>   
+         		<option value="10" ${reason_code-10} >10.地址改變</option>     
+         		<option value="11" ${reason_code-11} >11.先寄</option>         
+      		</select>
+  		 </td>
+   	</tr>
+   	<tr>
+   		<td nowrap colspan="12">帳單地址:
+      			<input type="hidden"  name="db_addr" value="${db_addr}" size="60"  /><span class="dsp_text">${db_addr}</span>
+   		</td>
+   	</tr>
+   	<tr>
+        <td nowrap>卡片寄送地址註記:
+      		<select name="MAIL_ADDR_FLAG" class="col_ddlb" onChange="mailAddrFlagChg();" id="mail_addr_flag">
+         		<option value="">--</option>
+         		<option value="1" ${MAIL_ADDR_FLAG-1} >同戶籍地</option>
+         		<option value="2" ${MAIL_ADDR_FLAG-2} >同居住地</option>
+         		<option value="3" ${MAIL_ADDR_FLAG-3} >同公司地</option>
+      		</select>
+   		</td>
+    </tr>
+    <tr>
+  		<td nowrap colspan="12">卡片寄送地址:
+        <span class="dsp_text db_zip_code" >${db_zip_code}</span>
+     		<select size="1" id="zip_code" name="zip_code" class="col_ddlb"  onChange="return top.submitControl('C1')" style="display: none;">
+   				<option value="">--</option>
+      				${dddw_zip_code}
+   			</select>
+        <span class="dsp_text db_mail_addr1">${db_mail_addr1}</span>
+     		<input type="text" class="col_any" zEdit="any,canTW" id="mail_addr1" name="mail_addr1" value="${mail_addr1}"  maxlength="10" size="10" style="display: none;"/>縣市
+        <span class="dsp_text db_mail_addr2">${db_mail_addr2}</span>
+    		<input type="text" class="col_any" zEdit="any,canTW" id="mail_addr2" name="mail_addr2" value="${mail_addr2}"  maxlength="10" size="10" style="display: none;"/>鄉鎮市區
+        <span class="dsp_text db_mail_addr3">${db_mail_addr3}</span>
+     		<input type="text" class="col_any" zEdit="any,canTW" id="mail_addr3" name="mail_addr3" value="${mail_addr3}"  maxlength="12" size="12" style="display: none;"/>村里
+        <input type="hidden" class = "db_zip_code" name="db_zip_code" value="${db_zip_code}">
+        <input type="hidden" class = "db_mail_addr1" name="db_mail_addr1" value="${db_mail_addr1}">
+        <input type="hidden" class = "db_mail_addr2" name="db_mail_addr2" value="${db_mail_addr2}">
+        <input type="hidden" class = "db_mail_addr3" name="db_mail_addr3" value="${db_mail_addr3}"> 
+      </td>
+   	</tr>
+   	<tr>
+   		<td colspan="12">
+        <span class="dsp_text db_mail_addr4">${db_mail_addr4}</span>
+   			<input type="text" class="col_any" zEdit="any,canTW" id="mail_addr4" name="mail_addr4" value="${mail_addr4}"  maxlength="12" size="12" style="display: none;"/>鄰
+        <span class="dsp_text db_mail_addr5">${db_mail_addr5}</span>
+   			<input type="text" class="col_any" zEdit="any,canTW" id="mail_addr5" name="mail_addr5" value="${mail_addr5}"  maxlength="56" size="56" style="display: none;"/>
+        <input type="hidden" class = "db_mail_addr4" name="db_mail_addr4" value="${db_mail_addr4}">
+        <input type="hidden" class = "db_mail_addr5" name="db_mail_addr5" value="${db_mail_addr5}">
+      </td>
+   	</tr>
+  	<tr>
+ 		<td nowrap colspan="4">處理結果:
+        	<select   size="1" id="proc_status"  name="proc_status" class="col_ddlb" onChange="itemChange();mailTypeChg();" zRequire="Y">
+         		<option value="1" ${proc_status-1} >1.處理中</option>
+         		<option value="2" ${proc_status-2} >2.銷毀</option>
+         		<option value="3" ${proc_status-3} >3.寄出</option>
+         		<option value="4" ${proc_status-4} >4.申停</option>
+         		<option value="5" ${proc_status-5} >5.重製</option>  
+         		<option value="6" ${proc_status-6} >6.寄出不封裝</option>  
+         		<option value="7" ${proc_status-7} >7.庫存</option>          
+      		</select>
+   		</td>
+    	<td nowrap colspan="4">退卡重寄日期:
+          <span class="dsp_text"></span>
+        	<input type="text" class="col_date" id="mail_date" name="mail_date" value="${mail_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+      		<script language="JavaScript">
+				    new tcal ({'formname': 'dataForm','controlname': 'mail_date'});
+	  		  </script>
+   		</td>
+    	<td nowrap colspan="4">掛號號碼:
+        	<span  class="dsp_text">${mail_no}</span>
+            <input type="hidden" name="mail_no" value="${mail_no}">
+<!--     		<input type="text" id="mail_no" name="mail_no" value="${mail_no}"> -->
+   		</td>
+
+   	</tr>
+ 	<tr>
+    	<td nowrap colspan="4">產生封裝檔:
+      		<span class="col_radio" >
+         		<input type="radio" value="Y" name="package_flag" ${package_flag-Y} />Y
+         		<input type="radio" value="N" name="package_flag" ${package_flag-N} />N
+      		</span>
+   		</td>
+     	<td nowrap colspan="4">產生封裝檔日期:
+          <span class="dsp_text"></span>
+        	<input type="text" class="col_date" id="package_date" name="package_date" value="${package_date}" 
+        	zEdit="date,yyyymmdd" maxlength="8" size="8" style="display: none;"/>
+      		<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'package_date'});
+	  		</script>
+   		</td>
+      <td nowrap colspan="4">掛號條碼:
+        <input type="text" name="barcode_num" value="${barcode_num}">
+      </td>
+  	</tr>
+  	<tr>
+  		<td nowrap colspan="12">退卡備註:
+    		<textarea cols="40" rows="5" class="col_text" name="return_note"   maxlength="200" >${return_note}</textarea>
+   		</td>
+  	</tr>
+
+</table>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="${MOD_PGM}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="USERID" value="${userId}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="MOD_PGM" value="crdm0170">
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.kk_cond_val.focus();
+
+ function validateInput(){
+  var proc_status_value = $("#proc_status").val();
+  var mail_type = $("#mail_type");
+  var mail_branch = $("#mail_branch");
+  if (!top.checkFormat()){ 
+     return false; 
+  }
+  if (proc_status_value!="3" && proc_status_value!="6") {
+    mail_type.children()[0].selected = true;
+    mail_branch.children()[0].selected = true;
+  }
+
+  $("input[name=package_flag]").prop("disabled",false);
+  return true;
+
+}
+
+ 
+
+ $(document).ready(function() {
+  $("input[name=package_flag]").prop("disabled",true);
+	itemChange();
+	mailTypeChg();
+ })
+ 
+ function itemChange(){
+    var return_date = $("#return_date");
+    var beg_date = $("#beg_date");
+    var end_date = $("#end_date");
+    var mail_type = $("#mail_type");
+    var mail_branch = $("#mail_branch");
+//     var reason_code = $("#reason_code");
+    var zip_code = $("#zip_code");
+    var mail_addr1 = $("#mail_addr1");
+    var mail_addr2 = $("#mail_addr2");
+    var mail_addr3 = $("#mail_addr3");
+    var mail_addr4 = $("#mail_addr4");
+    var mail_addr5 = $("#mail_addr5");
+    var mail_date = $("#mail_date");
+    var mail_no = $("#mail_no");
+    var package_date = $("#package_date");
+    var return_seqno_td = $("#return_seqno_td");
+    var proc_status = $("#proc_status");
+
+    var arr = [return_date, beg_date, end_date, package_date];
+//     var arr1 = [reason_code]
+    var arrAdd = [zip_code, mail_addr1, mail_addr2, mail_addr3, mail_addr4, mail_addr5];
+
+
+
+  // 處理結果為3，產生封裝檔才能為Y
+	 if(proc_status.val()=="3"){
+		 $("input[name=package_flag][value='Y']").prop("checked",true);
+	 }else{
+		 $("input[name=package_flag][value='N']").prop("checked",true);
+	 }
+
+    // 隱藏mail_date
+    mail_date.hide();
+    mail_date.nextAll().eq(1).hide();
+
+    var btnAdd = $("#btnAdd");
+    if ( ! btnAdd.attr('disabled')){
+    // 要新增時(也就是讀取資料後)
+       proc_status = proc_status[0];
+       for (var i = proc_status.length - 1; i > 0; i--) {
+           proc_status[i].remove();
+       }
+
+       return_seqno_td.hide();
+       package_date.next().next().hide();
+
+    }else {
+    // 要修改時(也就從主畫面點擊查詢結果)
+
+      $(".tcalIcon").hide(); //隱藏日歷
+      $("#cond_tr").hide();  //隱藏查詢選單
+      $("#kk_cond_val").attr('disabled', true);
+
+      for (var i = 0; i < arr.length; i++) {
+          col = arr[i];
+          col.hide();
+          col.prev().text(col.val());
+      }
+//       for (var i = 0; i < arr1.length; i++) {
+//           col = arr1[i];
+//           col.hide();
+//           col.prev().text(col.children(":selected").text());
+//       }
+
+
+      if (proc_status.val()=="3"||proc_status.val()=="6") {
+          for (var i = 0; i < arrAdd.length; i++) {
+              ele = arrAdd[i];
+              ele.show();
+          }
+
+            // 打開mail_type, mail_branch選單
+            mail_type.show();
+            mail_branch.show();
+
+            // 打開mail_date
+            mail_date.show();
+            mail_date.prev().hide();
+            mail_date.nextAll().eq(1).show();
+
+            mailBranchChg();
+
+      }else{
+            for (var i = 0; i < arrAdd.length; i++) {
+                ele = arrAdd[i];
+                ele.hide();
+            }
+
+             // 隱藏mail_type, mail_branch選單
+             mail_type.hide();
+             mail_branch.hide();
+
+             // 關閉mail_date
+             mail_date.hide();
+             mail_date.prev().show();
+             mail_date.nextAll().eq(1).hide();
+             $('.db_zip_code').val("").text("");
+             $('.db_mail_addr1').val("").text("");
+             $('.db_mail_addr2').val("").text("");
+             $('.db_mail_addr3').val("").text("");
+             $('.db_mail_addr4').val("").text("");
+             $('.db_mail_addr5').val("").text("");
+      }
+
+    }
+
+ }
+
+function mailBranchChg(){
+  var zip_code = $("#zip_code");
+  var mail_addr1 = $("#mail_addr1");
+  var mail_addr2 = $("#mail_addr2");
+  var mail_addr3 = $("#mail_addr3");
+  var mail_addr4 = $("#mail_addr4");
+  var mail_addr5 = $("#mail_addr5");
+  var dbZipCode = $(".db_zip_code");
+  var dbMailAddr1 = $(".db_mail_addr1");
+  var dbMailAddr2 = $(".db_mail_addr2");
+  var dbMailAddr3 = $(".db_mail_addr3");
+  var dbMailAddr4 = $(".db_mail_addr4");
+  var dbMailAddr5 = $(".db_mail_addr5");
+  var arrAdd = [zip_code, mail_addr1, mail_addr2, mail_addr3, mail_addr4, mail_addr5];
+  var arrAdd2 = [dbZipCode, dbMailAddr1, dbMailAddr2, dbMailAddr3, dbMailAddr4, dbMailAddr5];
+  var mailBranch = $("select[name = mail_branch] :selected").val();
+
+  if($.trim(mailBranch).length>0){
+    for (var i = 0; i < arrAdd.length; i++) {
+      ele = arrAdd[i];
+      ele.hide();
+      ele = arrAdd2[i];
+      ele.show();
+    }
+  }else{
+    for (var i = 0; i < arrAdd.length; i++) {
+      ele = arrAdd[i];
+      if($("#mail_addr_flag").val().length==0){
+    	  ele.val("");
+  	  }
+      ele.show();
+      ele = arrAdd2[i];
+      ele.hide();
+    }
+  }
+  if (top.actionCode == "U" ) {
+	  return true;
+  }
+  
+   idCode = "1" ;
+   top.actionCode = "AJAX";
+   resetJSON();
+   addJSON("mail_branch",mailBranch);
+   processAJAX();
+
+   return true;
+ }
+ 
+function mailAddrFlagChg(){
+	  var idNo = $("#id_no").val();
+	  var mailAddrflag = $("#mail_addr_flag").val();
+	  var mailBranch = $("select[name = mail_branch] :selected").val();
+	   top.actionCode = "AJAX";
+	   resetJSON();
+	   addJSON("id_no_json",idNo);
+	   addJSON("mail_addr_flag_json",mailAddrflag);
+	   addJSON("mail_branch_json",mailBranch);
+	   processAJAX();
+
+	   return true;
+ }
+
+ function ajaxResponse()
+ {
+ 	top.respHtml ="crdm0170_detl";
+ 	top.requHtml ="crdm0170_detl";
+ 	
+ 	if(getJSONvalue("flag_json",0)==='Y'){
+ 		var zipCodeJson = getJSONvalue("zip_code_json",0);
+ 		zipCodeJson != null ? zipCodeJson : "";
+ 	    $("#zip_code").val(zipCodeJson); 
+ 		 for(var i= 1 ; i<=5 ; i++ ){
+ 	       var addr = getJSONvalue("mail_addr" + i + "_json",0);
+ 	       addr = addr != null ? addr : "";
+ 	       $("#mail_addr" + i).val(addr);
+ 	    }
+ 	}
+ 	
+ 	if(getJSONvalue("flag_ajax",0)==='Y'){
+ 	    var zipCode = getJSONvalue("ajax_zip_code",0);
+ 	    zipCode != null ? zipCode : "";
+ 	    $(".db_zip_code").val(zipCode).text(zipCode); 
+
+ 	    for(var i= 1 ; i<=5 ; i++ ){
+ 	        var addr = getJSONvalue("ajax_chi_addr_" + i,0);
+ 	        addr != null ? zipCode : "";
+ 	        $(".db_mail_addr" + i).val(addr).text(addr);
+ 	    }
+ 	}
+ }
+ 
+ function mailTypeChg(){
+	 var mailType = $("#mail_type").val();
+	 var procStatus = $('#proc_status').val();
+	 if((mailType==='1'||mailType==='2') && (procStatus === '3' || procStatus === '6')){
+		 $("#mail_addr_flag").attr("disabled",false);
+	 }	else{
+		 $("#mail_addr_flag").attr("disabled",true);
+		 $("#mail_addr_flag").val("");
+	 }
+ }
+</script>

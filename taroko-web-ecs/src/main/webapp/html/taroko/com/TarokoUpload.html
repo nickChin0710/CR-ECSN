@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>檔案上傳</title>
+<meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1" />
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language=JavaScript src="js/encryption.js"></script>
+<script language=JavaScript src="js/systemControl_12.js"></script>
+
+<body  onbeforeunload="windowsClose()" >
+   <form method="post" name="newForm" action="" enctype="multipart/form-data">
+    <br>
+    <table align="center">
+     <tr>
+        <td align="left" ><b>選擇上傳檔案 :</b>
+         Page No: ${open_html}
+         <input type="hidden" id="open_html" value="${levelNum}">
+        </td>
+     </tr>
+     <tr>
+       <td align="left">
+         <input type="file" name="upload_file" size="60" value="${upload_file}"  accept="text/plain, text/csv, application/vnd.ms-excel" />
+       </td>
+     </tr>
+     <tr>
+       <td align="left">
+         <input type="submit" name="btn_upload" value="上傳" onClick="return checkInput();" />
+<!--          
+<input type="button" value="取消" onClick="return windowsClose();" />
+ -->       
+       </td>
+     </tr>
+    </table>
+    <br><br>
+    <table align="center">
+     <tr>
+       <td align="center">
+         <input type="text" style="font-color: blue" name="upload_mesg" value="${UPLOAD_MESSAGE}" size="60" readonly />
+       </td>
+     </tr>
+     <tr><td>
+    <input type="text" class="dsp_text" name="file_name" value="${file_name}" readonly />
+    </td></tr>
+    </table>
+    <input type="hidden" name="HIDE" id="HIDE" value="${HIDE_DATA}">
+   </form>
+
+</body>
+</html>
+
+<script language="JavaScript">
+
+window.onblur =function() {
+   this.focus();
+   }
+var opener_html =opener.top.respHtml;
+//alert("page-no="+opener_html+"; ");
+
+ function checkInput()
+ {
+    if (opener_html!=opener.top.respHtml) {      
+      alert("主網頁不同, 不可上傳");
+      return false;
+    }  
+    if ( document.newForm.upload_file.value.length == 0 )
+       { alert('請輸入檔案名稱 ');  return false;  }
+
+    // hideData   = "";
+    // fix a error caused by checking the session
+    hideData = document.getElementById("HIDE").value; 
+    splitHideData();
+    newWindow  = "Y";
+    menuCode = "UP";
+
+    createHideData();
+    document.newForm.action = "MainControl?HIDE="+hideData;
+    document.newForm.submit();
+
+    return true;
+  }
+
+ function windowsClose()
+ {
+    if (opener_html!=opener.top.respHtml) {
+      return false;
+    }
+
+
+    var fileName =document.newForm.file_name.value;    
+    if ( fileName.length  != 0 ) {
+      opener.getWindowValue("zz_file_name",fileName);
+    }
+    if ( window.opener && !window.opener.closed && fileName.length  != 0 ) {
+    	  var k = opener.top.levelNum + (opener.top.tabsInd * opener.top.maxLevel);    	
+        window.opener.dataFrame.frames[k].wf_uploadAfter();
+    }
+    return true;
+  }
+
+</script>

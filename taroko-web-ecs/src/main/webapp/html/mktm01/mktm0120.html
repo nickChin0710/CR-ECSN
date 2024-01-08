@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>BANKNEWS月訊參數維護-107-0226-V1.00.01-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="/js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+   		<td nowrap>&nbsp;批號:
+      		<input  zEdit="any" class="col_any" type="text" size="10" MaxLength="10" name="ex_batchno" value="${ex_batchno}"></input>  
+   		</td>
+   		<td nowrap>&nbsp;  
+      		<input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   		</td>
+  	</tr>
+  	<tr>
+  		<td nowrap colspan=2>&nbsp;建檔日期：&nbsp;
+      		<input type="text" class="col_date" name="ex_crtdate1" value="${ex_crtdate1}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crtdate1'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_crtdate2" value="${ex_crtdate2}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_crtdate2'});
+	    	</script>
+   		</td>
+  	</tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">批號</th>
+    	<th nowrap class="list_th">活動說明</th>   
+    	<th nowrap class="list_th">建檔日期</th>   
+    	<th nowrap class="list_th">經辦代號</th>   
+    	<th nowrap class="list_th">主管覆核</th>
+    	<th nowrap class="list_th">覆核日期</th> 
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr onclick="detailScreen('${SER_NUM}','${batch_no}','','','')" style="cursor:hand">
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${batch_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${description}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${file_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${employee_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${confirm_parm}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${confirm_date.YMD}&nbsp; </td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="MOD_PGM" value="mktm0120">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript" >
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_batchno.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktm0120_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "mktm0120_detl" ;
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

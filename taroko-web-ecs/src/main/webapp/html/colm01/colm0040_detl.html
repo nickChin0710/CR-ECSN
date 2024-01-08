@@ -1,0 +1,214 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 109-01-16  V1.00.01  Justin Wu      <input type='button'>:name->id       -->
+<!-- 110-08-19  V1.00.02  Sunny Ts      chi_name size fix 92                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>暫不電催、暫不發催收簡訊註記維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" id="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" id="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;帳戶帳號：
+      <select size="1" name="kk_acct_type" class="col_ddlb">${PtrAcctTypeList}</select>&nbsp;
+      <input type="text" class="col_text" name="kk_acct_key" value="${kk_acct_key}" 
+        zEdit="alphanum,upper" maxlength="11" size="13" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap colspan="2" class="col_key">帳戶帳號：&nbsp;
+            <input type="text" class="dsp_text" name="acct_type" value="${acct_type}" size="2" style="color:red; font-weight:bold;" disabled/> - 
+		    <input type="text" class="dsp_text" name="acct_key" value="${acct_key}" size="12" style="color:red; font-weight:bold;" disabled/>
+			<input type="hidden" name="acct_type" value="${acct_type}">
+			<input type="hidden" name="acct_key" value="${acct_key}">
+        </td>
+    </tr>
+    <tr>
+        <td nowrap colspan="2">客戶名稱：&nbsp;
+   	        <input type="text" class="dsp_text" name="chi_name" value="${chi_name}" size="92" disabled/>
+			<input type="hidden" name="chi_name" value="${chi_name}">
+        </td>
+    </tr>
+    <tr>
+        <td nowrap colspan="2">帳戶狀態：&nbsp;
+            <input type="text" class="dsp_text" name="tt_acct_status" value="${tt_acct_status}" size="20" disabled/>
+			<input type="hidden" name="acct_status" value="${acct_status}">
+			<input type="hidden" name="tt_acct_status" value="${tt_acct_status}">
+        </td>
+    </tr>
+    <tr>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="no_tel_coll_flag" ${no_tel_coll_flag-Y} disabled>&nbsp;暫不電催
+            <input type="hidden" name="no_tel_coll_flag" value="${no_tel_coll_flag}">
+            
+        </td>
+        <td nowrap>&nbsp;有效期間：
+   	        <input type="text" class="col_date" name="no_tel_coll_s_date" value="${no_tel_coll_s_date}"
+   		        zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+   	        <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'no_tel_coll_s_date'});
+	        </script>
+	        <input type="hidden" name="src_no_tel_coll_s_date" value="${src_no_tel_coll_s_date}">
+   	        &nbsp;－&nbsp;
+   	        <input type="text" class="col_date" name="no_tel_coll_e_date" value="${no_tel_coll_e_date}"
+   		        zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+   	        <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'no_tel_coll_e_date'});
+	        </script>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap>
+            <input type="checkbox" value="Y" name="no_sms_flag" ${no_sms_flag-Y} disabled>&nbsp;暫不發送催收簡訊
+            <input type="hidden" name="no_sms_flag" value="${no_sms_flag}">
+        </td>
+        <td nowrap>&nbsp;有效期間：
+   	        <input type="text" class="col_date" name="no_sms_s_date" value="${no_sms_s_date}"
+   		        zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+   	        <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'no_sms_s_date'});
+	        </script>
+	        <input type="hidden" name="src_no_sms_s_date" value="${src_no_sms_s_date}">
+   	        &nbsp;－&nbsp;
+   	        <input type="text" class="col_date" name="no_sms_e_date" value="${no_sms_e_date}"
+   		        zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+   	        <script language="JavaScript">
+		        new tcal ({'formname': 'dataForm','controlname': 'no_sms_e_date'});
+	        </script>
+        </td>
+    </tr>
+</table>
+</div>
+
+<!-- 動態視窗控制 -->
+<div id="disDiv" class="disScreen"></div>
+<div id="popDiv" class="popup1">
+  <table id="popup2" style="top:-250px; left:30px; width:600px; height:100px;">
+     <tr><td colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+
+     <!--List -->
+<tr><td colspan="2">
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">帳戶號碼</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">帳戶 ID</th>
+    <th nowrap class="list_th">中文姓名</th>
+    <th nowrap class="list_th">卡人生日</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenPop('${SER_NUM}','${p-p_seqno}','${p-acct_type}','${p-acct_key}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-acct_type} - ${p-acct_key}&nbsp;</td>
+   <td nowrap class="list_ll"> ${p-tt_acct_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-id_no} - ${p-id_no_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${p-chi_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-birthday.YMD}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</td></tr>     
+  </table>
+</div>
+
+<!-- <table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${userId}">
+   </td>
+  </tr>
+</table>
+-->
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colm0040">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="dataType" value="0">
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+<input type="hidden"  name="queryReadCnt"  value="${queryReadCnt}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.kk_acct_key.focus();
+ 
+ var CC = document.dataForm.queryReadCnt.value;
+ if(CC >1){
+ 	top.popupBlock('popDiv');
+ }
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ function detailScreenPop(serNum,parm,parm2,parm3) { 
+	 document.dataForm.p_seqno.value = parm;
+	 document.dataForm.kk_acct_type.value = parm2;
+	 document.dataForm.kk_acct_key.value = parm3;
+	 
+	 top.hideBlock('popDiv');
+	 top.submitControl('R');
+	 return true;
+ }
+
+</script>

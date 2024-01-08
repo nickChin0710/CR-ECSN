@@ -1,0 +1,239 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-07-17  V1.00.01  JustinWu              hide the last row             -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>客服D檔調整主管覆核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;登錄者:
+      <select size="1" name="ex_user" class="col_ddlb" >
+      	<option value="">--</option>
+      	${dddw_sec_user}
+      </select>
+      &nbsp;&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"     value="覆核" onClick="return top.submitControl('C1')" class="btProcess" >&nbsp;&nbsp;      
+      <input type="Button"     value="取消覆核" onClick="return top.submitControl('C2')" class="btDelete" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" />      
+   </td>
+  </td>
+   <td nowrap >&nbsp;身分證號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;D檔部門:
+      <select size="1" name="ex_adj_dept" class="col_ddlb" >
+      	<option value="">--</option>
+      	${dddw_dept_no}
+   		</select>
+   </td>
+   <td nowrap >&nbsp;雙幣幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_dc_curr_code_tw}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="N" name="ex_debit_flag" ${ex_debit_flag-N} ${DEFAULT-ex_debit_flag} />信用卡
+         <input type="radio" value="Y" name="ex_debit_flag" ${ex_debit_flag-Y} />Debit卡
+      </span>
+   </td>   
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${DEFAULT-ex_apr_flag} />未覆核
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+      </span>
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;
+       <input type="checkbox" name="ex_act_item1" value="1" ${ex_act_item1-1} >費用
+       <input type="checkbox" name="ex_act_item2" value="1" ${ex_act_item2-1} >利息
+       <input type="checkbox" name="ex_act_item3" value="1" ${ex_act_item3-1} >違約金
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">  
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+    <th nowrap >入帳日&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >科目名稱&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >期末餘額&nbsp;</th>
+    <th nowrap >可D數餘額&nbsp;</th>
+    <th nowrap >D檔金額&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+    <th nowrap >檢核條件&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="ok_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+ 	 ${SER_NUM}&nbsp;${db_apr_flag}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />	
+	<input type="hidden" name="rowid" value="${rowid}" />
+	<input type="hidden" name="batch_no" value="${batch_no}" />
+	<input type="hidden" name="db_apr_flag" value="${db_apr_flag}" />
+	</td>	
+   <td nowrap class="list_cc"> ${item_post_date.YMD}&nbsp;
+      <input type="hidden" name="item_post_date" value="${item_post_date}" />  
+   </td>
+   <td nowrap class="list_cc"> ${acct_type}-${db_acct_key}&nbsp;
+      <input type="hidden" name="acct_type" value="${acct_type}" />  
+      <input type="hidden" name="db_acct_key" value="${db_acct_key}" />  
+   </td>
+   <td nowrap class="list_cc"> ${db_idno_name}&nbsp;
+      <input type="hidden" name="db_idno_name" value="${db_idno_name}" />  
+   </td>
+   <td nowrap class="list_cc"> ${acct_code}_${tt_acct_code}&nbsp;
+      <input type="hidden" name="acct_code" value="${acct_code}" />  
+      <input type="hidden" name="tt_acct_code" value="${tt_acct_code}" />
+   </td>
+   <td nowrap class="list_cc"> ${curr_code}_${tt_curr_code}&nbsp;
+      <input type="hidden" name="curr_code" value="${curr_code}" />  
+      <input type="hidden" name="tt_curr_code" value="${tt_curr_code}" />
+   </td>
+   <td nowrap class="list_rr"> ${end_bal.(999.00)}&nbsp;
+      <input type="hidden" name="end_bal" value="${end_bal}" />  
+   </td>
+   <td nowrap class="list_rr"> ${d_avail_bal.(999.00)}&nbsp;
+      <input type="hidden" name="d_avail_bal" value="${d_avail_bal}" />  
+   </td>
+   <td nowrap class="list_rr"> ${adj_amt.(999.00)}&nbsp;
+      <input type="hidden" name="adj_amt" value="${adj_amt}" />  
+   </td>
+   <td nowrap class="list_ll"> ${adj_remark}&nbsp;
+      <input type="hidden" name="adj_remark" value="${adj_remark}" />  
+   </td>
+   <td nowrap class="list_ll"> ${adj_check_memo}&nbsp;
+      <input type="hidden" name="adj_check_memo" value="${adj_check_memo}" />  
+   </td>
+   <td nowrap class="list_cc"> ${crt_user}_${tt_crt_user}&nbsp;
+      <input type="hidden" name="crt_user" value="${crt_user}" /> 
+      <input type="hidden" name="tt_crt_user" value="${tt_crt_user}" />
+   </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_rr" colspan="6" >幣別：台幣</td>
+    <td nowrap class="list_cc" >筆數：${tl_cnt_901.(999)}
+        <input type="hidden" name="tl_cnt_901" value="${tl_cnt_901}" />
+    </td>
+    <td nowrap class="list_cc" >D檔金額：</td>
+    <td nowrap class="list_rr" >${tl_db_d_amt_901.(999)}
+        <input type="hidden" name="tl_db_d_amt_901" value="${tl_db_d_amt_901}"/>
+        
+    </td>    
+    <td nowrap class="list_ll" colspan="4" > 
+  </tr>  
+  <tr>
+    <td nowrap class="list_rr" colspan="6" >幣別：美金</td>
+    <td nowrap class="list_cc" >筆數：${tl_cnt_840.(999)}
+        <input type="hidden" name="tl_cnt_840" value="${tl_cnt_840}" />
+    </td>
+    <td nowrap class="list_cc" >D檔金額：</td>
+    <td nowrap class="list_rr" >${tl_db_d_amt_840.(999.00)}
+        <input type="hidden" name="tl_db_d_amt_840" value="${tl_db_d_amt_840}"/>
+        
+    </td>    
+    <td nowrap class="list_ll" colspan="4" > 
+  </tr>  
+  <tr>
+    <td nowrap class="list_rr" colspan="6" >幣別：日幣</td>
+    <td nowrap class="list_cc" >筆數：${tl_cnt_392.(999)}
+        <input type="hidden" name="tl_cnt_392" value="${tl_cnt_392}" />
+    </td>
+    <td nowrap class="list_cc" >D檔金額：</td>
+    <td nowrap class="list_rr" >${tl_db_d_amt_392.(999.00)}
+        <input type="hidden" name="tl_db_d_amt_392" value="${tl_db_d_amt_392}"/>
+        
+    </td>    
+    <td nowrap class="list_ll" colspan="4" > 
+  </tr>  
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables_2.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1',1,2,0);
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; } 
+    return true;
+  }
+  
+  function selectAll() {
+    var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+
+ }
+  
+</script>

@@ -1,0 +1,173 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--    -06-14  V1.00.01  jh                                                  -->
+<!-- 109-07-24  V1.00.02  Justin Wu      remove the text excel. in the buttons-->
+<!-- 109-07-28  V1.00.03  Justin Wu      ++case_seqno                         -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>案件補寄資料郵寄標籤列印-0728</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_send_type]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_send_type]").filter('[value=0]').prop('checked', true);
+}
+var selected = $("input[name=ex_send_text]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_send_text]").filter('[value=1]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;補寄期間:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="地址標籤" onClick="return top.submitControl('PDF')" class="btProcess" >&nbsp;&nbsp;      
+      <input type="Button"   value="大宗掛號" onClick="return top.submitControl('PDF2')" class="btProcess" >&nbsp;&nbsp;      
+      <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('C')" class="btDelete" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+   <td nowrap >&nbsp;身分證字號:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_send_type" ${ex_send_type-0} />全部
+         <input type="radio" value="3" name="ex_send_type" ${ex_send_type-3} />平信
+         <input type="radio" value="2" name="ex_send_type" ${ex_send_type-2} />限專
+         <input type="radio" value="1" name="ex_send_type" ${ex_send_type-1} />掛號
+      </span>
+   </td>
+   <td nowrap >&nbsp;大宗掛號類別:
+      <span class="col_radio">
+         <input type="radio" value="1" name="ex_send_text" ${ex_send_text-1} />普掛
+         <input type="radio" value="2" name="ex_send_text" ${ex_send_text-2} />限掛
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;分類代號:
+      <select size="1" name="ex_case_type" class="col_ddlb" >
+         ${d_dddw_casetype2}
+      </select>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+   	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+       刪除
+	 </th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >身分證ID&nbsp;</th>
+    <th nowrap >Debit卡&nbsp;</th>
+    <th nowrap >收件人姓名&nbsp;</th>
+    <th nowrap >分類代號&nbsp;</th>
+    <th nowrap >接聽序號&nbsp;</th>
+    <th nowrap >地址&nbsp;</th>
+    <th nowrap >性別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+   	<input type="hidden" name="rowid" value="${rowid}">
+	</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${case_idno}&nbsp;
+      <input type="hidden" name="case_idno" value="${case_idno}">
+	</td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;
+      <input type="hidden" name="debit_flag" value="${debit_flag}">
+	</td>
+	<td nowrap class="list_ll"> ${recv_cname}&nbsp;
+      <input type="hidden" name="recv_cname" value="${recv_cname}">
+	</td>
+	<td nowrap class="list_cc"> ${case_type}&nbsp;
+      <input type="hidden" name="case_type" value="${case_type}">
+	</td>
+  <td nowrap class="list_cc"> ${case_seqno}&nbsp;
+      <input type="hidden" name="case_seqno" value="${case_seqno}">
+  </td>
+	<td nowrap class="list_ll"> ${wk_addr}&nbsp;
+      <input type="hidden" name="wk_addr" value="${wk_addr}">
+	</td>
+	<td nowrap class="list_cc"> ${db_sex}.${#JAVA:ecsfunc.DeCodeCrd.idnoSex(db_sex)}&nbsp;
+      <input type="hidden" name="db_sex" value="${db_sex}">      
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+${#PLUGIN:htmcomm_plugin.select_all}
+  
+</script>

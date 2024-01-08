@@ -1,0 +1,148 @@
+<html> 
+
+<head>
+    <title>溢付款轉帳作業-106-12-20-V1.00.00-OrisChang-[Initial]
+        -109-09-03-V1.00.01-Andy-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2">&nbsp;帳戶帳號:
+                        <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" zEdit="alphanum,upper" maxlength=11 size=20 />
+                    </td>
+                    <td nowrap colspan="2">&nbsp;結算幣別:
+                        <select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+                    </td>
+                    <td nowrap rowspan="3">&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;
+                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;建檔日期起迄:
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+                        </script>
+                    </td>
+                    <td nowrap colspan="2">&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="2" name="ex_kind" ${ex_kind-2} ${DEFAULT_CHK} />未放行
+                            <input type="radio" value="1" name="ex_kind" ${ex_kind-1} />已放行
+                            <input type="radio" value="0" name="ex_kind" ${ex_kind-0} />全部
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">&nbsp;
+                        總筆數:&nbsp;
+                        <span style="color: blue" class="dsp_text" id='sum_ct'>${sum_ct.(999)}</span>&nbsp;
+                        轉出金額合計:&nbsp;
+                        <span style="color: blue" class="dsp_text" id='sum_dc_dr_amt'>${sum_dc_dr_amt.(999.00)}</span>&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">轉出帳戶號碼</th>
+                <th nowrap class="list_th">轉出帳戶姓名</th>
+                <th nowrap class="list_th">結算幣別</th>
+                <th nowrap class="list_th">溢付款總額</th>
+                <th nowrap class="list_th">轉出金額</th>
+                <th nowrap class="list_th">轉入帳戶號碼</th>
+                <th nowrap class="list_th">轉入帳戶姓名</th>
+                <th nowrap class="list_th">Payment Value Date</th>
+                <th nowrap class="list_th">異動時間</th>
+                <th nowrap class="list_th">狀態</th>
+                <th nowrap class="list_th">備 註</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${ser_num}','${acct_type}','${acct_key}','${curr_code}','${mod_type}','${rowid}')" style="cursor:hand">
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+                    <input type="hidden" name="rowid" value="${rowid}">
+                </td>
+                <td nowrap class="list_ll"><span style="font-weight:bold;">${acct_type}-${acct_key}&nbsp;</span></td>
+                <td nowrap class="list_ll">${db_cname}&nbsp;</td>
+                <td nowrap class="list_cc"><span style="color:#930093; font-weight:bold;">${curr_code}&nbsp;</span></td>
+                <td nowrap class="list_rr">${wk_tot_bef_amt.(999.00)}&nbsp;</td>
+                <td nowrap class="list_rr">${dc_dr_amt.(999.00)}&nbsp;</td>
+                <td nowrap class="list_ll"><span style="font-weight:bold;">${trans_acct_type}-${trans_acct_key}&nbsp;</span></td>
+                <td nowrap class="list_ll">${db_trans_cname}&nbsp;</td>
+                <td nowrap class="list_cc">${post_date.YMD}&nbsp;</td>
+                <td nowrap class="list_cc">${update_date}&nbsp;${update_time}&nbsp;</td>
+                <td nowrap class="list_cc"><span style="color:red; font-weight:bold;">${mod_type}&nbsp;</span></td>
+                <td nowrap class="list_cc">${tt_which_table}&nbsp;</td>
+                <input type="hidden" name="adjust_type" value="${adjust_type}">
+                <input type="hidden" name="p_seqno" value="${p_seqno}">
+                <input type="hidden" name="acct_type" value="${acct_type}">
+                <input type="hidden" name="curr_code" value="${curr_code}">
+                <input type="hidden" name="crt_datetime" value="${crt_datetime}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="data_k4" value="">
+        <input type="hidden" name="data_k5" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_acct_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "actm0110_add";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm1, parm2, parm3,parm4,parm5) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm1;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml = "actm0110_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

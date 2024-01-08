@@ -1,0 +1,893 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 107-05-04  V1.00.00  andy          Initial                               -->
+<!-- 109-01-03  V1.00.01  Justin Wu     updated for archit.  change           -->
+<!-- 112-02-07  V1.00.02  Yang Han      add table column                      -->
+<!-- 112-08-21  V1.00.03  Grace Huang   memo1/2/3 欄位限制輸入10個字                                              -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>會計分錄自由格式維護作業</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+</head>
+<script language="JavaScript">
+    function wf_add_newrow() {
+    var sel_acno = $("#ex_gen_acct").val(); 
+    var rowNum=0;
+    var row_num = $('input[name=row_num]').val();   
+    if(isNaN(row_num)){
+          alert("請輸入數字！");
+          return false;
+    }
+    if(Number(row_num)<0){
+          alert("不可輸入負數");
+          return false;
+    }
+    if(row_num!=''){
+        rowNum = row_num;
+        insert_row_flag = 'Y';
+    }else{
+        rowNum=document.getElementById( 'table1' ).rows.length -1;
+    }
+    var ind = document.getElementById('table1').rows.length - 1;
+    var num = '${ser_num}';
+    if(num==''){
+        ind=document.getElementById( 'table1' ).rows.length-2;
+    }
+    if(row_num>ind){ 
+        alert("輸入不可大於筆數");
+        $('input[name=row_num]').css("background-color","pink");
+        return false;
+    }
+    $('input[name=row_num]').css("background-color","");
+    var colNum = 0;
+    var fi = 0;
+
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap"
+    var serNo = "";
+    if (ind < 10) {
+        serNo = "0" + ind;
+    } else {
+        serNo = "" + ind;
+    }
+    fi++;
+
+    var con = document.createElement('span');
+    con.setAttribute('class', 'dsp_num');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var ip2 = document.createElement('input');
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild(ip2);
+    
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'seqno';
+    ip3.value = '0';
+    myCell.appendChild(ip3);
+    
+    var ip4 = document.createElement('input');
+    ip4.type = 'hidden';
+    ip4.name = 'db_brief';
+    ip4.value = '';
+    myCell.appendChild(ip4);
+    
+    var ip5 = document.createElement('input');
+    ip5.type = 'hidden';
+    ip5.name = 'key_value';
+    ip5.value = '';
+    myCell.appendChild(ip5);
+    
+    var ip6 = document.createElement('input');
+    ip6.type = 'hidden';
+    ip6.name = 'ifrs_flag';
+    ip6.value = '';
+    myCell.appendChild(ip6);
+    
+    var ip7 = document.createElement('input');
+    ip7.type = 'hidden';
+    ip7.name = 'jrn_status';
+    ip7.value = '';
+    myCell.appendChild(ip7);
+    
+    var ip8 = document.createElement('input');
+    ip8.type = 'hidden';
+    ip8.name = 'db_brn_rpt_flag';
+    ip8.value = '';
+    myCell.appendChild(ip8);
+    
+    var ip9 = document.createElement('input');
+    ip9.type = 'hidden';
+    ip9.name = 'db_old_memo_chg';
+    ip9.value = '';
+    myCell.appendChild(ip9);
+    
+    var ip10 = document.createElement('input');
+    ip10.type = 'hidden';
+    ip10.name = 'db_memo3_kind';
+    ip10.value = '';
+    myCell.appendChild(ip10);
+    
+    var ip11 = document.createElement('input');
+    ip11.type = 'hidden';
+    ip11.name = 'db_dr_flag';
+    ip11.value = '';
+    myCell.appendChild(ip11);
+    
+    var ip12 = document.createElement('input');
+    ip12.type = 'hidden';
+    ip12.name = 'db_cr_flag';
+    ip12.value = '';
+    myCell.appendChild(ip12);
+    
+    var ip13 = document.createElement('input');
+    ip13.type = 'hidden';
+    ip13.name = 'db_memo3_flag';
+    ip13.value = '';
+    myCell.appendChild(ip13);
+    
+    var ip14 = document.createElement('input');
+    ip14.type = 'hidden';
+    ip14.name = 'refno';
+    ip14.value = '';
+    myCell.appendChild(ip14);
+    
+    var ex_curr = $("#ex_curr").val();    
+    var ip15 = document.createElement('input');
+    ip15.type = 'hidden';
+    ip15.name = 'curr';
+    ip15.value = ex_curr;
+    myCell.appendChild(ip15);
+    
+    var ip16 = document.createElement('input');
+    ip16.type = 'hidden';
+    ip16.name = 'brno';
+    ip16.value = '';
+    myCell.appendChild(ip16);
+    
+    var ip17 = document.createElement('input');
+    ip17.type = 'hidden';
+    ip17.name = 'dept';
+    ip17.value = '';
+    myCell.appendChild(ip17);
+    
+    var ip18 = document.createElement('input');
+    ip18.type = 'hidden';
+    ip18.name = 'depno';
+    ip18.value = '';
+    myCell.appendChild(ip18);
+    
+    var ip19 = document.createElement('input');
+    ip19.type = 'hidden';
+    ip19.name = 'voucher_cnt';
+    ip19.value = '';
+    myCell.appendChild(ip19);
+    
+    var ip20 = document.createElement('input');
+    ip20.type = 'hidden';
+    ip20.name = 'sign_flag';
+    ip20.value = '';
+    myCell.appendChild(ip20);
+    
+    var ip21 = document.createElement('input');
+    ip21.type = 'hidden';
+    ip21.name = 'db_insplist';
+    ip21.value = '';
+    myCell.appendChild(ip21);
+    
+    var ip22 = document.createElement('input');
+    ip22.type = 'hidden';
+    ip22.name = 'crt_user';
+    ip22.value = '';
+    myCell.appendChild(ip22);
+    
+    var ip23 = document.createElement('input');
+    ip23.type = 'hidden';
+    ip23.name = 'sys_rem';
+    ip23.value = '';
+    myCell.appendChild(ip23);
+    
+    var ip24 = document.createElement('input');
+    ip24.type = 'hidden';
+    ip24.name = 'post_flag';
+    ip24.value = '';
+    myCell.appendChild(ip24);
+    
+    var ip25 = document.createElement('input');
+    ip25.type = 'hidden';
+    ip25.name = 'curr_code_dc';
+    ip25.value = '';
+    myCell.appendChild(ip25);
+    
+    var ip26 = document.createElement('input');
+    ip26.type = 'hidden';
+    ip26.name = 'mod_seqno';
+    ip26.value = '';
+    myCell.appendChild(ip26);
+    
+    var ip27 = document.createElement('input');
+    ip27.type = 'hidden';
+    ip27.name = 'db_nocode';
+    ip27.value = '';
+    myCell.appendChild(ip27);
+    
+    var ip28 = document.createElement('input');
+    ip28.type = 'hidden';
+    ip28.name = 'tx_date';
+    ip28.value = '';
+    myCell.appendChild(ip28);
+    
+    var ip29 = document.createElement('input');
+    ip29.type = 'hidden';
+    ip29.name = 'db_dbcr';
+    ip29.value = '';
+    myCell.appendChild(ip29);
+    
+    var ip30 = document.createElement('input');
+    ip30.type = 'hidden';
+    ip30.name = 'apr_user2';
+    ip30.value = '';
+    myCell.appendChild(ip30);
+    
+    //seqno======================================
+   /*   colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var seqno = document.createElement('span');
+    seqno.textContent = '0';
+    myCell.appendChild(seqno);*/
+
+    //err_msg======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    //dbcr======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    var dbcrarray = [ "D","C"];
+
+    var idbcr = document.createElement('select');
+    idbcr.setAttribute('class', 'col_ddlb');
+    idbcr.name = 'dbcr';
+    idbcr.value = '';
+    for (var i = 0; i < dbcrarray.length; i++) {
+        var option = document.createElement("option");
+        option.value = dbcrarray[i];
+        if (dbcrarray[i] == "C") {
+            option.text = "貸";
+        } else if (dbcrarray[i] == "D") {
+            option.text = "借";
+        }
+
+        idbcr.appendChild(option);
+    }
+    myCell.appendChild(idbcr);
+
+    //acno======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    //僅顯示
+    // var con = document.createElement('span');
+    // con.setAttribute('class', 'dsp_text');
+    // con.textContent = sel_acno;
+    // myCell.appendChild(con);
+
+    // var acno = document.createElement('input');
+    // acno.type = 'hidden';
+    // acno.name = 'ac_no';
+    // acno.value = sel_acno;
+    // myCell.appendChild(acno);
+
+    var ac1 = document.createElement('input');
+    ac1.setAttribute('class', 'col_any');
+    ac1.setAttribute('zEdit', 'number');
+    ac1.type = 'text';
+    ac1.name = 'ac_no';
+    ac1.maxLength = 9;
+    ac1.size = 10;
+    ac1.value = sel_acno;
+    // ac1.setAttribute('onChange', 'itemchk('+serNo+',"ac_no",this.value)');
+    ac1.setAttribute('onChange', 'itemchk(this,"ac_no",this.value)');
+    myCell.appendChild(ac1);
+    //db_brief======================================
+    // var sel_brief = document.getElementById("ex_ac_full_name").value;
+    var sel_brief = $("input[name=ex_ac_full_name]").val();
+    // alert("sel_brief:"+sel_brief);
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td"; 
+    myCell.setAttribute('align','left');
+    myCell.setAttribute('nowrap', 'nowrap');
+
+    var con1 = document.createElement('span');
+    con1.setAttribute('class', 'dsp_ac_full_name');
+    con1.textContent = sel_brief;
+    myCell.appendChild(con1);
+
+    var brief = document.createElement('input');
+    brief.type = 'hidden';
+    brief.name = 'db_brief1';
+    brief.value = sel_brief;
+    myCell.appendChild(brief);
+    
+    //amt======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var amt = document.createElement('input');
+    amt.setAttribute('class', 'col_number');
+    amt.setAttribute('zEdit', 'dignumber');
+    amt.type = 'text';
+    amt.name = 'amt';
+
+    amt.maxLength = 16;
+    amt.size = 16;
+    amt.value = 0;
+    myCell.appendChild(amt);
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var iid_no = document.createElement('input');
+    iid_no.setAttribute('class', 'col_text');
+    iid_no.setAttribute('zEdit', 'alphanum');
+    iid_no.type = 'text';
+    iid_no.name = 'id_no';
+    iid_no.maxLength = 10;
+    iid_no.size = 10;
+    iid_no.value = '';
+    myCell.appendChild(iid_no);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mo1 = document.createElement('input');
+    mo1.setAttribute('class', 'col_any');
+    mo1.setAttribute('zEdit', 'any,canTW');
+    mo1.type = 'text';
+    mo1.name = 'memo1';
+    //mo1.maxLength = 20;
+    //mo1.size = 20;
+    mo1.maxLength = 10;
+    mo1.size = 20;
+    mo1.value = '';
+    myCell.appendChild(mo1);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mo2 = document.createElement('input');
+    mo2.setAttribute('class', 'col_any');
+    mo2.setAttribute('zEdit', 'any,canTW');
+    mo2.type = 'text';
+    mo2.name = 'memo2';
+    //mo2.maxLength = 20;
+    //mo2.size = 20;
+    mo2.maxLength = 10;
+    mo2.size = 20;
+    mo2.value = '';
+    myCell.appendChild(mo2);
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var mo3 = document.createElement('input');
+    mo3.setAttribute('class', 'col_any');
+    mo3.setAttribute('zEdit', 'any,canTW');
+    mo3.type = 'text';
+    mo3.name = 'memo3';
+    //mo3.maxLength = 20;
+    //mo3.size = 20;
+    mo3.maxLength = 10;
+    mo3.size = 20;
+    mo3.value = '';
+    myCell.appendChild(mo3);
+    
+    //key_value======================================
+    /* colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td"; */
+
+    //ifrs_flag======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var ii = ind;
+    for(var i=0;i<ii;i++){
+        var aa =i+1;
+        if ( aa < 10 )
+            { aa = "0"+aa; }
+        else
+            { aa = ""+aa;  }
+        // alert("aa :"+aa) ;   
+        $("#table1 tr td .dsp_num").eq(i).text(aa);
+        $("input[name=opt]").eq(i).val(aa);        
+    }
+}
+
+</script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <!--COND -->
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap colspan="3">&nbsp;標準分錄代碼:
+                    <select size="1" name="ex_std_cd" class="col_ddlb" onChange="return top.submitControl('Q2')">
+                        ${dddw_ex_std_cd}
+                    </select>
+                </td>
+                <td nowrap colspan="3">&nbsp;套號：
+                    <input type="text" class="col_text" name="ex_refno" value="${ex_refno}" zEdit="any" maxlength=6 size=6 />
+                </td>
+                <td nowrap colspan="3">&nbsp;分行代碼:
+                    <select size="1" name="ex_brn" class="col_ddlb">
+                        ${dddw_ex_brn}
+                    </select>
+                </td>
+                <td nowrap colspan="3">
+                    <span class="dsp_text" style="color: red">軋帳中:${ls_vouch_chk_flag}</span>&nbsp;&nbsp;
+                    <span class="dsp_text">軋帳完成:${ls_vouch_close_flag}</span>
+                    <input type="hidden" name="ls_vouch_close_flag" value="${ls_vouch_close_flag}">
+                    <input type="hidden" name="ls_vouch_chk_flag" value="${ls_vouch_chk_flag}">
+                </td>
+
+            </tr>
+            <tr>
+                <td nowrap colspan="4">&nbsp;業務別:
+                    <span class="dsp_text">UB</span>
+                    <input type="hidden" name="ex_dept" value="UB">
+                    &nbsp;部門別::
+                    <span class="dsp_text">銀行部</span>
+                    <input type="hidden" name="ex_deptno" value="1">
+                    &nbsp;日期:
+                    <input type="text" class="col_date" name="ex_tx_date" value="${ex_tx_date}" zeditType="date,ymd" MaxLength=8 size=10 onBlur="checkDate()" readonly="readonly">
+                    <input type="hidden" name="ex_tx_date2" value="${ex_tx_date2}">
+                </td>
+                <td nowrap colspan="4">&nbsp;幣別：
+                    <select id="ex_curr" name="ex_curr" class="col_ddlb">
+                        ${dddw_curr}
+                    </select>
+                </td>
+                <td nowrap colspan="4">&nbsp;列印種類:
+      				<input type="Button"   value="傳票" onClick="return top.submitControl('PDF2')" class="btProcess" >&nbsp;&nbsp;      
+                    <!-- <input type="radio" value="1" name="ex_print_kind" ${ex_print_kind-1} ${DEFAULT_CHK} />會計分錄 -->
+                    <!-- <input type="radio" value="2" name="ex_print_kind" ${ex_print_kind-2} />待沖聯
+                    <input type="radio" value="3" name="ex_print_kind" ${ex_print_kind-3} />報單 -->
+                    <!-- <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="checkref();" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="8">&nbsp;新舊分錄識別碼：&nbsp;新舊制(B)&nbsp;&nbsp;&nbsp; 　註：分錄識別碼有IFRS新制(I)、舊制(G)，請另提需求單申請
+                </td>
+                <td nowrap colspan="4">&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <!-- <input type="Button" name="btnAdd" value="存檔" ${btnUpdate_disable} ${set_btn} onClick="checkCurr();" class="btAdd">&nbsp;&nbsp; -->
+                    <input type="Button" name="btnAdd" value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!--List -->
+    <table border="0" width="5%">
+        <tr>
+            <td nowrap>
+                <input type="Button" name="detl_btnAdd" value="新增明細" ${btnSelect_disable} onclick="re_set_serno();" class="btAdd_detl" />&nbsp;
+                <input type="text" onkeyup='this.value=this.value.replace(/\D/gi,"")' class="col_number" name="row_num" value="" zEdit="number" size="3" />
+                <span style="color:red">(未輸入則新增至最後一筆)</span>
+                &nbsp;科子細目:
+                <input class="field_style" type="text" name="ex_gen_acct" id="ex_gen_acct" size="15" maxlength="15" value="${ex_gen_acct}" onChange="itemchk2('ac_no1',this.value);">&nbsp;&nbsp;
+                <input type="Button" name="detl_btnAdd" value="..." onclick="processVendorCode()" class="btAdd_detl" />
+                &nbsp;&nbsp;
+                中文全稱:<span class="dsp_text" name="ex_ac_full_name" id="ex_ac_full_name">${ex_ac_full_name}</span>
+                <input type="hidden" name="ex_ac_full_name" value="${ex_ac_full_name}">
+                <span class="dsp_text" name="data_msg" id="data_msg" style="color: red">${data_msg}</span>
+            </td>
+        </tr>
+    </table>
+    <!-- 動態 BLOCK 視窗控制 -->
+    <!-- <div id="disDiv" class="disScreen"></div> -->
+    <div id="popDiv" class="popup1">
+        <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+            <tr>
+                <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
+                <th nowrap style="width:40%;">科子細目：</th>
+                <td nowrap style="width:60%;">
+                    <select size="1" name="gen_acct_2" id="gen_acct_2">
+                        ${OPTION_LIST_2}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="Button" value=" ok " onClick="top.setBlockValue('ex_gen_acct','gen_acct_2'); top.hideBlock('popDiv');ItemChanged();" class="btConfirm">
+                    <!-- top.hideBlock('popDiv');ItemChanged();" class="btConfirm"> -->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!--List -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+        <tr>
+            <th nowrap class="list_th" width="5%">
+                <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();">刪除&nbsp;</th>
+            <th nowrap class="list_th">錯誤訊息</th>
+            <th nowrap class="list_th">借/貸</th>
+            <th nowrap class="list_th">科子細目</th>
+            <th nowrap class="list_th">科子細目中文</th>
+            <th nowrap class="list_th">金額</th>
+            <th nowrap class="list_th">摘要一</th>
+            <th nowrap class="list_th">摘要二</th>
+            <th nowrap class="list_th">摘要三</th>
+            <th nowrap class="list_th">身分證號碼</th>
+            <th nowrap class="list_th">帳號</th>
+            <th nowrap class="list_th">戶名</th>
+            <th nowrap class="list_th">IAS24關係人統編/ID</th>
+            <!-- <th nowrap class="list_th">銷帳鍵值</th> -->
+            <th nowrap class="list_th">新舊分錄</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr class="tr">
+            <td nowrap class="list_no">
+                <span class="dsp_flag">${ok_flag}</span>
+                <span class="dsp_num">${SER_NUM}</span>
+                <input type="checkbox" name="opt" value="${ser_num}">
+                <input type="hidden" name="ser_num" value="${ser_num}">
+                <input type="hidden" name="rowid" value="${rowid}" />
+                <input type="hidden" name="seqno" value="${seqno}">
+                <input type="hidden" name="db_dbcr" value="${db_dbcr}">
+                <input type="hidden" name="key_value" value="${key_value}">
+                <input type="hidden" name="ifrs_flag" value="${ifrs_flag}">
+                <input type="hidden" name="brno" value="${brno}">
+                <input type="hidden" name="tx_date" value="${tx_date}">
+                <input type="hidden" name="dept" value="${dept}">
+                <input type="hidden" name="depno" value="${depno}">
+                <input type="hidden" name="refno" value="${refno}">
+                <input type="hidden" name="curr" value="${curr}">
+                <input type="hidden" name="voucher_cnt" value="${voucher_cnt}">
+                <input type="hidden" name="sign_flag" value="${sign_flag}">
+                <input type="hidden" name="crt_user" value="${crt_user}">
+                <input type="hidden" name="apr_user2" value="${apr_user2}">
+                <input type="hidden" name="jrn_status" value="${jrn_status}">
+                <input type="hidden" name="post_flag" value="${post_flag}">
+                <input type="hidden" name="db_optcode" value="${db_optcode}">
+                <input type="hidden" name="db_cr_flag" value="${db_cr_flag}">
+                <input type="hidden" name="db_dr_flag" value="${db_dr_flag}">
+                <input type="hidden" name="db_memo3_flag" value="${db_memo3_flag}">
+                <input type="hidden" name="db_memo3_kind" value="${db_memo3_kind}">
+                <input type="hidden" name="db_insplist" value="${db_insplist}">
+                <input type="hidden" name="db_brn_rpt_flag" value="${db_brn_rpt_flag}">
+                <input type="hidden" name="sys_rem" value="${sys_rem}">
+                <input type="hidden" name="db_nocode" value="${db_nocode}">
+                <input type="hidden" name="db_old_memo_chg" value="${db_old_memo_chg}">
+                <input type="hidden" name="ac_full_name" value="${ac_full_name}">
+                <input type="hidden" name="curr_desc" value="${curr_desc}">
+                <input type="hidden" name="ac_brief_name" value="${ac_brief_name}">
+                <input type="hidden" name="db_brn_name" value="${db_brn_name}">
+                <input type="hidden" name="db_brn_addr1" value="${db_brn_addr1}">
+                <input type="hidden" name="db_brn_addr2" value="${db_brn_addr2}">
+                <input type="hidden" name="curr_code_dc" value="${curr_code_dc}">
+                <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+            </td>
+            <td nowrap class="list_ll" style="color: red">${err_msg}</td>
+            <td nowrap class="list_ll">
+                <select size="1" name="dbcr" class="col_ddlb">
+                    <option value="C" ${dbcr-C}>貸</option>
+                    <option value="D" ${dbcr-D}>借</option>
+                </select>
+            </td>
+            <!--       <td nowrap class="list_ll">${acct_name}&nbsp; </td>
+                  <td nowrap class="list_ll">${ias24_id}&nbsp; </td> -->
+            <td nowrap class="list_ll">
+                <input type="text" class="col_any" name="ac_no" zEdit="any" value="${ac_no}" maxlength=9 size=10 onChange="itemchk(this,'ac_no',this.value);"/>
+                <!-- <input type="text" class="col_any" name="ac_no" zEdit="any" value="${ac_no}" maxlength=8 size=10 onChange="itemchk('${ser_num}','ac_no',this.value);"/> -->
+            </td>
+            <td nowrap class="list_ll dsp_ac_full_name">${db_brief1}&nbsp;</td>
+            <input type="hidden" name="db_brief1" value="${db_brief1}">
+            <td nowrap class="list_ll">
+                <input type="text" class="col_number" name="amt" value="${amt}" zEdit="dignumber" maxlength=16 size=16 style="text-align:right;" />
+            </td>
+            <td nowrap class="list_ll">
+                <!-- <input type="text" class="col_any" name="memo1" value="${memo1}" zEdit="any,canTW" maxlength=20 size=20 /> -->
+                <input type="text" class="col_any" name="memo1" value="${memo1}" zEdit="any,canTW" maxlength=10 size=20 />
+            </td>
+            <td nowrap class="list_ll">
+                <!-- <input type="text" class="col_any" name="memo2" value="${memo2}" zEdit="any,canTW" maxlength=20 size=20 /> -->
+                <input type="text" class="col_any" name="memo2" value="${memo2}" zEdit="any,canTW" maxlength=10 size=20 />
+            </td>
+            <td nowrap class="list_ll">
+                <!-- <input type="text" class="col_any" name="memo3" value="${memo3}" zEdit="any,canTW" maxlength=20 size=20 /> -->
+                <input type="text" class="col_any" name="memo3" value="${memo3}" zEdit="any,canTW" maxlength=10 size=20 />
+            </td>
+            <td nowrap class="list_ll">
+                <input type="text" class="col_any" name="acct_no" value="${acct_no}" zEdit="any,canTW" />
+            </td>
+            <td nowrap class="list_ll">
+                <input type="text" class="col_any" name="acct_name" value="${acct_name}" zEdit="any,canTW" />
+            </td>
+            <td nowrap class="list_ll">
+                <input type="text" class="col_any" name="ias24_id" value="${ias24_id}" zEdit="any,canTW" />
+            </td>
+            <td nowrap class="list_ll">
+                <input type="text" class="col_text" name="id_no" value="${id_no}" zEdit="alphanum" maxlength=10 size=10 />
+            </td>
+            <!-- <td nowrap class="list_ll">${key_value}&nbsp; </td> -->
+            <td nowrap class="list_ll">${ifrs_flag}&nbsp; </td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+    <input type="hidden" name="new_flag" id="new_flag" value="${new_flag}">           <!--新增資料旗標:計算rowIndex用-->
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+var index1=0;       //全域變數:存index用
+var insert_row_flag = '';
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "genp0110_detl";
+    top.submitControl('S');
+    return true;
+}
+
+
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+function checkref() {
+	if ($('input[name=ex_print_kind]:checked').val() == undefined) {
+		alert('請選擇列印種類!!');
+		return;
+	}
+    var aa = document.getElementsByName("ex_refno")[0].value;
+    if (aa.length > 0) {
+        top.submitControl('PDF');
+    } else {
+        alert('請輸入套號!!');
+    }
+}
+
+function checkDate() {
+    var txdate = $("input[name=ex_tx_date]");
+    var txdate2 = $("input[name=ex_tx_date2]");
+    if (txdate.val().length <= 0) {
+        alert("日期不能為空");
+        txdate.css("background-color", "pink");
+        document.dataForm.ex_tx_date.focus();
+        return;
+    }
+    if (Number(txdate.val()) < Number(txdate2.val())) {
+        alert("日期不能小於營業日:" + txdate2.val());
+        txdate.css("background-color", "pink");
+        document.dataForm.ex_tx_date.focus();
+        return;
+    }
+    txdate.css("background-color", "");
+}
+
+//20200803 Mantis:0003868==>20210127 改後端檢核
+// function checkCurr() {
+//     var curr = $("#ex_curr").val();
+//     //  console.log("curr="+curr);
+//     if (curr == '01') {
+//         top.submitControl('S2');
+//     } else {
+//         var ll = $("input[name=amt]").length;        
+//         for (var i = 0; i < ll; i++) {
+//             var aa = $('input[name=amt]').eq(i).val();
+//             if (aa % 1 === 0) {
+//                 top.submitControl('S2');
+//             } else {
+//                 alert("台幣、日幣之金額不可有小數點值");
+//             }
+//         }    
+
+//     }
+// }
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    idCode = "1";
+    var vendorNo = document.dataForm.ex_gen_acct.value;
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    // autoJSON = false;    
+    top.actionCode = "AJAX";
+    // top.methodName = "actionFunction";
+    // top.methodName = "wfChkCol";
+    // addJSON("ex_gen_acct", vendorNo);
+    addJSON("text_data1","dddw_ac_no");
+    addJSON("text_data2",vendorNo);
+    addJSON("text_data3",'');
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    top.respHtml = "genp0110";
+    top.requHtml = "genp0110";
+    if (idCode == "1") {
+       var vendorNo = document.dataForm.ex_gen_acct.value;
+        var vendorList = document.getElementById("gen_acct_2");
+
+        for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+        var len = getJSONlength("OPTION_TEXT");
+        for (var i = 0; i < len; i++) {
+            vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+            if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+        }
+        top.popupBlock('popDiv'); 
+    }
+    if (idCode == "2") {
+        //$("#exist_cost_months").val(getJSONvalue("exist_cost_months",0));
+        var chk_flag = getJSONvalue("chk_flag",0);
+        var data_msg = getJSONvalue("data_msg",0);
+        var ac_full_name = getJSONvalue("ac_full_name",0);
+        var db_memo3_flag = getJSONvalue("db_memo3_flag",0);
+        // alert("db_memo3_flag:"+db_memo3_flag);
+        // var row_index = getJSONvalue("row_index",0);
+        var row_index = index1;         //直接取全域變數
+        // alert("row_index :"+row_index);
+        //alert("chk_flag :"+chk_flag);
+        if(chk_flag != 'OK'){
+            alert(data_msg); 
+        }
+        // alert("row_index:"+row_index);
+        // alert("ac_full_name:"+ac_full_name);
+        $('.dsp_ac_full_name').eq(parseInt(row_index)).text(ac_full_name);
+        $('input[name=db_brief1]').eq(parseInt(row_index)).val(ac_full_name);
+        $('input[name=db_memo3_flag]').eq(parseInt(row_index)).val(db_memo3_flag);
+    }
+    if (idCode == "3") {
+        var ac_full_name = getJSONvalue("ac_full_name",0);
+        var data_msg = getJSONvalue("data_msg",0);
+        var db_memo3_flag = getJSONvalue("db_memo3_flag",0);
+        // alert("db_memo3_flag:"+db_memo3_flag);
+        // alert("ac_full_name :"+ac_full_name+" data_msg:"+data_msg);
+        $('#ex_ac_full_name').text(ac_full_name);
+        $('input[name=ex_ac_full_name]').val(ac_full_name);
+        $('#data_msg').text(data_msg);
+        $('input[name=db_memo3_flag]').eq(parseInt(row_index)).val(db_memo3_flag);
+    }   
+}
+
+function ItemChanged() {
+    top.submitControl('ItemChanged');
+    return true;
+}
+//動態新增科子細目中文(每筆資料)          //20210415 week stop use
+function itemchk(obj,chk_col,chk_val){
+    idCode = "2";
+    top.actionCode = "AJAX";
+    // top.methodName = "wfChkCol";    
+    var new_flg = $("#new_flag").val();
+    // alert("new_flg : "+new_flg);
+    if(new_flg == 'Y'){
+        var row = obj.parentNode.parentNode.rowIndex - 2; //index row  
+    } else{
+        var row = obj.parentNode.parentNode.rowIndex - 1; //index row  
+    }    
+    // var row = Number(obj) - 1;
+    index1 = row; 
+    // alert("index1 : "+index1); 
+    if(chk_val === ''){
+        var empty = '';
+        $('.dsp_ac_full_name').eq(row).text(empty);          
+        return false;
+    }    
+    resetJSON();
+    
+    // alert("row_index :"+row);
+    chk_val = chk_val.toUpperCase();
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    addJSON("text_data3","");
+    addJSON("row_index",row+"");
+    processAJAX();
+    return true;     
+}
+
+//動態新增科子細目中文(上方輸入列)
+function itemchk2(chk_col,chk_val){
+    idCode = "3";
+    top.actionCode = "AJAX";
+    // top.methodName = "wfChkCol";
+    resetJSON();
+    chk_val = chk_val.toUpperCase();
+    // alert("chk_val:"+chk_val);
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    addJSON("text_data3",'');
+    processAJAX();
+    return true;     
+}
+function re_set_serno(){
+    wf_add_newrow();
+    top.submitControl('RR');
+    return true;
+}
+</script>

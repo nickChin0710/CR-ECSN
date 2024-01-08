@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>訊息發送系統群組成員維護-V.2019-0904-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="50%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;群組代號:
+			<input type="text" class="col_any" zEdit="any" name="ex_group_id" value="${ex_group_id}"
+      		maxlength="20" size="22"/>
+   		</td>
+   		<td nowrap >&nbsp;  
+			<input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+			<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table width="30%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th nowrap class="list_th" width="5%">No</th>
+		<th nowrap class="list_th">群組代號</th>
+		<th nowrap class="list_th">群組名稱</th>
+	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+	<tr onclick="detailScreen('${SER_NUM}','${group_id}','${group_name}','','')" style="cursor:hand">
+		<td nowrap class="list_no" >
+			${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}">
+			<input type="hidden" name="group_id" value="${group_id}">
+			<input type="hidden" name="group_name" value="${group_name}">
+		</td>
+		<td nowrap class="list_ll">${group_id}&nbsp;</td>
+		<td nowrap class="list_ll">${group_name}&nbsp;</td>
+	</tr>
+
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+<br>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="ptrm4030">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+ document.dataForm.ex_group_id.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ptrm4030_detl"; 
+    }
+    return true;
+  }
+ 
+ function detailScreen(serNum,parm,parm2,parm3) { 
+	    top.respLevel = 1;
+	    top.currRows  = serNum;
+	    document.dataForm.data_k1.value = parm;
+	    document.dataForm.data_k2.value = parm2;
+	    document.dataForm.data_k3.value = parm3;
+	    top.respHtml  = "ptrm4030_detl" ;
+	    top.submitControl('S');
+	    return true;
+ }
+ 
+</script>

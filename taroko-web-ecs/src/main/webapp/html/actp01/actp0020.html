@@ -1,0 +1,272 @@
+<html>
+<head>
+<title>帳戶帳齡MP調整-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}">
+	<form name="dataForm" method="post" action="">
+		<div id="condBlock">
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>&nbsp;帳戶帳號: 
+						<select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>-- 
+<!--
+						<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=15 onchange="initinfo()" />
+-->
+						<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=15 />
+						<input type="hidden" name="h_acct_type" value="${h_acct_type}" />
+						<input type="hidden" name="h_acct_key" value="${h_acct_key}" />
+					</td>
+					<td nowrap>&nbsp;中文姓名:${q_id_cname}<input type="hidden" name="q_id_cname" value="${q_id_cname}"></td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;卡號: 
+<!--
+						<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength=16 size=18 onblur="initinfo()" />
+-->
+						<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength=16 size=18 />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;待覆核登入人員:
+						<select size="1" name="ex_update_user" class="col_ddlb" onChange="update_remain(this.value)">
+                    ${dddw_update_user}
+            </select>
+						&nbsp;
+						<span class="dsp_text" id="q_user_cname" > ${q_user_cname} </span>
+		  			<input type="hidden" name="q_user_cname" value="${q_user_cname}">
+						&nbsp;&nbsp;
+						<span class="dsp_text" id="q_update_remain" > ${q_update_remain} </span>
+		  			<input type="hidden" name="q_update_remain" value="${q_update_remain}">
+					</td>
+					<td>&nbsp;公司名稱:${q_corp_cname}<input type="hidden" name="q_corp_cname" value="${q_corp_cname}"></td>
+				</tr>
+				<tr>
+					<td nowrap colspan=2>&nbsp;
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="執行" onClick="return top.submitControl('U')" class="btUpdate">
+						&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+		<!-- 合計============================ -->
+		<div id="queryBlock">
+			<table border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap class="td_text" width="150">帳戶現狀碼：</td>
+					<td nowrap class="td_data" width="100">
+					<span class="dsp_text"> ${q_acct_status} </span> 
+					<input type="hidden" name="q_acct_status" value="${q_acct_status}"></td>
+					<td nowrap class="td_text" width="200">帳戶對帳單週期：</td>
+					<td nowrap class="td_data" width="500">
+					<span class="dsp_text"> ${q_stmt_cycle} </span>
+					<input type="hidden" name="q_stmt_cycle" value="${q_stmt_cycle}">
+					<span class="dsp_text"> ${q_this_acct_month} </span>
+					<input type="hidden" name="q_this_acct_month" value="${q_this_acct_month}">
+					<input type="hidden" name="q_this_acct_yymm" value="${q_this_acct_yymm}">
+					<span class="dsp_text"> ${q_p_seqno} </span>
+					<input type="hidden" name="q_p_seqno" value="${q_p_seqno}"></td>
+				</tr>
+				<tr>
+					<td nowrap class="td_text" width="150">登錄人員：</td>
+					<td nowrap class="td_data" width="100">
+					<span class="dsp_text"> ${update_user} </span> 
+					<input type="hidden" name="update_user" value="${update_user}"></td>
+					<td nowrap class="td_text" width="200">登錄日期：</td>
+					<td nowrap class="td_data" width="500">
+					<span class="dsp_text"> ${update_date.YMD} </span>
+					<input type="hidden" name="update_date" value="${update_date}">
+				</tr>
+			</table>
+		</div>
+		<hr>
+		<!-- 明細============================ -->
+		<table border="1" cellspacing="0" cellpadding="4">
+			<tr>
+				<td>調整後</td>
+				<td>調整前</td>
+			</tr>
+			<tr>
+				<td style="vertical-align:top;">
+					<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+						<tr>
+							<th nowrap class="list_th">關帳年月</th>
+							<th nowrap class="list_th">雙幣幣別</th>
+							<th nowrap class="list_th">當期MP餘額<br>(結算幣別)
+							</th>
+							<th nowrap class="list_th">當期MP餘額<br>(台幣)-調後
+							</th>
+							<th nowrap class="list_th">當期MP餘額<br>(台幣)-調前
+							</th>
+							<th nowrap class="list_th">待覆核</th>
+							<th nowrap class="list_th">&nbsp;</th>
+						</tr>
+						<!-- BEGIN DYNAMIC : DETAIL -->
+						<tr style="cursor: hand">
+							<td nowrap class="list_cc">${acct_month.YMD}
+								<input type="hidden" name="acct_month" value="${acct_month}" />
+								<input type="hidden" name="rowid" value="${rowid}" />
+								<input type="hidden" name="seq_no" value="${seq_no}">
+								<input type="hidden" name="mod_user" value="${mod_user}">
+							</td>
+							<td nowrap class="list_cc">${curr_code}
+								<input type="hidden" name="curr_code" value="${curr_code}" />
+							</td>
+							<td nowrap class="list_rr">${dc_pay_amt.(999.00)}
+								<input type="hidden" name="dc_pay_amt" value="${dc_pay_amt}" />
+								<input type="hidden" name="dc_pay_amt2" value="${dc_pay_amt2}" />
+							  <input type="hidden" name="dc_pay_amt_s" value="${dc_pay_amt_s}" />
+							</td>
+							<td nowrap class="list_rr">${pay_amt.(999)}
+								<input type="hidden" name="pay_amt" value="${pay_amt}" />
+							  <input type="hidden" name="pay_amt_s" value="${pay_amt_s}" />
+							</td>
+							<td nowrap class="list_rr">${pay_amt2.(999)}
+								<input type="hidden" name="pay_amt2" value="${pay_amt2}" />
+							</td>
+							<td nowrap class="list_cc">${appr_yn}
+								<input type="hidden" name="appr_yn" value="${appr_yn}" />
+							</td>
+							<td nowrap class="list_cc">${status_ua}
+								<input type="hidden" name="status_ua" value="${status_ua}" />
+							</td>
+						</tr>
+						<!-- END DYNAMIC : DETAIL -->
+					</table>
+				</td>
+				<td>
+					<table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+						<tr>
+							<th nowrap class="list_th">關帳年月</th>
+							<th nowrap class="list_th">雙幣幣別</th>
+							<th nowrap class="list_th">當期MP餘額<br>(結算幣別)
+							</th>
+							<th nowrap class="list_th">當期MP餘額<br>(台幣)-調後
+							</th>
+							<th nowrap class="list_th">當期MP餘額<br>(台幣)-調前
+							</th>
+						</tr>
+						<!-- BEGIN DYNAMIC : DETAIL -->
+						<tr style="cursor: hand">
+							<td nowrap class="list_cc">${acct_month_o.YMD}
+								<input type="hidden" name="acct_month_o" value="${acct_month_o}" />
+								<input type="hidden" name="rowid_o" value="${rowid_o}" />
+								<input type="hidden" name="db_org_amt_dc" value="${db_org_amt_dc}">
+							</td>
+							<td nowrap class="list_cc">${curr_code_o}<input type="hidden" name="curr_code_o" value="${curr_code_o}" /></td>
+							<td nowrap class="list_rr">${dc_pay_amt_o.(999)}<input type="hidden" name="dc_pay_amt_o" value="${dc_pay_amt_o}" /></td>
+							<td nowrap class="list_rr">${pay_amt_o.(999)}<input type="hidden" name="pay_amt_o" value="${pay_amt_o}" /></td>
+							<td nowrap class="list_rr">${db_org_amt_tw.(999)}<input type="hidden" name="db_org_amt_tw" value="${db_org_amt_tw}" /></td>
+						</tr>
+						<!-- END DYNAMIC : DETAIL -->
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="0" cellspacing="0" cellpadding="4" style="vertical-align:bottom;">
+						<tr>
+							<td nowrap class="td_text" width="100">MP=</td>
+							<td nowrap class="td_data" width="100"><span class="dsp_text">
+									${q_mp.(999)} </span> <input type="hidden" name="q_mp" value="${q_mp}">
+							</td>
+							<td nowrap class="td_text" width="130">Mcode=</td>
+							<td nowrap class="td_data" width="130"><span class="dsp_text">
+									${q_mcode} </span> <input type="hidden" name="q_mcode"
+								value="${q_mcode}"></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table border="0" cellspacing="0" cellpadding="4">
+						<tr>
+							<td nowrap class="td_text" width="100">MP=</td>
+							<td nowrap class="td_data" width="100"><span class="dsp_text">
+									${q_mp_o.(999)} </span> <input type="hidden" name="q_mp_o" value="${q_mp_o}">
+							</td>
+							<td nowrap class="td_text" width="130">Mcode=</td>
+							<td nowrap class="td_data" width="130"><span class="dsp_text">
+									${q_mcode_o} </span> <input type="hidden" name="q_mcode_o"
+								value="${q_mcode_o}"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<hr>
+		<!--保留功能-->
+			<input type="hidden"  name="data_k1" value="" >
+			<input type="hidden"  name="data_k2" value="" >
+			<input type="hidden"  name="data_k3" value="" >
+			<input type="hidden"  name="data_k4" value="" >
+			<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+			<input type="hidden" name="pageType" value="cond">
+			<input type="hidden" name="tempdata" value="${tempdata}">
+	</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+tigra_tables('table2', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+//document.dataForm.ex_risk_type.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    if (top.actionCode=='U') {
+    	if(confirm("是否執行帳齡調整覆核")==false){
+    			return false;
+    	}
+    }
+    
+    return true;
+}
+
+
+function initinfo() { 
+	top.submitControl('I');
+	 
+}
+
+function updateRemain(upd_user) {
+
+    top.actionCode = "Q";
+    top.methodName = "upd_user_changed";
+    resetJSON();
+    addJSON("upd_user", upd_user);
+    processAJAX();
+
+}
+
+function ajaxResponse() {
+    top.respHtml = "actp0020";
+
+    var q_user_cname =getJSONvalue("q_user_cname",0);
+    if (q_user_cname.length>0) { 
+    	$("#q_user_cname").text(q_user_cname);   
+     	$("#q_user_cname").val(q_user_cname);   
+    }      
+      
+    var q_update_remain =getJSONvalue("q_upd_remain",0);
+    if (q_update_remain.length>0) { 
+    	$("#q_update_remain").text(q_update_remain);   
+     	$("#q_update_remain").val(q_update_remain);   
+    }      
+      
+    return false;
+}
+
+
+</script>

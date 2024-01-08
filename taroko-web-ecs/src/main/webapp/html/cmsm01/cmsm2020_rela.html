@@ -1,0 +1,275 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-07-29  V1.00.02  Justin Wu      add checkIdno and check if idno + reltype is duplicate -->
+<!-- 109-08-07  V1.00.03  Justin Wu      fix 關係人頁面 bug -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>公司戶關係人</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.del_apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"    value="讀取"  onClick="return top.submitControl('R2');" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U1')" class="btUpdate" >&nbsp;&nbsp;    
+  </td>
+</tr>
+</table>
+
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+<tr>
+   <td nowrap >&nbsp;統編:
+    <span class="col_key">${corp_no}</span>
+    <input type="hidden" name="corp_no" value="${corp_no}" />
+   </td>
+</tr>
+<tr>
+   <td nowrap class="list_ll" >&nbsp;類別:
+      <select name="ex_rela_type" id="ex_rela_type" class="col_ddlb" >                
+        <option value="1" ${ex_rela_type-1} >實質受益人</option>
+        <option value="2" ${ex_rela_type-2} >高階管理人</option>
+        <option value="3" ${ex_rela_type-3} >具控制權人</option>        
+      </select>
+      &nbsp;&nbsp;
+      身分證字號/證照號碼/統編:
+      <input type="text" class="col_text" name="ex_idno" id="ex_idno" value="${ex_idno}" maxlength="10" size="10" zEdit="alphanum,upper" >
+      &nbsp;&nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細"  class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num} &nbsp;         
+      <input type="hidden" name="ind_num" value="${ind_num}">
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+   <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >刪除
+	</th>
+    <th nowrap >類別</th>
+    <th nowrap >身分證字號/證照號碼/統編</th>
+    <th nowrap >中文名</th>
+    <th nowrap >英文名</th>
+    <th nowrap >生日(西元年YYYYMMDD)</th>
+    <th nowrap >國籍</th>
+    <th nowrap >異動別</th>
+    <th nowrap >錯誤原因</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> 
+    <span class="dsp_flag">${ok_flag}</span>
+    <input type="checkbox" name="opt" value="${ser_num}"/>
+ 	 ${SER_NUM}&nbsp;
+	  <input type="hidden" name="ser_num" value="${ser_num}" />	
+    <input type="hidden" name="rela_type" value="${rela_type}" />
+    <input type="hidden" name="tt_rela_type" value="${tt_rela_type}" />
+    <input type="hidden" name="mix_data" value="${mix_data}" />
+    <input type="hidden" name="id_no" value="${id_no}"/>
+    <input type="hidden" name="data_status" value="${data_status}"/>
+   </td>
+   <td nowrap class="list_cc" >${tt_rela_type}</td>
+   <td nowrap class="list_cc" >${id_no}</td>
+   <td nowrap class="list_cc" >
+    <input type="text" class="col_any" name="chi_name" value="${chi_name}" maxlength="30" size="32" zEdit="any,canTw" >
+    <input type="hidden" name="old_chi_name" value="${old_chi_name}" >
+   </td>
+   <td nowrap class="list_cc" >
+    <input type="text" class="col_text" name="eng_name" value="${eng_name}" maxlength="30" size="32" zEdit="alphanum" >
+    <input type="hidden" name="old_eng_name" value="${old_eng_name}" >
+   </td>
+   <td nowrap class="list_cc" >
+    <input type="text" class="col_text" name="birthday" value="${birthday}" maxlength="8" size="10" zEdit="number" >
+    <input type="hidden" name="old_birthday" value="${old_birthday}" >
+   </td>
+   <td nowrap class="list_cc" >
+    <input type="text" class="col_text" name="cntry_code" value="${cntry_code}" maxlength="2" size="5" zEdit="alphanum,upper" >
+    <input type="hidden" name="old_cntry_code" value="${old_cntry_code}" >
+   </td>
+   <td nowrap class="list_cc" >${mod_type}
+    <input type="hidden" name="mod_type" value="${mod_type}" >
+   </td>
+   <td nowrap class="list_cc err_msg" >${error_msg}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<br>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="cmsm2020">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	var ind=${IND_NUM};
+  var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+  var isAJAXFinished = true;
+
+ top.refreshButton2('1');  
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ $("#detl_btnAdd").click(function(){
+
+  if( ! isAJAXFinished){
+    alert("檢核「身分證字號/證照號碼/統編」中，請稍後再按「新增明細」");
+    return;
+  }
+	
+   var ls_idno =$("#ex_idno").val().toUpperCase(); 
+   var ls_rela_type =$("#ex_rela_type").val();
+   var ls_tt_rela_type =$("#ex_rela_type option:selected").text();
+   
+   if(ls_idno == ''){
+	   alert("身分證字號/證照號碼/統編: 不可空白");
+	   return ;	   
+   }
+   
+   if(ls_idno.length != 8 && ls_idno.length != 10){
+	   alert("證號資料格式長度檢核有誤!");
+	   return ;	
+   }
+   
+   if(ls_rela_type == '' || ls_rela_type ==null){
+	   alert("類別: 不可空白");
+	   return ;
+   }
+
+   // check idno or corpno is valid
+   top.actionCode = "AJAX";
+
+   resetJSON();
+   addJSON("methodCode","1");  
+   addJSON("idnoAJAX",ls_idno);
+
+   isAJAXFinished = false;
+
+   document.getElementById("ex_idno").disabled = true;
+   document.getElementById("ex_rela_type").disabled = true;
+
+   processAJAX();
+
+});
+
+ function ajaxResponse(){
+   isAJAXFinished = true;
+
+   document.getElementById("ex_idno").disabled = false;
+   document.getElementById("ex_rela_type").disabled = false;
+
+   top.respHtml ="cmsm2020_rela";
+   top.requHtml ="cmsm2020_rela";
+
+   if( getJson("isIdnoValid") != "Y" ){
+    alert("此「身分證字號/證照號碼/統編」不符合格式");
+    return;
+   }
+
+   var ls_idno =$("#ex_idno").val().toUpperCase(); 
+   var ls_rela_type =$("#ex_rela_type").val();
+   var ls_tt_rela_type =$("#ex_rela_type option:selected").text();
+
+   if( isIdnoDuplicate(ls_idno,ls_rela_type) ){
+    alert("此「身分證字號/證照號碼/統編」已重複");
+    return;
+   }
+
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+    { serNo = ""+ind;  }
+    $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"      
+      +"<input type='hidden' value='"+ls_idno+"' name='id_no' />"      
+      +"<input type='hidden' value='"+ls_rela_type+"' name='rela_type' />"            
+      +"<input type='hidden' value='"+ls_rela_type+ls_idno+"' name='mix_data' />"
+      +"<input type='hidden' value='"+ls_tt_rela_type+"' name='tt_rela_type' />"
+      +"<input type='hidden' value='A' name='mod_type' />" 
+      +"<input type='hidden' name='data_status' value='A'/>" 
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_tt_rela_type              
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_idno      
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='text' class='col_any' name='chi_name' value='' maxlength='30' size='32' zEdit='any,canTw' >"
+      +"<input type='hidden' name='old_chi_name' value='' >"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='text' class='col_text' name='eng_name' value='' maxlength='30' size='32' zEdit='alphanum' >"
+      +"<input type='hidden' name='old_eng_name' value='' >"
+      +"</td>"
+      +"<td nowrap class='list_cc' >"
+      +"<input type='text' class='col_text' name='birthday' value='' maxlength='8' size='10' zEdit='number' >"
+      +"<input type='hidden' name='old_birthday' value='' >"
+      +"</td>"     
+      +"<td nowrap class='list_cc' >"
+      +"<input type='text' class='col_text' name='cntry_code' value='' maxlength='2' size='5' zEdit='alphanum,upper' >"
+      +"<input type='hidden' name='old_cntry_code' value='' >"
+      +"</td>"     
+      +"<td nworap class='list_cc'>A "
+      +"</td>"
+      +"<td nowrap class='list_cc err_msg' ></td>"
+   );
+   $("#ex_idno").val('');
+   $("#ex_rela_type").val('');
+ }
+
+ function isIdnoDuplicate(idno, relType){
+  var idnos = document.getElementsByName("id_no");
+  var relTypes = document.getElementsByName("rela_type");
+  
+
+  for (var i = 0; i < idnos.length; i++) {
+    if( relTypes[i].value == relType && idnos[i].value == idno){
+      return true;
+    }
+  }
+  return false;
+ }
+
+  
+  
+</script>

@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>額度層級參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;額度層級:
+      <input type="text" class="col_text" name="ex_level" value="${ex_level}" maxlength="10" size="12" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >額度層級&nbsp;</th>
+    <th nowrap >個人額度&nbsp;</th>
+    <th nowrap >公司額度&nbsp;</th>
+    <th nowrap >臨時額度&nbsp;</th>
+    <th nowrap >說明&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${al_level}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${al_level}&nbsp;</td>
+	<td nowrap class="list_rr"> ${al_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${al_amt02.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${al_amt03.(999)}&nbsp;</td>
+	<td nowrap class="list_ll"> ${al_desc}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "secm2010_detl"; 
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "secm2010_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

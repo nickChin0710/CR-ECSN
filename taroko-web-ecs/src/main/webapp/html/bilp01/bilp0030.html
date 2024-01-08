@@ -1,0 +1,307 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>郵購/分期付款商品資料覆核作業-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="4">&nbsp;特店代號:
+                        <input class="field_style" type="text" name="ex_merchant" size="15" maxlength="15" value="${ex_merchant}" />
+                        &nbsp;&nbsp;
+                        <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />
+                    </td>
+                    <td id="pro_no" nowrap colspan="4">&nbsp;商品代號：
+                        <select name="ex_product_no" class="col_ddlb" style="width:40%">
+                            <option value="">--</option>
+                            ${dddw_product_no}
+                        </select>
+                    </td>
+                    <td nowrap colspan="4">&nbsp;建檔人員:
+                        <input class="col_text" type="text" name="ex_mod_user" size="10" maxlength="10" value="${ex_mod_user}" />
+                        &nbsp;
+                    </td>
+                </tr>    
+                <tr>   
+                    <td nowrap  colspan="6">&nbsp;
+                        <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"   value="執行" onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                    <td nowrap  colspan="6">&nbsp;
+                         <span class="dsp_text">&nbsp;總筆數:&nbsp;${tot_cont.(999)}&nbsp;</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 動態 BLOCK 視窗控制 -->
+        <div id="disDiv" class="disScreen"></div>
+        <div id="popDiv" class="popup1">
+            <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                <tr>
+                    <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <th nowrap style="width:40%;">特店代號：</th>
+                    <td nowrap style="width:60%;">
+                        <select size="1" name="merchant_2" id="merchant_2">
+                            ${OPTION_LIST_2}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="Button" value=" ok " onClick="top.setBlockValue('ex_merchant','merchant_2'); top.hideBlock('popDiv');mcht_no_focus()" class="btConfirm">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">放行&nbsp;
+                </th>
+                <th nowrap class="list_th">錯誤訊息</th>
+                <th nowrap class="list_th">特店代號</th>
+                <th nowrap class="list_th">商品代號</th>
+                <th nowrap class="list_th">商品名稱</th>
+                <th nowrap class="list_th">每期金額</th>
+                <th nowrap class="list_th">總期數</th>
+                <th nowrap class="list_th">紅利點數</th>
+                <th nowrap class="list_th">折抵金額</th>
+                <th nowrap class="list_th">尾數</th>
+                <th nowrap class="list_th">總金額</th>
+                <th nowrap class="list_th">額外費用</th>
+                <th nowrap class="list_th">紅利積點抵用</th>
+                <th nowrap class="list_th">手續費</th>
+                <th nowrap class="list_th">手續費率</th>
+                <th nowrap class="list_th">風險分類</th>
+                <th nowrap class="list_th">建檔人員</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no" rowspan="2">
+                    <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled}/>
+                    <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                </td>
+            </tr>
+            <tr onclick="detailScreen('${SER_NUM}','${mcht_no}','${product_no}','')" style="cursor:hand">
+                <td nowrap class="list_ll" style="color: red"> ${wk_err}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mcht_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${product_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${product_name}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${unit_price.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${tot_term.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${redeem_point.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${redeem_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${remd_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${tot_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${extra_fees.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${against_num.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${fees_fix_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${interest_rate.(999)} </td>
+                <td nowrap class="list_ll"> ${risk_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mod_user}&nbsp; </td>
+                <input type="hidden" name="mcht_no" value="${mcht_no}" />
+                <input type="hidden" name="product_no" value="${product_no}" />
+                <input type="hidden" name="product_name" value="${product_name}" />
+                <input type="hidden" name="unit_price" value="${unit_price}" />
+                <input type="hidden" name="tot_amt" value="${tot_amt}" />
+                <input type="hidden" name="tot_term" value="${tot_term}" />
+                <input type="hidden" name="remd_amt" value="${remd_amt}" />
+                <input type="hidden" name="extra_fees" value="${extra_fees}" />
+                <input type="hidden" name="fees_fix_amt" value="${fees_fix_amt}" />
+                <input type="hidden" name="fees_min_amt" value="${fees_min_amt}" />
+                <input type="hidden" name="fees_max_amt" value="${fees_max_amt}" />
+                <input type="hidden" name="interest_rate" value="${interest_rate}" />
+                <input type="hidden" name="interest_min_rate" value="${interest_min_rate}" />
+                <input type="hidden" name="interest_max_rate" value="${interest_max_rate}" />
+                <input type="hidden" name="auto_delv_flag" value="${auto_delv_flag}" />
+                <input type="hidden" name="auto_print_flag" value="${auto_print_flag}" />
+                <input type="hidden" name="against_num" value="${against_num}" />
+                <input type="hidden" name="confirm_flag" value="${confirm_flag}" />
+                <input type="hidden" name="clt_fees_fix_amt" value="${clt_fees_fix_amt}" />
+                <input type="hidden" name="clt_interest_rate" value="${clt_interest_rate}" />
+                <input type="hidden" name="clt_fees_min_amt" value="${clt_fees_min_amt}" />
+                <input type="hidden" name="clt_fees_max_amt" value="${clt_fees_max_amt}" />
+                <input type="hidden" name="installment_flag" value="${installment_flag}" />
+                <input type="hidden" name="refund_flag" value="${refund_flag}" />
+                <input type="hidden" name="dtl_flag" value="${dtl_flag}" />
+                <input type="hidden" name="redeem_point" value="${redeem_point}" />
+                <input type="hidden" name="redeem_amt" value="${redeem_amt}" />
+                <input type="hidden" name="risk_code" value="${risk_code}" />
+                <input type="hidden" name="trans_rate" value="${trans_rate}" />
+                <input type="hidden" name="year_fees_rate" value="${year_fees_rate}" />
+                <input type="hidden" name="mod_audcode" value="${mod_audcode}" />
+                <input type="hidden" name="mod_user" value="${mod_user}" />
+                <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+                <input type="hidden" name="h_mod_seqno" value="${h_mod_seqno}" />
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="bilp0030">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+var idCode = "0";
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "bilp0030_detl";
+    }
+
+    if (top.actionCode == "S2") {
+        if (!chkdata()) {
+            return false;
+        }
+        if (confirm("是否執行作業?!") === false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "bilp0030_detl";
+    top.submitControl('S');
+    return true;
+}
+//全選
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox" && aElements[i].disabled == false) {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+function chkdata() {
+    var seq = 0;
+    var agy = document.dataForm.opt;
+    var ll = agy.length;
+    if (typeof ll === 'undefined') {
+        if (agy.checked) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (agy[i].checked) {
+                seq++;
+
+            }
+        }
+    }
+
+    if (seq == 0) {
+        //alert("請至少勾選一筆資料!");
+        alert("未選取執行資料!");
+        return false;
+    }
+    return true;
+}
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    idCode = "1";
+    var vendorNo = document.dataForm.ex_merchant.value;
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; } 
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged"; 
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName", "pop_mchtno");
+    addJSON("ex_merchant", vendorNo);
+    processAJAX();
+    return true;
+}
+// function MchtNo(mcht_no) {
+//     idCode = "2";    
+//     top.actionCode = "Q";
+//     top.methodName = "itemchanged";
+//     resetJSON();
+//     addJSON("ajaxName", "mcht_no_change");
+//     addJSON("mcht_no", mcht_no);
+//     //addJSON("tot_term",$("select[name=tot_term]").val());
+//     processAJAX();
+//     return true;
+// }
+
+function ajaxResponse() {
+    top.respHtml = "bilp0030";
+    top.requHtml = "bilp0030";
+    // if(idCode=="2"){
+    //     if (getJSONvalue("dddw_product_no", 0) != null) {
+    //         $("#pro_no select option").remove();
+    //         $("#pro_no select").append(getJSONvalue("dddw_product_no", 0));
+    //     }
+    // }
+    if(idCode=="1"){
+        var vendorNo = document.dataForm.ex_merchant.value;
+        var vendorList = document.getElementById("merchant_2");
+
+        for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+        var len = getJSONlength("OPTION_TEXT");
+        for (var i = 0; i < len; i++) {
+            vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+            if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+        }
+        top.popupBlock('popDiv');
+    }    
+}
+function mcht_no_focus() {
+	document.dataForm.ex_merchant.focus();
+    document.dataForm.ex_product_no.focus();
+    
+    var mcht = document.dataForm.ex_merchant.value;
+    top.submitControl('itemchange');
+
+}
+</script>

@@ -1,0 +1,170 @@
+<html>
+<head>
+<title>DeBit帳務明細D檔調整作業-detl-107-08-31-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="2"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value=" 存檔 " ${btnUpdate_disable} ${pho_update_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+  <input type="Button" value=" 刪除 " ${btnDelete_disable} ${pho_delete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+  <input type="Button" value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;帳戶帳號：</td>
+    <td nowrap><span class="dsp_text">${acct_type} - ${acct_key}</span></td>
+    <td nowrap>&nbsp;中文姓名：</td>
+    <td nowrap><span class="dsp_text">${ex_cname}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;卡號：</td>
+    <td nowrap colspan="3"><span class="dsp_text">${card_no}</span></td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;交易參考號：</td><td nowrap><span class="dsp_text">${reference_no}</span></td>
+    <td nowrap>&nbsp;科目代碼：</td><td nowrap colspan="3"><span class="dsp_text">${acct_code} ${tt_acct_code}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;入帳日期：</td><td nowrap><span class="dsp_text">${post_date.YMD}</span></td>
+    <td nowrap>&nbsp;消費日期：</td><td nowrap><span class="dsp_text">${purchase_date.YMD}</span></td>
+    <td nowrap>&nbsp;今日是否已調整過：</td><td nowrap><span class="dsp_text">${ex_dcount}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;目前餘額：</td><td nowrap><span class="dsp_text">${ex_bef_amt.(999)}</span></td>
+    <td nowrap>&nbsp;目前可 D 數：</td><td nowrap colspan="3"><span class="dsp_text">${ex_bef_d_amt.(999)}</span></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;最新金額：</td><td nowrap><span class="dsp_text" id="ex1">${ex_aft_amt.(999)}</span></td>
+    <td nowrap>&nbsp;最新可 D 數：</td><td nowrap colspan="3"><span class="dsp_text" id="ex2">${ex_aft_d_amt.(999)}</span></td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap><span style="color:red;">&nbsp;D 檔金額：</span></td><td nowrap>
+      <input type="text" class="col_number" name="dr_amt" value="${dr_amt}" zEdit="number" maxlength="10" size="12" zRequire="Y" onchange="dramt(this);"/></td>
+    <td nowrap>&nbsp;調整備註：</td><td nowrap>
+      <input type="text" class="col_any" name="adj_comment" value="${adj_comment}" zEdit="any,canTW" maxlength=20 size=24 /></td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;銷帳鍵值：</td><td nowrap>
+      <input type="text" class="col_text" name="c_debt_key" value="${c_debt_key}" maxlength=20 size=24 /></td>
+    <td nowrap>&nbsp;借方科目：</td>
+    <td nowrap>
+      <select size="1" name="debit_item" class="col_ddlb" ${pho_disable}>
+        <option value="27247000" ${debit_item-27247000}>暫收款--其他 2724-7000</option>
+        <option value="14817000" ${debit_item-14817000}>應收款--其他 1481-7000</option>
+        <option value="55030700" ${debit_item-55030700}>雜項支出--5503-0700</option>
+        <option value="24817000" ${debit_item-24817000}>應付款--其他 2481-7000</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;</td>
+    <td nowrap>&nbsp;</td>
+    <td nowrap><span style="color:red; background-color: lightgray;">(非本金類勿須點選,假若點選亦不生效)</span></td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap style="color:yellow; background-color: black;">D檔本金科目(不含DB及CB))時<br>
+1.D檔金額>目前餘額，目前餘額將於Ｄ檔放行後之次營業~日啟帳，產生『1481-7000 應收款-其他』傳票；<br> 
+2.D檔金額扣除目前餘額=回存金額，將於回存成功後之次營業~日啟帳，產生『1481-7000 應收款-其他』傳票。</td>
+  </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="dbam0030">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="db_table" value="${db_table}">
+        <input type="hidden" name="rowid" value="${rowid}">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" name="acct_type" value="${acct_type}">
+        <input type="hidden" name="acct_key" value="${acct_key}">
+        <input type="hidden" name="ex_cname" value="${ex_cname}">
+        <input type="hidden" name="card_no" value="${card_no}">
+        <input type="hidden" name="reference_no" value="${reference_no}">
+        <input type="hidden" name="acct_code" value="${acct_code}">
+        <input type="hidden" name="tt_acct_code" value="${tt_acct_code}">
+        <input type="hidden" name="post_date" value="${post_date}">
+        <input type="hidden" name="item_post_date" value="${item_post_date}">
+        <input type="hidden" name="purchase_date" value="${purchase_date}">
+        <input type="hidden" name="orginal_amt" value="${orginal_amt}">
+        <input type="hidden" name="cr_amt" value="${cr_amt}">
+        <input type="hidden" name="bef_amt" value="${bef_amt}">
+        <input type="hidden" name="aft_amt" value="${aft_amt}">
+        <input type="hidden" name="bef_d_amt" value="${bef_d_amt}">
+        <input type="hidden" name="aft_d_amt" value="${aft_d_amt}">
+        <input type="hidden" name="acct_no" value="${acct_no}">
+        <input type="hidden" name="func_code" value="${func_code}">
+        <input type="hidden" name="ex_dcount" value="${ex_dcount}">
+        <input type="hidden" name="txn_code" value="${txn_code}">
+        <input type="hidden" name="apr_flag" value="${apr_flag}">
+        <input type="hidden" name="bill_type" value="${bill_type}">
+        
+        <input type="hidden" name="ex_bef_amt" value="${ex_bef_amt}">
+        <input type="hidden" name="ex_aft_amt" value="${ex_aft_amt}">
+        <input type="hidden" name="ex_bef_d_amt" value="${ex_bef_d_amt}">
+        <input type="hidden" name="ex_aft_d_amt" value="${ex_aft_d_amt}">
+        <input type="hidden" name="pho_update_disable" value="${pho_update_disable}">
+        <input type="hidden" name="pho_delete_disable" value="${pho_delete_disable}">
+        <input type="hidden" name="pho_disable" value="${pho_disable}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.dr_amt.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+function dramt(obj) {
+	var dramt = Number(obj.value);
+	var befamt = Number(document.getElementsByName('bef_amt')[0].value);
+	var befdamt = Number(document.getElementsByName('bef_d_amt')[0].value);
+
+	if (dramt > befdamt) {
+		alert("D檔金額不可大於目前可 D 數!");
+		return;
+	} else {
+		document.getElementsByName('aft_amt')[0].value = befamt - dramt;
+		document.getElementsByName('aft_d_amt')[0].value = befdamt - dramt;
+		document.getElementsByName('ex_aft_amt')[0].value = befamt - dramt;
+		document.getElementsByName('ex_aft_d_amt')[0].value = befdamt - dramt;
+		$("#ex1").text(befamt - dramt);
+		$("#ex2").text(befdamt - dramt);
+	}
+
+}
+
+</script>

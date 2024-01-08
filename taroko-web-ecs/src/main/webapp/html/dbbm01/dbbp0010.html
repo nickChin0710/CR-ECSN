@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>線上加檔放行作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;登錄批號:
+   		<input type="text" class="col_text" name="ex_key_no" value="${ex_key_no}" maxlength="4" size="6" zEdit="alphanum,upper" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;登錄人員:
+   		<input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw" >
+   </td>  
+   <td nowrap >&nbsp;正卡身分證字號:
+   		<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 		<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	覆核
+	  </th>
+	  <th >帳戶類別&nbsp;</th>
+	  <th >正卡身分證號&nbsp;</th>
+	  <th >中文姓名&nbsp;</th>
+	  <th >加檔項目&nbsp;</th>
+	  <th >加檔卡號&nbsp;</th>
+	  <th >金額&nbsp;</th>
+	  <th >消費日期&nbsp;</th>
+	  <th >對帳單文字&nbsp;</th>
+	  <th >登錄人員&nbsp;</th>
+	  <th >覆核人員&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>  	
+    <td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} />
+		 	 ${SER_NUM}&nbsp;
+		 	<input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+			<input type="hidden" name="ser_num" value="${ser_num}" />
+			<input type="hidden" name="rowid" value="${rowid}" />
+		</td>
+		<td nowrap class="list_cc" >${acct_type}&nbsp;
+			<input type="hidden" name="acct_type" value="${acct_type}">
+		</td>
+		<td nowrap class="list_cc" >${id_no}&nbsp;
+			<input type="hidden" name="id_no" value="${id_no}">
+		</td>
+		<td nowrap class="list_cc" >${chi_name}&nbsp;
+			<input type="hidden" name="chi_name" value="${chi_name}">
+		</td>
+		<td nowrap class="list_cc" >${add_item}&nbsp;
+			<input type="hidden" name="add_item" value="${add_item}">
+		</td>
+		<td nowrap class="list_cc" >${card_no}&nbsp;
+			<input type="hidden" name="card_no" value="${card_no}">
+		</td>
+		<td nowrap class="list_rr" >&nbsp;${dest_amt.(999)}
+			<input type="hidden" name="dest_amt" value="${dest_amt}">
+		</td>
+		<td nowrap class="list_cc" >${purchase_date.YMD}&nbsp;
+			<input type="hidden" name="purchase_date" value="${purchase_date}">
+		</td>
+		<td nowrap class="list_ll" >${bill_desc}&nbsp;
+			<input type="hidden" name="bill_desc" value="${bill_desc}">
+		</td>
+		<td nowrap class="list_cc" >${mod_user}&nbsp;
+			<input type="hidden" name="mod_user" value="${mod_user}">
+		</td>
+		<td nowrap class="list_cc" >${apr_user}&nbsp;
+			<input type="hidden" name="apr_user" value="${apr_user}">
+		</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    }
+    return true;
+  }
+  
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" && aElements[i].disabled == false) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ } 
+  
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.getElementsByName('opt');
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 if (agy.checked){ seq++; }
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			 if(agy[i].checked){
+				 seq++;
+			 }
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("未選取覆核資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+</script>

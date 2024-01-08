@@ -1,0 +1,661 @@
+<html> 
+
+<head>
+    <title>線上繳款單多筆維護作業-V.2020-0727-Andy-[Initial]
+    -V.2021-0112-Andy-[Update]
+    -V.2023-0628-Simon-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+    function wf_add_newrow()
+{
+var ind=document.getElementById( 'table1' ).rows.length -1;
+var rowNum=document.getElementById( 'table1' ).rows.length -1;
+var colNum=0;
+var fi=0;
+var index =document.getElementById( 'table1' ).rows.length -2;
+
+// 判斷是否已讀取資料
+var seno = $("input[name=serial_no]").eq(index).val(); 
+if(typeof(seno) == "undefined"){
+  alert("請先查詢資料!");
+  return false;
+}
+//
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind+" "; }
+    else
+        { serNo = ""+ind+" ";  }
+    fi++;
+  
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+
+    var con = document.createElement( 'span' );
+    con.textContent = serNo; 
+    myCell.appendChild( con );    
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    var ip2 = document.createElement( 'input' );
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild( ip2 );    
+
+///////////////////////////////////////
+    //err_msg  
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var err_msg = document.createElement( 'span' );
+    err_msg.setAttribute('class', 'dsp_text');
+    err_msg.textContent = '';
+    myCell.appendChild( err_msg );
+    
+    var herr_msg = document.createElement( 'input' );
+    herr_msg.type = 'hidden';
+    herr_msg.name = 'err_msg';
+    herr_msg.value = '';
+    myCell.appendChild( herr_msg );    
+    //batch_no======================================    
+    colNum++;
+    var sel_batch_no = document.getElementById("ex_batch_no").value;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var batch_no = document.createElement( 'span' );
+    batch_no.setAttribute('class', 'dsp_text');
+    batch_no.textContent = sel_batch_no;
+    myCell.appendChild( batch_no );
+    
+    var hbatch_no = document.createElement( 'input' );
+    hbatch_no.type = 'hidden';
+    hbatch_no.name = 'batch_no';
+    hbatch_no.value = sel_batch_no;
+    myCell.appendChild( hbatch_no );
+
+    //serial_no======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var sno = $("input[name=serial_no]").eq(index).val(); 
+    var get_serial_no = "";
+    var sno1 = parseInt(sno)+1;
+
+    if ( sno1 < 10 ) { get_serial_no = "0000"+sno1; };
+    if ( sno1 >= 10 && sno1 < 100 ) { get_serial_no = "000"+sno1; };
+    if ( sno1 >= 100 && sno1 < 1000 ) { get_serial_no = "00"+sno1; };
+    if ( sno1 >= 1000 && sno1 < 10000 ) { get_serial_no = "0"+sno1; };     
+
+    var serial_no = document.createElement( 'span' );
+    serial_no.setAttribute('class', 'dsp_text');
+    serial_no.textContent = get_serial_no;
+    myCell.appendChild( serial_no );
+    
+    var hserial_no = document.createElement( 'input' );
+    hserial_no.type = 'hidden';
+    hserial_no.name = 'serial_no';
+    hserial_no.value = get_serial_no;
+    myCell.appendChild( hserial_no );   
+
+    //pay_card_no======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_ll";
+    
+    var pay_card_no = document.createElement( 'input' );
+    pay_card_no.setAttribute('class', 'col_text');
+    pay_card_no.setAttribute('zEdit', 'number');
+    pay_card_no.type = 'text';
+    pay_card_no.name = 'pay_card_no';
+    pay_card_no.maxLength=16;
+    pay_card_no.size=18;
+    pay_card_no.value = '';
+    pay_card_no.setAttribute('onChange', 'itemchk('+serNo+',"pay_card_no",this.value)');
+    myCell.appendChild(pay_card_no); 
+
+    //payment_no======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_ll";
+    
+    var payment_no = document.createElement( 'input' );
+    payment_no.setAttribute('class', 'col_text');
+    payment_no.setAttribute('zEdit', 'alphanum,upper');
+    payment_no.type = 'text';
+    payment_no.name = 'payment_no';
+    payment_no.maxLength=16;
+    payment_no.size=18;
+    payment_no.value = '';
+    payment_no.setAttribute('onChange', 'itemchk('+serNo+',"payment_no",this.value)');
+    myCell.appendChild(payment_no); 
+
+    //acct_type======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_ll";
+    
+    var acct_type = document.createElement( 'input' );
+    acct_type.setAttribute('class', 'col_text');
+    acct_type.setAttribute('zEdit', 'number');
+    acct_type.type = 'text';
+    acct_type.name = 'acct_type';
+    acct_type.maxLength=2;
+    acct_type.size=3;
+    acct_type.value = '';
+    acct_type.setAttribute('onChange', 'itemchk1('+serNo+',"acct_type",this.value)');
+    myCell.appendChild(acct_type); 
+
+    //acct_key======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_ll";
+    
+    var acct_key = document.createElement( 'input' );
+    acct_key.setAttribute('class', 'col_text');
+    acct_key.setAttribute('zEdit', 'alphanum,upper');
+    acct_key.type = 'text';
+    acct_key.name = 'acct_key';
+    acct_key.maxLength=11;
+    acct_key.size=13;
+    acct_key.value = '';    
+    acct_key.setAttribute('onChange', 'itemchk1('+serNo+',"acct_key",this.value)');
+    myCell.appendChild(acct_key);
+
+    //pay_amt======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_ll";
+    
+    var pay_amt = document.createElement( 'input' );
+    pay_amt.setAttribute('class', 'col_number');
+    pay_amt.setAttribute('zEdit', 'number');
+    pay_amt.type = 'text';
+    pay_amt.name = 'pay_amt';
+    pay_amt.maxLength=17;
+    pay_amt.size=20;
+    pay_amt.value = '0';
+    pay_amt.setAttribute('onChange', 'itemchk2("pay_amt",this.value)');
+    myCell.appendChild(pay_amt);
+
+    //pay_date======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_ll";
+    
+    var pay_date = document.createElement( 'input' );
+    pay_date.setAttribute('class', 'col_date');
+    pay_date.setAttribute('zEdit', 'date,yyyymmdd');
+    pay_date.type = 'text';    
+    pay_date.name = 'pay_date';
+    // pay_date.setAttribute('tabindex', '88');
+    pay_date.tabindex = "88";
+    pay_date.maxLength=8;
+    pay_date.size=9;
+    pay_date.value = '';
+    pay_date.setAttribute('onChange', 'itemchk2("pay_date",this.value)');
+    myCell.appendChild(pay_date);
+
+    //cname==========================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var cname = document.createElement( 'span' );
+    cname.setAttribute('class', 'dsp_cname');
+    cname.textContent = "";
+    myCell.appendChild( cname );
+    
+    var hcname = document.createElement( 'input' );
+    hcname.type = 'hidden';
+    hcname.name = 'cname';
+    hcname.value = "";
+    myCell.appendChild( hcname );
+
+    //payment_type======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    myCell.setAttribute('nowrap', 'nowrap');
+    
+    var get_d_payment_type = $("input[name=d_payment_type]").eq(index).val(); 
+    var payment_type = document.createElement( 'span' );
+    payment_type.setAttribute('class', 'dsp_text');
+    payment_type.textContent = get_d_payment_type;
+    myCell.appendChild( payment_type );
+    
+    var hd_payment_type = document.createElement( 'input' );
+    hd_payment_type.type = 'hidden';
+    hd_payment_type.name = 'd_payment_type';
+    hd_payment_type.value = get_d_payment_type;
+    myCell.appendChild( hd_payment_type );
+
+    var get_payment_type = $("input[name=payment_type]").eq(index).val(); 
+    var hpayment_type = document.createElement( 'input' );
+    hpayment_type.type = 'hidden';
+    hpayment_type.name = 'payment_type';
+    hpayment_type.value = get_payment_type;
+    myCell.appendChild( hpayment_type );
+
+/***
+    //debit_item======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    myCell.setAttribute('nowrap', 'nowrap');
+
+    var get_debit_item = $("input[name=debit_item]").eq(index).val(); 
+    var debit_item = document.createElement( 'span' );
+    debit_item.setAttribute('class', 'dsp_text');
+    debit_item.textContent = get_debit_item;
+    myCell.appendChild( debit_item );
+    
+    var hdebit_item = document.createElement( 'input' );
+    hdebit_item.type = 'hidden';
+    hdebit_item.name = 'debit_item';
+    hdebit_item.value = get_debit_item;
+    myCell.appendChild( hdebit_item );
+
+    //debt_key======================================    
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    myCell.setAttribute('nowrap', 'nowrap');
+
+    var get_debt_key = $("input[name=debt_key]").eq(index).val();
+    // if(get_debt_key == undefined){
+    //     get_debt_key = '';
+    // } 
+    var debt_key = document.createElement( 'span' );
+    debt_key.setAttribute('class', 'dsp_text');
+    debt_key.textContent = get_debt_key;
+    myCell.appendChild( debt_key );
+    
+    var hdebt_key = document.createElement( 'input' );
+    hdebt_key.type = 'hidden';
+    hdebt_key.name = 'debt_key';
+    hdebt_key.value = get_debt_key;
+    myCell.appendChild( hdebt_key );
+***/
+    //crt_user==========================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    //crt_date==========================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";  
+
+    //crt_time==========================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+} 
+
+var index1=0;       //全域變數:存index用
+//卡號or繳款單號檢核傳值
+function itemchk(obj,chk_col,chk_val){
+  //top.methodName = "wfChkCol"; 沒用   
+    // alert("chk_col :"+chk_col);
+    // alert("chk_val :"+chk_val);
+    // var row = obj.parentNode.parentNode.rowIndex - 1; //index row
+    var row = Number(obj) - 1;
+    index1 = row;
+    if(chk_val === ''){
+        var empty = '';
+        $('.dsp_cname').eq(row).text(empty);  
+        $('input[name=cname]').eq(row).val(empty);
+        $('input[name=acct_type]').eq(row).val(empty);
+        $('input[name=acct_key]').eq(row).val(empty);  
+        return false;
+    }    
+    top.actionCode = "AJAX";
+    resetJSON();
+    
+    // alert("row_index :"+row);
+    chk_val = chk_val.toUpperCase();
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    addJSON("text_data3","");
+    // addJSON("row_index",row+"");
+    processAJAX();
+    return true;     
+}
+// 帳戶帳號檢核傳值
+function itemchk1(obj,chk_col,chk_val){
+  //top.methodName = "wfChkCol"; 沒用
+    // var row = obj.parentNode.parentNode.rowIndex - 1; //index row
+    var row = Number(obj) - 1;
+    index1 = row;
+    // var serno = $("input[name=ser_num]").eq(row).val();
+    if(chk_col == 'acct_type'){
+        var chk_key = $("input[name=acct_key]").eq(row).val();
+        //alert("chk_key"+chk_key);
+        if(chk_key === ''){
+            return false;
+        } else {
+           chk_type =  chk_val;
+           chk_val = chk_key; 
+        }
+    }
+    if(chk_col == 'acct_key'){
+        var chk_type = $("input[name=acct_type]").eq(row).val();
+        if(chk_type === ''){
+            alert("請輸入帳戶類別!")
+            return false;
+        }
+    }
+    chk_col = "acct_key";
+    // alert("chk_col :"+chk_col +" chk_val:"+chk_val +" chk_type:"+chk_type);
+    top.actionCode = "AJAX";
+    resetJSON();    
+    chk_val = chk_val.toUpperCase()
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    addJSON("text_data3",chk_type);
+    // addJSON("row_index",row+"");
+    // addJSON("serno",serno);
+    processAJAX();
+    return true;     
+}
+//繳款金額or繳款日期檢核
+function itemchk2(chk_col,chk_val){
+    //繳款金額檢核
+    if(chk_col == 'pay_amt'){
+        var ss = $.isNumeric(chk_val);
+        if(ss == false){
+            alert("請輸入數字!");
+            return false;
+        } 
+
+        if(parseInt(chk_val) <=0){
+            alert("金額需大於０!");
+            return false;
+        }
+    }
+    //日期格式檢核
+    if(chk_col == 'pay_date'){
+        var re = new RegExp("^([0-9]{4}){1}([0-9]{1,2}){1}([0-9]{1,2})$");
+        var strDataValue;
+        var infoValidation = true;
+        if ((strDataValue = re.exec(chk_val)) != null) {
+            var i;
+            i = parseFloat(strDataValue[1]);
+            if (i <= 0 || i > 9999) { /*年*/
+                infoValidation = false;
+            }
+            i = parseFloat(strDataValue[2]);
+            if (i <= 0 || i > 12) { /*月*/
+                infoValidation = false;
+            }
+            i = parseFloat(strDataValue[3]);
+            if (i <= 0 || i > 31) { /*日*/
+                infoValidation = false;
+            }
+        } else {
+            infoValidation = false;
+        }
+        if (!infoValidation) {
+            alert("請輸入 YYYYMMDD 日期格式");
+            return false;
+        }
+        //繳款日期 V.S. 系統日期
+        var mydate = new Date();
+        var mm = parseInt(mydate.getMonth())+1;
+        var mm1 ="";
+        if(mm < 10){
+            mm1 = "0"+mm;
+        } else {
+            mm1 = mm+"";
+        }        
+        var yyyy = mydate.getFullYear();
+        var dd = parseInt(mydate.getDate());
+        var dd1 = "";
+        if(dd < 10){
+            dd1 = "0"+dd;
+        } else{
+            dd1 = dd+"";
+        }
+        var mydate1 = yyyy+mm1+dd1;
+/***
+        if(Number(chk_val) > Number(mydate1)){
+            alert("繳款日期不可大於系統日:"+mydate1);
+            return false;
+        }
+***/
+    }
+    return true;     
+}
+
+function ajaxResponse(){
+    top.respHtml ="actm2020_append";
+    top.requHtml ="actm2020_append";
+
+    var data_msg = $("#data_msg").val();
+    var text_data1 = $("#text_data1").val();
+    var text_data2 = $("#text_data2").val();
+    var text_data3 = $("#text_data3").val();
+    // var row_index = $("#row_index").val();
+    var row_index = index1;         //直接取全域變數
+    //alert("r index :"+row_index);
+    var rcname = $("#rcname").val();
+    // alert("rcname :"+rcname);
+    if(text_data1 == 'acct_key' ){
+        $('.dsp_cname').eq(parseInt(row_index)).text(rcname);  
+        $('input[name=cname]').eq(parseInt(row_index)).val(rcname);
+    } else {
+        $('.dsp_cname').eq(parseInt(row_index)).text(rcname);  
+        $('input[name=cname]').eq(parseInt(row_index)).val(rcname);
+    }
+    
+    if(text_data1 != 'acct_key' ){
+        var racct_type = $("#racct_type").val();
+        var racct_key = $("#racct_key").val();
+        $('input[name=acct_type]').eq(parseInt(row_index)).val(racct_type);
+        $('input[name=acct_key]').eq(parseInt(row_index)).val(racct_key);
+    }   
+    var chk_flag = $("#chk_flag").val();
+    //alert("chk_flag :"+chk_flag);
+    if(chk_flag != 'OK'){
+       alert(data_msg); 
+    }
+
+    return true;
+
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2">&nbsp;
+                        <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層">&nbsp;&nbsp;
+                        <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q1')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S3')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;主管未放行之舊批次號碼:
+                        <span class="dsp_text" style="color: blue">${ex_batch_no}</span>
+                        <input type="hidden" name="ex_batch_no" id="ex_batch_no" value="${ex_batch_no}">
+                        <!-- <select size="1" id="ex_batch_no" name="ex_batch_no" class="col_ddlb" disabled="disabled">${dddw_batch_no}</select> -->
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <span class="dsp_text" style="color: red">註:舊批次號碼資料查詢僅顯示最後一序號資料</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <table border="0" width="5%">
+            <tr>
+                <td align="right">
+                    <input type="Button" name="detl_btnAdd" value="新增序號" ${btnSelect_disable} {btn_set} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+                </td>
+            </tr>
+        </table>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <!-- <th nowrap class="list_th" width="5%">No&nbsp;</th> -->
+                <th nowrap class="list_th" width="5%">刪除 </th>
+                <th nowrap class="list_th">檢核訊息</th>
+                <th nowrap class="list_th">批次號碼</th>
+                <th nowrap class="list_th">序號</th>
+                <th nowrap class="list_th">繳款卡號</th>
+                <th nowrap class="list_th">繳款編號</th>
+                <th nowrap colspan="2" class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">繳款金額</th>
+                <th nowrap class="list_th">繳款日期</th>
+                <th nowrap class="list_th">中文姓名</th>
+           <!-- <th nowrap class="list_th">繳款類別</th> -->
+           <!-- <th nowrap class="list_th">借方科目</th> -->
+                <th nowrap class="list_th">銷帳鍵值</th>
+                <th nowrap class="list_th">更改人員</th>
+                <th nowrap class="list_th">更改日期</th>
+                <th nowrap class="list_th">更改時間</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <!-- <td nowrap class="list_no">${SER_NUM}&nbsp;<input type="hidden" name="ser_num" value="${ser_num}"></td> -->
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span>
+                    <span class="dsp_num">${SER_NUM}</span>
+                    <input type="checkbox" name="opt" value="${ser_num}" ${set_opt}>
+                    <input type="hidden" name="ser_num" value="${ser_num}">
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                </td>
+                <td nowrap class="list_ll" style="color: red">${err_msg}<input type="hidden" name="err_msg" value="${err_msg}"></td>
+                <td nowrap class="list_ll">${batch_no}<input type="hidden" name="batch_no" value="${batch_no}"></td>
+                <td nowrap class="list_ll">${serial_no}<input type="hidden" name="serial_no" value="${serial_no}"></td>
+                <td nowrap class="list_ll">${pay_card_no}<input type="hidden" name="pay_card_no" value="${pay_card_no}"></td>
+                <td nowrap class="list_ll">${payment_no}<input type="hidden" name="payment_no" value="${payment_no}"></td>
+                <td nowrap class="list_ll">${acct_type}<input type="hidden" name="acct_type" value="${acct_type}"></td>
+                <td nowrap class="list_ll">${acct_key}<input type="hidden" name="acct_key" value="${acct_key}"></td>
+                <td nowrap class="list_rr">${pay_amt}<input type="hidden" name="pay_amt" value="${pay_amt}"></td>
+                <td nowrap class="list_ll" tabindex="88">${pay_date}<input type="hidden" name="pay_date" value="${pay_date}"></td>
+                <td nowrap class="list_ll dsp_cname">${cname}<input type="hidden" name="cname" value="${cname}"></td>
+                <!--配合動態新增要設2個class  -->
+                <td nowrap class="list_ll">${d_payment_type}
+                    <input type="hidden" name="d_payment_type" value="${d_payment_type}">
+                    <input type="hidden" name="payment_type" value="${payment_type}">
+                </td>
+<!--
+                <td nowrap class="list_ll">${debit_item}<input type="hidden" name="debit_item" value="${debit_item}"></td>
+                <td nowrap class="list_ll">${debt_key}<input type="hidden" name="debt_key" value="${debt_key}"></td>
+-->
+                <td nowrap class="list_ll">${mod_user}<input type="hidden" name="mod_user" value="${mod_user}"></td>
+                <td nowrap class="list_ll">${mod_date.YMD}<input type="hidden" name="mod_date" value="${mod_date}"></td>
+                <td nowrap class="list_ll">${mod_time.TIME}<input type="hidden" name="mod_time" value="${mod_time}"></td>
+                <input type="hidden" name="p_seqno" value="${p_seqno}">
+                <input type="hidden" name="p_status" value="${p_status}">
+                <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+                <input type="hidden" name="rowid" value="${rowid}">
+            </tr>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="h_std_vouch_desc" value="${std_vouch_desc}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="ls_business_date" value="${ls_business_date}">
+        <input type="hidden" name="mod_pgm" value="actm2020">
+        <input type="hidden" name="data2" id="data2" value="${data2}">
+        <input type="hidden" name="data_msg" value="${data_msg}" id="data_msg" />
+        <input type="hidden" name="chk_flag" value="${chk_flag}" id="chk_flag" />
+        <input type="hidden" name="row_index" value="${row_index}" id="row_index" />
+        <input type="hidden" name="rcname" value="${rcname}" id="rcname" />
+        <input type="hidden" name="racct_type" value="${racct_type}" id="racct_type" />
+        <input type="hidden" name="racct_key" value="${racct_key}" id="racct_key" />
+        <input type="hidden" name="text_data1" value="${text_data1}" id="text_data1" />
+        <input type="hidden" name="text_data2" value="${text_data2}" id="text_data2" />
+        <input type="hidden" name="text_data3" value="${text_data3}" id="text_data3" />
+        <input type="hidden" name="ready_w" value="${ready_w}" id="ready_w" />
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('1');
+top.pageRows = "99999";
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "Q1") {
+        var tt = "";
+        $("#ready_w").val(tt); //還原ready旗標
+    }
+    return true;
+}
+//取得ready旗標以控制觸發wf_add_newrow()
+var ready1 = $('input[name=ready_w]').val();
+if (ready1 == '') {
+    $(function() {
+        var tt = "load_ok";
+        $("#ready_w").val(tt); //設定ready旗標       
+        wf_add_newrow();
+    });
+}
+//鍵盤事件Tab檢核繳款日期是否為空白
+var $test = $('#table1');
+$test.on('keydown', function(event) {
+    if (event.keyCode === 9) {
+        var focused = document.activeElement;
+        if (focused.tabindex == "88") {
+            var ss = focused.value;
+            if (ss == '') {
+                alert("繳款日期不可空白");
+            }
+        }
+    }
+    //Enter鍵觸發事件(暫時保留)    
+    // if (event.keyCode === 13) {
+    //     var focused = document.activeElement;
+    //     if (focused.tabindex == "88") {
+    //         var ss = focused.value;
+    //         if (ss == '') {
+    //             alert("繳款日期不可空白");
+    //         }
+    //     }
+    //     wf_add_newrow();
+    // }
+});
+</script>

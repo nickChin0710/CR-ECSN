@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>期中覆審ACTION參數主管覆核</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=loan_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=loan_flag]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap>&nbsp;ACTION 版本號碼:
+         <span class="dsp_text">${batch_no}&nbsp;</sapn>
+         <input type="hidden" name="batch_no" value="${batch_no}">
+      </td>　
+      <td nowrap>&nbsp;覆核:
+         <span class="dsp_text">${apr_flag}&nbsp;</span>
+         <input type="hidden" name="apr_flag" value="${apr_flag}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap colspan="2">&nbsp;風險族群:
+         <span class="dsp_text">${risk_group}</span>
+         <input type="hidden" name="risk_group" value="${risk_group}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;Action Code:
+         <span class="dsp_text">${action_code}.${#JAVA:ecsfunc.DeCodeRsk.trialAction(action_code)}</span>
+         <input type="hidden" name="action_code" value="${action_code}">
+      </td>
+      <td nowrap>&nbsp;Action延遲執行天數:
+         <span class="dsp_text">${delay_action_day}</span>
+         <input type="hidden" name="delay_action_day" value="${delay_action_day}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap >&nbsp;
+         <input type="checkbox" name="delay_msg_flag" value="Y" ${delay_msg_flag-Y} disabled />發送延遲簡訊
+      </td>
+      <td nowrap>&nbsp;
+         <input type="checkbox" name="msg_flag" value="Y" ${msg_flag-Y} disabled />發送簡訊
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;調降額度比例[%]:
+         <span class="dsp_text">${adj_limit_rate.(999)}</span>
+         <input type="hidden" name="adj_limit_rate" value="${adj_limit_rate}">
+      </td>
+      <td nowrap>&nbsp;額度調整原因碼:
+         <span class="dsp_text">${adj_limit_reason}.${tt_limit_reason}</span>
+         <input type="hidden" name="adj_limit_reason" value="${adj_limit_reason}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;凍結碼[4]:
+         <span class="dsp_text">${block_reason4}</span>
+         <input type="hidden" name="block_reason4" value="${block_reason4}">
+      </td>
+      <td nowrap>&nbsp;凍結碼[5]:
+         <span class="dsp_text">${block_reason5}</span>
+         <input type="hidden" name="block_reason5" value="${block_reason5}">
+      </td>
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;戶特指:
+         <span class="dsp_text">${spec_status}</span>
+         <input type="hidden" name="spec_status" value="${spec_status}">
+      </td>
+      <td nowrap>&nbsp;LOAN 覆審決策:
+         <span class="col_radio">
+            <input type="radio" value="0" name="loan_flag" ${loan_flag-0} disabled />0.正常
+            <input type="radio" value="1" name="loan_flag" ${loan_flag-1} disabled />1.加強催理
+         </span>
+      </td>   
+ </tr>
+ <tr>
+      <td nowrap>&nbsp;覆核主管:
+         <span class="dsp_text">${apr_user}</span>
+         <input type="hidden" name="apr_user" value="${apr_user}">
+      </td>
+      <td nowrap>&nbsp;覆核日期:
+         <span class="dsp_text">${apr_date.YMD}</span>
+         <input type="hidden" name="apr_date" value="${apr_date}">
+      </td>
+ </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="rskm1040">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

@@ -1,0 +1,643 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-12  V1.00.01  Allen Ho      Initial                               -->
+<!-- 109-01-06  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!-- 112/04/21  V1.00.03  Ryan          增加名單匯入功能 ,增加LIST_COND,LIST_FLAG,LIST_USE_SEL欄位維護                 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>首刷禮活動回饋參數</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"    value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="70%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">活動代碼：
+       <span class="dsp_text">${active_code}</span>
+       <input  type="hidden" name="active_code" value="${active_code}" />
+     活動序號：
+       <span class="dsp_text">${active_seq}</span>
+       <input  type="hidden" name="active_seq" value="${active_seq}" />
+     </td>
+     <td  nowrap  >放行狀態: 
+       <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+       <input       type="hidden" name="aud_type" value="${aud_type}" />
+       <input  type="hidden" name="commfunc_aud_type" value="${commfunc_aud_type}" />
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="-" cellpadding="4">
+   <tr>
+   </tr>
+ </table>
+ <table  width="70%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　消費金額及回饋設定　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr>
+   <tr>
+     <td nowrap>贈品階層序號:&nbsp;
+       <select name="level_seq" class="col_ddlb"  >
+       <option value="01" ${level_seq-01} >01</option>
+       <option value="02" ${level_seq-02} >02</option>
+       <option value="03" ${level_seq-03} >03</option>
+       <option value="04" ${level_seq-04} >04</option>
+       <option value="05" ${level_seq-05} >05</option>
+       <option value="06" ${level_seq-06} >06</option>
+       <option value="07" ${level_seq-07} >07</option>
+       <option value="08" ${level_seq-08} >08</option>
+       </select>
+              (依贈品階層序號擇優回饋(序號小→最優))
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="record_cond" ${record_cond-Y} >
+              登錄群組:
+          
+       <select name="record_group_no" class="col_ddlb" />
+               ${dddw_record_gp}
+       </select>
+              (卡友多次登錄則取最後登錄代號)
+     </td>
+   </tr>
+    <tr>
+     <td nowrap>活動序號停用旗標：&nbsp;
+      <input type="checkbox" value="Y" name="stop_flag" ${stop_flag-Y} >&nbsp;
+         停用日期：　 
+       <input type="text" class="col_date" name="stop_date" value="${stop_date}"
+              zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'stop_date'});
+      </script>
+         停用說明： 
+       <input type="text" class="col_any" name="stop_desc" value="${stop_desc}"
+              zEdit="any,canTW" maxlength="30" size="30" />
+     </td>
+   </tr>  
+    <tr>
+     <td nowrap >消費期間:&nbsp;
+       <input type="radio" value="1" name="pur_date_sel" ${pur_date_sel-1} checked  />1.依原消費期間
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　 　　　&nbsp;
+       <input type="radio" value="2" name="pur_date_sel" ${pur_date_sel-2} />2.消費日期期間
+         發卡日次日起
+       <input type="text" class="col_number" name="purchase_days" value="${purchase_days}"
+              zEdit="number" maxlength="4" size="4" />
+              日內
+     </td>
+   </tr>  
+   
+   <tr>
+     <td nowrap >回饋型態：&nbsp;
+       <input type="radio" value="1" name="active_type" ${active_type-1} checked  />1.紅利點數
+         紅利類別： 
+       <select name="bonus_type" class="col_ddlb" />
+               ${dddw_bonus_type}
+       </select>
+         　是否應稅： 
+       <input type="radio" value="Y" name="tax_flag" ${tax_flag-Y} />應稅
+       <input type="radio" value="N" name="tax_flag" ${tax_flag-N} checked  />免稅
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　　　　&nbsp;
+       <input type="radio" value="2" name="active_type" ${active_type-2} />2.現金回饋代碼：
+          
+       <select name="fund_code" class="col_ddlb" />
+               ${dddw_func_code}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　　　　&nbsp;
+       <input type="radio" value="3" name="active_type" ${active_type-3} />3.豐富點數
+         群組代號： 
+       <select name="group_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="1" ${group_type-1} >1.限信用卡兌換(限01、05、06)</option>
+       <option value="4" ${group_type-4} >4.限特定卡號兌換</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　　　活動代碼選擇：&nbsp;
+       <select name="prog_code1" class="col_ddlb" onChange="columnItemChange('2')" />
+               ${dddw_prog_code}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >　　　　　　　　　　　　　活動代碼： 
+       <input      size="8" class="dsp_text" type="text" name="prog_code" value="${prog_code}" readonly/>
+         　　兌換期間： 
+       <input      size="8" class="dsp_text" type="text" name="prog_s_date" value="${prog_s_date}" readonly/>
+         ~ 
+       <input      size="8" class="dsp_text" type="text" name="prog_e_date" value="${prog_e_date}" readonly/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　　　　　　　　　　　　贈品代碼：&nbsp;
+       <select name="gift_no" class="col_ddlb" id="ajaxh_gift_no"  />
+               ${dddw_gift_no}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　　　　&nbsp;
+       <input type="radio" value="4" name="active_type" ${active_type-4} />4.贈品
+         商品代號： 
+       <select name="spec_gift_no" class="col_ddlb" />
+               ${dddw_spec_gift_no}
+       </select>
+     </td>
+   </tr>
+  </table>
+   <table  width="80%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　　符合活動消費條件　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr> 
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="list_cond" ${list_cond-Y} >&nbsp;
+       <input       type="hidden" name="wk_list_cond" value="${wk_list_cond}" />
+         名單類別: 
+       <select name="list_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+       <option value="1" ${list_flag-1} >1.身分證號</option>
+       <option value="2" ${list_flag-2} >2.卡號</option>
+       <option value="3" ${list_flag-3} >3.一卡通卡號</option>
+       <option value="4" ${list_flag-4} >4.悠遊卡號</option>
+       <option value="5" ${list_flag-5} >5.愛金卡號</option>
+       </select>
+       <input       type="hidden" name="wk_list_flag" value="${wk_list_flag}" />
+         名單選項: 
+       <input type="radio" value="1" name="list_use_sel" ${list_use_sel-1} />指定
+       <input type="radio" value="2" name="list_use_sel" ${list_use_sel-2} />排除
+       <input       type="hidden" name="wk_list_use_sel" value="${wk_list_use_sel}" />
+      <img src="images/uperLoad.gif" onclick="return upload_click('1','list')" style="cursor:hand"
+           type="Button" id="upllist" ${upllist_disable}  />
+          
+       <span class="dsp_text">${list_flag_cnt}</span>
+       <input       type="hidden" name="list_flag_cnt" value="${list_flag_cnt}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　＊ 匯檔錯誤請至ecsq0040查詢錯誤說明，要完全成功才匯入檔&nbsp; 
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　　＊ 通路活動匯入名單請至mktq6280查詢&nbsp; 
+     </td>
+   </tr>
+    <tr>
+     <td nowrap >特店代號:&nbsp;
+       <input type="radio" value="0" name="merchant_sel" ${merchant_sel-0} checked  onChange="columnOnChange('7')" />全部
+       <input type="radio" value="1" name="merchant_sel" ${merchant_sel-1} onChange="columnOnChange('7')" />指定
+       <input type="radio" value="2" name="merchant_sel" ${merchant_sel-2} onChange="columnOnChange('7')" />排除
+        <input type="Button" class="btOther" name="btnmrcd" id="btnmrcd"  value="特店代號" ${btnmrcd_disable}
+               onClick="return buttonScreen('3','mrcd','data_type','7')" >
+      <img src="images/uperLoad.gif" onclick="return upload_click('1','aaa1')" style="cursor:hand"
+           type="Button" id="uplaaa1" ${uplaaa1_disable}  />
+          
+       <span class="dsp_text">${merchant_sel_cnt}</span>
+       <input       type="hidden" name="merchant_sel_cnt" value="${merchant_sel_cnt}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >特店群組:&nbsp;
+       <input type="radio" value="0" name="mcht_group_sel" ${mcht_group_sel-0} checked  onChange="columnOnChange('8')" />全部
+       <input type="radio" value="1" name="mcht_group_sel" ${mcht_group_sel-1} onChange="columnOnChange('8')" />指定
+       <input type="radio" value="2" name="mcht_group_sel" ${mcht_group_sel-2} onChange="columnOnChange('8')" />排除
+        <input type="Button" class="btOther" name="btnaaa1" id="btnaaa1"  value="特店群組" ${btnaaa1_disable}
+               onClick="return buttonScreen('2','aaa1','data_type','8')" >
+          
+       <span class="dsp_text">${mcht_group_sel_cnt}</span>
+       <input       type="hidden" name="mcht_group_sel_cnt" value="${mcht_group_sel_cnt}" />
+     </td>
+   </tr> 
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="per_amt_cond" ${per_amt_cond-Y} >
+              單筆最低消費金額:
+          
+       <input type="text" class="col_number" name="per_amt" value="${per_amt}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              元
+         　 
+      <input type="checkbox" value="Y" name="perday_cnt_cond" ${perday_cnt_cond-Y} >
+              每日消費筆數限量:
+          
+       <input type="text" class="col_number" name="perday_cnt" value="${perday_cnt}"
+              zEdit="dignumber" maxlength="6" size="6" />
+              筆(取消費金額最高)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="sum_amt_cond" ${sum_amt_cond-Y} >
+              累積最低消費金額:
+          
+       <input type="text" class="col_number" name="sum_amt" value="${sum_amt}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              元
+         　 
+      <input type="checkbox" value="Y" name="sum_cnt_cond" ${sum_cnt_cond-Y} >
+              累積最低消費筆數:
+          
+       <input type="text" class="col_number" name="sum_cnt" value="${sum_cnt}"
+              zEdit="dignumber" maxlength="6" size="6" />
+              筆
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >門檻計算方式:&nbsp;
+       <input type="radio" value="1" name="threshold_sel" ${threshold_sel-1} checked  />級距式
+              (符合最高門檻及以下各門檻累加)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　　 　　　&nbsp;
+       <input type="radio" value="2" name="threshold_sel" ${threshold_sel-2} />條件式
+              (只計符合對應之門檻資料)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >門檻項目:&nbsp;
+       <input type="radio" value="1" name="purchase_type_sel" ${purchase_type_sel-1} checked  />1.累積金額
+       <input type="radio" value="2" name="purchase_type_sel" ${purchase_type_sel-2} />2.累積筆數
+       <input type="radio" value="3" name="purchase_type_sel" ${purchase_type_sel-3} />3.日累積金額
+       <input type="radio" value="4" name="purchase_type_sel" ${purchase_type_sel-4} />4.日累積筆數
+       <input type="radio" value="5" name="purchase_type_sel" ${purchase_type_sel-5} />5.單筆消費金額
+     </td>
+   </tr>
+   <tr>
+   </tr>
+   </table>
+ <table  width="70%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap style="TEXT-ALIGN: left" >　　　　　　　累積金額/筆數　　　　　　　　給點數/現金回饋/贈品&nbsp;</th>
+  </tr>
+   <tr>
+     <td nowrap>門檻一：&nbsp; 
+       <input type="text" class="col_number" name="purchase_amt_s1" value="${purchase_amt_s1}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              ~
+          
+       <input type="text" class="col_number" name="purchase_amt_e1" value="${purchase_amt_e1}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('amt1')"/>
+              元/筆
+          
+       <input type="text" class="col_number" name="feedback_amt_1" value="${feedback_amt_1}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              點/元/件
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>門檻二：&nbsp; 
+       <input type="text" class="col_number" name="purchase_amt_s2" value="${purchase_amt_s2}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              ~
+          
+       <input type="text" class="col_number" name="purchase_amt_e2" value="${purchase_amt_e2}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('amt2')"/>
+              元/筆
+          
+       <input type="text" class="col_number" name="feedback_amt_2" value="${feedback_amt_2}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              點/元/件
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>門檻三：&nbsp; 
+       <input type="text" class="col_number" name="purchase_amt_s3" value="${purchase_amt_s3}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              ~
+          
+       <input type="text" class="col_number" name="purchase_amt_e3" value="${purchase_amt_e3}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('amt3')"/>
+              元/筆
+          
+       <input type="text" class="col_number" name="feedback_amt_3" value="${feedback_amt_3}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              點/元/件
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>門檻四：&nbsp; 
+       <input type="text" class="col_number" name="purchase_amt_s4" value="${purchase_amt_s4}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              ~
+          
+       <input type="text" class="col_number" name="purchase_amt_e4" value="${purchase_amt_e4}"
+              zEdit="dignumber" maxlength="9" size="9"  onChange="columnOnChange('amt4')"/>
+              元/筆
+          
+       <input type="text" class="col_number" name="feedback_amt_4" value="${feedback_amt_4}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              點/元/件
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>門檻五：&nbsp; 
+       <input type="text" class="col_number" name="purchase_amt_s5" value="${purchase_amt_s5}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              ~
+          
+       <input type="text" class="col_number" name="purchase_amt_e5" value="${purchase_amt_e5}"
+              zEdit="dignumber" maxlength="9" size="9" />
+              元/筆
+          
+       <input type="text" class="col_number" name="feedback_amt_5" value="${feedback_amt_5}"
+              zEdit="dignumber" maxlength="8" size="8" />
+              點/元/件
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>回饋總上限:&nbsp; 
+       <input type="text" class="col_number" name="feedback_limit" value="${feedback_limit}"
+              zEdit="number" maxlength="8" size="8" />
+              點/元/件(0 表示無上限)
+     </td>
+   </tr>
+ </table>
+ <table width="70%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護經辦： 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+     <td  nowrap  >維護日期： 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核人員： 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+     <td  nowrap  >覆核日期： 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm6250">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_prog_code1 =document.forms["dataForm"]["prog_code1"].value;
+   var  win_prog_code =document.forms["dataForm"]["prog_code"].value;
+   var  win_prog_s_date =document.forms["dataForm"]["prog_s_date"].value;
+
+   idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+/*   if ( idCode == '2' )
+      {*/
+   clearListObj(document.getElementById("ajaxh_gift_no"));
+       // top.methodName = "wf_ajax_func_2"; // 20200102 updated for archit.  change
+   resetJSON();
+   addJSON("ax_win_prog_code1",win_prog_code1);
+   addJSON("ax_win_prog_code",win_prog_code);
+   addJSON("ax_win_prog_s_date",win_prog_s_date);
+      // }
+
+   processAJAX();
+ }
+
+
+ function columnOnChange(ps1)
+  {
+   var  win_merchant_sel0 = document.forms["dataForm"]["merchant_sel"][0].checked;
+   var  win_mcht_group_sel0 = document.forms["dataForm"]["mcht_group_sel"][0].checked;    
+   var  win_aud_type = document.forms["dataForm"]["aud_type"].value;
+   var  win_purchase_amt_e1 = document.forms["dataForm"]["purchase_amt_e1"].value;
+   var  win_purchase_amt_e2 = document.forms["dataForm"]["purchase_amt_e2"].value;
+   var  win_purchase_amt_e3 = document.forms["dataForm"]["purchase_amt_e3"].value;
+   var  win_purchase_amt_e4 = document.forms["dataForm"]["purchase_amt_e4"].value;
+
+   idCode = ps1;
+   if ( idCode == '7' )
+      {
+       if (win_merchant_sel0 == true)
+           {
+            document.getElementById("btnmrcd").disabled = true;
+            document.getElementById("btnmrcd").style.backgroundColor = "lightgray";
+            document.getElementById("uplaaa1").disabled = true;
+           }
+        else
+           {
+            document.getElementById("btnmrcd").disabled = false;
+            document.getElementById("btnmrcd").style.backgroundColor = "green";
+            document.getElementById("uplaaa1").disabled = false;
+           }
+      }
+
+   if ( idCode == '8' )
+      {
+       if (win_mcht_group_sel0 == true)
+           {
+            document.getElementById("btnaaa1").disabled = true;
+            document.getElementById("btnaaa1").style.backgroundColor = "lightgray";
+           }
+        else
+           {
+            document.getElementById("btnaaa1").disabled = false;
+            document.getElementById("btnaaa1").style.backgroundColor = "green";
+           }
+      }   
+   if ( idCode == 'amt1' )
+      {
+       if (win_purchase_amt_e1 < 99999999) 
+          document.dataForm.purchase_amt_s2.value = +win_purchase_amt_e1 + 1;
+      }
+
+   if ( idCode == 'amt2' )
+      {
+       if (win_purchase_amt_e2 < 99999999) 
+          document.dataForm.purchase_amt_s3.value = +win_purchase_amt_e2 + 1;
+      }
+
+   if ( idCode == 'amt3' )
+      {
+       if (win_purchase_amt_e3 < 99999999) 
+          document.dataForm.purchase_amt_s4.value = +win_purchase_amt_e3 + 1;
+      }
+
+   if ( idCode == 'amt4' )
+      {
+       if (win_purchase_amt_e4 < 99999999) 
+          document.dataForm.purchase_amt_s5.value = +win_purchase_amt_e4 + 1;
+      }
+
+ }
+
+  $(document).ready(function()
+   {
+     var ls_merchant_sel = $("input[name=merchant_sel]:checked").val();
+    if (ls_merchant_sel != 0 )
+       {
+        document.getElementById("btnmrcd").disabled = false;
+        document.getElementById("btnmrcd").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnmrcd").disabled = true;
+        document.getElementById("btnmrcd").style.backgroundColor = "lightgray";
+       }
+
+    var ls_mcht_group_sel = $("input[name=mcht_group_sel]:checked").val();
+    if (ls_mcht_group_sel != 0 )
+       {
+        document.getElementById("btnaaa1").disabled = false;
+        document.getElementById("btnaaa1").style.backgroundColor = "green";
+       }
+    else
+       {
+        document.getElementById("btnaaa1").disabled = true;
+        document.getElementById("btnaaa1").style.backgroundColor = "lightgray";
+       }  
+   
+   });
+ function ajaxResponse()
+ {
+  top.respHtml ="mktm6250_detl";
+  var len = 0;
+
+  if (idCode == '2' )
+     {
+       document.dataForm.prog_code.value =getJSONvalue("prog_code",0);
+       document.dataForm.prog_s_date.value =getJSONvalue("prog_s_date",0);
+       document.dataForm.prog_e_date.value =getJSONvalue("prog_e_date",0);
+      var listObj = document.getElementById("ajaxh_gift_no");
+      len = getJSONlength("ajaxj_gift_no");
+      for ( var ii=0; ii<len; ii++)
+          listObj.options.add(new Option(getJSONvalue("ajaxj_gift_no",ii)
+                                        +" "+getJSONvalue("ajaxj_gift_name",ii)
+                                        ,getJSONvalue("ajaxj_gift_no",ii)));
+      return false;
+     }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+  
+   function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktm6250_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+   
+   function upload_click(parm1,parm2)
+   {
+  	   if ( parm2 === 'list' )
+  	      {
+  	       var  win_list_cond = document.forms["dataForm"]["list_cond"].checked;
+  	       var  win_list_flag     =document.forms["dataForm"]["list_flag"].value;
+  	       if ( win_list_flag === ' ' )
+  	          {
+  	           alert("指定名單類別必須選擇!");
+  	           return false;
+  	          }
+  	       if ( win_list_cond === false )
+  	          {
+  	           alert("指定名單類別必須打勾!");
+  	           return false;
+  	          }
+  	      }
+  	   
+    document.dataForm.zz_file_name.value = "";
+
+    document.dataForm.sys_upload_type.value = parm1;
+    document.dataForm.sys_upload_alias.value = parm2;
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "mktm02";
+    top.javaName    = "Mktm6250";
+    top.requHtml    = "mktm6250_detl";
+    top.respHtml    = "mktm6250_detl";
+    return true;
+   }
+   
+   function wf_uploadAfter()
+   {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0)  top.submitControl('UPLOAD2');
+   }
+</script>
+<!-- ******************************************************************** -->

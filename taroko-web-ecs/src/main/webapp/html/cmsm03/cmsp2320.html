@@ -1,0 +1,192 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-08-18  V1.00.00    yanghan       Initial                             -->
+<!-- 111-01-10  V1.00.01    Justin        增加欄位及改善使用者介面              -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>預借現金密碼解鎖重置次數覆核-111-01-10-V1.00.01-Justin-[增加欄位及改善使用者介面]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;異動日期：
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;異動人員：
+      <input type="text" class="col_text" name="exUser" value="${exUser}" 
+       zEdit="alphanum"  maxlength="10" size="10" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;覆核狀態：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exAprState" ${exAprState-0} />全部
+         <input type="radio" value="N" name="exAprState" ${exAprState-N} ${DEFAULT-exAprState}/>未覆核
+         <input type="radio" value="Y" name="exAprState" ${exAprState-Y} />已覆核
+      </span>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+      <span class="col_key"><input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >覆核</span></th>
+    <th nowrap class="list_th">覆核狀態</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">原密碼錯誤次數</th>
+    <th nowrap class="list_th">原密碼次數重置日期</th>
+    <th nowrap class="list_th">身份證號碼</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">修改日期</th>
+    <th nowrap class="list_th">修改時間</th>
+    <th nowrap class="list_th">修改者</th>
+    <th nowrap class="list_th">覆核日期</th>
+    <th nowrap class="list_th">覆核時間</th>
+    <th nowrap class="list_th">覆核者</th>   
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+     <td nowrap class="list_no">
+    	<span class="col_key">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}" ${isDisable} />
+     	 ${SER_NUM}&nbsp;
+    	<input type="hidden" name="ser_num" value="${ser_num}" />
+    	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+    	<input type="hidden" name="card_no" value="${card_no}"> 
+    	<input type="hidden" name="apr_flag" value="${apr_flag}"> 
+    	<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+    	<input type="hidden" name="mod_user" value="${mod_user}">
+     </td>
+     <td nowrap class="list_cc"> ${apr_flag}&nbsp;</td>
+     <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+     <td nowrap class="list_ll"> ${old_passwd_err_count}&nbsp;</td>
+     <td nowrap class="list_cc"> ${old_pw_err_count_resetdate}&nbsp;</td>
+     <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+     <td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+     <td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;</td>
+     <td nowrap class="list_cc"> ${mod_time.TIME}&nbsp;</td>
+     <td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+     <td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+     <td nowrap class="list_cc"> ${apr_time.TIME}&nbsp;</td>
+     <td nowrap class="list_cc"> ${apr_user}&nbsp;</td>
+  </tr>
+  <input type="hidden" name="old_passwd_err_count" value="${old_passwd_err_count}">
+  <input type="hidden" name="old_pw_err_count_resetdate" value="${old_pw_err_count_resetdate}"> 
+  <input type="hidden" name="id_no" value="${id_no}"> 
+  <input type="hidden" name="chi_name" value="${chi_name}">
+  <input type="hidden" name="mod_date" value="${mod_date}">
+  <input type="hidden" name="mod_time" value="${mod_time}">
+  <input type="hidden" name="mod_user" value="${mod_user}"> 
+  <input type="hidden" name="apr_date" value="${apr_date}"> 
+  <input type="hidden" name="apr_time" value="${apr_time}">
+  <input type="hidden" name="apr_user" value="${apr_user}">
+  <input type="hidden" name="isDisable" value="${isDisable}">
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="mod_pgm" value="cmsp2320">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ //top.pageRows="999";
+ document.dataForm.exDateS.focus();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) {
+    		return false; 
+    	} 
+    	if (confirm("是否執行 主管覆核作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			if ( aElements[i].name == "opt" ) {
+				if ( aElements[i].disabled == false ) {
+					aElements[i].checked = document.dataForm.ex_selectAll.checked;
+				}
+			}
+		}
+	}
+	return;
+ }
+ 
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.getElementsByName('opt');
+	 var ll = agy.length;
+	 for ( var i=0; i < ll; i++ ) {
+		 if(agy[i].checked){
+			 seq++;
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("請至少勾選一筆資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+</script>

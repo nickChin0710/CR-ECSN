@@ -1,0 +1,164 @@
+<html>
+
+<head>
+    <title>特店群組設定(按鈕1)-108-06-24-V1.00.01-AndyLiu-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript">
+    function wf_add_newrow() {
+    //debugger;
+    var ind = document.getElementById('table1').rows.length - 1;
+    var rowNum = document.getElementById('table1').rows.length - 1;     
+    var colNum = 0;
+    var fi = 0;
+    //console.log("a:"+ind);
+    var num = '${ser_num}';
+    if (num == '') {
+        ind = document.getElementById('table1').rows.length - 2;
+    }
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) { serNo = "0" + ind; } else { serNo = "" + ind; }
+    fi++;
+
+    var con = document.createElement('span');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var ip2 = document.createElement('input');
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild(ip2);
+
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'mod_seqno';
+    ip3.value = '';
+    myCell.appendChild(ip3);
+
+    //======================================
+    var sel_mcht_group = document.getElementById("kk_mcht_group").value;
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+
+    var mno = document.createElement('input');
+    mno.setAttribute('class', 'col_text');
+    mno.type = 'text';
+    mno.name = 'data_code';
+    mno.maxLength = 10;
+    mno.size = 10;
+    // mno.value = '';
+    mno.value = sel_mcht_group;
+    mno.setAttribute('zEdit', 'any');
+    myCell.appendChild(mno);
+
+
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R1')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" id="update"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('mcht_group_out')" class="btUpdate">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <hr>
+            <table border="0" width="5%">
+                <tr>
+                    <td nowrap class="colKey" >&nbsp;團體代號:
+                        <span class="dsp_text">${group_code}</span>
+                        <input type="hidden" name="group_code" value="${group_code}" />
+                    </td>
+                    <td nowrap class="col_key">已覆核：
+                    <span class="dsp_text">${apr_flag}</span>
+                    <input type=hidden name="apr_flag" value="${apr_flag}" />
+                </td>
+                </tr>
+                <tr>
+                    <td align="right">&nbsp;特店群組:
+                        <select size="1" id="kk_mcht_group" name="kk_mcht_group" class="col_ddlb">
+                            ${dddw_mcht_group}
+                        </select>
+                        <input type="Button" id="update2"  value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+                    </td>
+                </tr>
+                 <script>
+                    if("${apr_flag}"=="Y"){
+                    	document.getElementById("update").remove();
+                    	document.getElementById("update2").remove();
+                    }
+                    </script>
+            </table>
+            <table id="table1" width="30%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">特店群組</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no" bgcolor="#EFEFEF">
+                        <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                        <input type="checkbox" name="opt" value="${ser_num}">
+                        <input type="hidden" name="ser_num" value="${ser_num}">
+                        <input type="hidden" name="rowid" value="${rowid}" />
+                    </td>
+                    <td nowrap class="list_cc">
+                        <input type="text" class="col_text" name="data_code" value="${data_code}" zEdit="any" maxlength='20' size='20' />
+                    </td>
+                    <input type="hidden" name="h_data_code" value="${data_code}" />
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="MOD_PGM" value="mktm0210">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="nccc">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('2');
+top.pageRows = "9999";
+
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    return true;
+}
+</script>

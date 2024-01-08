@@ -1,0 +1,252 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06   V1.00.01  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>偽冒爭議款案件處理-交易記錄</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;Control No:
+      <input type="text" class="col_text" name="kk_ctrl_seqno" value="${kk_ctrl_seqno}" maxlength="15" size="17" onChange="ctrlseqnoChange('1')" >      
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;Case No:
+      <span class="dsp_text">${case_no}&nbsp;</span>
+      <input type="hidden" name="case_no" value="${case_no}">
+   </td>
+   <td nowrap >&nbsp;Control No:
+      <span class="dsp_text">${ctrl_seqno}&nbsp;</span>
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;Txn Date :
+      <input type="text" class="col_date" id="txn_date" name="txn_date" value="${txn_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'txn_date'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;
+	   <input type="checkbox" name="on_us_flag" value="Y" ${on_us_flag-Y}> On Us
+	</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;On Us Merchant:
+      <input type="text" class="col_any" name="on_us_mcht_name" value="${on_us_mcht_name}" maxlength="100" size="102" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;Year:
+      <input type="text" class="col_text" id="arn_year" name="arn_year" value="${arn_year}" maxlength="4" size="6" >
+   </td>
+   <td nowrap >&nbsp;Julian:
+      <input type="text" class="col_text" id="arn_ddd" name="arn_ddd" value="${arn_ddd}" maxlength="3" size="5" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;TXN Amt:
+      <input type="text" class="col_number" name="txn_amt" value="${txn_amt}" maxlength="9" size="11" zEdit="number" zRequire="Y" >
+   </td>
+   <td nowrap >&nbsp;Closed Date:
+      <input type="text" class="col_date" name="ecs_close_date" value="${ecs_close_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ecs_close_date'});
+	      </script>
+	</td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;Progress:
+      <input type="text" class="col_any" name="proc_status" value="${proc_status}" zEdit="can,Tw" maxlength="60" size="62" >
+   </td>
+   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;Closed Reason:
+      <input type="text" class="col_any" id="ecs_close_reason" name="ecs_close_reason" value="${ecs_close_reason}" zeditType="any,canTW" maxlength="60" size="60" /> 
+      <input type="Button" class="btOther" id="btn_adjcommt" value="..." onClick="wf_adj_comment()" />
+   </td>   
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<div id="dlg_adj_comment">
+    <table border="0">
+        <tr><td>&nbsp;備註:
+         <select size="1" id="ddlb_ecs_close_reason" name="ddlb_ecs_close_reason" class="col_ddlb" >
+          <option value="特店未請款">特店未請款</option>
+          <option value="特店自動退款">特店自動退款</option>
+          <option value="持卡人承認消費">持卡人承認消費</option>
+          <option value="持卡人取消爭議">持卡人取消爭議</option>
+          <option value="持卡人自付">持卡人自付</option>
+         </select>
+        </td><tr>
+    </table>
+</div>
+
+
+<!-- -->
+<input type="hidden" id="reference_no" name="reference_no" value="${reference_no}">
+<input type="hidden" id="reference_seq" name="reference_seq" value="${reference_seq}">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="rskm3260">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ function wf_adj_comment() {
+	 $("#dlg_adj_comment").dialog("open");
+ }
+ 
+ $(document).ready(function () {
+     $("#dlg_adj_comment").dialog({
+         title:'Closed Reason',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         //height: 200,
+         //width: 300,
+         buttons: {
+             "確定": function() {
+                 $("#ecs_close_reason").val($('#ddlb_ecs_close_reason').val()); 
+                 $(this).dialog("close");
+             },
+             "取消": function () {
+                 $(this).dialog("close");
+             }
+         }
+     });
+
+ });
+ 
+ function ctrlseqnoChange(ps1)
+ {
+	var  ctrl_seqno =document.forms["dataForm"]["kk_ctrl_seqno"].value;
+	if ( ctrl_seqno === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+
+/*   // 20200102 updated for archit.  change
+   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_ctrl_seqno";
+   }*/
+
+	resetJSON();
+	addJSON("ax_ctrl_seqno",ctrl_seqno);
+	processAJAX();
+ }
+ 
+ function ajaxResponse()
+ {
+	top.respHtml ="rskm3260_txn";
+   top.requHtml ="rskm3260_txn";
+
+	if  ( idCode === '1' ) {
+      var reference_no =getJSONvalue("reference_no",0);
+      if (reference_no.length>0) { 
+         $("#reference_no").val(reference_no); 
+      }
+      var reference_seq=getJSONvalue("reference_seq",0);
+      if (reference_seq.length>0) {
+         $("#reference_seq").val(reference_seq); 
+      }
+      var txn_date=getJSONvalue("txn_date",0);
+      if (txn_date.length>0) {
+         $("#txn_date").val(txn_date); 
+      }
+      var arn_year=getJSONvalue("arn_year",0);
+      if (arn_year.length>0) {
+         $("#arn_year").val(arn_year); 
+      }
+      var arn_ddd=getJSONvalue("arn_ddd",0);
+      if (arn_ddd.length>0) {
+         $("#arn_ddd").val(arn_ddd); 
+      }
+      
+	}			
+	if (idCode === '1' )
+	{ return false; }	
+ }    
+ 
+</script>

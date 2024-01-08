@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>DS業務名單及代號設定維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"      value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+<!-- 輸入資料讀取條件  -->
+    <td nowrap >&nbsp;DS業務代號:
+  		<input type="text" class="col_text" name="kk_sales_id" value="${kk_sales_id}" maxlength="10" size="12" zEdit="alphanum,upper" >
+  	</td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap >&nbsp;DS業務代號:
+			<span class="dsp_text">${sales_id}&nbsp;</span>
+			<input type="hidden" name="sales_id" value="${sales_id}">
+		</td>
+		<td nowrap >&nbsp;DS業務主管代號:
+			<input type="text" class="col_text" name="mangr_id" value="${mangr_id}" maxlength="10" size="12" zRequire="Y" zEdit="alphanum,upper">
+		</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;身分證ID:
+  		<input type="text" class="col_text" name="id_no" value="${id_no}" maxlength="10" size="12" zEdit="alphanum,upper" >
+  	</td>
+  	<td nowrap >&nbsp;業務姓名:
+  		<input type="text" class="col_any" name="sales_cname" value="${sales_cname}" maxlength="10" size="12" zEdit="any,canTw" >
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;到職日:
+  		<input type="text" class="col_date" name="hire_date" value="${hire_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="Y"  />      
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'hire_date'});
+	       </script>
+	  </td>  
+	  <td nowrap >&nbsp;離職日:
+  		<input type="text" class="col_date" name="leave_date" value="${leave_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />      
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'leave_date'});
+	       </script>
+	  </td>  
+  <tr>
+  	<td nowrap >&nbsp;覆核人員:
+  		<span class="dsp_text">${apr_user}&nbsp;</span>
+  		<input type="hidden" name="apr_user" value="${apr_user}">
+  	</td>
+  	<td nowrap >&nbsp;覆核日期:
+  		<span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+  		<input type="hidden" name="apr_date" value="${apr_date}">
+  	</td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="mktm5020">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="apr_flag" value="${apr_flag}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

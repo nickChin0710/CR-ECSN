@@ -1,0 +1,117 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-06-14  V1.00.01  jh                                                  -->
+<!-- 109-01-31  V1.00.02  Justin Wu      PP->貴賓, and add new column vip_kind -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>新貴通卡/龍騰卡掛失及停用登錄</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;貴賓卡號:
+      <input type="text" class="col_text" name="ex_pp_card_no" value="${ex_pp_card_no}" maxlength="19" size="21" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;貴賓卡:
+      <select  size="1"  name="ex_vip_kind" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${ex_vip_kind-1} >1_新貴通卡</option>
+         <option value="2" ${ex_vip_kind-2} >2_龍騰卡</option>       
+      </select>
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >貴賓卡&nbsp;</th>
+    <th nowrap >貴賓卡號&nbsp;</th>
+    <th nowrap >貴賓卡狀態&nbsp;</th>
+    <th nowrap >貴賓卡別&nbsp;</th>
+    <th nowrap >身分證ID&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >停用日期&nbsp;</th>
+    <th nowrap >停用原因&nbsp;</th>
+    <th nowrap >停掛編號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${pp_card_no}','${vip_kind}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${vip_kind_desc}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pp_card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${bin_type}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_idno}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${db_chi_name}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${oppost_date.YMD}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${tt_oppost_reason}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${stop_apply_no}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsm3130_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

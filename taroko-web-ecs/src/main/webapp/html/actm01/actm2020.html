@@ -1,0 +1,439 @@
+<html> 
+
+<head>
+    <title>線上繳款單多筆維護作業-V.2020-0727-Andy-[Initial]
+        -V.2020-0818-Andy-[Update]
+        -V.2021-0802-Andy-[Update Mantis8067]
+        -V.2021-0803-Andy-[Update Mantis8067]
+        -V.2023-0628-Simon-[Update] 
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+var index1=0;       //全域變數:存index用
+function itemchk(chk_col,chk_val){
+    top.methodName = "wfChkCol";
+    chk_val = chk_val.toUpperCase();
+    resetJSON();
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    processAJAX();
+    return true;     
+}
+
+function itemchk1(obj,chk_col,chk_val){
+    var row = obj.parentNode.parentNode.rowIndex - 1; //index row
+    index1 = row;
+    top.methodName = "wfChkCol";
+    resetJSON();
+    var chk_type = $('input[name=acct_type]').eq(row).val();
+    chk_val = chk_val.toUpperCase();
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    addJSON("text_data3",chk_type);
+    processAJAX();
+    return true;     
+}
+//前端數值==>千分位字串
+function format_with_regex(number) {
+    var reg = /\d{1,3}(?=(\d{3})+$)/g;
+    return (number + '').replace(reg, '$&,');
+}
+function itemchk2(chk_col,chk_val){
+    //繳款金額檢核
+    if(chk_col == 'pay_amt'){
+        var ss = $.isNumeric(chk_val);
+        if(ss == false){
+            alert("請輸入數字!");
+            return false;
+        } 
+
+        if(parseInt(chk_val) <=0){
+            alert("金額需大於０!");
+            return false;
+        }
+
+        var payamt_row = $("input[name=pay_amt]");
+        var ll = payamt_row.length;
+        var sum_amt = 0;
+        for (var i = 0; i < ll; i++) {
+            sum_amt += Number($('input[name=pay_amt]').eq(i).val());
+        }
+        var ss = format_with_regex(sum_amt);
+        $("#sum_amt").text(ss);
+    }
+    
+    //日期格式檢核
+    if(chk_col == 'pay_date'){
+        if(chk_val == "") {
+          alert("繳款日期不可空白");
+          return false;
+        }
+        var re = new RegExp("^([0-9]{4}){1}([0-9]{1,2}){1}([0-9]{1,2})$");
+        var strDataValue;
+        var infoValidation = true;
+        var t_date="";       
+        if ((strDataValue = re.exec(chk_val)) != null) {
+            var i;
+            i = parseFloat(strDataValue[1]);
+            if (i <= 0 || i > 9999) { /*年*/
+                infoValidation = false;
+            }
+            i = parseFloat(strDataValue[2]);
+            if (i <= 0 || i > 12) { /*月*/
+                infoValidation = false;
+            }
+            i = parseFloat(strDataValue[3]);
+            if (i <= 0 || i > 31) { /*日*/
+                infoValidation = false;
+            }          
+        } else {
+            infoValidation = false;
+        }
+        if (!infoValidation) {
+            alert("請輸入 YYYYMMDD 日期格式");
+            return false;
+        }
+        //繳款日期 V.S. 系統日期
+        var mydate = new Date();
+        var mm = parseInt(mydate.getMonth())+1;
+        var mm1 ="";
+        if(mm < 10){
+            mm1 = "0"+mm;
+        } else {
+            mm1 = mm+"";
+        }        
+        var yyyy = mydate.getFullYear();
+        var dd = parseInt(mydate.getDate());
+        var dd1 = "";
+        if(dd < 10){
+            dd1 = "0"+dd;
+        } else{
+            dd1 = dd+"";
+        }
+        var mydate1 = yyyy+mm1+dd1;
+        if(Number(chk_val) > Number(mydate1)){
+            alert("繳款日期不可大於系統日:"+mydate1);
+            return false;
+        }
+    }
+    return true;     
+}
+/***
+function debit_item_chk(chk_col,chk_val){
+    top.methodName = "wfChkCol";
+    resetJSON();
+    addJSON("text_data1",chk_col);
+    addJSON("text_data2",chk_val);
+    addJSON("text_data3",'');
+    processAJAX();
+    return true;     
+}
+function set_debt_key(sdebt_key) {
+    sdebt_key = sdebt_key.toUpperCase();
+    $('.dsp_text2').text(sdebt_key);
+    $('input[name=debt_key]').val(sdebt_key);
+}
+***/
+
+function ajaxResponse(){
+    top.respHtml ="actm2020";
+    top.requHtml ="actm2020";
+    //$("#exist_cost_months").val(getJSONvalue("exist_cost_months",0));
+    var data_msg = $("#data_msg").val();
+    var text_data1 = $("#text_data1").val();
+    var text_data2 = $("#text_data2").val();
+    var text_data3 = $("#text_data3").val();
+    var chk_flag = $("#chk_flag").val();
+    // alert("text_data1 :"+text_data1);
+/***
+    var chk_debit_item =  $("#chk_debit_item").val();
+    if(text_data1 == 'debit_item'){
+        $('.dsp_text1').text(text_data2);
+        $('input[name="debit_item"]').val(text_data2);
+    }
+***/
+    if(text_data1 == 'acct_key'){
+        var rcname = getJSONvalue("rcname",0);    
+        var racno_p_seqno = getJSONvalue("racno_p_seqno",0);  
+        var rp_seqno = getJSONvalue("rp_seqno",0);  
+        var rid_p_seqno = getJSONvalue("rid_p_seqno",0); 
+        // alert("rcname :"+rcname);
+        // alert("racno_p_seqno :"+racno_p_seqno);
+        // alert("rp_seqno :"+rp_seqno);
+        $('.dsp_cname').eq(parseInt(index1)).text(rcname);  
+        $('input[name=cname]').eq(parseInt(index1)).val(rcname);
+        $('input[name=id_p_seqno]').eq(parseInt(index1)).val(rid_p_seqno);
+        $('input[name=acno_p_seqno]').eq(parseInt(index1)).val(racno_p_seqno);
+        $('input[name=p_seqno]').eq(parseInt(index1)).val(rp_seqno);
+    } 
+    if(text_data1 == 'payment_no'){
+        var rcname = getJSONvalue("rcname",0);    
+        var racno_p_seqno = getJSONvalue("racno_p_seqno",0);  
+        var rp_seqno = getJSONvalue("rp_seqno",0); 
+        var rid_p_seqno = getJSONvalue("rid_p_seqno",0);  
+        // alert("rcname :"+rcname);
+        // alert("racno_p_seqno :"+racno_p_seqno);
+        // alert("rp_seqno :"+rp_seqno);
+        $('.dsp_cname').eq(parseInt(index1)).text(rcname);  
+        $('input[name=cname]').eq(parseInt(index1)).val(rcname);
+        $('input[name=id_p_seqno]').eq(parseInt(index1)).val(rid_p_seqno);
+        $('input[name=acno_p_seqno]').eq(parseInt(index1)).val(racno_p_seqno);
+        $('input[name=p_seqno]').eq(parseInt(index1)).val(rp_seqno);
+    }
+    if(text_data1 == 'pay_card_no'){
+        var rcname = getJSONvalue("rcname",0);    
+        var racno_p_seqno = getJSONvalue("racno_p_seqno",0);  
+        var rp_seqno = getJSONvalue("rp_seqno",0); 
+        var rid_p_seqno = getJSONvalue("rid_p_seqno",0);  
+        // alert("rcname :"+rcname);
+        // alert("racno_p_seqno :"+racno_p_seqno);
+        // alert("rp_seqno :"+rp_seqno);
+        $('.dsp_cname').eq(parseInt(index1)).text(rcname);  
+        $('input[name=cname]').eq(parseInt(index1)).val(rcname);
+        $('input[name=id_p_seqno]').eq(parseInt(index1)).val(rid_p_seqno);
+        $('input[name=acno_p_seqno]').eq(parseInt(index1)).val(racno_p_seqno);
+        $('input[name=p_seqno]').eq(parseInt(index1)).val(rp_seqno);
+    }
+    if(chk_flag != 'OK'){
+       alert(data_msg); 
+    }
+
+    return true;
+
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="6">&nbsp;
+                        <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="新增序號" onClick="return top.submitControl('X1')" class="btAdd">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="新增新批號" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;主管未放行之舊批次號碼:
+                        <select size="1" id="ex_batch_no" name="ex_batch_no" class="col_ddlb">${dddw_batch_no}</select>&nbsp;
+                    </td>
+                    <td nowrap colspan=2>&nbsp;序號:
+                        <input type="text" class="col_any" name="ex_serial_no1" value="${ex_serial_no1}" zEdit="number" maxlength=5 size=6 />
+                        --
+                        <input type="text" class="col_any" name="ex_serial_no2" value="${ex_serial_no2}" zEdit="number" maxlength=5 size=6 />&nbsp;
+                    </td>
+                    <td nowrap colspan="2">&nbsp;帳戶帳號:
+                        <select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+                        <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 />&nbsp;
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <table>
+                <tr>
+<!--
+                    <td nowrap colspan="6">&nbsp;借方科目:
+                        <input type="text" class="col_text" id="ex_debit_item" name="ex_debit_item" value="${ex_debit_item}" maxlength=8 size=9 zEdit="number" onChange="debit_item_chk('debit_item',this.value);" />
+                        <span style="background-color:#FFFF33" class="dsp_text" id='chk_debit_item'>${chk_debit_item}</span>
+                    </td>
+                    <td nowrap colspan="2">&nbsp;銷帳鍵值:
+                        <input type="text" class="col_text" id="ex_debt_key" name="ex_debt_key" value="${ex_debt_key}" maxlength=20 size=21 onChange="set_debt_key(this.value)" />
+                    </td>
+-->
+                    <td>&nbsp;
+                        總筆數:&nbsp;
+                        <span style="color: blue" class="dsp_text" id='sum_ct'>${sum_ct.(999)}</span>&nbsp;
+                        繳款金額合計:&nbsp;
+                        <span style="color: blue" class="dsp_text" id='sum_amt'>${sum_amt.(999)}</span>&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th">
+                    <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();">
+                    修改&nbsp;
+                </th>
+                <th nowrap class="list_th">
+                    <input type="checkbox" name="ex_selectAll_2" id="allcheck" value="Y" onChange="selectAll2();">
+                    刪除&nbsp;
+                </th>
+                <th nowrap class="list_th">檢核訊息</th>
+                <th nowrap class="list_th">批次號碼</th>
+                <th nowrap class="list_th">序號</th>
+                <th nowrap class="list_th">繳款卡號</th>
+                <th nowrap class="list_th">繳款編號</th>
+                <th nowrap colspan="2" class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">繳款金額</th>
+                <th nowrap class="list_th">繳款日期</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">繳款類別</th>
+           <!-- <th nowrap class="list_th">借方科目</th>  -->
+           <!-- <th nowrap class="list_th">銷帳鍵值</th>  -->
+                <th nowrap class="list_th">更改人員</th>
+                <th nowrap class="list_th">更改日期</th>
+                <th nowrap class="list_th">更改時間</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span>
+                    ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}" ${check} ${set_opt}>
+                    <input type="hidden" name="ser_num" value="${ser_num}">
+                    <input type="hidden" class="" name="rowid" value="${rowid}" zEdit="any" />
+                </td>
+                <td nowrap class="list_no">
+                    <input type="checkbox" name="dpt" value="${ser_num}" ${set_dpt} />
+                </td>
+                <td nowrap class="list_ll" style="color: red">${err_msg}<input type="hidden" name="err_msg" value="${err_msg}"></td>
+                <td nowrap class="list_ll">${batch_no}<input type="hidden" name="batch_no" value="${batch_no}"></td>
+                <td nowrap class="list_ll">${serial_no}<input type="hidden" name="serial_no" value="${serial_no}"></td>
+                <td nowrap class="list_ll"><input type='text' class='col_text' name='pay_card_no' zEdit='number' maxlength='16' size='18' value='${pay_card_no}' onChange="itemchk('pay_card_no',this.value);" /></td>
+                <td nowrap class="list_ll"><input type='text' class='col_text' name='payment_no' zEdit='alphanum,upper' maxlength='16' size='18' value='${payment_no}' onChange="itemchk('payment_no',this.value);" /></td>
+                <td nowrap class="list_ll"><input type='text' class='col_text' name='acct_type' zEdit='number' maxlength='2' size='3' value='${acct_type}' /></td>
+                <td nowrap class="list_ll"><input type='text' class='col_text' name='acct_key' zEdit='alphanum,upper' maxlength='11' size='13' value='${acct_key}' onChange="itemchk1(this,'acct_key',this.value);" /></td>
+                <td nowrap class="list_rr"><input type='text' class='col_number' name='pay_amt' zEdit='number' maxlength='17' size='20' value='${pay_amt}' onChange="itemchk2('pay_amt',this.value);" /></td>
+                <td nowrap class="list_ll"><input type='text' class='col_date' name='pay_date' zEdit='date,yyyymmdd' maxlength='8' size='10' value='${pay_date}' onChange="itemchk2('pay_date',this.value);" /></td>
+                <td nowrap class="list_ll dsp_cname">${cname}<input type="hidden" name="cname" value="${cname}"></td>
+                <td nowrap class="list_ll">${d_payment_type}
+                    <input type="hidden" name="d_payment_type" value="${d_payment_type}">
+                    <input type="hidden" name="payment_type" value="${payment_type}">
+                </td>
+           <!-- <td nowrap class="list_ll dsp_text1">${debit_item}</td> -->
+           <!-- <td nowrap class="list_ll dsp_text2">${debt_key}</td>   -->
+                <td nowrap class="list_ll">${mod_user}<input type="hidden" name="mod_user" value="${mod_user}"></td>
+                <td nowrap class="list_ll">${mod_date.YMD}<input type="hidden" name="mod_date" value="${mod_date}"></td>
+                <td nowrap class="list_ll">${mod_time.TIME}<input type="hidden" name="mod_time" value="${mod_time}"></td>
+           <!-- <input type="hidden" name="debt_key" value="${debt_key}"> -->
+           <!-- <input type="hidden" name="debit_item" value="${debit_item}"> -->
+                <input type="hidden" name="p_seqno" value="${p_seqno}">
+                <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}">
+                <input type="hidden" name="p_status" value="${p_status}">
+                <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+                <input type="hidden" name="rowid" value="${rowid}">
+            </tr>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="h_std_vouch_desc" value="${std_vouch_desc}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="ls_business_date" value="${ls_business_date}">
+        <input type="hidden" name="mod_pgm" value="actm2020">
+        <input type="hidden" name="data2" id="data2" value="${data2}">
+        <input type="hidden" name="text_data1" value="${text_data1}" id="text_data1" />
+        <input type="hidden" name="text_data2" value="${text_data2}" id="text_data2" />
+        <input type="hidden" name="text_data3" value="${text_data3}" id="text_data3" />
+        <input type="hidden" name="data_msg" value="${data_msg}" id="data_msg" />
+        <input type="hidden" name="chk_flag" value="${chk_flag}" id="chk_flag" />
+        <input type="hidden" name="sel_batch_no" value="${sel_batch_no}" />
+        <input type="hidden" name="sel_serial_no" value="${sel_serial_no}" />
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "99999";
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "S2") {
+        if (!chkdata()) {
+            return false;
+        }
+    }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "actm2020_detl";
+    }
+    if (top.actionCode == "X1") {
+        var ss = $("#ex_batch_no").val();
+        if (ss == '') {
+            alert("請先選擇批號！");
+            return false;
+        }
+        document.dataForm.data_k1.value = ss;
+        top.respLevel = 1;
+        top.respHtml = "actm2020_append";
+    }
+    return true;
+}
+
+//全選opt
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].name == "opt") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+//全選dpt
+function selectAll2() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].name == "dpt") {
+            aElements[i].checked = document.dataForm.ex_selectAll_2.checked;
+        }
+    }
+
+    return;
+}
+
+function chkdata() {
+    var seq = 0;
+    var seq1 = 0;
+    var agy = document.dataForm.opt;
+    var ll = agy.length;
+    if (typeof ll === 'undefined') {
+        if (agy.checked) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (agy[i].checked) {
+                seq++;
+
+            }
+        }
+    }
+    var dgy = document.dataForm.dpt;
+    var ll1 = dgy.length;
+    if (typeof ll1 === 'undefined') {
+        if (dgy.checked) { seq1++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (dgy[i].checked) {
+                seq1++;
+            }
+        }
+    }
+
+    if (seq == 0 && seq1 == 0) {
+        //alert("請至少勾選一筆資料!");
+        alert("未選取修改或刪除資料!");
+        return false;
+    }
+    return true;
+}
+</script>

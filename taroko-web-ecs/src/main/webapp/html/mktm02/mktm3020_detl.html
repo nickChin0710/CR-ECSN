@@ -1,0 +1,175 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--  110/12/28    V1.00.00   Machao     全體員工年招攬卡年度總目標參數檔維護                 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>  修改页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user}
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <!-- Button **************************************************************-->
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td colspan="4">
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;
+                <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+                <input type="Button"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+                <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+                <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+                <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+<div id="dataBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap  width="50%">年度：&nbsp;
+                    <input type="text" class="col_any" name="ex_acct_year" value="${acct_year}"
+                           maxlength="30" size="12" zEdit="any,canTW" style="background-color: ${ex_acct_year_pink}" />
+                </td>
+            </tr>
+        </table>
+        <hr>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  	<td nowrap >&nbsp;年度:
+  		<span class="col_key">${acct_year}&nbsp;</span>
+  		<input type="hidden" name="acct_year" value="${acct_year}">
+  	</td>
+  	<td nowrap >&nbsp;覆核:
+  		<span class="dsp_text">${apr_flag}&nbsp;</span>
+  		<input type="hidden" name="apr_flag" value="${apr_flag}">
+      &nbsp;&nbsp;
+  	</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;年度總目標新卡數:
+ 			<input type="text" class="col_any" name="target_card_cnt" value="${target_card_cnt}" maxlength="30" size="12" zEdit="any,canTW"
+ 			style="background-color: ${target_card_cnt_pink}">張 (注：正卡、排除本行员工)
+ 		</td>
+ </tr>
+ <tr>
+    <td nowrap colspan="2" >&nbsp;分行員工目標: 每一分行
+        <input type="text" class="col_any" name="branch_cnt" value="${branch_cnt}" maxlength="30" size="12" zEdit="any,canTW" 
+        style="background-color: ${branch_cnt_pink}">張，
+        </td>
+        
+</tr>
+<tr>
+	<td nowrap colspan="2" >&nbsp;員工每人：
+        <input type="text" class="col_any" name="employee_cnt" value="${employee_cnt}" maxlength="30" size="12" zEdit="any,canTW"
+        style="background-color: ${employee_cnt_pink}">張
+    </td>
+</tr>
+
+<tr>
+	<td nowrap >帳戶類別:&nbsp;
+		<input type="radio" value="0" name="acct_type_flag" ${acct_type_flag-0} checked />全部
+        <input type="radio" value="1" name="acct_type_flag" ${acct_type_flag-1} />指定
+        <input type="radio" value="2" name="acct_type_flag" ${acct_type_flag-2} />排除
+        <input type="Button" class="btOther"  id="btnparm"  value="參數明細維護" ${btnparm_disable}
+                           onClick="return buttonScreen('${acct_year}', '${rowid}')" />
+     </td>
+</tr>
+<tr>
+	<td nowrap >團體代碼:&nbsp;
+		<input type="radio" value="0" name="group_code_flag" ${group_code_flag-0} checked />全部
+        <input type="radio" value="1" name="group_code_flag" ${group_code_flag-1} />指定
+        <input type="radio" value="2" name="group_code_flag" ${group_code_flag-2} />排除
+    </td>
+</tr>
+<tr>
+	<td nowrap >卡片種類:&nbsp;
+		<input type="radio" value="0" name="card_type_flag" ${card_type_flag-0} checked />全部
+        <input type="radio" value="1" name="card_type_flag" ${card_type_flag-1} />指定
+        <input type="radio" value="2" name="card_type_flag" ${card_type_flag-2} />排除
+    </td>
+</tr>
+<tr>
+    <td nowrap >分行:&nbsp;
+    	 <input type="radio" value="0" name="branch_flag" ${branch_flag-0} checked />全部
+     	 <input type="radio" value="1" name="branch_flag" ${branch_flag-1} />指定
+         <input type="radio" value="2" name="branch_flag" ${branch_flag-2} />排除
+ </span>
+</td>
+</tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 18px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <spqn class="dsp_text">${mod_t} </spqn>
+      <input type="hidden" name="mod_t" value="${mod_t}">
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">
+   </td>
+  </tr>
+</table>
+<!-- -->
+	<input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+    <input type="hidden" name="rowid" value="${rowid}">
+    <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+    <input type="hidden" name="mod_pgm" value="Mktm3020">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="action_type" value="${action_type}">
+    <input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+top.refreshButton2('1');
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+    { return false; }
+
+    return true;
+}
+function buttonScreen(param1, param2)
+{
+    top.respLevel = 2;
+    top.respHtml = "mktm3020_detl_01";
+
+    document.dataForm.data_k1.value = param1;
+    document.dataForm.data_k2.value = param2;
+    top.submitControl("R2");
+    return true;
+}
+
+    
+</script>
+<!-- ******************************************************************** -->

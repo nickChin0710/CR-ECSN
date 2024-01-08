@@ -1,0 +1,190 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                Initial                               -->
+<!-- 109-01-03  V1.00.01  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>愛金卡自動加值拒絕代行名單維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=secu_code]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=secu_code]").filter('[value=R]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"      value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp; 
+  <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;信用卡卡號:
+      <input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}" maxlength="16" size="18" zEdit="number" onChange="cardChange('1')" >
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="2" >&nbsp;信用卡卡號:
+			<span class="dsp_text" >${card_no}</span>
+			<input type="hidden" name="card_no" value="${card_no}">
+		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;愛金卡卡號:
+	 		<label class="dsp_text" id="ich_card_no" >${ich_card_no}</label>
+	  	<input type="hidden" name="ich_card_no" value="${ich_card_no}"> 		
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;愛金卡狀態:
+ 			<label class="dsp_text" id="current_code" >${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</label>
+	  	<input type="hidden" name="current_code" value="${current_code}"> 		
+	  </td>
+	  <td nowrap >&nbsp;愛金卡效期:
+	  	<label class="dsp_text" id="new_end_date" >${new_end_date.YMD}</label>
+	  	<input type="hidden" name="new_end_date" value="${new_end_date}"> 		
+	  </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;傳送類別:
+ 			<span class="col_radio">
+         <input type="radio" value="R" name="secu_code" ${secu_code-R} ${DEFAULT_CHK} />R.拒絕代行
+         <input type="radio" value="Q" name="secu_code" ${secu_code-Q} />Q.取消拒絕代行     
+      </span>
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;拒絕代行說明:
+ 			<input type="text" class="col_any" name="risk_remark" value="${risk_remark}" maxlength="100" size="102" zEdit="any,canTw" >
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap >&nbsp;異動經辦:
+ 			<span class="dsp_text">${mod_user}</span>
+ 			<input type="hidden" name="mod_user" value="${mod_user}">
+ 		</td>
+ 		<td nowrap >&nbsp;建檔日期:
+ 			<span class="dsp_text">${crt_date.YMD}&nbsp;${crt_time.TIME}</span>
+ 			<input type="hidden" name="crt_date" value="${crt_date}">
+ 			<input type="hidden" name="crt_time" value="${crt_time}">
+ 		</td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="2" >&nbsp;傳送日期:
+ 			<span class="dsp_text">${send_date.YMD}&nbsp;</span>
+ 			<input type="hidden" name="send_date" value="${send_date}">
+ 		</td>
+ </tr>
+</table>
+</div>
+<br>
+
+<!-- -->
+<input type="hidden" name="ajax_code" value="${ajax_code}">
+<input type="hidden" name="db_tsc57" value="${db_tsc57}">
+<input type="hidden" name="db_tsc04" value="${db_tsc04}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ichm0070">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }												
+    return true;
+  }
+ 
+   function cardChange(ps1)
+ {
+ 	var  card_no =document.forms["dataForm"]["kk_card_no"].value.toUpperCase();
+	var  ajax_code =document.forms["dataForm"]["ajax_code"].value;
+	if ( card_no === '' || ajax_code !='' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+/*   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_key";
+   }*/ // 20200102 updated for archit.  change
+
+	resetJSON();
+	addJSON("ax_card_no",card_no);	
+	processAJAX();
+ }
+ 
+   function ajaxResponse()
+ {
+	 top.respHtml ="ichm0070_detl";
+   top.requHtml ="ichm0070_detl";
+
+	if  ( idCode === '1') {
+      var ich_card_no =getJSONvalue("ich_card_no",0);
+      if (ich_card_no.length>0) { 
+      	$("#ich_card_no").text(ich_card_no);   
+      	$("#ich_card_no").val(ich_card_no);   
+      }      
+      
+      var current_code =getJSONvalue("current_code",0);
+      if (current_code.length>0) { 
+      	$("#current_code").text(current_code);   
+      	$("#current_code").val(current_code);   
+      }      
+      
+      var new_end_date =getJSONvalue("new_end_date",0);
+      if (new_end_date.length>0) { 
+      	$("#new_end_date").text(new_end_date);   
+      	$("#new_end_date").val(new_end_date);   
+      } 
+            
+	}
+      
+	if ( idCode === '1')
+	{ return false; }
+ }
+
+
+</script>

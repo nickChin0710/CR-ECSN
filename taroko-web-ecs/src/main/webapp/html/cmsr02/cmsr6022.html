@@ -1,0 +1,146 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-11-24  V1.00.01  sunny          配合卡部要求，將「接聽」改為「受理」  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>案件登錄查詢報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;受理日期:
+         <input type="text" class="col_date" name="ex_cms_date_s" value="${ex_cms_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_s'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_cms_date_e" value="${ex_cms_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_e'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;受理人員:
+       <select size="1" name="ex_user" class="col_ddlb">
+      	<option value="">--</option>
+      	${dddw_user}
+       </select>           	   
+	</td>
+	</tr>
+	<tr>
+	<td nowrap >&nbsp;問題類別:
+	   <select size="1" name="ex_casetype1" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_casetype1}
+      </select>
+      --
+      <select size="1" name="ex_casetype2" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_casetype2}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;
+      <input type="checkbox" name="ex_type_a" value="Y" ${ex_type_a-Y}>A.權益 &nbsp;
+      <input type="checkbox" name="ex_type_b" value="Y" ${ex_type_b-Y}>B.年費/利息/其他費用&nbsp;
+      <input type="checkbox" name="ex_type_c" value="Y" ${ex_type_c-Y}>C.行銷活動/分期業務 &nbsp;
+      <input type="checkbox" name="ex_type_d" value="Y" ${ex_type_d-Y}>D.卡片使用/開卡/停卡/掛失/可用餘額 &nbsp;
+      <input type="checkbox" name="ex_type_z" value="Y" ${ex_type_z-Y}>Z.授權組業務 &nbsp;
+      <br>&nbsp;
+      <input type="checkbox" name="ex_type_e" value="Y" ${ex_type_e-Y}>E.申請業務 &nbsp;
+      <input type="checkbox" name="ex_type_f" value="Y" ${ex_type_f-Y}>F.帳務/帳單 &nbsp;
+      <input type="checkbox" name="ex_type_g" value="Y" ${ex_type_g-Y}>G.產品功能/補寄資料/分行查詢/保險/申訴/其他 &nbsp;
+      <input type="checkbox" name="ex_type_h" value="Y" ${ex_type_h-Y}>H.銀行業務 &nbsp;
+      <input type="checkbox" name="ex_type_i" value="Y" ${ex_type_i-Y}>I.非值機組使用 &nbsp;      
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >受理日期&nbsp;</th>
+    <th nowrap colspan="2" >身份證字號 / 卡    號&nbsp;</th>
+    <th nowrap >案件類型&nbsp;</th>
+    <th nowrap >異動時間&nbsp;</th>
+    <th nowrap >受理人員&nbsp;</th>
+    <th nowrap >移送&nbsp;</th>
+    <th nowrap >移送部門&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_idno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${wk_case_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_time}&nbsp;</td>
+	<td nowrap class="list_ll"> ${wk_case_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${send_code}&nbsp;</td>
+	<td nowrap class="list_ll"> ${wk_proc_dept}&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap class="list_no"></td>
+   <td nowrap class="list_ll" colspan="8">案件描述: ${case_desc}<br>&nbsp;&nbsp;　　　　${case_desc2}</td>
+  </tr>
+  <tr>
+   <td nowrap class="list_no"></td>
+   <td nowrap class="list_ll" colspan="8">處理說明: ${proc_desc}<br>&nbsp;&nbsp;　　　　${proc_desc2}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

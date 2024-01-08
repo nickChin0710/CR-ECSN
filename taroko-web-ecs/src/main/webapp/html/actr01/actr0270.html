@@ -1,0 +1,134 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-11-25  V1.00.00  Max Lin        Initial                              -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>繳款資料查核錯誤報表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=12>&nbsp;
+                        <input type="Button"   ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"   ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+<!--                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+-->
+                    </td>
+                </tr>
+            </table>
+            
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                   <td nowrap>&nbsp;*入帳日期:
+                        <input type="text" class="col_date" name="ex_date_S" value="${ex_date_S}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_S'
+                        });
+                        </script>
+						--
+                        <input type="text" class="col_date" name="ex_date_E" value="${ex_date_E}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_E'
+                        });
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">資料筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                    <!--  Add 合計:金額 (Linda, 20180907)--> 
+        			<td nowrap >&nbsp;繳款金額:
+        				<span class="dsp_text">${tot_amt.(999)}&nbsp;</span>
+        				<input type="hidden" name="tot_amt" value="${tot_amt}">
+        			</td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">待覆核</th>
+                <th nowrap class="list_th">入帳日期</th>
+                <th nowrap class="list_th">批次號碼</th>
+                <th nowrap class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">繳款卡號</th>
+                <th nowrap class="list_th">繳款金額</th>
+                <th nowrap class="list_th">繳款日期</th>
+                <th nowrap class="list_th">繳款單來源代碼</th>
+                <th nowrap class="list_th">錯誤原因</th>
+                <th nowrap class="list_th">強迫補入</th>
+                <th nowrap class="list_th">ID</th>
+                <th nowrap class="list_th">分行</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${confirm_flag} </td> 
+                <td nowrap class="list_cc"> ${crt_date} </td>
+                <td nowrap class="list_cc"> ${batch_no_serial} </td>
+                <td nowrap class="list_cc"> ${acct_type_key} </td>
+                <td nowrap class="list_cc"> ${chi_name} </td>
+                <td nowrap class="list_cc"> ${pay_card_no} </td>
+                <td nowrap class="list_rr"> ${pay_amt.(999)} </td>
+                <td nowrap class="list_cc"> ${pay_date} </td>
+                <td nowrap class="list_cc"> ${payment_type} </td>
+                <td nowrap class="list_cc"> ${error_reason} </td>
+                <td nowrap class="list_cc"> ${duplicate_mark} </td>
+                <td nowrap class="list_cc"> ${id_no} </td>
+                <td nowrap class="list_cc"> ${branch} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_post_amt" value="${sum_post_amt}">  
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

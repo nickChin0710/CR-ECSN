@@ -1,0 +1,182 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                Initial                               -->
+<!-- 109-01-03  V1.00.01  Justin Wu     updated for archit.  change           -->
+<!-- 110-01-26  V1.00.02  Justin Wu     extend the length of card_code           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>DebitCard卡別_團代對照維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+          <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+          <input type="Button"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+  <tr>
+       <td nowrap width="50%">卡別：&nbsp;
+            <input type="text" class="col_text" name="kk_card_code" value="${kk_card_code}" zEdit="alpha,upper" maxlength="3" size="3" />
+       </td>
+       <td nowrap width="50%">數位註記：&nbsp;
+           <select name="kk_digital_flag" class="col_ddlb" >
+             <option value="" ${kk_digital_flag} >--</option>
+	         <option value="N" ${kk_digital_flag-N} >N</option>
+	         <option value="Y" ${kk_digital_flag-Y} >Y</option>
+
+	       </select>    
+       </td>
+  </tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap class="colKey" >卡別：
+          <span class="dsp_text">${card_code}</span>
+          <input type="hidden" name="card_code" value="${card_code}" >
+       </td>
+       <td nowrap class="colKey" >數位註記：
+          <span class="dsp_text">${digital_flag}</span>
+          <input type="hidden" name="digital_flag" value="${digital_flag}" >
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>卡種:&nbsp;
+          <select  name="card_type" class="col_ddlb"  zRequire ="Y"  onChange="detailCardType(this.value)"  >
+               ${dddw_card_type}   
+          </select>  
+       </td>
+       <td nowrap>團體代號:&nbsp;
+          <select  name="group_code" class="col_ddlb" zRequire ="Y"   onChange="detailGroupCode(this.value)" >
+               ${dddw_group_code}   
+          </select>  
+       </td>
+   </tr>
+   <tr>
+       <td id="b">認同集團代碼:&nbsp;
+          <select  name="unit_code" class="col_ddlb">
+               ${dddw_unit_code}   
+          </select>  
+       </td>
+       <td nowrap>來源代號:&nbsp;
+          <select  name="source_code" class="col_ddlb">
+               ${dddw_source_code}   
+          </select>  
+       </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2">名稱:&nbsp;
+            <input type="text" class="col_any" name="name" value="${name}" zEdit="canTW"    maxlength="20" size="20" />
+       </td>
+   </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap>鍵檔日期:
+          <span class="dsp_text">${crt_date.YMD}</span>
+          <input type="hidden" name="crt_date" value="${crt_date}" >
+       </td>
+       <td nowrap>鍵檔人員:&nbsp;
+          <span class="dsp_text">${crt_user}</span>
+          <input type="hidden" name="crt_user" value="${crt_user}" >
+       </td>
+   </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="dbcp0010">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    return true;
+}
+
+
+function detailCardType(cardType) { 
+    idCode = "1" ;
+    // 20200102 updated for archit.  change
+    top.actionCode = "AJAX";
+    // top.methodName = "itemchanged";
+    resetJSON();
+    addJSON("idCode",idCode);
+    addJSON("ajaxName","cardType");
+    addJSON("a_cardType",cardType);
+    //addJSON("tot_term",$("select[name=tot_term]").val());
+    processAJAX();
+   
+   return true;
+    
+ }
+ 
+function detailGroupCode(groupCode) { 
+    idCode = "2" ;
+    // 20200102 updated for archit.  change
+    top.actionCode = "AJAX";
+    // top.methodName = "itemchanged";
+    resetJSON();
+    addJSON("idCode",idCode);
+    addJSON("ajaxName","groupCode");
+    addJSON("a_groupCode",groupCode);
+    //addJSON("tot_term",$("select[name=tot_term]").val());
+    processAJAX();
+   
+   return true;
+    
+ }
+ 
+function ajaxResponse()
+{
+    top.respHtml ="dbcp0010_detl";
+    top.requHtml ="dbcp0010_detl";
+    if(idCode=="1" || idCode=="2" ){
+        if(getJSONvalue("dddw_unit_code",0)!=null){  
+               $("#b select option").remove();
+               $("#b select").append(getJSONvalue("dddw_unit_code",0));
+           }        
+    }
+
+}
+
+
+</script>

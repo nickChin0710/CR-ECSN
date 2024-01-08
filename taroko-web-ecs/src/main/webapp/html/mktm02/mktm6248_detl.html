@@ -1,0 +1,184 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-09-03  V1.00.01  Allen Ho      Initial                               -->
+<!-- 109-01-06  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>深呆戶卡片等級維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user3}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>深呆等級:&nbsp;
+       <select   size="1"  name="kk_data_type" class="col_ddlb"  >
+         <option value="1" ${kk_data_type-1} >等級1</option>
+         <option value="2" ${kk_data_type-2} >等級2</option>
+         <option value="3" ${kk_data_type-3} >等級3</option>
+         <option value="4" ${kk_data_type-4} >等級4</option>
+         <option value="5" ${kk_data_type-5} >等級5</option>
+         <option value="6" ${kk_data_type-6} >等級6</option>
+         <option value="7" ${kk_data_type-7} >等級7</option>
+         <option value="8" ${kk_data_type-8} >等級8</option>
+       </select>
+              (等級愈小者, 卡片等級愈高)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;卡片等級:
+       <select size="1"  name="kk_data_code" class="col_ddlb" 20 onChange="columnItemChange('2')">
+               ${dddw_lost_code4}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;卡　　種:
+       <select size="1"  name="kk_data_code2" class="col_ddlb"  id="ajaxh_data_code2" >
+               ${dddw_card_type}
+       </select>
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">深呆等級:
+       <span class="dsp_text">${data_type}</span>
+       <input  type="hidden" name="data_type" value="${data_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="colKey">卡片等級:
+       <span class="dsp_text">${data_code}</span>
+       <input  type="hidden" name="data_code" value="${data_code}" />
+              -${comm_data_code}
+     <input  type="hidden" name="comm_data_code" value="${comm_data_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="colKey">卡　　種:
+       <span class="dsp_text">${data_code2}</span>
+       <input  type="hidden" name="data_code2" value="${data_code2}" />
+              -${comm_data_code2}
+     <input  type="hidden" name="comm_data_code2" value="${comm_data_code2}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護經辦： 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+               - ${comm_crt_user}
+     <input    type="hidden" name="comm_crt_user" value="${comm_crt_user}" />    
+	</td>
+     <td  nowrap  >維護日期： 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm6248">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+ function columnItemChange(ps1)
+  {
+   var  win_data_code =document.forms["dataForm"]["kk_data_code"].value;
+
+   idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+/*   if ( idCode == '2' )
+      {*/
+   clearListObj(document.getElementById("ajaxh_data_code2"));
+       // top.methodName = "wf_ajax_func_2"; // 20200102 updated for archit.  change
+   resetJSON();
+   addJSON("ax_win_data_code",win_data_code);
+      // }
+
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktm6248_detl";
+  var len = 0;
+
+  if (idCode == '2' )
+     {
+      var listObj = document.getElementById("ajaxh_data_code2");
+      len = getJSONlength("ajaxj_data_code2");
+      for ( var ii=0; ii<len; ii++)
+          listObj.options.add(new Option(getJSONvalue("ajaxj_data_code2",ii)
+                                        +" "+getJSONvalue("ajaxj_name",ii)
+                                        ,getJSONvalue("ajaxj_data_code2",ii)));
+      return false;
+     }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+
+</script>
+<!-- ******************************************************************** -->

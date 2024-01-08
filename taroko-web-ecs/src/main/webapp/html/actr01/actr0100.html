@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <title>政府網路採購卡對帳單-108-03-12-V1.00.01-AndyLiu-[initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+                    <td nowrap colspan=6>&nbsp;關帳年月:                       
+                        <input type="text" class="col_text" name="ex_acct_month" value="${ex_acct_month}" maxlength="6" size="8" />
+                    </td>                                         
+                </tr>    
+                <tr>
+                   <td nowrap colspan=6>&nbsp;入帳日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                        </script>&nbsp;
+                    </td>
+                    <td nowrap colspan=6>&nbsp;
+                        <input type="Button"   ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"   ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td> 
+                </tr>      
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">消費日期</th>
+                <th nowrap class="list_th">入帳起息日</th>
+                <th nowrap class="list_th">帳項說明</th>
+                <th nowrap class="list_th">新台幣金額</th>
+                <th nowrap class="list_th">卡別/卡號(末四碼)</th>
+                <th nowrap class="list_th">外幣折算日</th>
+                <th nowrap class="list_th">外幣幣別</th>
+                <th nowrap class="list_th">外幣金額</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${chi_name} </td>
+                <td nowrap class="list_cc"> ${acct_key} </td>
+                <td nowrap class="list_cc"> ${purchase_date} </td>
+                <td nowrap class="list_cc"> ${post_date} </td>
+                <td nowrap class="list_ll">
+                	${mcht_chi_name}&nbsp;${mcht_city}&nbsp;${mcht_country}</td>    
+                <td nowrap class="list_cc"> ${dest_amt} </td>                
+                <td nowrap class="list_cc"> ${bin_type}&nbsp;${card_no}
+                	<!-- <span class="dsp_text">${card_no_desc}</span> <input type="hidden" name="card_no" value="${card_no}"> -->
+                	
+                </td>
+                <td nowrap class="list_cc"> ${process_date} </td>
+                <td nowrap class="list_cc"> ${source_curr} </td>
+                <td nowrap class="list_cc"> ${source_amt} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+      	<input type="hidden" name="sum_source_amt" value="${sum_source_amt}">
+        <input type="hidden" name="row_ct" value="${row_ct}"> 
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.exDateS.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

@@ -1,0 +1,138 @@
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-01-15  V1.00.02 Justin       增加下拉選單                                                  -->
+<!--**************************************************************************-->
+<head>
+    <title>卡號區間號碼查詢-110-01-15-V1.00.02-Justin-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap >&nbsp;日期區間:
+                        <input type="text" class="col_date" name="ex_dateS" value="${ex_dateS}" zeditType="date,yyyymmdd" size=8 maxlength=10 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_dateS'});
+             </script>
+                        ~
+                        <input type="text" class="col_date" name="ex_dateE" value="${ex_dateE}" zeditType="date,yyyymmdd" size=8 maxlength=10 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_dateE'});
+            </script>(YYYYMMDD)
+                    </td>
+                    <td nowrap >&nbsp;卡號用途註記:
+                     <select
+						name="ex_card_flag" class="col_ddlb">
+							<option value="1"${ex_card_flag-1}>一般用</option>
+							<!-- <option value="2"${ex_card_flag-2}>緊急替代用</option> -->
+							<option value="5"${ex_card_flag-5}>HCE TPAN用</option>
+							<option value="7"${ex_card_flag-7}>GOOGLE PAY</option>
+					</select>
+					</td>
+                    <td nowrap rowspan="3">&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrapc >&nbsp;團體代號:
+                        <select size="1" name="ex_group_code" class="col_ddlb">
+                            <option value="" ${ex_group_code}>--</option>
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td nowrapc >&nbsp;卡種:
+                        <select size="1" name="ex_card_type" class="col_ddlb">
+                            <option value="" ${ex_card_type}>--</option>
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrapc >&nbsp;篩選:
+                        <select size="1" name="ex_select" class="col_ddlb">
+                        	<option value="1" ${ex_select-1}>未使用筆數&lt;</option>
+                            <option value="0" ${ex_select-0}>全部</option>
+                        </select>
+                        <input type="text" class="col_number" zEdit="number" name="ex_select_cnt" value="${ex_select_cnt}" size="10"/>
+                    </td>
+                    <td nowrapc >&nbsp;排序:
+                        <select size="1" name="ex_order" class="col_ddlb">
+                            <option value="1" ${ex_order-1}>依起流水號排序</option>
+                            <option value="2" ${ex_order-2}>依團代、卡種、異動日期</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">團體代號</th>
+                <!--<th nowrap class="list_th">會員註記</th>-->
+                <th nowrap class="list_th">卡種</th>
+                <th nowrap class="list_th">卡號用途註記</th>
+                <th nowrap class="list_th">鍵檔日期</th>
+                <th nowrap class="list_th">異動日期</th>
+                <th nowrap class="list_th">異動流水號</th>
+                <th nowrap class="list_th">Bin-no</th>
+                <th nowrap class="list_th">起流水號</th>
+                <th nowrap class="list_th">迄流水號</th>
+                <th nowrap class="list_th">主管覆核日期</th>
+                <th nowrap class="list_th">主管</th>
+                <th nowrap class="list_th">未使用筆數</th>
+                <th nowrap class="list_th">備註</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${group_code}</td>
+                <!--<td nowrap class="list_cc"> ${member_note}</td>-->
+                <td nowrap class="list_cc"> ${card_type}</td>
+                <td nowrap class="list_cc"> ${card_flag_desc}</td>
+                <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+                <td nowrap class="list_cc"> ${trans_date.YMD}</td>
+                <td nowrap class="list_cc"> ${trans_no}</td>
+                <td nowrap class="list_cc"> ${bin_no}</td>
+                <td nowrap class="list_cc"> ${beg_seqno}</td>
+                <td nowrap class="list_cc"> ${end_seqno}</td>
+                <td nowrap class="list_cc"> ${charge_date.YMD} </td>
+                <td nowrap class="list_ll"> ${charge_id} </td>
+                <td nowrap class="list_rr"> ${unuse.(999)}</td>
+                <td nowrap class="list_cc"> ${remark_40}</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_dateS.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    return true;
+}
+</script>

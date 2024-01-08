@@ -1,0 +1,573 @@
+<html> 
+<head>
+<title>科目明細 D 檔調整作業-多筆 106-12-20-V1.00.00-OrisChang [Initial]
+112-12-18-v1.00.01-Simon-[update]
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+					<td nowrap>&nbsp;帳戶帳號:
+	                </td>
+	                <td>
+						<select size="1" name="ex_acct_type" class="col_ddlb">
+							${dddw_acct_type}</select>-- 
+						<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 zRequire ="k"/>
+	  				<input type="hidden" name="ex_p_seqno" value="${ex_p_seqno}">
+	                </td>
+					<td nowrap>&nbsp;帳戶姓名/名稱:
+	                </td>
+	                <td>
+						${ex_cname}	                
+	                </td>
+	                <td nowrap rowspan="5">&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;<br><br>&nbsp;
+                        <input type="Button" name="btnUpdate" ${btnUpdate_disable} value="存檔" onClick="return top.submitControl('C')" class="btUpdate">&nbsp;
+                    </td>
+	            </tr>
+            	<tr>
+					<td nowrap colspan"2">&nbsp;　費用類:
+	                </td>
+	                <td>
+						<input type="checkbox" value="Y" name="ex_acitem01" ${ex_acitem01-Y}/><span style="color:#0000FF;">費用　&nbsp;</span>
+						<input type="checkbox" value="Y" name="ex_acitem02" ${ex_acitem02-Y}/><span style="color:#0000FF;">利息　&nbsp;</span>
+						<input type="checkbox" value="Y" name="ex_acitem03" ${ex_acitem03-Y}/><span style="color:#0000FF;">違約金&nbsp;</span>
+	                </td>
+					<td nowrap>&nbsp;關帳年月:
+	                </td>
+	                <td>
+						<input type="text" class="col_text" name="ex_s_yyymm" value="${ex_s_yyymm}" zEdit="number" maxlength=6 size=6 /> -- 
+						<input type="text" class="col_text" name="ex_e_yyymm" value="${ex_e_yyymm}" zEdit="number" maxlength=6 size=6 />
+	                </td>
+	            </tr>
+            	<tr>
+					<td nowrap colspan"2">&nbsp;
+	                </td>
+	                <td nowrap>
+						<input type="checkbox" value="Y" name="ex_acitem04" ${ex_acitem04-Y}/><span style="color:#0000FF;">本金類　　　　　　　</span>
+<!--
+						<input type="checkbox" value="Y" name="ex_acitem05" ${ex_acitem05-Y}/><span style="color:#0000FF;">代收&nbsp;</span>
+-->
+	                </td>
+					<td nowrap>&nbsp;結算幣別:
+	                </td>
+	                <td>
+						 <select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+	                </td>
+	            </tr>
+<!--
+	            <tr>
+					<td nowrap>&nbsp;銷帳鍵值:
+	                </td>
+					<td nowrap colspan="3">
+						<input type="text" class="col_text" name="ex_debit_key" value="${ex_debit_key}" zEdit="alphanum,upper" maxlength=20 size=30 />
+						<span style="color:#EE0000;">註：整批D檔之借方起帳科目為[14817000]</span>
+	                </td>
+	            </tr>
+-->
+	            <tr>
+					<td nowrap>&nbsp;調整備註:
+	                </td>
+					<td nowrap colspan="3">
+						<input type="text" class="col_any" name="ex_adj_comment" value="${ex_adj_comment}" zEdit="any,canTW" maxlength=40 size=30 />
+						<input type="Button" name="btnSelAll" value="全選" onClick="selectAll();" >&nbsp;
+						<input type="Button" name="btnBefAmt" value="同期末餘額" onClick="setBefAmt();" >&nbsp;
+<!--
+						<input type="Button" name="btnDebitKey" value="同[銷帳鍵值/備註]" onClick="setDebitKey();" >&nbsp;
+-->
+						<input type="Button" name="btnDebitKey" value="同[備註]" onClick="setDebitKey();" >&nbsp;
+	                </td>
+	            </tr>
+            </table>
+        </div>
+        <hr>
+     <!-- 明細============================ -->
+     <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	    <tr>
+		     <td nowrap class="list_rr" colspan="2">&nbsp;本頁合計D檔  筆數:</td>
+		     <td nowrap class="list_ll" colspan="2">
+			       <input type="text" class="dsp_text" id="click_tot_dr_cnt" name="click_tot_dr_cnt" 
+			       value="${click_tot_dr_cnt}" onfocus="this.blur()" >
+		     </td>
+		     <td nowrap class="list_rr" colspan="2">&nbsp;台幣金額:</td>
+		     <td nowrap class="list_ll" colspan="2">
+			       <input type="text" class="dsp_text" id="click_tot_dr_amt" name="click_tot_dr_amt" 
+			       value="${click_tot_dr_amt}" >
+		     </td>
+<!--
+		     <td nowrap class="list_rr" colspan="2">&nbsp;結算幣別金額:</td>
+		     <td nowrap class="list_ll" colspan="2">
+			       <input type="text" class="dsp_text" id="click_tot_dc_dr_amt" name="click_tot_dc_dr_amt" 
+			       value="${click_tot_dc_dr_amt}" >
+		     </td>
+-->
+	    </tr>
+      <tr>
+				<th nowrap class="list_th">執行<br>D檔</th>
+				<th nowrap class="list_th">取消<br>D檔</th>
+				<th nowrap class="list_th">結算<br>幣別</th>
+				<th nowrap class="list_th">D檔金額</th>
+				<th nowrap class="list_th">交易<br>參考號</th>
+				<th nowrap class="list_th">關帳年月</th>
+				<th nowrap class="list_th">入帳日</th>
+				<th nowrap class="list_th">起息日</th>
+				<th nowrap class="list_th">卡號</th>
+				<th nowrap class="list_th">期初餘額</th>
+				<th nowrap class="list_th">期末餘額</th>
+				<th nowrap class="list_th">目前餘額</th>
+				<th nowrap class="list_th">最新金額</th>
+				<th nowrap class="list_th">目前<br>可 D 數</th>
+				<th nowrap class="list_th">最新<br>可 D 數</th>
+				<th nowrap class="list_th">科目代碼_名稱</th>
+<!--
+				<th nowrap class="list_th">銷帳鍵值</th>
+-->
+				<th nowrap class="list_th">調整備註</th>
+<!--
+				<th nowrap class="list_th">借方科目</th>
+-->
+      </tr>
+      <!-- BEGIN DYNAMIC : DETAIL -->
+      <tr>
+				<td nowrap class="list_cc">
+					<input type="checkbox" name="aopt" value="${ser_num}" ${aopt-Y} ${add_disable} onClick="set_a_click_amt(this)" />
+					<input type="hidden" name="sv_aopt" value="${sv_aopt}">
+				</td>
+				<td nowrap class="list_cc">
+					<input type="checkbox" name="dopt" value="${ser_num}" ${del_disable} onClick="set_d_click_amt(this)" />
+					<input type="hidden" name="sv_dopt" value="${sv_dopt}">
+				</td>
+				<td nowrap class="list_cc">(台幣)</td>
+				<td nowrap class="list_ll"><input type="text" class="col_number" name="dr_amt" value="${dr_amt}" maxlength=10 size=10 readonly onkeydown="return false;"/></td>
+				<td nowrap class="list_ll">${reference_no}</td>
+				<td nowrap class="list_ll">${acct_month.YMD}</td>
+				<td nowrap class="list_ll">${post_date.YMD}</td>
+				<td nowrap class="list_ll">${interest_date.YMD}</td>
+				<td nowrap class="list_ll">${card_no}</td>
+				<td nowrap class="list_rr">${beg_bal}</td>
+				<td nowrap class="list_rr">${end_bal}</td>
+				<td nowrap class="list_rr">${bef_amt}</td>
+				<td nowrap class="list_rr"><input type="text" class="col_number" name="aft_amt" value="${aft_amt}" maxlength=10 size=10 readonly onkeydown="return false;"/></td>
+				<td nowrap class="list_rr">${bef_d_amt}</td>
+				<td nowrap class="list_rr"><input type="text" class="col_number" name="aft_d_amt" value="${aft_d_amt}" maxlength=10 size=10 readonly onkeydown="return false;"/></td>
+				<td nowrap class="list_ll">${acct_code}_${acct_item_cname}</td>
+<!--
+				<td nowrap class="list_ll"><input type="text" class="col_text" name="c_debt_key" value="${c_debt_key}" maxlength=20 size=24 /></td>
+-->
+				<td nowrap class="list_ll"><input type="text" class="col_any" name="adj_comment" value="${adj_comment}" zEdit="any,canTW" maxlength=40 size=24 /></td>
+<!--
+				<td nowrap class="list_cc">
+					<select size="1" name="debit_item" class="col_ddlb" ${debit_item_disabled} >
+						<option value="27247000" ${debit_item-27247000}>暫收款--其他 2724-7000</option>
+						<option value="14817000" ${debit_item-14817000}>應收款--其他 1481-7000</option>
+						<option value="55030700" ${debit_item-55030700}>雜項支出--5503-0700</option>
+						<option value="24817000" ${debit_item-24817000}>應付款--其他 2481-7000</option>
+					</select>
+          <input type="hidden" name="debit_item_disabled" value="${debit_item_disabled}" />
+				</td>
+-->
+			</tr>
+			<tr>
+				<td nowrap class="list_ll" colspan="2">${wk_table}&nbsp;${db_table}</td>
+				<td nowrap class="list_cc">${ex_curr_name}</td>
+				<td nowrap class="list_ll"><input type="text" class="col_number" name="dc_dr_amt" value="${dc_dr_amt}" zEdit="dignumber" maxlength=10 size=10 onchange="dcdramt(this);" /></td>
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_rr">${dc_beg_bal}</td>
+				<td nowrap class="list_rr">${dc_end_bal}</td>
+				<td nowrap class="list_rr">${dc_bef_amt}</td>
+				<td nowrap class="list_rr"><input type="text" class="col_number" name="dc_aft_amt" value="${dc_aft_amt}" maxlength=10 size=10 readonly onkeydown="return false;"/></td>
+				<td nowrap class="list_rr">${dc_bef_d_amt}</td>
+				<td nowrap class="list_rr"><input type="text" class="col_number" name="dc_aft_d_amt" value="${dc_aft_d_amt}" maxlength=10 size=10 readonly onkeydown="return false;"/></td>
+				<td nowrap class="list_ll">&nbsp;</td>
+<!--
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_ll">&nbsp;</td>
+				<td nowrap class="list_ll">&nbsp;</td>
+-->
+				<td nowrap class="list_ll">&nbsp;
+					<input type="hidden" name="db_table" value="${db_table}">
+					<input type="hidden" name="p_seqno" value="${p_seqno}">
+					<input type="hidden" name="rowid" value="${rowid}">
+					<input type="hidden" name="acct_type" value="${acct_type}">
+					<input type="hidden" name="reference_no" value="${reference_no}">
+					<input type="hidden" name="post_date" value="${post_date}">
+					<input type="hidden" name="orginal_amt" value="${orginal_amt}">
+					<input type="hidden" name="beg_bal" value="${beg_bal}">
+					<input type="hidden" name="end_bal" value="${end_bal}">
+					<input type="hidden" name="sv_dc_dr_amt" value="${sv_dc_dr_amt}">
+					<input type="hidden" name="sv_dr_amt" value="${sv_dr_amt}">
+					<input type="hidden" name="cr_amt" value="${cr_amt}">
+					<input type="hidden" name="bef_amt" value="${bef_amt}">
+					<input type="hidden" name="bef_d_amt" value="${bef_d_amt}">
+					<input type="hidden" name="acct_code" value="${acct_code}">
+					<input type="hidden" name="function_code" value="${function_code}">
+					<input type="hidden" name="card_no" value="${card_no}">
+					<input type="hidden" name="interest_date" value="${interest_date}">
+					<input type="hidden" name="curr_code" value="${curr_code}">
+					<input type="hidden" name="dc_orginal_amt" value="${dc_orginal_amt}">
+					<input type="hidden" name="dc_beg_bal" value="${dc_beg_bal}">
+					<input type="hidden" name="dc_end_bal" value="${dc_end_bal}">
+					<input type="hidden" name="dc_cr_amt" value="${dc_cr_amt}">
+					<input type="hidden" name="dc_bef_amt" value="${dc_bef_amt}">
+					<input type="hidden" name="dc_bef_d_amt" value="${dc_bef_d_amt}">
+					<input type="hidden" name="adj_reason_code" value="${adj_reason_code}">
+					<input type="hidden" name="bill_type" value="${bill_type}">
+					<input type="hidden" name="acct_item_cname" value="${acct_item_cname}">
+					<input type="hidden" name="wk_table" value="${wk_table}">
+					<input type="hidden" name="ex_curr_name" value="${ex_curr_name}">
+					<input type="hidden" name="del_disable" value="${del_disable}">
+					<input type="hidden" name="ser_num" value="${ser_num}">
+					<input type="hidden" name="value_type" value="2">
+					
+				</td>
+      </tr>
+            <!-- END DYNAMIC : DETAIL -->
+     </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="actm0032">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="ex_selectAll" value="0">
+        <input type="hidden" name="exchange_rate_840" value="${exchange_rate_840}">
+        <input type="hidden" name="exchange_rate_392" value="${exchange_rate_392}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+//top.pageRows = "20";
+
+document.dataForm.ex_acct_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否存檔?!") === false) {
+            return false;
+        } 
+    }
+
+    return true;
+}
+
+function selectAll() {
+	var chkflag = document.dataForm.ex_selectAll.value=="0"? true:false;
+//var aElements = document.dataForm.getElementsByTagName("input");
+	var aElements = document.getElementsByName("aopt");
+	var total_dr_cnt = Number(document.dataForm.click_tot_dr_cnt.value);				
+	var total_dr_amt = Number(document.dataForm.click_tot_dr_amt.value);				
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" && aElements[i].disabled==false) {
+			aElements[i].checked = chkflag;					
+	    var dc_dr_amt = Number(document.getElementsByName("dc_dr_amt")[i].value);				
+	    var sv_dr_amt = Number(document.getElementsByName("sv_dr_amt")[i].value);				
+	    var dr_amt = Number(document.getElementsByName("dr_amt")[i].value);				
+	    var sv_aopt = document.getElementsByName("sv_aopt")[i].value;		
+	    var aopt_ckbox = document.getElementsByName("aopt")[i].checked;
+	    var dopt_ckbox = document.getElementsByName("dopt")[i].checked;
+
+    //if (aopt_ckbox==true){ 為防止 ie 快速連續按兩次會連續做兩次，加 sv_aopt 判斷控制
+	    if ( (aopt_ckbox==true) && (dopt_ckbox==false) && (sv_aopt != 'Y') ) {
+		    total_dr_cnt = total_dr_cnt + 1;
+		    total_dr_amt = Number(total_dr_amt + dr_amt);
+	      document.getElementsByName('sv_dc_dr_amt')[i].value = dc_dr_amt;
+	      document.getElementsByName('sv_dr_amt')[i].value = dr_amt;
+        document.getElementsByName("sv_aopt")[i].value = 'Y';
+      }
+
+	    if ( (aopt_ckbox==false) && (dopt_ckbox==false) && (sv_aopt == 'Y') ) {
+		    total_dr_cnt = total_dr_cnt - 1;
+		    total_dr_amt = Number(total_dr_amt - dr_amt);
+	      document.getElementsByName('sv_dc_dr_amt')[i].value = 0;
+	      document.getElementsByName('sv_dr_amt')[i].value = 0;
+        document.getElementsByName("sv_aopt")[i].value = '';
+      }
+		}
+	}
+
+	$("#click_tot_dr_cnt").text(total_dr_cnt);   
+  $("#click_tot_dr_cnt").val(total_dr_cnt);   		
+	$("#click_tot_dr_amt").text(total_dr_amt);   
+  $("#click_tot_dr_amt").val(total_dr_amt);   		
+
+	document.dataForm.ex_selectAll.value = document.dataForm.ex_selectAll.value=="0"? "1":"0";
+}
+
+function setBefAmt() {
+	var tbl = document.getElementsByName('db_table');
+	
+	var dcendbal = document.getElementsByName('dc_end_bal');
+	var dcdramt = document.getElementsByName('dc_dr_amt');
+	var dcaftamt = document.getElementsByName('dc_aft_amt');
+	var dcbefamt = document.getElementsByName('dc_bef_amt');
+	var dcaftdamt = document.getElementsByName('dc_aft_d_amt');
+	var dcbefdamt = document.getElementsByName('dc_bef_d_amt');
+	
+	var endbal = document.getElementsByName('end_bal');
+	var dramt = document.getElementsByName('dr_amt');
+	var aftamt = document.getElementsByName('aft_amt');
+	var befamt = document.getElementsByName('bef_amt');
+	var aftdamt = document.getElementsByName('aft_d_amt');
+	var befdamt = document.getElementsByName('bef_d_amt');
+
+	var agy = document.getElementsByName('aopt');
+	var total_dr_amt = Number(document.dataForm.click_tot_dr_amt.value);				
+	var ll = agy.length;
+	for ( var i=0; i < ll; i++ ) {
+		if (agy[i].checked && tbl[i].value != "acaj" )  {
+			var ldc = Number(dcendbal[i].value);
+			dcdramt[i].value = ldc;
+			dcaftamt[i].value = dcbefamt[i].value - ldc;
+			dcaftdamt[i].value = dcbefdamt[i].value - ldc;
+
+			var ltw = Number(endbal[i].value);
+			dramt[i].value = ltw;
+			aftamt[i].value = befamt[i].value - ltw;
+			aftdamt[i].value = befdamt[i].value - ltw;
+
+	    var sv_dr_amt = Number(document.getElementsByName("sv_dr_amt")[i].value);				
+	    total_dr_amt = Number(total_dr_amt - sv_dr_amt + ltw);
+	    document.getElementsByName('sv_dc_dr_amt')[i].value = ldc;
+	    document.getElementsByName('sv_dr_amt')[i].value = ltw;
+		}
+	}
+
+	$("#click_tot_dr_amt").text(total_dr_amt);   
+  $("#click_tot_dr_amt").val(total_dr_amt);   		
+
+
+}
+
+function setDebitKey() {
+//var debitKey = document.dataForm.ex_debit_key.value;
+	var adjComment = document.dataForm.ex_adj_comment.value;
+	var agy = document.getElementsByName('aopt');
+	var dgy = document.getElementsByName('dopt');
+//var cgy = document.getElementsByName('c_debt_key');
+	var tgy = document.getElementsByName('adj_comment');
+	var ll = agy.length;
+	for ( var i=0; i < ll; i++ ) {
+		if (agy[i].checked && (!dgy[i].checked)) {
+		//cgy[i].value = debitKey;
+			tgy[i].value = adjComment;
+		}
+	}
+}
+
+function chkdata() {
+	var seq = 0;
+	var agy = document.getElementsByName('aopt');
+	var dgy = document.getElementsByName('dopt');
+	var ll = agy.length;
+	for ( var i=0; i < ll; i++ ) {
+		if(agy[i].checked){	seq++; }
+		if(dgy[i].checked){	seq++; }
+	}
+
+	if(seq == 0){
+		alert("請至少勾選一筆資料!");
+		return false;
+	}
+	return true;
+}
+
+function dcdramt(obj) {
+//var num = (obj.parentNode.parentNode.rowIndex / 2) -1;
+	var num = (obj.parentNode.parentNode.rowIndex - 3)/ 2;//index row 減掉 合計行及 th 行及本筆第一行資料再除以2(一筆兩行資料)
+//alert("num:"+num);
+
+	var dcdramt = Number(obj.value);
+	var tbl = document.getElementsByName('db_table');
+	var curr_code = document.getElementsByName('curr_code')[num].value;
+	var ii_curr_dp;  //TWD(901), JPY(392) = 0, USD(840) = 2
+	if (curr_code=='840') {ii_curr_dp = 2;} else {ii_curr_dp = 0;}
+	
+	var lm_amt2 = Number(document.getElementsByName('dc_orginal_amt')[num].value);
+	var lm_amt3 = Number(document.getElementsByName('orginal_amt')[num].value);
+	var lm_amt1 = f_dc2tw(curr_code,dcdramt,lm_amt2,lm_amt3);
+	//alert(num+":"+curr_code+":"+dcdramt+":"+lm_amt1+":"+lm_amt2+":"+lm_amt3);
+	
+	//document.dataForm.dr_amt[num].value = lm_amt1;
+	//document.dataForm.aft_amt[num].value = (Number(document.dataForm.bef_amt[num].value) - lm_amt1).toFixed(ii_curr_dp);
+	//document.dataForm.aft_d_amt[num].value = (Number(document.dataForm.bef_d_amt[num].value) - lm_amt1).toFixed(ii_curr_dp);
+	//document.dataForm.dc_aft_amt[num].value = (Number(document.dataForm.dc_bef_amt[num].value) - dcdramt).toFixed(ii_curr_dp);
+	//document.dataForm.dc_aft_d_amt[num].value = (Number(document.dataForm.dc_bef_d_amt[num].value) - dcdramt).toFixed(ii_curr_dp);
+	
+	document.getElementsByName('dr_amt')[num].value = lm_amt1;
+	document.getElementsByName('aft_amt')[num].value = (Number(document.getElementsByName('bef_amt')[num].value) - lm_amt1).toFixed(0);
+	document.getElementsByName('aft_d_amt')[num].value = (Number(document.getElementsByName('bef_d_amt')[num].value) - lm_amt1).toFixed(0);
+	document.getElementsByName('dc_aft_amt')[num].value = (Number(document.getElementsByName('dc_bef_amt')[num].value) - dcdramt).toFixed(ii_curr_dp);
+	document.getElementsByName('dc_aft_d_amt')[num].value = (Number(document.getElementsByName('dc_bef_d_amt')[num].value) - dcdramt).toFixed(ii_curr_dp);
+
+	var total_dr_amt = Number(document.dataForm.click_tot_dr_amt.value);				
+	var sv_dr_amt = Number(document.getElementsByName("sv_dr_amt")[num].value);				
+	var sv_dc_dr_amt = Number(document.getElementsByName("sv_dc_dr_amt")[num].value);				
+
+	if ((tbl[num].value == "acaj") && (dcdramt != sv_dc_dr_amt)) {
+		alert("更改D檔金額，請先取消D檔再重新輸入D檔金額!");
+	  document.getElementsByName('dc_dr_amt')[num].value = sv_dc_dr_amt;
+	  document.getElementsByName('dr_amt')[num].value = sv_dr_amt;
+		return false;
+  }
+
+	var aopt_ckbox = document.getElementsByName("aopt")[num].checked;
+//alert("aopt_ckbox:"+aopt_ckbox);
+	if (aopt_ckbox==true) {
+	  total_dr_amt = Number(total_dr_amt - sv_dr_amt + lm_amt1);
+	  document.getElementsByName('sv_dc_dr_amt')[num].value = dcdramt;
+	  document.getElementsByName('sv_dr_amt')[num].value = lm_amt1;
+
+	  $("#click_tot_dr_amt").text(total_dr_amt);   
+    $("#click_tot_dr_amt").val(total_dr_amt);   		
+
+    return true;
+  }
+
+}
+
+function f_dc2tw(as_curr_code,am_amt,am_dc_amt,am_tw_amt) {
+	//目前只處理('392','840','901'), 且匯率由後端預先讀取, 不做即時DB運算.
+	var lm_amt;
+	var ii_curr_dp; //小數點位數 //TWD(901), JPY(392) = 0, USD(840) = 2
+	if (as_curr_code=='840') {ii_curr_dp = 2;} else {ii_curr_dp = 0;}
+	
+	if (as_curr_code=='901' || as_curr_code=='') return am_amt;
+	
+	//is_curr_code =as_curr_code
+	////-set ii_curr_dp: (該幣別使用小數點數)----------
+	//if is_curr_code in (null, '', '901','TWD','392','JPY) then 
+	//   	ii_curr_dp =0
+	//Else
+	////read from db
+	//	select nvl(curr_amt_dp,2) into :ii_curr_dp
+	//	from 	ptr_currcode
+	//	where curr_code =:is_curr_code;
+	//	if sqlca.sqlcode<>0 then ii_curr_dp =2
+	//End If
+	
+	if (am_dc_amt != 0 && am_tw_amt != 0) {
+		lm_amt =(am_amt / am_dc_amt) * am_tw_amt;
+		return lm_amt.toFixed(0);
+	}
+
+	//select :am_amt * exchange_rate into :lm_amt
+	//from	ptr_curr_rate
+	//where	curr_code =:as_curr_code;
+	var exchange_rate = 1;
+	if (as_curr_code=='840') {
+		exchange_rate = document.dataForm.exchange_rate_840.value;
+	} else if (as_curr_code=='392') {
+		exchange_rate = document.dataForm.exchange_rate_392.value;
+	}
+	lm_amt = am_amt * exchange_rate;
+	
+	return lm_amt.toFixed(0);
+}
+
+function set_a_click_amt(obj){
+//var ii = parseInt(parm2) - 1;		
+	var ii = (obj.parentNode.parentNode.rowIndex - 2)/ 2;//index row 減掉 合計行及 th 行再除以2(一筆兩行資料)
+//alert("ii:"+ii);
+	var dc_dr_amt = Number(document.getElementsByName("dc_dr_amt")[ii].value);				
+	var dr_amt = Number(document.getElementsByName("dr_amt")[ii].value);				
+	var sv_dr_amt = Number(document.getElementsByName("sv_dr_amt")[ii].value);				
+	var total_dr_cnt = Number(document.dataForm.click_tot_dr_cnt.value);				
+	var total_dr_amt = Number(document.dataForm.click_tot_dr_amt.value);				
+	var sv_aopt = document.getElementsByName("sv_aopt")[ii].value;		
+	var aopt_ckbox = document.getElementsByName("aopt")[ii].checked;
+	var dopt_ckbox = document.getElementsByName("dopt")[ii].checked;
+
+//if (aopt_ckbox==true){ 為防止 ie 快速連續按兩次會連續做兩次，加 sv_aopt 判斷控制
+	if ( (aopt_ckbox==true) && (dopt_ckbox==false) && (sv_aopt != 'Y') ) {
+		total_dr_cnt = total_dr_cnt + 1;
+		total_dr_amt = Number(total_dr_amt + dr_amt);
+	  document.getElementsByName('sv_dc_dr_amt')[ii].value = dc_dr_amt;
+	  document.getElementsByName('sv_dr_amt')[ii].value = dr_amt;
+    document.getElementsByName("sv_aopt")[ii].value = 'Y';
+  }
+
+	if ( (aopt_ckbox==false) && (dopt_ckbox==false) && (sv_aopt == 'Y') ) {
+		total_dr_cnt = total_dr_cnt - 1;
+		total_dr_amt = Number(total_dr_amt - dr_amt);
+	  document.getElementsByName('sv_dc_dr_amt')[ii].value = 0;
+	  document.getElementsByName('sv_dr_amt')[ii].value = 0;
+    document.getElementsByName("sv_aopt")[ii].value = '';
+  }
+
+	$("#click_tot_dr_cnt").text(total_dr_cnt);   
+  $("#click_tot_dr_cnt").val(total_dr_cnt);   		
+	$("#click_tot_dr_amt").text(total_dr_amt);   
+  $("#click_tot_dr_amt").val(total_dr_amt);   		
+
+}
+
+function set_d_click_amt(obj){
+//var ii = parseInt(parm2) - 1;		
+	var ii = (obj.parentNode.parentNode.rowIndex - 2)/ 2;//index row 減掉 合計行及 th 行再除以2(一筆兩行資料)
+//alert("ii:"+ii);
+	var dc_dr_amt = Number(document.getElementsByName("dc_dr_amt")[ii].value);				
+	var dr_amt = Number(document.getElementsByName("dr_amt")[ii].value);				
+	var total_dr_cnt = Number(document.dataForm.click_tot_dr_cnt.value);				
+	var total_dr_amt = Number(document.dataForm.click_tot_dr_amt.value);				
+	var sv_dopt = document.getElementsByName("sv_dopt")[ii].value;				
+	var dopt_ckbox = document.getElementsByName("dopt")[ii].checked;
+
+  //alert("dc_dr_amt:"+dc_dr_amt);
+	//alert("dr_amt:"+dr_amt);
+	//alert("total_dc_dr_amt:"+total_dc_dr_amt);
+	//alert("total_dr_amt:"+total_dr_amt);
+	//alert("sv_dopt:"+sv_dopt);
+
+
+//if (dopt_ckbox==true){ 為防止 ie 快速連續按兩次會連續做兩次，加 sv_aopt 判斷控制
+	if ( (dopt_ckbox==true) && (sv_dopt != 'Y') ) {
+		total_dr_cnt = total_dr_cnt - 1;
+		total_dr_amt = Number(total_dr_amt - dr_amt);
+	  document.getElementsByName('sv_dc_dr_amt')[ii].value = 0;
+	  document.getElementsByName('sv_dr_amt')[ii].value = 0;
+    document.getElementsByName("sv_dopt")[ii].value = 'Y';
+  }
+
+	if ( (dopt_ckbox==false) && (sv_dopt == 'Y') ) {
+		total_dr_cnt = total_dr_cnt + 1;
+		total_dr_amt = Number(total_dr_amt + dr_amt);
+	  document.getElementsByName('sv_dc_dr_amt')[ii].value = dc_dr_amt;
+	  document.getElementsByName('sv_dr_amt')[ii].value = dr_amt;
+    document.getElementsByName("sv_dopt")[ii].value = '';
+  }
+
+	$("#click_tot_dr_cnt").text(total_dr_cnt);   
+  $("#click_tot_dr_cnt").val(total_dr_cnt);   		
+	$("#click_tot_dr_amt").text(total_dr_amt);   
+  $("#click_tot_dr_amt").val(total_dr_amt);   		
+
+}
+
+</script>

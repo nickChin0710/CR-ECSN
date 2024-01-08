@@ -1,0 +1,157 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/23  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!-- 112/01/17  V1.00.02  Simon          java程式寫html不work，取消幣別小計   -->
+<!--**************************************************************************-->
+<html>
+<head>
+	<title>帳戶利息計算明細查詢-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+	<div id="condBlock">
+		<table width="80%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap>&nbsp;帳戶帳號:
+					<select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+					<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" />
+				</td>
+				<td nowrap>&nbsp;中文姓名:${dsp_id_cname}</td>
+			</tr>
+			<tr>
+				<td nowrap>&nbsp;卡號:
+					<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength="16" size="18" />
+				</td>
+				<td>&nbsp;公司名稱:${dsp_corp_cname}</td>
+			</tr>
+			<tr>
+				<td nowrap colspan=2>&nbsp;
+					<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+					&nbsp;&nbsp;
+					<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+					&nbsp;&nbsp;
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr>
+	<!-- 合計============================ -->
+	<div id="queryBlock">
+		<table width="80%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap>&nbsp;關帳年月：</td>
+				<td nowrap>
+					<input type="text" class="col_date" name="ex_date_s" value="${ex_date_s}" zEdit="date,yyyymm" maxlength="6" size="8" />--
+					<input type="text" class="col_date" name="ex_date_e" value="${ex_date_e}" zEdit="date,yyyymm" maxlength="6" size="8" />
+				</td>
+				<td nowrap>&nbsp;雙幣幣別：</td>
+				<td nowrap>
+					<select size="1" name="ex_curr_code" class="col_ddlb">${dddw_curr_code}</select>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap>&nbsp;對帳單週期：</td>
+				<td nowrap class="td_data">&nbsp;${dsp_cycle}</td>
+				<td nowrap>&nbsp;對帳單通知利息的金額：</td>
+				<td nowrap class="td_text" style="color:red;">&nbsp;${dsp_interest.(999.00)}</td>
+			</tr>
+		</table>
+	</div>
+	<hr>
+	<!-- 明細============================ -->
+	<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<th nowrap class="list_th">入帳日期</th>
+			<th nowrap class="list_th">關帳年月</th>
+			<th nowrap class="list_th">利息本金</th>
+			<th nowrap class="list_th">起算日</th>
+			<th nowrap class="list_th">截止日</th>
+			<th nowrap class="list_th">利率<br>( n/10000 )</th>
+			<th nowrap class="list_th">正/負</th>
+			<th nowrap class="list_th">結算<br>幣別</th>
+			<th nowrap class="list_th">利息金額</th>
+			<th nowrap class="list_th">可D數金額</th>
+			<th nowrap class="list_th">減免金額</th>
+			<th nowrap class="list_th">產生原因</th>
+			<th nowrap class="list_th">科目明細<br>之參考序號</th>
+			<th nowrap class="list_th">原始起息日</th>
+			<th nowrap class="list_th">原始消費日</th>
+			<th nowrap class="list_th">原始消費金額</th>
+		</tr>
+		<!-- BEGIN DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_cc">&nbsp;${post_date.YMD}</td>
+			<td nowrap class="list_cc">&nbsp;${acct_month.YMD}</td>
+			<td nowrap class="list_rr">&nbsp;${intr_org_captial.(999.00)}</td>
+			<td nowrap class="list_cc">&nbsp;${intr_s_date.YMD}</td>
+			<td nowrap class="list_cc">&nbsp;${intr_e_date.YMD}</td>
+			<td nowrap class="list_rr">&nbsp;${interest_rate}</td>
+			<td nowrap class="list_cc"><span style="font-weight:bold;">&nbsp;${interest_sign}</span></td>
+			<td nowrap class="list_cc"><span style="color:#930093; font-weight:bold;">&nbsp;${curr_code}</span></td>
+			<td nowrap class="list_rr">&nbsp;${interest_amt.(999.00)}</td>
+			<td nowrap class="list_rr">&nbsp;${inte_d_amt.(999.00)}</td>
+			<td nowrap class="list_rr">&nbsp;${inte_waive_amt.(999.00)}</td>
+			<td nowrap class="list_cc">&nbsp;${reason_code}</td>
+			<td nowrap class="list_ll">&nbsp;${reference_no}</td>
+			<td nowrap class="list_cc">&nbsp;${interest_date.YMD}</td>
+			<td nowrap class="list_cc">&nbsp;${purchase_date.YMD}</td>
+			<td nowrap class="list_rr">&nbsp;${destination_amt.(999.00)}</td>
+		</tr>
+			${tr}
+		<!-- END DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_rr" style="color:blue">台幣 總計：</td>
+			<td nowrap class="list_rr" style="color:blue">利息本金合計：</td>
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_intr_amt.(999.00)}</td>
+			<td nowrap class="list_rr" style="color:blue">正項利息：</td>
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_p_amt.(999.00)}</td>
+			<td nowrap class="list_rr" style="color:blue">負項利息：</td>
+			<td nowrap colspan="2" class="list_rr" style="color:blue">&nbsp;${tot_m_amt.(999.00)}</td>
+			<td nowrap class="list_rr" style="color:blue">計息合計：</td>
+			<!--		<td nowrap colspan="2" class="list_rr" style="color:blue">&nbsp;${tot_t_amt.(999.00)}</td>  -->
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_t_amt.(999.00)}</td>
+			<td nowrap colspan="2" class="list_rr" style="color:blue">可D數金額合計：</td>
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_inte_d_amt.(999.00)}</td>
+			<td nowrap colspan="1" class="list_rr" style="color:blue">減免金額合計：</td>
+			<td nowrap class="list_rr" style="color:blue">&nbsp;${tot_inte_waive_amt.(999.00)}</td>
+			<!--		<td nowrap class="list_ll">&nbsp;</td>  -->
+		</tr>
+	</table>
+
+	<!--保留功能-->
+	<input type="hidden"  name="data_k1" value="" >
+	<input type="hidden"  name="data_k2" value="" >
+	<input type="hidden"  name="data_k3" value="" >
+	<input type="hidden"  name="data_k4" value="" >
+	<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+	<input type="hidden"  name="pageType" value="cond">
+	<input type="hidden"  name="p_seqno" value="${p_seqno}">
+	<input type="hidden"  name="acct_type" value="${acct_type}" />
+	<input type="hidden"  name="acct_key" value="${acct_key}" />
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+	top.refreshButton2('0');
+	top.pageRows = "9999";
+
+	document.dataForm.ex_acct_key.focus();
+
+	function validateInput() {
+		if (!top.checkFormat()) {return false;}
+
+		return true;
+	}
+</script>

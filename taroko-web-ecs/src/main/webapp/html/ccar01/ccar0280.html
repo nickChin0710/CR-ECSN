@@ -1,0 +1,182 @@
+<html>
+<head>
+<title>附卡人通知寄送紀錄報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+	<form name="dataForm" method="post" action="">
+
+		<div id="condBlock">
+			<table width="60%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>&nbsp;臨調登錄日: <input type="text" class="col_date"
+						name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd"
+						MaxLength=8 size=10 /> <script language="JavaScript">
+							new tcal({
+								'formname' : 'dataForm',
+								'controlname' : 'ex_date1'
+							});
+						</script> -- <input type="text" class="col_date" name="ex_date2"
+						value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+						<script language="JavaScript">
+							new tcal({
+								'formname' : 'dataForm',
+								'controlname' : 'ex_date2'
+							});
+						</script>
+					</td>
+					<td nowrap>&nbsp; <input type="Button" value="查詢"
+						onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+						<input type="Button" value="清除"
+						onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+						<input type="Button" value="記錄列印"
+						onClick="return top.submitControl('PDF1')" class="btClear">&nbsp;&nbsp;
+						<input type="Button" value="信函列印"
+						onClick="return top.submitControl('PDF2')" class="btClear">&nbsp;&nbsp;
+						<input type="Button" value="寄件完成"
+						onClick="return top.submitControl('U')" class="btClear">&nbsp;&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;通知寄送日: <input type="text" class="col_date"
+						name="ex_send_date1" value="${ex_send_date1}"
+						zEdit="date,yyyymmdd" MaxLength=8 size=10 /> <script
+							language="JavaScript">
+							new tcal({
+								'formname' : 'dataForm',
+								'controlname' : 'ex_send_date1'
+							});
+						</script> -- <input type="text" class="col_date" name="ex_send_date2"
+						value="${ex_send_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+						<script language="JavaScript">
+							new tcal({
+								'formname' : 'dataForm',
+								'controlname' : 'ex_send_date2'
+							});
+						</script>
+					</td>
+					<td nowrap>&nbsp;身分證: <input type="text" class="col_text"
+						name="ex_idno" value="${ex_idno}" maxlength="10" size="12">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="2">&nbsp;卡號: <input type="text"
+						class="col_text" name="ex_card_no" value="${ex_card_no}"
+						maxlength="19" size="21" zEdit="number">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+
+		<table id="table1" class="sortable" border="0" cellspacing="0"
+			cellpadding="4">
+			<tr>
+				<th nowrap class="list_th" width="10%"><input type="checkbox"
+					name="ex_selectAll" value="Y" onClick="selectAll();">列印</th>
+				<th nowrap>臨調日期&nbsp;</th>
+				<th nowrap>寄送日期&nbsp;</th>
+				<th nowrap>臨調<br>刪除日
+				</th>
+				<th nowrap>正卡ID&nbsp;</th>
+				<th nowrap>類別&nbsp;</th>
+				<th nowrap>正卡<br>姓名
+				</th>
+				<th nowrap>附卡<br>姓名
+				</th>
+				<th nowrap>原額度&nbsp;</th>
+				<th nowrap>調整後<br>額度
+				</th>
+				<th nowrap>臨調生效期間&nbsp;</th>
+				<th nowrap>臨調<br>原因
+				</th>
+				<th nowrap>臨調備註&nbsp;</th>
+				<th nowrap>臨調經辦&nbsp;</th>
+			</tr>
+			<!-- BEGIN DYNAMIC : DETAIL -->
+			<tr>
+				<td nowrap class="list_no"><span class="dsp_flag">${ok_flag}</span>
+					<input type="checkbox" name="opt" value="${ser_num}" />
+					${SER_NUM}&nbsp; 
+					<input type="hidden" name="ser_num" value="${ser_num}" />
+					<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+					<input type="hidden" name="rowid" value="${rowid}" />	
+					<input type="hidden" name="card_acct_idx" value="${card_acct_idx}" />				
+				</td>
+				<td nowrap class="list_cc">${crt_date.YMD}&nbsp;
+					<input type="hidden" name="crt_date" value="${crt_date}" />
+				</td>
+				<td nowrap class="list_cc">${send_date.YMD}&nbsp;
+					<input type="hidden" name="send_date" value="${send_date}" />
+				</td>
+				<td nowrap class="list_cc">${del_adj_date.YMD}&nbsp;
+					<input type="hidden" name="del_adj_date" value="${del_adj_date}" />
+				</td>
+				<td nowrap class="list_cc">${wk_major_id}&nbsp;
+					<input type="hidden" name="wk_major_id" value="${wk_major_id}" />
+				</td>
+				<td nowrap class="list_cc">${acct_type}&nbsp;
+					<input type="hidden" name="acct_type" value="${acct_type}" />
+				</td>
+				<td nowrap class="list_cc">${major_chi_name}&nbsp;
+					<input type="hidden" name="major_chi_name" value="${major_chi_name}" />
+				</td>
+				<td nowrap class="list_cc">${chi_name}&nbsp;
+					<input type="hidden" name="chi_name" value="${chi_name}" />
+				</td>
+				<td nowrap class="list_rr">${org_tot_consume.(999)}&nbsp;
+					<input type="hidden" name="org_tot_consume" value="${org_tot_consume}" />
+				</td>
+				<td nowrap class="list_rr">${lmt_tot_consume.(999)}&nbsp;
+					<input type="hidden" name="lmt_tot_consume" value="${lmt_tot_consume}" />
+				</td>
+				<td nowrap class="list_cc">
+					${adj_eff_start_date.YMD}--${adj_eff_end_date.YMD}&nbsp;
+					<input type="hidden" name="adj_eff_start_date" value="${adj_eff_start_date}" />
+					<input type="hidden" name="adj_eff_end_date" value="${adj_eff_end_date}" />
+				</td>
+				<td nowrap class="list_cc">${wk_adj_reason}&nbsp;
+					<input type="hidden" name="wk_adj_reason" value="${wk_adj_reason}" />
+				</td>
+				<td nowrap class="list_cc">${adj_remark}&nbsp;
+					<input type="hidden" name="adj_remark" value="${adj_remark}" />
+				</td>
+				<td nowrap class="list_cc">${crt_user}&nbsp;
+					<input type="hidden" name="crt_user" value="${crt_user}" />
+				</td>
+
+			</tr>
+			<!-- END DYNAMIC : DETAIL -->
+		</table>
+
+		<input type="hidden" name="data_k1" value=""> 
+		<input type="hidden" name="data_k2" value=""> 
+		<input type="hidden" name="data_k3" value=""> 
+		<input type="hidden" name="HIDE" value="${HIDE_DATA}"> 
+		<input type="hidden" name="pageType" value="cond">
+
+	</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+	top.refreshButton2('0');
+	top.pageRows = "20";
+
+	function validateInput() {
+		if (!top.checkFormat()) {
+			return false;
+		}
+		return true;
+	}
+</script>

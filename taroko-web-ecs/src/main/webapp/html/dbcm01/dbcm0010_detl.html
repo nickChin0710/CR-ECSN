@@ -1,0 +1,262 @@
+<html>
+
+<head>
+    <title>DebitCard重製登錄作業-detl-V.20180920--Andy-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+                    <!-- <input type="Button" name="btnQuery" value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp; -->
+                    <input type="Button" name="btnAdd" value=" 新增 " ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button" name="btnUpdate" value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap colspan="2" width="50%">舊卡號 ：&nbsp;
+                        <input type="text" class="col_any" name="kk_old_card_no" value="${kk_old_card_no}" zEdit="any" maxlength="19" size="21" zRequire="k" onChange="return top.submitControl('C')" ${set} />
+                        <span style="background-color:#FFFF33;color: red" class="dsp_text2" id="card_desp">${card_desp}</span>                
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table id= table1 width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="1">舊卡號 :
+                        <span class="dsp_text" id="old_card_no">${old_card_no}</span>
+                        <input type="hidden" name="old_card_no" value="${old_card_no}">                        
+                    </td>
+                    <td nowrap colspan="1">卡種：
+                        <span class="dsp_text" id="card_type">${card_type}</span>
+                        <input type="hidden" name="card_type" value="${card_type}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey" colspan="1">批號：
+                        <span class="dsp_text" id="batchno">${batchno}</span>
+                        <input type="hidden" name="batchno" value="${batchno}">
+                    </td>
+                    <td nowrap class="colKey" colspan="1">紀錄碼：
+                        <span class="dsp_text" id="recno">${recno}</span>
+                        <input type="hidden" name="recno" value="${recno}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">製卡來源：
+                        <span class="dsp_text" id="emboss_source">${emboss_source}</span>
+                        <input type="hidden" name="emboss_source" value="${emboss_source}">
+                    </td>
+                    <td nowrap colspan="1">晶片卡旗標：
+                        <span class="dsp_text" id="ic_flag">${ic_flag}</span>
+                        <input type="hidden" name="ic_flag" value="${ic_flag}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">重製原因:
+                        <select name="emboss_reason" class="col_ddlb" zRequire="Y" onChange="return top.submitControl('C1')">
+                            ${dddw_reason}
+                        </select>
+                    </td>
+                    <td nowrap colspan="1">強制註記:
+                        <span class="dsp_text" id="force_flag">${force_flag}</span>
+                        <input type="hidden" name="force_flag" value="${force_flag}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">重製原因說明:
+                        <select name="reissue_code" class="col_ddlb" id="reissue_code" zRequire="Y">
+                            ${dddw_reissue_code}
+                        </select>
+                    </td>
+                    <td nowrap colspan="1">數位註記：
+                        <span class="dsp_text" >${digital_flag}</span>
+                        <input type="hidden" name="digital_flag" value="${digital_flag}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">是否收重製費:
+                        <span class="col_radio">    
+                            <input type="radio" value="Y" name="redo_flag" ${redo_flag-Y}>是 
+                            <input type="radio" value="N" name="redo_flag" ${redo_flag-N} ${DEFAULT_CHK}>否
+                        </span>
+                    </td>
+                    <td nowrap colspan="1">中文姓名:
+                        <span class="dsp_text" id="chi_name">${chi_name}</span>
+                        <input type="hidden" name="chi_name" value="${chi_name}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">申請人ID:
+                        <span class="dsp_text" id="apply_id">${apply_id}</span>
+                        <input type="hidden" name="apply_id" value="${apply_id}">
+                        <span class="dsp_text" id="apply_id_code">${apply_id_code}</span>
+                        <input type="hidden" name="apply_id_code" value="${apply_id_code}">
+                    </td>
+                    <td nowrap colspan="1">預約不續卡:
+                        <span class="dsp_text" id="expire_chg_flag">${expire_chg_flag}</span>
+                        <input type="hidden" name="expire_chg_flag" value="${expire_chg_flag}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">英文姓名:
+                        <input type="text" class="col_any" name="eng_name" value="${eng_name}" zEdit="any" maxlength="25" size="25" zRequire="Y"/>
+                    </td>
+                    <td nowrap colspan="1">正附卡別:
+                        <span class="dsp_text" id="sup_flag">${sup_flag}</span>
+                        <input type="hidden" name="sup_flag" value="${sup_flag}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">法人ID:
+                        <span class="dsp_text" id="corp_no">${corp_no}</span>
+                        <input type="hidden" name="corp_no" value="${corp_no}">
+                    </td>
+                    <td nowrap colspan="1">認同集團碼:
+                        <input type="text" class="col_text" name="unit_code" value="${unit_code}" zEdit="any" maxlength="4" size="4" onChange="return top.submitControl('C2')" zRequire="Y"/>
+                        <span style="background-color:#FFFF33;color: red" class="dsp_text2" id="unit_desp">${unit_desp}</span> 
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">團體代碼:
+                        <span class="dsp_text" id="group_code">${group_code}</span>
+                        <input type="hidden" name="group_code" value="${group_code}">
+                    </td>
+                    <td nowrap colspan="1">本卡原效期:
+                        <span class="dsp_text" id="old_beg_date">${old_beg_date}</span>
+                        <input type="hidden" name="old_beg_date" value="${old_beg_date}">-
+                        <span class="dsp_text" id="old_end_date">${old_end_date}</span>
+                        <input type="hidden" name="old_end_date" value="${old_end_date}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">正卡原效期:
+                        <span class="dsp_text" id="major_valid_fm">${major_valid_fm}</span>
+                        <input type="hidden" name="major_valid_fm" value="${major_valid_fm}">-
+                        <span class="dsp_text" id="major_valid_to">${major_valid_to}</span>
+                        <input type="hidden" name="major_valid_to" value="${major_valid_to}">
+                    </td>
+                    <td nowrap colspan="1">新效期:
+                        <input type="text" class="col_date" name="valid_fm" value="${valid_fm}" zeditType="date,ymd" MaxLength=8 size=8 zRequire="Y"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'valid_fm' });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="valid_to" value="${valid_to}" zeditType="date,ymd" MaxLength=8 size=8 zRequire="Y"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'valid_to' });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">凸字第四行:
+                        <input type="text" class="col_text" name="emboss_4th_data" value="${emboss_4th_data}" zEdit="any" maxlength="20" size="20" />
+                    </td>                    
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">代收分行:
+                        <select name="receipt_branch" class="col_ddlb">
+                            ${dddw_receipt}
+                        </select>
+                    </td>
+                    <td nowrap colspan="1">金融存款帳戶:
+                        <span class="dsp_text" id="act_no">${act_no}</span>
+                        <input type="hidden" name="act_no" value="${act_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">備註說明:
+                        <input type="text" class="col_text" name="receipt_remark" value="${receipt_remark}" zEdit="any" maxlength="90" size="90" />
+                    </td>
+                </tr>
+            </table>
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="1">重製日期:
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date}">
+                    </td>
+                    <td nowrap colspan="1">重製人員:&nbsp;
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--dbc_emboss_tmp cols -->        
+        <input type="hidden" name="branch" value="${branch}">
+        <input type="hidden" name="reg_bank_no" value="${reg_bank_no}">       
+        <input type="hidden" name="mail_type" value="${mail_type}">
+        <input type="hidden" name="major_card_no" value="${major_card_no}">
+        <input type="hidden" name="pm_id" value="${pm_id}">        
+        <input type="hidden" name="pm_id_code" value="${pm_id_code}"> 
+        <input type="hidden" name="apply_ibm_id_code" value="${apply_ibm_id_code}">
+        <input type="hidden" name="pm_ibm_id_code" value="${pm_ibm_id_code}"> 
+        <input type="hidden" name="reason_code" value="${reason_code}">
+        <input type="hidden" name="to_nccc_code" value="${to_nccc_code}">
+        <input type="hidden" name="nccc_type" value="${nccc_type}">
+        <input type="hidden" name="acct_type" value="${acct_type}">
+        <input type="hidden" name="source_code" value="${source_code}"> 
+        <input type="hidden" name="member_id" value="${member_id}"> 
+        <input type="hidden" name="service_code" value="${service_code}"> 
+        <input type="hidden" name="nation" value="${nation}">  
+        <input type="hidden" name="credit_amt" value="${credit_amt}">      
+        <input type="hidden" name="birthday" value="${birthday}">
+        <input type="hidden" name="voice_passwd" value="${voice_passwd}">
+        <input type="hidden" name="sex" value="${sex}">
+        <input type="hidden" name="age_indicator" value="${age_indicator}">
+        <input type="hidden" name="status_code" value="${status_code}">  
+        <input type="hidden" name="bin_no" value="${bin_no}">      
+        <!-- wk col -->
+        <input type="hidden" name="type_flag" value="${type_flag}">
+        <input type="hidden" name="spec_flag" value="${spec_flag}">
+        <input type="hidden" name="current_code" value="${current_code}">
+        <input type="hidden" name="oppost_date" value="${oppost_date}">
+        <input type="hidden" name="reissue_status" value="${reissue_status}">
+        <input type="hidden" name="reissue_date" value="${reissue_date}">
+        <input type="hidden" name="reissue_reason" value="${reissue_reason}">
+        <input type="hidden" name="change_status" value="${change_status}">
+        <input type="hidden" name="bin_type" value="${bin_type}">
+        <input type="hidden" name="db_new_card_no" value="${db_new_card_no}">
+        <input type="hidden" name="acct_no" value="${acct_no}">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" name="pvv" value="${pvv}">
+        <input type="hidden" name="cvv" value="${cvv}">
+        <input type="hidden" name="cvv2" value="${cvv2}">
+        <input type="hidden" name="pvki" value="${pvki}">       
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="dbcm0010">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+//document.dataForm.old_card_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+</script>

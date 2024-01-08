@@ -1,0 +1,167 @@
+<html>
+<head>
+<title> 108/11/22 V1.00.01 Allen Ho Initial 簡訊查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="16">
+   <tr>
+   <td nowrap>&nbsp;新增日期:
+      <input type="text" class="col_date" 
+          name="ex_crt_date_s" value="${ex_crt_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_crt_date_e" value="${ex_crt_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_e'});
+      </script>
+   簡訊代碼:
+      <input type="text" class="col_any" 
+          name="ex_msg_id" value="${ex_msg_id}"
+         zeditType="any"  maxlength=6 size=6 />
+     </td>
+   <td nowrap>&nbsp;維護經辦:
+      <input type="text" class="col_any" 
+          name="ex_crt_user" value="${ex_crt_user}"
+         zeditType="any"  maxlength=10 size=10 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;身份證號:
+      <input type="text" class="col_any" 
+          name="ex_id_no" value="${ex_id_no}"
+         zeditType="any,upper"  maxlength=10 size=10 />
+   行動電話:
+      <input type="text" class="col_any" 
+          name="ex_cellar_phone" value="${ex_cellar_phone}"
+         zeditType="any"  maxlength=16 size=16 />
+     </td>
+   <td nowrap>&nbsp;電話檢核註記:
+      <select  name="ex_cellphone_check_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_cellphone_check_flag-Y} >正確</option>
+         <option value="N" ${ex_cellphone_check_flag-N} >不正確</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;使用部門:
+      <select size="1" name="ex_msg_dept" class="col_ddlb" >
+         ${dddw_dept_code}
+      </select>
+   簡訊狀態:
+      <select  name="ex_proc_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_proc_flag-Y} >已發送</option>
+         <option value="N" ${ex_proc_flag-N} >未發送</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">身分證號</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">簡訊代碼</th>
+    <th nowrap class="list_th">行動電話</th>
+    <th nowrap class="list_th">建檔日期</th>
+    <th nowrap class="list_th">發送部門</th>
+    <th nowrap class="list_th">經辦人員</th>
+    <th nowrap class="list_th">電話檢查旗標</th>
+    <th nowrap class="list_th">簡訊流水號</th>
+    <th nowrap class="list_th">發送完成旗標</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td  nowrap class="list_cc"> ${id_no}${comm_id_no}</td>
+    <td nowrap class="list_ll"> ${chi_name}</td>
+    <td nowrap class="list_ll"> ${msg_id}</td>
+    <td nowrap class="list_cc"> ${cellar_phone}</td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+    <td  nowrap class="list_cc"> ${msg_dept}-${comm_msg_dept}</td>
+    <td nowrap class="list_cc"> ${crt_user}</td>
+    <td nowrap class="list_cc"> ${cellphone_check_flag}</td>
+    <td nowrap class="list_cc"> ${msg_seqno}</td>
+    <td nowrap class="list_cc"> ${proc_flag}</td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "smsq0010_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "smsq0010_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

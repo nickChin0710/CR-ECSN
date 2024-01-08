@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="warn" name="MyApp" packages="">
+  <Properties>
+    <Property name="baseDir">/craplog/batch</Property>
+    <Property name="logFileName">ECS_batch</Property>
+    <Property name="deleteFileDay">45d</Property>
+  </Properties>
+  <Appenders>
+
+    <Console name="STDOUT" target="SYSTEM_OUT">
+        <PatternLayout pattern="%d{yy/MM/dd HH:mm:ss} %p %m%n"/>
+    </Console>
+
+    <RollingFile name="defaultlogger" fileName="${baseDir}/${logFileName}.log"
+       filePattern="${baseDir}/${logFileName}.log.%d{yyyy-MM-dd}.gz">
+      <PatternLayout>
+        <Pattern>%d{yy/MM/dd HH:mm:ss} %p %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <!-- <SizeBasedTriggeringPolicy size="10 KB"/> -->
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${baseDir}" maxDepth="1">
+          <IfFileName glob="${logFileName}*.gz" />
+          <IfLastModified age="${deleteFileDay}" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+
+  <!-- 
+    <RollingFile name="pdpalogger" fileName="${baseDir}/PDPA.log"
+       filePattern="${baseDir}/PDPA.log.%d{yyyy-MM-dd}.gz">
+      <PatternLayout>
+        <Pattern>%d{yy/MM/dd HH:mm:ss} %p %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${baseDir}" maxDepth="1">
+          <IfFileName glob="PDPA*.gz" />
+          <IfLastModified age="${deleteFileDay}" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile> 
+  -->
+
+  </Appenders>
+  
+  <Loggers>
+
+    <Logger name="defaultlogger" level="debug">
+      <AppenderRef ref="defaultlogger"/>
+    </Logger>
+
+    <!-- 
+    <Logger name="pdpalogger" level="debug">
+      <AppenderRef ref="pdpalogger"/>
+    </Logger>
+     -->
+
+    <Root level="debug">
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+
+  </Loggers>
+</Configuration>

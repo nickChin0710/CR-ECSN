@@ -1,0 +1,121 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+	<title>印對帳單作業-[含雙幣卡]-pond-V.2018-0129-ryan-[Initial]</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+	<link rel="stylesheet" href="js/Calendar/calendar.css">
+	<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+	<div id="condBlock">
+		<!--COND -->
+		<table width="60%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap>&nbsp;帳戶帳號：
+					<select size="1" name="ex_acct_type" class="col_ddlb" zRequire="C">
+						${dddw_acct_type}
+					</select>
+					<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}"
+						   zEdit="alphanum,upper" maxlength="11" size="13" />
+				</td>
+				<td nowrap>&nbsp;
+					<input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+					<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td nowrap>&nbsp;卡號：
+					<input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}"
+						   zEdit="any" maxlength="16" size="18" />
+				</td>
+				<td nowrap >&nbsp;中文姓名:
+					<span class="dsp_text" >${send_name}</span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap colspan="2">&nbsp;對帳單年月：
+					<input type="text" class="col_date" name="ex_acct_month_s" value="${ex_acct_month_s}"
+						   zeditType="date,yyyymm" MaxLength=6 size=8  zRequire="k"/>
+					--
+					<input type="text" class="col_date" name="ex_acct_month_e" value="${ex_acct_month_e}"
+						   zeditType="date,yyyymm" MaxLength=6 size=8 />
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr>
+	<!--Sum -->
+
+	<!--List -->
+	<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="40%">
+		<tr>
+			<th nowrap class="list_th" width="5%">No</th>
+			<th nowrap class="list_th">對帳單年月</th>
+			<th nowrap class="list_th">帳務年月</th>
+			<th nowrap class="list_th">產生日期</th>
+		</tr>
+		<!-- BEGIN DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_no"> &nbsp;${SER_NUM}&nbsp;
+				<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${acct_month}')" style="cursor:hand">&nbsp;
+			</td>
+			<td nowrap class="list_cc"> ${print_month.YMD}&nbsp;</td>
+			<td nowrap class="list_cc"> ${acct_month.YMD}&nbsp;</td>
+			<td nowrap class="list_cc"> ${sys_date.YMD}&nbsp; </td>
+		</tr>
+		<!-- END DYNAMIC : DETAIL -->
+	</table>
+
+	<input type="hidden"  name="HIDE"       value="${HIDE_DATA}">
+	<input type="hidden"  name="acct_month" value="">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+	top.refreshButton2('0');
+	top.pageRows="20";
+	document.dataForm.ex_acct_key.focus();
+
+	function validateInput()
+	{
+		if ( !top.checkFormat() )
+		{ top.normalEffect(); return false; }
+		var acct_key = document.dataForm.ex_acct_key.value;
+		if ( top.actionCode == "Q"||top.actionCode == "C") {
+			if ( acct_key.length == 8 )
+			{ acct_key = acct_key+"000"; }
+			if ( acct_key.length == 10 )
+			{ acct_key = acct_key+"0";	}
+		}
+		document.dataForm.ex_acct_key.value = acct_key;
+		return true;
+	}
+
+	function detailScreen(serNum,parm_month) {
+		//top.respLevel = 1;
+		top.currRows  = serNum;
+		document.dataForm.acct_month.value = parm_month;
+		top.submitControl('PDF');
+		return true;
+	}
+
+</script>

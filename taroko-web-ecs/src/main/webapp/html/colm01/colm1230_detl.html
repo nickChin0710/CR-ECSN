@@ -1,0 +1,444 @@
+
+<html>
+<head>
+<title>LGD表二報送JCIC登錄作業-detl-V.2017-0703-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<style>
+ font{
+ 	color:#B22222;
+ }
+ #table1{
+ 	background-color:#E8FFE8;
+ }
+ .col_text2{
+ 	color:blue;
+ 	background-color:#ffffff;
+ }
+</style>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="2">
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" id="btnQuery"  value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"  value=" 存檔 " ${btnUpdate_disable} ${display_none} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"  value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"  value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+<div>
+<hr>
+<!-- Detail data================================= -->
+<table  id="table1" width="80%" border="0"   cellspacing="0" cellpadding="4">
+    <tr>
+   		<td nowrap   align="right">授信戶ID/統編:
+   		</td>
+   		<td class="col_key"colspan="2">
+   			<span class="col_text">${id_corp_no}</span>
+      		<input type="hidden" name="id_corp_no" value="${id_corp_no}">
+      		<input type="hidden" name="id_corp_p_seqno" value="${id_corp_p_seqno}">
+   		</td>
+  	</tr>
+   	<tr>
+      	<td nowrap align="right">LGD序號:
+   		</td>
+   		<td>
+   			<span class="col_text2">${lgd_seqno}</span>
+       		<input type="hidden" name="lgd_seqno" value="${lgd_seqno}">
+   		</td>
+     	<td nowrap>
+     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     		<span class="col_text2">${tt_send_flag}</span>
+			<input type="hidden" name="tt_send_flag" value="${tt_send_flag}">
+   		   	<input type="hidden" name="send_flag" value="${send_flag}">
+   		</td>
+   	</tr>
+   	<tr>
+     	<td nowrap align="right">交易代碼 (02):
+   		</td>
+   		<td>
+   			<span class="col_text2">${tt_aud_code}</span>
+			<input type="hidden" name="tt_aud_code" value="${tt_aud_code}">
+   		   	<input type="hidden" name="aud_code" value="${aud_code}">
+   		</td>
+    	<td nowrap >媒體報送日期:
+    		<span class="col_text2">${send_date.YMD}</span>
+   		  	<input type="hidden" name="send_date" value="${send_date}">  
+   		</td>
+   	</tr>
+  	<tr>
+    	<td nowrap align="right">資料報送年月(05):
+   		</td>
+   		<td>
+   			<span class="col_text2">${send_ym.YMD}</span>
+			<input type="hidden" name="send_ym" value="${send_ym}">  
+   		</td>
+   		<td nowrap >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;異動管道:
+   		   	<span class="col_text2">${tt_from_type}</span>
+			<input type="hidden" name="tt_from_type" value="${tt_from_type}">
+   		   	<input type="hidden" name="from_type" value="${from_type}">
+   		</td>
+   	</tr>
+    <tr>
+    	<td nowrap align="right">違約型態 (06):
+   		</td>
+   		<td>
+   			<span class="col_text2">${tt_lgd_type}</span>
+    		<input type="hidden" name="tt_lgd_type" value="${tt_lgd_type}">
+   		 	<input type="hidden" name="lgd_type" value="${lgd_type}">
+   		</td>
+   		<td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;建檔日期:
+   			<span class="col_text2">${crt_date.YMD}</span>
+			<input type="hidden" name="crt_date" value="${crt_date}">
+   		</td>
+   	</tr>
+    <tr>
+  		<td nowrap align="right">最早違約日年月 (07):
+   		</td>
+   		<td>
+   			<input type="text" class="col_date" name="early_ym" value="${early_ym}"
+   		  	zEdit="date,yymm" maxlength="6" size="6">   
+   		</td>
+   		<td nowrap >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;建檔經辦:
+   			<span class="col_text2">${crt_user}</span>
+			<input type="hidden" name="crt_user" value="${crt_user}">
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">最早違約日暴險額 (08): 
+   		</td>
+   		<td>
+   			<input type="text" class="col_number" name="risk_amt" value="${risk_amt}"
+   		  	zEdit="dignumber" maxlength="13" size="13">  
+   		</td>
+    	<td nowrap >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;覆核日期:
+    		<span class="col_text2">${apr_date.YMD}</span>
+			<input type="hidden" name="apr_date" value="${apr_date}">
+   		</td>
+   	</tr>
+    <tr>
+  		<td nowrap align="right">本帳戶列入逾放年月 (09):
+   		</td>
+   		<td>
+   			<input type="text" class="col_date" name="overdue_ym" value="${overdue_ym}"
+   		 	zEdit="date,yymm"  maxlength="6" size="6">   
+   		</td>
+   		<td nowrap >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;覆核主管:
+   			<span class="col_text2">${apr_user}</span>
+  			<input type="hidden" name="apr_user" value="${apr_user}">
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">列入逾放暴險額 (10):
+   		</td>
+   		<td>
+   			<input type="text" class="col_number" name="overdue_amt" value="${overdue_amt}"
+   		  	zEdit="dignumber"  maxlength="13" size="15"> 
+   		</td>
+   	</tr>
+   	<tr>
+    	<td nowrap align="right">本帳戶轉催收款年月 (11):
+   		</td>
+   		<td>
+   			<input type="text" class="col_date" name="coll_ym" value="${coll_ym}"
+   		  	zEdit="date,yymm"  maxlength="6" size="6">
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">轉催日暴險額 (12):
+   		</td>
+   		<td>
+   			<input type="text" class="col_number" name="coll_amt" value="${coll_amt}"
+   		  	zEdit="dignumber"  maxlength="13" size="15">  
+   		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">法金授信帳戶特性 (13):
+   		</td>
+   		<td>
+   			<span class="col_text2">${crdt_charact}</span>
+			<input type="hidden" name="crdt_charact" value="${crdt_charact}">
+   		</td>
+   		<td>
+     		<font>Ｅ.其他無明確期限或表外授信</font>
+   		</td>
+   	</tr>
+    <tr>
+  		<td nowrap align="right">擔保類別 (14):
+   		</td>
+   		<td>
+   			<span class="col_text2">${tt_assure_type}</span>
+  			<input type="hidden" name="tt_assure_type" value="${tt_assure_type}">
+   		    <input type="hidden" name="assure_type" value="${assure_type}">
+   		</td>
+   	</tr>
+    <tr>
+  		<td nowrap align="right">用途別 (15):
+    	</td>
+    	<td> 
+      		<select size="1" name="crdt_use_type" class="col_ddlb">
+         		<option value="1" ${crdt_use_type-1} >1.購置不動產</option>
+         		<option value="2" ${crdt_use_type-2} >2.購買動產</option>
+         		<option value="3" ${crdt_use_type-3} >3.企業投資</option>
+         		<option value="4" ${crdt_use_type-4} >4.週轉金</option>
+      		</select> 
+    	</td>
+   	</tr>
+    <tr>
+    	<td nowrap align="right">是否為聯貸案件 (16):
+  		</td>  
+  		<td>
+  			<span class="col_text2">${syn_loan_yn}</span>
+   		    <input type="hidden" name="syn_loan_yn" value="${syn_loan_yn}"> 	
+  		</td>
+   	</tr>
+    <tr>
+   		<td nowrap align="right">聯貸合約訂定日期 (17):
+   		</td>
+   		<td>
+   			<span class="col_text2">${syn_loan_date.YMD}</span>
+			<input type="hidden" name="syn_loan_date" value="${syn_loan_date}"> 	
+   		</td>  
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">是否有政府, 金融機構或信保基金等機構保證 (18):
+   		</td>
+   		<td>
+   			<span class="col_text2">${fina_commit_yn}</span>
+			<input type="hidden" name="fina_commit_yn" value="${fina_commit_yn}"> 
+   		</td>
+   	</tr> 
+   	<tr>
+  		<td nowrap align="right">保證類型 (19):
+   		</td>
+   		<td>
+   			<span class="col_text2">${ecic_case_type}</span>
+			<input type="hidden" name="ecic_case_type" value="${ecic_case_type}">  
+   		</td>
+   		<td nowrap colspan="2">
+			<font> Ａ.一般／專案保證；</font><br>
+			<font> Ｂ.批次保證，如非屬政府，金融機構或信保基金保證案件請空白，勿填０;</font>
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">政府，金融機構或信保基金等機構保證成數 (20):
+   		</td>
+   		<td>
+   			<span class="col_text2">${fina_commit_prct.(999)}</span>
+			<input type="hidden" name="fina_commit_prct" value="${fina_commit_prct}"> 
+   		</td>
+   		<td nowrap>
+			<font>「如屬批次保證，此欄位請填'1.000'」</font>
+   		</td>
+   	</tr>
+    <tr>
+ 		<td nowrap align="right">是否有其他保證人 (21):
+   		</td>
+   		<td>
+   			<span class="col_radio">
+         		<input type="radio" value="Y" name="card_rela_type" ${card_rela_type-Y}>是 
+         		<input type="radio" value="N" name="card_rela_type" ${card_rela_type-N} >否
+         	</span>
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">回數金額-貿易型授信產品自償回收 (22):
+   		</td>
+   		<td>
+   			<span class="col_text2">${recv_trade_amt.(999)}</span>
+			<input type="hidden" name="recv_trade_amt" value="${recv_trade_amt}">
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+   	<tr>
+  		<td  nowrap align="right">回收金額-自處分擔保品之回收金額(23):
+   		</td>
+   		<td>
+   			<span class="col_text2">${recv_collat_amt.(999)}</span>
+			<input type="hidden" name="recv_collat_amt" value="${recv_collat_amt}"> 
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+    <tr>
+  		<td  nowrap align="right">回收金額-因政府，金融機構或信保基<br>金等機構保證所收回之金額 (24):
+   		</td>
+   		<td>
+   			<span class="col_text2">${recv_fina_amt.(999)}</span>
+			<input type="hidden" name="recv_fina_amt" value="${recv_fina_amt}"> 
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+	<tr>
+  		<td nowrap align="right">回收金額-借款人自償 (25):	   
+   		</td>
+   		<td>
+   			<input type="text" class="col_number canMinus" name="recv_self_amt" value="${recv_self_amt}"
+   		  	zEdit=""  maxlength="13" size="15"> 
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">回收金額-其他保證人他償 (26): 
+   		</td>
+   		<td>
+   			<input type="text" class="col_number canMinus" name="recv_rela_amt" value="${recv_rela_amt}"
+   		  	zEdit=""  maxlength="13" size="15"> 	
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+    <tr>
+  		<td nowrap align="right">回收金額-其他 (27):	   
+   		</td>
+   		<td>
+   			<input type="text" class="col_number canMinus" name="recv_oth_amt" value="${recv_oth_amt}"
+   		  	zEdit=""  maxlength="13" size="15" > 
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">成本與費用金額 (28):
+   		</td>
+   		<td>
+   			<input type="text" class="col_number canMinus" name="costs_amt" value="${costs_amt}"
+   		  	zEdit=""  maxlength="13" size="15"> 	
+   		</td>
+   		<td nowrap>
+			<font>「若有退(收)回金額，請於本欄位第一碼(即左靠)加註'-'（負號）」</font>
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">回收與成本費用發生年月 (29):
+   		</td>
+   		<td>
+   			<input type="text" class="col_date" name="costs_ym" value="${costs_ym}"
+   		  	zEdit="date,yymm"  maxlength="6" size="6"> 	   
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">利率 (30):
+   		</td>
+   		<td>
+   			<input type="text" class="col_number"  name="revol_rate" value="${revol_rate}"
+   		  	zEdit="dignumber"  maxlength="7" size="15"> 
+   		</td>
+   	</tr>
+   	<tr>
+  		<td nowrap align="right">結束日報送型態 (31):  
+    	</td> 
+    	<td colspan="2">
+    		<select size="1"  name="close_reason" class="col_ddlb">
+         		<option value="A1" ${close_reason-A1} >A1.借戶治癒 </option>
+         		<option value="A2" ${close_reason-A2} >A2.協議後依約正常還款</option>
+         		<option value="A3" ${close_reason-A3} >A3.其他</option>
+         		<option value="B1" ${close_reason-B1} >B1.最小單位下債務全數清償結案、借戶自行買回或自行處分擔保品</option>
+         		<option value="B2" ${close_reason-B2} >B2.其他違約滿兩年, 回收無望案件</option>
+         		<option value="B3" ${close_reason-B3} >B3.其他</option>
+      		</select> 
+    	</td>
+   	</tr>
+   	<tr>
+    	<td nowrap align="right">本帳號相關政府、金融機構與信保基金等機構保證及<br>擔保品是否均已處分完成或無執行實益 (32):   
+   		</td>
+   		<td>
+   			<span class="col_text2">${collat_yn}</span>
+			<input type="hidden" name="collat_yn" value="${collat_yn}">
+   		</td>
+  	</tr>  
+</table>
+</div>
+<br>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colm1230">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="USERID" value="${userId}">
+<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="display_none" value="${display_none}">
+
+</form>
+</body>
+</html>
+
+
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ //document.dataForm.kk_risk_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+   /* if ( top.actionCode == "D" ) {
+    	if (confirm("是否刪除此筆資料?") === false) {
+            return false;
+        } 
+    }*/
+    if ( top.actionCode == "U" ) {
+    	if (minusNum() === false) {
+    		alert("只允許輸入含小數點,負號之數字");
+            return false;
+        } 
+    }
+    if ( top.actionCode == "R" ) {
+    	if (minusNum() === false) {
+    		alert("只允許輸入含小數點,負號之數字");
+            return false;
+        } 
+    }
+    return true;
+  }
+ 
+
+	function minusNum() {
+		var err = 0;
+		var s1 = '';
+		$('.canMinus').each(function() {
+			s1 = this.value;
+			if (s1.length === 0) {
+				return;
+			}
+			var formatexp = /^\-[.0-9]+$/;
+			if (!formatexp.exec(s1)) {
+				formatexp = /^[.0-9]+$/;
+				if (!formatexp.exec(s1)) {
+					this.style.background = "pink";
+					err++;
+					return;
+				}
+				return;
+			}
+			 this.style.background = "";
+		})
+		if (err > 0) {
+			return false;
+		}
+		return true;
+
+	}
+</script>

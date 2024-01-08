@@ -1,0 +1,404 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 108-12-30  V1.00.01                                                      -->
+<!-- 109-08-11  V1.00.02  JustinWu       調整欄位顏色、刪除排除名單備註字         -->
+<!-- 109-08-18  V1.00.03  JustinWu       hide 帳戶卡人等級, 帳戶PD Rating違約預測評等         -->
+<!-- 109-08-28  V1.00.04  JustinWu       plugin: apr_user -> del_apr_user     -->
+<!-- 109-08-28  V1.00.04  JustinWu       add > to the tail of <td             -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>帳戶 VIP 設定參數維護　V20220222</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.del_apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+   <td nowrap>&nbsp;計算順序：
+      <input type="text" class="col_number" name="seq_no" value="${seq_no}" maxlength="5" size="7" zEdit="number" zRequire="Y">
+   </td>
+   <td nowrap>&nbsp;VIP Code：
+      <input type="text" class="col_text" name="vip_code" value="${vip_code}" maxlength="2" size="5" zRequire="Y">
+   </td>
+   <td nowrap> &nbsp;已覆核：
+      <span class="dsp_text">${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan=3>&nbsp;說明：
+      <input type="text" class="col_any" name="vip_desc" value="${vip_desc}" maxlength="60" size="62" zEdit="any,canTw" zRequire="Y">
+   </td>
+</tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+   <td nowrap >
+      <span class="dsp_remark">*僅會處理一般卡，不處理商務卡、政府採購卡*</span>
+   </td>
+   <td nowrap >&nbsp;
+      <input type="Button" class="btOther" value="參數明細維護" ${btnUpdate_disable} 
+         onClick="return detailScreen('${seq_no}','${apr_flag}')" >
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2" class="td_titl" >篩　選　條　件</td>
+</tr>
+ <tr>
+   <td nowrap colspan="2">　　
+      <input type="checkbox" name="reset_flag" value="Y" ${reset_flag-Y}>
+      <span class="col_key">0.執行時針對已按上VIP Code的客戶，重新篩選</span>
+      &nbsp;<span class="dsp_remark">注意：相同VIP Code只要任一參數勾選「重新篩選」，全體適用
+   </td>
+   
+</tr>
+<tr style="display: none;">
+   <td nowrap colspan="2" >　
+      <input type="checkbox" id="db_incl_class_code" name="db_incl_class_code" value="Y" ${db_incl_class_code-Y} disabled  >
+      <input type="hidden" name="incl_cond" value="${invl_cond}">
+      <span class="dsp_text">1.帳戶卡人等級</span>      
+      <span class="col_radio">
+         <input type="radio" value="1" name="class_code_flag" ${class_code_flag-1} />1.指定
+         <input type="radio" value="2" name="class_code_flag" ${class_code_flag-2} />2.排除
+      </span>
+      
+      <span class="readOnlyBlock">　卡人等級　(${cnt_I01})</span>
+   </td>
+</tr>
+<tr style="display: none;">
+   <td nowrap colspan="2">&nbsp;
+      <span class="dsp_remark">注意:1.因關帳後先執行VIP判斷再執行卡人等級判斷，若卡人等級列為VIP參數條件時，會造成VIP篩選時引用關帳前舊卡人等級資料。
+         <br>　　　　  
+         2.為避免因此批次程式執行之先後順序影響VIP資料判斷之合理性，「帳戶卡人等級」項目暫不列入VIP參數。
+         <br>　　　　  
+         3.程式執行時點：每cycle之次日曆日
+</tr>
+<tr style="display: none;">
+   <td nowrap colspan="2">&nbsp;　　　2. 帳戶 PD Rating 違約預測評等
+   <input type="hidden" name="db_incl_pd_rate" value="Y" />
+   </td>
+</tr>
+<tr style="display: none;">
+   <td nowrap colspan="2">&nbsp;
+     　　　　 <input type="checkbox" name="pd_rate_mm_cond" value="Y" ${pd_rate_mm_cond-Y}>&nbsp;
+      近
+      &nbsp;<input type="text" class="col_number" name="pd_rate_mm" value="${pd_rate_mm}" maxlength="3" size="5" zEdit="number">個月,
+      <span class="col_radio">
+         <input type="radio" value="1" name="pd_rate_mm_flag" ${pd_rate_mm_flag-1} />1.指定
+         <input type="radio" value="2" name="pd_rate_mm_flag" ${pd_rate_mm_flag-2} />2.排除
+      </span>
+      <span class="readOnlyBlock">　違約預測評等 (${cnt_I02})　</span>(不含當月)
+   </td>      
+</tr>
+<tr style="display: none;">
+   <td nowrap colspan="2">&nbsp;　　
+    　　 <input type="checkbox" name="pd_rate_m1_cond" value="Y" ${pd_rate_m1_cond-Y}>&nbsp;
+      最近一期,
+      <span class="col_radio">
+         <input type="radio" value="1" name="pd_rate_m1_flag" ${pd_rate_m1_flag-1} />1.指定
+         <input type="radio" value="2" name="pd_rate_m1_flag" ${pd_rate_m1_flag-2} />2.排除
+      </span>
+      <span class="readOnlyBlock">　違約預測評等 (${cnt_I03})　</span>
+   </td>      
+</tr>
+<tr>  
+   <td nowrap colspan="2">&nbsp;　　　1.繳款評等
+   <input type="hidden" name="db_incl_pay_rate" value="Y" />
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　 　　
+    <input type="checkbox" name="pay_rate_mm_cond" value="Y" ${pay_rate_mm_cond-Y}>&nbsp;
+      近
+      &nbsp;<input type="text" class="col_number" name="pay_rate_mm" value="${pay_rate_mm}" maxlength="3" size="5" zEdit="number">個月,
+      <span class="col_radio">
+         <input type="radio" value="1" name="pay_rate_mm_flag" ${pay_rate_mm_flag-1} />1.指定
+         <input type="radio" value="2" name="pay_rate_mm_flag" ${pay_rate_mm_flag-2} />2.排除
+      </span>
+      <span class="readOnlyBlock">　繳款評等 (${cnt_I04})　</span>(不含當月)
+   </td>      
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　 　　
+      <input type="checkbox" name="pay_rate_m1_cond" value="Y" ${pay_rate_m1_cond-Y}>&nbsp;
+      最近一期,
+      <span class="col_radio">
+         <input type="radio" value="1" name="pay_rate_m1_flag" ${pay_rate_m1_flag-1} />1.指定
+         <input type="radio" value="2" name="pay_rate_m1_flag" ${pay_rate_m1_flag-2} />2.排除
+      </span>
+      <span class="readOnlyBlock">　繳款評等 (${cnt_I05})　</span>
+   </td>      
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_incl_card_since" value="Y" ${db_incl_card_since-Y}> 
+      2.持卡月數：
+      <input type="text" class="col_number" name="card_since1" value="${card_since1}" maxlength="6" size="8" zEdit="number">月
+      --
+      <input type="text" class="col_number" name="card_since2" value="${card_since2}" maxlength="6" size="8" zEdit="number">月
+      &nbsp; ;帳戶之最早發卡日(含有效卡及無效卡)
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+      <input type="checkbox" name="db_incl_limit_amt" value="Y" ${db_incl_limit_amt-Y}> 
+       3.信用卡額度：
+      <input type="text" class="col_number" name="limit_amt1" value="${limit_amt1}" zEdit="number" maxlength="8" size="10">元
+      --
+      <input type="text" class="col_number" name="limit_amt2" value="${limit_amt2}" zEdit="number" maxlength="8" size="10">元
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_incl_purch_amt" value="Y" ${db_incl_purch_amt-Y}> 
+      4.消費金額： 近
+      <input type="text" class="col_number" name="purch_amt_mm" value="${purch_amt_mm}" zEdit="number" maxlength="3" size="5">
+      個月累積消費金額：&nbsp;
+      <input type="text" class="col_number" name="purch_amt1" value="${purch_amt1}" zEdit="number" maxlength="8" size="10">元
+      --
+      <input type="text" class="col_number" name="purch_amt2" value="${purch_amt2}" zEdit="number" maxlength="8" size="10">元
+      <br>　　　　　　　　　
+      ,and 近六個月消費名次為前
+      <input type="text" class="col_number" name="purch_amt_num" value="${purch_amt_num}" zEdit="number" maxlength="8" size="10">名(含)
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_incl_bank_rela" value="Y" ${db_incl_bank_rela-Y}> 
+      5.金控利害關係人：
+      <span class="col_radio">
+         <input type="radio" value="Y" name="bank_rela_flag" ${bank_rela_flag-Y} />Y
+         <input type="radio" value="N" name="bank_rela_flag" ${bank_rela_flag-N} />N
+      </span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_incl_list" value="Y" ${db_incl_list-Y}> 
+      6.指定名單：
+      <span class="readOnlyBlock">　指定名單 (${cnt_I06})　</span>      
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_incl_group_code" value="Y" ${db_incl_group_code-Y}> 
+      7.指定團體代號：
+      <span class="readOnlyBlock">　指定團體代號 (${cnt_I07})　</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2" class="td_titl" >排　除　條　件</td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_block" value="Y" ${db_excl_block-Y}> 
+      1.凍結碼：　　　　　
+      <span class="readOnlyBlock">　凍結碼 (${cnt_E01})　</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_exblock" value="Y" ${db_excl_exblock-Y}> 
+      　　　　　　　　　　
+      <span class="readOnlyBlock">　例外凍結碼 (${cnt_E05})　</span>
+    <input type="hidden" name="excl_cond" value="${excl_cond}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_hi_risk" value="Y" ${db_excl_hi_risk-Y}> 
+      2.風險性產品註記：　
+      <span class="readOnlyBlock">　風險分類 (${cnt_E02})　</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_overdue" value="Y" ${db_excl_overdue-Y}> 
+      3.帳戶近：
+      <input type="text" class="col_number" name="overdue_mm" value="${overdue_mm}" maxlength="3" size="5" zEdit="number">&nbsp;
+      個月,M1(含)以上次數：
+      <input type="text" class="col_number" name="overdue_times1" value="${overdue_times1}" maxlength="5" size="7" zEdit="number">次
+      --
+      <input type="text" class="col_number" name="overdue_times2" value="${overdue_times2}" maxlength="5" size="7" zEdit="number">次
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　　 
+      <input type="hidden" name="db_excl_rc_use" value="Y" />
+      4.RC平均使用率：
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　 　　
+    <input type="checkbox" name="rc_use_mm_flag" value="Y" ${rc_use_mm_flag-Y}>&nbsp;
+      近
+    <input type="text" class="col_number" name="rc_use_mm" value="${rc_use_mm}" maxlength="3" size="5" zEdit="number">
+    個月,
+    <input type="text" class="col_number" name="rc_use_mm_rate1" value="${rc_use_mm_rate1}" maxlength="4" size="5" zEdit="dignumber">%
+    --
+    <input type="text" class="col_number" name="rc_use_mm_rate2" value="${rc_use_mm_rate2}" maxlength="4" size="5" zEdit="dignumber">%(不含當月)&nbsp;　　 　　
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　 　　
+    <input type="checkbox" name="rc_use_m1_flag" value="Y" ${rc_use_m1_flag-Y}>
+      最近一期,
+    <input type="text" class="col_number" name="rc_use_m1_rate1" value="${rc_use_m1_rate1}" maxlength="4" size="5" zEdit="dignumber">%
+    --
+    <input type="text" class="col_number" name="rc_use_m1_rate2" value="${rc_use_m1_rate2}" maxlength="4" size="5" zEdit="dignumber">%
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_pre_cash" value="Y" ${db_excl_pre_cash-Y}> 
+      5.帳戶近：
+    <input type="text" class="col_number" name="pre_cash_mm" value="${pre_cash_mm}" maxlength="3" size="5" zEdit="number">
+    個月之預借現金使用：
+    <input type="text" class="col_number" name="pre_cash_times1" value="${pre_cash_times1}" maxlengtg="5" size="7" zEdit="number">次
+    --
+    <input type="text" class="col_number" name="pre_cash_times2" value="${pre_cash_times2}" maxlength="5" size="7" zEdit="number">次
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　　 
+      <input type="hidden" name="db_excl_limit_use" value="Y" />
+      6.額度平均動用率：
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　 　　
+    <input type="checkbox" name="limit_use_mm_flag" value="Y" ${limit_use_mm_flag-Y}>&nbsp;
+      近
+    <input type="text" class="col_number" name="limit_use_mm" value="${limit_use_mm}" maxlength="3" size="5" zEdit="number">個月,
+    <input type="text" class="col_number" name="limit_use_mm_rate1" value="${limit_use_mm_rate1}" maxlength="4" size="5" zEdit="dignumber">%
+    --
+    <input type="text" class="col_number" name="limit_use_mm_rate2" value="${limit_use_mm_rate2}" maxlength="4" size="5" zEdit="dignumber">%(不含當月)
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　　 　　
+    <input type="checkbox" name="limit_use_m1_flag" value="Y" ${limit_use_m1_flag-Y}>&nbsp;
+      最近一期,
+    <input type="text" class="col_number" name="limit_use_m1_rate1" value="${limit_use_m1_rate1}" maxlength="4" size="5" zEdit="dignumber">%
+    --
+    <input type="text" class="col_number" name="limit_use_m1_rate2" value="${limit_use_m1_rate1}" maxlength="4" size="5" zEdit="dignumber">%
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_incl_reason_down" value="Y" ${db_incl_reason_down-Y}> 
+      7.調降額度：　
+      <span class="readOnlyBlock">　例外 調降額度理由碼 (${cnt_I09})　</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_action_code" value="Y" ${db_excl_action_code-Y}> 
+      8.最近一期 ACTION-CODE：　
+      <span class="readOnlyBlock">　ACTION-CODE (${cnt_E03})　</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;　
+    <input type="checkbox" name="db_excl_list" value="Y" ${db_excl_list-Y}> 
+      9.排除名單：　
+      <span class="readOnlyBlock">　排除名單 (${cnt_E04})　</span>      
+   </td>
+</tr>
+</table>
+
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">建檔日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">建檔經辦：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">覆核日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${apr_date.YMD}</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">覆核主管：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${apr_user} </span>
+      <input type="hidden" name="apr_user" value="${apr_user}">   
+   </td>
+  </tr>  
+</table>
+
+<!-- -->
+
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ptrm0470">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(parm,parm2) { 
+    var ls_acct_type =document.forms["dataForm"]["seq_no"].value.toUpperCase();
+    var ls_class_code =document.forms["dataForm"]["apr_flag"].value.toUpperCase();
+//    var ls_apr_flag =document.forms["dataForm"]["apr_flag"].value.toUpperCase();
+   
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml  = "ptrm0470_I04";
+  top.submitControl("R2");
+  return true;
+ }
+
+
+</script>

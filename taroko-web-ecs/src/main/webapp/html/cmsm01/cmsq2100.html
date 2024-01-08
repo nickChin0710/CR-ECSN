@@ -1,0 +1,635 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-16  V1.00.01                                                      -->
+<!-- 109-08-17  V1.00.02    JustinWu    add 悠遊VD卡                          -->
+<!-- 109-08-26  V1.00.03    Sunny       change acct_no maxlenth               -->
+<!-- 109-09-02  V1.00.04    JustinWu    display db_corpname                   -->
+<!-- 109-09-23  V1.00.05    JustinWu    法人名稱->卡人(法人)名稱                -->
+<!-- 109-10-05  V1.00.06    Sunny       chi_name center                       -->
+<!-- 109-11-09  V1.00.07    JustinWu    rename the names of response HTML     -->
+<!-- 109-12-31  V1.00.08    JustinWu    add the enter condition of OEM pay    -->
+<!-- 110-03-25  V1.00.09    JustinWu    prevent empty oempay value            -->
+<!-- 111-06-01  V1.00.10    Sunny Ts    調整中文姓名(長度變長)，獨立一行，避免跑版                          -->
+<!-- 111-11-02  V1.00.11    Ryan        新增EPAY主檔相關資訊                        -->
+<!-- 112-08-17  V1.00.12    Ryan        貴賓卡頁籤的卡片狀態右邊增加信用卡號欄位                        -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人相關資料查詢[cmsq2100]-cond-V20220601</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+//alert("page-type="+page_type);
+
+$('.tbl_idno').hide();
+$('.tbl_acno').hide();
+$('.tbl_card').hide();
+$('.tbl_relcard').hide();
+$('.tbl_relidno').hide();
+$('.tbl_relbank').hide();
+$('.tbl_xxcard').hide();
+$('.tbl_rcv').hide();
+$('.tbl_ppcard').hide();
+if (page_type=='idno') {
+   $('.tbl_idno').show();
+}
+else if (page_type=='acno') {
+   $('.tbl_acno').show();
+}
+else if (page_type=='card') {
+   $('.tbl_card').show();
+}
+else if (page_type=='relcard') {
+   $('.tbl_relcard').show();
+}
+else if (page_type=='relidno') {
+   $('.tbl_relidno').show();
+}
+else if (page_type=='relidno') {
+   $('.tbl_relidno').show();
+}
+else if (page_type=='relbank') {
+   $('.tbl_relbank').show();
+}
+else if (page_type=='xxcard') {
+   $('.tbl_xxcard').show();
+}
+else if (page_type=='rcv') {
+   $('.tbl_rcv').show();
+}
+else if (page_type=='ppcard') {
+   $('.tbl_ppcard').show();
+}
+});
+
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;身分證號：
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}"
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap colspan="1">&nbsp;  
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td> 
+   </tr>
+   <tr>
+   <td nowrap colspan="3" >&nbsp;中文姓名：
+      <input type="text" class="col_any" name="ex_chi_name" value="${ex_chi_name}" zEdit="any,canTw" maxlength=50 size=92 />
+   </td> 
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡號：
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}"
+       maxlength=16 size=18 />
+   </td>
+   <td nowrap>&nbsp;Debit 金融帳號：
+      <input type="text" class="col_text" name="ex_acct_no" value="${ex_acct_no}"
+       maxlength=13 size=15 />
+   </td>
+   <td nowrap>&nbsp;貴賓卡卡號：
+      <input type="text" class="col_text" name="ex_pp_card_no" value="${ex_pp_card_no}"
+       maxlength=19 size=21 />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;儲值/支付資料卡號:
+   		<input type="text" class="col_text" name="ex_xx_card_no" value="${ex_xx_card_no}" maxlength="20" size="22" zEdit="alphanum,upper" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;公司電話：
+      <input type="text" class="col_text" name="ex_offi_area" value="${ex_offi_area}"
+       maxlength=5 size=7/>
+      <input type="text" class="col_text" name="ex_offi_telno" value="${ex_offi_telno}"
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap>&nbsp;住家電話：
+      <input type="text" class="col_text" name="ex_home_area" value="${ex_home_area}"
+       maxlength=5 size=7 />
+      <input type="text" class="col_text" name="ex_home_telno" value="${ex_home_telno}"
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap>&nbsp;行動電話：
+      <input type="text" class="col_text" name="ex_cellar_no" value="${ex_cellar_no}"
+       maxlength=10 size=12 />
+   </td>
+  </tr>
+ </table>
+</div>
+<table>
+<tr><td>
+<input type="Button" value="基本資料" onClick="return top.submitControl('Q1')" class="${bt_class1}" >&nbsp;&nbsp;
+<input type="Button" value="帳戶資料" onClick="return top.submitControl('Q2')" class="${bt_class2}" >&nbsp;&nbsp;
+<input type="Button" value="卡片資料" onClick="return top.submitControl('Q3')" class="${bt_class3}" >&nbsp;&nbsp;
+<input type="Button" value="關係卡" onClick="return top.submitControl('Q4')" class="${bt_class4}" >&nbsp;&nbsp;
+<input type="Button" value="關係人" onClick="return top.submitControl('Q5')" class="${bt_class5}" >&nbsp;&nbsp;
+<input type="Button" value="金控利害關係人" onClick="return top.submitControl('Q6')" class="${bt_class6}" >&nbsp;&nbsp;
+<input type="Button" value="儲值/支付資料" onClick="return top.submitControl('Q7')" class="${bt_class7}" >&nbsp;&nbsp;
+<input type="Button" value="債協清償" onClick="return top.submitControl('Q11')" class="${bt_class11}" >&nbsp;&nbsp;
+<input type="Button" value="貴賓卡" onClick="return top.submitControl('Q12')" class="${bt_class12}" >&nbsp;&nbsp;
+</td></tr>
+</table>
+${#PLUGIN:htmcomm_plugin.vip_color}
+<hr>
+<!--IDNO==================================================================== -->
+ <table id="tbl_idno" class="tbl_idno" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>類別&nbsp;</th>
+    <th nowrap>身分證號碼&nbsp;</th>
+    <th nowrap>中文姓名&nbsp;</th>
+    <th nowrap>英文姓名&nbsp;</th>
+    <th nowrap>出生日期&nbsp;</th>
+    <th nowrap>性別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenA('${SER_NUM}','${id_p_seqno}','${debit_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	
+      <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">   
+   </td>
+   <td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCrd.debitFlag(debit_flag)}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${db_ename}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${birthday.YMD}&nbsp;	</td>
+   <td nowrap class="list_ll"> ${#JAVA:ecsfunc.DeCodeCrd.idnoSex(sex)}&nbsp;	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!--ACNO==================================================================== -->
+ <table id="tbl_acno" class="tbl_acno" border="0" cellspacing="0" cellpadding="4">
+   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>類別&nbsp;</th>
+    <th nowrap colspan="2">帳號&nbsp;</th>
+    <th nowrap>卡人(法人)名稱&nbsp;</th>
+    <th nowrap>產品類別&nbsp;</th>
+    <th nowrap>金融帳號&nbsp;</th>
+    <!-- <th nowrap>已售出&nbsp;</th> -->
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenB('${SER_NUM}','${acno_p_seqno}','${id_p_seqno}','${debit_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	
+      <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+      <input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />   
+   </td>
+   <td nowrap class="list_cc"> ${tt_debit_flag}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${acct_key}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${db_corpname}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${card_indicator}.${tt_card_indicator}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${combo_acct_no}&nbsp;	</td>
+   <!-- <td nowrap class="list_cc"> ${sale_flag}&nbsp;	</td> -->
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!--CARD==================================================================== -->
+ <table id="tbl_card" class="tbl_card" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>參數類別&nbsp;</th>
+    <th nowrap colspan="2">帳戶帳號&nbsp;</th>
+    <th nowrap>卡號&nbsp;</th>
+    <th nowrap>狀態&nbsp;</th>
+    <th nowrap colspan="2">卡種&nbsp;</th>
+    <th nowrap>團體代號&nbsp;</th>
+    <th nowrap>團代名稱&nbsp;</th>
+    <th nowrap>停用原因&nbsp;</th>
+    <th nowrap>幣別&nbsp;</th>
+    <!-- <th nowrap>中華電信QR扣&nbsp;</th> -->
+    <th nowrap>核卡日期&nbsp;</th>
+    <th nowrap>停卡日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenC('${SER_NUM}','${card_no}','${id_p_seqno}','${debit_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${tt_debit_flag}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${acct_key}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${card_type}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${tt_card_type}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${group_code}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${group_name}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${oppost_reason}${tt_oppost_reason}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${curr_code}${tt_curr_code}&nbsp;	</td>
+   <!-- <td nowrap class="list_cc"> ${qr_code}&nbsp;	</td> -->
+   <td nowrap class="list_cc"> ${issue_date.YMD}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${oppost_date.YMD}&nbsp;	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <!--RELCARD==================================================================== -->
+ <table id="tbl_relcard" class="tbl_relcard" border="0" cellspacing="0" cellpadding="4">
+   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>類別&nbsp;</th>
+    <th nowrap>身分證號碼&nbsp;</th>
+    <th nowrap>中文姓名&nbsp;</th>
+    <th nowrap>英文姓名&nbsp;</th>
+    <th nowrap>出生日期&nbsp;</th>
+    <th nowrap>性別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenD('${SER_NUM}','','${id_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${debit_flag}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${db_ename}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${birthday.YMD}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${sex}${tt_sex}&nbsp;	</td>
+   <input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+   
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>    
+ <!--RELIDNO==================================================================== -->
+ <table id="tbl_relidno" class="tbl_relidno" border="0" cellspacing="0" cellpadding="4">
+   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>類別&nbsp;</th>
+    <th nowrap>身分證號碼&nbsp;</th>
+    <th nowrap>中文姓名&nbsp;</th>
+    <th nowrap>英文姓名&nbsp;</th>
+    <th nowrap>出生日期&nbsp;</th>
+    <th nowrap>性別&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenE('${SER_NUM}','','${id_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${debit_flag}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${db_ename}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${birthday.YMD}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${sex}${tt_sex}&nbsp;	</td>
+   <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+   
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>    
+ <!--RELIDNO==================================================================== -->
+ 
+ <table id="tbl_relbank" class="tbl_relbank" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  	<td nowrap class="list_cc" colspan="3" >合計:&nbsp;</th>
+  	<td nowrap class="list_rr" >&nbsp;${tl_amt.(999)} </th>
+  	<td nowrap class="list_cc" >&nbsp;最高額度 : ${high_amt.(999)}</th>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>帳號&nbsp;</th>
+    <th nowrap>額度分類&nbsp;</th>
+    <th nowrap>額度&nbsp;</th>
+    <th nowrap>產品分類&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_acct_key}&nbsp;</td>
+   <td nowrap class="list_cc"> ${db_cname}&nbsp;</td>
+   <td nowrap class="list_rr"> ${line_of_credit_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${card_indicator}${tt_card_indicator}&nbsp;</td>   
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>    
+ <!--TSCC==================================================================== -->
+ <table id="tbl_xxcard" class="tbl_xxcard" border="0" cellspacing="0" cellpadding="4">
+  <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>聯名卡類別&nbsp;</th>
+    <th nowrap>聯名卡卡號&nbsp;</th>
+    <th nowrap>狀態&nbsp;</th>
+    <th nowrap>信用卡號&nbsp;</th>
+    <th nowrap>有效日期&nbsp;</th>
+    <th nowrap>Auto-Load&nbsp;</th>
+    <th nowrap>關閉自動加值日期&nbsp;</th>
+    <th nowrap>退卡&nbsp;</th>
+    <th nowrap>鎖卡&nbsp;</th>
+    <th nowrap>黑名單&nbsp;</th>
+    <th nowrap>拒絕代行&nbsp;</th>
+    <th nowrap>行動裝置號碼&nbsp;</th>
+    <th nowrap>服務終止&nbsp;</th>
+    <th nowrap>凍結暫停&nbsp;</th>
+    <th nowrap>產生日期&nbsp;</th>
+    <th nowrap>TPAN狀態改變日期&nbsp;</th>
+    <th nowrap>簡訊驗證&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenF('${SER_NUM}','${xx_card_type}','${xx_card_no}','${card_no}','${id_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_display_card_type}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_current_code}.${tt_current_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_start_date.YMD} -- ${xx_end_date.YMD}</td>   
+   <td nowrap class="list_cc"> ${xx_autoload_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_autoload_clo_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_return_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_lock_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_blacklt_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_refuse_type}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_msisdn}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_stop_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_block_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_crt_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_change_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${xx_sms_flag}&nbsp;</td>
+   <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+	</tr>
+   
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <!--RCV==================================================================== --> 
+ <table id="tbl_rcv" class="tbl_rcv" border="0" cellspacing="0" cellpadding="4">   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>資料類別&nbsp;</th>
+    <th nowrap>狀態/進度&nbsp;</th>
+    <th nowrap>狀態日期&nbsp;</th>
+    <th nowrap>結案日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL --> 
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_type}&nbsp;</td>
+   <td nowrap class="list_ll"> ${tt_wk_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_rcv_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_end_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL --> 
+ </table>
+ <!--ppcard==================================================================== --> 
+ <table id="tbl_ppcard" class="tbl_ppcard" border="0" cellspacing="0" cellpadding="4">   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>貴賓卡卡號&nbsp;</th>
+    <th nowrap>身分證 ID&nbsp;</th>
+    <th nowrap>卡片狀態&nbsp;</th>
+    <th nowrap>信用卡號&nbsp;</th>
+    <th nowrap>卡別&nbsp;</th>
+    <th nowrap>貴賓卡別&nbsp;</th>
+    <th nowrap>發卡日期&nbsp;</th>
+    <th nowrap>卡片效期&nbsp;</th>
+    <th nowrap>停卡日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL --> 
+  <tr onclick="detailScreenJ('${SER_NUM}','${pp_card_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pp_card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${bin_type}.${#JAVA:ecsfunc.DeCodePtr.binType(bin_type)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_vip_kind}&nbsp;</td>
+   <td nowrap class="list_cc"> ${issue_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${valid_to.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${oppost_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL --> 
+ </table>        
+ 
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+ <input type="hidden"  name="bt_class1" value="${bt_class1}" >
+ <input type="hidden"  name="bt_class2" value="${bt_class2}" >
+ <input type="hidden"  name="bt_class3" value="${bt_class3}" >
+ <input type="hidden"  name="bt_class4" value="${bt_class4}" >
+ <input type="hidden"  name="bt_class5" value="${bt_class5}" >
+ <input type="hidden"  name="bt_class6" value="${bt_class6}" >
+ <input type="hidden"  name="bt_class7" value="${bt_class7}" >
+ <input type="hidden"  name="bt_class8" value="${bt_class8}" >
+ <input type="hidden"  name="bt_class9" value="${bt_class9}" >
+ <input type="hidden"  name="bt_class10" value="${bt_class10}" >
+ <input type="hidden"  name="bt_class11" value="${bt_class11}" >
+ <input type="hidden"  name="bt_class12" value="${bt_class12}" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  id="pageType" name="pageType"  value="${pageType}">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('tbl_idno');
+	tigra_tables('tbl_acno');
+	tigra_tables('tbl_card');
+	tigra_tables('tbl_relcard');
+	tigra_tables('tbl_relidno');
+   tigra_tables('tbl_relbank');
+   tigra_tables('tbl_xxcard');   
+   tigra_tables('tbl_rcv');
+   tigra_tables('tbl_ppcard');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+  
+  function detailScreenA(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    if(parm2 ==='N'){
+      top.respHtml  = "cmsq2100_idno";    
+    } else  {
+      top.respHtml  = "cmsq2100_dbidno";    
+    }
+    
+    top.submitControl('S1');
+    return true;
+  }
+  
+  function detailScreenB(serNum,parm,parm2,parm3) {
+    if(parm3 ==='Z'){
+      alert("帳戶已瘦身 無法顯示資料");
+      return true;  
+    }         
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    if(parm3 ==='N'){
+      top.respHtml  = "cmsq2100_acno";
+    } else  {
+      top.respHtml  = "cmsq2100_dbacno";
+    }
+    
+    top.submitControl('S2');
+    return true;
+  }
+  
+  function detailScreenC(serNum,parm,parm2,parm3) { 
+    if(parm3 ==='Z'){
+      alert("卡片已瘦身 無法顯示資料");
+      return true;  
+    }   
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    if(parm3 === 'N'){
+      top.respHtml  = "cmsq2100_card";
+    } else  {
+      top.respHtml  = "cmsq2100_dbcard";
+    }
+    
+    top.submitControl('S3');
+    return true;
+  }
+  
+  function detailScreenD(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsq2100_relcard";
+    top.submitControl('S4');
+    return true;
+  }
+  
+  function detailScreenE(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsq2100_relidno";
+    top.submitControl('S5');
+    return true;
+  }
+  
+//111-11-02  V1.00.11    Ryan        新增EPAY主檔相關資訊 
+  function detailScreenF(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+
+    switch (parm) {
+      case '悠遊卡':
+      top.respHtml  = "cmsq2100_tscc";
+      top.submitControl('S7');
+      break;
+      case '悠遊VD卡':
+      top.respHtml  = "cmsq2100_tscc";
+      top.submitControl('S14');
+      break;
+      case '一卡通':
+      top.respHtml  = "cmsq2100_ipass";
+      top.submitControl('S10');
+      break;
+      case '愛金卡':
+      top.respHtml  = "cmsq2100_ich";
+      top.submitControl('S13');
+      break;
+      case '行動支付':
+      top.respHtml  = "cmsq2100_mob";
+      top.submitControl('S8');
+      break;
+      case 'HCE':
+      top.respHtml  = "cmsq2100_hce";
+      top.submitControl('S9');
+      break;
+      case 'OEMPAY':
+      case 'WALLET REMOTE':
+      case 'NFC':
+      case 'Apple Pay':
+      case 'Android Pay':
+      case 'Samsung Pay':
+      top.respHtml  = "cmsq2100_oem";
+      top.submitControl('S15');
+      break;
+      case 'EPAY':
+      top.respHtml  = "cmsq2100_epay";
+      top.submitControl('S16');
+      break;
+    }
+    return true;
+  }
+  
+  function detailScreenG(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsq2100_hce";
+    top.submitControl('S8');
+    return true;
+  }
+  
+  function detailScreenH(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsq2100_tpan";
+    top.submitControl('S9');
+    return true;
+  }
+  
+  function detailScreenI(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsq2100_ipass";
+    top.submitControl('S10');
+    return true;
+  }
+ 
+  function detailScreenJ(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "cmsq2100_ppcard";
+    top.submitControl('S12');
+    return true;
+  } 
+ 
+</script>

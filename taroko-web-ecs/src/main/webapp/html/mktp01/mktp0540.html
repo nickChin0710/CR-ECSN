@@ -1,0 +1,119 @@
+<html>
+
+<head>
+    <title>合庫金控子公司推廣單位放行作業-V.2022-0709-machao-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                       <td nowrap>&nbsp;機構代號:
+      <select size="1" name="ex_corp_no" class="col_ddlb" >
+         ${dddw_mkt_office_m}
+      </select>
+     </td>
+      <td nowrap>&nbsp;
+                        <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="執行" onClick="return top.submitControl('U')" class="btAdd">&nbsp;&nbsp;
+                      <!--    <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                    -->
+                    </td>              
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table width="60%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" value="Y" ${ex_selectAll} onChange="selectAll();">放行&nbsp;</th>
+                <th nowrap class="list_th">機構代號</th>
+                <th nowrap class="list_th">推廣單位</th>
+                <th nowrap class="list_th">證券公司</th>
+                <th nowrap class="list_th">異動人員</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no" rowspan="2">
+                    <span class="dsp_flag">${ok_flag}</span>
+                    ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                    <input type="hidden" name="rowid" value="${rowid}">
+                </td>
+            </tr>
+            <tr onclick="detailScreen('${SER_NUM}','${opt}','','')" style="cursor:hand">
+                <td nowrap class="list_ll"> ${corp_no}
+                <input type="hidden" name="corp_no" value="${corp_no}"> </td>
+                <td nowrap class="list_ll"> ${office_code}-${office_name}
+                <input type="hidden" name="office_code" value="${office_code}">&nbsp; </td>
+                <input type="hidden" name="office_name" value="${office_name}">&nbsp; </td>
+                <td nowrap class="list_ll"> ${brokerage_flag}
+                <input type="hidden" name="brokerage_flag" value="${brokerage_flag}"> </td>
+                <td nowrap class="list_ll"> ${mod_user}
+                <input type="hidden" name="mod_user" value="${mod_user}"> </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="corp_no" value="${corp_no}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="mod_pgm" value="mktp0540">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_user.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "mktp0540_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "mktp0540_detl";
+    top.submitControl('U');
+    return true;
+}
+
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+</script>

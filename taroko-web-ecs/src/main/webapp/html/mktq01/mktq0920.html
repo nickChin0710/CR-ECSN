@@ -1,0 +1,115 @@
+<html>
+<head>
+    <title>申請電子帳單歷史資料查詢-112-02-27-V1.00.00-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+
+    <div id="condBlock">
+        <!--COND -->
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>&nbsp;身分證號:
+                    <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}"
+                           zEdit="alphanum,upper" maxlength="10" size="10"/>
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')"
+                           class="btQuery">
+                    <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="3">&nbsp;申辦日期:
+                    <input type="text" class="col_date" name="ex_Apply_date_s" value="${ex_Apply_date_s}"
+                           zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+                    <script language="JavaScript">
+                      new tcal({'formname': 'dataForm', 'controlname': 'ex_Apply_date_s'})
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="ex_Apply_date_e" value="${ex_Apply_date_e}"
+                           zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+                    <script language="JavaScript">
+                      new tcal({'formname': 'dataForm', 'controlname': 'ex_Apply_date_e'})
+                    </script>&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+
+    <!--List -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">身分證號</th>
+            <th nowrap class="list_th">姓名</th>
+            <th nowrap class="list_th">卡人流水號</th>
+            <th nowrap class="list_th">申辦日期</th>
+            <th nowrap class="list_th">取消日期</th>
+            <th nowrap class="list_th">異動日期</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+            <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+            <td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+            <td nowrap class="list_ll"> ${id_p_seqno}&nbsp;</td>
+            <td nowrap class="list_cc"> ${apply_date.YMD}&nbsp;</td>
+            <td nowrap class="list_cc"> ${cancel_date.YMD}&nbsp;</td>
+            <td nowrap class="list_cc"> ${update_date.YMD}&nbsp;</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+
+
+    <input type="hidden" name="data_k1" value="">
+    <input type="hidden" name="data_k2" value="">
+    <input type="hidden" name="data_k3" value="">
+    <input type="hidden" name="MOD_PGM" value="mktq6250">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc')
+</script>
+
+<script language="javascript">
+  top.refreshButton2('0')
+
+  //top.pageRows="9999";
+
+  function validateInput() {
+    return top.checkFormat()
+  }
+  
+  function feedbackSelected(feedbackInput) {
+    const feedbackTypeList = document.dataForm.ex_feedback_type
+    if (feedbackInput.checked) {
+      if (feedbackInput.value === '0') {
+        for (let i = 0; i < feedbackTypeList.length; i++) {
+          if (feedbackTypeList[i].value !== '0') {
+            feedbackTypeList[i].checked = ''
+          }
+        }
+      } else {
+        for (let i = 0; i < feedbackTypeList.length; i++) {
+          if (feedbackTypeList[i].value === '0') {
+            feedbackTypeList[i].checked = ''
+          }
+        }
+      }
+    }
+  }
+
+</script>

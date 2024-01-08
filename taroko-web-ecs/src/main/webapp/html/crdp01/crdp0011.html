@@ -1,0 +1,212 @@
+<html>
+
+<head>
+    <title>庫存卡片異動覆核作業-V.2019-1029-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=6>&nbsp;異動編號：
+                        <input type="text" class="col_any" name="ex_warehouse_no" value="${ex_warehouse_no}" zEdit="number" maxlength="8" size="8" />
+                    </td>
+                    <td nowrap colspan=6>&nbsp;庫&nbsp;&nbsp;&nbsp;&nbsp;位：
+                        <select name="ex_place" class="col_ddlb">
+                            <option value="" ${ex_place}>--</option>
+                            ${dddw_place}
+                        </select>
+                    </td>
+                </tr>    
+                <tr>
+                    <td colspan=6>
+                        &nbsp;卡樣代碼：
+                        <select size="1" name="ex_card_item" class="col_ddlb">
+                            <option value="" ${ex_card_item}>--</option>
+                            ${dddw_card_item}
+                        </select>
+                    </td>    
+                    
+                    <td nowrap colspan=6>&nbsp;出入庫日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="exDateE" value="${exDateE}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateE'
+                        });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=8>&nbsp;庫存種類：
+                        <br>
+                        <input type="radio" value="0" name="ex_tns_type" onClick="chang()" ${ex_tns_type-0} ${DEFAULT-ex_tns_type}>0:全部
+                        <input type="radio" value="1" name="ex_tns_type" onClick="chang()" ${ex_tns_type-1}>1:入庫                                  
+                        <input type="radio" value="2" name="ex_tns_type" onClick="chang()" ${ex_tns_type-2}>2:出庫&nbsp;&nbsp;出入庫原因： 
+                        <select name="ex_trans_reason1" id="ex_trans_reason1" class="col_ddlb">
+                            <option value="" ${ex_trans_reason1}>--</option>
+                            ${dddw_trans_reason1}
+                        </select>  
+                        <select name="ex_trans_reason2" id="ex_trans_reason2" class="col_ddlb">
+                            <option value="" ${ex_trans_reason2}>--</option>
+                            ${dddw_trans_reason2}
+                        </select>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="執行" onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();">覆核&nbsp;</th>
+                <th nowrap class="list_th">異動編號</th>
+                <th nowrap class="list_th">卡樣代碼</th>
+                <th nowrap class="list_th">卡樣中文</th>
+                <th nowrap class="list_th">庫位</th>
+                <th nowrap class="list_th">庫存種類</th>
+                <th nowrap class="list_th">出入庫原因</th>
+                <th nowrap class="list_th">起帳日期</th>
+                <th nowrap class="list_th">出入庫日期</th>
+                <th nowrap class="list_th">數量</th>
+                <th nowrap class="list_th">單價</th>
+                <th nowrap class="list_th">鍵檔日期</th>
+                <th nowrap class="list_th">鍵檔人員</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">
+                    <span class="col_key">${ok_flag}</span>
+                    <input type="checkbox" name="opt" class="check" value="${ser_num}" /> ${SER_NUM}&nbsp;
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                    <input type="hidden" name="rowid" value="${rowid}">
+                    <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+                </td>
+                <td nowrap class="list_ll"> ${warehouse_no} </td>
+                <td nowrap class="list_ll"> ${card_item} </td>
+                <td nowrap class="list_ll"> ${db_card_item_name} </td>
+                <td nowrap class="list_ll"> ${db_place} </td>
+                <td nowrap class="list_ll"> ${db_tns_type} </td>
+                <td nowrap class="list_ll"> ${db_trans_reason} </td>
+                <td nowrap class="list_ll"> ${crt_date.YMD} </td>
+                <td nowrap class="list_ll"> ${warehouse_date.YMD} </td>
+                <td nowrap class="list_rr"> ${use_total.(999)} </td>
+                <td nowrap class="list_rr"> ${item_amt.(999.00)} </td>
+                <td nowrap class="list_ll"> ${crt_date.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${crt_user}&nbsp; </td>
+                <input type="hidden" name="warehouse_no" value="${warehouse_no}">
+                <input type="hidden" name="lot_no" value="${lot_no}">
+                <input type="hidden" name="card_item" value="${card_item}">
+                <input type="hidden" name="db_card_item_name" value="${db_card_item_name}">
+                <input type="hidden" name="ic_flag" value="${ic_flag}">
+                <input type="hidden" name="warehouse_date" value="${warehouse_date}">
+                <input type="hidden" name="db_place" value="${db_place}">
+                <input type="hidden" name="db_tns_type" value="${db_tns_type}">
+                <input type="hidden" name="db_trans_reason" value="${db_trans_reason}">
+                <input type="hidden" name="use_total" value="${use_total}">
+                <input type="hidden" name="item_amt" value="${item_amt}">
+                <input type="hidden" name="crt_date" value="${crt_date}">                
+                <input type="hidden" name="crt_user" value="${crt_user}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="crdp0011">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_warehouse_no.focus();
+chang();
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0010_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "crdm0011_detl";
+    top.submitControl('S');
+    return true;
+}
+function chang() {
+    var ss = $('input[name*=ex_tns_type]:checked').val()
+    if(ss == "0"){
+        $("#ex_trans_reason1").hide();
+        $("#ex_trans_reason2").hide();
+    }
+    if(ss == "1"){
+        $("#ex_trans_reason1").show();
+        $("#ex_trans_reason2").hide();
+    }
+    if(ss == "2"){
+        $("#ex_trans_reason1").hide();
+        $("#ex_trans_reason2").show();
+    }
+}
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+function chkdata() {
+     var agy =0;
+     $("input[name=opt]").each(function (){
+         if($(this).prop("checked")==true){
+             agy++; 
+         }
+     })
+     if(agy == 0){
+         alert("未選取"+$(".ex_selectAll").text()+"資料!");
+         return false;
+     }
+     return true;
+}
+</script>

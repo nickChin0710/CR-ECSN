@@ -1,0 +1,743 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.01  Ru Chen        modify AJAX                          -->
+<!-- 109-11-20  V1.00.02  tanwei         添加HTML和相關判斷的js                 -->
+<!-- 109-11-23  V1.00.03  Justin         新增財金選項、計算尾數、帶入特店代號      -->
+<!-- 109-11-26  V1.00.03  JustinWu       fix lots of bugs                     -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>郵購/分期付款商品資料維護作業-detl-V.2020-1126-Justin</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    ${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<style>
+	body {background-attachment : fixed;}
+</style>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript">
+  function wf_add_newrow_a(){
+    //debugger;
+    var ind=document.getElementById( 'table1' ).rows.length -1;
+    var rowNum=document.getElementById( 'table1' ).rows.length -1;
+    var colNum=0;
+    var fi=0;
+    var acct_value = $("#ex_dtl_value_a").val();
+    var acct_text = $("#ex_dtl_value_a :selected").text();
+    //console.log("a:"+ind);
+    var num = '${ser_num}';
+    if(num==''){
+        ind=document.getElementById( 'table1' ).rows.length-2;
+    }
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+  
+    var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+  
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opta';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mo1 = document.createElement( 'input' );
+    mo1.type = 'hidden';
+    mo1.name = 'dtl_value_a';
+    mo1.value = acct_value;
+    myCell.appendChild(mo1);
+    
+    var mo2 = document.createElement( 'span' );
+    mo2.setAttribute('class', 'dsp_text');
+    mo2.textContent= acct_text;
+    myCell.appendChild(mo2);
+    
+    var mo3 = document.createElement( 'input' );
+    mo3.type = 'hidden';
+    mo3.name = 'tt_dtl_value_a';
+    mo3.value = acct_text;
+    myCell.appendChild(mo3);
+  }
+
+function wf_add_newrow_g()
+{
+//debugger;
+var ind=document.getElementById( 'table2' ).rows.length -1;
+var rowNum=document.getElementById( 'table2' ).rows.length -1;
+var colNum=0;
+var fi=0;
+var group_value = $("#ex_dtl_value_g").val();
+var group_text = $("#ex_dtl_value_g :selected").text();
+//console.log("a:"+ind);
+var num = '${ser_num}';
+if(num==''){
+    ind=document.getElementById( 'table2' ).rows.length-2;
+}
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table2.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+  
+  var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+  
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'optg';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mo1 = document.createElement( 'input' );
+    mo1.type = 'hidden';
+    mo1.name = 'dtl_value_g';
+    mo1.value = group_value;
+    myCell.appendChild(mo1);
+    
+    var mo2 = document.createElement( 'span' );
+    mo2.setAttribute('class', 'dsp_text');
+    mo2.textContent= group_text;
+    myCell.appendChild(mo2);
+    
+    var mo3 = document.createElement( 'input' );
+    mo3.type = 'hidden';
+    mo3.name = 'tt_dtl_value_g';
+    mo3.value = group_text;
+    myCell.appendChild(mo3);
+}
+
+function wf_add_newrow_c()
+    {
+    //debugger;
+    var ind=document.getElementById( 'table3' ).rows.length -1;
+    var rowNum=document.getElementById( 'table3' ).rows.length -1;
+    var colNum=0;
+    var fi=0;
+    var card_value = $("#ex_dtl_value_c").val();
+    var card_text = $("#ex_dtl_value_c :selected").text();
+    //console.log("a:"+ind);
+    var num = '${ser_num}';
+    if(num==''){
+      ind=document.getElementById( 'table3' ).rows.length-2;
+    }
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table3.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+  
+    var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+  
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'optc';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mo1 = document.createElement( 'input' );
+    mo1.type = 'hidden';
+    mo1.name = 'dtl_value_c';
+    mo1.value = card_value;
+    myCell.appendChild(mo1);
+    
+    var mo2 = document.createElement( 'span' );
+    mo2.setAttribute('class', 'dsp_text');
+    mo2.textContent= card_text;
+    myCell.appendChild(mo2);
+    
+    var mo3 = document.createElement( 'input' );
+    mo3.type = 'hidden';
+    mo3.name = 'tt_dtl_value_c';
+    mo3.value = card_text;
+    myCell.appendChild(mo3);
+} 
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"   value="讀取" ${btnRead_disable} onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="50%">特店代號：&nbsp;
+                        <input type="text" class="col_text" name="kk_mcht_no" value="${kk_mcht_no}" zEdit="number" maxlength="15" size="15" />
+                        <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />
+                    </td>
+<!--                     <td nowrap width="50%">商品代號：&nbsp;
+                        <input type="text" class="col_text" name="kk_product_no" value="${kk_product_no}" zEdit="any" maxlength="8" size="8" />
+                    </td> -->
+                    <td id="pro_no" nowrap colspan=3 ${pro_no_display} >&nbsp;商品代號：
+                        <select name="kk_product_no" value="${kk_product_no}" class="col_ddlb" onChange="return itemchange2(this) ">
+                            ${dddw_product_no}
+                        </select>&nbsp;
+                        <input type="hidden" name="dddw_product_no" value="${dddw_product_no}">
+                    </td>
+                </tr>
+            </table>
+            <!-- 動態 BLOCK 視窗控制 -->
+            <div id="disDiv" class="disScreen"></div>
+            <div id="popDiv" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">特店代號：</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="merchant_2" id="merchant_2">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('kk_mcht_no','merchant_2'); top.hideBlock('popDiv');mcht_no_focus();" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+           
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">特店代號：
+                        <span class="dsp_text">${mcht_no}</span>
+                        <input type="hidden" id="mcht_no" name="mcht_no" value="${mcht_no}">
+                    </td>
+                    <td nowrap>特店類別:
+                        <input type="hidden" name="db_merchant_type" id="merchantType" value="${db_merchant_type}">
+                        <input type="radio" value="0" id="merchantType0"  ${db_merchant_type-0} disabled/>自行
+                        <input type="radio" value="1" id="merchantType1"  ${db_merchant_type-1} disabled/>郵購
+                        <input type="radio" value="2" id="merchantType2"  ${db_merchant_type-2} disabled/>NCCC
+                        <input type="radio" value="3" id="merchantType3"  ${db_merchant_type-3} disabled/>財金
+                    </td>
+                    <td nowrap colspan="2">放行狀態:
+                        <span class="dsp_text">${tt_apr_flag}</span>
+                        <input type="hidden" name="apr_flag" value="${apr_flag}">
+                        <input type="hidden" name="tt_apr_flag" value="${tt_apr_flag}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap class="colKey">商品代號：
+                        <input type=text class="col_any" name="product_no" value="${product_no}" zedit="any" maxlength="8" size="9" zRequire ="Y"/>
+                    </td>
+                    <td nowrap>商品名稱:&nbsp;
+                        <input type=text class="col_any" zEdit="canTW,any" name="product_name" value="${product_name}" maxlength="40" size="40" zRequire="Y" />
+                    </td>                    
+                    <td nowrap>送jcic旗標:&nbsp;
+                        <span class="dsp_text" id="db_trans_flag">${db_trans_flag}</span>
+                        <input type="hidden" name="db_trans_flag" value="${db_trans_flag}">
+                    </td>
+                    <td nowrap>還款利率:&nbsp;
+                        <input type=text class="col_number" name="trans_rate" value="${trans_rate}" zedit="dignumber" maxlength="6" size="6" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>風險分類:&nbsp;
+                        <input type=text class="col_any" zEdit="any" name="risk_code" value="${risk_code}" maxlength="2" size="2" />
+                    </td>
+                    <td style="color:red" colspan="4">
+                        新增風險性產品時請同時鍵入風險分類，新增完成後請通知風管部</br>
+                        _policy team至「rskm2130風險性產品資料維護」確認是否自動新增該產品資料。
+                    </td>
+                </tr>
+                <th colspan="4">商品金額</th>
+                <tr>
+                    <td nowrap class="list_rr"> 總金額:&nbsp;
+                        <input type=text class="col_number" id="tot_amt" name="tot_amt" value="${tot_amt}" zedit="dignumber,number" maxlength="8" size="10" onChange="computeRemdAmt();" />
+                    </td>
+                    <td nowrap>
+                        = 每期金額:&nbsp;<input type=text class="col_number" id="unit_price" name="unit_price" value="${unit_price}" zedit="dignumber,number" maxlength="8" size="10" onChange="computeRemdAmt();" />
+                        X 總期數:&nbsp;<input type=text class="col_number" id="tot_term" name="tot_term" value="${tot_term}" zedit="number" size="3" onChange="computeRemdAmt();" />
+                    </td>
+                    <td nowrap rowspan="2" style="border:1px red solid;" colspan="2">&nbsp; 紅利點數:&nbsp;
+                        <input type=text class="col_number" name="redeem_point" value="${redeem_point}" zedit="number" size="5" /> </br>+ 兌換</br>
+                        &nbsp; 折抵:&nbsp;<input type=text class="col_number" name="redeem_amt" value="${redeem_amt}" zedit="dignumber,number" maxlength="14" size="14"  />元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td nowrap>+ 尾數:&nbsp;
+                        <span class="dsp_text" id="remd_amt_span">${remd_amt}</span>
+                        <input type="hidden" id="remd_amt" name="remd_amt" value="${remd_amt}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>額外費用:&nbsp;
+                        <input type=text class="col_number" name="extra_fees" value="${extra_fees}" zedit="dignumber,number" maxlength="8" size="10" />
+                    </td>
+                    <td nowrap colspan="3">紅利積點抵用:&nbsp;
+                        <input type=text class="col_number" name="against_num" value="${against_num}" zedit="number" size="8" />
+                    </td>
+                </tr>
+                <th colspan="4">客戶手續費</th>
+                <tr>
+                    <td nowrap colspan="2">手續費=&nbsp;
+                        <input type=text class="col_number" name="clt_fees_fix_amt" value="${clt_fees_fix_amt}" zedit="dignumber,number" maxlength="8" size="10" />
+                        +
+                        <input type=text class="col_number" name="clt_interest_rate" value="${clt_interest_rate}" zedit="dignumber,number" maxlength="5" size="5" />%
+                    </td>
+                    <td nowrap colspan="2">是否可分期付款: &nbsp;
+                        <input type="radio" value="Y" name="installment_flag" ${installment_flag-Y} />是
+                        <input type="radio" value="N" name="installment_flag" ${installment_flag-N} ${DEFAULT_CHK} />否
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">(每筆手續費收取金額)最低:&nbsp;
+                        <input type=text class="col_number" name="clt_fees_min_amt" value="${clt_fees_min_amt}" zedit="dignumber,number" maxlength="8" size="10" />
+                        ~ 最高:&nbsp;
+                        <input type=text class="col_number" name="clt_fees_max_amt" value="${clt_fees_max_amt}" zedit="dignumber,number" maxlength="8" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">應付費用年百分率:&nbsp;
+                        <input type=text class="col_number" name="year_fees_rate" value="${year_fees_rate}" zedit="dignumber,number" maxlength="5" size="5" />%
+                    </td>
+                </tr>
+                <th colspan="4">特店手續費</th>
+                <tr>
+                    <td nowrap colspan="4">手續費=&nbsp;
+                        <input type=text class="col_number" name="fees_fix_amt" value="${fees_fix_amt}" zedit="dignumber,number" maxlength="8" size="10" />
+                        +
+                        <input type=text class="col_number" name="interest_rate" value="${interest_rate}" zedit="dignumber,number" maxlength="5" size="5" />%
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">(每筆手續費收取金額)最低:&nbsp;
+                        <input type=text class="col_number" name="fees_min_amt" value="${fees_min_amt}" zedit="dignumber,number" maxlength="8" size="10" />
+                        ~ 最高:&nbsp;
+                        <input type=text class="col_number" name="fees_max_amt" value="${fees_max_amt}" zedit="dignumber,number" maxlength="8" size="10" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>自動出貨旗標:
+                        <select name="auto_delv_flag" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="Y" ${auto_delv_flag-Y}>Y</option>
+                            <option value="N" ${auto_delv_flag-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="3">列印名條旗標:
+                        <select name="auto_print_flag" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="Y" ${auto_print_flag-Y}>Y</option>
+                            <option value="N" ${auto_print_flag-N}>N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>可否退貨:
+                        <select name="refund_flag" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="Y" ${refund_flag-Y}>Y</option>
+                            <option value="N" ${refund_flag-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan="3">主管覆核註記:&nbsp;
+                        <span class="dsp_text">${confirm_flag}</span>
+                        <input type="hidden" name="confirm_flag" value="${confirm_flag}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div class="tab">
+            <table>
+                <tr>
+                    <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">帳戶類別</td>
+                    <td class="tablinks" onclick="return tabControl(event, 'tab-2')">團體代號</td>
+                    <td class="tablinks" onclick="return tabControl(event, 'tab-3')">卡種</td>
+                </tr>
+            </table>
+        </div>
+        <!-- IDNO================================ -->
+        <div id="tab-1" class="tabcontent">
+            <div id="dataBlock">
+                <table border="0" width="5%">
+                    <tr>
+                        <td nowrap class="list_ll">
+                            <select name="ex_dtl_value_a" id="ex_dtl_value_a" class="col_ddlb">
+                                ${dddw_acct}
+                            </select>
+                        </td>
+                        <td align="right">
+                            <input type="Button"  value="新增類別" ${btnSelect_disable} onclick="wf_add_newrow_a()" class="btAdd_detl" />&nbsp;
+                        </td>
+                    </tr>
+                </table>
+                <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="2" width="40%">
+                    <tr>
+                        <th nowrap class="list_th" width="5%">
+                            <span class="col_key">刪除</span></th>
+                        <th nowrap class="list_th">帳戶類別</th>
+                    </tr>
+                    <!-- BEGIN DYNAMIC : DETAIL -->
+                    <tr>
+                        <td nowrap class="list_no">
+                            <span class="dsp_flag">${ok_flag}</span>
+                            ${SER_NUM}
+                            <input type="checkbox" name="opta" value="${ser_num}" />
+                            <input type="hidden" name="ser_num" value="${ser_num}" />
+                        </td>
+                        <td nowrap class="list_cc">
+                            <span class="dsp_text">${tt_dtl_value_a}</span>
+                            <input type="hidden" name="dtl_value_a" value="${dtl_value_a}">
+                            <input type="hidden" name="tt_dtl_value_a" value="${tt_dtl_value_a}">
+                        </td>
+                    </tr>
+                    <!-- END DYNAMIC : DETAIL -->
+                </table>
+            </div>
+        </div>
+        <div id="tab-2" class="tabcontent">
+            <div id="dataBlock">
+                <table border="0" width="5%">
+                    <tr>
+                        <td nowrap class="list_ll">
+                            <select name="ex_dtl_value_g" id="ex_dtl_value_g" class="col_ddlb">
+                                ${dddw_group}
+                            </select>
+                        </td>
+                        <td align="right">
+                            <input type="Button"  value="新增代號" ${btnSelect_disable} onclick="wf_add_newrow_g()" class="btAdd_detl" />&nbsp;
+                        </td>
+                    </tr>
+                </table>
+                <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="2" width="40%">
+                    <tr>
+                        <th nowrap class="list_th" width="5%">
+                            <span class="col_key">刪除</span></th>
+                        <th nowrap class="list_th">團體代號</th>
+                    </tr>
+                    <!-- BEGIN DYNAMIC : DETAIL -->
+                    <tr>
+                        <td nowrap class="list_no">
+                            <span class="dsp_flag">${ok_flag}</span>
+                            ${SER_NUM}
+                            <input type="checkbox" name="optg" value="${ser_num}" />
+                            <input type="hidden" name="ser_num" value="${ser_num}" />
+                        </td>
+                        <td nowrap class="list_cc">
+                            <span class="dsp_text">${tt_dtl_value_g}</span>
+                            <input type="hidden" name="dtl_value_g" value="${dtl_value_g}">
+                            <input type="hidden" name="tt_dtl_value_g" value="${tt_dtl_value_g}">
+                        </td>
+                    </tr>
+                    <!-- END DYNAMIC : DETAIL -->
+                </table>
+            </div>
+        </div>
+        <div id="tab-3" class="tabcontent">
+            <div id="dataBlock">
+                <table border="0" width="5%">
+                    <tr>
+                        <td nowrap class="list_ll">
+                            <select name="ex_dtl_value_c" id="ex_dtl_value_c" class="col_ddlb">
+                                ${dddw_card}
+                            </select>
+                        </td>
+                        <td align="right">
+                            <input type="Button"  value="新增卡種" ${btnSelect_disable} onclick="wf_add_newrow_c()" class="btAdd_detl" />&nbsp;
+                        </td>
+                    </tr>
+                </table>
+                <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="2" width="40%">
+                    <tr>
+                        <th nowrap class="list_th" width="5%">
+                            <span class="col_key">刪除</span></th>
+                        <th nowrap class="list_th">卡種</th>
+                    </tr>
+                    <!-- BEGIN DYNAMIC : DETAIL -->
+                    <tr>
+                        <td nowrap class="list_no">
+                            <span class="dsp_flag">${ok_flag}</span>
+                            ${SER_NUM}
+                            <input type="checkbox" name="optc" value="${ser_num}" />
+                            <input type="hidden" name="ser_num" value="${ser_num}" />
+                        </td>
+                        <td nowrap class="list_cc">
+                            <span class="dsp_text">${tt_dtl_value_c}</span>
+                            <input type="hidden" name="dtl_value_c" value="${dtl_value_c}">
+                            <input type="hidden" name="tt_dtl_value_c" value="${tt_dtl_value_c}">
+                        </td>
+                    </tr>
+                    <!-- END DYNAMIC : DETAIL -->
+                </table>
+            </div>
+        </div>
+        <!-- -->
+        <input type="hidden" name="rowid" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0090">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+//頁面加載完成之後
+$(function(){
+	var merchantType = $("#merchantType").val();
+	if(merchantType == 0){
+        document.getElementById("merchantType0").checked = true;
+    }else
+    if(merchantType == 1){
+        document.getElementById("merchantType1").checked = true;
+	}else
+    if(merchantType == 2){
+    	document.getElementById("merchantType2").checked = true;
+    }else
+    if(merchantType == 3){
+        document.getElementById("merchantType3").checked = true;
+    }
+});
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "A") {
+        if (!validatePk()) {
+            return false;
+        }
+
+        if (!validateRemdAmt()) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function validatePk(){
+    var merchantNo = document.getElementById("mcht_no");
+    if (merchantNo.value.trim().length == 0) {
+        alert("特店代號不可空白");
+        merchantNo.style.background = "pink";
+        return false;
+    }else{
+        merchantNo.style.background = "white";
+        return true;
+    }
+    
+}
+
+function validateRemdAmt(){
+    var tot_amt = document.getElementById("tot_amt"); //總金額
+    var unit_price = document.getElementById("unit_price"); //每期金額
+    var tot_term = document.getElementById("tot_term"); //總期數
+
+    if (parseValToFloat(unit_price.value) <= 0) {
+        //alert("每期金額(單價) 必須大於一元");
+        unit_price.style.background = "pink";
+        return false;
+    }else{
+        unit_price.style.background = "white";
+    }
+
+    var tempVal = parseValToFloat(unit_price.value) * parseValToFloat(tot_term.value);
+
+    if (parseValToFloat(tot_amt.value) < tempVal) {
+        //alert("總金額不可小於每期金額*期數");
+        return true;
+    }
+
+    return true;
+}
+
+function computeRemdAmt(){
+    var tot_amt = document.getElementById("tot_amt"); //總金額
+    var unit_price = document.getElementById("unit_price"); //每期金額
+    var tot_term = document.getElementById("tot_term"); //總期數
+    var remdArr = [tot_amt, unit_price, tot_term];
+
+    for (var i = 0; i < remdArr.length; i++) {
+        if (isNaN(remdArr[i].value)) {
+            //alert("請輸入數字");
+            remdArr[i].style.background = "pink";
+            return false;
+        }else{
+            remdArr[i].style.background = "white";
+        }
+    }
+
+    if (! validateRemdAmt()) {
+        return false;
+    }
+
+    var tempVal = parseValToFloat(unit_price.value) * parseValToFloat(tot_term.value);
+
+    tempVal = parseValToFloat(tot_amt.value) - tempVal;
+    document.getElementById("remd_amt_span").innerText = tempVal ;
+    document.getElementById("remd_amt").value = tempVal ;
+    
+    return true;
+}
+
+function parseValToFloat(val){
+    if (val.trim().length == 0) {
+        return 0.0;
+    }
+    return parseFloat(val);
+}
+
+function itemChange(val) {
+
+    idCode = "1";
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "itemchange";
+    resetJSON();
+    addJSON("ajaxName", "mcht_no");
+    addJSON("val_mcht_no", val);
+    processAJAX();
+    return true;
+}
+function ajaxResponse() {
+    top.respHtml = "bilm0090_detl";
+    top.requHtml = "bilm0090_detl";
+}
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.kk_mcht_no.value;
+
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("kk_mcht_no", vendorNo);
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX 
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    var vendorNo = document.dataForm.kk_mcht_no.value;
+    var vendorList = document.getElementById("merchant_2");
+
+    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+    }
+
+    top.popupBlock('popDiv');
+}
+
+function mcht_no_focus() {
+     document.dataForm.kk_mcht_no.focus();
+     document.dataForm.kk_product_no.focus();
+
+     var mcht = document.dataForm.kk_mcht_no.value;
+     top.submitControl('itemchange');
+
+}
+
+function itemchange2(ele){
+    if (ele.value.trim().length == 0) return false;
+    top.submitControl('itemchange2');
+}
+</script>

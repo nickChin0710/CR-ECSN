@@ -1,0 +1,479 @@
+
+<html>
+<head>
+<title>人工授權處理-jh-191210</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+</head>
+
+<script language="JavaScript">
+  $(document).ready(function () {
+    var authNo = $("#auth_no").val();
+    if(authNo != '') {
+    	$('#id_mcht_country').attr('disabled', true);
+    	$('#id_currency').attr('disabled', true);
+    }	else	{
+    	$('#id_mcht_country').attr('disabled', false);
+    	$('#id_currency').attr('disabled', false);
+    }    
+  });
+</script>
+
+<body background="${water_mark}">
+	<form name="dataForm" method="post" action="">
+
+		<table border="0" cellpadding="0" cellspacing="0"
+			style="margin-bottom: 10px;">
+			<tr>
+				<td width="100">&nbsp;</td>
+				<td>
+					<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+					<input type="Button" name="btnQuery" value="讀取" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+					<input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('A')" class="btAdd" ${btnAdd_disable}    />&nbsp;&nbsp;
+					<input type="Button" name="btnUpdate" value="修改" onClick="return top.submitControl('U')" class="btUpdate" ${btnUpdate_disable} />&nbsp;&nbsp;
+					<input type="hidden" value="${kk_action}" name="kk_action" size="3" readonly />
+				</td>
+			</tr>
+		</table>
+		<div id="dataBlock">
+			<table width="60%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>&nbsp;卡號: <input type="text" class="col_text"
+						name="kk_card_no" value="${kk_card_no}" maxlength="19" size="21"
+						zrequire="C" onChange="keyChange(1)">
+					</td>
+					<td nowrap>&nbsp;授權號碼: <input type="text" class="col_text"
+						name="kk_auth_no" value="${kk_auth_no}" maxlength="6" size="8"
+						onChange="keyChange(2)" />
+				</tr>
+			</table>
+			<hr>
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap colspan="2">&nbsp;卡號: <span class="dsp_text">${card_no}</span>
+						<input type="hidden" name="card_no" value="${card_no}" />
+					</td>
+					<td nowrap colspan="1">&nbsp;授權號碼: <span class="col_key">${auth_no}</span>
+						<input type="hidden" id="auth_no" name="auth_no" value="${auth_no}" />
+					</td>
+					<td nowrap>&nbsp;團代:<span class="dsp_text">${group_code}</span>
+						<input type="hidden" name="group_code" value="${group_code}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;卡人姓名:<span class="dsp_text">${chi_name}</span>
+						<input type="hidden" name="chi_name" value="${chi_name}" />
+					</td>
+					<td nowrap>&nbsp;卡人身分證:<span class="dsp_text">${id_no}</span>
+						<input type="hidden" name="id_no" value="${id_no}" />
+					</td>
+					<td nowrap>&nbsp;出生日期:<span class="dsp_date">${birthday.YMD}</span>
+						<input type="hidden" name="birthday" value="${birthday}" />
+					</td>
+					<td nowrap>&nbsp;Debit卡:<span class="dsp_text">${debit_flag}</span>
+						<input type="hidden" name="debit_flag" value="${debit_flag}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;帳戶帳號: <span class="dsp_text">${acct_type}-${acct_key}</span>
+						<input type="hidden" name="acct_type" value="${acct_type}" /> <input
+						type="hidden" name="acct_key" value="${acct_key}" />
+					</td>
+					<td nowrap>&nbsp;電話(H): <span class="dsp_text">${wk_telno_h}</span>
+						<input type="hidden" name="wk_telno_h" value="${wk_telno_h}" />
+					</td>
+					<td nowrap colspan=2>&nbsp;電話(O): <span class="dsp_text">${wk_telno_o}</span>
+						<input type="hidden" name="wk_telno_o" value="${wk_telno_o}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3">&nbsp;公司及職稱:<span class="dsp_text">${wk_comp_name}</span>
+						<input type="hidden" name="wk_comp_name" value="${wk_comp_name}" />
+					</td>
+					<td nowrap>&nbsp;凍結碼:<span class="dsp_text">${wk_block_reason}</span>
+						&nbsp;<span class="dsp_text">${wk_spec_status},${card_spec_status}</span>
+						<input type="hidden" name="wk_block_reason"
+						value="${wk_block_reason}" /> <input type="hidden"
+						name="wk_spec_status" value="${wk_spec_status}" /> <input
+						type="hidden" name="card_spec_status" value="${card_spec_status}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3">&nbsp;帳單地址:<span class="dsp_text">${wk_bill_addr}</span>
+						<input type="hidden" name="wk_bill_addr" value="${wk_bill_addr}" />
+					</td>
+					<td nowrap colspan="1">&nbsp;VIP:<span class="dsp_text">${vip_code}</span>
+						<input type="hidden" name="vip_code" value="${vip_code}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3">&nbsp;備註:<span class="dsp_text">${wk_auth_remark}</span>
+						<input type="hidden" name="wk_auth_remark"
+						value="${wk_auth_remark}" /> &nbsp; <input type="Button"
+						name="btnNotice" value="特殊事項" onClick="wf_id_note('R1')"
+						class="btOther" />
+					</td>
+					<td nowrap>&nbsp;<span class="dsp_text">${current_code}
+							&nbsp; ${oppo_reason}</span> <input type="hidden" name="current_code"
+						value="${current_code}" /> <input type="hidden"
+						name="oppost_reason" value="${oppost_reason}" />
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>&nbsp;有效日期: <input type="text" class="col_text"
+						name="eff_date" value="${eff_date}" maxlength="4" size="6"
+						zRequire="Y" onchange="wf_item_change('eff_date');" ${update_dis} />&nbsp;(月/年)
+					</td>
+					<td nowrap>&nbsp;卡片效期:<span class="dsp_date">新效期:${wk_effdate_mmyy}&nbsp;舊效期:${old_effdate_mmyy}</span>&nbsp;(月/年)
+						<input type="hidden" name="wk_effdate_mmyy"
+						value="${wk_effdate_mmyy}" /> <input type="hidden"
+						name="old_effdate_mmyy" value="${old_effdate_mmyy}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan=2>&nbsp;特店代號: <input type="text"
+						class="col_text" name="mcht_no" value="${mcht_no}" maxlength="15"
+						size="17" onChange="wf_item_change('mcht_no');" zRequire="Y" ${update_dis} />
+						&nbsp;商店名稱:
+						<label class="dsp_text" id="mcht_name" >${mcht_name}</label>
+  						<input type="hidden" name="mcht_name" value="${mcht_name}"> 		 
+						<!--
+						<input type="text" class="dsp_text" id="mcht_name"
+						name="mcht_name" value="${mcht_name}" onfocus="this.blur()"
+						size="50" zEdit="any,canTw">
+						-->
+						<input type="hidden" id="mcht_eng_name" name="mcht_eng_name" value="${mcht_eng_name}" />
+						<input type="hidden" id="acq_bank_id" name="acq_bank_id" value="${acq_bank_id}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="2" >&nbsp;風險等級(本行): <input type="text"
+						class="dsp_text" id="ncc_risk_level" name="ncc_risk_level"
+						value="${ncc_risk_level}" onfocus="this.blur()" size="5">
+					</td>					
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;MCC: <input type="text" class="col_text"
+						id="mcc_code" name="mcc_code" value="${mcc_code}" maxlength="4"
+						size="6" onChange="mccChange('2')" /> &nbsp; <input type="text"
+						class="dsp_text" id="tt_mcc_code" name="tt_mcc_code"
+						value="${tt_mcc_code}" zEdit="any,canTW" readonly />
+					</td>
+					<td nowrap>&nbsp;CVC2: <input type="text" class="col_text"
+						name="cvc2" value="${cvc2}" maxlength="3" size="5" ${update_dis} />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;消費地金額: 
+                        <input type="text" class="col_number" name="amt0" value="${amt0}" maxlength="8" size="10" zEdit="dignumber" ${update_dis} />
+					</td>					
+                    <td nowrap>&nbsp;消費貨幣代碼: 
+                        <select size="1" name="consume_curr" class="col_ddlb" zRequire="Y" />
+                            <option value="">--</option> 
+                            ${dddw_consume_curr} 
+                        </select>
+                        &nbsp;消費國家: 
+                        <select size="1" id="id_mcht_country" name="mcht_country" class="col_ddlb" zRequire="Y" ${ddlb_dis} >
+							<option value="">--</option> ${dddw_country}
+                        </select>
+					</td>                    					
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;清算金額: <input type="text" class="col_number"
+						name="amt1" value="${amt1}" maxlength="8" size="10"
+						zEdit="dignumber" onchange="wf_item_change('amt1')" ${update_dis} />
+					</td>
+					<td nowrap>&nbsp;清算貨幣代碼: <select size="1" id="id_currency"
+						name="currency" class="col_ddlb" zRequire="Y"
+						onChange="wf_item_change('currency')" />
+						<option value="">--</option> ${dddw_currency} </select>
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;台幣(原消費)金額: <input type="text"
+						class="dsp_number" id="amt2" name="amt2" value="${amt2}" size="12"
+						readonly onblur="false" />
+					</td>
+					<td nowrap>&nbsp;原交易金額:
+                        <span class="dsp_number">${ori_amt.(999)}</span>
+						<input type="hidden" name="ori_amt" value="${ori_amt}" />
+					</td>
+				</tr>
+			</table>
+			<!-- 
+Test-RespCode: 
+!-->
+			<input type="hidden" class="col_text" name="tt_resp_code" value=""
+				maxlength="2" size="5" />
+			<!-- 
+CVC2:
+ -->
+			<input type="hidden" name="trans_cvv2" value="${trans_cvv2}" size="5" />
+		</div>
+		<input type="hidden" name="iso_resp_code" value="${iso_resp_code}"
+			size="5" />
+
+		<!-- -->
+		<input type="hidden" id="new_end_date" name="new_end_date"
+			value="${new_end_date}" /> <input type="hidden" id="old_end_date"
+			name="old_end_date" value="${old_end_date}" /> <input type="hidden"
+			id="combo_indicator" name="combo_indicator"
+			value="${combo_indicator}" /> <input type="hidden" id="sup_flag"
+			name="sup_flag" value="${sup_flag}" /> <input type="hidden"
+			name="cacu_amount" value="${cacu_amount}" /> <input type="hidden"
+			name="bin_type" value="${bin_type}" />
+		<!-- -->
+		<input type="hidden" name="ROWID" value="${rowid}"> <input
+			type="hidden" name="MOD_PGM" value="ccam1010"> <input
+			type="hidden" name="MOD_SEQNO" value="${mod_seqno}"> <input
+			type="hidden" name="HIDE" value="${HIDE_DATA}"> <input
+			type="hidden" name="pageType" value="detl">
+		<!--  -->
+		<input type="hidden" name="tx_date" value="${tx_date}" />
+		<input type="hidden" name="tx_time" value="${tx_time}" />
+		<input type="hidden" name="trace_no" value="${trace_no}" />
+        <input type="hidden" name="card_curr_code" value="${card_curr_code}" />
+	</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+ var idCode="";
+ var colName="";
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ top.deleteConfirm_show ="";
+
+ function validateInput() {
+   $("input[name=kk_action]").val(top.actionCode);
+   if ( !top.checkFormat() )
+      { return false; }
+   var ls_action =top.actionCode;
+   var ls_cvc2 =$('input[name=cvc2]').val().trim();
+   var ls_mcht_no =$('input[name=mcht_no]').val().trim();
+   var ls_eff_date =$('input[name=eff_date]').val().trim();
+    if (",A,U".indexOf(top.actionCode)>0) {
+        if (ls_mcht_no =='' || ls_eff_date=='') {
+          alert('有效日期, 特店代號: 不可空白');
+          return false;
+        }
+      var ls_eff_mmyy = $("input[name=wk_effdate_mmyy]").val().trim();
+      var ls_old_mmyy = $("input[name=old_effdate_mmyy]").val().trim();
+      var lb_mmyy =false;
+      if (ls_eff_mmyy !='' && ls_eff_date ==ls_eff_mmyy) { lb_mmyy =true; }
+      if (ls_old_mmyy !='' && ls_eff_date ==ls_old_mmyy) { lb_mmyy=true; }
+      if (lb_mmyy == false) {
+        alert("有效日期: 輸入錯誤");
+        return false;
+      }
+        if (ls_cvc2 =='') {
+          if (confirm("未輸入CVC2, 是否繼續作業")==false) {
+              return false;
+          }
+        }
+    if (top.actionCode =="A") {
+      top.respLevel = 1;
+      top.respHtml  = "ccam1010_confirm";
+    }
+     else if (top.actionCode =="U") {
+    	$('#id_mcht_country').attr('disabled', false);
+     	$('#id_currency').attr('disabled', false); 
+        top.respLevel = 0;
+        top.respHtml = "ccam1010";
+      }
+    }
+
+    return true;
+  }
+
+
+ function wf_id_note(par) {
+    top.respLevel = 1;
+    top.respHtml  = "ccam1010_id_note";
+    top.submitControl(par);
+ }
+
+ function keyChange(ps1)
+ {
+	var  card_no =document.forms["dataForm"]["kk_card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+              if (ps1 == 1) {
+	top.submitControl('R');
+              return;
+   }
+   var ls_auth_no =$("input[name=kk_auth_no]").val().trim();
+   if (ls_auth_no.length ==0) { return; }
+   if (ps1 == 2) {
+      if (ls_auth_no.length >0 && ls_auth_no.length !=6) {
+         alert("授權號碼: 輸入錯誤");
+         return;
+      }
+      top.submitControl('Q');
+   }
+ }
+
+ function wf_item_change(parm1) {
+   colName =parm1;
+	var  card_no =document.forms["dataForm"]["kk_card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+   var ls_data ='';
+   if (parm1 == 'eff_date') {
+      ls_data =$("input[name=eff_date]").val();
+      var ls_eff_mmyy =$("input[name=wk_effdate_mmyy]").val();
+      if (ls_data == ls_eff_mmyy) {
+         return true;
+      }
+      resetJSON();
+      addJSON("ax_card_no",card_no);
+      addJSON("ax_col",parm1);
+      addJSON("ax_data",ls_data);
+   }
+   else if (parm1 == 'mcht_no') {
+      ls_data =$("input[name=mcht_no]").val();
+      ls_data2 = $("input[name=bin_type]").val();
+      resetJSON();
+      addJSON("ax_card_no",card_no);
+      addJSON("ax_col",parm1);
+      addJSON("ax_data",ls_data);
+      addJSON("ax_data2",ls_data2);
+   }
+   else if (parm1 == 'currency' || parm1 == 'amt1') {
+      var ls_currency =$("select[name=currency]").val();
+      var  ls_amt1 =$("input[name=amt1]").val();
+      if ( ls_amt1=='0' || ls_amt1=='' ) {
+         $("input[name=amt2]").val('0');
+         return;
+      }
+      if (Number(ls_amt1) <=0) {
+         alert("消費金額: 須>0");
+         return false;
+      }
+      if ( ls_currency=='' || ls_currency =='901') {
+         $("input[name=amt2]").val(ls_amt1);
+         return;
+      }
+      resetJSON();
+      addJSON("ax_col",parm1);
+      addJSON("ax_currency",ls_currency);
+      addJSON("ax_amt1",ls_amt1);
+   }
+
+	idCode = '1';
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+	//top.methodName = "wf_item_change";
+	top.actionCode = "AJAX";
+	addJSON("ID_CODE", idCode);
+
+	processAJAX();
+ }
+ 
+ function mccChange(ps1)
+ {
+ 	var  mcc_code =document.forms["dataForm"]["mcc_code"].value.toUpperCase();	
+	if ( mcc_code === '') {
+        $("#tt_mcc_code").val("");
+		return false;
+	}
+	idCode = ps1;
+    //20200107 modify AJAX
+	//top.actionCode = "Q";
+    if ( idCode === '2' ) { 
+		//top.methodName = "wf_ajax_mcc";
+    }
+    top.actionCode = "AJAX";
+	
+    resetJSON();
+	
+    addJSON("ax_mcc_code",mcc_code);
+	addJSON("ID_CODE", idCode);
+	
+	processAJAX();
+ }
+ 
+ function ajaxResponse() {
+	top.respHtml ="ccam1010";
+   top.requHtml ="ccam1010";
+
+   var ss ="";
+   if (idCode == '1' && colName == 'eff_date') {
+      return false;
+//      var ax_rc =getJSONvalue("ax_rc",0);
+//      if (ax_rc == '0') {
+//         return;
+//      }
+//      else {
+//         var ax_errmsg =getJSONvalue("ax_msg1",0)+"\n"+getJSONvalue("ax_msg2",0)+"\n"+getJSONvalue("ax_msg3",0);
+//         alert(ax_errmsg);
+//         return false;
+//      }
+   }
+   if ( idCode == '1' && colName == 'mcht_no' ) {
+      var mcht_name =getJSONvalue("mcht_name",0);
+      if (mcht_name.length>0) {
+         $("#mcht_name").val(mcht_name);
+         $("#mcht_name").text(mcht_name);   
+      }
+            
+      var acq_bank_id =getJSONvalue("acq_bank_id",0);
+      if (acq_bank_id.length>0) {
+         $("#acq_bank_id").val(acq_bank_id);
+      }      
+      
+      var mcht_eng_name =getJSONvalue("mcht_eng_name",0);
+      if (mcht_eng_name.length>0) {
+         $("#mcht_eng_name").val(mcht_eng_name);
+      }
+      
+      var ncc_risk_code =getJSONvalue("ncc_risk_code",0);
+      if (ncc_risk_code.length>0) {
+         $("#ncc_risk_code").val(ncc_risk_code);
+      }
+      var ncc_risk_level =getJSONvalue("ncc_risk_level",0);
+      if (ncc_risk_level.length>0) {
+         $("#ncc_risk_level").val(ncc_risk_level);
+      }
+      var mcc_code =getJSONvalue("mcc_code",0);
+      var ls_mcc_code =document.forms["dataForm"]["mcc_code"].value;
+      if(ls_mcc_code ===''){
+         if (mcc_code.length>0) {
+         $("#mcc_code").val(mcc_code);
+        }
+      }
+      ss =getJSONvalue("tt_mcc_code",0);
+      $("#tt_mcc_code").val(ss);
+
+      $("#mcc_code").focus();
+      return false;
+   }
+   if (idCode =='1' && (colName =='currency' || colName=='amt1') ) {
+      ss =getJSONvalue("wk_amt2",0);
+      $("input[name=amt2]").val(ss);
+      return false;
+   }
+   
+   if (idCode =='2'){
+      ss =getJSONvalue("tt_mcc_code",0);
+      $("#tt_mcc_code").val(ss);
+   }
+   
+ }
+function wf_upper_return(parm1) {
+   if (parm1 ==1) {
+      $('input[name=btnQuery]').attr({
+         class: 'btDisabled',
+         disabled: 'true'
+      });
+   }
+}
+</script>

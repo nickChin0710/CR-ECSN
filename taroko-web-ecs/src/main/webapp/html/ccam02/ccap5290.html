@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>DEBIT拒絕非面對面刷卡特店主管覆核</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;收單行代碼:
+      <input type="text" class="col_text" name="ex_acq_id" value="${ex_acq_id}" maxlength="15" size="17" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"     value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;特店代號:
+      <input type="text" class="col_text" name="ex_mcht_no" value="${ex_mcht_no}" maxlength="15" size="17" zEdit="number">
+   </td>
+   <td nowrap >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;異動經辦:
+      <input type="text" class="col_any" name="ex_mod_user" value="${ex_mod_user}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">
+    	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	覆核    	
+    </th>
+    <th nowrap >收單行&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >特店名稱&nbsp;</th>
+    <th nowrap >上線日期&nbsp;</th>
+    <th nowrap >下線日期&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> &nbsp;
+      <span class="dsp_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}" />
+ 	    ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	</td>
+	<td nowrap class="list_cc">&nbsp;${acq_id}
+	   <input type="hidden" name="acq_id" value="${acq_id}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${mcht_no}
+	   <input type="hidden" name="mcht_no" value="${mcht_no}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${mcht_name}
+	   <input type="hidden" name="mcht_name" value="${mcht_name}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${online_date.YMD}
+	   <input type="hidden" name="online_date" value="${online_date}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${stop_date.YMD}
+	   <input type="hidden" name="stop_date" value="${stop_date}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${crt_user}
+	   <input type="hidden" name="crt_user" value="${crt_user}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${crt_date.YMD}
+	   <input type="hidden" name="crt_date" value="${crt_date}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+  function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

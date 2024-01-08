@@ -1,0 +1,172 @@
+<html>
+<head>
+<title>信用卡逾期轉列催收通知書</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap nowrap colspan="2">&nbsp;轉催日期（起）:
+      <input type="text" class="col_date" name="ex_trans_date1" value="${ex_trans_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_trans_date1'});
+	      </script>
+	                轉催日期（迄）
+	      <input type="text" class="col_date" name="ex_trans_date2" value="${ex_trans_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_trans_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="1">&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap colspan="1">&nbsp;帳務類別:
+	   <select size="1" name="ex_acct_type" class="col_ddlb" >
+	      <option value="">--</option>
+         ${dddw_acct_type}
+      </select>
+   </td>   
+   <td nowrap >&nbsp;公司戶以負責人姓名產生
+   		<input type="checkbox" id = "checkbox" class="col_text" ${DEFAULT_CHK}/ >
+   		<input type="hidden" id = "chargeNameFlag" name = "chargeNameFlag" class="col_text"/>
+   	</td>
+   </tr>
+   <tr>
+    <td nowrap colspan="3">&nbsp;----------------------------------------------------------------------------------</td>
+   </tr>
+   <tr>
+   	<td nowrap >&nbsp;分機:
+   		<input type="text" class="col_text" name="ex_tel" value="${ex_tel}" maxlength="8" size="10" zEdit="number" >
+   	</td>
+   	<td nowrap >&nbsp;經辦:
+   		<input type="text" class="col_text" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw">
+   	</td>
+  </tr>
+  <tr>
+  <td nowrap>&nbsp;電話:
+      <input type="text" class="col_text" name="ex_phone" value="(02)2331-7531" maxlength="15" size="22">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">
+      <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >列印
+    </th>
+    <th nowrap >身分證&nbsp;</th>
+    <th nowrap >統編&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >信函通知人&nbsp;</th>
+    <!-- <th nowrap >信函稱謂&nbsp;</th> -->
+    <th nowrap >郵區&nbsp;</th>
+    <th nowrap >戶籍地址&nbsp;</th>
+    <th nowrap >轉催日期&nbsp;</th>
+    <th nowrap >轉催前關帳日&nbsp;</th>
+    <th nowrap class="list_th">轉催金額&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <input type="checkbox" name="opt" value="${ser_num}" />
+      <!--input type="hidden" name="acct_key" value="${ACCT_KEY}"  -->
+      <input type="hidden" name="id_no" value="${id_no}" />
+      <input type="hidden" name="corp_no" value="${corp_no}" />
+      <input type="hidden" name="acct_type" value="${acct_type}" />
+      <input type="hidden" name="chi_name" value="${chi_name}" />
+      <input type="hidden" name="charge_name" value="${charge_name}" />
+      <input type="hidden" name="letter_title" value="${letter_title}" />
+      <input type="hidden" name="charge_name2" value="${charge_name2}" />
+      <input type="hidden" name="letter_title2" value="${letter_title2}" />
+      <!-- <input type="hidden" name="bill_sending_zip" value="${bill_sending_zip}" />
+      <input type="hidden" name="bill_sending_addr" value="${bill_sending_addr}" /> -->
+      <input type="hidden" name="resident_zip" value="${resident_zip}" />
+      <input type="hidden" name="resident_addr" value="${resident_addr}" />
+      <input type="hidden" name="trans_date" value="${trans_date}" />
+      <input type="hidden" name="transDateTwo" value="${transDateTwo}" />
+      <input type="hidden" name="transDateNewTwo" value="${transDateNewTwo}" />
+      <input type="hidden" name="transDateNew" value="${transDateNew}" />
+      <input type="hidden" name="src_amt" value="${src_amt.(999)}" />        
+ 	    ${SER_NUM}&nbsp;   
+   </td>
+	<!-- td nowrap class="list_cc"> ${ACCT_KEY}&nbsp;</td -->
+	<td nowrap class="list_ll"> ${id_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${corp_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${acct_type}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+	<td nowrap class="list_ll"> ${charge_name}&nbsp;</td>
+	<!-- td nowrap class="list_cc"> ${bill_sending_zip}&nbsp;</td>
+	<td nowrap class="list_ll"> ${bill_sending_addr}&nbsp;</td -->
+	<td nowrap class="list_cc"> ${resident_zip}&nbsp;</td>
+	<td nowrap class="list_ll"> ${resident_addr}&nbsp;</td>
+	<td nowrap class="list_cc"> ${trans_date}&nbsp;</td>
+	<td nowrap class="list_cc"> ${transDateNew}&nbsp;</td>
+	<td nowrap class="list_rr"> ${src_amt.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+   {
+        if($("#checkbox").prop("checked")==true){
+	        $("#chargeNameFlag").val("Y");
+        }
+
+	   if (top.actionCode == "PDF") {
+			if (!chkdata()) {
+				return false;
+			}
+		}
+		if (!top.checkFormat()) {
+			return false;
+		}
+		return true;
+	}
+
+	function chkdata() {
+		var agy = 0;
+		$("input[name=opt]").each(function() {
+			if ($(this).prop("checked") == true) {
+				agy++;
+			}
+		})
+		if (agy == 0) {
+			alert("請選擇要列印資料!");
+			return false;
+		}
+		return true;
+	}
+</script>

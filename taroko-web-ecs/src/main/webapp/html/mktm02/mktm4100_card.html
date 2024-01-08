@@ -1,0 +1,169 @@
+<html>
+<head>
+<title>NCCC特店商品分期付款參數維護-card_type</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;  
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >特店代號:
+      <span class="dsp_text">${mcht_no}</span>
+      <input type=hidden name="mcht_no" value="${mcht_no}" />
+   </td>
+   <td nowrap >分期期數:
+      <span class="dsp_text">${product_no}</span>
+      <input type=hidden name="product_no" value="${product_no}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >序號:
+      <span class="dsp_text">${seq_no}</span>
+      <input type=hidden name="seq_no" value="${seq_no}" />
+   </td>
+   <td nowrap class="col_key">覆核狀態:
+      <span class="dsp_text">${tt_apr_flag}</span>
+      <input type=hidden name="tt_apr_flag" value="${tt_apr_flag}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">
+      <input type="Button" value="帳戶類別" onclick="wf_detl_2page('1');" class="btAdd_detl"  />
+      <input type="Button" value="團體代號" onclick="wf_detl_2page('2');" class="btAdd_detl"  />
+      <input type="Button" value="卡種" onclick="wf_detl_2page('3');" class="btAdd_detl" disabled />      
+   </td>
+   </tr>
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >卡種:
+      <select size="1" id="ex_data_code" class="col_ddlb">
+         <option value="">--</option>
+         ${dddw_data_value}
+      </select>
+      &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}            
+   </td>
+  </tr>
+</table>  
+<hr>
+<table id="table1" width="60%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">卡種</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="dtl_value" value="${dtl_value}" />
+      <input type="hidden" name="tt_dtl_value" value="${tt_dtl_value}" />
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${tt_dtl_value}</td>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="apr_flag" value="${apr_flag}" />
+<input type="hidden" name="dtl_kind" value="CARD-TYPE" />
+<input type="hidden" name="MOD_PGM" value="mktm4100">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ top.pageRows="999";
+
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+ }
+  
+  $("#detl_btnAdd").click(function(){
+
+	var ls_data_code =$("#ex_data_code").val().toUpperCase();;
+	var ls_data_code_tt = $("#ex_data_code option:selected").text();
+	if(ls_data_code =='') {
+	   alert("卡種: 不可空白");
+	   return ;
+	}
+
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ls_data_code+"' name='dtl_value' />"
+      +"<input type='hidden' value='"+ls_data_code_tt+"' name='tt_dtl_value' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code_tt
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_data_code").val('');
+  
+  });
+  
+ function wf_detl_2page(parm) { 
+   top.respLevel = 2;
+   if (parm === "1") {
+      top.respHtml ="mktm4100_acct";
+   }
+   else if (parm === "2") {
+      top.respHtml ="mktm4100_group";
+   }
+   else if (parm === "3") {
+      top.respHtml ="mktm4100_card";
+   }   
+   else {
+      return false;
+   }
+   top.submitControl("R2");
+   return true;
+ }
+</script>

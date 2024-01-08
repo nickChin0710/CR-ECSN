@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>檔案上傳</title>
+<base target='_self'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language=JavaScript src="js/encryption.js"></script>
+<script language=JavaScript src="js/systemControl_12.js"></script>
+
+<body  onbeforeunload="windowsClose()" >
+   <form method="post" name="newForm" action="" enctype="multipart/form-data">
+    <br>
+    <table align="center">
+     <tr>
+        <td align="left" ><b>選擇上傳檔案 :</b>
+         Page No: ${opener_html}
+         <input type="text" class="dsp_text" id="open_html" value="" readonly />
+        </td>
+     </tr>
+     <tr>
+       <td align="left">
+         <input type="file" name="upload_file" value="${upload_file}"
+             size="50"   accept="text/plain, text/csv, application/vnd.ms-excel" />
+       </td>
+     </tr>
+     <tr>
+       <td align="left">
+         <input type="submit" class="btProcess" name="btn_upload" value="上傳" onClick="return checkInput();" />
+<!--          
+<input type="button" value="取消" onClick="return windowsClose();" />
+ -->       
+       </td>
+     </tr>
+    </table>
+    <br><br>
+    ${UPLOAD_MESSAGE}
+    <table align="center">
+     <tr><td>
+    <input type="text" class="dsp_text" name="file_name" value="${file_name}" readonly />
+    </td></tr>
+    </table>
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+   </form>
+</body>
+</html>
+
+<script language="JavaScript">
+
+//var opener_html =window.opener.top.respHtml;
+ var ii_close=1;
+ function checkInput()
+ {
+   ii_close =0;
+    if ( document.newForm.upload_file.value.length == 0 )
+       { alert('請輸入檔案名稱 ');  return false;  }
+
+    requHtml    = "TarokoUpload_dialog";
+    respHtml    = "TarokoUpload_dialog";
+
+    hideData = "";
+    menuCode = "UP";
+    //newWindow  = "Y";
+    createHideData();
+    document.newForm.action = "MainControl?HIDE="+hideData;
+    document.newForm.submit();
+
+    return true;
+ }
+
+ function windowsClose(event)
+ {
+   if (ii_close==1) {
+      var file_name =document.newForm.file_name.value;
+      alert("file_name="+file_name);
+      window.returnValue =file_name;
+   }
+   //return file_name; 
+ }
+
+</script>

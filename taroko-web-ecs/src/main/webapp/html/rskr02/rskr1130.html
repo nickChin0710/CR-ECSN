@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>批次覆審統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_apr_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_apr_flag]").filter('[value=Y]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;查詢日期:
+      <input type="text" class="col_date" name="ex_query_date1" value="${ex_query_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_query_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_query_date2" value="${ex_query_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_query_date2'});
+	      </script>
+	</td>
+   </td>
+   <td nowrap >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;      
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;      
+  </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;查詢批號:
+      <input type="text" class="col_text" name="ex_batch_no1" value="${ex_batch_no1}" maxlength="10" size="12" zEdit="alphanum,upper">
+      <input type="text" class="col_text" name="ex_batch_no2" value="${ex_batch_no2}" maxlength="10" size="12" zEdit="alphanum,upper">
+      <input type="text" class="col_text" name="ex_batch_no3" value="${ex_batch_no3}" maxlength="10" size="12" zEdit="alphanum,upper">
+      <input type="text" class="col_text" name="ex_batch_no4" value="${ex_batch_no4}" maxlength="10" size="12" zEdit="alphanum,upper">
+      <input type="text" class="col_text" name="ex_batch_no5" value="${ex_batch_no5}" maxlength="10" size="12" zEdit="alphanum,upper">
+      <input type="text" class="col_text" name="ex_batch_no6" value="${ex_batch_no6}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+  </tr>
+  <tr>   
+	<td nowrap >&nbsp;覆審日期:
+      <input type="text" class="col_date" name="ex_trial_date1" value="${ex_trial_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_trial_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_trial_date2" value="${ex_trial_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_trial_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核結案
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />尚未覆核
+      </span>
+   </td>
+  </tr>
+  <tr>   
+   <td nowrap >&nbsp;風險族群:
+      <select size="1" name="ex_risk_group" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_risk_group}
+         <option value="Z9" ${ex_risk_group-Z9} >Z9</option>
+      </select>
+   </td>
+   <td nowrap >&nbsp;Action Code:
+      <select size="1" name="ex_action_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_action_code}
+      </select>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >查詢批號&nbsp;</th>
+    <th nowrap >查詢日期&nbsp;</th>
+    <th nowrap >風險族群&nbsp;</th>
+    <th nowrap >Action Code&nbsp;</th>
+    <th nowrap >筆數&nbsp;</th>
+    <th nowrap >調降額度金額&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${batch_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${query_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${risk_group}&nbsp;</td>
+	<td nowrap class="list_ll"> ${action_code}.${#JAVA:ecsfunc.DeCodeRsk.trialAction(action_code)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_adj_remain.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ 
+</script>

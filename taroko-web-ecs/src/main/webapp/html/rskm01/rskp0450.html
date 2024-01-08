@@ -1,0 +1,202 @@
+<html>
+<head>
+<title>預備依從/依從權主管覆核-V.19-0507</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript">
+function wf_compl_times(s1) {
+   if (s1 =='1') {
+      document.write("預備依從");
+   }
+   else if (s1 =='2') {
+      document.write("依從權");
+   }
+}
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_add_date1" value="${ex_add_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_add_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_add_date2" value="${ex_add_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_add_date2'});
+	      </script>
+	</td>
+   <td nowrap >&nbsp;<span class="col_radio">
+         <input type="radio" value="1" name="ex_compl_times" ${ex_compl_times-1} ${default-ex_compl_times} />預備依從權
+         <input type="radio" value="2" name="ex_compl_times" ${ex_compl_times-2} />依從權
+      </span>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnProc"  value="覆核" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;建檔經辦:
+      <input type="text" class="col_any" name="ex_user_id" value="${ex_user_id}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap >&nbsp;</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >覆核</th>
+    <th nowrap>覆核結果</th>
+    <th nowrap >控制流水號</th>
+    <th nowrap >卡號</th>
+    <th nowrap >消費日期</th>
+    <th nowrap >國別</th>
+    <th nowrap >微縮影NO</th>
+    <th nowrap >結算幣別</th>
+    <th nowrap >結算金額</th>
+    <th nowrap >階段</th>
+    <th nowrap >CASE No</th>
+    <th nowrap >登錄日期</th>
+    <th nowrap >國際組織提出日</th>
+    <th nowrap >違規日</th>
+    <th nowrap >預依從結果</th>
+    <th nowrap >依從權提出日</th>
+    <th nowrap >依從權結果</th>
+    <th nowrap >建檔經辦</th>
+    <th nowrap >階段備註</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} ${opt_disabled} />
+    	 ${SER_NUM}&nbsp;
+    <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+   	<input type="hidden" name="ser_num" value="${ser_num}" />
+    <input type="hidden" name="can_appr" value="${can_appr}" />
+   	<input type="hidden" name="rowid" value="${rowid}" />
+   	<input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+	</td>
+  <td nowrap class="list_ll">
+    <font color="red">${proc_mesg}</font>&nbsp;
+  </td>
+   <td nowrap class="list_ll">${bin_type}-${ctrl_seqno}&nbsp;
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" />
+      <input type="hidden" name="bin_type" value="${bin_type}" />
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;
+	   <input type="hidden" name="purchase_date" value="${purchase_date}">	   
+	</td>
+	<td nowrap class="list_cc"> ${mcht_country}&nbsp;
+	   <input type="hidden" name="mcht_country" value="${mcht_country}">
+	</td>
+	<td nowrap class="list_cc"> ${film_no}&nbsp;
+	   <input type="hidden" name="film_no" value="${film_no}">
+	</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;
+	   <input type="hidden" name="curr_code" value="${curr_code}">
+	</td>
+	<td nowrap class="list_cc"> ${dc_dest_amt.(999.00)}
+	   <input type="hidden" name="dc_dest_amt" value="${dc_dest_amt}">
+	</td>
+	<td nowrap class="list_cc">&nbsp;${compl_times}.<script>wf_compl_times('${compl_times}')</script>
+	   <input type="hidden" name="compl_times" value="${compl_times}">
+	</td>
+	<td nowrap class="list_cc"> ${vcr_case_no}&nbsp;
+	   <input type="hidden" name="vcr_case_no" value="${vcr_case_no}">
+	</td>
+	<td nowrap class="list_cc"> ${event_date.YMD}&nbsp;
+	   <input type="hidden" name="event_date" value="${event_date}">
+	</td>
+	<td nowrap class="list_cc"> ${pre_apply_date.YMD}&nbsp;
+	   <input type="hidden" name="pre_apply_date" value="${pre_apply_date}">
+	</td>
+	<td nowrap class="list_cc"> ${viol_date.YMD}&nbsp;
+	   <input type="hidden" name="viol_date" value="${viol_date}">
+	</td>
+	<td nowrap class="list_cc"> ${pre_clo_result}.${#JAVA:ecsfunc.DeCodeRsk.complPreResult(pre_clo_result)}&nbsp;
+	   <input type="hidden" name="pre_clo_result" value="${pre_clo_result}">
+	</td>
+	<td nowrap class="list_cc"> ${com_apply_date.YMD}&nbsp;
+	   <input type="hidden" name="com_apply_date" value="${com_apply_date}">
+	</td>
+   
+	<td nowrap class="list_cc"> ${com_clo_result}.${#JAVA:ecsfunc.DeCodeRsk.complCloResult(com_clo_result)}&nbsp;
+	   <input type="hidden" name="com_clo_result" value="${com_clo_result}">
+	</td>
+	<td nowrap class="list_cc"> ${add_user}&nbsp;
+	   <input type="hidden" name="add_user" value="${add_user}" />
+	</td>
+	<td nowrap class="list_cc"> ${wk_compl_remark}&nbsp;
+	   <input type="hidden" name="wk_compl_remark" value="${wk_compl_remark}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+   if (top.actionCode=='C') {
+      return confirm('是否執行 [依從權覆核]');
+   }    
+    return true;
+  }
+  
+  function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

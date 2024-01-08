@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>卡友權益資格參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#list_btnAdd").click(function(){
+
+	var ex_mcc =$("#ex_acct_type").val();
+   var tt_mcc =$("#ex_acct_type option:selected").text();
+	if (ex_mcc.trim()==='') {
+	   alert("帳戶類別: 不可空白");
+	   return false;
+	}
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ex_mcc+"' name='data_code' />"
+      +"<input type='hidden' value='"+tt_mcc+"' name='tt_data_code' />"
+      +"<input type='hidden' value='' name='data_code2' />"
+      +"<input type='hidden' value='"+ex_mcc+"' name='wk_data' />"
+      +"</td>"      
+      +"<td nowrap class='list_ll'>"+tt_mcc+"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_acct_type").val('');
+  });   
+
+});
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="return top.upperLevel()"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_Key" >權益代碼:
+			<span class="dsp_text">${wk_item_no}</span>
+    	<input type=hidden name="item_no" value="${item_no}">
+    	<input type=hidden name="wk_item_no" value="${wk_item_no}">
+   </td>
+   <td nowrap class="col_key" >專案代號:
+   		<span class="dsp_text">${proj_code}</span>
+    	<input type=hidden name="proj_code" value="${proj_code}">
+  </tr>
+  <tr>
+   <td nowrap class="col_Key" >參數類別:
+      <span class="dsp_text">帳戶類別</span>
+      <input type="hidden" name="data_type" value="01">      
+   </td>
+   <td nowrap class="col_key" >已覆核:
+      <span class="dsp_text">${apr_flag}&nbsp;</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >帳戶類別：
+     <select size=1 id="ex_acct_type" class="col_ddlb">
+       <option value="">--</option>  
+       ${dddw_acct_type}
+     </select>
+     &nbsp;
+     <input type="Button" id="list_btnAdd" value="新增明細" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}            
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>   
+    <th nowrap class="list_cc">帳戶名稱</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+      <input type="hidden" name="data_code2" value="${data_code2}">
+      <input type="hidden" name="tt_data_code" value="${tt_data_code}">
+      <input type="hidden" name="wk_data" value="${wk_data}">
+    </td>    
+    <td nowrap class="list_ll" >&nbsp;${tt_data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${item_no}" />
+<input type=hidden name="data_k2" value="" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="MOD_PGM" value="cmsm4210">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ top.pageRows ="9999";
+ 
+ //document.dataForm.ex_acct_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+   return true;
+  }	
+	
+</script>

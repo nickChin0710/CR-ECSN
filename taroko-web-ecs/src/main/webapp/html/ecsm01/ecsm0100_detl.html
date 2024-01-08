@@ -1,0 +1,226 @@
+<html>
+<head>
+<title> 108/11/08 V1.00.01 Allen Ho Initial 系統刪除資料庫表格參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=ie11">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+ ${#PLUGIN:htmcomm_plugin.apr_user3}  
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"    value="複製" onClick="return top.submitControl('procMethod_COPY')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">表格代碼:&nbsp;
+       <input type="text" class="col_any" name="kk_table_name" value="${kk_table_name}"
+              zEdit="any,upper" zRequire="K,C" maxlength="30" size="30" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>移檔模式:&nbsp;
+       <select   size="1"  name="kk_rmtab_mode" class="col_ddlb"  >
+         <option value="1" ${kk_rmtab_mode-1} >直接移除</option>
+         <option value="2" ${kk_rmtab_mode-2} >轉歷史檔案</option>
+       </select>
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">表格代碼:
+       <span class="dsp_text">${table_name}</span>
+       <input  type="hidden" name="table_name" value="${table_name}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="colKey">移檔模式:
+       <span class="dsp_text">${rmtab_mode}</span>
+       <input  type="hidden" name="rmtab_mode" value="${rmtab_mode}" />
+              -${comm_rmtab_mode}
+     <input  type="hidden" name="comm_rmtab_mode" value="${comm_rmtab_mode}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>移檔說明&nbsp; 
+       <input type="text" class="col_any" name="rmtab_desc" value="${rmtab_desc}"
+              zEdit="any,canTW" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>比照處理表格:&nbsp; 
+        <input type="Button" class="btOther"  id="btnsame"  value="比照處理表格:" ${btnsame_disable}
+               onClick="return buttonScreen('5','same','data_type','6')" >
+         　　複製檔名: 
+       <input type="text" class="col_any" name="copy_table_name" value="${copy_table_name}"
+              zEdit="any" maxlength="30" size="30" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>歷史檔名:&nbsp; 
+       <input type="text" class="col_any" name="hst_table_name" value="${hst_table_name}"
+              zEdit="any" maxlength="30" size="30" />
+              (轉歷史檔未輸入檔名,預設為後加_HST)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>停用日期:&nbsp; 
+       <input type="text" class="col_datea" name="stop_date" value="${stop_date}"
+              zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'stop_date'});
+      </script>
+         說明: 
+       <input type="text" class="col_any" name="stop_desc" value="${stop_desc}"
+              zEdit="any,canTW" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >啟動時間:&nbsp;
+       <input type="radio" value="9" name="rmtime_type" ${rmtime_type-9} checked  />不定時
+       <input type="radio" value="1" name="rmtime_type" ${rmtime_type-1} />每日批次
+       <input type="radio" value="2" name="rmtime_type" ${rmtime_type-2} />帳單週期
+          
+       <input type="radio" value="0" name="cycle_day_flag" ${cycle_day_flag-0} checked  />當日
+       <input type="radio" value="1" name="cycle_day_flag" ${cycle_day_flag-1} />後一日
+       <input type="radio" value="2" name="cycle_day_flag" ${cycle_day_flag-2} />後二日
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >　　 　　&nbsp;
+       <input type="radio" value="3" name="rmtime_type" ${rmtime_type-3} />每週
+        <input type="Button" class="btOther"  id="btnweek"  value="每週明細" ${btnweek_disable}
+               onClick="return buttonScreen('3','week','data_type','2')" >
+          
+       <input type="radio" value="4" name="rmtime_type" ${rmtime_type-4} />每月
+        <input type="Button" class="btOther"  id="btnmont"  value="每月明細" ${btnmont_disable}
+               onClick="return buttonScreen('3','mont','data_type','3')" >
+          
+       <input type="radio" value="5" name="rmtime_type" ${rmtime_type-5} />每年
+        <input type="Button" class="btOther"  id="btnyear"  value="每年明細" ${btnyear_disable}
+               onClick="return buttonScreen('4','year','data_type','4')" >
+          
+       <input type="radio" value="1" name="date_type" ${date_type-1} checked  />營業日
+       <input type="radio" value="2" name="date_type" ${date_type-2} />系統日
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>避免CYCLE日期:&nbsp;
+      <input type="checkbox" value="Y" name="avoid_cycle" ${avoid_cycle-Y} >
+              (後一日)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >COMMIT註記&nbsp;
+       <input type="radio" value="0" name="commit_flag" ${commit_flag-0} checked  />一次commit
+       <input type="radio" value="1" name="commit_flag" ${commit_flag-1} />10萬筆
+       <input type="radio" value="2" name="commit_flag" ${commit_flag-2} />20萬筆
+       <input type="radio" value="9" name="commit_flag" ${commit_flag-9} />自訂筆數
+         COMMIT 筆數 
+       <input type="text" class="col_number" name="commit_rows" value="${commit_rows}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>SQL WHERE 條件:&nbsp; 
+        <input type="Button" class="btOther"  id="btnvarn"  value="SQL變數" ${btnvarn_disable}
+               onClick="return buttonScreen('2','varn','data_type','1')" >
+              (  Table 預設 alias name 為 a)
+     </td>
+   </tr>
+   <tr>
+     <td wrap="hard" >　
+       <textarea cols="60" rows="10" type="text" class="col_any" name="rmtab_where"
+              zEdit="any" maxlength="600" size="600" />${rmtab_where}</textarea>
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="-" cellpadding="4">
+   <tr>
+     <td  nowrap  >鍵檔日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+     <td  nowrap  >鍵檔人員: 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+     </td>
+     <td  nowrap  >覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="ecsm0100">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    top.allow_spec_char = true ;
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "ecsm0100_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

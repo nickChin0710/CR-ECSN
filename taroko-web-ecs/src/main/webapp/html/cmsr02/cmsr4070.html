@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>客服經辦D檔登錄匯入成功/失敗報表-jh-190617</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;覆核批號:
+      <input type="text" class="col_text" name="ex_appr_no" value="${ex_appr_no}" maxlength="10" value="${ex_appr_no}" >
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="N" name="ex_debit_flag" ${ex_debit_flag-N} ${DEFAULT-ex_debit_flag} />信用卡
+         <input type="radio" value="Y" name="ex_debit_flag" ${ex_debit_flag-Y} />Debit卡
+      </span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;雙幣幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_dc_curr_code_tw}
+      </select>
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="1" name="ex_err_code" ${ex_err_code-1} ${DEFAULT-ex_err_code} />匯入成功
+         <input type="radio" value="2" name="ex_err_code" ${ex_err_code-2} />匯入失敗
+      </span>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">  
+  <tr>   
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >覆核批號&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >登錄人員&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >科目名稱&nbsp;</th>
+    <th nowrap >交易參考號&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >金額&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+    <th nowrap >失敗原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${appr_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_user}_${tt_crt_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${wk_acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_cname}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tt_acct_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${reference_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodePtr.currCode(curr_code)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${adj_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_ll"> ${adj_remark}&nbsp;</td>
+	<td nowrap class="list_ll"> ${acct_errdesc}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+    <tr>
+    <td nowrap class="list_rr" colspan="8" >幣別：台幣</td>
+    <td nowrap class="list_cc" >筆數：${tl_cnt_901.(999)}
+        <input type="hidden" name="tl_cnt_901" value="${tl_cnt_901}" />
+    </td>
+    <td nowrap class="list_cc" >金額：</td>
+    <td nowrap class="list_rr" >${tl_db_d_amt_901.(999)}
+        <input type="hidden" name="tl_db_d_amt_901" value="${tl_db_d_amt_901}"/>
+        
+    </td>    
+    <td nowrap class="list_ll" colspan="3" > 
+  </tr>  
+  <tr>
+    <td nowrap class="list_rr" colspan="8" >幣別：美金</td>
+    <td nowrap class="list_cc" >筆數：${tl_cnt_840.(999)}
+        <input type="hidden" name="tl_cnt_840" value="${tl_cnt_840}" />
+    </td>
+    <td nowrap class="list_cc" >金額：</td>
+    <td nowrap class="list_rr" >${tl_db_d_amt_840.(999.00)}
+        <input type="hidden" name="tl_db_d_amt_840" value="${tl_db_d_amt_840}"/>
+        
+    </td>    
+    <td nowrap class="list_ll" colspan="3" > 
+  </tr>  
+  <tr>
+    <td nowrap class="list_rr" colspan="8" >幣別：日幣</td>
+    <td nowrap class="list_cc" >筆數：${tl_cnt_392.(999)}
+        <input type="hidden" name="tl_cnt_392" value="${tl_cnt_392}" />
+    </td>
+    <td nowrap class="list_cc" >金額：</td>
+    <td nowrap class="list_rr" >${tl_db_d_amt_392.(999.00)}
+        <input type="hidden" name="tl_db_d_amt_392" value="${tl_db_d_amt_392}"/>
+        
+    </td>    
+    <td nowrap class="list_ll" colspan="3" > 
+  </tr>  
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

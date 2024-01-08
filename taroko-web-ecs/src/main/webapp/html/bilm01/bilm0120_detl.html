@@ -1,0 +1,349 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-10-03  V1.00.01     Ryan       Initial                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>分期付款申購書登錄作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8;">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="讀取" ${btnAdd_disable} onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+	<!-- 輸入資料讀取條件  -->
+	<tr>
+		<td nowrap width="50%">申購書編號:&nbsp;
+			<input type="text" zEdit="any" class="col_any" name="kk_contract_no" value="${kk_contract_no}" maxlength="10" size="10">
+		</td>
+		<td nowrap width="50%">申購書序號:&nbsp;
+			<input type="text" zEdit="number" class="col_number" name="kk_contract_seq_no" value="1" size="3">
+		</td>
+	</tr>
+ </table>
+
+ <hr>
+
+<!-- Detail data detl *************************************************** -->
+ <table width="70%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap class="colKey">申購書編號:
+			<span class="dsp_text">${contract_no}</span>
+				<input type="hidden" name="contract_no" value="${contract_no}">
+		</td>
+		<td nowrap class="colKey" colspan="3">申購書序號:&nbsp;
+			<span class="dsp_text">${contract_seq_no}</span>
+				<input type="hidden" name="contract_seq_no" value="${contract_seq_no}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3">*分期種類:&nbsp; 
+			<span class="col_radio" >
+				<input type="radio" value="N" name="install_type" ${install_type-N} ${DEFAULT_CHK}/>一般分期
+				<input type="radio" value="S" name="install_type" ${install_type-S} />帳單分期
+				<input type="radio" value="K" name="install_type" ${install_type-K} />長循分期
+			</span>
+		</td>
+	</tr>
+	<th colspan="3">分期資料</th>
+   	<tr>
+   		<td nowrap>*交易卡號:&nbsp;
+			<input type=text zEdit="any" class="col_any" name="card_no" value="${card_no}" maxlength="19" size="19" onChange="itemChange(this.value,'card_no')" />
+   		</td>
+     	<td nowrap>*帳戶身分證號:&nbsp; 
+     		<input type="text" class="col_any" name="id_no" value="${id_no}"
+        		zEdit="any,upper"  maxlength="11" size="13"/>
+     	</td>
+   <tr>
+   	 <td nowrap colspan="2">*分期特店代號:
+        <select name="mcht_no" id= "mcht_no" class="col_ddlb">
+                ${dddw_mcht_no_parm}
+        </select>
+        <input type="hidden" name="mcht_chi_name" value="${mcht_chi_name}">
+     </td>
+   </tr>
+   	<tr id="tr"> 
+     <td nowrap colspan="2">*分期商品:
+         <select name="product_no" id="product_no" class="col_ddlb">
+                ${dddw_product_no}
+         </select>
+         <input type="hidden" name="product_name" value="${product_name}">
+     </td>
+   	</tr>
+   	<tr>
+		<td nowrap>首尾期旗標:
+ 			<select name="fee_flag" class="col_ddlb">
+				<option value="F" ${fee_flag-F}>首期</option>
+				<option value="L" ${fee_flag-L}>尾期</option>
+			</select>
+		</td>
+		<td nowrap>
+ 			<font color="red">分期入帳時間:</font>
+                        <select size="1" id="installment_delay" name="installment_delay" class="col_ddlb">
+                            <option value="Y" ${installment_delay-Y}>當期</option>
+                            <option value="N" ${installment_delay-N}>次期</option>
+                        </select>
+		</td>
+   	</tr>
+   
+   <tr>
+   	<td nowrap >年利率:&nbsp; 
+	    <input type=text class="col_number" id="trans_rate" name="trans_rate" value="${trans_rate}" zedit="dignumber" maxlength="6" size="6" />%
+    </td>
+	<td nowrap >應付費用年百分率:&nbsp; 
+       	<input type=text class="col_number" id="year_fees_rate" name="year_fees_rate" value="${year_fees_rate}" zedit="dignumber,number" maxlength="5" size="5" />%
+     </td>
+     
+   </tr>   	
+   
+	<tr>
+     	<td nowrap >*分期金額:&nbsp; 
+       		<input type="text" class="col_number" id="install_tot_amt" name="install_tot_amt" value="${install_tot_amt}"
+              	zEdit="number" maxlength="12" size="14"/>
+            &nbsp;&nbsp;*分期期數:
+            <input type="text" class="col_number" id="install_tot_term" name="install_tot_term" value="${install_tot_term}"
+              	zEdit="number" maxlength="2" size="4"/>
+     	</td>
+     	<td nowrap >額外費用:&nbsp;
+			<input type=text class="col_number" id="extra_fees" name="extra_fees" value="${extra_fees}" 
+                zEdit="dignumber,number" maxlength="8" size="8" />
+		</td>
+   	</tr>
+
+   <tr>
+     <td nowrap>首/尾期金額:&nbsp; 
+        <span class="dsp_text first_install_amt" >${first_install_amt.(999)}</span>
+		    <input type="hidden" class ="first_install_amt" name="first_install_amt" value="${first_install_amt}">
+     </td>
+     <td nowrap>每期金額:&nbsp; 
+        <span class="dsp_text unit_price" >${unit_price.(999)}</span>
+		<input type="hidden" class ="unit_price"  name="unit_price" value="${unit_price}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="2">
+      <input type="checkbox" value="Y" name="spec_flag" ${spec_flag-Y} >&nbsp;
+          	分期專款專用註記 
+     </td>
+   </tr>
+   <th colspan="3">持卡人資訊</th>
+   	<tr>
+		<td nowrap>姓名:&nbsp; 
+        	<span class="dsp_text">${chi_name}</span>
+		    	<input type="hidden"   name="chi_name" value="${chi_name}">
+     	</td>
+     	<td nowrap>自動扣繳指示碼:&nbsp; 
+      	  <span class="dsp_text">${#JAVA:ecsfunc.DeCodeBil.autopayIndicator(autopay_indicator)}</span>
+		  	  <input type="hidden"  name="autopay_indicator" value="${autopay_indicator}">
+     	</td>
+   </tr>
+   <tr>
+     <td nowrap>結帳日期:&nbsp; 
+        <span class="dsp_text">${this_closing_date.YMD}</span>
+		    <input type="hidden"  name="this_closing_date" value="${this_closing_date}">
+     </td>
+     <td nowrap>帳戶狀態:&nbsp; 
+        <span class="dsp_text">${#JAVA:ecsfunc.DeCodeBil.acctStatus(acct_status)}</span>
+		    <input type="hidden"  name="acct_status" value="${acct_status}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="2">繳款截止日:&nbsp; 
+        <span class="dsp_text">${this_lastpay_date.YMD}</span>
+		    <input type="hidden"  name="this_lastpay_date" value="${this_lastpay_date}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="2">最低應繳款日期:&nbsp; 
+        <span class="dsp_text">${last_min_pay_date.YMD}</span>
+		    <input type="hidden"  name="last_min_pay_date" value="${last_min_pay_date}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>本期應繳金額:&nbsp; 
+        <span class="dsp_text">${stmt_this_ttl_amt.(999)}</span>
+		    <input type="hidden"  name="stmt_this_ttl_amt" value="${stmt_this_ttl_amt}">
+     </td>
+     <td nowrap>總額度:&nbsp; 
+        <span class="dsp_text">${line_of_credit_amt.(999)}</span>
+		    <input type="hidden"  name="line_of_credit_amt" value="${line_of_credit_amt}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>本期應繳金額(餘額):&nbsp; 
+        <span class="dsp_text">${ttl_amt_bal.(999)}</span>
+		    <input type="hidden"  name="ttl_amt_bal" value="${ttl_amt_bal}">
+     </td>
+     <td nowrap>臨調額度:&nbsp; 
+        <span class="dsp_text">${tot_amt_month.(999)}</span>
+		    <input type="hidden"  name="tot_amt_month" value="${tot_amt_month}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap colspan="2">最低應繳金額(餘額):&nbsp; 
+        <span class="dsp_text">${min_pay_bal.(999)}</span>
+		    <input type="hidden"  name="min_pay_bal" value="${min_pay_bal}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>可分期金額:&nbsp; 
+        <span class="dsp_text">${ttl_amt_bal.(999)}</span>
+		    <input type="hidden"  name="ttl_amt_bal" value="${ttl_amt_bal}">
+     </td>
+     <td nowrap>可分期額度:&nbsp; 
+        <span class="dsp_text">${line_of_credit_amt.(999)}</span>
+		    <input type="hidden"  name="line_of_credit_amt" value="${line_of_credit_amt}">
+     </td>
+   </tr>
+	<th colspan="3">異動記錄</th>
+   <tr>
+     <td  nowrap  >更新人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+		&nbsp;&nbsp;&nbsp;更新日期: 
+       <span class="dsp_date">${mod_date.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_date" value="${mod_date}" />
+     </td>
+     <td  nowrap  >覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="10"  type="hidden" name="apr_date" value="${apr_date}" />
+     </td>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="p_seqno" value="${p_seqno}">
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+  $(document).ready(function(){ 
+    $('#mcht_no').on('change',function(){
+      top.actionCode = "AJAX";
+      resetJSON();
+      addJSON("data_mcht_no",$(this).val());
+      addJSON("action_code","AJAX1"); 
+      processAJAX();
+    });
+    $('#product_no').on('change',function(){
+    	var installTotTerm = $("#product_no :selected").val();
+    	$("#install_tot_term").text(installTotTerm).val(installTotTerm);
+    	if($("input[name = install_tot_amt]").val() !="" && 
+    			$("input[name = install_tot_term]").val() !="" ){
+      		top.actionCode = "AJAX";
+      		resetJSON();
+      		addJSON("data_product_no",$("#product_no :selected").val());
+      		addJSON("data_mcht_no",$("#mcht_no :selected").val());
+      		addJSON("data_install_tot_amt",$("input[name = install_tot_amt]").val());
+      		addJSON("data_install_tot_term",$("input[name = install_tot_term]").val());
+      		addJSON("dddw_product_no_option",$("#tr td select").html());
+      		addJSON("action_code","AJAX2"); 
+      		processAJAX();
+    	}
+    });
+    $('#install_tot_amt,#install_tot_term').on('change',function(){
+    	if($("input[name = install_tot_amt]").val() !="" && 
+    			$("input[name = install_tot_term]").val() !="" ){
+      		top.actionCode = "AJAX";
+      		resetJSON();
+      		addJSON("data_product_no",$("#product_no :selected").val());
+      		addJSON("data_mcht_no",$("#mcht_no :selected").val());
+      		addJSON("data_install_tot_amt",$("input[name = install_tot_amt]").val());
+      		addJSON("data_install_tot_term",$("input[name = install_tot_term]").val());
+      		addJSON("dddw_product_no_option",$("#tr td select").html());
+      		addJSON("action_code","AJAX2"); 
+      		processAJAX();
+    	}
+    });
+    $('input[name = install_type]').on('change',function(){
+      top.submitControl('R2');
+    })
+    $('input[name = id_no],input[name = card_no]').on('change',function(){
+      top.submitControl('R1');
+    })
+  });
+
+ function ajaxResponse()
+ {
+ 	 top.respHtml ="bilm0120_detl";
+   top.requHtml ="bilm0120_detl";
+ 	if(getJSONvalue("dddw_product_no_option",0)!=null){
+ 		  $("#tr td select option").remove();
+      $("#tr td select").append(getJSONvalue("dddw_product_no_option",0)); 
+   }
+  
+  if(getJSONvalue("json_installment_delay",0)!=null && getJSONvalue("json_installment_delay",0)!=""){
+ 	  var installmentDelay = getJSONvalue("json_installment_delay",0);
+ 	  $("#installment_delay").val(installmentDelay);
+  }	
+
+  if(getJSONvalue("select_val",0)!=null){
+     $("#product_no").val(getJSONvalue("select_val",0));
+   }
+
+  if(getJSONvalue("json_first_install_amt",0)!=null){
+      var firstInstallAmt = getJSONvalue("json_first_install_amt",0);
+      $(".first_install_amt").text(firstInstallAmt).val(firstInstallAmt);
+  }
+  if(getJSONvalue("json_unit_price",0)!=null){
+      var unitPrice = getJSONvalue("json_unit_price",0);
+      $(".unit_price").text(unitPrice).val(unitPrice);
+  }
+  if(getJSONvalue("json_trans_rate",0)!=null){
+      var transRate = getJSONvalue("json_trans_rate",0);
+      $("#trans_rate").text(transRate).val(transRate);
+  }
+  if(getJSONvalue("json_year_fees_rate",0)!=null){
+      var yearFeesRate = getJSONvalue("json_year_fees_rate",0);
+      $("#year_fees_rate").text(yearFeesRate).val(yearFeesRate);
+  }
+  
+  
+ }
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>DebitCard 臨時額度調整統計表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_self]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_self]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;來電日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;主動服務:
+  		<span class="col_radio">
+         <input type="radio" value="0" name="ex_self" ${ex_self-0} />全部
+         <input type="radio" value="Y" name="ex_self" ${ex_self-Y} />Yes
+         <input type="radio" value="N" name="ex_self" ${ex_self-N} />No
+      </span>
+		</td>
+		<td nowrap >&nbsp;
+			<input type="checkbox" name="ex_purch_flag" value="Y" ${ex_purch_flag-Y}>預約消費
+			<input type="checkbox" name="ex_over_lmt_flag" value="Y" ${ex_over_lmt_flag-Y}>超過系統參數
+			<input type="checkbox" name="ex_oth_flag" value="Y" ${ex_oth_flag-Y}>其他
+		</td>
+	</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >主動服務&nbsp;</th>
+    <th nowrap >總件數&nbsp;</th>
+    <th nowrap >拒絕件數&nbsp;</th>
+    <th nowrap >核淮件數&nbsp;</th>
+    <th nowrap >取消臨調件數&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${self_flag}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_tot_cnt.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_reject.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_pass.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_cancel.(999)}&nbsp;</td>
+	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

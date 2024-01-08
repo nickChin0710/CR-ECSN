@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>每月特指/凍結明細報表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;檢視日期:
+   		<input type="text" class="col_date" name="ex_log_date" value="${ex_log_date}" maxlength="6" size="8" zEdit="date,yyyymm" >
+	 </td>
+	 <td nowrap >&nbsp;類別:
+	 		<span class="col_radio">
+         <input type="radio" value="1" name="ex_type" ${ex_type-1} />卡片特指
+         <input type="radio" value="2" name="ex_type" ${ex_type-2} ${DEFAULT-ex_type} />戶凍結/特指
+      </span>
+	 </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+   <td nowrap rowspan="3" >
+   	<span class="col_key">
+   		&nbsp;註：<br>
+   		&nbsp;1.每月1日批次執行。<br>
+   		&nbsp;2.檢視日期：依檢視<br>
+   		&nbsp;月份往前追遡流通卡<br>
+   		&nbsp;戶仍有凍結及特指<br>
+   		&nbsp;者。
+   	</span>
+   </td>
+  </tr>  
+  <tr>
+  	<td nowrap >&nbsp;檢視部門:
+  		<select size="1" name="ex_dept_no" class="col_ddlb" >
+  			<option value="">--</option>
+      	${dddw_dept_no}
+   		</select>
+  	</td>
+  	<td nowrap >&nbsp;處理經辦:
+  		<input type="text" class="col_any" name="ex_proc_user" value="${ex_proc_user}" maxlength="10" size="12" zEdit="any,canTw">
+  	</td>  
+	</tr>
+	<tr>		
+		<td nowrap >&nbsp;特指碼/凍結碼:
+			<input type="text" class="col_text" name="ex_block_reason" value="${ex_block_reason}" maxlength="2" size="5" zEdit="alphanum,upper" >
+		</td>
+		<td nowrap colspan="2" >&nbsp;特指備註:
+			<input type="text" class="col_any" name="ex_remark" value="${ex_remark}" maxlength="30" size="32" zEdit="any,canTw" >
+		</td>
+	</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >檢視部門&nbsp;</th>
+    <th nowrap >處理經辦&nbsp;</th>
+    <th nowrap >客戶卡號&nbsp;</th>
+    <th nowrap >客戶ID&nbsp;</th>
+    <th nowrap >帳戶別&nbsp;</th>
+    <th nowrap >特指/凍結日期&nbsp;</th>
+    <th nowrap >特指迄日&nbsp;</th>
+    <th nowrap >特指碼/凍結碼&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${user_dept_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_key}&nbsp;</td>
+   <td nowrap class="list_cc"> ${log_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${spec_del_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${wk_block_status}&nbsp;</td>
+   <td nowrap class="list_ll"> ${log_remark}&nbsp;</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

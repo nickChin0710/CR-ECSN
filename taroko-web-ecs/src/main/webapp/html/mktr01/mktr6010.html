@@ -1,0 +1,146 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-09-15  V1.00.01  jiangyingdong      Create                           -->
+
+<html>
+	<head>
+		<title>年費入帳明細表</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+		<script language="JavaScript" src="js/jquery.js"></script>
+		<link rel="stylesheet" href="js/Calendar/calendar.css">
+	</head>
+	<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+	<body background="${water_mark}">
+		<form name="dataForm" method="post" action="">
+		
+			<div id="condBlock">
+				<table width="80%" border="0" cellspacing="0" cellpadding="4">
+					<tr>
+						<td nowrap>&nbsp;篩選年費年月:
+							<input type="text" class="col_text" name="ex_date1" value="${ex_date1}" maxlength="6" size="8" zEdit="number" zRequire="C" >
+						</td>
+						<td nowrap>&nbsp;身分證號:
+        					<input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" maxlength="10" size="12" >
+   						</td>
+						<td nowrap>&nbsp;
+							<input type="Button" value="查詢" onClick="return top.submitControl('Q')"
+								class="btQuery">&nbsp;&nbsp;
+							<input type="Button" value="清除" onClick="return top.submitControl('L')"
+								class="btClear">&nbsp;&nbsp;
+							<img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;"
+								onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);"
+								onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td nowrap>&nbsp;發卡分行:
+							<select size="1" name="ex_reg_bank_no" class="col_ddlb" >                             
+                				${dddw_branch_name}
+                        	</select>&nbsp;
+						</td>
+						<td nowrap>&nbsp;卡號:
+							<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+						</td>
+						<td nowrap >&nbsp;
+    						<span class="col_radio">
+         						<input type="radio" value="N" name="ex_type" ${ex_type-N} ${DEFAULT-ex_type} />選收年費
+         						<input type="radio" value="Y" name="ex_type" ${ex_type-Y} />選免年費
+         						<input type="radio" value="0" name="ex_type" ${ex_type-0} />全部
+      						</span>
+    					</td>
+					</tr>
+					<tr>
+						<td nowrap>&nbsp;團代:
+							<input type="text" class="col_text" name="ex_group_code" value="${ex_group_code}" maxlength="4" size="6" >
+						</td>
+						<td nowrap>&nbsp;卡種:
+							<input type="text" class="col_text" name="ex_card_type" value="${ex_card_type}" maxlength="2" size="4" >
+						</td>
+						<td nowrap>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<hr>
+
+			<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<th nowrap width="5%">No&nbsp;</th>
+					<th nowrap>發卡分行&nbsp;</th>
+					<th nowrap>身份證號(正卡)&nbsp;</th>
+					<th nowrap>卡種&nbsp;</th>
+					<th nowrap>團代&nbsp;</th>
+					<th nowrap>卡號&nbsp;</th>
+					<th nowrap>持卡人姓名&nbsp;</th>
+					<th nowrap>開戶日&nbsp;</th>
+					<th nowrap>應收年費&nbsp;</th>
+					<th nowrap>免年費&nbsp;</th>
+					<th nowrap>實收年費&nbsp;</th>
+					<th nowrap>帳單起迄年月&nbsp;</th>
+					<th nowrap>卡片消費筆數&nbsp;</th>
+					<th nowrap>卡片消費金額&nbsp;</th>
+					<th nowrap>歸戶消費筆數&nbsp;</th>
+					<th nowrap>歸戶消費金額&nbsp;</th>
+					<th nowrap>住家電話&nbsp;</th>
+					<th nowrap>公司電話&nbsp;</th>
+					<th nowrap>手機&nbsp;</th>
+					<th nowrap>備註&nbsp;</th>
+				</tr>
+				<!-- BEGIN DYNAMIC : DETAIL -->
+				<tr>
+					<td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+					<td nowrap class="list_cc"> ${reg_bank_no}&nbsp;</td>
+					<td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+					<td nowrap class="list_cc"> ${card_type}&nbsp;</td>
+					<td nowrap class="list_cc"> ${group_code}&nbsp;</td>
+					<td nowrap class="list_ll"> ${card_no}&nbsp;</td>
+					<td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+					<td nowrap class="list_cc"> ${issue_date}&nbsp;</td>
+					<td nowrap class="list_cc"> ${org_annual_fee}&nbsp;</td>
+					<td nowrap class="list_cc"> ${reason_code}&nbsp;</td>
+					<td nowrap class="list_cc"> ${rcv_annual_fee}&nbsp;</td>
+					<td nowrap class="list_cc"> ${acct_month_between}&nbsp;</td>
+					<td nowrap class="list_cc"> ${card_pur_cnt}&nbsp;</td>
+					<td nowrap class="list_cc"> ${card_pur_amt}&nbsp;</td>
+					<td nowrap class="list_cc"> ${sum_pur_cnt}&nbsp;</td>
+					<td nowrap class="list_cc"> ${sum_pur_amt}&nbsp;</td>
+					<td nowrap class="list_cc"> ${home_phone}&nbsp;</td>
+					<td nowrap class="list_cc"> ${office_phone}&nbsp;</td>
+					<td nowrap class="list_ll"> ${cellar_phone}&nbsp;</td>
+					<td nowrap class="list_cc"> ${comment}&nbsp;</td>
+				</tr>
+				<!-- END DYNAMIC : DETAIL -->
+			</table>
+
+			<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+			<input type="hidden" name="pageType" value="cond" />
+
+		</form>
+	</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+	top.refreshButton2('0');
+	top.pageRows = "20";
+
+	// 驗證表單
+	function validateInput() {
+		if (!top.checkFormat()) {
+			return false;
+		}
+		return true;
+	}
+
+</script>

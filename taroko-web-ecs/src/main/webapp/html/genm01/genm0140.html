@@ -1,0 +1,114 @@
+<html>
+
+<head>
+    <title>臨時宣布放假作業-V.2017-0705-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="30%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="執行" onClick="return disp_confirm()" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table width="30%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>
+                        請確定今日 :&nbsp;
+                        <font color="#FF0000">${business_date}&nbsp;
+                            <font color="blue">因
+                                <input type="text" class="col_any" name="incident" value="${incident}" zEdit="any,canTW" maxlength=14 size=14 /> 臨時放假
+                                <br/> 於今日夜間批次開始執行前，必須完成此作業。
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="600">
+            <tr>
+                <th nowrap class="list_th" colspan="3">&nbsp;原起帳日為：${business_date}</th>
+                <th nowrap class="list_th" colspan="3">&nbsp;更改後起帳日為：${vouch_date}</th>
+                <input type="hidden" name="business_date" value="${business_date}">
+                <input type="hidden" name="vouch_date" value="${vouch_date}">
+            </tr>
+            <tr>
+                <th nowrap class="list_th" colspan="3">&nbsp;套號前3碼</th>
+                <th nowrap class="list_th" colspan="3">&nbsp;最大套號</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_ll" colspan="3"> ${ref}</td>
+                <td nowrap class="list_ll" colspan="3"> ${ref_cnt}</td>
+                <input type="hidden" name="ref" value="${ref}">
+                <input type="hidden" name="ref_cnt" value="${ref_cnt}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="h_business_date" value="${business_date}">
+        <input type="hidden" name="h_vouch_date" value="${vouch_date}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script type="text/javascript">
+function disp_confirm() {
+	var refs = document.getElementsByName("ref");
+	if (refs == undefined || refs.lenth == 0 || refs[0].value == '') {
+		alert("該營業日 [" + document.dataForm.business_date.value + "] 查無 gen_vouch 資料!!"); 
+		return false;
+	}
+    var r = confirm("請確認,是否執行臨時宣布放假作業~?")
+    if (r == true) {
+        top.submitControl('S2');
+    } else {
+        alert("取消作業.....");
+    }
+}
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "genm0140_detl";
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "genm0140_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

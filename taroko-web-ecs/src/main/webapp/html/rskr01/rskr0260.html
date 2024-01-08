@@ -1,0 +1,114 @@
+<html>
+<head>
+<title>問交未處理報表-jh-20200617</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;消費日期＜＝(系統日期-60天):
+     <span class="rsp_date">${ex_date2.YMD}</span>
+      <input type="hidden" class="col_date" name="ex_date2" value="${ex_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_dbcard_flag" ${ex_dbcard_flag-0} ${default-ex_dbcard_flag} />全部
+         <input type="radio" value="1" name="ex_dbcard_flag" ${ex_dbcard_flag-1} />信用卡
+         <input type="radio" value="2" name="ex_dbcard_flag" ${ex_dbcard_flag-2} />VD 卡
+         <input type="radio" value="3" name="ex_dbcard_flag" ${ex_dbcard_flag-3} />悠遊卡加值
+      </span>
+   </td>
+  <td nowrap>&nbsp;消費日期>=:
+    <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+    <script language="JavaScript">
+      new tcal({ 'formname': 'dataForm', 'controlname': 'ex_date1' });
+    </script>
+  </td>
+  </tr>
+  <tr>
+  <td nowrap>&nbsp;登錄經辦:
+    <input type="text"" class="col_text" name="ex_user" value="${ex_user}" MaxLength=10 size=12 />
+  </td>
+  <td nowrap>&nbsp;</td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >卡號</th>
+    <th nowrap >持卡人</th>
+    <th nowrap >帳戶帳號</th>
+    <th nowrap >控制流水號</th>
+    <th nowrap >消費日期</th>
+    <th nowrap >消費金額</th>
+    <th nowrap >問交金額</th>
+    <th nowrap>TC</th>
+    <th nowrap>原因碼</th>
+    <th nowrap >案件來源</th>
+    <th nowrap >調單日</th>
+    <th nowrap >登錄經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+     <input type="hidden" name="reference_no" value="${reference_no}" />
+    <input type="hidden" name="reference_seq" value="${reference_seq}" />
+   </td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999)}&nbsp;</td>
+  <td nowrap class="list_rr"> ${dc_prb_amount.(999)}&nbsp;</td>
+  <td nowrap class="list_cc"> ${txn_code}&nbsp;</td>
+  <td nowrap class="list_cc"> ${prb_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctfc_source_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rept_add_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${add_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+</script>

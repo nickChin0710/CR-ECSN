@@ -1,0 +1,218 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-17  V1.00.01                                                      -->
+<!-- 109-07-22  V1.00.02  JustinWu       ++ error_reason                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>案件移送補寄資料類別維護 V20191217</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#list_btnAdd").click(function(){
+
+	var ex_ct =$("#ex_case_type").val();
+	var ex_ci =$("#ex_case_id").val();
+	var ex_cd =$("#ex_case_desc").val();
+	var ex_md ='';
+	var ex_mu ='';
+	if (ex_ci.trim()==='') {
+	   alert("分類代碼: 不可空白");
+	   return false;
+	}
+   if (ex_cd.trim()==='') {
+	   alert("分類說明: 不可空白");
+	   return false;
+	}
+   
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"<input type='hidden' value='"+ex_ct+"' name='case_type' />"
+      +"<input type='hidden' value='' name='crt_user' />"
+      +"<input type='hidden' value='' name='crt_date' />"
+      +"<input type='hidden' value='' name='mod_seqno' />"
+      +"<input type='hidden' value='' name='old_data' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='text' class='col_text' name='case_id' value='"+ex_ci+"' maxlength='4' size='6' zRequire='Y' />"
+      +"</td>"
+      +"<td nowrap class='list_ll'>"
+      +"<input type='text' class='col_any' name='case_desc' value='"+ex_cd+"' maxlength='50' size='52' zRequire='Y' zEdit='any,canTw' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='hidden'  name='mod_date' value='' />"
+      +"</td>"
+       +"<td nowrap class='list_cc'>"
+      +"<input type='hidden'  name='mod_user' value='' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_case_id").val('');
+   $("#ex_case_desc").val('');
+  });   
+
+});
+</script>
+
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+   ${#PLUGIN:htmcomm_plugin.apr_user} 
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;代碼類別:
+      <select   size="1"  name="ex_case_type" class="col_ddlb" zRequire="C">
+         <option value="A" ${ex_case_type-A} >類別一:卡片類&nbsp;</option>
+         <option value="B" ${ex_case_type-B} >類別二:帳務類&nbsp;</option>
+         <option value="C" ${ex_case_type-C} >類別三:行銷類&nbsp;</option>
+         <option value="D" ${ex_case_type-D} >類別四:其他類&nbsp;</option>
+     </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   ${btnUpdate_disable} value="存檔" onClick="return top.submitControl('U')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >代碼類別:
+     <span class="dsp_text">${ex_case_type}&nbsp;</span>
+     <input type="hidden" id="ex_case_type" value="${ex_case_type}">        
+   </td>
+   <td nowrap >分類代碼:
+   <input type="text" class="col_text" id="ex_case_id" value="${ex_case_id}" maxlength="4" size="6" >
+	</td>
+	<td nowrap >分類說明:
+	   <input type="text" class="col_any" id="ex_case_desc" value="${ex_case_desc}" maxlength="50" size="52"  zEdit="any,canTw">
+	   &nbsp;
+     <input type="Button" id="list_btnAdd" value="新增明細" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}
+      &nbsp;    
+	</td>
+  </tr>
+</table>
+</div>  
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    刪除
+	 </th>
+    <th nowrap >分類代碼&nbsp;</th>
+    <th nowrap >分類說明&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >錯誤原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="case_type" value="${case_type}">
+	<input type="hidden" name="crt_user" value="${crt_user}">
+	<input type="hidden" name="crt_date" value="${crt_date}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden" name="old_data" value="${old_data}">
+	</td>
+	<td nowrap class="list_cc">
+	   <input type="text" class="col_text" name="case_id" value="${case_id}" maxlength="4" size="6" zRequire="Y">
+	</td>
+	<td nowrap class="list_ll">
+	   <input type="text" class="col_any" name="case_desc" value="${case_desc}" maxlength="50" size="52" zRequire="Y" zEdit="any,canTw">
+	</td>
+	<td nowrap class="list_cc">${mod_date.YMD}&nbsp;${mod_time.TIME}
+	   <input type="hidden" name="mod_date" value="${mod_date}">
+       <input type="hidden" name="mod_time" value="${mod_time}">       
+	</td>
+	<td nowrap class="list_cc">${mod_user}_${usr_cname}
+	   <input type="hidden" name="mod_user" value="${mod_user}">
+       <input type="hidden" name="usr_cname" value="${usr_cname}">
+	</td>
+  <td nowrap class="list_cc err_msg">
+    ${error_reason}
+  </td> 
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

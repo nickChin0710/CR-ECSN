@@ -1,0 +1,221 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/28  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!-- 111/11/03  V1.00.02  Simon          alternative solution for ineffective -->
+<!--                                     "&nbsp;" derived from java program   -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title> 110/04/15 V1.00.01 Allen Ho Initial 累積消費次數及金額查詢</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+    <div id="condBlock">
+        <!-- query key *************************************************************-->
+        <table width="60%" border="0" cellspacing="0" cellpadding="18">
+            <tr>
+                <td nowrap>&nbsp;正卡身分證字號/統編:
+                    <input type="text" class="col_text"
+                           name="ex_id_no" value="${ex_id_no}"
+                           zeditType="any,upper"  maxlength=13 size=13 />
+                    卡號：
+                    <input type="text" class="col_any"
+                           name="ex_card_no" value="${ex_card_no}"
+                           zeditType="any"  maxlength=19 size=19 />
+                    ${ex_chi_name}
+                    <input    type="hidden" name="ex_chi_name" value="${ex_chi_name}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>&nbsp;查詢年月：
+                    <input type="text" class="col_date"
+                           name="ex_acct_month_s" value="${ex_acct_month_s}"
+                           zeditType="date,yyyymm"  maxlength=6 size=6 />
+                    --
+                    <input type="text" class="col_date"
+                           name="ex_acct_month_e" value="${ex_acct_month_e}"
+                           zeditType="date,yyyymm"  maxlength=6 size=6 />
+                    查詢方式：
+                    <select  name="ex_query_table" class="col_ddlb"  zRequire="Y" >
+                        <option value="2" ${ex_query_table-2} >入帳月</option>
+                        <option value="1" ${ex_query_table-1} >關帳月</option>
+                    </select>
+                </td>
+                <td nowrap>&nbsp;
+                    <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+                    <input type="Button" name="btnAdd"   value="注意事項" onClick="helpScreen()"  class="btAdd" >&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <table width="60%" border="0" cellspacing="0" cellpadding="18">
+            <tr>
+            </tr>
+        </table>
+        <hr>
+
+      <table width="60%" border="0" cellspacing="0" cellpadding="18">
+       <tr>
+         <td nowrap class="list_cc" width="5%">累計&nbsp;</td>
+         <td nowrap class="list_rr">BL金額/筆數</td>
+         <td nowrap class="list_rr">CA金額/筆數</td>
+         <td nowrap class="list_rr">IT金額/筆數</td>
+         <td nowrap class="list_rr">AO金額/筆數</td>
+         <td nowrap class="list_rr">ID金額/筆數</td>
+         <td nowrap class="list_rr">OT金額/筆數</td>
+         <td nowrap class="list_rr">有收益金額/筆數</td>
+         <td nowrap class="list_rr">無收益金額/筆數</td>
+         <td nowrap class="list_rr">總計金額/筆數</td>
+       </tr>
+       <tr>
+         <td> </td> 
+         <td nowrap class="list_rr"> ${ex_total_bl_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_ca_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_it_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_ao_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_id_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_ot_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_good_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_none_amt}</td>
+         <td nowrap class="list_rr"> ${ex_total_sum_amt}</td>
+       </tr>
+       <tr>
+         <td> </td> 
+         <td nowrap class="list_rr"> ${ex_total_bl_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_ca_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_it_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_ao_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_id_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_ot_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_good_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_none_cnt}</td>
+         <td nowrap class="list_rr"> ${ex_total_sum_cnt}</td>
+       </tr>
+      </table>    
+    </div>
+     <!-- browse ************************************************************** -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">卡號</th>
+            <th nowrap class="list_th">卡種/<BR>團代</th>
+            <th nowrap class="list_th">BL金額/<BR>次數</th>
+            <th nowrap class="list_th">CA金額/<BR>次數</th>
+            <th nowrap class="list_th">IT金額/<BR>次數</th>
+            <th nowrap class="list_th">AO金額/<BR>次數</th>
+            <th nowrap class="list_th">ID金額/<BR>次數</th>
+            <th nowrap class="list_th">OT金額/<BR>次數</th>
+            <th nowrap class="list_th">有收益消費<BR>總金額/次數</th>
+            <th nowrap class="list_th">無收益消費<BR>總金額/次數</th>
+            <th nowrap class="list_th">累計金額/<BR>次數</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr onclick="detailScreen('${SER_NUM}','${rowid}','${card_no}','${transtr}','','')" style="cursor:hand">
+            <td nowrap class="list_no">
+                ${SER_NUM}&nbsp;
+                <input type="hidden" name="rowid" value="${rowid}"/>
+            </td>
+            <td nowrap class="list_cc"> ${card_no}</td>
+            <td  nowrap class="list_ll"> ${card_type}-${comm_card_type}</td>
+            <td nowrap class="list_rr"> ${consume_bl_amt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_ca_amt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_it_amt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_ao_amt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_id_amt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_ot_amt.(999)}</td>
+            <td nowrap class="list_rr">
+                <span class="col_key"> ${good_amt.(999)}</span>
+            </td>
+            <td nowrap class="list_rr"> ${none_amt.(999)}</td>
+            <td nowrap class="list_rr"> ${sum_amt.(999)}</td>
+            <td nowrap style="visibility:hidden;"> ${major_id_p_seqno} </td>
+        </tr>
+        <tr>
+            <td> </td> 
+            <td nowrap class="list_cc"> ${sub_flag}</td>
+            <td  nowrap class="list_ll"> ${group_code}-${comm_group_code}</td>
+            <td nowrap class="list_rr"> ${consume_bl_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_ca_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_it_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_ao_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_id_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${consume_ot_cnt.(999)}</td>
+            <td nowrap class="list_rr">
+                <span class="col_key"> ${good_cnt.(999)}</span>
+            </td>
+            <td nowrap class="list_rr"> ${none_cnt.(999)}</td>
+            <td nowrap class="list_rr"> ${sum_cnt.(999)}</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <!-- hidden ************************************************************** -->
+    <input type="hidden" name="WPROWID" value="${wprowid}">
+    <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+    <input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+    <input type="hidden" name="data_k4" value="" >
+    <input type="hidden" name="data_k5" value="" >
+
+    <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+    <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+    top.refreshButton2('0');
+    top.pageRows="20";
+
+
+    function validateInput()
+    {
+        if ( !top.checkFormat() )
+        { return false; }
+
+        if ( top.actionCode == "X" ) {
+            top.respLevel = 1;
+            top.respHtml = "cycr0040_dbro";
+        }
+        return true;
+    }
+
+    function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+    {
+        top.respLevel = 1;
+        top.currRows  = serNum;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        document.dataForm.data_k4.value = parm4;
+        document.dataForm.data_k5.value = parm5;
+        top.respHtml  = "cycr0040_dbro";
+        top.submitControl('S');
+        return true;
+    }
+
+    function helpScreen()
+    {
+        top.respLevel = 1;
+        top.respHtml  = "cycr0040_help";
+        top.submitControl('I');
+        return true;
+    }
+
+</script>
+<!-- ******************************************************************** -->

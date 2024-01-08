@@ -1,0 +1,286 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-07-01  V1.00.01  tanwei         增加關係人欄位                        -->
+<!-- 109-09-01  V1.00.02  JustinWu       add 清除button                       -->
+<!-- 109-09-04  V1.00.03  JustinWu       往來狀態acct_status.acct_status_desc  -->
+<!-- 111-05-05  V1.00.04  JustinWu       帳務總覽明細只能查詢相對應的acct_type資料   -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人相關資料查詢[cmsq2200]-cond-JustinWu-20220505</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+
+$('.tbl_idno').hide();
+$('.tbl_acno').hide();
+$('.tbl_relcard').hide();
+$('.tbl_relidno').hide();
+$('.tbl_accounting').hide();
+$('.tbl_relatedParties').hide();
+
+if (page_type=='idno') {
+   $('.tbl_idno').show();
+}
+else if (page_type=='acno') {
+   $('.tbl_acno').show();
+}
+else if (page_type=='relcard') {
+   $('.tbl_relcard').show();
+}else if (page_type=='relatedParties') {
+     $('.tbl_relatedParties').show();
+  }
+else if (page_type=='relidno') {
+   $('.tbl_relidno').show();
+}
+else if (page_type=='accounting') {
+     $('.tbl_accounting').show();
+  }
+});
+
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+   <td nowrap >&nbsp;統編:
+      <input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}" maxlength="11" size="15" zEdit="alphanum">
+   </td>
+   <td nowrap >&nbsp;公司名稱:
+      <input type="text" class="col_any" name="ex_cname" value="${ex_cname}" maxlength="20" size="22" zEdit="any,canTw">
+   </td> 
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td> 
+ </tr>
+ </table>
+</div>
+<table>
+<tr><td>
+<input type="Button"  value="基本資料" onClick="return top.submitControl('Q1')" class="btQuery" >&nbsp;&nbsp;
+<input type="Button"  value="法人帳戶資料" onClick="return top.submitControl('Q2')" class="btQuery" >&nbsp;&nbsp;
+<input type="Button"  value="關係卡" onClick="return top.submitControl('Q3')" class="btQuery" >&nbsp;&nbsp;
+<input type="Button"  value="關係人" onClick="return top.submitControl('Q6')" class="btQuery" >&nbsp;&nbsp;
+<input type="Button"  value="聯絡人" onClick="return top.submitControl('Q4')" class="btQuery" >&nbsp;&nbsp;
+<input type="Button"  value="帳務總覽" onClick="return top.submitControl('Q5')" class="btQuery" >&nbsp;&nbsp;
+</td></tr>
+</table>
+<hr>
+<!--IDNO==================================================================== -->
+ <table id="tbl_idno" class="tbl_idno" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>統一編號&nbsp;</th>
+    <th nowrap>公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenA('${SER_NUM}','${corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp; 
+      <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />   
+   </td>
+   <td nowrap class="list_cc"> ${corp_no}&nbsp; </td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;  </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!--ACNO==================================================================== -->
+ <table id="tbl_acno" class="tbl_acno" border="0" cellspacing="0" cellpadding="4">
+   
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>帳號&nbsp;</th>
+    <th nowrap>產品類別&nbsp;</th>
+    <th nowrap>公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenB('${SER_NUM}','${acno_p_seqno}','${corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_key}&nbsp;  </td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp; </td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;  </td>
+   <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <!--RELCARD==================================================================== -->
+ <table id="tbl_relcard" class="tbl_relcard" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>統一編號&nbsp;</th>
+    <th nowrap>公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenC('${SER_NUM}','${corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp; 
+      <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">   
+   </td>
+   <td nowrap class="list_cc"> ${corp_no}&nbsp; </td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;  </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+  <!--關係人relatedParties==================================================================== -->
+ <table id="tbl_relatedParties" class="tbl_relatedParties" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>統一編號&nbsp;</th>
+    <th nowrap>公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenF()" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp; 
+      <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">   
+   </td>
+   <td nowrap class="list_cc"> ${corp_no}&nbsp; </td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;  </td>
+   <input type="hidden" name="corp_no" value="${corp_no}">
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <!--RELIDNO==================================================================== -->
+ <table id="tbl_relidno" class="tbl_relidno" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>統一編號&nbsp;</th>
+    <th nowrap>公司名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenD('${SER_NUM}','${corp_p_seqno}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp; 
+      <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">   
+   </td>
+   <td nowrap class="list_cc"> ${corp_no}&nbsp; </td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;  </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <!--ACCOUNTING==================================================================== -->
+ <table id="tbl_accounting" class="tbl_accounting" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>帳號&nbsp;</th>
+    <th nowrap>產品類別&nbsp;</th>
+    <th nowrap>公司名稱&nbsp;</th>
+    <th nowrap>帳務周期&nbsp;</th>
+    <th nowrap>繳款方式&nbsp;</th>
+    <th nowrap>往來狀態&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenE('${SER_NUM}','${corp_no}','${corp_p_seqno}', '${acct_type}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_key}&nbsp;  </td>
+   <td nowrap class="list_cc"> ${acct_type}&nbsp; </td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;  </td>
+   <td nowrap class="list_cc"> ${stmt_cycle}&nbsp;  </td>
+   <td nowrap class="list_cc"> ${corp_act_type_desc}&nbsp;</td>
+   <td nowrap class="list_cc"> ${acct_status}.${acct_status_desc}&nbsp; </td>
+   <input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  id="pageType" name="pageType"  value="${pageType}">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('tbl_idno');
+  tigra_tables('tbl_acno');
+  tigra_tables('tbl_relcard');
+  tigra_tables('tbl_relatedParties');
+  tigra_tables('tbl_relidno');
+  tigra_tables('tbl_accounting');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+  function set_datakey(p1,p2,p3) {
+    document.dataForm.data_k1.value = p1;
+    document.dataForm.data_k2.value = p2;
+    document.dataForm.data_k3.value = p3;
+  }
+  
+  function detailScreenA(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    set_datakey(parm,parm2,parm3);
+    top.respHtml  = "cmsq2200_corpno";
+    top.submitControl('S1');
+    return true;
+  }
+  
+  function detailScreenB(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    set_datakey(parm,parm2,parm3);
+    top.respHtml  = "cmsq2200_acno";
+    top.submitControl('S2');
+    return true;
+  }
+  
+  function detailScreenC(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    set_datakey(parm,parm2,parm3);
+    top.respHtml  = "cmsq2200_relcard";
+    top.submitControl('S3');
+    return true;
+  }
+  
+  function detailScreenD(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    set_datakey(parm,parm2,parm3);
+    top.respHtml  = "cmsq2200_contr";
+    top.submitControl('S4');
+    return true;
+  }
+  
+  function detailScreenE(serNum,parm,parm2,parm3) { 
+      top.respLevel = 1;
+      top.currRows  = serNum;
+      set_datakey(parm,parm2,parm3);
+      top.respHtml  = "cmsq2200_accounting";
+      top.submitControl('S5');
+      return true;
+    }
+  
+  function detailScreenF() {
+      top.respLevel = 1;    
+      top.respHtml  = "cmsq2200_rela";
+      top.submitControl('S6');
+      return true;
+   }
+
+</script>

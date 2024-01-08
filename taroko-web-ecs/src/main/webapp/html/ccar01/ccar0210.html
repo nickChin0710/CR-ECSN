@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>[刷卡]簡訊傳送記錄查詢-jh2023-1205</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;交易日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	   <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>	
+	<td nowrap >&nbsp;簡訊類別:
+      <select   size="1"  name="ex_msg_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="AUTO" ${ex_msg_type-AUTO} >刷卡簡訊</option>
+         <option value="AUTO2" ${ex_msg_type-AUTO2} >附卡消費簡訊</option>
+         <option value="SPEC1" ${ex_msg_type-SPEC1} >特殊消費簡訊一</option>         
+         <option value="SPEC2" ${ex_msg_type-SPEC2} >特殊消費簡訊二</option>                          
+         <option value="CASH" ${ex_msg_type-CASH} >預借現金密碼重置簡訊</option>                          
+         <option value="OPEN" ${ex_msg_type-OPEN} >開卡發送預借現金密碼通知簡訊</option>                          
+      </select>
+   </td>
+
+   <td nowrap rowspan="3" >&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>  	
+  	<td nowrap >&nbsp;卡號:
+  		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" zEdit="number" >
+  	</td>
+  	<td nowrap >&nbsp;身分證字號
+  		<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;手機號碼:
+  		<input type="text" class="col_text" name="ex_cellar_phone" value="${ex_cellar_phone}" maxlength="10" size="12" zEdit="number" />
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">  
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >交易日期</th>
+    <th nowrap >交易時間</th>        
+    <th nowrap >卡  號</th>
+    <th nowrap >身份證</th>    
+    <th nowrap >姓  名</th>
+    <th nowrap >手機號碼</th>    
+    <th nowrap >交易金額 NT</th>    
+    <th nowrap >附卡簡訊</th>
+    <th nowrap >三竹簡訊序號</th>
+    <th nowrap >三竹簡訊狀態</th>
+    <th nowrap >三竹簡訊狀態日期</th>
+    <th nowrap >三竹簡訊狀態時間</th>
+    <th nowrap >發送者</th>
+    <th nowrap >發送門檻</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tx_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tx_time.TIME}&nbsp;</td>		
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${id_no}&nbsp;</td>	
+	<td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${cellar_phone}&nbsp;</td>	
+	<td nowrap class="list_rr"> ${trans_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tt_msg_type}&nbsp;</td>	
+	<td nowrap class="list_cc"> ${appr_pwd}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tt_proc_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${msg_resp_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${msg_resp_time.time}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${entry_mode}&nbsp;</td>
+  </tr>
+  <tr>
+   <td nowrap class="list_no">&nbsp;</td>
+   <td nowrap class="list_cc" >簡訊內容: </td>
+   <td nowrap class="list_ll" colspan="13" >${sms_content}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }  
+</script>

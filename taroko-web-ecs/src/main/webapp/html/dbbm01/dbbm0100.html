@@ -1,0 +1,202 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                Initial                               -->
+<!-- 108-12-10  V1.00.01                                                      -->
+<!-- 109-01-03  V1.00.02  Justin Wu     updated for archit.  change           -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>群組維護作業 (Debit Card負項交易群組特店維護) V20191210</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user} 
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;群組代號:
+   		<input type="text" class="col_text" name="ex_rsk_group" value="${ex_rsk_group}" maxlength="4" size="6" zEdit="alphanum,upper" >
+   </td>
+   <td nowrap >&nbsp;群組名稱:
+   		<input type="text" class="col_any" name="ex_group_name" value="${ex_group_name}" maxlength="60" size="62" zEdit="any,canTw" >
+   </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;特店代號:
+  		<input type="text" class="col_text" name="ex_mcht_no" value="${ex_mcht_no}" maxlength="19" size="21" >
+  	</td>  	
+  </tr>
+ </table>
+</div>
+<hr>
+ <div id="dataBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>   
+   <td nowrap >
+      <input type="Button" id="detl_btnAdd" ${btnUpdate_disable} value="新增明細" 
+                 class="btAdd_detl" />
+      &nbsp;
+      <input type="hidden" name="ind_num" value="${ind_num}">
+   </td>
+  </tr>
+ </table>  
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 		<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >刪除    
+	 </th>
+    <th nowrap > 特店代號&nbsp;</th>
+    <th nowrap > 群組代號&nbsp;</th>
+    <th nowrap > 群組名稱&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rsk_group" value="${rsk_group}">
+      <input type="hidden" name="group_name" value="${group_name}">
+      <input type="hidden" name="old_data" value="${old_data}">    
+      <input type="hidden" name="rowid" value="${rowid}">  
+    </td>
+    <td nowrap class="list_cc" >&nbsp;
+    	<input type="text" class="col_text" name="mcht_no" value="${mcht_no}" maxlength="19" size="21" zRequire="Y" zEdit="alphanum,upper" onChange="wf_check_mcht('1','${ser_num}')" >
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${rsk_group}    	
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${group_name}
+    </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>   
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+ $("#detl_btnAdd").click(function(){
+   rowNum++;
+   ind++;
+   
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }  
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rsk_group' />"
+      +"<input type='hidden' value='' name='group_name' />"
+      +"<input type='hidden' value='' name='old_data'"      
+      +"<input type='hidden' value='' name='rowid'"      
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"<input type='text' class='col_text' name='mcht_no' value='' maxlength='19' size='21' zRequire='Y' zEdit='alphanum,upper' onChange='wf_check_mcht(1,"+serNo+")'  "
+      +"</td>"
+      +"<td nowrap class='list_cc'>"      
+      +"</td>"
+      +"<td nowrap class='list_ll'>"      
+      +"</td>"
+      +"</tr>"
+   );     
+  });
+  
+ function wf_check_mcht(ps1,parm)
+ {
+ 
+ 	var ii =parseInt(parm) - 1;
+	var  ls_mcht_no =document.getElementsByName("mcht_no")[ii].value;		
+	if ( ls_mcht_no === '' ) {
+		return false;
+	}
+	idCode = ps1;	
+  
+  // 20200102 updated for archit.  change
+   top.actionCode = "AJAX";
+/*   if ( idCode === '1' || idCode === 1 ) { 
+		top.methodName = "wf_ajax_mcht";
+   }*/
+
+	resetJSON();
+	addJSON("ax_mcht_no",ls_mcht_no);
+	processAJAX();
+ }
+ 
+ function ajaxResponse()
+ {
+	top.respHtml ="dbbm0100";
+   top.requHtml ="dbbm0100";
+
+	if  ( idCode === '1' || idCode === 1 ) {
+      var li_db_cnt =getJSONvalue("db_cnt",0);      
+      if (li_db_cnt >0) { 
+         alert("此特店代號 已存在 !");
+      }                  
+	}
+
+	if ( idCode === '1' )
+	{ return false; }
+ }   
+  
+</script>

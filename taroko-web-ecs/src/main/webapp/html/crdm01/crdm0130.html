@@ -1,0 +1,161 @@
+<html>
+
+<head>
+    <title>毀損重製登錄作業-V.2017-1103-ryan-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="/js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;批號:
+                        <input zEdit="any" class="col_any" type="text" size="10" MaxLength="10" name="ex_batchno" value="${ex_batchno}"></input>
+                    </td>
+                    <!-- <td nowrap>&nbsp;記錄號碼:
+                        <input  zEdit="any" class="col_any" type="text" size="10" MaxLength="10" name="ex_recno" value="${ex_recno}"></input>  
+                    </td> -->
+                    <td nowrap>&nbsp;建檔日期起迄:
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+                        </script>
+                    </td>
+                    <td nowrap>&nbsp;重製原因:
+                        <select size="1" name="ex_emboss_reason" class="col_ddlb" value="${ex_emboss_reason}">
+                            <option value="">--</option>
+                            <option value="1" ${emboss_reason-1}>掛失</option>
+                            <option value="2" ${emboss_reason-2}>毀損</option>
+                            <option value="3" ${emboss_reason-3}>偽卡</option>
+                        </select>
+                    </td>
+                    <td nowrap>&nbsp;舊卡號:
+                        <input zEdit="any" class="col_any" type="text" size="21" MaxLength="19" name="ex_old_card_no" value="${ex_old_card_no}"></input>
+                    </td>
+                    <td nowrap rowspan="2">&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;中文姓名:
+                        <input zEdit="canTW,any" class="col_any" type="text" size="10" MaxLength="40" name="ex_chi_name" value="${ex_chi_name}"></input>
+                    </td>
+                    <td nowrap>&nbsp;法人ID:
+                        <input class="col_any" type="text" size="8" MaxLength="9" name="ex_corp_no" value="${ex_corp_no}" zEdit="alphanum,upper"></input>
+                    </td>
+                    <td nowrap>&nbsp;申請人ID:
+                        <input class="col_text" type="text" size="11" MaxLength="10" name="ex_apply_id" value="${ex_apply_id}" zEdit="alphanum,upper"></input>
+                    </td>
+                    <td nowrap>&nbsp;登錄人員:
+                        <select name="ex_crt_user" class="col_ddlb">
+                            <option value="">--</option>
+                            ${dddw_crt_user}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">記錄號碼</th>
+                <th nowrap class="list_th">重製原因</th>
+                <th nowrap class="list_th">新卡號</th>
+                <th nowrap class="list_th">舊卡號</th>
+                <th nowrap class="list_th">申請人ID</th>
+                <th nowrap class="list_th">法人ID</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">英文姓名</th>
+                <th nowrap class="list_th">寄件別</th>
+                <th nowrap class="list_th">取件分行</th>
+                <th nowrap class="list_th">備註</th>
+                <th nowrap class="list_th">有效年月起</th>
+                <th nowrap class="list_th">有效年月迄</th>
+                <th nowrap class="list_th">卡種</th>
+                <th nowrap class="list_th">團體代碼</th>
+                <th nowrap class="list_th">認同集團碼</th>
+                <th nowrap class="list_th">登錄人員</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${batchno}','${recno}','','')" style="cursor:hand">
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+                <td nowrap class="list_ll"> ${batchno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${recno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${tt_emboss_reason}&nbsp; </td>
+                <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${old_card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${apply_id}&nbsp; </td>
+                <td nowrap class="list_ll"> ${corp_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${eng_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_mail_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mail_branch}&nbsp; </td>
+                <td nowrap class="list_ll"> ${remark_20}&nbsp; </td>
+                <td nowrap class="list_ll"> ${valid_fm.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${valid_to.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${card_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${group_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${unit_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mod_user}&nbsp; </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="data_k4" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="emboss_reason" value="${emboss_reason}">
+        <input type="hidden" name="MOD_PGM" value="crdm0130">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0130_detl";
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3, parm4) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml = "crdm0130_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

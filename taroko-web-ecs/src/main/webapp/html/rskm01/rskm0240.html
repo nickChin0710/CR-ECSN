@@ -1,0 +1,144 @@
+<html>
+<head>
+<title>再提示整批登錄維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12">
+   </td>
+    <td nowrap>&nbsp;卡別:
+      <select   size="1"  name="ex_bin_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="V" ${ex_bin_type-V} >Visa&nbsp;</option>
+         <option value="M" ${ex_bin_type-M} >MasterCard&nbsp;</option>
+         <option value="J" ${ex_bin_type-J} >JCB&nbsp;</option>
+      </select>
+   </td>
+   <td nowrap rowspan="3" >&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡號(後4碼)
+      <input type="text" class="col_text" name="ex_card_no4" value="${ex_card_no4}" maxlength="6" size="8" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;結算幣別:
+      <select size="1" name="ex_curcode" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_dc_curr_code_tw}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;微縮影編號:
+      <input type="text" class="col_text" name="ex_film_no" value="${ex_film_no}" maxlength="23" size="25">
+   </td>
+   <td nowrap  >&nbsp;再提示日期:
+      <input type="text" class="col_date" name="ex_rep_date1" value="${ex_rep_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_rep_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_rep_date2" value="${ex_rep_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_rep_date2'});
+	      </script>
+	</td>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >控制<br>流水號</th>
+    <th nowrap >扣款<br>狀態</th>
+    <th nowrap >卡號</th>
+    <th nowrap >結算<br>幣別</th>
+    <th nowrap >再提示<br>結算金額</th>
+    <th nowrap >扣款<br>結算金額</th>
+    <th nowrap >差額</th>
+    <th nowrap >再提示<br>處理日期</th>
+    <th nowrap >沖銷<br>借方科目</th>
+    <th nowrap >沖銷銷帳鍵值</th>
+    <th nowrap >微縮影編號</th>
+    <th nowrap >總<br>結案</th>
+    <th nowrap >Debit</th>
+    <th nowrap >扣款撥款<br>結算金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${reference_no}','${reference_seq}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_ll"> ${bin_type}-${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_ll"> ${chg_stage}-${sub_stage}-${final_close}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${rep_dc_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${fst_dc_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_diffamt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${repsent_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rep_ac_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rep_glmemo3}&nbsp;</td>
+	<td nowrap class="list_cc"> ${film_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${final_close}&nbsp;</td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;</td>
+	<td nowrap class="list_rr"> ${fst_disb_dc_amt.(999.00)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm0240_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

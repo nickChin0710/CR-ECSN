@@ -1,0 +1,194 @@
+<html>
+
+<head>
+    <title>溢付款調整 -- 主管覆核作業
+        -V.20200825 Andy[Upadte]
+        -V.20230704 Simon[Upadte]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript">
+    $(document).ready(function(){
+var selected = $("input[name=ex_apr_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_apr_flag]").filter('[value=N]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2">&nbsp;帳戶帳號:
+                        <select size="1" name="ex_acct_type" class="col_ddlb">
+                            <option value="">--</option>
+                            ${dddw_acct_type}
+                        </select>
+                        <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" zEdit="alphanum,upper">
+                    </td>
+                    <td nowrap colspan="2">&nbsp;登錄人員:
+                        <input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw">
+                    </td>
+                    <td nowrap rowspan="3">&nbsp;
+                        <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="執行" onClick="return top.submitControl('C')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;幣別:
+                        <select size="1" name="ex_current_code" class="col_ddlb">
+                            <option value="">--</option>
+                            ${dddw_current_code}
+                        </select>
+                    </td>
+                    <td nowrap colspan="2">&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} />全部
+                            <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未放行
+                            <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已放行
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">&nbsp;
+                        總筆數:&nbsp;
+                        <span style="color: blue" class="dsp_text" id='sum_ct'>${sum_ct.(999)}</span>&nbsp;
+                        提領金額合計:&nbsp;
+                        <span style="color: blue" class="dsp_text" id='sum_amt'>${sum_amt.(999.00)}</span>&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();">覆核
+                </th>
+                <th nowrap>覆核<br>作業</th>
+                <th nowrap>調整類別&nbsp;</th>
+                <th nowrap>帳戶帳號<br>轉出帳戶帳號</th>
+                <th nowrap>帳戶姓名<br>轉出帳戶姓名</th>
+                <th nowrap>結算<br>幣別</th>
+                <th nowrap>溢付款<br>總額</th>
+                <th nowrap>提領金額<br>轉出金額</th>
+                <th nowrap>尚可提領<br>金額</th>
+                <th nowrap>提領方式</th>
+                <th nowrap>匯出帳號/其他<br>或轉入帳戶帳號</th>
+                <th nowrap>轉入帳戶姓名&nbsp;</th>
+                <th nowrap>入乙帳<br>Value Date</th>
+                <th nowrap>建檔時間&nbsp;</th>
+                <th nowrap>登錄人員&nbsp;</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span>
+                    <input type="checkbox" name="opt" value="${ser_num}" ${check} ${opt_disabled} />
+                    ${SER_NUM}&nbsp;
+                    <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                    <input type="hidden" name="bef_amt" value="${bef_amt}" />
+                    <input type="hidden" name="bef_d_amt" value="${bef_d_amt}" />
+                    <input type="hidden" name="p_seqno" value="${p_seqno}" />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+                </td>
+                <td nowrap class="list_cc"> ${tt_apr_flag}&nbsp;
+                    <input type="hidden" name="apr_flag" value="${apr_flag}" />
+                    <input type="hidden" name="tt_apr_flag" value="${tt_apr_flag}" />
+                </td>
+                <td nowrap class="list_cc"> ${tt_adjust_type}&nbsp;
+                    <input type="hidden" name="adjust_type" value="${adjust_type}" />
+                    <input type="hidden" name="tt_adjust_type" value="${tt_adjust_type}" />
+                </td>
+                <td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;
+                    <input type="hidden" name="acct_type" value="${acct_type}" />
+                    <input type="hidden" name="acct_key" value="${acct_key}" />
+                </td>
+                <td nowrap class="list_cc"> ${db_cname}&nbsp;
+                    <input type="hidden" name="db_cname" value="${db_cname}" />
+                </td>
+                <td nowrap class="list_cc"> ${curr_code}.${#JAVA:ecsfunc.DeCodePtr.currCode(curr_code)}&nbsp;
+                    <input type="hidden" name="curr_code" value="${curr_code}" />
+                </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_tot_bef_amt.(999.00)}
+                    <input type="hidden" name="wk_tot_bef_amt" value="${wk_tot_bef_amt}" />
+                </td>
+                <td nowrap class="list_rr"> &nbsp;${dr_amt.(999.00)}
+                    <input type="hidden" name="dr_amt" value="${dr_amt}" />
+                </td>
+                <td nowrap class="list_rr"> &nbsp;${aft_amt.(999.00)}
+                    <input type="hidden" name="aft_amt" value="${aft_amt}" />
+                </td>
+                <td nowrap class="list_cc"> ${tt_cash_type}&nbsp;
+                    <input type="hidden" name="cash_type" value="${cash_type}" />
+                    <input type="hidden" name="tt_cash_type" value="${tt_cash_type}" />
+                </td>
+                <td nowrap class="list_cc"> ${wk_tans_acctno}&nbsp;
+                    <input type="hidden" name="wk_tans_acctno" value="${wk_tans_acctno}" />
+                    <input type="hidden" name="trans_acct_type" value="${trans_acct_type}" />
+                    <input type="hidden" name="trans_acct_key" value="${trans_acct_key}" />
+                </td>
+                <td nowrap class="list_cc"> ${db_trans_cname}&nbsp;
+                    <input type="hidden" name="db_trans_cname" value="${db_trans_cname}" />
+                </td>
+                <td nowrap class="list_cc"> ${post_date.YMD}&nbsp;
+                    <input type="hidden" name="post_date" value="${post_date}" />
+                </td>
+                <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;${crt_time.TIME}&nbsp;
+                    <input type="hidden" name="crt_date" value="${crt_date}" />
+                    <input type="hidden" name="crt_time" value="${crt_time}" />
+                </td>
+                <td nowrap class="list_cc"> ${update_user}&nbsp;
+                    <input type="hidden" name="update_user" value="${update_user}" />
+                </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function selectAll() {
+    var opt_select = document.dataForm.ex_selectAll.checked;
+    var aElements = document.getElementsByName("opt");
+    for (var i = 0; i < aElements.length; i++) 
+    {
+	  	if  ( aElements[i].type == "checkbox" && aElements[i].disabled==false) {
+		  	aElements[i].checked = opt_select;
+      }
+    }
+
+    return;
+}
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == 'C') {
+        if (confirm("是否執行溢付款調整放行/解放行 !") == false) {
+            return false;
+        }
+    }
+    return true;
+}
+</script>

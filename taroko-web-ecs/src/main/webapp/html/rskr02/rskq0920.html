@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>持卡人信用額度調整查詢作業-190621</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;修改方式:
+   		<select   size="1"  name="ex_emend" class="col_ddlb" onChange="emendChange()">
+         <option value="1" ${ex_emend-1} >個人額度</option>
+         <option value="2" ${ex_emend-2} >商務卡公司額度</option>
+         <option value="3" ${ex_emend-3} >商務卡個人額度</option>         
+         <option value="5" ${ex_emend-5} >預借現金額度</option>
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" id="ex_acct_type" >         
+         ${dddw_acct_type}
+      </select>
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13">      
+   </td>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;姓名:
+      <span class="dsp_text">${db_acno_name}&nbsp;</span>
+      <input type="hidden" name="db_acno_name" value="${db_acno_name}">
+   </td>
+   <td nowrap >&nbsp;出生日期:
+   		<span class="dsp_text">${birthday.YMD}</span>
+   		<input type="hidden" name="birthday" value="${birthday}">
+   	</td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;性別:
+  		<span class="dsp_text">${sex}&nbsp;</span>
+  		<input type="hidden" name="sex" value="${sex}">
+  	</td>
+  	<td nowrap >&nbsp;住家電話:
+  		<span class="dsp_text">${wk_home_tel}&nbsp;</span>
+  		<input type="hidden" name="wk_home_tel" value="${wk_home_tel}">
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;法人名稱:
+  		<span class="dsp_text">${corp_name}&nbsp;</span>
+  		<input type="hidden" name="corp_name" value="${corp_name}">
+  	</td>
+  	<td nowrap >&nbsp;ID總歸戶信用額度:
+      <span class="dsp_text">${db_tot_credit_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="db_tot_credit_amt" value="${db_tot_credit_amt}">
+   </td>
+  </tr>
+  <tr>   
+   <td nowrap colsan="2" >&nbsp;帳戶信用額度:
+      <span class="dsp_text">${db_bef_loc_amt.(999)}&nbsp;</span>
+      <input type="hidden" name="db_bef_loc_amt" value="${db_bef_loc_amt}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;預借現金額度:
+      <span class="dsp_text">${db_credit_cash.(999)}&nbsp;</span>
+      <input type="hidden" name="db_credit_cash" value="${db_credit_cash}">
+   </td>
+   <td nowrap >&nbsp;指撥額度:
+      <span class="dsp_text">${db_combo_cash_limit.(999)}&nbsp;</span>
+      <input type="hidden" name="db_combo_cash_limit" value="${db_combo_cash_limit}">
+   </td>
+  </tr>      
+ </table>
+</div>
+${#PLUGIN:htmcomm_plugin.vip_color}
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >調整日期&nbsp;</th>
+    <th nowrap >調整類別&nbsp;</th>
+    <th nowrap >調整前額度&nbsp;</th>
+    <th nowrap >調整後額度&nbsp;</th>
+    <th nowrap >調整結果&nbsp;</th>
+    <th nowrap >調整人員&nbsp;</th>
+    <th nowrap >調整原因&nbsp;</th>
+    <th nowrap >郵寄否&nbsp;</th>
+    <th nowrap >覆核人員&nbsp;</th>
+    <th nowrap >覆核日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${log_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${#JAVA:ecsfunc.DeCodeRsk.emendType(emend_type)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${wk_amt_bef.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${wk_amt_aft.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tt_adj_loc_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	<td nowrap class="list_ll"> ${log_reason}${tt_log_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mail_comp_yn}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+ function emendChange()
+ {
+ 	var ls_emend = document.forms["dataForm"]["ex_emend"].value;
+ 	if(ls_emend =='2' || ls_emend =='3'){
+ 		$("#ex_acct_type").val('02');
+ 	}	else if (ls_emend =='1'){
+ 		$("#ex_acct_type").val('01');
+ 	}
+ }
+  
+</script>

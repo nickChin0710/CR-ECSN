@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>DebitCard消費扣款成功失敗表-pond-2022-04-01</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    </td>
+  </tr>
+<!-- <tr>
+    <td nowrap>&nbsp;扣款處理日期：
+      <input type="text" class="col_date" name="exDeductProcDateS" value="${exDeductProcDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDeductProcDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exDeductProcDateE" value="${exDeductProcDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDeductProcDateE'});
+	  </script>&nbsp;
+    </td>
+    <td nowrap>&nbsp;身分證字號：
+      <input type="text" class="col_text" name="exIdNo" value="${exIdNo}" 
+        zEdit="alphanum,upper" maxlength="10" size="10" />
+    </td>
+  </tr>
+-->
+  <tr>
+    <td nowrap>&nbsp;扣款日期：
+      <input type="text" class="col_date" name="exCrDateS" value="${exCrDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exCrDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exCrDateE" value="${exCrDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exCrDateE'});
+	  </script>&nbsp;
+    </td>
+    <td nowrap>&nbsp;金融卡帳號：
+      <input type="text" class="col_text" name="exAccno" value="${exAccno}" 
+        zEdit="alphanum,upper" maxlength="16" size="18" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;扣款結果：
+      <span class="col_radio">
+         <input type="radio" value="01" name="exDeductType" ${exDeductType-01} ${DEFAULT-exDeductType} />扣款成功&nbsp;&nbsp;
+         <input type="radio" value="10" name="exDeductType" ${exDeductType-10} />扣款失敗&nbsp;&nbsp;
+         <input type="radio" value="02" name="exDeductType" ${exDeductType-02} />部份扣款&nbsp;&nbsp;
+      </span>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--Sum -->
+<div id="queryBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+    <tr>
+		<td nowrap width="150">合計筆數:&nbsp;
+		    <span class="dsp_number">${sum_tolrow.(999)}</span> 
+		</td>
+		<td nowrap width="270">合計原始扣款金額:&nbsp;
+		    <span class="dsp_number">${sum_beg_bal.(999)}</span> 
+		</td>
+		<td nowrap width="250">合計送扣款金額:&nbsp;
+		    <span class="dsp_number">${sum_org_deduct_amt.(999)}</span> 
+		</td>
+		<td nowrap width="260">合計實際扣款金額:&nbsp;
+		    <span class="dsp_number">${sum_deduct_amt.(999)}</span> 
+		</td>
+    </tr>
+</table>
+</div>
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">送出扣款日</th>
+    <th nowrap class="list_th">ID</th>
+    <th nowrap class="list_th">中文姓名</th>
+    <th nowrap class="list_th">扣款帳號</th>
+    <th nowrap class="list_th">消費卡號</th>
+    <th nowrap class="list_th">消費請款日</th>
+    <th nowrap class="list_th">原始扣款金額</th>
+    <th nowrap class="list_th">送扣款金額</th>
+    <th nowrap class="list_th">實際扣款金額</th>
+    <th nowrap class="list_th">回覆理由碼</th>
+    <th nowrap class="list_th">科目</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${deduct_date.YMD}&nbsp; </td>
+   <td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+   <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+   <td nowrap class="list_ll"> ${acct_no}&nbsp; </td>
+   <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+   <td nowrap class="list_cc"> ${item_post_date.YMD}&nbsp; </td>
+   <td nowrap class="list_rr"> ${beg_bal.(999)}&nbsp; </td>
+   <td nowrap class="list_rr"> ${org_deduct_amt.(999)}&nbsp; </td>
+   <td nowrap class="list_rr"> ${deduct_amt.(999)}&nbsp; </td>
+   <td nowrap class="list_ll"> ${tt_deduct_proc_code}&nbsp; </td>
+   <td nowrap class="list_ll"> ${acct_code}&nbsp; </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="dbar0010">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ 
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ //top.pageRows="20";
+ document.dataForm.exCrDateS.focus();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+</script>

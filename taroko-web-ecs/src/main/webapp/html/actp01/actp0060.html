@@ -1,0 +1,197 @@
+<html>
+
+<head>
+    <title>繳款資料查核錯誤覆核作業-107-07-20-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <!--<link rel="stylesheet" href="js/Calendar/calendar.css"> -->
+</head>
+<!--<script language="JavaScript" src="js/Calendar/calendar_db.js"></script> -->
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="4">&nbsp;批次號碼:
+                        <select size="1" name="ex_batchno" class="col_ddlb" value="${ex_batchno}">
+                            ${dddw_batchno}
+                        </select>&nbsp;
+                    </td>                    
+                    <td nowrap colspan=6>&nbsp;修改者
+                        <select size="1" name="ex_crtuser" class="col_ddlb" value="${ex_crtuser}">
+                            ${dddw_crtuser}
+                        </select>&nbsp;
+                    </td>
+                    <td nowrap colspan=12>&nbsp;
+                        <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="執行" onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>                
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">放行&nbsp;
+                </th>
+                <th nowrap class="list_th">強行補入</th>
+                <th nowrap class="list_th">批次號碼+序號</th>
+                <th nowrap class="list_th">帳戶帳號</th>
+                <th nowrap class="list_th">正卡ID</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">銷帳編號</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">繳款金額</th>
+                <th nowrap class="list_th">繳款日期</th>
+<!--
+                <th nowrap class="list_th">銷帳鍵值</th>
+-->
+                <th nowrap class="list_th">繳款類別</th>
+                <th nowrap class="list_th">錯誤原因</th>  
+                <th nowrap class="list_th">錯誤原因說明</th>
+                <th nowrap class="list_th">修改日期</th>
+                <th nowrap class="list_th">修改者</th>
+                <th nowrap class="list_th">分行別</th>
+                <th nowrap class="list_th" style="color: red">Err Msg</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no" rowspan="2">
+                    <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}"  ${opt_disabled} />
+                    <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                    <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+                    <input type="hidden" name="rowid1" value="${rowid1}" />
+                    <input type="hidden" name="mod_seqno1" value="${mod_seqno1}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap class="list_ll"> ${duplicate_mark}&nbsp; </td>
+                <td nowrap class="list_ll"> ${wk_batchno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${wk_ackey}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_id}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_cname}&nbsp; </td>
+                <td nowrap class="list_ll"> ${payment_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${pay_card_no}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${pay_amt.(999)} </td>
+                <td nowrap class="list_ll"> ${pay_date}&nbsp; </td>
+<!--
+                <td nowrap class="list_ll"> ${vouch_memo3}&nbsp; </td>
+-->
+                <td nowrap class="list_ll"> ${payment_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${error_reason}&nbsp; </td>
+                <td nowrap class="list_ll"> ${error_remark}&nbsp; </td>
+                <td nowrap class="list_ll"> ${update_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${update_user}&nbsp; </td>
+                <td nowrap class="list_ll"> ${branch}&nbsp; </td>
+                <td nowrap class="list_ll" style="color: red"> ${err_msg}&nbsp; </td>
+                <input type="hidden" name="duplicate_mark" value="${duplicate_mark}">
+                <input type="hidden" name="wk_batchno" value="${wk_batchno}">
+                <input type="hidden" name="batch_no" value="${batch_no}">
+                <input type="hidden" name="serial_no" value="${serial_no}">
+                <input type="hidden" name="p_seqno" value="${p_seqno}">
+                <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}">
+                <input type="hidden" name="wk_ackey" value="${wk_ackey}">
+                <input type="hidden" name="acct_type" value="${acct_type}">
+                <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">                
+                <input type="hidden" name="db_id" value="${db_id}">
+                <input type="hidden" name="id_no_code" value="${id_no_code}">
+                <input type="hidden" name="pay_card_no" value="${pay_card_no}">
+                <input type="hidden" name="pay_amt" value="${pay_amt}">
+                <input type="hidden" name="pay_date" value="${pay_date}">
+                <input type="hidden" name="payment_type" value="${payment_type}">
+                <input type="hidden" name="vouch_memo3" value="${vouch_memo3}">
+                <input type="hidden" name="update_date" value="${update_date}">
+                <input type="hidden" name="update_user" value="${update_user}">
+                <input type="hidden" name="update_time" value="${update_time}">
+                <input type="hidden" name="branch" value="${branch}">
+                <input type="hidden" name="acct_key" value="${acct_key}">
+                <input type="hidden" name="db_cname" value="${db_cname}">
+                <input type="hidden" name="payment_no" value="${payment_no}">         
+                <input type="hidden" name="error_reason" value="${error_reason}">
+                <input type="hidden" name="error_remark" value="${error_remark}">                
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->            
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="actp0060">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "9999";
+document.dataForm.ex_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "actp0060_detl";
+    }
+
+    if (top.actionCode == "S2") {
+        if (!chkdata()) {
+            return false;
+        }
+        if (confirm("是否執行作業?!") === false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "actp0060";
+    top.submitControl('S');
+    return true;
+}
+//全選
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+    return;
+}
+
+function chkdata() {
+    var agy = 0;
+    $("input[name=opt]").each(function() {
+        if ($(this).prop("checked") == true) {
+            agy++;
+        }
+    })
+    if (agy == 0) {
+        alert("未選取資料!");
+        return false;
+    }
+    return true;
+}
+
+</script>

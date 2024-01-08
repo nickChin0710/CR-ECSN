@@ -1,0 +1,168 @@
+<html>
+<head>
+<title> 108/12/12 V1.00.01 Allen Ho Initial 市區停車手KEY資料審核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="12">
+   <tr>
+   <td nowrap>&nbsp;停車日期:
+      <input type="text" class="col_date"
+          name="ex_park_date_s_s" value="${ex_park_date_s_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_s_s'});
+      </script>
+      --
+      <input type="text" class="col_date"
+          name="ex_park_date_s_e" value="${ex_park_date_s_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_park_date_s_e'});
+      </script>
+   卡號:
+      <input type="text" class="col_any"
+          name="ex_card_no" value="${ex_card_no}"
+         zeditType="any"  maxlength=19 size=19 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;審核結果:
+      <select  name="ex_verify_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="0" ${ex_verify_flag-0} >尚未審核</option>
+         <option value="1" ${ex_verify_flag-1} >正常交易</option>
+         <option value="2" ${ex_verify_flag-2} >本行吸收</option>
+         <option value="3" ${ex_verify_flag-3} >廠商吸收</option>
+       </select>
+   審核日期:
+      <input type="text" class="col_date"
+          name="ex_crt_date_s" value="${ex_crt_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date"
+          name="ex_crt_date_e" value="${ex_crt_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_e'});
+      </script>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;廠商代碼:
+      <select size="1" name="ex_park_vendor" class="col_ddlb" >
+         ${dddw_park_vendow}
+      </select>
+   主管覆核:
+       <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} checked  />(全部:不含新增)
+       <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">入場日期</th>
+    <th nowrap class="list_th">出場日期</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">廠商代碼</th>
+    <th nowrap class="list_th">停車<br>時數</th>
+    <th nowrap class="list_th">免費<br>時數</th>
+    <th nowrap class="list_th">應收<br>停車費</th>
+    <th nowrap class="list_th">扣抵點數</th>
+    <th nowrap class="list_th">實扣點數</th>
+    <th nowrap class="list_th">實扣金額</th>
+    <th nowrap class="list_th">審核結果</th>
+    <th nowrap class="list_th">審核日期</th>
+    <th nowrap class="list_th">來源類別</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+       <span class="dsp_flag">${ok_flag}</span>
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${park_date_s.YMD}</td>
+    <td nowrap class="list_cc"> ${park_date_e.YMD}</td>
+    <td nowrap class="list_cc"> ${card_no}</td>
+    <td nowrap class="list_cc"> ${park_vendor}</td>
+    <td nowrap class="list_cc"> ${park_hr}</td>
+    <td nowrap class="list_cc"> ${free_hr}</td>
+    <td nowrap class="list_rr"> ${charge_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${use_point.(999)}</td>
+    <td nowrap class="list_rr"> ${act_use_point.(999)}</td>
+    <td nowrap class="list_rr"> ${act_charge_amt.(999)}</td>
+    <td  nowrap class="list_cc"> ${verify_flag}</td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+    <td nowrap class="list_cc"> ${pass_type.(999)}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm1020_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

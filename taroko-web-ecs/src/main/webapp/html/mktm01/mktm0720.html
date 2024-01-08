@@ -1,0 +1,233 @@
+<html>
+
+<head>
+    <title>特店歸屬群組設定作業-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <!-- <link rel="stylesheet" href="js/Calendar/calendar.css"> -->
+</head>
+<!--<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>-->
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" width="60%">
+            <tr>
+                <td>
+                    <span class="dsp_text">&nbsp;&nbsp;同一商店多家連鎖特店之聯信平台紅利折抵複製設定</span>
+                </td>
+            </tr>
+        </table>
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="4">&nbsp;原特店群組代碼:
+                        <select size="1" id="ex_mcht_group_old" name="ex_mcht_group_old" class="col_ddlb" value="${ex_mcht_group_old}">
+                            ${dddw_mcht_group_old}
+                        </select>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;特店代號:
+                        <input type="text" class="col_any" name="ex_mcht_no1" value="${ex_mcht_no1}" zEdit="alphanum" maxlength=15 size=15 />&nbsp;--
+                        <input type="text" class="col_any" name="ex_mcht_no2" value="${ex_mcht_no2}" zEdit="alphanum" maxlength=15 size=15 />&nbsp;&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                        <img src="images/uperLoad.gif" onclick="return upload_click()" style="cursor:hand" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="4">&nbsp;新特店群組代碼:
+                        <select size="1" id="ex_mcht_group_new" name="ex_mcht_group_new" class="col_ddlb" value="${ex_mcht_group_new}">
+                            ${dddw_mcht_group_new}
+                        </select>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="Button"  value="群組設定" onClick="return top.submitControl('C2')" class="btDelete">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="Button"  value="群組取消" onClick="return top.submitControl('C3')" class="btDelete">&nbsp;&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;讀取資料來源:
+                        <input type="radio" value="1" name="ex_appr_flag" ${ex_appr_flag-1}${DEFAULT-ex_appr_flag} onChange="chang();" />特店資料
+                        <input type="radio" value="2" name="ex_appr_flag" ${ex_appr_flag-2} onChange="chang();" />異動未覆核
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=8>&nbsp;特店名稱:
+                        <input type="text" class="col_any" id="ex_mcht_cname" name="ex_mcht_cname" value="${ex_mcht_cname}" zEdit="any,canTW" maxlength=40 size=40 />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;處理選項:
+                        <input type="radio" value="1" name="ex_opt_flag" ${ex_opt_flag-1}${DEFAULT-ex_opt_flag} />設定群組
+                        <input type="radio" value="2" name="ex_opt_flag" ${ex_opt_flag-2} />刪除異動
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" width="60%" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">
+                    <input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" style="color:blue">處理&nbsp;&nbsp;
+                </th>
+                <th nowrap class="list_th">特店代號</th>
+                <th nowrap class="list_th">原特店群組代碼</th>
+                <th nowrap class="list_th">新特店群組代碼</th>
+                <th nowrap class="list_th">未覆核旗標</th>
+                <th nowrap class="list_th">特店名稱</th>
+                <th nowrap class="list_th">Err Msg</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                    <input type="checkbox" name="set_opt" value="${ser_num}" ${set_opt} />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                </td>
+                <td nowrap class="list_cc"> ${mcht_no}&nbsp; </td>
+                <td nowrap class="list_cc"> ${mcht_group_id}&nbsp; </td>
+                <td nowrap class="list_cc"> ${mcht_group_id_new}&nbsp; </td>
+                <td nowrap class="list_cc" style="color: red"> ${wk_appr_flag}&nbsp; </td>
+                <td nowrap class="list_cc"> ${mcht_chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${err_msg}&nbsp; </td>
+                <input type="hidden" name="mcht_no" value="${mcht_no}">
+                <input type="hidden" name="mcht_group_id" value="${mcht_group_id}">
+                <input type="hidden" name="mcht_group_id_new" value="${mcht_group_id_new}">
+                <input type="hidden" name="wk_appr_flag" value="${wk_appr_flag}">
+                <input type="hidden" name="mcht_chi_name" value="${mcht_chi_name}">
+                <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="text" class="dsp_text" name="zz_file_name" value="" zEdit="any,canTw" readonly />
+        <input type="hidden" name="upload_file" value="" />
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+// document.dataForm.ex_mcht_group_old.focus();
+$(document).ready(function() {
+    chang();
+})
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "mktm0720_detl";
+    }
+
+    if (top.actionCode == "S2" || top.actionCode == "C2" || top.actionCode == "C3") {
+        if (!chkdata()) {
+            return false;
+        }
+        // if (confirm("是否執行作業?!") === false) {
+        //     return false;
+        // }
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "mktm0720_detl";
+    top.submitControl('S');
+    return true;
+}
+//全選
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox" & aElements[i].name == "set_opt") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+
+function chkdata() {
+    var seq = 0;
+    var agy = document.dataForm.set_opt;
+    var ll = agy.length;
+
+    $(document).ready(function() {
+        chang();
+    })
+    if (typeof ll === 'undefined') {
+        if (agy.checked) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (agy[i].checked) {
+                seq++;
+            }
+        }
+    }
+
+    if (seq == 0) {
+        //alert("請至少勾選一筆資料!");
+        alert("未勾選處理資料!");
+        return false;
+    }
+    return true;
+}
+
+function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml = "TarokoUpload";
+    var parmName = "upload_file,zz_file_name";
+    var windowSize = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName = "TarokoUpload";
+    top.methodName = "showScreen";
+    top.openWindow("", parmHtml, parmName, windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "mktm01";
+    top.javaName = "Mktm0720";
+    //methodName  = "actionFunction";
+    top.requHtml = "mktm0720";
+    top.respHtml = "mktm0720";
+    return true;
+}
+
+function wf_uploadAfter() {
+    var ss = document.dataForm.zz_file_name.value.trim();
+    if (ss.length > 0) {
+        top.submitControl('UPLOAD');
+    }
+}
+
+function chang() {
+    var ss = $('input[name*=ex_appr_flag]:checked').val()
+    if (ss == "1") {
+        document.getElementById('ex_mcht_cname').style.backgroundColor = "#FFFFFF";
+        // document.getElementById('ex_mcht_group_new').style.backgroundColor = "#EDEDED";
+    }
+    if (ss == "2") {
+        document.getElementById('ex_mcht_cname').style.backgroundColor = "#EDEDED";
+        // document.getElementById('ex_mcht_group_new').style.backgroundColor = "#FDFE92";
+    }
+}
+</script>

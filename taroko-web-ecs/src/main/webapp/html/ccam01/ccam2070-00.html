@@ -1,0 +1,526 @@
+<html>
+<head>
+<title>DEBIT卡臨時調整額度維護(adj_debit)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;金融卡身份證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+      <input type="text" class="col_text" name="ex_id_code" value="${ex_id_code}" maxlength="1" size="3">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"    value="查詢" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+      <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+    </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+  </tr>
+ </table>
+</div>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap>&nbsp;卡戶身分證:
+         <span class="dsp_text">${id_no}</span>
+         <input type="hidden" name="id_no" value="${id_no}">
+      </td>
+      <td nowrap>&nbsp;姓名:
+         <span class="dsp_text">${idno_name}</span>
+         <input type="hidden" name="idno_name" value="${idno_name}">
+      </td>
+      <td nowrap>&nbsp;金融卡帳戶號碼:
+         <span class="dsp_text">${acct_no}</span>
+         <input type="hidden" name="acct_no" value="${acct_no}"> 
+      </td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;金控利害關係人:
+         <span class="dsp_text">${rela_flag}</span>
+         <input type="hidden" name="rela_flag" value="${rela_flag}">
+      </td>
+      <td nowrap>&nbsp;消貸餘額:
+         <span class="dsp_text">${asset_balance}</span>
+         <input type="hidden" name="asset_balance" value="${asset_balance}">
+      </td>
+      <td nowrap>&nbsp;擔保品:
+         <span class="dsp_text">${bond_amt.(999)}</span>
+         <input type="hidden" name="bond_amt" value="${bond_amt}"> 
+      </td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;調高原因:
+         <select size="1" name="adj_reason" class="col_ddlb" >
+            <option value="">--</option>
+            ${dddw_adj_reason}
+         </select>
+      </td>
+      <td nowrap>&nbsp;適用地區別:
+         <select   size="1"  name="adj_area" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${adj_area-1} >國外</option>
+         <option value="2" ${adj_area-2} >國內</option>
+         <option value="3" ${adj_area-3} >國內外</option>
+      </select>
+      </td>
+      <td nowrap>&nbsp;原日限次:
+         <span class="dsp_text">${org_day_cnt}</span>
+         <input type="hidden" name="org_day_cnt" value="${org_day_cnt}"> 
+      </td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;原月限額:
+         <span class="dsp_text">${org_month_amt.(999)}</span>
+         <input type="hidden" name="org_month_amt" value="${org_month_amt}">
+      </td>
+      <td nowrap>&nbsp;原日限額:
+         <span class="dsp_text">${org_day_amt.(999)}</span>
+         <input type="hidden" name="org_day_amt" value="${org_day_amt}">
+      </td>
+      <td nowrap>&nbsp;原次限額:
+         <span class="dsp_text">${org_cnt_amt.(999)}</span>
+         <input type="hidden" name="org_cnt_amt" value="${org_cnt_amt}"> 
+      </td>
+  </tr>
+  <hr>
+  <tr>
+      <td nowrap>&nbsp;臨調放大比率:
+         <input type="text" class="col_number" name="adj_rate" value="${adj_rate}" maxlength="6" size="8" zEdit="dignumber">
+         <span class="dsp_text">％</span>
+      </td>      
+      <td nowrap>&nbsp;調整後日限次:
+         <span class="dsp_text">${cur_day_cnt}</span>
+         <input type="hidden" name="cur_day_cnt" value="${cur_day_cnt}"> 
+      </td>
+      <td nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+      <td nowrap>&nbsp;調整後月限額:
+         <span class="dsp_text">${cur_month_amt.(999)}</span>
+         <input type="hidden" name="cur_month_amt" value="${cur_month_amt}">
+      </td>
+      <td nowrap>&nbsp;調整後日限額:
+         <span class="dsp_text">${cur_day_amt.(999)}</span>
+         <input type="hidden" name="cur_day_amt" value="${cur_day_amt}">
+      </td>
+      <td nowrap>&nbsp;調整後次限額:
+         <span class="dsp_text">${cur_cnt_amt.(999)}</span>
+         <input type="hidden" name="cur_cnt_amt" value="${cur_cnt_amt}"> 
+      </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">調高原因備註:
+      <input type="text" class="col_any" name="adj_remark" value="${adj_remark}" maxlength="30" size="32" zEdit="any,canTw">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;有效日期:
+      <input type="text" class="col_date" name="adj_eff_date1" value="${adj_eff_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_eff_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="adj_eff_date2" value="${adj_eff_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'adj_eff_date2'});
+	      </script>
+	</td>
+  </tr>
+</table>
+<hr>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap>&nbsp;風險類別:
+          <select size="1" name="ex_risk_type" id="wk_risk_type" class="col_ddlb" >
+            <option value="">--</option>
+            ${dddw_risk_type}
+          </select>
+          <input type="hidden" id="wk_cnt_amt_pct" value="${wk_cnt_amt_pct}" maxlength="6" size="8" >
+          <input type="hidden" id="wk_db_cnt_amt" value="${wk_db_cnt_amt}" maxlength="10" size="12" >
+          <input type="hidden" id="cnt_amt" value="${cnt_amt}">
+          <input type="hidden" id="wk_day_amt_pct" value="${wk_day_amt_pct}" maxlength="6" size="8" >
+          <input type="hidden" id="wk_db_day_amt" value="${wk_db_day_amt}" maxlength="10" size="12" >
+	       <input type="hidden" id="day_amt" value="${day_amt}">
+	       <input type="hidden" id="wk_month_amt_pct" value="${wk_month_amt_pct}" maxlength="6" size="8" >
+          <input type="hidden" id="wk_db_month_amt" value="${wk_db_month_amt}" maxlength="10" size="12" >
+	       <input type="hidden" id="month_amt" value="${month_amt}">
+	       <input type="hidden" id="wk_day_cnt_pct" value="${wk_day_cnt_pct}" maxlength="6" size="8" >
+          <input type="hidden" id="wk_db_day_cnt" value="${wk_db_day_cnt}" maxlength="7" size="9" >
+	       <input type="hidden" id="day_cnt" value="${day_cnt}">
+	       <input type="hidden"  id="wk_month_cnt_pct" value="${wk_month_cnt_pct}" maxlength="6" size="8" >
+          <input type="hidden"  id="wk_db_month_cnt" value="${wk_db_month_cnt}" maxlength="7" size="9" >
+	       <input type="hidden" id="month_cnt" value="${month_cnt}">
+      </td>
+      <td nowrap>&nbsp;
+         <input type="Button" id="detl_btnAdd" value="新增明細" 
+                 class="btAdd_detl" />
+          &nbsp;IND_NUM=${ind_num} 
+      </td>
+   </tr>
+</table>  
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">刪除&nbsp;</th>
+    <th nowrap >風險類別&nbsp;</th>
+    <th nowrap colspan="2">次限額 (%/元)&nbsp;</th>
+    <th nowrap colspan="2">日限額 (%/元)&nbsp;</th>
+    <th nowrap colspan="2">月限額 (%/元)&nbsp;</th>
+    <th nowrap colspan="2">日限次 (%/次)&nbsp;</th>
+    <th nowrap colspan="2">月限次 (%/次)&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+  <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}" />
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}" />
+      <input type="hidden" name="${#_cnt_amt-}"  value="${cnt_amt}" />
+      <input type="hidden" name="${#_day_amt-}"  value="${day_amt}" />
+      <input type="hidden" name="${#_month_amt-}"  value="${month_amt}" />
+      <input type="hidden" name="${#_day_cnt-}"  value="${day_cnt}" />
+      <input type="hidden" name="${#_month_cnt-}"  value="${month_cnt}" />
+    </td>
+    <td nowrap class="list_cc" >
+      <span class="dsp_text">&nbsp;${risk_type}</span>
+      <input type="hidden" name="risk_type" value="${risk_type}" />  
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_cnt_amt_pct-}"  value="${cnt_amt_pct}" maxlength="6" size="8" zEdit="dignumber" onChange="cnt_amt_pct('${ser_num}');" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_db_cnt_amt-}"  value="${db_cnt_amt}" maxlength="10" size="12" zEdit="number" onChange="db_cnt_amt(${ser_num});" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_day_amt_pct-}"  value="${day_amt_pct}" maxlength="6" size="8" zEdit="dignumber" onChange="day_amt_pct(${ser_num});" />
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_db_day_amt-}"  value="${db_day_amt}" maxlength="10" size="12" zEdit="number" onChange="db_day_amt(${ser_num})">
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_month_amt_pct-}"  value="${month_amt_pct}" maxlength="6" size="8" zEdit="dignumber" onChange="month_amt_pct(${ser_num})">
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_db_month_amt-}"  value="${db_month_amt}" maxlength="10" size="12" zEdit="number" onChange="db_month_amt(${ser_num})">
+    </td>
+     <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_day_cnt_pct-}"  value="${day_cnt_pct}" maxlength="6" size="8" zEdit="dignumber" onChange="day_cnt_pct(${ser_num})">
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_db_day_cnt-}"  value="${db_day_cnt}" maxlength="7" size="9" zEdit="number" onChange="db_day_cnt(${ser_num})">
+    </td>
+     <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_month_cnt_pct-}"  value="${month_cnt_pct}" maxlength="6" size="8" zEdit="dignumber" onChange="month_cnt_pct(${ser_num})">
+    </td>
+    <td nowrap class="list_rr">
+      <input type="text" class="col_number" name="${#_db_month_cnt-}"  value="${db_month_cnt}" maxlength="7" size="9" zEdit="number" onChange="db_month_cnt(${ser_num})">
+    </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="text"  name="card_acct_idx" value="${card_acct_idx}" />
+ <input type="hidden"  name="p_seqno" value="${p_seqno}" />
+ <input type="hidden"  name="id_p_seqno" value="${id_p_seqno}" />
+ 
+ <input type="hidden"  name="org_reason" value="${org_reason}" />
+ <input type="hidden"  name="card_corp_id" value="${card_corp_id}" />
+ <input type="hidden"  name="org_adj_rate" value="${org_adj_rate}" />
+ <input type="hidden"  name="org_eff_end_date" value="${org_eff_end_date}" />
+ <input type="hidden"  name="org_remark" value="${org_remark}" />
+ <input type="hidden"  name="org_eff_start_date" value="${org_eff_start_date}" />
+ <input type="hidden"  name="org_area" value="${org_area}" />
+ 
+ <input type="hidden"  name="mod_seqno" value="${mod_seqno}" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="data">
+ 
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+$(document).ready(function(){
+
+$("#wk_risk_type").change(function(){
+   var ls_risk_type = $("#wk_risk_type").val();	
+	if ( ls_risk_type === '' ) {
+		return false;
+	}
+	idCode = '1';
+   top.actionCode = "Q";
+   if ( idCode === '1' ) { 
+		top.methodName = "wfAjaxRiskType"; // "wf_ajax_risk_type";
+   }
+	resetJSON();
+	addJSON("ax_risk_type",ls_risk_type);
+	processAJAX();   
+}); 
+
+$("#detl_btnAdd").click(function(){
+
+	var ls_risk_type =$("#wk_risk_type").val();
+	var li_cnt_amt_pct =$("#wk_cnt_amt_pct").val();
+	var li_db_cnt_amt =$("#wk_db_cnt_amt").val();
+	var li_cnt_amt =$("#cnt_amt").val();
+	var li_day_amt_pct =$("#wk_day_amt_pct").val();
+	var li_db_day_amt =$("#wk_db_day_amt").val();
+	var li_day_amt =$("#day_amt").val();
+	var li_month_amt_pct =$("#wk_month_amt_pct").val();
+	var li_db_month_amt =$("#wk_db_month_amt").val();
+	var li_month_amt =$("#month_amt").val();
+   var li_day_cnt_pct =$("#wk_day_cnt_pct").val();
+	var li_db_day_cnt =$("#wk_db_day_cnt").val();
+	var li_day_cnt =$("#day_cnt").val();
+	var li_month_cnt_pct =$("#wk_month_cnt_pct").val();
+	var li_db_month_cnt =$("#wk_db_month_cnt").val();
+	var li_month_cnt =$("#month_cnt").val();
+
+   if (rowNum>0) {
+      ind++;
+   }
+   rowNum++;
+   var serNo ="0";
+   if ( rowNum < 10 )
+      { serNo = "0"+rowNum; }
+   else
+   	{ serNo = ""+rowNum;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+li_cnt_amt+"' name='cnt_amt-"+ind+"' />"
+      +"<input type='hidden' value='"+li_day_amt+"' name='day_amt-"+ind+"' />"
+      +"<input type='hidden' value='"+li_month_amt+"' name='month_amt-"+ind+"' />"
+      +"<input type='hidden' value='"+li_day_cnt+"' name='day_cnt-"+ind+"' />"
+      +"<input type='hidden' value='"+li_month_cnt+"' name='month_cnt-"+ind+"' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_risk_type
+      +"<input type='hidden' value='"+ls_risk_type+"' name='risk_type'/>"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='cnt_amt_pct-"+ind+"' value='"+li_cnt_amt_pct+"' maxlength='6' size='8' onChange='cnt_amt_pct("+ind+")' zEdit='dignumber'  />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='db_cnt_amt-"+ind+"' value='"+li_db_cnt_amt+"' maxlength='10' size='12' onChange='db_cnt_amt("+ind+")' zEdit='number' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='day_amt_pct-"+ind+"' value='"+li_day_amt_pct+"' maxlength='6' size='8' onChange='day_amt_pct("+ind+")' zEdit='dignumber' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='db_day_amt-"+ind+"'  value='"+li_db_day_amt+"' maxlength='10' size='12' onChange='db_day_amt("+ind+")' zEdit='number' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='month_amt_pct-"+ind+"' value='"+li_month_amt_pct+"' maxlength='6' size='8' onChange='month_amt_pct("+ind+")' zEdit='dignumber' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='db_month_amt-"+ind+"'  value='"+li_db_month_amt+"' maxlength='10' size='12' onChange='db_month_amt("+ind+")' zEdit='number' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='day_cnt_pct-"+ind+"'  value='"+li_day_cnt_pct+"' maxlength='6' size='8' onChange='day_cnt_pct("+ind+")' zEdit='dignumber' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='db_day_cnt-"+ind+"'  value='"+li_db_day_cnt+"' maxlength='7' size='9' onChange='db_day_cnt("+ind+")' zEdit='number' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='month_cnt_pct-"+ind+"'  value='"+li_month_cnt_pct+"' maxlength='6' size='8' onChange='month_cnt_pct("+ind+")' zEdit='dignumber' />"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='db_month_cnt-"+ind+"'  value='"+li_db_month_cnt+"' maxlength='7' size='9' onChange='db_month_cnt("+ind+")' zEdit='number' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#wk_risk_type").val('');
+   $("#wk_cnt_amt_pct").val('');
+   $("#wk_db_cnt_amt").val('');
+   $("#cnt_amt").val('');
+   $("#wk_day_amt_pct").val('');
+   $("#wk_db_day_amt").val('');
+   $("#day_amt").val('');
+   $("#wk_month_amt_pct").val('');
+   $("#wk_db_month_amt").val('');
+   $("#month_amt").val('');
+   $("#wk_day_cnt_pct").val('');
+   $("#wk_db_day_cnt").val('');
+   $("#day_cnt").val('');
+   $("#wk_month_cnt_pct").val('');
+   $("#wk_db_month_cnt").val('');
+   $("#month_cnt").val('');
+  });
+
+});
+  
+ function ajaxResponse()
+ {
+	top.respHtml ="ccam2070";
+   top.requHtml ="ccam2070";
+
+	if  ( idCode === '1' ) {
+	   $("#wk_cnt_amt_pct").val('100');
+	   $("#wk_db_cnt_amt").val(getJSONvalue("wk_db_cnt_amt",0));
+	   $("#cnt_amt").val(getJSONvalue("wk_db_cnt_amt",0));
+	   $("#wk_day_amt_pct").val('100');
+	   $("#wk_db_day_amt").val(getJSONvalue("wk_db_day_amt",0));
+	   $("#day_amt").val(getJSONvalue("wk_db_day_amt",0));
+		$("#wk_month_amt_pct").val('100');
+	   $("#wk_db_month_amt").val(getJSONvalue("wk_db_month_amt",0));
+	   $("#month_amt").val(getJSONvalue("wk_db_month_amt",0));
+		$("#wk_day_cnt_pct").val('100');
+	   $("#wk_db_day_cnt").val(getJSONvalue("wk_db_day_cnt",0));
+	   $("#day_cnt").val(getJSONvalue("wk_db_day_cnt",0));
+		$("#wk_month_cnt_pct").val('100');
+	   $("#wk_db_month_cnt").val(getJSONvalue("wk_db_month_cnt",0));
+	   $("#month_cnt").val(getJSONvalue("wk_db_month_cnt",0));
+	}
+
+	if ( idCode === '1' )
+	{ return false; }
+ } 
+
+function ind_2col(ii) {
+   var col =parseInt(ii);
+   if (col >0) {
+      col =col -1;
+   }
+   alert('ii='+ii+', col='+col);
+   return col;
+} 
+function cnt_amt_pct(ii) {
+   //var col='cnt_amt-'+ind_2col(ii);
+   ii =ind_2col(ii);
+   var cnt_amt =parseInt($("input[name=cnt_amt-"+ii+"]").val());
+   var cnt_amt_pct =parseInt($("input[name=cnt_amt_pct-"+ii+"]").val());
+   var db_cnt_amt = (cnt_amt * cnt_amt_pct) / 100;
+   $("input[name=db_cnt_amt-"+ii+"]").val(db_cnt_amt);
+   alert('amt='+cnt_amt+', pct='+cnt_amt_pct+', db='+db_cnt_amt);
+}
+
+function db_cnt_amt(ii) {
+   ii=ind_2col(ii);
+   var col='db_cnt_amt-'+ii;
+   var cnt_amt =parseInt($("input[name=cnt_amt-"+ii+"]").val());
+   var db_cnt_amt =parseInt($("input[name=db_cnt_amt-"+ii+"]").val());
+   var cnt_amt_pct = (db_cnt_amt / cnt_amt) * 100;
+   $("input[name=cnt_amt_pct-"+ii+"]").val(cnt_amt_pct);
+  
+}
+
+function day_amt_pct(ii) {
+   var col='day_amt_pct-'+ii;
+   var day_amt =parseInt($("input[name=day_amt-"+ii+"]").val());
+   var day_amt_pct =parseInt($("input[name=day_amt_pct-"+ii+"]").val());
+   var db_day_amt = (day_amt * day_amt_pct) / 100;
+   $("input[name=db_day_amt-"+ii+"]").val(db_day_amt);
+  
+}
+
+function db_day_amt(ii) {
+   
+   var col='db_day_amt-'+ii;
+   var day_amt =parseInt($("input[name=day_amt-"+ii+"]").val());
+   var db_day_amt =parseInt($("input[name=db_day_amt-"+ii+"]").val());
+   var day_amt_pct = (db_day_amt / day_amt) * 100;
+   $("input[name=day_amt_pct-"+ii+"]").val(day_amt_pct);
+  
+}
+
+function month_amt_pct(ii) {
+   var col='month_amt_pct-'+ii;
+   var month_amt =parseInt($("input[name=month_amt-"+ii+"]").val());
+   var month_amt_pct =parseInt($("input[name=month_amt_pct-"+ii+"]").val());
+   var db_month_amt = (month_amt * month_amt_pct) / 100;
+   $("input[name=db_month_amt-"+ii+"]").val(db_month_amt);
+  
+}
+
+function db_month_amt(ii) {
+   
+   var col='db_month_amt-'+ii;
+   var month_amt =parseInt($("input[name=month_amt-"+ii+"]").val());
+   var db_month_amt =parseInt($("input[name=db_month_amt-"+ii+"]").val());
+   var month_amt_pct = (db_month_amt / month_amt) * 100;
+   $("input[name=month_amt_pct-"+ii+"]").val(month_amt_pct);
+  
+}
+
+function day_cnt_pct(ii) {
+   var col='day_cnt_pct-'+ii;
+   var day_cnt =parseInt($("input[name=day_cnt-"+ii+"]").val());
+   var day_cnt_pct =parseInt($("input[name=day_cnt_pct-"+ii+"]").val());
+   var db_day_cnt = (day_cnt * day_cnt_pct) / 100;
+   $("input[name=db_day_cnt-"+ii+"]").val(db_day_cnt);
+  
+}
+
+function db_day_cnt(ii) {
+   
+   var col='db_day_cnt-'+ii;
+   var day_cnt =parseInt($("input[name=day_cnt-"+ii+"]").val());
+   var db_day_cnt =parseInt($("input[name=db_day_cnt-"+ii+"]").val());
+   var day_cnt_pct = (db_day_cnt / day_cnt) * 100;
+   $("input[name=day_cnt_pct-"+ii+"]").val(day_cnt_pct);
+  
+}
+
+function month_cnt_pct(ii) {
+   var col='month_cnt_pct-'+ii;
+   var month_cnt =parseInt($("input[name=month_cnt-"+ii+"]").val());
+   var month_cnt_pct =parseInt($("input[name=month_cnt_pct-"+ii+"]").val());
+
+   var db_month_cnt = Math.ceil((month_cnt * month_cnt_pct) / 100);
+   $("input[name=db_month_cnt-"+ii+"]").val(db_month_cnt);
+  
+}
+
+function db_month_cnt(ii) {
+   
+   var col='db_month_cnt-'+ii;
+   var month_cnt =parseInt($("input[name=month_cnt-"+ii+"]").val());
+   var db_month_cnt =parseInt($("input[name=db_month_cnt-"+ii+"]").val());
+   var month_cnt_pct = (db_month_cnt / month_cnt) * 100;
+   $("input[name=month_cnt_pct-"+ii+"]").val(month_cnt_pct);
+  
+}
+
+</script>

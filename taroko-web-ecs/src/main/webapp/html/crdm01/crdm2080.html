@@ -1,0 +1,191 @@
+<html>
+<head>
+<title>PP卡-預約不續卡資料輸入-V.2017-1222-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.min.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.min.js"></script>
+
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="30%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<td nowrap colspan="2">&nbsp;  
+      		<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<input type="Button"  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+    	</td>
+  	</tr>
+  	<tr>
+   		<td nowrap>&nbsp;卡號:
+      		<input type="text" class="col_any" name="ex_cardno" value="${ex_cardno}" 
+        zEdit="any" maxlength="19" size="19" />
+    	</td>
+     	<td nowrap>&nbsp;身分證 ID:
+      		<input type="text" class="col_text" name="ex_id" value="${ex_id}" 
+        	zEdit="alphanum,upper" maxlength="10" size="10" />
+    	</td>
+  	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="70%">
+  	<tr >
+    	<th nowrap class="list_th" width="5%" style="color:blue">
+		處理&nbsp;</th>
+    	<th nowrap class="list_th">放行註記</th>
+    	<th nowrap class="list_th">放行日期</th>
+    	<th nowrap class="list_th">處理狀態</th>
+    	<th nowrap class="list_th">預約原因</th>
+    	<th nowrap class="list_th">人工原因</th>
+    	<th nowrap class="list_th">卡號</th>
+    	<th nowrap class="list_th">效期</th>
+    	<th nowrap class="list_th">身分證號碼</th>
+    	<th nowrap class="list_th">中文姓名</th>
+    	<th nowrap class="list_th">不續卡註記</th>
+    	<th nowrap class="list_th">不續卡原因</th>
+    	<th nowrap class="list_th">續卡註記</th>
+    	<th nowrap class="list_th">續卡狀態</th>
+    	<th nowrap class="list_th">處理日期</th>
+    	<th nowrap class="list_th">卡種</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr >
+		<td nowrap class="list_no">
+			<span class="col_key">${ok_flag}</span>${SER_NUM}&nbsp;
+	 		<select   size="1"  name="opt" class="col_ddlb" onChange="optChange(this.value,'${SER_NUM}')">
+	 			<option value="5">--</option>
+         		<option value="0" ${opt-0} >取消不續卡(放行前)</option>
+         		<option value="1" ${opt-1} >預約不續卡</option>
+         		<option value="4" ${opt-4} >人工不續卡</option>
+         		<option value="2" ${opt-2} >取消不續卡(放行後)</option>
+         		<option value="3" ${opt-3} >系統不續卡改續卡</option>
+      		</select>
+ 			<input type="hidden" name="ser_num" value="${ser_num}" />
+			<input type="hidden" name="rowid" value="${rowid}">
+    		<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+    		<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+    		<input type="hidden" name="db_appr" value="${db_appr}">
+    		<input type="hidden" name="db_appr_date" value="${db_appr_date}">
+    		<input type="hidden" name="db_old_process" value="${db_old_process}">
+    		<input type="hidden" name="tt_db_old_process" value="${tt_db_old_process}">
+    		<input type="hidden" name="pp_card_no" value="${pp_card_no}">
+    		<input type="hidden" name="valid_to" value="${valid_to}">
+    		<input type="hidden" name="id_no" value="${id_no}">
+    		<input type="hidden" name="chi_name" value="${chi_name}">
+    		<input type="hidden" name="db_expire_chg" value="${db_expire_chg}">
+    		<input type="hidden" name="tt_db_expire_chg" value="${tt_db_expire_chg}">
+    		<input type="hidden" name="db_expire_reason" value="${db_expire_reason}">
+    		<input type="hidden" name="tt_change_reason" value="${tt_change_reason}">
+    		<input type="hidden" name="change_reason" value="${change_reason}">
+    		<input type="hidden" name="tt_change_status" value="${tt_change_status}">
+    		<input type="hidden" name="change_status" value="${change_status}">
+    		<input type="hidden" name="expire_chg_date" value="${expire_chg_date}">
+    		<input type="hidden" name="card_type" value="${card_type}">
+    		<input type="hidden" name="expire_reason" value="${expire_reason}">
+    		<input type="hidden" name="expire_chg_flag" value="${expire_chg_flag}">
+    		<input type="hidden" name="new_end_date" value="${new_end_date}">
+  		</td>
+  		<td nowrap class="list_ll"> ${db_appr} &nbsp;</td>
+  		<td nowrap class="list_ll"> ${db_appr_date.YMD} &nbsp;</td>
+  		<td nowrap class="list_ll"> ${tt_db_old_process} &nbsp;</td>
+  		<td nowrap class="list_ll">
+   		   	<select size="1" name="db_optcode1" class="col_ddlb" >
+   				<option value="">--</option>
+      			${dddw_db_optcode1}
+   			</select>
+   		</td>
+   		<td nowrap class="list_ll">
+   			<select size="1" name="db_optcode2" class="col_ddlb" >
+   				<option value="">--</option>
+      			${dddw_db_optcode2}
+   			</select>
+   		</td>
+  		<td nowrap class="list_ll">${pp_card_no} &nbsp;</td>
+  		<td nowrap class="list_ll">${valid_to} &nbsp;</td>
+  		<td nowrap class="list_ll">${id_no}&nbsp;</td>
+  		<td nowrap class="list_ll">${chi_name} &nbsp;</td>
+  		<td nowrap class="list_ll tt_db_expire_chg">${tt_db_expire_chg} &nbsp;</td>
+  		<td nowrap class="list_ll db_expire_reason">${db_expire_reason} &nbsp;</td>
+  		<td nowrap class="list_ll">${tt_change_reason} &nbsp;</td>
+  		<td nowrap class="list_ll">${tt_change_status} &nbsp;</td>
+  		<td nowrap class="list_ll">${expire_chg_date.YMD} &nbsp;</td>
+  		<td nowrap class="list_ll">${card_type} &nbsp;</td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="crdm2080">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond"> 
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+ var num = 0;
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ document.dataForm.ex_cardno.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "crdm2080_detl_notuse"; 
+    }
+    
+    if ( top.actionCode == "C" ) {
+
+    	if (confirm("是否執行作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function optChange(val,num){
+	 num = Number(num)-1;
+	 var opt_text = $("select[name=opt] :selected").eq(num).text();
+	 $("input[name=db_expire_chg]").eq(num).val(val);
+	 $(".tt_db_expire_chg").eq(num).text(opt_text); 
+	 $("input[name=tt_db_expire_chg]").eq(num).val(opt_text); 
+	 if(val=='1'){
+		 $("select[name=db_optcode1]").eq(num).prop("disabled",false);
+		 $("select[name=db_optcode2]").eq(num).prop("disabled",true);
+	 }else if(val=='4'){
+		 $("select[name=db_optcode1]").eq(num).prop("disabled",true);
+		 $("select[name=db_optcode2]").eq(num).prop("disabled",false);
+	 }else{
+		 $("select[name=db_optcode1]").eq(num).prop("disabled",true);
+		 $("select[name=db_optcode2]").eq(num).prop("disabled",true);
+	 }
+ }
+ 
+ $(document).ready(function() {
+	 $("select[name=opt]").val("");
+	 $("select[name=db_optcode1]").prop("disabled",true);
+	 $("select[name=db_optcode2]").prop("disabled",true);
+ })
+
+     
+</script>

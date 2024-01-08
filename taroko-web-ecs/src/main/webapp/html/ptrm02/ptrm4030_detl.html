@@ -1,0 +1,261 @@
+<html>
+<head>
+<title>mktm4090-group-V.20191203</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript">
+function wf_add_newrow()
+{
+//debugger;
+var ind=document.getElementById( 'table1' ).rows.length -1;
+var rowNum=document.getElementById( 'table1' ).rows.length -1;
+var ii_err = 0;
+
+var member_id_value = $("#ex_member_id").val();
+
+$('input[name=member_id]').each(function () {
+	if($(this).val()==member_id_value){
+		alert("成員代號重複");
+		ii_err++;
+	}
+})
+if(ii_err>0){
+	return;
+}
+
+var colNum=0;
+var fi=0;
+//console.log("a:"+ind);
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+	
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+	var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+ 
+    var mno = document.createElement( 'input' );
+    mno.type = 'hidden';
+    mno.name = 'rowid';
+    mno.value = '';
+    myCell.appendChild(mno);
+    
+	var ip3 = document.createElement( 'input' );
+    ip3.type = 'hidden';
+    ip3.name = 'member_id_o';
+    ip3.value = '';
+    myCell.appendChild( ip3 );
+    
+	var ip4 = document.createElement( 'input' );
+    ip4.type = 'hidden';
+    ip4.name = 'mail_type_o';
+    ip4.value = '';
+    myCell.appendChild( ip4 );
+    
+	var ip6 = document.createElement( 'input' );
+    ip6.type = 'hidden';
+    ip6.name = 'modify_date';
+    ip6.value = '';
+    myCell.appendChild( ip6 );
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_cc";
+  
+    var mo1 = document.createElement( 'input' );
+    mo1.type = 'hidden';
+    mo1.name = 'member_id';
+    mo1.value = member_id_value;
+    myCell.appendChild(mo1);
+    
+    var mo2 = document.createElement( 'span' );
+	mo2.setAttribute('class', 'dsp_text');
+	mo2.textContent= member_id_value;
+    myCell.appendChild(mo2);
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    var kindarray = ["","T","C","B","R"];
+    
+    var kind = document.createElement( 'select' );
+	kind.setAttribute('class', 'col_ddlb');
+    kind.name = 'mail_type';
+	kind.value = '';
+	for (var i = 0; i < kindarray.length; i++) {
+    var option = document.createElement("option");
+    option.value = kindarray[i];
+	if(kindarray[i]=="")
+	   { option.text ="--";}
+	else if(kindarray[i]=="T")
+	   { option.text ="收件者";}
+	else if(kindarray[i]=="C")
+	   {option.text = "副本收件者";}
+	else if(kindarray[i]=="B")
+	   {option.text = "密本收件者";}
+	else if(kindarray[i]=="R")
+	   {option.text = "回信收件者";}
+    kind.appendChild(option);
+    }
+    myCell.appendChild(kind);
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_cc";
+
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_cc";
+
+}	
+</script>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;width:20%">
+  	<tr>
+     	<td width="100">&nbsp;</td>
+        <td colspan="4">
+        	<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+     	</td>
+     	<td> 
+       		<input type="Button" ${btnUpdate_disable}  value="存檔" onClick="return top.submitControl('C')" class="btUpdate" >&nbsp;&nbsp;
+    	</td>
+  	</tr>
+</table>
+<div id="dataBlock">
+<table width="40%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+      	<td nowrap >&nbsp;群組代號:
+        	<span class="dsp_text" >${group_id}</span>
+        	<input type="hidden" name="group_id" value="${group_id}" >
+      	</td>
+      	<td nowrap >&nbsp;群組名稱:
+        	<span class="dsp_text">${group_name}</span>
+        	<input type="hidden" name="group_name" value="${group_name}" >
+      	</td>
+  	</tr>
+</table>
+<hr>
+<table border="0" width="40%" width="50%">
+  	<tr>
+  		<td nowrap>&nbsp;成員代號:
+  			<select size="1" name="ex_member_id" id="ex_member_id" class="col_ddlb" >
+      			${dddw_member_id}
+   			</select>
+   			&nbsp;&nbsp;&nbsp;
+   			<input type="Button" value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+  		</td>
+  	</tr>
+</table>
+<!--List -->
+<table width="40%" id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th nowrap class="list_th" width="5%">
+			<input type="checkbox" name="ex_selectAll"  value="Y" onChange="selectAll();" style="color:blue">刪除&nbsp;</th>
+		<th nowrap class="list_th">成員代號</th>
+		<th nowrap class="list_th">郵寄類別</th>
+		<th nowrap class="list_th">修改時間</th>
+		<th nowrap class="list_th">errmsg</th>
+	</tr>
+	
+<!-- BEGIN DYNAMIC : DETAIL -->
+
+	<tr>
+		<td nowrap class="list_no">
+			<span class="col_key">${ok_flag}</span>
+			<input type="checkbox" name="opt" class="check"  value="${ser_num}" />
+			${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}">
+			<input type="hidden" name="rowid" value="${rowid}">
+			<input type="hidden" name="member_id" value="${member_id}">
+			<input type="hidden" name="member_id_o" value="${member_id_o}">
+			<input type="hidden" name="mail_type_o" value="${mail_type_o}">
+			<input type="hidden" name="modify_date" value="${modify_date}">	
+			<input type="hidden" name="modify_date2" value="${modify_date2}">	
+		</td>
+		<td nowrap class="list_ll">
+      		<span class="dsp_text">${member_id}</span>
+		</td>
+		<td nowrap class="list_ll">
+      		<select name="mail_type" class="col_ddlb">
+       			<option value="">--</option>
+         		<option value="T" ${mail_type-T} >收件者</option>
+         		<option value="C" ${mail_type-C} >副本收件者</option>
+         		<option value="B" ${mail_type-B} >密本收件者</option>
+         		<option value="R" ${mail_type-R} >回信收件者</option>
+      		</select>
+   		</td>
+   		<td nowrap class="list_ll">${modify_date.YMD}&nbsp;</td>
+   		<td nowrap class="list_ll"><span class="col_key">${errmsg}&nbsp;</span></td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+</div>
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ptrm4030">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="nccc">
+<input type="hidden" name="dtl_kind" value="GROUP-CODE">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+ top.refreshButton2('1');
+ top.pageRows="9999";
+
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if (confirm("是否執行存檔?") === false) {
+            return false;
+        } 
+    }
+  	
+   return true;
+ }
+  
+ //全選
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+				aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+		return;
+ }
+</script>

@@ -1,0 +1,210 @@
+<!--* 111-12-08  V1.00.04  sunny         增加不能覆核自己及不同部門的案件                                 *-->
+<html>
+<head>
+<title>線上主管覆核正常,催收,呆帳戶作業-106-05-24-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+      <span id="span1">&nbsp;筆數：
+      <span class="col_key">${exCnt.(999)}</span>
+      &nbsp;金額：
+      <span class="col_key">${exAmt.(999)}</span>
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;建檔日期：
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateS'});
+	  </script>
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'exDateE'});
+	  </script>
+    </td>
+    <td nowrap>&nbsp;建檔人員：
+      <input type="text" class="col_text" name="exUser" value="${exUser}" 
+        zEdit="alphanum,upper" maxlength="10" size="10" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;覆核狀態：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exAprState" ${exAprState-0} />全部
+         <input type="radio" value="N" name="exAprState" ${exAprState-N} ${DEFAULT-exAprState}/>未覆核
+         <input type="radio" value="Y" name="exAprState" ${exAprState-Y} />已覆核
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;覆核類別：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exType" ${exType-0} ${DEFAULT-exType} />全部
+         <input type="radio" value="1" name="exType" ${exType-1} />轉正常
+         <input type="radio" value="3" name="exType" ${exType-3} />轉催收
+         <input type="radio" value="4" name="exType" ${exType-4} />轉呆帳
+      </span>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+      <span class="col_key"><input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" ${opt_disabled}>覆核</span></th>
+    <th nowrap class="list_th">帳戶號碼</th>
+    <th nowrap class="list_th">客戶名稱</th>
+    <th nowrap class="list_th">原始狀態</th>
+    <th nowrap class="list_th">欲轉換狀態</th>
+    <th nowrap class="list_th">欲轉催呆金額</th>
+    <th nowrap class="list_th">覆核日期</th>
+    <th nowrap class="list_th">建立日期</th>
+    <th nowrap class="list_th">建立人員</th>
+    <th nowrap class="list_th">呆帳核准日</th>
+    <th nowrap class="list_th">文件確認日</th>
+    <th nowrap class="list_th">憑証名稱</th>
+    <th nowrap class="list_th">覆核人員</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="col_key">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} ${isDisable}/>
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden" name="p_seqno" value="${p_seqno}">
+	<input type="hidden" name="acct_type" value="${acct_type}">
+	<input type="hidden" name="acct_key" value="${acct_key}">
+	<input type="hidden" name="chi_name" value="${chi_name}">
+	<input type="hidden" name="src_acct_stat" value="${src_acct_stat}">
+	<input type="hidden" name="tt_src_acct_stat" value="${tt_src_acct_stat}">
+	<input type="hidden" name="trans_type" value="${trans_type}">
+	<input type="hidden" name="tt_trans_type" value="${tt_trans_type}">
+	<input type="hidden" name="bad_debt_amt" value="${bad_debt_amt}">
+	<input type="hidden" name="apr_flag" value="${apr_flag}">
+	<input type="hidden" name="apr_date" value="${apr_date}">
+	<input type="hidden" name="crt_date" value="${crt_date}">
+	<input type="hidden" name="crt_user" value="${crt_user}">
+	<input type="hidden" name="alw_bad_date" value="${alw_bad_date}">
+	<input type="hidden" name="paper_conf_date" value="${paper_conf_date}">
+	<input type="hidden" name="paper_name" value="${paper_name}">
+	<input type="hidden" name="apr_user" value="${apr_user}">
+	<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}">
+	<input type="hidden" name="acno_flag" value="${acno_flag}">
+	<input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+   </td>
+   <td nowrap class="list_cc"> ${acct_type}-${acct_key}&nbsp;</td>
+   <td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_src_acct_stat}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_trans_type}&nbsp;</td>
+   <td nowrap class="list_rr"> ${bad_debt_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+   <td nowrap class="list_cc"> ${alw_bad_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${paper_conf_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${paper_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${apr_user}&nbsp;</td> 
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="MOD_PGM" value="colp0080">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ //top.pageRows="999";
+ document.dataForm.exDateS.focus();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) {
+    		return false; 
+    	} 
+    	if (confirm("是否執行 主管覆核作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			if ( aElements[i].name == "opt" ) {
+				if ( aElements[i].disabled == false ) {
+					aElements[i].checked = document.dataForm.ex_selectAll.checked;
+				}
+			}
+		}
+	}
+	return;
+ }
+ 
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.getElementsByName('opt');
+	 var ll = agy.length;
+	 for ( var i=0; i < ll; i++ ) {
+		 if(agy[i].checked){
+			 seq++;
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("請至少勾選一筆資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+// function tab_select(optname) {
+//	 document.dataForm.optname.value = optname;
+//	 document.dataForm.id_tab1.value = (optname=='aopt')? "id='tab_active'":"";
+//	 document.dataForm.id_tab2.value = (optname=='bopt')? "id='tab_active'":"";
+// }
+ 
+</script>

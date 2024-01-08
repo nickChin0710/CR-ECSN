@@ -1,0 +1,132 @@
+<html>
+
+<head>
+    <title>記名悠遊卡掛失餘額轉置明細表-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">      
+                <tr>
+                    <td nowrap colspan=4>&nbsp;掛失日期起迄：
+                        <input type="text" class="col_date" name="ex_oppost_date1" value="${ex_oppost_date1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_oppost_date1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_oppost_date2" value="${ex_oppost_date2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_oppost_date2'
+                        });
+                        </script>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;入帳日期起迄：
+                        <input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_crt_date1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_crt_date2'
+                        });
+                        </script>&nbsp;
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>                                                                 
+            </table>
+        </div>
+        <hr>
+               <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="200">掛失當下餘額總計:&nbsp;
+                        <span class="dsp_number">${sum_tran_amt_0h.(999)}</span>
+                        <input type=hidden name="sum_tran_amt_0h" value="${sum_tran_amt_0h}" />
+                    </td>
+                    <td nowrap width="200">掛失3H餘額總計:&nbsp;
+                        <span class="dsp_number">${sum_tran_amt_6h.(999)}</span>
+                        <input type=hidden name="sum_tran_amt_6h" value="${sum_tran_amt_6h}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">掛失日期</th>
+                <th nowrap class="list_th">人帳日期</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">ID</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">悠遊卡卡號</th>
+                <th nowrap class="list_th">掛失當下餘額</th>
+                <th nowrap class="list_th">掛失3H餘額</th>
+                <th nowrap class="list_th">AUTOLOAD FLAG</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${oppost_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${crt_date}&nbsp; </td>
+                <td nowrap class="list_rr"> ${card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${wk_id_no} &nbsp;</td>
+                <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${tsc_card_no}&nbsp; </td>                
+                <td nowrap class="list_rr"> &nbsp;${tran_amt_0h.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${tran_amt_6h.(999)} </td> 
+                <td nowrap class="list_ll"> ${autoload_flag}&nbsp; </td> 
+                <input type="hidden" name="group_ct" value="${group_ct}">  
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum1" value="${sum1}">  
+        <input type="hidden" name="sum2" value="${sum2}"> 
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_oppost_date1.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

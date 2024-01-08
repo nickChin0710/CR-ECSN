@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>rskm1012 消費通知參數維護作業明細維護-accttype</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+
+<body bgcolor="#FFFFFF">
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">卡片等級:
+		<span class="dsp_text"> ${card_note}.${#JAVA:ecsfunc.DeCodeCrd.cardNote(card_note)}</span>
+      <input type=hidden name="card_note" value="${card_note}">
+   </td>
+   <td nowrap class="colKey">交易類別:
+		<span class="dsp_text"> ${web3d_flag}.${tt_web3d_flag}</span>
+      <input type=hidden name="web3d_flag" value="${web3d_flag}">
+      <input type="hidden" name="tt_web3d_flag" value="${tt_web3d_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="colKey" colspan="2">明細類別：
+		<span class="dsp_text">排除MCC</span>
+      <input type=hidden id="data_type1" name="data_type1" value="MCC1">
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >
+  		<input type="Button"   value="簡訊一-排除MCC" onclick="wf_detl_2page('MCC1');" disabled  />
+      <input type="Button"   value="簡訊一-排除特店" onclick="wf_detl_2page('MCHT1');" class="btAdd_detl" />
+      <input type="Button"   value="簡訊一-排除風險類別" onclick="wf_detl_2page('RISK1');" class="btAdd_detl" />   
+      <input type="Button"   value="簡訊二-排除MCC" onclick="wf_detl_2page('MCC2');" class="btAdd_detl" />
+      <input type="Button"   value="簡訊二-排除特店" onclick="wf_detl_2page('MCHT2');" class="btAdd_detl" />
+      <input type="Button"   value="簡訊二-排除風險類別" onclick="wf_detl_2page('RISK2');" class="btAdd_detl" />    
+      <input type="Button"   value="簡訊二-發送回覆碼" onclick="wf_detl_2page('SMS2');" class="btAdd_detl" />    
+  	</td>
+  </tr>
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap width="90%">Mcc Code:
+     <input type="text" class="col_text" id="ex_mcc_code" name="ex_mcc_code" value="${ex_mcc_code}" maxlength="4" size="6">
+     &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" 
+                class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}            
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>    
+    <th nowrap class="list_cc">資料代碼 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code1" value="${data_code1}">
+      <input type="hidden" name="data_type" value="${data_type}">
+      <input type="hidden" name="data_code2" value="${data_code2}">
+    </td>    
+    <td nowrap class="list_cc" >&nbsp;${data_code1} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${card_note}" />
+<input type=hidden name="data_k2" value="${web3d_flag}" />
+<input type=hidden name="data_k3" value="" />
+<input type=hidden name="data_k4" value="" />
+<input type=hidden name="data_k5" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_accttype">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+   return true;
+ }
+
+ $("#detl_btnAdd").click(function(){
+
+	var ls_data_code =$("#ex_mcc_code").val().toUpperCase();
+	var ls_data_type =$("#data_type1").val();
+	
+	if(ls_data_code ==''){
+		alert("MCC Code 不可空白 !");
+		return;
+	}
+	
+	
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='"+ls_data_code+"' name='data_code1' />"
+      +"<input type='hidden' value='"+ls_data_type+"' name='data_type' />" 
+      +"<input type='hidden' value='' name='data_code2' />"     
+      +"</td>"      
+      +"<td nowrap class='list_cc'>"+ls_data_code
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_mcc_code").val('');
+   
+  });  
+  
+ function wf_detl_2page(parm) {
+	 	if (parm==="MCC1") {
+		top.respHtml  = "ccam5272_mcc1";
+	 }
+	 else if (parm==="MCHT1") {
+		top.respHtml  = "ccam5272_mcht1";
+	 }
+	 else if (parm=="RISK1") {
+		top.respHtml  = "ccam5272_risk1";
+	 }	 
+	 else if (parm==="MCC2") {
+		top.respHtml  = "ccam5272_mcc2";
+	 }
+	 else if (parm==="MCHT2") {
+		top.respHtml  = "ccam5272_mcht2";
+	 }
+	 else if (parm=="RISK2") {
+		top.respHtml  = "ccam5272_risk2";
+	 }	 
+	 else if (parm=="SMS2") {
+		top.respHtml  = "ccam5272_sms2";
+	 }
+    top.respLevel = 2;
+	  document.dataForm.data_k5.value = parm;
+    top.submitControl("S2");
+    return true;
+ }
+  
+</script>

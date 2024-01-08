@@ -1,0 +1,140 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-07-28  V1.00.00  Sunny           fix部門平均處理天數/案件平均結案天數 -->
+<!-- 111-11-24  V1.00.01  sunny           配合卡部要求，將「接聽」改為「受理」  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>案件移送部每日清單</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_ugcall_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_ugcall_flag]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;統計受理期間:
+         <input type="text" class="col_date" name="ex_cms_date_s" value="${ex_cms_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_s'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_cms_date_e" value="${ex_cms_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_e'});
+	      </script>
+	</td>
+	<td nowrap>&nbsp;部門的處理狀況:
+       <select   size="1"  name="ex_case_result" class="col_ddlb">
+         <option value="">--</option>
+         <option value="0" ${ex_case_result-0} >全部&nbsp;</option>
+         <option value="1" ${ex_case_result-1} >未處理&nbsp;</option>
+         <option value="2" ${ex_case_result-2} >處理中&nbsp;</option>
+         <option value="3" ${ex_case_result-3} >完成&nbsp; </option>
+     </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+</tr>
+<tr>
+	<td nowrap >&nbsp;移送部門:
+	   <select size="1" name="ex_proc_deptno" class="col_ddlb" >
+	      <option value="">--</option>
+         ${dddw_proc_dept}
+      </select>
+   </td>
+   <td nowrap colspan="2">&nbsp;案件類別:
+	   <select size="1" name="ex_casetype" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_casetype}
+      </select>
+   </td>
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap class="list_rr" colspan="4">&nbsp;總計筆數:</td>
+ 		<td nowrap class="list_rr" >&nbsp;${tl_total_cnt.(999)}筆
+ 			<input type="hidden" name="tl_total_cnt" value="${tl_total_cnt}">
+ 		</td>
+ 		<td nowrap class="list_rr"></td>
+ 	</tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >移送部門&nbsp;</th>
+    <th nowrap >案件類別&nbsp;</th>
+    <th nowrap >處理結果&nbsp;</th>
+    <th nowrap >筆數&nbsp;</th>
+    <th nowrap >部門平均<br>處理天數&nbsp;</th>
+	<th nowrap >案件平均<br>結案天數&nbsp;</th>
+ </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll"> ${proc_deptno}_${dept_name}&nbsp;</td>
+	<td nowrap class="list_ll"> ${case_type}_${case_desc}&nbsp;</td>
+	<td nowrap class="list_cc"> ${proc_result}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_count.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_day.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_master_day.(999.00)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

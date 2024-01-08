@@ -1,0 +1,273 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-12-02  V1.00.01  Justin         change uf_tt_idtab into uf_opp_status-->
+<!-- 112-06-09  V1.00.02  Ryan           增加其他頁籤                                                                                -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人帳戶資料查詢-2020-12-02-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+  </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證號碼:
+      <span class="dsp_text">${wk_idno}</span>
+      <input type="hidden" name="wk_idno" value="${wk_idno}">
+   </td>
+   <td nowrap>&nbsp;出生日期:
+      <span class="dsp_text">${birthday.YMD}</span>
+      <input type="hidden" name="birthday" value="${birthday}">
+   </td>
+   <td nowrap>&nbsp;性別:
+      <span class="dsp_text">${sex}.${#JAVA:ecsfunc.DeCodeCrd.idnoSex(sex)}</span>
+      <input type="hidden" name="sex" value="${sex}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;中文姓名:
+      <span class="dsp_text">${chi_name}</span>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+</tr>
+ <tr>
+   <td nowrap >&nbsp;居留證號碼:
+      <span class="dsp_text">${resident_no}</span>
+      <input type="hidden" name="resident_no" value="${resident_no}">
+   </td>
+   <td nowrap colspan="2">&nbsp;外籍護照號碼:
+      <span class="dsp_text">${other_cntry_code}</span>
+      <input type="hidden" name="other_cntry_code" value="${other_cntry_code}">
+      -&nbsp;
+      <span class="dsp_text">${passport_no}</span>
+      <input type="hidden" name="passport_no" value="${passport_no}">
+   </td>
+</tr>      
+</table>
+</div>
+<hr>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">有效卡</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">申停</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-3')">掛失</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-5')">強停</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-6')">其他</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-4')">偽卡</td>
+    </tr>
+  </table>
+</div>
+<!-----------有效卡-------------->
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%" >
+   <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >卡種&nbsp;</th>
+    <th nowrap >團體代號&nbsp;</th>
+    <th nowrap >正/附卡&nbsp;</th>
+    <th nowrap >正卡卡號&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >持卡人 ID&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${A.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.card_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.group_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(A.sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.major_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.acct_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.id_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${A.chi_name}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------申停-------------->
+<div id="tab-2" class="tabcontent" > 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正/附卡&nbsp;</th>
+    <th nowrap >正卡卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >停卡日期&nbsp;</th>
+    <th nowrap >停用原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${B.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(B.sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.major_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${B.oppost_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${B.oppost_reason}.${B.tt_oppost_reason}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------掛失-------------->
+<div id="tab-3" class="tabcontent" > 
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正/附卡&nbsp;</th>
+    <th nowrap >正卡卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >掛失日期&nbsp;</th>
+    <th nowrap >掛失原因&nbsp;</th>
+    <th nowrap >新卡卡號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${C.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(C.sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.major_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.oppost_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${C.oppost_reason}.${C.tt_oppost_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${C.new_card_no}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------偽卡-------------->
+<div id="tab-4" class="tabcontent" > 
+ <table id="table4" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正/附卡&nbsp;</th>
+    <th nowrap >正卡卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >停卡日期&nbsp;</th>
+    <th nowrap >偽卡原因&nbsp;</th>
+    <th nowrap >偽卡重製之新卡號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${D.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${D.sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(D.sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${D.major_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${D.db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${D.oppost_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${D.oppost_reason}.${D.tt_oppost_reason}&nbsp;</td>
+	<td nowrap class="list_cc"> ${D.new_card_no}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------強停-------------->
+<div id="tab-5" class="tabcontent" > 
+ <table id="table5" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正/附卡&nbsp;</th>
+    <th nowrap >正卡卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >停卡日期&nbsp;</th>
+    <th nowrap >強停原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${E.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${E.sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(E.sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${E.major_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${E.db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${E.oppost_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${E.oppost_reason}.${E.tt_oppost_reason}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-----------其他-------------->
+<div id="tab-6" class="tabcontent" > 
+ <table id="table6" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正/附卡&nbsp;</th>
+    <th nowrap >正卡卡號&nbsp;</th>
+    <th nowrap >持卡人姓名&nbsp;</th>
+    <th nowrap >停卡日期&nbsp;</th>
+    <th nowrap >其他停用原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${ser_num}&nbsp;</td>
+   <td nowrap class="list_cc"> ${F.card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${F.sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(F.sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${F.major_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${F.db_idno_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${F.oppost_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${F.oppost_reason}.${F.tt_oppost_reason}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<!-- -->
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="cmsq2100">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+	tigra_tables('table3');
+	tigra_tables('table4');
+	tigra_tables('table5');
+	tigra_tables('table6');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

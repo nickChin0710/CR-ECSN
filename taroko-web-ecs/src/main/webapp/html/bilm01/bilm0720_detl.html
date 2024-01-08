@@ -1,0 +1,528 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡友來電自動分期作業-detl-V.2018-0209-ryan[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<!-- <script language="JavaScript" src="js/Calendar/calendar_db.js"></script> -->
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.min.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.min.js"></script>
+<!-- <link rel="stylesheet" href="js/Calendar/calendar.css"> -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+</head>
+<style type="text/css">
+  font {
+    color: red;
+		 }
+  span.colorred{
+    color: red;
+  }
+  span.dsp_text2 {
+    background-color:#C0C0C0;
+    color:blue;
+  }
+
+</style>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+  	<tr>
+     	<td width="100">&nbsp;</td>
+     	<td colspan="4">
+          	<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+          	<!--<input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;  -->
+          	<input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp; 
+          	<input type="Button"    value="修改" ${btnUpdate_disable}  onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          	<input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp; 
+          	<input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+     	</td>
+  	</tr>
+</table>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+	<tr>
+     	<td nowrap colspan="6">&nbsp;卡號:
+        	<input type=text class="col_any" name="kk_card_no" value="${kk_card_no}" 
+              	zedit="any" maxlength="19" size="19"  onchange="detailKk_card_no(this.value)"/>
+     	</td>
+  	</tr>
+</table>
+<!-- Detail data================================= -->
+<table id="table2" width="80%" border="0" cellspacing="0" cellpadding="4">
+   		<td nowrap colspan="6">&nbsp;卡號:
+   			<input type="hidden" name="card_no" value="${card_no}">
+   			<span class="dsp_text" id="card_no">${card_no}</span>
+              	&nbsp;匯入合約檔日期:
+          	<input type="hidden" name="post_date" value="${post_date}">
+   			<span class="dsp_text2">${post_date.YMD}</span>
+      	</td>
+   	</tr>
+   	<tr>
+   	  	<td nowrap colspan="6">&nbsp;分期特店代號:
+            <select size="1" name="mcht_no_parm" class="col_ddlb"  onChange="detailMcht_no_parm(this.value)">
+                ${dddw_merchant_auto2}
+            </select>
+            <input type="hidden"  name="action_desc" value="${action_desc}">
+     		<span class="dsp_text2"id="action_desc" >${action_desc}</span>
+     	</td>
+   	</tr>
+	<tr id="tr"> 
+     	<td nowrap colspan="6">&nbsp;分期期數:
+            <select size="1" name="tot_term" class="col_ddlb" onChange="detailTot_term(this.value)" >
+                ${dddw_productno_in}
+                
+           </select>
+            <input type="Button" class="btOther"   value="消費記錄"  
+               	onClick="return detailDwcb_bill()" > 
+     	</td>
+   	</tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+      	<td nowrap >&nbsp;消費特店代號<br>
+        	<input type=text class="col_any" name="mcht_no" value="${mcht_no}" 
+              	zedit="any" maxlength="15" size="15" ${disabl} /> 
+      	</td>
+      	<td nowrap >&nbsp;消費金額<br>
+        	<input type=text class="col_number" name="dest_amt" value="${dest_amt}" 
+              	zedit="number,dignumber" maxlength="12" size="12" onchange="detailDest_amt(this.value)" ${disabl}/> 
+      	</td>
+      	<td nowrap >&nbsp;授權碼<br>
+        	<input type=text class="col_any" name="authorization" value="${authorization}" 
+             	zedit="any" maxlength="6" size="6" ${disabl}/>
+      	</td>
+      	<td nowrap >&nbsp;消費日期<br>
+        	<input type="text" class="col_date" name="purchase_date" value="${purchase_date}"
+         		zeditType="date,ymd" MaxLength=8 size=8 ${disabl}/>
+        	<!-- <script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'purchase_date'});
+	    	</script> -->
+      	</td>
+      	<td nowrap >&nbsp;特店名稱<br>
+        	<input type=text class="col_any" name="mcht_chi_name" value="${mcht_chi_name}" 
+              	zedit="any,canTW" maxlength="40" size="42" /> 
+      	</td>
+      	<td nowrap >&nbsp;引介人員代號<br>
+        	<input type=text class="col_any" name="sale_emp_no" value="${sale_emp_no}" 
+              	zedit="any" maxlength="6" size="6" /> 
+      	</td>
+    </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <th colspan="6">第一階段檢核項目</th>
+    <tr>
+    	<td nowrap width="5%">&nbsp;<font>系統</font><br>&nbsp;<font>檢核</font>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;登錄經辦:
+   		  	<input type="hidden" name="crt_user" value="${crt_user}">
+   		  	<input type="hidden" name="usr_cname" value="${usr_cname}">
+   			<span class="dsp_text2">${usr_cname}</span>
+   			&nbsp;登錄日期:
+   		  	<input type="hidden" name="tx_date" value="${tx_date}">
+   			<span class="dsp_text2">${tx_date}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="destination_amt_flag" value="${destination_amt_flag}">
+   			<span class="dsp_text colorred" id = "destination_amt_flag">${destination_amt_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;單筆消費 
+   			<input type="hidden" name="dest_amt2" value="${dest_amt}">
+   			<span class="dsp_text2" id="dest_amt2">${dest_amt.(999)}</span>
+   			&nbsp;>=&nbsp;
+   			<input type="hidden" name="destination_amt_parm" value="${destination_amt_parm}">
+   			<span class="dsp_text2" id="destination_amt_parm">${destination_amt_parm}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="payment_rate_flag" value="${payment_rate_flag}">
+   			<span class="dsp_text colorred" id="payment_rate_flag">${payment_rate_flag}</span>
+   		</td>
+   		<td nowrap >&nbsp;近
+   			<input type="hidden" name="payment_rate_term" value="${payment_rate_term}">
+   			<span class="dsp_text2" id="payment_rate_term">${payment_rate_term}</span>
+   			&nbsp;期繳款記錄為
+   		</td>
+   		<td>
+   			<input type="hidden" name="payment_rate1" value="${payment_rate1}">
+   			<span class="dsp_text2" id="payment_rate1">${payment_rate1}</span>
+   			<input type="hidden" name="payment_rate2" value="${payment_rate2}">
+   			<span class="dsp_text2" id="payment_rate2">${payment_rate2}</span>
+   			<input type="hidden" name="payment_rate3" value="${payment_rate3}">
+   			<span class="dsp_text2" id="payment_rate3">${payment_rate3}</span>
+   			<input type="hidden" name="payment_rate4" value="${payment_rate4}">
+   			<span class="dsp_text2" id="payment_rate4">${payment_rate4}</span>
+   			<input type="hidden" name="payment_rate5" value="${payment_rate5}">
+   			<span class="dsp_text2" id="payment_rate5">${payment_rate5}</span>
+   			<input type="hidden" name="payment_rate6" value="${payment_rate6}">
+   			<span class="dsp_text2" id="payment_rate6">${payment_rate6}</span>
+   			<input type="hidden" name="payment_rate7" value="${payment_rate7}">
+   			<span class="dsp_text2" id="payment_rate7">${payment_rate7}</span>
+   			<input type="hidden" name="payment_rate8" value="${payment_rate8}">
+   			<span class="dsp_text2" id="payment_rate8">${payment_rate8}</span>
+   			<input type="hidden" name="payment_rate9" value="${payment_rate9}">
+   			<span class="dsp_text2" id="payment_rate9">${payment_rate9}</span>
+   			<input type="hidden" name="payment_rate10" value="${payment_rate10}">
+   			<span class="dsp_text2" id="payment_rate10">${payment_rate10}</span>
+   			<br>
+   			<input type="hidden" name="payment_rate11" value="${payment_rate11}">
+   			<span class="dsp_text2" id="payment_rate11">${payment_rate11}</span>
+   			<input type="hidden" name="payment_rate12" value="${payment_rate12}">
+   			<span class="dsp_text2" id="payment_rate12">${payment_rate12}</span>
+   			<input type="hidden" name="payment_rate13" value="${payment_rate13}">
+   			<span class="dsp_text2" id="payment_rate13">${payment_rate13}</span>
+   			<input type="hidden" name="payment_rate14" value="${payment_rate14}">
+   			<span class="dsp_text2" id="payment_rate14">${payment_rate14}</span>
+   			<input type="hidden" name="payment_rate15" value="${payment_rate15}">
+   			<span class="dsp_text2" id="payment_rate15">${payment_rate15}</span>
+   			<input type="hidden" name="payment_rate16" value="${payment_rate16}">
+   			<span class="dsp_text2" id="payment_rate16">${payment_rate16}</span>
+   			<input type="hidden" name="payment_rate17" value="${payment_rate17}">
+   			<span class="dsp_text2" id="payment_rate17">${payment_rate17}</span>
+   			<input type="hidden" name="payment_rate18" value="${payment_rate18}">
+   			<span class="dsp_text2" id="payment_rate18">${payment_rate18}</span>
+   			<input type="hidden" name="payment_rate19" value="${payment_rate19}">
+   			<span class="dsp_text2" id="payment_rate19">${payment_rate19}</span>
+   			<input type="hidden" name="payment_rate20" value="${payment_rate20}">
+   			<span class="dsp_text2" id="payment_rate20">${payment_rate20}</span>
+   			<br>
+   			<input type="hidden" name="payment_rate21" value="${payment_rate21}">
+   			<span class="dsp_text2" id="payment_rate21">${payment_rate21}</span>
+   			<input type="hidden" name="payment_rate22" value="${payment_rate22}">
+   			<span class="dsp_text2" id="payment_rate22">${payment_rate22}</span>
+   			<input type="hidden" name="payment_rate23" value="${payment_rate23}">
+   			<span class="dsp_text2" id="payment_rate23">${payment_rate23}</span>
+   			<input type="hidden" name="payment_rate24" value="${payment_rate24}">
+   			<span class="dsp_text2" id="payment_rate24">${payment_rate24}</span>
+   			<input type="hidden" name="payment_rate25" value="${payment_rate25}">
+   			<span class="dsp_text2" id="payment_rate25">${payment_rate25}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="rc_rate_flag" value="${rc_rate_flag}">
+   			<span class="dsp_text colorred" id="rc_rate_flag">${rc_rate_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;循環信用比率
+   			<input type="hidden" name="rc_rate" value="${rc_rate}">
+   			<span class="dsp_text2" id="rc_rate">${rc_rate}</span>
+   			&nbsp;＜=
+   			<input type="hidden" name="rc_rate_parm" value="${rc_rate_parm}">
+   			<span class="dsp_text2" id="rc_rate_parm">${rc_rate_parm}</span>
+   			&nbsp;％（上期結欠金額／信用額度）或
+   			<br>
+   			&nbsp;額度使用比率
+   			<input type="hidden" name="credit_amt_rate" value="${credit_amt_rate}">
+   			<span class="dsp_text2" id="credit_amt_rate">${credit_amt_rate}</span>
+   			&nbsp;＜=
+   			<input type="hidden" name="credit_amt_rate_parm" value="${credit_amt_rate_parm}">
+   			<span class="dsp_text2" id="credit_amt_rate_parm">${credit_amt_rate_parm}</span>
+   			&nbsp;％（累計本期結欠餘額／信用額度）
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="mcc_code_flag" value="${mcc_code_flag}">
+   			<span class="dsp_text colorred" id="mcc_code_flag">${mcc_code_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;排除高風險交易
+   			<input type="hidden" name="mcht_category" value="${mcht_category}">
+   			<span class="dsp_text2" id='mcht_category'>${mcht_category}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="mcht_flag" value="${mcht_flag}">
+   			<span class="dsp_text colorred" id="mcht_flag">${mcht_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;排除特店代號
+   			<input type="hidden" name="wk_mcht_no" value="${wk_mcht_no}">
+   			<span class="dsp_text2">${wk_mcht_no}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="over_credit_amt_flag" value="${over_credit_amt_flag}">
+   			<span class="dsp_text colorred" id="over_credit_amt_flag">${over_credit_amt_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;排除超額（總額度：
+   			<input type="hidden" name="line_of_credit_amt" value="${line_of_credit_amt}">
+   			<span class="dsp_text2" id="line_of_credit_amt">${line_of_credit_amt.(999)}</span>
+   			&nbsp;已用額度：
+   			<input type="hidden" name="db_bal" value="${db_bal}">
+   			<span class="dsp_text2" id="db_bal">${db_bal.(999)}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="block_reason_flag" value="${block_reason_flag}">
+   			<span class="dsp_text colorred" id="block_reason_flag">${block_reason_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;排除凍結戶
+   			<input type="hidden" name="block_reason" value="${block_reason}">
+   			<span class="dsp_text2" id="block_reason">${block_reason}</span>
+   			&nbsp;
+   			<input type="hidden" name="block_reason2" value="${block_reason2}">
+   			<span class="dsp_text2" id="block_reason2">${block_reason2}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td nowrap class="list_cc">
+   			<input type="hidden" name="spec_status_flag" value="${spec_status_flag}">
+   			<span class="dsp_text colorred" id="spec_status_flag">${spec_status_flag}</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;排除特殊指示戶
+   			<input type="hidden" name="spec_status" value="${spec_status}">
+   			<span class="dsp_text2">${spec_status}</span>
+   			&nbsp;
+   			<input type="hidden" name="spec_del_date" value="${spec_del_date}">
+   			<span class="dsp_text2">${spec_del_date}</span>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td style="color:red" colspan="3">
+   			備註：無任一流通卡或帳戶類別為02(商務卡)、03(採購卡)及90(VD卡)及雙幣卡之外幣消費不得申請分期。
+   		</td>
+   	</tr>
+</table>
+</div>
+<!-- 動態視窗控制 -->
+<!--  <div id="disDiv" class="disScreen"></div>-->
+<div id="popDiv" class="popup1">
+  <table id="popup2" style="top:-600px; left:30px; width:600px; height:100px;">
+     <tr><td colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+
+     <!--List -->
+<tr><td colspan="2">
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <th nowrap class="list_th" width="5%">No&nbsp;</th>
+     <th nowrap class="list_th">卡號</th>
+     <th nowrap class="list_th">消費金額</th>
+     <th nowrap class="list_th">特店代號 (名稱)</th>
+     <th nowrap class="list_th">授權碼</th> 
+     <th nowrap class="list_th">MCC CODE</th> 
+     <th nowrap class="list_th">消費日期</th> 
+     <th nowrap class="list_th">Reference No</th> 
+     <th nowrap class="list_th">幣別</th>
+   </tr>
+ <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${p-card_no}','${p-auth_code}','${p-mcht_category}','${p-purchase_date}','${p-reference_no}','${p-curr_code}','${p-mcht_no}','${p-mcht_chi_name}','${p-db_dest_amt}')" style="cursor:hand">
+        <td nowrap class="list_no">
+            ${SER_NUM}&nbsp;
+        </td>
+        <td nowrap class="list_ll">${p-card_no}&nbsp;</td>
+        <td nowrap class="list_rr">&nbsp;${p-db_dest_amt.(999)}</td>
+        <td nowrap class="list_ll">${p-wk_mcht_id_cname}&nbsp;
+        <td nowrap class="list_ll">${p-auth_code}&nbsp;</td>
+        <td nowrap class="list_ll">${p-mcht_category}&nbsp;</td>
+        <td nowrap class="list_ll">${p-purchase_date.YMD}&nbsp;</td>
+        <td nowrap class="list_ll">${p-reference_no}&nbsp;</td>
+        <td nowrap class="list_ll">${p-curr_code}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</td></tr>     
+  </table>
+</div>
+
+<!-- -->
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+<input type="hidden" name="rowid" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="bilm0720">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden"  name="reference_no"  value="${reference_no}">
+<input type="hidden"  name="trial_status"  value="${trial_status}">
+<input type="hidden"  name="payment_rate"  value="${payment_rate}">
+<input type="hidden"  name="mcht_parm"  value="${mcht_parm}">
+<input type="hidden"  name="acct_jrnl_bal"  value="${acct_jrnl_bal}">
+<input type="hidden"  name="authorization2"  value="${authorization2}">
+<input type="hidden"  name="disabl"  value="${disabl}">
+<input type="hidden"  name="istr_auto_mcht_flag"  value="${istr_auto_mcht_flag}">
+<input type="hidden"  name="istr_auto_payment_rate_flag"  value="${istr_auto_payment_rate_flag}">
+<input type="hidden"  name="istr_auto_payment_rate"  value="${istr_auto_payment_rate}">
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+ top.refreshButton2('1');
+ var idCode = "0";
+ 
+ document.dataForm.kk_card_no.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    return true;
+}
+
+
+var CC = "${queryReadCnt}";
+if(Number(CC) >0){
+	top.popupBlock('popDiv');
+}
+
+function detailScreen(num,card_no,auth_code,mcht_category,purchase_date,reference_no,curr_code,mcht_no,mcht_chi_name,db_dest_amt){
+	$("input[name=dest_amt]").val(db_dest_amt);
+	$("input[name=dest_amt2]").val(db_dest_amt);
+	$("#dest_amt2").text(db_dest_amt);
+	$("input[name=mcht_no]").val(mcht_no);
+	$("input[name=authorization]").val(auth_code);
+	$("input[name=purchase_date]").val(purchase_date);
+	$("input[name=mcht_chi_name]").val(mcht_chi_name);
+	$("input[name=mcht_category]").val(mcht_category);
+	$("#mcht_category").text(mcht_category);
+	//$("input[name=dest_amt]").change();
+	top.hideBlock('popDiv');
+	return top.submitControl('C2') 
+}
+
+function detailDwcb_bill() { 
+ 	return top.submitControl('Q2') 
+ }
+ 
+function detailMcht_no_parm(data_mcht_no) { 
+	 idCode = "1" ;
+	 //20200106 modify AJAX
+	 //top.actionCode = "Q";
+	 //top.methodName = "itemchanged";
+	 top.actionCode = "AJAX";
+	 resetJSON();
+	 addJSON("name","merchant_no_parm");
+     addJSON("data_mcht_no",data_mcht_no);
+     processAJAX();
+    
+    
+	return true;
+	 
+}
+
+function detailDest_amt(data_dest_amt) { 
+    idCode = "2" ;
+    //20200106 modify AJAX
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+	resetJSON();
+	addJSON("name","dest_amt");
+    addJSON("data_dest_amt",data_dest_amt);
+    addJSON("db_bal",$("input[name=db_bal]").val());
+    addJSON("line_of_credit_amt",$("input[name=line_of_credit_amt]").val());
+    addJSON("destination_amt_parm",$("input[name=destination_amt_parm]").val());
+    addJSON("destination_amt_flag",$("input[name=destination_amt_flag]").val());
+    addJSON("over_credit_amt_flag",$("input[name=over_credit_amt_flag]").val());
+    processAJAX();
+    
+	return true;
+	 
+}
+function detailTot_term(data_tot_term) { 
+	 idCode = "1" ;
+	 top.actionCode = "AJAX";
+	 resetJSON();
+	 addJSON("name","tot_term");
+	 addJSON("mcht_no_parm",$("select[name=mcht_no_parm] :selected").val());
+	 addJSON("data_tot_term",data_tot_term);
+     processAJAX();
+     return true;
+}
+
+function detailKk_card_no(data_kk_card_no) { 
+	 idCode = "4" ;
+	 //20200106 modify AJAX
+     //top.actionCode = "Q";
+     //top.methodName = "itemchanged";
+     top.actionCode = "AJAX";
+	 resetJSON();
+	 addJSON("name","kk_card_no");
+	 addJSON("data_kk_card_no",data_kk_card_no);
+	 addJSON("card_no",$("input[name=card_no]").val());
+	 addJSON("rowid",$("input[name=rowid]").val());
+	 processAJAX();
+	 return true;
+	 
+}
+
+function ajaxResponse()
+{
+	top.respHtml ="bilm0720_detl";
+	top.requHtml ="bilm0720_detl";
+	if(idCode=="1"){
+		if(getJSONvalue("dddw_productno_refresh",0)!="Y" && getJSONvalue("dddw_productno_in2",0)!=null){
+		 	$("#table2 #tr td select option").remove();
+		 	$("#table2 #tr td select").append(getJSONvalue("dddw_productno_in2",0));
+		}
+		 $("input[name=action_desc]").val(getJSONvalue("action_desc",0));
+		 $("#action_desc").text(getJSONvalue("action_desc",0));
+		 $("input[name=mcht_parm]").val(getJSONvalue("mcht_parm",0));
+		 $("input[name=destination_amt_flag]").val(getJSONvalue("destination_amt_flag",0));
+		 $("#destination_amt_flag").text(getJSONvalue("destination_amt_flag",0));
+		 $("input[name=destination_amt_parm]").val(getJSONvalue("destination_amt_parm",0));
+		 $("#destination_amt_parm").text(getJSONvalue("destination_amt_parm",0));
+		 $("input[name=payment_rate_flag]").val(getJSONvalue("payment_rate_flag",0));
+		 $("#payment_rate_flag").text(getJSONvalue("payment_rate_flag",0));
+		 $("input[name=payment_rate_term]").val(getJSONvalue("payment_rate_term",0));
+		 $("#payment_rate_term").text(getJSONvalue("payment_rate_term",0));
+		 $("input[name=rc_rate_parm]").val(getJSONvalue("rc_rate_parm",0));
+		 $("#rc_rate_parm").text(getJSONvalue("rc_rate_parm",0));
+		 $("input[name=credit_amt_rate_parm]").val(getJSONvalue("credit_amt_rate_parm",0));
+		 $("#credit_amt_rate_parm").text(getJSONvalue("credit_amt_rate_parm",0));
+		 $("input[name=mcc_code_flag]").val(getJSONvalue("mcc_code_flag",0));
+		 $("#mcc_code_flag").text(getJSONvalue("mcc_code_flag",0));
+		 $("input[name=over_credit_amt_flag]").val(getJSONvalue("over_credit_amt_flag",0));
+		 $("#over_credit_amt_flag").text(getJSONvalue("over_credit_amt_flag",0));
+		 $("input[name=block_reason_flag]").val(getJSONvalue("block_reason_flag",0));
+		 $("#block_reason_flag").text(getJSONvalue("block_reason_flag",0));
+		 $("input[name=spec_status_flag]").val(getJSONvalue("spec_status_flag",0));
+		 $("#spec_status_flag").text(getJSONvalue("spec_status_flag",0));
+		 $("input[name=mcht_flag]").val(getJSONvalue("mcht_flag",0));
+		 $("#mcht_flag").text(getJSONvalue("mcht_flag",0));
+		 $("input[name=rc_rate_flag]").val(getJSONvalue("rc_rate_flag",0));
+		 $("#rc_rate_flag").text(getJSONvalue("rc_rate_flag",0));
+		 $("input[name=payment_rate]").val(getJSONvalue("payment_rate",0));
+		 //istr_auto.
+		 $("input[name=istr_auto_mcht_flag]").val(getJSONvalue("mcht_flag",0));
+		 $("input[name=istr_auto_payment_rate_flag]").val(getJSONvalue("payment_rate_flag",0));
+		 $("input[name=istr_auto_payment_rate]").val(getJSONvalue("payment_rate",0));
+		 return false;
+	}
+	if(idCode=="2"){
+		 $("input[name=dest_amt2]").val(getJSONvalue("dest_amt2",0));
+		 $("#dest_amt2").text(getJSONvalue("dest_amt2",0));
+		 $("input[name=destination_amt_flag]").val(getJSONvalue("destination_amt_flag",0));
+		 $("#destination_amt_flag").text(getJSONvalue("destination_amt_flag",0));
+		 if(getJSONvalue("dest_amt_ok",0)=="N"){
+			// document.dataForm.dest_amt.focus();
+		 }
+		 return false;
+	}
+	
+	if(idCode=="4"){
+		 $("input[name=card_no]").val(getJSONvalue("card_no",0));
+		 $("#card_no").text(getJSONvalue("card_no",0));
+		 return false;
+	}
+}
+
+</script>

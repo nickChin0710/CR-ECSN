@@ -1,0 +1,151 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-07-14  V1.00.01  Andy Liu       Initial                              -->
+<!-- 109-01-06  V1.00.02  Ru Chen        Modify AJAX                          -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>NCCC特店參數複製作業-add</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td colspan="12">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;                    
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" onClick="return top.submitControl('A1')" class="btAdd">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td colspan="12" style="color:blue;">Source特店</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="12" class="list_ll">特店代號：
+                        <span class="dsp_text">${mcht_no}</span>
+                        <input type="hidden" name="mcht_no" value="${mcht_no}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6" class="list_ll"> 名稱：&nbsp;${mcht_chi_name}</td>
+                    <td nowrap colspan="6" class="list_ll"> 類別：&nbsp;${mcht_type}&nbsp;(0.自行收單1.郵購2.NCCC)</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6" class="list_ll"> 序號：&nbsp;${seq_no}</td>
+                    <td nowrap colspan="6" class="list_ll"> 已複製：&nbsp;${copy_flag}</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="6" class="list_ll"> 已放行否：&nbsp;${confirm_flag}</td>
+                    <td nowrap colspan="6" class="list_ll"> 放行日期：&nbsp;${confirm_date}</td>
+                </tr>
+                <input type="hidden" name="rowid" value="${rowid}">
+                <input type="hidden" name="confirm_flag" value="${confirm_flag}">
+                <input type="hidden" name="mcht_type" value="${mcht_type}">
+                <input type="hidden" name="seq_no" value="${seq_no}">
+                <input type="hidden" name="copy_flag" value="${copy_flag}">
+                <input type="hidden" name="confirm_flag" value="${confirm_flag}">
+            </table>
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="60%">
+                <tr>
+                    <td colspan="12" style="color:red;">Destination特店</td>
+                </tr>
+                <td nowrap>&nbsp;特店代號:
+                    <input class="field_style" type="text" name="cc_merchant" size="15" maxlength="15" value="${cc_merchant}" zRequire ="k">&nbsp;&nbsp;
+                    <input type="Button"   value="..." onclick="processVendorCode()" class="btAdd_detl" />
+                </td>
+            </table>
+            <!-- 動態 BLOCK 視窗控制 -->
+            <div id="disDiv" class="disScreen"></div>
+            <div id="popDiv" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">特店代號：</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="merchant_2" id="merchant_2">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('cc_merchant','merchant_2'); top.hideBlock('popDiv');" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!--List -->
+            
+            <!-- END DYNAMIC : DETAIL -->
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="bilm0330">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="h_mcht_no_cpy" value="${mcht_no_cpy}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="JQList" id="JQList" value="${dddw_mcht_no_cpyj}">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('2');
+
+//document.dataForm.mcht_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.cc_merchant.value;
+    if (vendorNo.length < 2) { alert("請輸入至少兩碼"); return false; }
+    resetJSON();
+    autoJSON = false;
+    addJSON("cc_merchant", vendorNo);
+    top.actionCode = "AJAX";
+    //20200106 modify AJAX
+    //top.methodName = "actionFunction";
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    var vendorNo = document.dataForm.cc_merchant.value;
+    var vendorList = document.getElementById("merchant_2");
+
+    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+    }
+
+    top.popupBlock('popDiv');
+}
+
+</script>

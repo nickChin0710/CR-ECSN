@@ -1,0 +1,250 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-19  V1.00.01  jh                                                  -->
+<!-- 109-07-28  V1.00.02  Justin Wu      check if the opts of the rows whose crt_user has been selected is checked -->
+<!--	                                 and ++根據分配人員代號以AJAX更換案件移送部門 -->
+<!-- 111-11-24  V1.00.03  sunny          配合卡部要求，將「接聽」改為「受理」  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>未處理案件分配作業 V2022-11-24</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;受理日期:
+      <input type="text" class="col_date" name="ex_case_date1" value="${ex_case_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_case_date2" value="${ex_case_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date2'});
+	      </script>
+	</td>
+	<td nowrap>&nbsp;卡號/身分證字號:
+	   <input type="text" class="col_text" name="ex_id_card" value="${ex_id_card}" maxlength="16" size="18">
+	</td> 
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="覆核" onClick="return submitC()" class="btAdd" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;部門代號:
+      <select size="1" name="ex_dept_no" class="col_ddlb" zRequire="C" >
+         <option value="">--</option>   
+         ${d_dddw_dept_no}
+      </select>
+   </td>
+   <td nowrap colspan="2">&nbsp;依案件類別分配:
+      <select size="1" name="ex_case_type" class="col_ddlb" >
+         <option value="">--</option>   
+         ${d_dddw_casetype}
+      </select>
+   </td>
+  </tr>
+ </table>
+</div>
+${#PLUGIN:htmcomm_plugin.vip_color}
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    分配
+	 </th>
+	 <th nowrap >案件移送部門&nbsp;</th>
+	 <th nowrap >分配人員&nbsp;</th>
+	 <th nowrap >受理日期&nbsp;</th>
+	 <th nowrap >序號&nbsp;</th>
+	 <th nowrap >身分證ID/卡號&nbsp;</th>
+	 <th nowrap >移送問題&nbsp;</th>
+	 <th nowrap >處理結果&nbsp;</th>
+	 <th nowrap >受理人員&nbsp;</th>
+	 <th nowrap >問題內容&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden" name="dddw_crt_user" value="${dddw_crt_user}">
+	</td>
+	<td nowrap class="list_cc"><span name="proc_deptno_deptName">${proc_deptno}_${tt_proc_deptno}&nbsp;</span>
+	   <input type="hidden" name="proc_deptno" value="${proc_deptno}" />   
+	   <input type="hidden" name="tt_proc_deptno" value="${tt_proc_deptno}">
+	</td>
+	<td nowrap class="list_cc"> 
+	   <select size="1" name="crt_user" class="col_ddlb" onchange="crtUserOnChangeAJAX(this,${ser_num})">
+		 <option value="">--</option> 
+      	 ${dddw_crt_user}
+	   </select>	   
+	</td>
+	<td nowrap class="list_cc"> ${case_date.YMD}&nbsp;
+	   <input type="hidden" name="case_date" value="${case_date}" />   
+	</td>
+	<td nowrap class="list_cc"> ${case_seqno}&nbsp;
+	   <input type="hidden" name="case_seqno" value="${case_seqno}" />   
+	</td>
+	<td nowrap class="list_cc"> ${db_id_card}&nbsp;
+	   <input type="hidden" name="db_id_card" value="${db_id_card}" />   
+	</td>
+	<td nowrap class="list_cc"> ${case_type}.${tt_case_type}&nbsp;
+	   <input type="hidden" name="case_type" value="${case_type}" />   
+	   <input type="hidden" name="tt_case_type" value="${tt_case_type}"/>
+	</td>
+	<td nowrap class="list_cc"> ${proc_result}.${tt_proc_result}&nbsp;
+	   <input type="hidden" name="proc_result" value="${proc_result}" />   
+	   <input type="hidden" name="tt_proc_result" value="${tt_proc_result}">
+	</td>
+	<td nowrap class="list_cc"> ${case_user}&nbsp;
+	   <input type="hidden" name="case_user" value="${case_user}" />   
+	</td>
+	<td nowrap class="list_ll"> ${case_desc}&nbsp;
+	   <input type="hidden" name="case_desc" value="${case_desc}" />   
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="mod_pgm" value="cmsm6050" >
+ 
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  id="queryProcDeptno"  value="${proc_deptno}">
+ 
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="JavaScript" src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+ function submitC(){
+ 	if ( ! checkOptCheck()){
+ 		alert("請勾選分配案件或選擇分配人員");
+ 		return false;
+ 	}
+
+ 	top.submitControl('C');
+ }
+
+ function checkOptCheck(){
+ 	var isValid = true;
+ 	var crtUserArr = document.getElementsByName("crt_user");
+ 	var optArr = document.getElementsByName("opt");
+
+    // 若有勾選分配案件，則要選擇分配人員
+    for (var i = 0; i < optArr.length; i++) {
+    	if (optArr[i].checked == true && crtUserArr[i].value == "") {
+    		crtUserArr[i].style.backgroundColor = "pink";
+ 			isValid = false;
+    	}else{
+    		crtUserArr[i].style.backgroundColor = "#FFFFFF";
+    	}
+    }
+
+ 	// 若有選擇分配人員，則要勾選分配案件
+ 	for (var i = 0; i < crtUserArr.length; i++) {
+ 		if (crtUserArr[i].value != "" && optArr[i].checked == false) {
+ 			optArr[i].parentElement.style.backgroundColor = "pink";
+ 			isValid = false;
+ 		}else{
+ 			optArr[i].parentElement.style.backgroundColor = "#EFEFEF";
+ 		}
+ 	}
+
+ 	return isValid;
+ }
+
+ function crtUserOnChangeAJAX(ele, rowIndex){
+
+ 	top.actionCode = "AJAX";
+
+    resetJSON();
+    
+    addJSON("rowIndex", String(parseInt(rowIndex)-1));
+    addJSON("crtUserAJAX",ele.value);
+    processAJAX();
+
+ }
+
+ function ajaxResponse() {
+   top.respHtml ="cmsm6050";
+   top.requHtml ="cmsm6050";
+
+   var deptCode = getJson("deptCodeAJAX");
+   var deptName = getJson("deptNameAJAX");
+   var rowIndex = parseInt(getJson("rowIndexAJAX"));
+   var procDeptnoDeptNameNode = document.getElementsByName("proc_deptno_deptName")[rowIndex];
+
+   if (deptCode == "") {
+   	document.getElementsByName("crt_user")[rowIndex].value = "";
+   	alert("分配人員[" + getJson("crtUserAJAX") + "]的所屬部門找不到對應的代碼" );
+   }else{
+   	document.getElementsByName("proc_deptno")[rowIndex].value = deptCode;
+    document.getElementsByName("tt_proc_deptno")[rowIndex].value = deptName;
+    procDeptnoDeptNameNode.innerHTML = deptCode + "_" + deptName;
+
+    if (document.getElementById("queryProcDeptno").value != deptCode) {
+   	 procDeptnoDeptNameNode.parentElement.style.backgroundColor = "pink";
+    }
+   }
+}
+  
+</script>

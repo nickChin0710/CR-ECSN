@@ -1,0 +1,197 @@
+<html>
+<head>
+<title> 108/12/12 V1.00.01 Allen Ho Initial 特店群組代碼維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="存檔"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">車廂升等卡類：
+       <span class="dsp_text">${card_mode}</span>
+       <input  type="hidden" name="card_mode" value="${card_mode}" />
+     </td>
+     <td  nowrap  >放行狀態: 
+       <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+       <input       type="hidden" name="aud_type" value="${aud_type}" />
+       <input  type="hidden" name="commfunc_aud_type" value="${commfunc_aud_type}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>卡類說明：&nbsp; 
+       <input type="text" class="col_any" name="mode_desc" value="${mode_desc}"
+              zEdit="any,canTW" zRequire="Y" maxlength="40" size="40" />
+     </td>
+   </tr>
+   <td nowrap >啓用日期: &nbsp;
+   	  <input type="text" class="col_date" name="start_date" value="${start_date}"
+               zEdit="date,yyyymmdd" maxlength="8" size="8" /> (空白表無效期限制)
+   </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="stop_flag" ${stop_flag-Y} >
+              停用日期:
+          
+       <input type="text" class="col_date" name="stop_date" value="${stop_date}"
+              zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'stop_date'});
+      </script>
+         停用說明： 
+       <input type="text" class="col_any" name="stop_desc" value="${stop_desc}"
+              zEdit="any,canTW" maxlength="40" size="40" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >卡　　種:&nbsp;
+       <input type="radio" value="0" name="card_type_sel" ${card_type_sel-0} checked  />不檢核
+       <input type="radio" value="1" name="card_type_sel" ${card_type_sel-1} />指定
+        <input type="Button" class="btOther"  id="btncdtp"  value="卡　　種" ${btncdtp_disable}
+               onClick="return buttonScreen('2','cdtp','data_type','1')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >團體代號:&nbsp;
+       <input type="radio" value="0" name="group_code_sel" ${group_code_sel-0} checked  />不檢核
+       <input type="radio" value="2" name="group_code_sel" ${group_code_sel-2} />排除
+        <input type="Button" class="btOther"  id="btngpcd"  value="團體代號" ${btngpcd_disable}
+               onClick="return buttonScreen('2','gpcd','data_type','2')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>每次限購票數:&nbsp; 
+       <input type="text" class="col_number" name="max_ticket_cnt" value="${max_ticket_cnt}"
+              zEdit="number" maxlength="3" size="3" />
+              張 (僅供參考)
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="ticket_pnt_cond" ${ticket_pnt_cond-Y} >
+              紅利積點張數條件:
+         　　 
+       <input type="text" class="col_number" name="ticket_pnt_cnt" value="${ticket_pnt_cnt}"
+              zEdit="number" maxlength="3" size="3" />
+              張以下,每張扣除紅利
+          
+       <input type="text" class="col_number" name="ticket_pnt" value="${ticket_pnt}"
+              zEdit="number" maxlength="8" size="8" />
+              點
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="ticket_amt_cond" ${ticket_amt_cond-Y} >
+              加檔金額張數條件:
+         　　 
+       <input type="text" class="col_number" name="ticket_amt_cnt" value="${ticket_amt_cnt}"
+              zEdit="number" maxlength="3" size="3" />
+              張以下,每張加檔金額
+          
+       <input type="text" class="col_number" name="ticket_amt" value="${ticket_amt}"
+              zEdit="number" maxlength="8" size="8" />
+              元
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>其餘每張加檔金額:&nbsp; 
+       <input type="text" class="col_number" name="ex_ticket_amt" value="${ex_ticket_amt}"
+              zEdit="number" maxlength="8" size="8" />
+              元
+     </td>
+   </tr>
+   <tr>
+	   <td nowrap>
+	      <input type="checkbox" value="Y" name="add_file_flag" ${add_file_flag-Y} >
+	              紅利不足每月1日加檔註記(特殊團代)
+	   </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護經辦: 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+     <td  nowrap  >維護日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+     <td  nowrap  >覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm1040">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktm1040_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

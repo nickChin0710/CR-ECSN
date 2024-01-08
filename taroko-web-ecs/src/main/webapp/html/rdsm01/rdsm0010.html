@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>道路救援參數維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=amt_sum_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=amt_sum_flag]").filter('[value=1]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+   ${#PLUGIN:htmcomm_plugin.apr_user}
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap colspan="2" >&nbsp;累計消費金額計算方式:
+         <span class="col_radio">
+            <input type="radio" value="1" name="amt_sum_flag" ${amt_sum_flag-1} />帳戶
+            <input type="radio" value="2" name="amt_sum_flag" ${amt_sum_flag-2} />卡片
+         </span>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" >&nbsp;專案購買道路救援收費金額:
+         <input type="text" class="col_number" name="recv_amt" value="${recv_amt}" maxlength="6" size="8" zEdit="number" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="2" class="td_title">&nbsp;卡片停用期限 - 天數 :</td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;申停:
+         <input type="text" class="col_number" name="stop_days" value="${stop_days}" maxlength="3" size="5" zEdit="number" >
+      </td>
+      <td nowrap >&nbsp;強停:
+         <input type="text" class="col_number" name="fstop_days" value="${fstop_days}" maxlength="3" size="5" zEdit="number" >
+      </td>
+   </tr>
+   <tr>
+      <td nowrap >&nbsp;掛失:
+         <input type="text" class="col_number" name="lost_days" value="${lost_days}" maxlength="3" size="5" zEdit="number" >
+      </td>
+      <td nowrap >&nbsp;偽卡:
+         <input type="text" class="col_number" name="false_days" value="${false_days}" maxlength="3" size="5" zEdit="number" >
+      </td>
+   </tr>
+   
+</table>
+</div>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="old_amt_sum_flag" value="${old_amt_sum_flag}">
+ <input type="hidden"  name="rowid" value="${rowid}">
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+
+<script language="javascript">
+
+ top.refreshButton2('0');  
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+       
+    var new_flag = $("input[name=amt_sum_flag]:checked").val();
+    var old_flag = document.forms["dataForm"]["old_amt_sum_flag"].value;
+    
+    if(top.actionCode==='U') {
+      if(old_flag != new_flag){
+         if (confirm("會更改所有免費道路救援之累計消費金額方式, 是否存檔")==false) {
+            return false ;
+          }
+      }
+    }
+    
+    
+    return true;
+  }
+
+</script>

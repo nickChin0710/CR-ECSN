@@ -1,0 +1,758 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-03-01  V1.00.00  Ryan             Initial                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>一般卡申請書登打作業-2023-03-01</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js">
+window.onload = function() {
+    // your page initialization code here
+    // the DOM will be available here
+    checkControl();
+};
+
+function toggle_ic_flag(element) {
+    checkControl();
+}
+
+function checkControl() {
+   // debugger;
+    if (document.getElementsByName("ic_flag")[0].checked) {
+        document.getElementsByName("check_key_expire")[0].disabled = false;
+        document.getElementsByName("key_id")[0].disabled = false;
+        document.getElementsByName("l_offln_lmt")[0].disabled = false;
+        document.getElementsByName("u_offln_lmt")[0].disabled = false;
+    } else {
+        document.getElementsByName("check_key_expire")[0].checked = false;
+        document.getElementsByName("key_id")[0].selectedIndex = 0;
+        document.getElementsByName("l_offln_lmt")[0].value = "";
+        document.getElementsByName("u_offln_lmt")[0].value = "";
+
+        document.getElementsByName("check_key_expire")[0].disabled = true;
+        document.getElementsByName("key_id")[0].disabled = true;
+        document.getElementsByName("l_offln_lmt")[0].disabled = true;
+        document.getElementsByName("u_offln_lmt")[0].disabled = true;
+    }
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+                    <input type="Button" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <!-- Detail data================================= -->
+            <table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>批號:
+                        <span class="dsp_text">${batchno}</span>
+                        <input type="hidden" name="batchno" value="${batchno}" />
+                    </td>
+                    <td nowrap>序號:
+                        <span class="dsp_text">${recno}</span>
+                        <input type="hidden" name="recno" value="${recno}" />
+                    </td>
+                    <td nowrap>申請書編號:
+                        <input type="text" class="col_text" name="apply_no" value="${apply_no}" zEdit="any" maxlength="12" size="12" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>團體代號:
+                        <select id="group_code" name="group_code" value="${group_code}" class="col_ddlb" zRequire="Y" onChange="getCardTypeAndSourceCode()">
+                            <option value="">--</option>
+                            ${dddw_group_code}
+                        </select>
+                    </td>
+                    <td nowrap id="tdCardType">卡種:
+                        <select id="card_type" name="card_type" value="${card_type}" class="col_ddlb" zRequire="Y" onChange="getUnitCode()">
+                            <option value="">--</option>
+                            ${dddw_card_type}
+                        </select>
+                    </td>
+                    <td nowrap id="tdUnitCode">認同集團碼:
+                        <select id="unit_code" name="unit_code" value="${unit_code}" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            ${dddw_unit_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="online_mark" ${online_mark-Y}>緊急製卡註記
+                    </td>
+                    <td nowrap>電子帳單註記:
+                        <select name="stat_send_internet" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            <option value="Y" ${stat_send_internet-Y}>Y</option>
+                            <option value="N" ${stat_send_internet-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap>帳單期別:                         
+                        <select name="stmt_cycle" value="${stmt_cycle}" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            ${dddw_stmt_cycle}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>身分證號:
+                        <input type="text" class="col_text" name="apply_id" value="${apply_id}" zEdit="any" maxlength="10" size="10" zRequire="Y"/>
+                    </td>
+                    <td nowrap>性別:
+                        <input type="radio" value="1" name="sex" ${sex-1} ${DEFAULT_CHK}>1.男
+                        <input type="radio" value="2" name="sex" ${sex-2}>2.女
+                    </td>
+                    <td nowrap>出生年月日:
+                        <input type="text" class="col_date" name="birthday" value="${birthday}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire="Y"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'birthday' });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">中文姓名:
+                        <input type="text" class="col_text" name="chi_name" value="${chi_name}" zEdit="canTW" maxlength="50" size="92" zRequire="Y" onchange="top.convertInputToFullWidth(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">英文姓名:
+                        <input type="text" class="col_text" name="eng_name" value="${eng_name}" zEdit="any" maxlength="25" size="27" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="1">國籍:
+                        <input type="radio" value="1" name="nation" ${nation-1} ${DEFAULT_CHK} onclick="wf_nation_change1()">1:本國
+                        <input type="radio" value="2" name="nation" ${nation-2} onclick="wf_nation_change2()">2:外國
+                    </td>
+                    <td nowrap colspan="2">居留證有效日期:
+                        <input type="text" class="col_date" name="resident_no_expire_date" value="${resident_no_expire_date}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'resident_no_expire_date' });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">國籍代碼:
+                        <!-- <input type="text" class="col_text" name="other_cntry_code" id="other_cntry_code" value="${other_cntry_code}" zEdit="any" maxlength="2" size="2"/> -->
+                        <select size="1" id="other_cntry_code" name="other_cntry_code" class="col_ddlb" >
+                            ${d_dddw_other_cntry_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>護照號碼:
+                        <input type="text" class="col_text" name="passport_no" value="${passport_no}" zEdit="any" maxlength="20" size="20"/>
+                    </td>
+                    <td nowrap>護照日期:
+                        <input type="text" class="col_date" name="passport_date" value="${passport_date}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'passport_date' });
+                        </script>
+                    </td>
+                    <td nowrap>歐盟註記:
+                        <select name="ur_flag" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            <option value="Y" ${ur_flag-Y}>Y</option>
+                            <option value="N" ${ur_flag-N}>N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>婚姻:
+                        <input type="radio" value="1" name="marriage" ${marriage-1}>1:已婚
+                        <input type="radio" value="2" name="marriage" ${marriage-2} ${DEFAULT_CHK}>2:未婚
+                    </td>
+                    <td nowrap>教育程度:
+                        <select name="education" value="${education}" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            ${dddw_education}
+                        </select>
+                    </td>
+                    <td nowrap>畢業國小:
+                        <input type="text" class="col_text" name="graduation_elementarty" value="${graduation_elementarty}" zEdit="canTW" maxlength="20" size="20"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">行業別:
+                        <select name="business_code" value="${business_code}" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            ${dddw_business_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>行動電話:
+                        <input type="text" class="col_text" name="cellar_phone" value="${cellar_phone}" zEdit="number" maxlength="15" size="15"/>
+                    </td>
+                    <td nowrap colspan="2">EMAIL:
+                        <input type="text" class="col_any" name="e_mail_addr" value="${e_mail_addr}" zEdit="mail" maxlength="50" size="50"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>住家電話:
+                        <input type="text" class="col_text" name="home_area_code1" value="${home_area_code1}" zEdit="number" maxlength="4" size="4"/>
+                        <input type="text" class="col_text" name="home_tel_no1" value="${home_tel_no1}" zEdit="number" maxlength="10" size="10"/>
+                        <input type="text" class="col_text" name="home_tel_ext1" value="${home_tel_ext1}" zEdit="number" maxlength="6" size="6"/>
+                    </td>
+                    <td nowrap colspan="2">公司電話:
+                        <input type="text" class="col_text" name="office_area_code1" value="${office_area_code1}" zEdit="number" maxlength="4" size="4"/>
+                        <input type="text" class="col_text" name="office_tel_no1" value="${office_tel_no1}" zEdit="number" maxlength="10" size="10"/>
+                        <input type="text" class="col_text" name="office_tel_ext1" value="${office_tel_ext1}" zEdit="number" maxlength="6" size="6"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">戶籍地址:
+                        <select id="resident_zip"  name="resident_zip" value="${resident_zip}" class="col_ddlb" zRequire="Y" onchange="return zipChange('resident')">
+                            <option value="">--</option>
+                            ${dddw_resident_zip}
+                        </select>
+                        <input type="text" class="col_any" id="resident_zip2" name="resident_zip2" value="${resident_zip2}" maxlength="3" size="6" zEdit="number">
+                        <span class="dsp_text" id="resident_addr1_text">${resident_addr1}</span>
+                        <input type="hidden" class="col_text" id="resident_addr1" name="resident_addr1" value="${resident_addr1}" zEdit="canTW" maxlength="5" size="10" zRequire="Y"/>
+                        縣市
+                        <span class="dsp_text" id="resident_addr2_text">${resident_addr2}</span>
+                        <input type="hidden" class="col_text" id="resident_addr2" name="resident_addr2" value="${resident_addr2}" zEdit="canTW" maxlength="5" size="10"/>
+                        鄉鎮市區
+                        <input type="text" class="col_text" name="resident_addr3" value="${resident_addr3}" zEdit="canTW" maxlength="6" size="12"/>
+                        村里<br>
+                        <input type="text" class="col_text" name="resident_addr4" value="${resident_addr4}" zEdit="canTW" maxlength="6" size="12"/>
+                        鄰
+                        <input type="text" class="col_text" name="resident_addr5" value="${resident_addr5}" zEdit="canTW" maxlength="28" size="56" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">居住地址:
+                        <select id="mail_zip" name="mail_zip" value="${mail_zip}" class="col_ddlb" zRequire="Y" onchange="return zipChange('mail')">
+                            <option value="">--</option>
+                            ${dddw_mail_zip}
+                        </select>
+                        <input type="text" class="col_any" id="mail_zip2" name="mail_zip2" value="${mail_zip2}" maxlength="3" size="6" zEdit="number">
+                        <span class="dsp_text" id="mail_addr1_text">${mail_addr1}</span>
+                        <input type="hidden" class="col_text" id="mail_addr1" name="mail_addr1" value="${mail_addr1}" zEdit="canTW" maxlength="5" size="10" zRequire="Y"/>
+                        縣市
+                        <span class="dsp_text" id="mail_addr2_text">${mail_addr2}</span>
+                        <input type="hidden" class="col_text" id="mail_addr2" name="mail_addr2" value="${mail_addr2}" zEdit="canTW" maxlength="5" size="10"/>
+                        鄉鎮市區
+                        <input type="text" class="col_text" name="mail_addr3" value="${mail_addr3}" zEdit="canTW" maxlength="6" size="12"/>
+                        村里<br>
+                        <input type="text" class="col_text" name="mail_addr4" value="${mail_addr4}" zEdit="canTW" maxlength="6" size="12"/>
+                        鄰
+                        <input type="text" class="col_text" name="mail_addr5" value="${mail_addr5}" zEdit="canTW" maxlength="28" size="56" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">公司地址:
+                        <select id="company_zip" name="company_zip" value="${company_zip}" class="col_ddlb" zRequire="Y" onchange="return zipChange('company')">
+                            <option value="">--</option>
+                            ${dddw_company_zip}
+                        </select>
+                        <input type="text" class="col_any" id="company_zip2" name="company_zip2" value="${company_zip2}" maxlength="3" size="6" zEdit="number">
+                        <span class="dsp_text" id="company_addr1_text">${company_addr1}</span>
+                        <input type="hidden" class="col_text" id="company_addr1" name="company_addr1" value="${company_addr1}" zEdit="canTW" maxlength="5" size="10" zRequire="Y"/>
+                        縣市
+                        <span class="dsp_text" id="company_addr2_text">${company_addr2}</span>
+                        <input type="hidden" class="col_text" id="company_addr2" name="company_addr2" value="${company_addr2}" zEdit="canTW" maxlength="5" size="10"/>
+                        鄉鎮市區
+                        <input type="text" class="col_text" name="company_addr3" value="${company_addr3}" zEdit="canTW" maxlength="6" size="12"/>
+                        村里<br>
+                        <input type="text" class="col_text" name="company_addr4" value="${company_addr4}" zEdit="canTW" maxlength="6" size="12"/>
+                        鄰
+                        <input type="text" class="col_text" name="company_addr5" value="${company_addr5}" zEdit="canTW" maxlength="28" size="56" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>帳單註記:
+                        <select name="bill_apply_flag" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            <option value="1" ${bill_apply_flag-1}>同戶籍(個人)</option>
+                            <option value="2" ${bill_apply_flag-2}>同居住(個人)</option>
+                            <option value="3" ${bill_apply_flag-3}>同公司(個人)</option>
+                        </select>
+                    </td>
+                    <td nowrap>寄件別:
+                        <select name="mail_type" id="mail_type" class="col_ddlb" zRequire="Y" onchange="mailTypeOnChg(this)">
+                            <option value="">--</option>
+                            <option value="1" ${mail_type-1}>普掛</option>
+                            <option value="2" ${mail_type-2}>限掛</option>
+                            <option value="3" ${mail_type-3}>卡部親領</option>
+                            <option value="4" ${mail_type-4}>分行</option>
+                            <option value="5" ${mail_type-5}>暫不寄</option>
+                            <option value="6" ${mail_type-6}>快捷</option>
+                            <option value="7" ${mail_type-7}>航空</option>
+                            <option value="8" ${mail_type-8}>快遞</option>
+                            <option value="9" ${mail_type-9}>其他</option>
+                        </select>
+                    </td>
+                    <td nowrap>寄送分行:
+                        <select name="branch" id="branch" value="${branch}" class="col_ddlb">
+                            <option value="">--</option>
+                            ${dddw_branch}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">公司名稱:
+                        <input type="text" class="col_text" name="company_name" value="${company_name}" zEdit="any,canTW" maxlength="24" size="24" zRequire="Y" onchange="top.convertInputToFullWidth(this)"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">職稱:
+                        <input type="text" class="col_text" name="job_position" value="${job_position}" zEdit="any,canTW" maxlength="24" size="24" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>年資:
+                        <input type="text" class="col_text" name="service_year" value="${service_year}" zEdit="number" maxlength="2" size="2" zRequire="Y"/>年
+                        <input type="text" class="col_text" name="service_month" value="${service_month}" zEdit="number" maxlength="2" size="2" zRequire="Y"/>月
+                    </td>
+                    <td nowrap colspan="2">年收入:
+                        <input type="text" class="col_text" name="salary" value="${salary}" zEdit="number" maxlength="10" size="10" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>配偶ID:
+                        <input type="text" class="col_text" name="spouse_id_no" value="${spouse_id_no}" zEdit="any" maxlength="10" size="10"/>
+                    </td>
+                    <td nowrap colspan="2">配偶出生年月日:
+                        <input type="text" class="col_date" name="spouse_birthday" value="${spouse_birthday}" zEdit="date,yyyymmdd" maxlength="8" size="8"/>
+                        <script language="JavaScript">
+                        new tcal({ 'formname': 'dataForm', 'controlname': 'spouse_birthday' });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">配偶姓名:
+                        <input type="text" class="col_text" name="spouse_name" value="${spouse_name}" zEdit="canTW" maxlength="50" size="92"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>自動扣款帳號:
+                        <input type="text" class="col_text" name="act_no_l" value="${act_no_l}" zEdit="any" maxlength="16" size="16"/>
+                    </td>
+                    <td nowrap>自動扣繳註記:
+                        <select name="act_no_l_ind" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" ${act_no_l_ind-1}>全額</option>
+                            <option value="2" ${act_no_l_ind-2}>最低應繳</option>
+                        </select>
+                    </td>
+                    <td nowrap>ACH委扣銀行:
+                        <input type="text" class="col_number" name="autopay_acct_bank" value="${autopay_acct_bank}" zEdit="number" maxlength="8" size="8" onblur="padLeft('autopay_acct_bank',this.value, 8)"/>
+                        <spen style="color:red">若為自行扣款則放"0000001"</spen>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>核准額度:
+                        <input type="text" class="col_text" name="credit_lmt" value="${credit_lmt}" zEdit="number" maxlength="10" size="10" zRequire="Y"/>
+                    </td>
+                    <td nowrap>年利率:
+                        <input type="text" class="col_text" name="revolve_int_rate_year" value="${revolve_int_rate_year}" zEdit="number" maxlength="4" size="4"/>
+                    </td>
+                    <td nowrap>設定消費簡訊金額:
+                        <input type="text" class="col_text" name="sms_amt" value="${sms_amt}" zEdit="number" maxlength="12" size="12"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>預借現金註記:
+                        <select name="send_pwd_flag" class="col_ddlb" zRequire="Y">
+                            <option value="Y" ${send_pwd_flag-Y}>Y</option>
+                            <option value="N" ${send_pwd_flag-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap>是否申請子卡額度:
+                        <select id="son_card_flag" name="son_card_flag" class="col_ddlb" onchange="setIndivCrdLmt()">
+                            <option value="Y" ${son_card_flag-Y}>Y</option>
+                            <option value="N" ${son_card_flag-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap>子卡額度:
+                        <input type="text" class="col_text" id="indiv_crd_lmt" name="indiv_crd_lmt" value="${indiv_crd_lmt}" zEdit="number" maxlength="10" size="10" disabled/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>年費優惠:
+                        <select name="fee_code_i" class="col_ddlb" zRequire="Y">
+                            <option value="Y" ${fee_code_i-Y}>Y</option>
+                            <option value="N" ${fee_code_i-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap>同意分期註記:
+                        <select name="inst_flag" class="col_ddlb" zRequire="Y">
+                            <option value="Y" ${inst_flag-Y}>Y</option>
+                            <option value="N" ${inst_flag-N}>N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>車號拖吊登錄:
+                        <input type="text" class="col_text" name="roadside_assist_apply" value="${roadside_assist_apply}" zEdit="any" maxlength="8" size="8"/>
+                    </td>
+                    <td nowrap>拒絕行銷註記:
+                        <select name="market_agree_base" class="col_ddlb" zRequire="Y">
+                        	<option value="0" ${market_agree_base-0}>不同意</option>
+                            <option value="1" ${market_agree_base-1}>同意共銷</option>
+                            <option value="2" ${market_agree_base-2}>同意共享</option>
+                        </select>
+                    </td>
+                    <td nowrap>EDM寄送註記:
+                        <select name="e_news" class="col_ddlb" zRequire="Y">
+                            <option value="Y" ${e_news-Y}>Y</option>
+                            <option value="N" ${e_news-N}>N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>進件分行:
+<!--                         <select name="reg_bank_no" value="${reg_bank_no}" class="col_ddlb" zRequire="Y"> -->
+<!--                             <option value="">--</option> -->
+<!--                             ${dddw_reg_bank_no} -->
+<!--                         </select> -->
+						<input type="text" class="col_text" name="reg_bank_no" value="${reg_bank_no}" zEdit="any" maxlength="4" size="6" zRequire="Y"/>
+                    </td>
+                    <td nowrap colspan="2">凸字第四行:
+                        <input type="text" class="col_text" name="emboss_4th_data" value="${emboss_4th_data}" zEdit="any,canTW" maxlength="20" size="20"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>推廣人員ID:
+                        <input type="text" class="col_text" name="introduce_emp_no" value="${introduce_emp_no}" zEdit="any" maxlength="10" size="10"/>
+                        <input type="hidden" class="col_text" name="introduce_id"/>
+                    </td>
+                    <td nowrap>企業員工推廣人員:
+                        <input type="text" class="col_text" name="promote_emp_no" value="${promote_emp_no}" zEdit="any" maxlength="10" size="10"/>
+                    </td>
+                    <td nowrap >企業員工推廣單位:
+                        <input type="text" class="col_text" name="promote_dept" value="${promote_dept}" zEdit="any,canTW" maxlength="8" size="8"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>信評等級:
+                        <select name="credit_level_new" value="${credit_level_new}" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            ${dddw_credit_level_new}
+                        </select>
+                    </td>
+                    <td nowrap colspan="2">評分:
+                        <input type="text" class="col_text" name="jcic_score" value="${jcic_score}" zEdit="number" maxlength="3" size="3" zRequire="Y"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>鍵檔日期:
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date}" >
+                    </td>
+                    <td nowrap colspan="2">鍵檔人員:
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}" >
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>修改日期:
+                        <span class="dsp_text">${mod_time.YMD}</span>
+                        <input type="hidden" name="mod_time" value="${mod_time}" >
+                    </td>
+                    <td nowrap colspan="2">修改人員:
+                        <span class="dsp_text">${mod_user}</span>
+                        <input type="hidden" name="mod_user" value="${mod_user}" >
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>覆核日期:
+                        <span class="dsp_text">${apr_date.YMD}</span>
+                        <input type="hidden" name="apr_date" value="${apr_date}" >
+                    </td>
+                    <td nowrap colspan="2">覆核人員:
+                        <span class="dsp_text">${apr_user}</span>
+                        <input type="hidden" name="apr_user" value="${apr_user}" >
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="corp_no" value="${corp_no}">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+var isAJAXProcessing=false;
+
+top.refreshButton2('1');
+setIndivCrdLmt();
+
+// var typem =  document.dataForm.electronic_code.value;
+
+// if(typem =='02'){
+//     $("#ipsKind").attr('disabled',false);
+// }else{
+//     $("#ipsKind").attr('disabled',true);
+// }
+
+// if(typem =='03'){
+// 	$("#cardCode").attr('disabled',false);
+// }else{
+//     $("#cardCode").attr('disabled',true);
+// }
+
+
+window.onload = function(){
+    var nationArr = document.getElementsByName("nation");
+    if (nationArr[0].checked == true) {
+        wf_nation_change1();
+    }else{
+        wf_nation_change2();
+    }
+    mailTypeOnChg(document.getElementById("mail_type"));
+}
+
+function wf_nation_change1(){
+   var other_cntry_code_ele = document.getElementById('other_cntry_code');
+   other_cntry_code_ele.disabled=true;
+   other_cntry_code_ele.value="TW";
+}
+ 
+function wf_nation_change2(){
+    document.getElementById('other_cntry_code').disabled=false;
+}
+
+function checkOtherCntryCode(){
+   var nationArr = document.getElementsByName("nation");
+   var otherCntryCodeELe = document.getElementById("other_cntry_code");
+   if (nationArr[1].checked == true) {
+      if ( otherCntryCodeELe.value.trim().length == 0 ) {
+         alert("國籍為外國，國籍代碼不可為空白");
+         return false
+      }else{
+         if (otherCntryCodeELe.value == "TW") {
+            alert("國籍為外國，國籍代碼不可為TW(台灣)");
+            return false
+         }
+      }
+   }else{
+      wf_nation_change2();
+   }
+
+   return true;
+ }
+
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == 'U' || top.actionCode == 'A') {
+      if (! checkOtherCntryCode() ) {
+         return false;
+      }
+      if (! checkBranch()) {
+        return false;
+      }
+    }
+
+    return true;
+}
+
+function checkBranch(){
+    var mailType = document.getElementById("mail_type");
+    var branch = document.getElementById("branch");
+    if (mailType.value == '4') {
+        if (branch.value.trim().length == 0) {
+            alert("「寄件別」為分行，「寄送分行」為必填欄位。");
+            return false;
+        }
+    }
+    return true;
+}
+
+
+// function detailElectronic(type){
+    
+//     if(type =='02'){
+//         $("#ipsKind").attr('disabled',false);
+//      }else{
+//     	 $("#ipsKind").attr('disabled',true);
+//     }
+    
+//     if(type =='03'){
+//     	  $("#cardCode").attr('disabled',false);
+//     }else{
+//     	  $("#cardCode").attr('disabled',true);
+//     }
+// }
+
+// 左補0
+function padLeft(name, value, length) {
+	value = value + "";
+	
+	if (value=="") {
+		return;
+	}
+	
+    if (value.length < length) {
+    	return padLeft(name, "0" + value, length);
+    } else {
+    	$("input[name=" + name + "]").val(value);
+    }
+}
+
+function setIndivCrdLmt() {
+	var flag = $("#son_card_flag").val();
+	if (flag=="Y") {
+		$("#indiv_crd_lmt").prop('disabled',false);
+	} else {
+		$("#indiv_crd_lmt").prop('disabled',true);
+		$("#indiv_crd_lmt").val("");
+	}
+}
+
+function doAJAX(){
+    if (isAJAXProcessing) {
+        alert("取得資料進行中，請稍後再選擇一次")
+        return false;
+    }
+    isAJAXProcessing = true;
+    processAJAX();
+    return true;
+}
+
+function getCardTypeAndSourceCode() {
+    $("#card_type").val("");
+    $("#unit_code").val("");
+    removeDropDownList("card_type");
+    removeDropDownList("unit_code");
+	var groupCode = $("#group_code").val();
+    if (groupCode == '') {
+        return false;
+    }
+	top.actionCode = "AJAX";
+	resetJSON();
+	addJSON("groupCode",groupCode);
+	addJSON("idCode","1");
+	return doAJAX();
+}
+
+function getUnitCode() {
+    $("#unit_code").val("");
+    removeDropDownList("unit_code");
+    var cardType = $("#card_type").val();
+    var groupCode = $("#group_code").val();
+    if (cardType == '' || groupCode == '') {
+        return false;
+    }
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("cardType",cardType);
+    addJSON("groupCode",groupCode);
+    addJSON("idCode","2");
+    return doAJAX();
+}
+
+function zipChange(changeTarget){
+    var  zip_code =document.forms["dataForm"][changeTarget + "_zip"].value.toUpperCase();   
+
+    if ( zip_code === '') {
+      document.getElementById(changeTarget + "_addr1_text").innerHTML = "";
+      document.getElementById(changeTarget + "_addr2_text").innerHTML = "";
+      document.getElementById(changeTarget + "_addr1").value = "";
+      document.getElementById(changeTarget + "_addr2").value = ""; 
+      return false;
+    }
+
+    top.actionCode = "AJAX";
+
+    resetJSON();
+    addJSON("changeTarget",changeTarget);
+    addJSON("ax_zip_code",zip_code);
+    addJSON("idCode","3"); 
+    if (doAJAX() == false) document.getElementById(changeTarget + "_zip").value = "";
+    return true;
+} 
+
+function ajaxResponse(){
+    isAJAXProcessing=false;
+    top.respHtml ="crdm0054_detl";
+    top.requHtml ="crdm0054_detl";
+    if(getJSONvalue("idCode",0)==1){
+        $("#table1 tr #tdCardType select option").remove();
+        $("#table1 tr #tdCardType select").append(getJSONvalue("dddw_card_type2",0));
+    }else
+    if(getJSONvalue("idCode",0)==2){
+        $("#table1 tr #tdUnitCode select option").remove();
+        $("#table1 tr #tdUnitCode select").append(getJSONvalue("dddw_unit_code2",0));
+    }else
+    if(getJSONvalue("idCode",0)==3){
+        ajaxResponseAddr();
+    }
+    return false;
+}
+
+function ajaxResponseAddr(){
+   var changeTarget = getJSONvalue("changeTarget",0);
+
+   var ajax_addr1 = getJSONvalue("ajax_addr1",0);
+   if (ajax_addr1.length > 0) { 
+      document.getElementById(changeTarget + "_addr1_text").innerHTML = ajax_addr1;
+      document.getElementById(changeTarget + "_addr1").value = ajax_addr1;   
+   }      
+      
+   var ajax_addr2 = getJSONvalue("ajax_addr2",0);
+   if (ajax_addr2.length > 0) { 
+      document.getElementById(changeTarget + "_addr2_text").innerHTML = ajax_addr2;
+      document.getElementById(changeTarget + "_addr2").value = ajax_addr2;
+   } 
+   var ajax_zip_code = getJSONvalue("ajax_zip_code",0);
+   if (ajax_zip_code.length > 0) { 
+	  document.getElementById(changeTarget + "_zip2").value = ajax_zip_code;
+   } 
+}
+
+// enable branch column if mail_type = 4, or disable the column
+function mailTypeOnChg(mailType){
+    var branch = document.getElementById("branch");
+    if (mailType.value == '4') {
+        branch.disabled = false;
+        branch.style.background='rgb(255, 255, 206)';
+    }else{
+        branch.value = '0';
+        branch.disabled = true;
+        branch.style.background='white';
+    }
+}
+
+function removeDropDownList(targetName){
+    var unitCodeSelection = document.getElementById(targetName);
+    for (var i = unitCodeSelection.options.length - 1; i >= 0  ; i--) {
+        if(unitCodeSelection.options[i].value != ''){
+            unitCodeSelection.options[i].remove();
+        }
+    }
+}
+</script>

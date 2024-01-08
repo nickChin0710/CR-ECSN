@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>線上持卡人信用額度調整-jh190618</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層" />&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" />&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" />&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" />&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" />&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap >&nbsp;帳戶帳號:
+      <select size="1" name="kk_acct_type" class="col_ddlb" >
+         ${dddw_acct_type}
+      </select>
+      <input type="text" class="col_text" id="kk_acct_key" name="kk_acct_key" value="${kk_acct_key}" maxlength="11" size="13" onChange="wf_dataRead()" >
+   </td>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" id="kk_card_no" name="kk_card_no" value="${kk_card_no}" maxlength="19" size="21" OnChange="wf_dataRead()" >
+   </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;修改方式:
+      <span class="dsp_text">${emend_type}.${#JAVA:ecsfunc.DeCodeRsk.emendType(emend_type)}&nbsp;</span>
+      <input type="hidden" name="emend_type" value="${emend_type}">
+   </td>
+   <td nowrap >&nbsp;帳戶帳號:
+   		<span class="dsp_text" >${acct_type}</span>
+        <span class="dsp_text" >${acct_key}</span>
+        <input type="hidden" name="acct_type" value="${acct_type}">
+        <input type="hidden" name="acct_key" value="${acct_key}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;卡號:
+   		<span class="dsp_text" >${card_no}</span>
+        <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+   <td nowrap >&nbsp;姓名:
+   	  <span class="dsp_text" >${db_chi_name}</span>
+      <input type="hidden" name="db_chi_name" value="${db_chi_name}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;調整後額度:
+      <input type="text" class="col_number" name="db_aft_amt" value="${db_aft_amt}" maxlength="12" size="14" zEdit="number">
+   </td>
+   <td nowrap >&nbsp;調整前額度:
+   		<span class="dsp_text" >${wk_bef_amt.(999)}</span>
+        <input type="hidden" name="wk_bef_amt" value="${wk_bef_amt}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;調高原因:
+      <select size="1" name="log_reason_up" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_reason_up}
+      </select>
+   </td>
+   <td nowrap >&nbsp;調低原因:
+      <select size="1" name="log_reason_down" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_reason_down}
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;簡訊代號:
+      <select size="1" name="sms_flag" class="col_ddlb" >
+      	<option value="">--</option>
+         ${dddw_sms_flag}
+      </select>
+      &nbsp;&nbsp;      
+      <input type="hidden" name="wk_line" value="${wk_line}">
+      &nbsp;
+   </td>
+   <td nowrap >&nbsp;已覆核:
+      <span class="dsp_text">${apr_flag}&nbsp;</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;調整日期:
+      <span class="dsp_text">${log_date.YMD}&nbsp;</span>
+      <input type="hidden" name="log_date" value="${log_date}">
+   </td>
+   <td nowrap >&nbsp;調整經辦:
+      <span class="dsp_text">${mod_user}&nbsp;</span>
+      <input type="hidden" name="mod_user" value="${mod_user}">
+   </td>
+  </tr>
+</table>
+</div>
+
+<input type="hidden" name="log_reason" value="${log_reason}" />
+<input type="hidden" id="acno_p_seqno" name="acno_p_seqno" value="${acnp_p_seqno}" />
+<input type="hidden" name="adj_loc_flag" value="${adj_loc_flag}" />
+<input type="hidden" id="db_bef_amt" name="db_bef_amt" value="${db_bef_amt}" />
+<input type="hidden" id="db_bef_cash" name="db_bef_cash" value="${db_bef_cash}" />
+<input type="hidden" id="db_bef_cash" name="db_bef_cash" value="${db_bef_cash}" />
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+<input type="hidden" name="db_low" value="${db_low}" />
+<input type="hidden" name="db_upper" value="${db_upper}" />
+<input type="hidden" name="fh_flag" value="${fh_flag}" />
+<input type="hidden" name="conf_msg_fh" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ function wf_dataRead() {
+    var ls_acct_key = document.forms["dataForm"]["kk_acct_key"].value.toUpperCase();
+    var ls_card_no = document.forms["dataForm"]["kk_card_no"].value;
+    
+    if(ls_acct_key =='' && ls_card_no ==''){
+        return ;
+    }
+    top.submitControl('R');
+    
+ }
+ 
+</script>

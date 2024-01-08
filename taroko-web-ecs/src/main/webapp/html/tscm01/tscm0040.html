@@ -1,0 +1,341 @@
+<html>
+
+<head>
+    <title>悠遊卡餘額轉置通知檔維護作業-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+<script language="JavaScript">
+function wf_add_newrow() {
+    //debugger;計算畫面筆數從標題列起算
+    var ind = document.getElementById('table1').rows.length - 1;
+    var rowNum = document.getElementById('table1').rows.length - 1;
+    var colNum = 0;
+    var fi = 0;
+    //console.log("a:"+ind);
+    var num = '${ser_num}';
+    if (num == '') {
+        ind = document.getElementById('table1').rows.length - 2;
+    }
+    colNum = 0
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap = "nowrap";
+
+    var serNo = "";
+    if (ind < 10) {
+        serNo = "0" + ind;
+    } else {
+        serNo = "" + ind;
+    }
+    fi++;
+
+    var con = document.createElement('span');
+    con.textContent = serNo;
+    myCell.appendChild(con);
+
+    var ip = document.createElement('input');
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild(ip);
+
+    var ip1 = document.createElement('input');
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild(ip1);
+
+    var ip2 = document.createElement('input');
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild(ip2);
+
+    var ip3 = document.createElement('input');
+    ip3.type = 'hidden';
+    ip3.name = 'mod_seqno';
+    ip3.value = '';
+    myCell.appendChild(ip3);
+
+    //tsc_card_no
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var tsc_card_no = document.createElement('input');
+    tsc_card_no.setAttribute('class', 'col_text');
+    tsc_card_no.type = 'number';
+    tsc_card_no.name = 'tsc_card_no';
+    tsc_card_no.maxLength = 19;
+    tsc_card_no.size = 19;
+    tsc_card_no.value = '';
+    tsc_card_no.setAttribute('onChange', "change('"+serNo+"',this.value)");
+    myCell.appendChild(tsc_card_no);
+
+    //card_no
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    var card_no = document.createElement('span');
+    card_no.setAttribute('class', 'dsp_text');
+    card_no.type = 'number';
+    card_no.name = 'card_no';
+    card_no.maxLength = 19;
+    card_no.size = 19;
+    card_no.value = '';
+    myCell.appendChild(card_no);
+
+    //emboss_kind======================================       
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    var dbcrarray = ["E", "1", "5", "3", "2", "4", "6", "7", "8"];
+
+    var emboss_kind = document.createElement('select');
+    emboss_kind.setAttribute('class', 'col_ddlb');
+    emboss_kind.name = 'emboss_kind';
+    emboss_kind.value = '';
+    for (var i = 0; i < dbcrarray.length; i++) {
+        var option = document.createElement("option");
+        option.value = dbcrarray[i];
+        if (dbcrarray[i] == "E") {
+            option.text = "毀損補發";
+        } else if (dbcrarray[i] == "1") {
+            option.text = "申請停卡";
+        } else if (dbcrarray[i] == "5") {
+            option.text = "偽卡";
+        } else if (dbcrarray[i] == "3") {
+            option.text = "強制停卡";
+        } else if (dbcrarray[i] == "2") {
+            option.text = "掛失";
+        } else if (dbcrarray[i] == "4") {
+            option.text = "效期屆滿且續卡";
+        } else if (dbcrarray[i] == "6") {
+            option.text = "效期屆滿且不續卡";
+        } else if (dbcrarray[i] == "7") {
+            option.text = "爭議，不可歸責";
+        } else if (dbcrarray[i] == "8") {
+            option.text = "系統進行餘額轉置";
+        }
+        emboss_kind.appendChild(option);
+    }
+    myCell.appendChild(emboss_kind);
+
+    //create_date======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    var Today = new Date();　
+    var create_date = document.createElement('input');
+    create_date.setAttribute('class', 'col_text');
+    create_date.type = 'text';
+    create_date.name = 'create_date';
+    create_date.maxLength = 8;
+    create_date.size = 8;
+    var MM = (Today.getMonth()+1<10 ? '0' : '')+(Today.getMonth()+1);
+    var dd = (Today.getDate()<10 ? '0' : '')+Today.getDate();
+    create_date.value = Today.getFullYear() + "" + MM + "" + dd;
+    myCell.appendChild(create_date);
+
+    //balance_date==================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    //balance_date_rtn==============================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    //mod_user======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    //apr_user======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+    //apr_date======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=4>&nbsp;悠遊卡卡號:
+                        <input type="text" class="col_text" name="ex_tsc_card_no" value="${ex_tsc_card_no}" zEdit="alphanum" maxlength="20" size="20" />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;信用卡卡號:
+                        <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="alphanum" maxlength="19" size="19" />
+                    </td>
+                    <td nowrap colspan=4>&nbsp;登錄日期：
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date1'
+                        });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=12>&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--新增插入明細-->
+        <table border="0" width="5%">
+            <tr>
+                <td align="right">
+                    <input type="Button" name="detl_btnAdd" value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+                </td>
+            </tr>
+        </table>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">刪除</th>
+                <th nowrap class="list_th">悠遊卡號</th>
+                <th nowrap class="list_th">信用卡號</th>
+                <th nowrap class="list_th">事件原由</th>
+                <th nowrap class="list_th">登錄日期</th>
+                <th nowrap class="list_th">傳送日期</th>
+                <th nowrap class="list_th">回傳日期</th>
+                <th nowrap class="list_th">經辦人員</th>
+                <th nowrap class="list_th">覆核人員</th>
+                <th nowrap class="list_th">覆核日期</th>
+                <th nowrap class="list_th">Err Msg</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr style="cursor:hand">
+                <td nowrap class="list_no">
+                    <span class="dsp_flag">${ok_flag}</span> ${SER_NUM}
+                    <input type="checkbox" name="opt" value="${ser_num}" />
+                    <input type="hidden" name="ser_num" value="${ser_num}" />
+                    <input type="hidden" name="rowid" value="${rowid}" />
+                    <input type="hidden" name="mod_seqno" value="${mod_seqno}" />
+                </td>
+                <td nowrap class="list_ll">
+                    <input type="text" class="col_text" name="tsc_card_no" value="${tsc_card_no}" zEdit="number" maxlength="20" size="20" onChange="change('${ser_num}',this.value)" />
+                </td>
+                <td nowrap class="list_ll">
+                    <span class="dsp_text" ${set_color}>${card_no}</span>
+                    <input type="hidden" name="card_no" value="${card_no}"/>
+                </td>
+                <td nowrap>
+                    <select size="1" name="emboss_kind" class="col_ddlb">
+                        <option value="E" ${emboss_kind-E}>毀損補發</option>
+                        <option value="1" ${emboss_kind-1}>申請停卡 </option>
+                        <option value="5" ${emboss_kind-5}>偽卡</option>
+                        <option value="3" ${emboss_kind-3}>強制停卡</option>
+                        <option value="2" ${emboss_kind-2}>掛失</option>
+                        <option value="4" ${emboss_kind-4}>效期屆滿且續卡</option>
+                        <option value="6" ${emboss_kind-6}>效期屆滿且不續卡</option>
+                        <option value="7" ${emboss_kind-7}>爭議，不可歸責</option>
+                        <option value="8" ${emboss_kind-8}>系統進行餘額轉置</option>
+                    </select>
+                </td>
+                <td nowrap class="list_ll">
+                    <input type="text" class="col_date" name="create_date" value="${create_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                </td>
+                <td nowrap class="list_ll"> ${balance_date.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${balance_date_rtn.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mod_user}&nbsp; </td>
+                <td nowrap class="list_ll"> ${appr_user}&nbsp; </td>
+                <td nowrap class="list_ll"> ${appr_date}&nbsp; </td>
+                <td nowrap class="list_ll" style="color: red"> ${err_msg}&nbsp; </td>
+                <input type="hidden" name="tt_tsc_card_no" value="${tt_tsc_card_no}">
+                <input type="hidden" name="tt_card_no" value="${tt_card_no}">
+                <input type="hidden" name="tt_emboss_kind" value="${tt_emboss_kind}">
+                <input type="hidden" name="tt_create_date" value="${tt_create_date}">
+                <input type="hidden" name="mod_user" value="${mod_user}">
+                <input type="hidden" name="mod_time" value="${mod_time}">
+                <input type="hidden" name="mod_pgm" value="${mod_pgm}">
+                <input type="hidden" name="balance_date" value="${balance_date}">
+                <input type="hidden" name="balance_date_rtn" value="${balance_date_rtn}">
+                <input type="hidden" name="appr_user" value="${apr_user}">
+                <input type="hidden" name="apr_date" value="${apr_date}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="h_mod_user" value="${h_mod_user}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_tsc_card_no.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0065_detl";
+    }
+    return true;
+}
+
+// function detailScreen(serNum, parm, parm2, parm3) {
+//     top.respLevel = 1;
+//     top.currRows = serNum;
+//     document.dataForm.data_k1.value = parm;
+//     document.dataForm.data_k2.value = parm2;
+//     document.dataForm.data_k3.value = parm3;
+//     top.respHtml = "crdm0065_detl";
+//     top.submitControl('S');
+//     return true;
+// }
+function chkdata() {
+    var seq = 0;
+    var agy = document.dataForm.opt;
+    var ll = agy.length;
+    if (typeof ll === 'undefined') {
+        if (agy.checked) { seq++; }
+    } else {
+        for (var i = 0; i < ll; i++) {
+            if (agy[i].checked) {
+                seq++;
+            }
+        }
+    }
+}
+function change(num, val) {
+    document.dataForm.data_k1.value = num;
+    document.dataForm.data_k2.value = val;
+    top.submitControl('item_change');
+}
+</script>

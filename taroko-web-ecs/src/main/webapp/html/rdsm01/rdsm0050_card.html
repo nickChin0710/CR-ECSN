@@ -1,0 +1,280 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-01-12  V1.00.01  tanwei        bug修改                                                                                         -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>免費使用道路救援參數維護-V.2018-0416-ryan[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+
+<body bgcolor="#FFFFFF" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  			<input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  			<input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<td nowrap >&nbsp;專案代號:
+			<span class="dsp_text">${proj_no}&nbsp;</span>
+      		<input type=hidden name="proj_no" value="${proj_no}">      
+   		</td>
+   		<td nowrap >&nbsp;有效截止日期:
+			<span class="dsp_text">${valid_end_date.YMD}&nbsp;</span>
+      		<input type=hidden name="valid_end_date" value="${valid_end_date}">
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="2" >&nbsp;專案說明:
+      		<span class="dsp_text">${proj_desc}&nbsp;</span>
+      		<input type="hidden" name="proj_desc" value="${proj_desc}">
+   		</td>      
+  	</tr>
+</table>  
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<td nowrap >&nbsp;帳戶類別:
+      		<select size="1" name="wk_acct_type" id="ex_acct_type" class="col_ddlb" >
+         		<option value="">--</option>
+         		${dddw_acct_type}
+      		</select>
+   		</td>
+   		<td nowrap >&nbsp;卡種:
+      		<select size="1" name="wk_card_type" id="ex_card_type" class="col_ddlb" >
+         		<option value="">--</option>
+         		${dddw_card_type}
+      		</select>
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;團體代號:
+     		<select size="1" name="wk_group_code" id="ex_group_code" class="col_ddlb" >
+         		<option value="">--</option>
+         		${dddw_group_code}
+      		</select>
+   		</td>
+   		<td nowrap >&nbsp;統一編號:
+      		<input type="text" class="col_text" name="wk_corp_no" id="ex_corp_no" value="${wk_corp_no}" maxlength="8" size="8">
+      		&nbsp;
+      		<input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />
+   		</td>          
+  	</tr>
+</table>  
+<hr>
+<table width="80%" id="table1" class="sortable" border="0" >
+	<tr>
+		<td colspan="5">&nbsp;筆數:
+			<span class="dsp_text">${ind_num}</span>
+      	 	<input type="hidden" name="ind_num" value="${ind_num}">
+		</td> 
+	</tr>
+  	<tr>
+    	<th nowrap class="list_cc" width="5%">刪除 </th>
+    	<th nowrap class="list_cc">帳戶類別</th>
+    	<th nowrap class="list_cc">卡種</th>
+    	<th nowrap class="list_cc">團體代號</th>
+    	<th nowrap class="list_cc">統一編號</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr>
+    	<td nowrap class="list_no">
+      		<span class="dsp_flag">${ok_flag}</span>
+      		<input type="checkbox" name="opt" value="${ser_num}">
+      		${SER_NUM}
+      		<input type="hidden" name="ser_num" value="${ser_num}">
+      		<input type="hidden" name="acct_type" value="${acct_type}">
+      		<input type="hidden" name="card_type" value="${card_type}">
+      		<input type="hidden" name="group_code" value="${group_code}">
+      		<input type="hidden" name="corp_no" value="${corp_no}">
+      		<input type="hidden" name="rowid" value="${rowid}">
+    	</td>
+    	<td nowrap class="list_cc" >${acct_type}&nbsp;</td>
+    	<td nowrap class="list_cc" >${card_type}&nbsp;</td>
+    	<td nowrap class="list_cc" >${group_code}&nbsp;</td>
+    	<td nowrap class="list_cc" >${corp_no}&nbsp;</td>
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="" />
+<input type=hidden name="data_k2" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_accttype">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2'); 
+ top.pageRows="99999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    
+   return true;
+ }
+ 
+ $("#detl_btnAdd").click(function(){
+
+	var ls_acct_type =$("#ex_acct_type").val();
+	var ls_card_type =$("#ex_card_type").val();
+	var ls_group_code =$("#ex_group_code").val();
+	var ls_corp_no =$("#ex_corp_no").val();
+	
+	var ind=document.getElementById( 'table1' ).rows.length -2;
+	var num = '${ser_num}';
+	if(num==''){
+	    ind=document.getElementById( 'table1' ).rows.length-3;
+	}
+	var rowNum=document.getElementById( 'table1' ).rows.length -1;
+	var colNum=0;
+	var fi=0;
+   
+
+	
+	if(ls_acct_type =='' || ls_card_type =='') {
+	   alert("帳戶類別 , 卡別 不可空白 !");
+	   return ;
+	}
+	   
+    if((ls_acct_type =='02' || ls_acct_type =='03') && ls_group_code !=''){
+        alert("帳戶類別 02,03 不可輸入團代 !");
+        return;
+    }
+	
+    if(ls_acct_type !='02' && ls_acct_type !='03' && ls_corp_no !=''){
+      alert("統一編號 : 帳戶類別 02,03 才可輸入 !");
+      return;
+    }
+	
+   colNum=0 
+   rowNum++;
+   ind++;
+   var myRow = document.all.table1.insertRow(rowNum);
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_no";
+   myCell.noWrap ="nowrap";
+
+   var serNo ="";
+   if ( ind < 10 )
+       { serNo = "0"+ind; }
+   else
+       { serNo = ""+ind;  }
+   fi++;
+	
+   var ip = document.createElement( 'input' );
+   ip.className = 'col_ckbox';
+   ip.type = 'checkbox';
+   ip.name = 'opt';
+   ip.value = serNo;
+   myCell.appendChild( ip );
+   
+   var con = document.createElement( 'span' );
+   con.textContent = serNo;
+   myCell.appendChild( con );
+
+   var ip1 = document.createElement( 'input' );
+   ip1.type = 'hidden';
+   ip1.name = 'ser_num';
+   ip1.value = serNo;
+   myCell.appendChild( ip1 );
+
+   var ip2 = document.createElement( 'input' );
+   ip2.type = 'hidden';
+   ip2.name = 'rowid';
+   ip2.value = '';
+   myCell.appendChild( ip2 );
+   
+   var ip3 = document.createElement( 'input' );
+   ip3.type = 'hidden';
+   ip3.name = 'mod_seqno';
+   ip3.value = '';
+   myCell.appendChild( ip3 );
+   
+   var ip4 = document.createElement( 'input' );
+   ip4.type = 'hidden';
+   ip4.name = 'acct_type';
+   ip4.value = ls_acct_type;
+   myCell.appendChild( ip4 );
+   
+   var ip5 = document.createElement( 'input' );
+   ip5.type = 'hidden';
+   ip5.name = 'card_type';
+   ip5.value = ls_card_type;
+   myCell.appendChild( ip5 );
+   
+   var ip6 = document.createElement( 'input' );
+   ip6.type = 'hidden';
+   ip6.name = 'group_code';
+   ip6.value = ls_group_code;
+   myCell.appendChild( ip6 );
+   
+   var ip7 = document.createElement( 'input' );
+   ip7.type = 'hidden';
+   ip7.name = 'corp_no';
+   ip7.value = ls_corp_no;
+   myCell.appendChild( ip7 );
+   
+   //======================================
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   var mo1 = document.createElement( 'span' );
+   mo1.textContent = ls_acct_type;
+   myCell.appendChild(mo1);
+   //======================================
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   var mo2 = document.createElement( 'span' );
+   mo2.textContent = ls_card_type;
+   myCell.appendChild(mo2);
+   //======================================
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   var mo3 = document.createElement( 'span' );
+   mo3.textContent = ls_group_code;
+   myCell.appendChild(mo3);
+   //======================================
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   var mo4 = document.createElement( 'span' );
+   mo4.textContent = ls_corp_no;
+   myCell.appendChild(mo4);
+   
+   //-clear-
+   $("#ex_acct_type").val('');
+   $("#ex_card_type").val('');
+   $("#ex_group_code").val('');
+   $("#ex_corp_no").val('');
+   
+  });  
+</script>

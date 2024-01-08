@@ -1,0 +1,229 @@
+<html>
+<head>
+<title>cycm0015-group-V.2018-0124-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+
+</head>
+<script language="JavaScript">
+function wf_add_newrow()
+{
+
+//debugger;
+var ind=document.getElementById( 'table1' ).rows.length -1;
+var rowNum=document.getElementById( 'table1' ).rows.length -1;
+var num='${SER_NUM}';
+if(num==''){
+	ind=document.getElementById( 'table1' ).rows.length -2;
+}
+var group_value = $("#ex_db_optcode1").val();
+var group_text = $("#ex_db_optcode1 :selected").text();
+var err = 0;
+$("input[name=set_data]").each(function (){
+	 if($(this).val()==group_value){
+		err++;
+		return;
+	 }
+})
+if(err>0){
+	alert("資料重複無法新增");
+	$("#ex_db_optcode1").val("");
+	return;
+}
+if(group_value==''){
+	alert("空白資料無法新增");
+	return;
+}
+
+var colNum=0;
+var fi=0;
+//console.log("a:"+ind);
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+	
+	var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+	
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+ 
+    var mno = document.createElement( 'input' );
+    mno.type = 'hidden';
+    mno.name = 'rowid2';
+    mno.value = '';
+    myCell.appendChild(mno);
+    
+	var ip3 = document.createElement( 'input' );
+    ip3.type = 'hidden';
+    ip3.name = 'mod_seqno';
+    ip3.value = '';
+    myCell.appendChild( ip3 );
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+  
+
+    var mo1 = document.createElement( 'input' );
+	mo1.setAttribute('class', 'set_data');
+    mo1.type = 'hidden';
+    mo1.name = 'set_data';
+    mo1.value = group_value;
+    myCell.appendChild(mo1);
+    
+    var mo2 = document.createElement( 'span' );
+	mo2.setAttribute('class', 'dsp_text');
+	mo2.textContent= group_text;
+    myCell.appendChild(mo2);
+    
+    var mo3 = document.createElement( 'input' );
+    mo3.type = 'hidden';
+    mo3.name = 'tt_set_data';
+    mo3.value = group_text;
+    myCell.appendChild(mo3);
+    
+    $("#ex_db_optcode1").val("");
+}	
+</script>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;width:20%">
+  	<tr>
+     	<td align="center">&nbsp;
+        	<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="checkSelect()" alt="回上層" >&nbsp;
+     	</td>
+     	<td> 
+       		<input type="Button" name="btnUpdate"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('SGU')" class="btUpdate" >
+    	</td>
+  	</tr>
+</table>
+<div id="dataBlock">
+<table width="30%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+      	<td nowrap class="colKey" >&nbsp;訊息類別:
+        	<span class="dsp_text">${tt_kk_msg_type}</span>
+        	<input type="hidden" name="kk_msg_type" value="${kk_msg_type}" >
+        	<input type="hidden" name="tt_kk_msg_type" value="${tt_kk_msg_type}" >
+      	</td>
+  	</tr>
+</table>
+<hr>
+<table width="30%" border="0" width="5%">
+  	<tr>
+  		<td>
+  			<select size="1" name="ex_db_optcode1" id="ex_db_optcode1" class="col_ddlb" >
+      		<option value="">--</option>
+      			${dddw_group}
+   			</select>
+   			<input type="hidden" name="dddw_group" value="${dddw_group}" >
+  		</td>
+    	<td align="right">
+       		<input type="Button" name="detl_btnAdd" value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+    	</td>
+  	</tr>
+</table>
+<table id="table1" width="30%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">刪除 </th>
+    	<th nowrap class="list_th">團體代號</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	 <tr>
+     	<td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			${SER_NUM}
+			<input type="checkbox" name="opt" value="${ser_num}"/>
+			<input type="hidden" name="ser_num" value="${ser_num}"/>
+			<input type="hidden" name="rowid2" value="${rowid2}" />
+     	</td>
+     	<td nowrap class="list_cc">
+   			<span class="dsp_text tt_set_data">${tt_set_data}</span>
+   			<input type="hidden" class="set_data" name="set_data" value="${set_data}" >
+   			<input type="hidden" name="tt_set_data" value="${tt_set_data}" >
+   		</td> 
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="cycm0015">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="nccc">
+<input type="hidden" name="kk1_msg_month" value="${kk1_msg_month}" >
+<input type="hidden" name="kk2_acct_type" value="${kk2_acct_type}" >
+<input type="hidden" name="kk3_msg_code" value="${kk3_msg_code}" >
+<input type="hidden" name="kk4_apr_flag" value="${kk4_apr_flag}" >
+<input type="hidden" name="selectCnt" value="${selectCnt}" >
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+ top.refreshButton2('2');
+ top.pageRows="9999";
+
+ function validateInput() { 
+   if ( !top.checkFormat() )
+       { return false; }
+
+   if ( top.actionCode == "SGU" ) {
+   	 if ( !chkdata() ) { 
+   		 return false; 
+   	 } 
+   }
+   return true;
+ }
+  
+ function chkdata() {
+	 var agy =0;
+	 $("input[name=opt]").each(function (){
+			 agy++;  
+	 })
+	 if(agy == 0){
+		 alert("請新增明細在存檔!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+ function checkSelect(){
+
+	 var selectCnt = $("input[name=selectCnt]").val();
+	 if(selectCnt<=0){
+		if (confirm("團體代號不能為空,將刪除此帳單訊息") === false) {
+		       return false;
+		} 
+		top.respHtml ="cycm0015_detl";
+	 	top.submitControl('D2');
+	 }
+	 top.upperLevel();
+ }
+</script>

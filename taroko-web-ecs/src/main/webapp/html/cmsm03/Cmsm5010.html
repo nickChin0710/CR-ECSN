@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>新貴通卡請款匯入作業-jh-190614</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;匯入檔名:
+       <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any,canTw" />
+       <input type="button" name="btn_file_upload" value="..." class="btOther2" onclick="return upload_click()">
+    </td>
+   </tr>
+   <tr>
+    <td nowrap colspan="2">&nbsp;匯入失敗檔名:
+    <a href="${url_err_file}" style="cursor:hand">${err_file}</a>
+    </td>
+   </tr>
+  <tr>
+    <td nowrap>&nbsp;廠商統編:
+      <select size="1" name="ex_corp_no" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_corp_no}
+     </select>
+    </td>
+    <td nowrap>&nbsp;
+      <span class="col_key">(*.csv)</span>
+      <input type="Button" id="btnProc2" value="資料匯入-機埸停車" onClick="wf_proc_2('C2')" class="btProcess" >&nbsp;&nbsp;
+       <select   size="1"  name="ex_bin_type" class="col_ddlb">
+         <option value="V" ${ex_bin_type-V} >VISA</option>
+         <option value="M" ${ex_bin_type-M} >MasterCard</option>
+      </select>
+    </td>
+   </tr>
+   <tr>
+    <td nowrap colspan="2">&nbsp;</td>
+   </tr>
+   <tr>
+    <td nowrap>&nbsp;權益檔案類別: 03.機停
+    	<input type="hidden" name="ex_file_type" value="03" />
+      <!-- <select   size="1"  name="ex_file_type" class="col_ddlb">
+        <option value="01" ${ex_file_type-01} >01.機接</option>
+        <option value="03" ${ex_file_type-03} >03.機停</option>
+        <option value="04" ${ex_file_type-04} >04.新貴通</option>
+     </select> -->
+      &nbsp;匯入批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="14" size="16" />    </td>
+    <td nowrap>&nbsp;
+      <input type="Button" id="btnDelete" value="資料匯入-刪除" onClick="top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+      <input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+    </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+ <input type="hidden" name="upload_file" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if (top.actionCode =='D') {
+      if (confirm("是否執行 匯入資料刪除")==false) {
+        return false;
+      }
+    }   
+    return true;
+ }
+
+  function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "cmsm03";
+    top.javaName    = "Cmsm5010";
+    top.requHtml    = "cmsm5010";
+    top.respHtml    = "cmsm5010";
+    return true;
+  }
+
+ function wf_uploadAfter() {
+ 		return ;
+ }
+
+ function wf_proc_1(parm) {
+   top.sw_buttonOff =false;
+   var ls_file =document.forms["dataForm"]["zz_file_name"].value;
+   if (ls_file =='') {
+     alert("上傳檔名 不可空白");
+     return false;
+   }
+   if (confirm('是否執行 新貴通請款匯入資料')==false) {
+      return false;
+   }
+
+  top.respLevel = 0;
+  top.respHtml = "cmsp3140";
+ 	top.submitControl(parm);
+ 	//top.spinner.stop();
+ 	return true;
+}
+function wf_proc_2(parm) {
+  top.sw_buttonOff =false;
+  var ls_file =document.forms["dataForm"]["zz_file_name"].value;
+   if (ls_file =='') {
+     alert("上傳檔名 不可空白");
+     return false;
+   }
+  var ls_corpno = document.forms["dataForm"]["ex_corp_no"].value;
+  if (ls_corpno.trim() =='') {
+    alert("請輸入 廠商統編");
+    return false;
+  }
+   if (confirm('是否執行 機場停車請款匯入資料')==false) {
+      return false;
+   }
+
+  top.respLevel = 0;
+  top.respHtml = "cmsm5010";
+ 	top.submitControl(parm);
+ 	//top.spinner.stop();
+ 	return true;
+}
+
+</script>

@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>電子採購卡手續費月報表-[V.2018-0927.jh]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+  <div id="condBlock">
+      <table border="0" cellspacing="0" cellpadding="4">
+          <tr> 
+              <td nowrap >&nbsp;金融卡帳號：
+                  <input type="text" class="col_text" name="ex_acctno" value="${ex_acctno}" maxlength="16" size="18" />
+              </td>
+              <td nowrap >&nbsp;身分證ID：
+                  <input type="text" class="col_text" name="ex_id" value="${ex_id}" zEdit="alphanum,upper"  maxlength="10" size="12" />
+              </td>
+          </tr>
+          <tr>
+             <td nowrap >&nbsp;扣款日期：
+                  <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+                  <script language="JavaScript">
+                  new tcal({'formname': 'dataForm','controlname': 'ex_date1'});
+                  </script>
+                  --
+                  <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+                  <script language="JavaScript">
+                  new tcal({'formname': 'dataForm','controlname': 'ex_date2'});
+                  </script>
+              </td>  
+              <td nowrap >&nbsp;
+                  <input type="Button" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                  <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                  <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+              </td>                                    
+          </tr>                
+      </table>
+  </div>
+  <hr>
+  <table id="table1" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+          <td nowrap class="list_no" width="5%">&nbsp;</td>
+          <td nowrap class="list_ll" colspan="8"><b>結算金額:</b>
+            <span class="dsp_number">${db_end_bal.(999)}</span>
+            <input type="hidden" name="db_end_bal" value="${db_end_bal}" />
+          </td>
+      </tr>
+      <tr>
+          <th nowrap  width="5%">No&nbsp;</th>
+          <th nowrap >卡號</th>
+          <th nowrap >金融帳號</th>
+          <th nowrap >消費日期</th>
+          <th nowrap >特店名稱</th>
+          <th nowrap >扣款日期</th>
+          <th nowrap >扣款次數</th>
+          <th nowrap >扣款金額</th>
+          <th nowrap >消費金額</th>
+      </tr>
+      <!-- BEGIN DYNAMIC : DETAIL -->
+      <tr>
+          <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+          <td nowrap class="list_cc"> ${card_no} </td>
+          <td nowrap class="list_cc"> ${acct_no} </td>              
+          <td nowrap class="list_cc"> ${purchase_date.YMD} </td>         
+          <td nowrap class="list_ll"> ${db_mcht_cname} </td>
+          <td nowrap class="list_cc"> ${deduct_date.YMD} </td>
+          <td nowrap class="list_cc"> ${db_deduct_cnt} </td>
+          <td nowrap class="list_rr"> ${deduct_amt.(999)} </td>
+          <td nowrap class="list_rr"> ${beg_bal.(999)} </td>
+           
+      </tr>
+      <!-- END DYNAMIC : DETAIL -->
+  </table>
+  
+  <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+  <input type="hidden" name="pageType" value="cond">
+  <input type="hidden" name="row_ct" value="${row_ct}"> 
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables_2.js"></script>
+<script language="JavaScript">
+tigra_tables('table1',1,2,0);
+</script>
+
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

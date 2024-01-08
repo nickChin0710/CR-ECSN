@@ -1,0 +1,155 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/24  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!-- 112/07/12  V1.00.02  Simon          取消卡友選項                         -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>它行自動扣繳成功失敗明細表-V.2017-1129-Max Lin-[Initial]
+        -V.2018-0306-Andy-[Update UI]
+        -V.2018-0719-Alex-[Update UI]
+        -V.2020-0617-Andy-[Update UI]
+        -V.2020-0721-Andy-[Update]
+        -V.2023-0712-Simon-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap  colspan="3">&nbsp;&nbsp;&nbsp;
+                    <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="1">&nbsp;提出/扣款日期:
+                    <input type="text" class="col_date" name="ex_date_S" value="${ex_date_S}" zEdit="date,yyyymmdd" maxlength="8" size="10" zRequire ="k"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_S'
+                        });
+                    </script>
+                    --
+                    <input type="text" class="col_date" name="ex_date_E" value="${ex_date_E}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date_E'
+                        });
+                    </script>
+                </td>
+                <td nowrap colspan="1">&nbsp;身分證字號:
+                    <input type="text" class="col_text" name="ex_id" value="${ex_id}" maxlength="10" size="12" />
+                </td>
+                <td nowrap colspan="1">&nbsp;扣繳帳號:
+                    <input type="text" class="col_text" name="ex_autopay_acct_no" value="${ex_autopay_acct_no}" maxlength="16" size="18" zEdit="number" />&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="1">&nbsp;銀行代號:
+                    <select name="ex_bank_id" class="col_ddlb">
+                        <option value="">--</option>
+                        ${dddw_bank_id}
+                    </select>
+                </td>
+<!--
+                <td nowrap colspan="1">
+                    <input type="radio" value="A" name="ex_vip" ${ex_vip-A} ${DEFAULT_CHK} />全部
+                    <input type="radio" value="N" name="ex_vip" ${ex_vip-N} />一般卡友
+                    <input type="radio" value="Y" name="ex_vip" ${ex_vip-Y} />VIP 卡友
+                    <input type="radio" value="T" name="ex_vip" ${ex_vip-T} />頂級卡友
+                </td>
+-->
+                <td nowrap colspan="2">&nbsp;存款不足:
+               <!-- <input type="radio" value="0" name="ex_prt" ${ex_prt-0} ${DEFAULT_CHK} />不含 -->
+                    <input type="radio" value="0" name="ex_prt" ${ex_prt-0} />不含
+                    <input type="radio" value="1" name="ex_prt" ${ex_prt-1} ${DEFAULT-ex_prt} />包含
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!-- 合計============================ -->
+    <div id="dataBlock">
+        <table border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >&nbsp;合計:</td>
+                <td nowrap >&nbsp;它行自動扣繳ERROR筆數:
+                    <span class="dsp_number">${error_cnt.(999)}</span>
+                    <input type=hidden name="error_cnt" value="${error_cnt}" />
+                </td>
+                <td nowrap >&nbsp;扣繳金額總計:
+                    <span class="dsp_number">${sum_transaction_amt.(999)}</span>
+                    <input type=hidden name="sum_transaction_amt" value="${sum_transaction_amt}" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <!-- 明細============================ -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">扣繳銀行</th>
+            <th nowrap class="list_th">提出/扣款日</th>
+            <th nowrap class="list_th">帳戶帳號</th>
+            <th nowrap class="list_th">帳務週期</th>
+            <th nowrap class="list_th">正卡 ID</th>
+            <th nowrap class="list_th">中文姓名</th>
+            <th nowrap class="list_th">扣繳帳號</th>
+            <th nowrap class="list_th">扣繳金額</th>
+            <th nowrap class="list_th">自動扣繳帳號歸屬 ID</th>
+            <th nowrap class="list_th">退件原因</th>
+            <th nowrap class="list_th">簡訊註記</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+            <td nowrap class="list_ll"> ${vip}${acct_bank}_${tt_acct_bank} </td>
+            <td nowrap class="list_cc"> ${enter_acct_date.YMD} </td>
+            <td nowrap class="list_cc"> ${wk_acct_key} </td>
+            <td nowrap class="list_cc"> ${stmt_cycle} </td>
+            <td nowrap class="list_cc"> ${id_no} </td>
+            <td nowrap class="list_cc"> ${chi_name} </td>
+            <td nowrap class="list_ll"> ${autopay_acct_no} </td>
+            <td nowrap class="list_rr"> ${transaction_amt.(999)} </td>
+            <td nowrap class="list_cc"> ${autopay_id} </td>
+            <td nowrap class="list_ll"> ${status_code} </td>
+            <td nowrap class="list_cc"> ${wk_send_flag} </td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows = "20";
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+        return true;
+    }
+</script>

@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>臨時調整額度維護-依產品類別</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡片等級：
+      <select size="1" name="ex_card_note" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="*">*.通用</option>
+         ${dddw_card_note}
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;適用地區:
+       <select   size="1"  name="ex_area_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${ex_area_type-1} >國外</option>
+         <option value="2" ${ex_area_type-2} >國內</option>
+         <option value="3" ${ex_area_type-3} >國內外</option>
+      </select>
+   </td>
+   <td nowrap>&nbsp;放大MCC:
+      <input type="text" class="col_text" name="ex_mcc_code" value="${ex_mcc_code}" maxlength="4" size="6">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap  width="5%">No&nbsp;</th>
+    <th nowrap >卡片等級&nbsp;</th>
+    <th nowrap >適用地&nbsp;</th>    
+    <th nowrap >有效日期&nbsp;</th>
+    <th nowrap >放大MCC&nbsp;</th>
+    <th nowrap >放大總月限額&nbsp;</th>
+    <th nowrap >金額百分比&nbsp;</th>
+    <th nowrap >次數百分比&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+   		<input type="hidden" name="rowid" value="${rowid}">	
+   </td>
+	<td nowrap class="list_cc"> ${card_note}.${#JAVA:ecsfunc.DeCodeCrd.cardNote(card_note)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${area_type}.${#JAVA:ecsfunc.DeCodeCcas.areaType(area_type)}&nbsp;</td>	
+	<td nowrap class="list_cc"> ${adj_eff_date1.YMD}--${adj_eff_date2.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mcc_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${tot_amt_month.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${times_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${times_cnt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+ <input type="hidden"  name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam2060_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ccam2060_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

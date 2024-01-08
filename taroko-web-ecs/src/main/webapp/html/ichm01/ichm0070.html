@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>愛金卡自動加值拒絕代行名單維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;信用卡卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" >      
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <img src="images/uperLoad.gif" onclick="return upload_click()" style="cursor:hand" />
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;建檔日期:
+  		<input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	    </script>
+	    --
+	    <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	    </script>
+	  </td>
+	  <td nowrap >&nbsp;建檔經辦:
+	  	<input type="text" class="col_any" name="ex_crt_user" value="${ex_crt_user}" maxlength="10" size="12" zEdit="any,canTw" >
+	  </td>	  
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;傳送註記:
+  		<span class="col_radio">
+         <input type="radio" value="0" name="ex_send_flag" ${ex_send_flag-0} ${DEFAULT-ex_send_flag} />0.全部
+         <input type="radio" value="1" name="ex_send_flag" ${ex_send_flag-1} />1.未傳送
+         <input type="radio" value="2" name="ex_send_flag" ${ex_send_flag-2} />2.已傳送         
+      </span>
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >建檔日期_時間&nbsp;</th>
+    <th nowrap >信用卡卡號&nbsp;</th>
+    <th nowrap >愛金卡卡號&nbsp;</th>
+    <th nowrap >指定類別&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >傳送日期&nbsp;</th>
+    <th nowrap >拒絕代行說明&nbsp;</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;${crt_time.TIME}</td>
+	 <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${ich_card_no}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${tt_secu_code}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	 <td nowrap class="list_cc"> ${send_date.YMD}&nbsp;</td>
+	 <td nowrap class="list_ll"> ${risk_remark}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <input type="hidden"  name="upload_file" value="" /> 
+ <input type="hidden"  name="zz_file_name" value="" />
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ichm0070_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ichm0070_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+ function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "ichm01";
+    top.javaName    = "Ichm0070";
+    //methodName  = "actionFunction";
+    top.requHtml    = "ichm0070";
+    top.respHtml    = "ichm0070";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+      top.spinner.stop();
+    }
+ }   
+  
+</script>

@@ -1,0 +1,180 @@
+<html>
+<head>
+<title>VD催收歷史消費明細表-106-10-23-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!-- <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;帳戶帳號:
+      <select size="1" name="exAcctType" class="col_ddlb" zRequire ="k" >
+        ${DbpAcctTypeList}
+      </select>
+      <input type="text" class="col_text" name="exAcctKey" value="${exAcctKey}" 
+        zEdit="alphanum,upper" maxlength="19" size="19" />
+    </td>
+    <td nowrap>&nbsp;卡號：
+      <input type="text" class="col_number" name="exCardNo" value="${exCardNo}" 
+        zEdit="number" maxlength="19" size="19" />
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<div id="dsp1">
+<!--Head -->
+ <div id="queryBlock">
+ <table border="0" cellspacing="0" cellpadding="4">
+    <tr>
+		<td nowrap width="200">帳務年月:&nbsp;
+		    <span class="dsp_text">${tt_acct_month.YMD}</span> 
+		</td>
+		<td nowrap width="300">帳戶帳號:&nbsp;
+		    <span class="dsp_text">${acct_type_key}</span> 
+		</td>
+		<td nowrap width="300">${card_title}&nbsp;
+		    <span class="dsp_text">${card_chi_name}</span> 
+		</td>
+    </tr>
+ </table>
+ </div>
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">消費卡號</th>
+    <th nowrap class="list_th">起息日</th>
+    <th nowrap class="list_th">消費日</th>
+    <th nowrap class="list_th">特店名稱</th>
+    <th nowrap class="list_th">兌換日</th>
+    <th nowrap class="list_th">幣別</th>
+    <th nowrap class="list_th">原幣金額</th>
+    <th nowrap class="list_th">台幣金額</th>
+    <th nowrap class="list_th">城市</th>
+    <th nowrap class="list_th">交易別</th>
+    <th nowrap class="list_th">轉催呆<br>處理狀況</th>
+    <th nowrap class="list_th">轉催.呆<br>日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;	</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp; </td>
+   <td nowrap class="list_cc"> ${interest_date.YMD}&nbsp; </td>
+   <td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp; </td>
+   <td nowrap class="list_ll"> ${wk_mchtname}&nbsp; </td>
+   <td nowrap class="list_cc"> ${process_date.YMD}&nbsp; </td>
+   <td nowrap class="list_ll"> ${tt_source_curr}&nbsp; </td>
+   <td nowrap class="list_rr"> ${source_amt.(999)}&nbsp; </td>
+   <td nowrap class="list_rr"> ${dest_amt.(999)}&nbsp; </td>
+   <td nowrap class="list_ll"> ${mcht_city}&nbsp; </td>
+   <td nowrap class="list_cc"> ${txn_code}&nbsp; </td>
+   <td nowrap class="list_ll"> ${tt_debt_status}&nbsp; </td>
+   <td nowrap class="list_cc"> ${wk_date1.YMD}&nbsp; </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+<!-- 動態視窗控制 -->
+<div id="disDiv" class="disScreen"></div>
+<div id="popDiv" class="popup1">
+  <table id="popup2" style="top:-100px; left:30px; width:600px; height:100px;">
+    <tr><td colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+
+    <!--List -->
+<tr><td colspan="2">
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">帳戶號碼</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">帳戶ID</th>
+    <th nowrap class="list_th">中文姓名</th>
+    <th nowrap class="list_th">卡人生日</th>
+    <th nowrap class="list_th">金融帳號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreenPop('${SER_NUM}','${p-p_seqno}','${p-acct_type}','${p-acct_key}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-acct_type} - ${p-acct_key}&nbsp;</td>
+   <td nowrap class="list_ll"> ${p-tt_acct_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-id_no} - ${p-id_no_code}&nbsp;</td>
+   <td nowrap class="list_ll"> ${p-chi_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-birthday.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${p-tt_card_type}&nbsp;</td>
+   </tr><tr>
+     <td></td>
+     <th nowrap class="list_th">法人統編</th>
+     <td nowrap class="list_cc" colspan="3"> ${p-corp_no}&nbsp;</td>
+     <td nowrap class="list_cc"> ${p-tt_corp_act_flag}&nbsp;</td>
+     <td nowrap class="list_cc"> ${p-acct_no}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</td></tr>     
+  </table>
+</div>
+
+<!-- -->
+ <input type="hidden"  name="data_k1" value="${data_k1}" >
+ <input type="hidden"  name="data_k2" value="${data_k2}" >
+ <input type="hidden"  name="data_k3" value="${data_k3}" >
+ <input type="hidden" name="MOD_PGM" value="dbar0060">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  name="queryReadCnt"  value="${queryReadCnt}">
+ 
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+	tigra_tables('table2', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+ top.refreshButton2('0');
+ //top.pageRows="20";
+ document.dataForm.exAcctKey.focus();
+
+ var CC = document.dataForm.queryReadCnt.value;
+ if(CC >1){
+ 	top.popupBlock('popDiv');
+ }
+  
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreenPop(serNum,parm,parm2,parm3) { 
+	 document.dataForm.data_k1.value = parm;
+	 document.dataForm.data_k2.value = parm2;
+	 document.dataForm.data_k3.value = parm3;
+
+	 top.hideBlock('popDiv');
+	 top.submitControl('Q');
+	 return true;
+ }
+ 
+</script>

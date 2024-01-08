@@ -1,0 +1,105 @@
+<html>
+<head>
+  <title>會計科目主檔維護-V.2017-0622-Andy-[Initial]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+  <form  name="dataForm" method="post" action="" >
+
+    <div id="condBlock">
+      <!--COND -->
+      <table width="40%" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+         <td nowrap colspan="2">&nbsp;科子細目:
+           <input type="text" class="col_text" name="ex_ac_no" value="${ex_ac_no}"
+              zEdit="any" maxlength=9 size=10 />
+         </td>        
+       </tr>
+       <tr>
+         <td nowrap >主管覆核:&nbsp;
+	       <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} checked="checked" />(全部:不含新增)
+	       <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+	     </td>
+         <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   
+	         <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+	         <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+	         <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+         </td>   
+       </tr>
+      </table>
+  </div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap class="list_th" width="50">No&nbsp;</th>
+    <th nowrap class="list_th" >科子細目</th>
+    <th nowrap class="list_th" >會計科目簡稱</th>
+    <!--  <th nowrap class="list_th" >需銷帳鍵值註記</th> -->
+    <!--  <th nowrap class="list_th" >借方MEMO註記</th> -->
+    <!--  <th nowrap class="list_th" >貸方MEMO註記</th> -->
+    <th nowrap class="list_th" >會計科目全名</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${ac_no}','','')" style="cursor:hand">
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+    <td nowrap class="list_ll"> ${ac_no}</td>
+    <td nowrap class="list_ll"> ${ac_brief_name}</td>
+    <!--  <td nowrap class="list_ll"> ${memo3_flag}</td> -->
+    <!--  <td nowrap class="list_ll"> ${dr_flag}</td> -->
+    <!--  <td nowrap class="list_ll"> ${cr_flag}</td> -->
+    <td nowrap class="list_ll"> ${ac_full_name}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+<!--保留功能-->
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_ac_no.focus();
+
+ function validateInput()
+ {
+  if ( !top.checkFormat() )
+   { return false; }
+
+ if ( top.actionCode == "X" ) {
+  top.respLevel = 1;
+  top.respHtml = "genm0020_insert_detl"; 
+}
+
+return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+  top.respLevel = 1;
+  top.currRows  = serNum;
+  document.dataForm.data_k1.value = parm;
+  document.dataForm.data_k2.value = parm2;
+  document.dataForm.data_k3.value = parm3;  
+  top.respHtml  = "genm0020_detl";
+  top.submitControl('S');
+  return true;
+}
+
+</script>

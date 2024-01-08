@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <title>暫存檔請款明細查詢-V.2018-0830-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td colspan=6>&nbsp;交易卡號:
+                        <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength=20 size="21">&nbsp;
+                    </td>
+                    <td colspan=6 rowspan="2">&nbsp;類別:
+                        <br>
+                        <input type="radio" value="0" name="ex_kind" ${ex_kind-0}>0:格式錯誤&nbsp;
+                        <input type="radio" value="1" name="ex_kind" ${ex_kind-1}>1:問交-1&nbsp;&nbsp;&nbsp;
+                        <input type="radio" value="2" name="ex_kind" ${ex_kind-2}>2:問交-2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="radio" value="3" name="ex_kind" ${ex_kind-3}>3:問交-3&nbsp;&nbsp;&nbsp;
+                        <input type="radio" value="4" name="ex_kind" ${ex_kind-4}>4:問交-4&nbsp;&nbsp;
+                        <input type="radio" value="5" name="ex_kind" ${ex_kind-5}>5:問交-5&nbsp;&nbsp;
+                        <input type="radio" value="6" name="ex_kind" ${ex_kind-6}>6:問交-6&nbsp;
+                        <br>
+                        <input type="radio" value="7" name="ex_kind" ${ex_kind-7}>7:問交-7&nbsp;&nbsp;&nbsp;
+                        <input type="radio" value="8" name="ex_kind" ${ex_kind-8}>8:問交-8&nbsp;&nbsp;&nbsp;
+                        <input type="radio" value="9" name="ex_kind" ${ex_kind-9}>9:全部有疑義&nbsp;&nbsp;
+                        <input type="radio" value="10" name="ex_kind" ${ex_kind-10}>10:正確交易&nbsp;&nbsp;
+                        <input type="radio" value="11" name="ex_kind" ${ex_kind-11}>11:未查核交易&nbsp;&nbsp;
+                        <input type="radio" value="d" name="ex_kind" ${ex_kind-d} ${DEFAULT-ex_kind}>d:全部交易&nbsp;
+                    </td>&nbsp;
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;入帳日期：
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date2'
+                        });
+                        </script>&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=3>&nbsp;請款單位:
+                        <select name="ex_bill_type" class="col_ddlb">
+                            ${dddw_billuint}
+                        </select>&nbsp;
+                    </td>
+                    <td nowrap colspan=3>&nbsp;批號:
+                        <input type="text" class="col_any" name="ex_batchno" value="${ex_batchno}" zEdit="alphanum" maxlength=14 size="14">&nbsp;
+                    </td>
+                    <td>&nbsp;
+                        <span class="dsp_text" id="db_chi_name">總筆數：${db_count.(999)}</span>&nbsp;&nbsp;
+                        <span class="dsp_text" id="db_chi_name">消費總額：${db_sum_amt.(999)}</span>&nbsp;
+                    </td>
+                    <td nowrap colspan=3>&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!--<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;-->
+                        <!-- <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">交易卡號</th>
+                <th nowrap class="list_th">參考號碼</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">交易金額</th>
+                <th nowrap class="list_th">原始金額</th>
+                <th nowrap class="list_th">交易日期</th>
+                <th nowrap class="list_th">入帳日期</th>
+                <th nowrap class="list_th">疑異碼</th>
+                <th nowrap class="list_th">請款單位</th>
+                <th nowrap class="list_th">特店中文名稱</th>
+                <th nowrap class="list_th">特店英文名稱</th>
+                <th nowrap class="list_th">特店城市</th>
+                <th nowrap class="list_th">特店國別</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${reference_no}','','')" style="cursor:hand">
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${reference_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${batch_no}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${dest_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${source_amt.(999)} </td>
+                <td nowrap class="list_ll"> ${purchase_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${this_close_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${rsk_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_bill_type}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mcht_chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mcht_eng_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mcht_city}&nbsp; </td>
+                <td nowrap class="list_ll"> ${mcht_country}&nbsp; </td>
+                <input type="hidden" name="group_ct" value="${group_ct}">
+                <input type="hidden" name="txn_code" value="${txn_code}">
+                <input type="hidden" name="dest_amt" value="${dest_amt}">
+                <input type="hidden" name="wk_dest_amt" value="${wk_dest_amt}">
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+        <input type="hidden" name="user_id" value="${user_id}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_card_no.focus();
+
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "dbbq0020_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

@@ -1,0 +1,271 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-06-20   V1.00.01                                                     -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>偽冒調查列案與案件分派處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層" />&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;身分證ID:
+      <label class="dsp_text" id="db_idno" >${db_idno}</label>
+      <input type="hidden" name="db_idno" value="${db_idno}">
+   </td>
+   <td nowrap>&nbsp;姓名:
+      <label class="dsp_text" id="db_chi_name" >${db_chi_name}</label>
+      <input type="hidden" name="db_chi_name" value="${db_chi_name}">
+   </td>
+   <td nowrap>&nbsp;生日:
+      <label class="dsp_text" id="db_bir_date" >${db_bir_date.YMD}</label>
+      <input type="hidden" name="db_bir_date" value="${db_bir_date}">&nbsp;
+      <label class="dsp_text" id="vd_flag" >${vd_flag}</label>
+      <input type="hidden" name="vd_flag" value="${vd_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;住宅電話:
+      <label class="dsp_text" id="tel_no1" >${tel_no1}</label>
+      <input type="hidden" name="tel_no1" value="${tel_no1}">
+   </td>
+   <td nowrap>&nbsp;公司電話:
+      <label class="dsp_text" id="tel_no2" >${tel_no2}</label>
+      <input type="hidden" name="tel_no2" value="${tel_no2}">
+   </td>
+   <td nowrap>&nbsp;行動電話:
+      <label class="dsp_text" id="tel_no3" >${tel_no3}</label>
+      <input type="hidden" name="tel_no3" value="${tel_no3}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;帳單地址:
+     <label class="dsp_text" id="bill_addr" >${bill_addr}</label>
+      <input type="hidden" name="bill_addr" value="${bill_addr}">
+   </td>
+ </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="card_no" value="${card_no}" maxlength="16" size="18" zEdit="number" zRequire="Y" onChange="winidChange('1')">      
+   </td>
+   <td nowrap>&nbsp;卡片效期:
+      <label class="dsp_text" id="new_end_date" >${new_end_date.YMD}</label>
+      <input type="hidden" name="new_end_date" value="${new_end_date}">
+   </td>
+   <td nowrap>&nbsp;團體代號:
+      <label class="dsp_text" id="group_code" >${group_code}</label>
+      <input type="hidden" name="group_code" value="${group_code}">
+   </td>   
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;立案日期:
+      <input type="text" class="col_date" name="case_date" value="${case_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'case_date'});
+	  </script>
+   </td>
+   <td nowrap>&nbsp;案件編號:
+      <span class="dsp_text">${case_seqno}</span>
+      <input type="hidden" name="case_seqno" value="${case_seqno}">
+   </td>
+   <td nowrap>&nbsp;列案經辦:
+      <input type="text" class="col_any" name="case_user" value="${case_user}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;案件類型:
+   		<input type="text" class="col_any" id="case_type" name="case_type" value="${case_type}" zeditType="any,canTW" maxlength="30" size="32" /> 
+   		<input type="Button" class="btOther" id="btn_adjcommt" value="..." onClick="wf_adj_comment()" />
+      
+   </td>
+   <td nowrap>&nbsp;案件來源:
+      <select size="1" name="case_source" class="col_ddlb">
+      <option value="  ">  </option>
+      ${dddw_case_source}
+      </select>
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;盜刷成功筆數:
+      <input type="text" class="col_number" name="fraud_ok_cnt" value="${fraud_ok_cnt}" maxlength="7" size="9" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;盜刷成功金額:
+      <input type="text" class="col_number" name="fraud_ok_amt" value="${fraud_ok_amt}" maxlength="9" size="11" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;調查經辦:
+   		<select size="1" name="survey_user" class="col_ddlb">
+      	<option value="">--</option>
+      	${dddw_survey_user}
+      </select>      
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<div id="dlg_adj_comment">
+    <table border="0">
+        <tr><td>&nbsp;案件類型:
+        	<select size="1" id="ddlb_ecs_close_reason" name="ddlb_ecs_close_reason" class="col_ddlb">
+      			<option value="  ">  </option>   
+      		${dddw_case_type}
+      		</select>         
+        </td><tr>
+    </table>
+</div>
+
+<input type="hidden" id="id_p_seqno" name="id_p_seqno" value="${id_p_seqno}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+	
+	function wf_adj_comment() {
+	 $("#dlg_adj_comment").dialog("open");
+ }
+ 
+ $(document).ready(function () {
+     $("#dlg_adj_comment").dialog({
+         title:'案件類型',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         //height: 200,
+         //width: 300,
+         buttons: {
+             "確定": function() {
+                 $("#case_type").val($('#ddlb_ecs_close_reason').val()); 
+                 $(this).dialog("close");
+             },
+             "取消": function () {
+                 $(this).dialog("close");
+             }
+         }
+     });
+
+ });
+	
+function winidChange(ps1)
+ {
+	var  win_id =document.forms["dataForm"]["card_no"].value;
+
+	if ( win_id === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+
+/*   // 20200102 updated for archit.  change
+   if ( idCode === '1' ) { 
+		//clearListObj(document.getElementById("card_no"));
+		top.methodName = "wf_ajax_winid";
+		//listObjName ="card_no";
+   }*/
+
+	resetJSON();
+	addJSON("ax_winid",win_id);
+	processAJAX();
+ }
+  
+/*--
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+--*/  
+ function ajaxResponse()
+ {
+	top.respHtml ="rskm3160_detl";
+   top.requHtml ="rskm3160_detl";
+
+/*--	
+ 	var len = 0;
+	var listObj = document.getElementById(listObjName);
+	len = getJSONlength("OPTION_TEXT");
+--*/
+	if  ( idCode === '1' ) {
+		document.getElementById("db_idno").innerHTML =getJSONvalue("db_idno",0);
+		document.getElementById("db_chi_name").innerHTML =getJSONvalue("db_chi_name",0);
+		document.getElementById("db_bir_date").innerHTML =getJSONvalue("db_bir_date",0);
+		document.getElementById("vd_flag").innerHTML =getJSONvalue("vd_flag",0);
+		document.getElementById("tel_no1").innerHTML =getJSONvalue("tel_no1",0);
+		document.getElementById("tel_no2").innerHTML =getJSONvalue("tel_no2",0);
+		document.getElementById("tel_no3").innerHTML =getJSONvalue("tel_no3",0);
+		document.getElementById("bill_addr").innerHTML =getJSONvalue("bill_addr",0);
+		document.getElementById("new_end_date").innerHTML =getJSONvalue("new_end_date",0);
+		document.getElementById("group_code").innerHTML =getJSONvalue("group_code",0);
+		document.getElementById("id_p_seqno").innerHTML =getJSONvalue("id_p_seqno",0);		
+	}
+
+	if ( idCode === '1' )
+	{ return false; }
+ } 
+
+</script>

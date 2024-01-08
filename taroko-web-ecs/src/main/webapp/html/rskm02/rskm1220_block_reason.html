@@ -1,0 +1,116 @@
+<html>
+<head>
+<title>rskm1220-03-商務卡族群參數設定維護-block_reason</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body bgcolor="#FFFFFF">
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="wf_return_data()"; alt="回上層";>&nbsp;&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">族群代號：
+		<span class="dsp_text"> ${risk_group} </span>
+      <input type=hidden name="risk_group" value="${risk_group}">
+   </td>
+   <td nowrap class="colKey">明細類別：
+		<span class="dsp_text"> 03.凍結碼 </span>
+      <input type=hidden name="data_type" value="03">
+      <input type="hidden" name="type_desc" value="凍結碼">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >
+      <span class="col_key">主管覆核:&nbsp;${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>  
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>凍結碼：
+      <input type="text" class="col_text" id="ex_block" name="ex_block" value="${ex_block}" maxlength="2" size="5">
+     &nbsp;
+      <input type="Button" id="detl_btnAdd" value="新增明細" ${btnUpdate_disable} class="btUpdate" onClick="wf_save()" />      
+      <input type="Button" value="刪除明細" ${btnUpdate_disable} onClick="return top.submitControl('D2')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">凍結碼 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${batch_no}" />
+<input type=hidden name="data_k2" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_block_reason">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+   return true;
+  }
+ 
+ function wf_return_data() { 	 
+ 	 top.upperLevel();
+ 	 top.submitControl("S3"); 	 
+ }
+ 
+ function wf_save() { 		
+ 		var ls_data_code =$("#ex_block").val();
+ 		
+ 		if(ls_data_code==''){
+			alert("凍結碼 不可空白");
+			return ;
+		}
+ 		 		
+ 		top.submitControl('U2')
+ 		$("#ex_block").val('');
+ }
+ 
+</script>

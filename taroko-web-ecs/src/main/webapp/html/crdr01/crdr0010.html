@@ -1,0 +1,133 @@
+<html>
+
+<head>
+    <title>卡片庫存異動明細表-108-12-23-V1.00.02-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                     <td nowrap colspan=4>&nbsp;異動日期：
+                        <input type="text" class="col_date" name="exDateS" value="${exDateS}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'exDateS'
+                        });
+                        </script>                        
+                    </td>
+                    <td nowrap colspan=4>&nbsp;庫位:
+                        <select name="ex_place" class="col_ddlb">
+                            <option value="" ${ex_place}>--</option>
+                            ${dddw_place}
+                        </select>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;批號：
+                        <input type="text" class="col_any" name="ex_lot_no" value="${ex_lot_no}" zEdit="number" maxlength="10" size="12" />
+                    </td>                    
+                <tr>
+                    <td nowrap colspan=6>&nbsp;庫存種類：
+                        <br>
+                        <input type="radio" value="0" name="ex_tns_type" onClick="chang()" ${ex_tns_type-0} ${DEFAULT-ex_tns_type}>0:全部
+                        <input type="radio" value="1" name="ex_tns_type" onClick="chang()" ${ex_tns_type-1}>1:入庫                                  
+                        <input type="radio" value="2" name="ex_tns_type" onClick="chang()" ${ex_tns_type-2}>2:出庫&nbsp;&nbsp;出入庫原因： 
+                        <select name="ex_trans_reason1" id="ex_trans_reason1" class="col_ddlb">
+                            <option value="" ${ex_trans_reason1}>--</option>
+                            ${dddw_trans_reason1}
+                        </select>  
+                        <select name="ex_trans_reason2" id="ex_trans_reason2" class="col_ddlb">
+                            <option value="" ${ex_trans_reason2}>--</option>
+                            ${dddw_trans_reason2}
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!--<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;-->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>  
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4"  width="80%">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">異動編號</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">卡樣代碼</th>
+                <th nowrap class="list_th">卡樣中文</th>
+                <th nowrap class="list_th">庫位</th>                
+                <th nowrap class="list_th">單價</th>
+                <th nowrap class="list_th">出入庫原因</th>
+                <th nowrap class="list_th">入庫數量</th>
+                <th nowrap class="list_th">出庫數量</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${warehouse_no}&nbsp; </td>
+                <td nowrap class="list_cc"> ${lot_no}&nbsp; </td>
+                <td nowrap class="list_cc"> ${card_item}&nbsp; </td>
+                <td nowrap class="list_cc"> ${db_card_item_name}&nbsp; </td>
+                <td nowrap class="list_cc"> ${place}&nbsp; </td>                
+                <td nowrap class="list_rr"> &nbsp;${item_amt.(999)} </td>
+                <td nowrap class="list_ll"> ${trans_reason}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_inqty.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_outqty.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="wk_sort" value="${wk_sort}">
+        <input type="hidden" name="ibc_qty" value="${ibc_qty}">
+        <input type="hidden" name="ncc_qty" value="${ncc_qty}">
+        <input type="hidden" name="sum1" value="${sum1}">
+        <input type="hidden" name="sum2" value="${sum2}">
+        <input type="hidden" name="sum2" value="${user_id}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.exDateS.focus();
+chang();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+function chang() {
+    var ss = $('input[name*=ex_tns_type]:checked').val()
+    if(ss == "0"){
+        $("#ex_trans_reason1").hide();
+        $("#ex_trans_reason2").hide();
+    }
+    if(ss == "1"){
+        $("#ex_trans_reason1").show();
+        $("#ex_trans_reason2").hide();
+    }
+    if(ss == "2"){
+        $("#ex_trans_reason1").hide();
+        $("#ex_trans_reason2").show();
+    }
+}
+</script>

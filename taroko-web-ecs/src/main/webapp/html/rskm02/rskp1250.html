@@ -1,0 +1,167 @@
+<html>
+<head>
+<title>商務卡覆審結案主管覆核-jh-190620</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;覆審日期:
+      <input type="text" class="col_date" name="ex_close_date1" value="${ex_close_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_close_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_close_date2" value="${ex_close_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_close_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button" value="取消覆核" onClick="return top.submitControl('NC')" class="btProcess" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;覆審批號:
+      <input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+   <td nowrap >&nbsp;族群代號 [1/2]:
+      <input type="text" class="col_text" name="ex_risk_group1" value="${ex_risk_group1}" maxlength="2" size="5" >&nbsp;
+      <input type="text" class="col_text" name="ex_risk_group2" value="${ex_risk_group2}" maxlength="2" size="5" >&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;統一編號:
+      <input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}" zEdit="number" maxlength="8" size="10">&nbsp;
+   </td>
+   <td nowrap >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="1" name="ex_apr_flag" ${ex_apr_flag-1} ${default-ex_apr_flag} />未覆核
+         <input type="radio" value="2" name="ex_apr_flag" ${ex_apr_flag-2} />已覆核
+      </span>
+   </td>
+ </table>
+</div>
+<hr>
+
+<div id="dataBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap >&nbsp;已覆核筆數:${tl_apr_flag_Y.(999)}&nbsp;&nbsp;未覆核筆數:${tl_apr_flag_N.(999)}&nbsp;&nbsp;
+            <input type="Button" value="全部覆核" onClick="return top.submitControl('C3')" class="btProcess" ${button_proc_off} >&nbsp;&nbsp;
+            <input type="Button" value="全部取消覆核" onClick="return top.submitControl('C4')" class="btProcess" ${button_proc_off} >&nbsp;&nbsp;
+            <input type="hidden" name="tl_apr_flag_Y" value="${tl_apr_flag_Y}">
+            <input type="hidden" name="tl_apr_flag_N" value="${tl_apr_flag_N}">
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    覆核
+	 </th>
+	 <th nowrap >覆審批號&nbsp;</th>
+	 <th nowrap colspan="2" >族群代號[1/2]&nbsp;</th>
+	 <th nowrap >統一編號&nbsp;</th>
+	 <th nowrap >Action Code&nbsp;</th>
+	 <th nowrap >覆審日期&nbsp;</th>
+	 <th nowrap >經辦代號&nbsp;</th>
+	 <th nowrap >結案日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="rowid" value="${rowid}">
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	</td>
+	<td nowrap class="list_cc"> ${batch_no}&nbsp;
+	   <input type="hidden" name="batch_no" value="${batch_no}" />   
+	</td>
+	<td nowrap class="list_cc"> ${risk_group1}&nbsp;
+	   <input type="hidden" name="risk_group1" value="${risk_group1}" />   
+	</td>
+	<td nowrap class="list_cc"> ${risk_group2}&nbsp;
+	   <input type="hidden" name="risk_group2" value="${risk_group2}" />   
+	</td>
+	<td nowrap class="list_ll"> ${wk_corp_no_cname}&nbsp;
+	   <input type="hidden" name="wk_corp_no_cname" value="${wk_corp_no_cname}" />   
+	</td>
+	<td nowrap class="list_cc"> ${action_code}.${#JAVA:ecsfunc.DeCodeRsk.trialAction(action_code)}&nbsp;
+	   <input type="hidden" name="action_code" value="${action_code}" />   
+	</td>
+	<td nowrap class="list_cc"> ${close_date.YMD}&nbsp;
+	   <input type="hidden" name="close_date" value="${close_date}" />   
+	</td>
+	<td nowrap class="list_cc"> ${close_user}&nbsp;
+	   <input type="hidden" name="close_user" value="${close_user}" />   
+	</td>
+	<td nowrap class="list_cc"> ${close_apr_date.YMD}&nbsp;
+	   <input type="hidden" name="close_apr_date" value="${close_apr_date}" />   
+	</td>
+	</tr>
+	<tr>
+	   <td nowrap class="list_no"></td>
+	   <td nowrap class="list_ll" colspan="8">備註:${trial_remark}
+	      <input type="hidden" name="trial_remark" value="${trial_remark}">
+	   </td>
+	</tr> 
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables_2.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1',2,0,0);
+</script>
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+       
+    if (top.actionCode=='C') {
+       if (confirm("是否執行結案覆核")==false) {
+         return false;
+       }   
+    }  
+    
+    if (top.actionCode=='NC') {
+       if (confirm("是否執行取消結案覆核")==false) {
+         return false;
+       }   
+    }  
+       
+    return true;
+  }
+  
+</script>

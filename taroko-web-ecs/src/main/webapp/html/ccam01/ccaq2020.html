@@ -1,0 +1,161 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-11-18  V1.00.01  Justin          新增「停掛來源」                     -->
+<!-- 110-11-19  V1.00.02  Justin          add mod_pgm_desc                    -->
+<!-- 111-05-27  V1.00.03  Justin          add mail_branch                     -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>停用記錄查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;停掛日期:
+      <input type="text" class="col_date" name="ex_oppo_date1" value="${ex_oppo_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_oppo_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_oppo_date2" value="${ex_oppo_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_oppo_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12">
+   </td>
+  </tr>
+  <tr>   
+   <td nowrap>&nbsp;停掛人員:
+      <input type="text" class="col_any" name="ex_oppo_user" value="${ex_oppo_user}" maxlength="10" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap>&nbsp;停掛類別:
+      <select size="1" name="ex_oppo_type" class="col_ddlb" >
+         <option value="">--</option>
+         ${ddw_opptype}
+      </select>
+   </td>
+  </tr>
+  <tr>    
+   <td nowrap colspan="2" >&nbsp;停掛原因:
+      <select size="1" name="ex_oppo_status" class="col_ddlb" >
+         <option value="">--</option>
+         ${ddw_opptype_reason}
+      </select>
+   </td>
+  </tr>
+  <tr>    
+   <td nowrap colspan="2" >&nbsp;停掛來源:
+      <select size="1" name="ex_mod_pgm" class="col_ddlb" >
+         <option value="">--</option>
+         <option value="Etb0001" ${ex_mod_pgm-Etb0001}>ETABS</option>
+         <option value="ECSCDA39" ${ex_mod_pgm-ECSCDA39}>網銀</option>
+         <option value="others" ${ex_mod_pgm-others}>其他</option>
+      </select>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >持卡人ID&nbsp;</th>
+    <th nowrap >正卡ID&nbsp;</th>
+    <th nowrap >是否為正卡&nbsp;</th>
+    <th nowrap >停掛日期&nbsp;</th>
+    <th nowrap >停掛時間&nbsp;</th>
+    <th nowrap >停掛類別&nbsp;</th>
+    <th nowrap >停掛原因&nbsp;</th>
+    <th nowrap >停掛人員&nbsp;</th>
+    <th nowrap >補發否&nbsp;</th>
+    <th nowrap >寄達分行&nbsp;</th>
+    <th nowrap >刪除日期&nbsp;</th>
+    <th nowrap >刪除時間&nbsp;</th>
+    <th nowrap >刪除人員&nbsp;</th>
+    <th nowrap >更新日期&nbsp;</th>
+    <th nowrap >更新時間&nbsp;</th>
+    <th nowrap >更新人員&nbsp;</th>
+    <th nowrap >停掛來源&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${major_idno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${sup_flag}.${#JAVA:ecsfunc.DeCodeCrd.supFlag(sup_flag)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_time.TIME}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_type}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(oppo_type)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${opp_remark}&nbsp;</td>
+	<td nowrap class="list_cc"> ${oppo_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${renew_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mail_branch}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del_time.TIME}&nbsp;</td>
+	<td nowrap class="list_cc"> ${logic_del_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_time.TIME}&nbsp;</td>
+	<td nowrap class="list_cc"> ${chg_user}&nbsp;</td>
+   <td nowrap class="list_cc"> ${mod_pgm_desc}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }  
+</script>

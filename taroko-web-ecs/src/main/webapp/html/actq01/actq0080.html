@@ -1,0 +1,197 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/23  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+<head>
+	<title>系統自動退息明細查詢-V.2018-0316-ryan-[Initial]</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+	<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<style>
+	.numblue{
+		color:blue;
+	}
+	.numpink{
+		color:#FF44AA;
+	}
+</style>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+	<div id="condBlock">
+		<!--COND -->
+		<table width="90%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap>&nbsp;帳戶帳號:
+					<select size="1" name="ex_acct_type" class="col_ddlb" >
+						${dddw_acct_type}
+					</select>
+					--
+					<input type="text" class="col_text" zEdit="alphanum,upper"  name="ex_acct_key" value="${ex_acct_key}"
+						   maxlength="11" size="13" />
+					<!--   		maxlength="11" size="13" onChange="pSeqno('ex_acct_key')"/>  -->
+				</td>
+				<td nowrap>&nbsp;中文姓名:
+					<span class="dsp_text">${ex_id_cname}</span>
+					<input type="hidden"   name="ex_id_cname" value="${ex_id_cname}">
+				</td>
+				<td nowrap rowspan="2">&nbsp;
+					<input type="Button" name="btnQuery" value="查詢" onClick="return  pSeqno2(); " class="btQuery" >&nbsp;&nbsp;
+					<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+					<!--<input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;  -->
+				</td>
+			</tr>
+			<tr>
+				<td nowrap>&nbsp;卡號:
+					<input type="text" class="col_any" zEdit="any" name="ex_card_no" value="${ex_card_no}"
+						   maxlength="16" size="16" />
+					<!--   		maxlength="16" size="16" onChange="pSeqno('ex_card_no')"/>  -->
+				</td>
+				<td nowrap >&nbsp;公司名稱:
+					<span class="dsp_text">${ex_corp_cname}</span>
+					<input type="hidden"   name="ex_corp_cname" value="${ex_corp_cname}">
+				</td>
+			</tr>
+		</table>
+		<table width="90%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<td nowrap>&nbsp;關帳年月:
+					<input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+						   zeditType="date,ym" MaxLength=6 size=6 />
+					--
+					<input type="text" class="col_date" name="ex_date2" value="${ex_date2}"
+						   zeditType="date,ym" MaxLength=6 size=6 />
+				</td>
+				<td nowrap colspan="2">&nbsp;結算幣別:
+					<select size="1" name="ex_curr_code" class="col_ddlb" >
+						<option value="">--</option>
+						${dddw_curr_code}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap >&nbsp;對帳單週期:
+					<span class="dsp_text">${ex_cycle}</span>
+					<input type="hidden"   name="ex_cycle" value="${ex_cycle}">
+				</td>
+				<td nowrap >&nbsp;對帳單通知利息的金額:
+					<span class="dsp_text">${ex_interest}</span>
+					<input type="hidden"   name="ex_interest" value="${ex_interest}">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr>
+	<!--List -->
+	<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+		<tr>
+			<th nowrap class="list_th" width="5%">No&nbsp;</th>
+			<th nowrap class="list_th">入帳日期</th>
+			<th nowrap class="list_th">關帳年月</th>
+			<th nowrap class="list_th">利息本金</th>
+			<th nowrap class="list_th">起算日</th>
+			<th nowrap class="list_th">截止日</th>
+			<th nowrap class="list_th">利率<br>( n/10000 )</th>
+			<th nowrap class="list_th">正/負</th>
+			<th nowrap class="list_th">結算幣別</th>
+			<th nowrap class="list_th">利息金額<br>(結算幣別)</th>
+			<th nowrap class="list_th">可D數金額<br>(結算幣別)</th>
+			<th nowrap class="list_th">利息金額<br>(台幣)</th>
+			<th nowrap class="list_th">可D數金額<br>(台幣)</th>
+			<th nowrap class="list_th">產生原因</th>
+			<th nowrap class="list_th">科目明細<br>之參考序號</th>
+		</tr>
+		<!-- BEGIN DYNAMIC : DETAIL -->
+		<tr>
+			<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+			<td nowrap class="list_cc"> ${post_date.YMD} </td>
+			<td nowrap class="list_cc"> ${acct_month.YMD} </td>
+			<td nowrap class="list_rr"> ${intr_org_captial.(999.00)} </td>
+			<td nowrap class="list_cc"> ${intr_s_date.YMD} </td>
+			<td nowrap class="list_cc"> ${intr_e_date.YMD} </td>
+			<td nowrap class="list_rr"> ${interest_rate} </td>
+			<td nowrap class="list_cc"> ${interest_sign} </td>
+			<td nowrap class="list_cc numpink"> ${curr_code} </td>
+			<td nowrap class="list_rr numpink"> ${interest_amt.(999.00)} </td>
+			<td nowrap class="list_rr numpink"> ${inte_d_amt.(999.00)} </td>
+			<td nowrap class="list_rr numblue"> ${tw_interest_amt.(999.00)} </td>
+			<td nowrap class="list_rr numblue"> ${tw_inte_d_amt.(999.00)} </td>
+			<td nowrap class="list_cc"> ${reason_code} </td>
+			<td nowrap class="list_cc"> ${reference_no} </td>
+		</tr>
+		${sum_interest_amt}
+		<!-- END DYNAMIC : DETAIL -->
+		<tr ><td style="background-color:#FF44AA" colspan="15"></td></tr>
+		<tr style="border:5">
+			<td colspan="2"></td>
+			<td nowrap class="dsp_text">&nbsp;(台幣)利息:</td>
+			<td nowrap colspan="10" class="dsp_text">&nbsp;正項:
+				<span>${tol_interest_amt1}</span>
+				&nbsp;負項:
+				<span>${tol_interest_amt2}</span>
+				&nbsp;計息:
+				<span>${tol_interest_amt}</span>
+			</td>
+		</tr>
+	</table>
+	<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+	<input type="hidden"  name="pageType"  value="cond">
+	<input type="hidden"  name="MOD_PGM" value="actq0080">
+	<input type="hidden"  name="ex_p_seqno" id="ex_p_seqno" value="${ex_p_seqno}">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript" >
+
+	top.refreshButton2('0');
+	top.pageRows="20";
+
+	document.dataForm.ex_acct_key.focus();
+
+	function validateInput()
+	{
+		if ( !top.checkFormat() )
+		{ return false; }
+		return true;
+	}
+	function pSeqno(no){
+		var acct_key = $("input[name = ex_acct_key]").val();
+		if(acct_key.length==8){
+			acct_key = acct_key+"000";
+		}
+		if(acct_key.length==10){
+			acct_key = acct_key+"0";
+		}
+		$("input[name = ex_acct_key]").val(acct_key);
+		if(no=='ex_acct_key'){
+			top.submitControl('PSEQNO1');
+		}else if(no=='ex_card_no'){
+			top.submitControl('PSEQNO2');
+		}
+	}
+	function pSeqno2(){
+		var acct_key = $("input[name = ex_acct_key]").val();
+		if(acct_key.length==8){
+			acct_key = acct_key+"000";
+		}
+		if(acct_key.length==10){
+			acct_key = acct_key+"0";
+		}
+		$("input[name = ex_acct_key]").val(acct_key);
+		top.submitControl('Q2');
+		return true;
+	}
+
+
+</script>

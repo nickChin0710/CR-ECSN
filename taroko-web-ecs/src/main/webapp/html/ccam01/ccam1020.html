@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>人工授權沖正處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" />
+   </td>
+   <td nowrap >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" />
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >卡號</th>
+    <th nowrap >特店代號 </th>
+    <th nowrap >MCC </th>
+    <th nowrap >消費金額 </th>
+    <th nowrap >授權碼 </th>
+    <th nowrap >消費日期 </th>
+    <th nowrap >建檔時間 </th>
+    <th nowrap >授權序號 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${tx_date}','${tx_time}','${card_no}','${auth_no}','${trace_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="rowid" value="${rowid}">
+      <input type="hidden" name="trace_no" value="${trace_no}">
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${mcht_no}&nbsp;
+      <input type="hidden" name="mcht_no" value="${mcht_no}">
+	</td>
+	<td nowrap class="list_cc"> ${mcc_code}&nbsp;
+      <input type="hidden" name="mcc_code" value="${mcc_code}">
+	</td>
+	<td nowrap class="list_rr"> ${nt_amt.(999)}&nbsp;
+      <input type="hidden" name="nt_amt" value="${nt_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${auth_no}&nbsp;
+      <input type="hidden" name="auth_no" value="${auth_no}">
+	</td>
+	<td nowrap class="list_cc"> ${tx_date.YMD}&nbsp;
+      <input type="hidden" name="tx_date" value="${tx_date}">
+	</td>
+	<td nowrap class="list_cc"> ${tx_time.TIME}&nbsp;
+      <input type="hidden" name="tx_time" value="${tx_time}">
+	</td>
+  <td nowrap class="list_cc"> ${auth_seqno}&nbsp;
+      <input type="hidden" name="auth_seqno" value="${auth_seqno}" />
+  </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+ <input type="hidden"  name="data_k4" value="" />
+ <input type="hidden"  name="data_k5" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+function detailScreen(serNum,parm,parm2,parm3,parm4,parm5) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ccam1020_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

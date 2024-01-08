@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>郵購/分期付款申購書登錄作業-V.2017-0807-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;持卡人身分證號:
+            <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" 
+			   zEdit="alphanum,upper" maxlength="10" size="12"  />
+        </td>
+         <td nowrap>&nbsp;交易卡號:&nbsp;
+            <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}"
+            zEdit="any" maxlength=19 size=19 />
+        </td>
+        <td rowspan="2" nowrap>&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+    <tr>
+     	
+        <td nowrap >&nbsp;消費日期：
+          <input type="text" class="col_date" name="ex_purchase_date1" value="${ex_purchase_date1}" 
+            zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript">
+            new tcal ({'formname': 'dataForm','controlname': 'ex_purchase_date1'});
+          </script>
+          --
+          <input type="text" class="col_date" name="ex_purchase_date2" value="${ex_purchase_date2}" 
+            zEdit="date,yyyymmdd" maxlength="8" size="8" />
+          <script language="JavaScript">
+            new tcal ({'formname': 'dataForm','controlname': 'ex_purchase_date2'});
+          </script>
+          &nbsp;&nbsp;
+        </td>
+        <td nowrap>&nbsp;申購書編號:&nbsp;
+            <input type="text" class="col_any" name="ex_contract_no" value="${ex_contract_no}"
+            zEdit="any" maxlength=10 size=10 />
+        </td>
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th">申購書編號</th>
+        <th nowrap class="list_th">序號</th>
+        <th nowrap class="list_th">經辦</th>
+        <th nowrap class="list_th">放行旗標</th>
+        <th nowrap class="list_th">身分證號</th>
+        <th nowrap class="list_th">交易卡號</th>
+        <th nowrap class="list_th">消費日期</th>
+        <th nowrap class="list_th">總金額</th>
+        <th nowrap class="list_th">總期數</th>
+        <th nowrap class="list_th">每期金額</th>
+        <th nowrap class="list_th">入帳期數</th>
+        <th nowrap class="list_th">未入帳金額</th>
+        <th nowrap class="list_th">分期狀態</th>
+        <th nowrap class="list_th">強迫入帳</th>
+        <th nowrap class="list_th">商品代號</th>
+        <th nowrap class="list_th">商品名稱</th>
+        <th nowrap class="list_th">特店代號</th>
+        <th nowrap class="list_th">特店中文名稱</th>
+        <th nowrap class="list_th">類別</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr onclick="detailScreen('${SER_NUM}','${contract_no}','${contract_seq_no}','')" style="cursor:hand">
+        <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+        <td nowrap class="list_ll"> ${contract_no}</td>
+        <td nowrap class="list_cc"> ${contract_seq_no} </td>
+        <td nowrap class="list_ll"> ${mod_user} </td>
+        <td nowrap class="list_cc"> ${apr_flag} </td>
+        <td nowrap class="list_ll"> ${id_no} </td>
+        <td nowrap class="list_ll"> ${card_no} </td>
+        <td nowrap class="list_ll"> ${purchase_date.YMD} </td>
+        <td nowrap class="list_rr"> ${tot_amt.(999)} </td>
+        <td nowrap class="list_rr"> ${install_tot_term} </td>
+        <td nowrap class="list_rr"> ${unit_price.(999)} </td>
+        <td nowrap class="list_rr"> ${install_curr_term} </td>
+        <td nowrap class="list_rr"> ${unbill_amt.(999)} </td>
+        <td nowrap class="list_rr"> ${status_code} </td>
+        <td nowrap class="list_cc"> ${forced_post_flag} </td>
+        <td nowrap class="list_ll"> ${product_no} </td>
+        <td nowrap class="list_ll"> ${product_name} </td>
+        <td nowrap class="list_ll"> ${mcht_no} </td>
+        <td nowrap class="list_ll"> ${mcht_chi_name} </td>
+        <td nowrap class="list_cc"> ${db_contract_kind} </td>
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "bilm0110_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "bilm0110_detl";
+    top.submitControl('S');
+    return true;
+}
+
+
+
+
+</script>

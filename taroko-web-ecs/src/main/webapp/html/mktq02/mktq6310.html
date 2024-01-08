@@ -1,0 +1,251 @@
+<html>
+<head>
+<title> 112/09/08 V1.00.01 Ryan Initial 台外幣現金回饋月份查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="10">
+   <tr>
+   		<td nowrap>&nbsp;查詢月份:
+   	 		<input type="text" class="col_date" name="ex_tran_date" value="${ex_tran_date}"
+         	zeditType="date,yyyymm" MaxLength=6 size=8 zRequire ="k"/>
+   		</td>
+  	 	<td nowrap>&nbsp;幣別代碼:
+      		<select size="1" name="ex_curr_code" class="col_ddlb" >
+         		${dddw_curr_code}
+      		</select>
+     	</td>
+     	<td nowrap>&nbsp;資料類別：
+      		<select  name="ex_query_table" class="col_ddlb"  zRequire ="k">
+         		<option selected="selected" value="1" ${ex_query_table-1} >近程資料</option>
+         		<option value="2" ${ex_query_table-2} >歷史資料</option>
+      		</select>
+   		</td>
+     	<td nowrap rowspan="2">&nbsp;
+      		<input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   		</td>
+   </tr>
+   <tr>
+        <td nowrap style="border-right-style:none">&nbsp;查詢方式: </td>
+   		<td nowrap style="border-left-style:none" colspan="2">
+           <li style="list-style-type:none"><input type="radio" value="1"  name="ex_select_type" ${ex_select_type-1} ${DEFAULT_CHK} />日期/幣別 彙總</li>
+           <li style="list-style-type:none"><input type="radio" value="2"  name="ex_select_type" ${ex_select_type-2} />日期/幣別/帳戶類別 彙總</li>
+   		</td>
+   </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">查詢日期</th>
+    <th nowrap class="list_th">幣別</th>
+    <th nowrap class="list_th">原始回饋金額</th>
+    <th nowrap class="list_th">本日入帳金額</th>
+    <th nowrap class="list_th">本日估算可用餘額</th>
+<!--     <th nowrap class="list_th">最新可用餘額</th> -->
+    <th nowrap class="list_th">彙總筆數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${table_type}','${tran_date}','${curr_code}','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+    </td>
+    <td nowrap class="list_cc"> ${tran_date.YMD}</td>
+    <td nowrap class="list_cc"> ${curr_code}${comm_curr_code}</td>
+    <td nowrap class="list_rr"> ${beg_tran_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${ent_tran_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${cnt_tran_amt.(999)}</td>
+<!--     <td nowrap class="list_rr"> ${end_tran_amt.(999)}</td> -->
+    <td nowrap class="list_cc"> ${data_cnt}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+  <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">查詢日期</th>
+    <th nowrap class="list_th">幣別</th>
+    <th nowrap class="list_th">帳戶類別</th>
+    <th nowrap class="list_th">原始回饋金額</th>
+    <th nowrap class="list_th">本日入帳金額</th>
+    <th nowrap class="list_th">本日估算可用餘額</th>
+<!--     <th nowrap class="list_th">最新可用餘額</th> -->
+    <th nowrap class="list_th">彙總筆數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${table_type}','${tran_date}','${curr_code}','${acct_type}','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+    </td>
+    <td nowrap class="list_cc"> ${tran_date.YMD}</td>
+    <td nowrap class="list_cc"> ${curr_code}${comm_curr_code}</td>
+    <td nowrap class="list_cc"> ${acct_type}${comm_acct_type}</td>
+    <td nowrap class="list_rr"> ${beg_tran_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${ent_tran_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${cnt_tran_amt.(999)}</td>
+<!--     <td nowrap class="list_rr"> ${end_tran_amt.(999)}</td> -->
+    <td nowrap class="list_cc"> ${data_cnt}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ <hr>
+ <div id="dataBlock">
+ <table id = "table3" width="60%" border="0" cellspacing="0" cellpadding="4">
+  <th>合計</th>
+   <tr>
+     <td nowrap class="td_data">幣別 </td>
+     <td nowrap class="td_data">原始回饋金額 </td>
+     <td nowrap class="td_data">本月入帳金額 </td>
+     <td nowrap class="td_data">本月估算可用餘額</td>
+     <td nowrap class="td_data">最新可用餘額 </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">901新台幣</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_901.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_901.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_901.(999)}</span></td>   
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_901.(999)}</span></td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">840美金</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_840.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_840.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_840.(999)}</span></td>  
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_840.(999)}</span></td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">392日幣</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_392.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_392.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_392.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_392.(999)}</span></td>
+   </tr>
+ </table>
+ <table id = "table4" width="60%" border="0" cellspacing="0" cellpadding="4">
+  <th>合計</th>
+   <tr>
+     <td nowrap class="td_data">幣別 </td>
+     <td nowrap class="td_data">帳戶類別 </td>
+     <td nowrap class="td_data">原始回饋金額 </td>
+     <td nowrap class="td_data">本月入帳金額 </td>
+     <td nowrap class="td_data">本月估算可用餘額</td>
+     <td nowrap class="td_data">最新可用餘額 </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">901新台幣</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">01一般卡</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_90101.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_90101.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_90101.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_90101.(999)}</span></td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">901新台幣</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">03商務卡</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_90103.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_90103.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_90103.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_90103.(999)}</span></td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">901新台幣</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">06政府網路採購卡</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_90106.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_90106.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_90106.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_90106.(999)}</span></td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">840美金</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">01一般卡</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_84001.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_84001.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_84001.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_84001.(999)}</span></td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"><span class="dsp_text">392日幣</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">01一般卡</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${beg_tran_amt_39201.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${ent_tran_amt_39201.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${cnt_tran_amt_39201.(999)}</span></td>
+     <td nowrap class="td_data"><span class="dsp_text">${end_tran_amt_39201.(999)}</span></td>
+   </tr>
+ </table>
+ </div>
+ 
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+        tigra_tables('table2');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="31";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq6310_list";
+    top.submitControl('S');
+    return true;
+  }
+ 
+ $(document).ready(function(){ 
+	 if ($('input[name=ex_select_type][value=1]').prop("checked")==true) {
+	        $('#table1').show();
+	        $('#table2').hide();
+	        $('#table3').show();
+	        $('#table4').hide();
+	 }
+	 if ($('input[name=ex_select_type][value=2]').prop("checked")==true) {
+	        $('#table1').hide();
+	        $('#table2').show();
+	        $('#table3').hide();
+	        $('#table4').show();
+	 }
+  });
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,298 @@
+<html>
+<head>
+<title>自動扣繳帳號維護作業-detl [V.2018-0816.jh]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr> 
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;&nbsp;
+                    <input type="Button" name="btnQuery"   value="讀取" ${btnQuery_disable} onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+                    <input type="Button" name="btnAdd"    value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+                    <input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+
+        </table>
+
+        <div id="dataBlock">
+        	<table width="60%" border="0" cellspacing="0" cellpadding="4">
+        	<tr>
+            	<td nowrap >&nbsp;帳戶帳號:
+            		<select size="1" name="kk_acct_type" class="col_ddlb" ${kk_acct_type_attr} >
+            			${dddw_acct_type2}
+            		</select>
+            		<input type="text" class="col_text" name="kk_acct_key" value="${kk_acct_key}" 
+            		 ${kk_acct_key_attr} maxlength=11 size=13 />&nbsp;
+            	</td>
+          </tr>
+          </table>
+			<hr>
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap colspan="3" >&nbsp;帳戶帳號:
+						<span class="dsp_text">${acct_type}-${acct_key}&nbsp;</span>
+						<input type="hidden" name="acct_type" value="${acct_type}">
+						<input type="hidden" name="acct_key" value="${acct_key}">
+					</td>
+					<td nowrap style="color:red;" colspan="3" >&nbsp;
+            <span style="color:red; font-weight:bold;">${pending_msg}
+              <input type="hidden" name="pending_msg" value="${pending_msg}">
+            </span>
+						覆核日期:
+<!--				<span class="dsp_text">${exec_check_date.YMD}&nbsp;</span>   -->
+						<span >${exec_check_date.YMD}&nbsp;</span>
+						<input type="hidden" name="exec_check_date" value="${exec_check_date}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3" >&nbsp;中文姓名:
+						<span class="dsp_text" >${chi_name}&nbsp;</span>
+						<input type="hidden" name="chi_name" value="${chi_name}">
+					</td>
+					<td nowrap colspan="3" >&nbsp;公司名稱:
+						<span class="dsp_text" >${corp_chi_name}&nbsp;</span>
+						<input type="hidden" name="corp_chi_name" value="${corp_chi_name}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3" >&nbsp;申請書編號:
+						<span class="dsp_text">${appl_no}&nbsp;</span>
+						<input type="hidden" name="appl_no" value="${appl_no}">
+					</td>
+					<td nowrap colspan="3" >&nbsp;正卡ID:
+<!--				<span class="dsp_text">${id_no}&nbsp;</span>   -->
+						<span class="dsp_text">${tt_id_no}&nbsp;</span>
+   	  			<input type="hidden" name="tt_id_no" value="${tt_id_no}">    
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3" >&nbsp;扣繳行庫:
+    				<select size="1" name="autopay_acct_bank" class="col_ddlb" zRequire="Y" onChange="AcctBankChange('1');" >
+							<option value="">--</option>
+							${dddw_autopay_acct_bank2}
+						</select>
+   	  			<input type="hidden" name="chk_autopay_acct_bank" value="${chk_autopay_acct_bank}">    
+					</td>
+					<td nowrap colspan="3" >&nbsp;扣繳帳號:
+						<input type="text" class="col_text" name="autopay_acct_no" value="${autopay_acct_no}" maxlength="16" size="18" zEdit="alphuanum,upper" zRequire="Y" >
+   	  			<input type="hidden" name="chk_autopay_acct_no" value="${chk_autopay_acct_no}">    
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3" >&nbsp;自動扣繳指示碼:
+						<span class="col_radio">
+         			<input type="radio" value="1" name="autopay_indicator" ${autopay_indicator-1} ${DEFAULT_CHK} />扣 TTL
+         			<input type="radio" value="2" name="autopay_indicator" ${autopay_indicator-2} />扣 MP
+      			</span>
+   	  			<input type="hidden" name="chk_autopay_indicator" value="${chk_autopay_indicator}">    
+      		</td>
+          <td colspan="3" >
+          </td>
+      	</tr>
+      	<tr>
+      		<td nowrap colspan="3" >&nbsp;自動扣繳有效期間:
+      			<input type="text" class="col_date" name="autopay_acct_s_date" value="${autopay_acct_s_date}" zeditType="date,yyyymmdd" MaxLength="8" size="10" />
+							<script language="JavaScript">
+							  new tcal ({'formname': 'dataForm','controlname': 'autopay_acct_s_date'});
+							</script>
+   	  			<input type="hidden" name="chk_autopay_acct_s_date" value="${chk_autopay_acct_s_date}">    
+						--
+<!--
+						<span class="dsp_text">${autopay_acct_e_date.YMD}&nbsp;</span>
+						<input type="hidden" name="autopay_acct_e_date" value="${autopay_acct_e_date}">
+-->
+      			<input type="text" class="col_date" name="autopay_acct_e_date" value="${autopay_acct_e_date}" zeditType="date,yyyymmdd" MaxLength="8" size="10" />
+							<script language="JavaScript">
+							  new tcal ({'formname': 'dataForm','controlname': 'autopay_acct_e_date'});
+							</script>
+   	  			<input type="hidden" name="chk_autopay_acct_e_date" value="${chk_autopay_acct_e_date}">    
+					</td>
+					<td nowrap colspan="3" >&nbsp;生效旗標:
+						<span class="col_radio">
+         			<input type="radio" value="1" name="valid_flag" ${valid_flag-1} ${DEFAULT-valid_flag} />即時生效
+         			<input type="radio" value="2" name="valid_flag" ${valid_flag-2} />CYCLE生效
+   	    			<input type="hidden" name="chk_valid_flag" value="${chk_valid_flag}">    
+      			</span>
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3" width="50%" >&nbsp;自動扣繳歸屬ID:
+						<input type="text" class="col_text" name="autopay_id" value="${autopay_id}" maxlength="10" size="12" 
+						zEdit="alphanum,upper" zRequire="Y" onchange="alertAutopayId(this);" >
+						<input type="text" class="col_text" name="autopay_id_code" value="${autopay_id_code}" maxlength="1" size="3" zEdit="alphanum,upper" >
+       			<input type="hidden" name="chk_autopay_id" value="${chk_autopay_id}">    
+       			<input type="hidden" name="chk_autopay_id_code" value="${chk_autopay_id_code}">    
+					</td>
+					<td nowrap colspan="3" >&nbsp;帳單關帳期別:
+						<span class="dsp_text">${stmt_cycle}&nbsp;</span>
+						<input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="2" >&nbsp;
+						<input type="checkbox" name="edda_reentry_flag" value="Y" ${edda_reentry_flag-Y}>補登eDDA授權
+       			<input type="hidden" name="chk_edda_reentry_flag" value="${chk_edda_reentry_flag}">    
+					</td>
+					<td nowrap colspan="2" >&nbsp;維護日期:
+						<span class="dsp_text" >${crt_date.YMD}&nbsp;</span>
+						<input type="hidden" name="crt_date" value="${crt_date}">
+					</td>
+					<td nowrap colspan="2" >&nbsp;來源代號:
+						<span class="dsp_text">${from_mark}.${tt_from_mark}&nbsp;</span>
+						<input type="hidden" name="from_mark" value="${from_mark}">
+						<input type="hidden" name="tt_from_mark" value="${tt_from_mark}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="2" >&nbsp;
+						<input type="checkbox" name="verify_flag" value="Y" ${verify_flag-Y}>驗印完畢:
+       			<input type="hidden" name="chk_verify_flag" value="${chk_verify_flag}">    
+					</td>
+					<td nowrap colspan="2" >&nbsp;驗印完成日期:
+						<span class="dsp_text" >${verify_date.YMD}&nbsp;</span>
+						<input type="hidden" name="verify_date" value="${verify_date}">
+					</td>
+					<td nowrap colspan="2" >&nbsp;驗印結果:
+						<select   size="1"  name="verify_return_code" class="col_ddlb">
+			         <option value="">--</option>
+			         <option value="00" ${verify_return_code-00} >成功</option>
+			         <option value="01" ${verify_return_code-01} >失敗</option>
+			         <option value="99" ${verify_return_code-99} >免驗印</option>
+     			  </select>
+       			<input type="hidden" name="chk_verify_return_code" value="${chk_verify_return_code}">    
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="2" >&nbsp;</td>
+					<td nowrap colspan="2" >&nbsp;IBM 查核日期:
+						<span class="dsp_text">${ibm_check_date.YMD}&nbsp;</span>
+						<input type="hidden" name="ibm_check_date" value="${ibm_check_date}">
+					</td>
+					<td nowrap colspan="2" >&nbsp;查核結果:
+						<span class="dsp_text">${ibm_return_code}.${tt_ibm_return_code}&nbsp;</span>
+						<input type="hidden" name="ibm_return_code" value="${ibm_return_code}">
+					</td>
+				</tr>
+				<tr>
+					<td nowrap colspan="3" >&nbsp;上次簡訊發送日期:
+						<span class="dsp_text">${sms_send_date.YMD}&nbsp;</span>
+						<input type="hidden" name="sms_send_date" value="${sms_send_date}">
+					</td>
+					<td nowrap colspan="3" >&nbsp;簡訊發送次數:
+						<span class="dsp_text">${sms_send_cnt.(999)}&nbsp;</span>
+						<input type="hidden" name="sms_send_cnt" value="${sms_send_cnt}">
+						&nbsp;
+						<input type="Button" name="btnSms" ${btnSms_disable} value="發送簡訊" onClick="wfSendSmsMsg()" class="btOther">&nbsp;&nbsp;
+					</td>
+				</tr>
+
+			</table>
+		</div>
+        <!-- -->
+        <input type="hidden" name="p_seqno" value="${p_seqno}" />
+        <input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+        <input type="hidden" id="sms_send_flag" name="sms_send_flag" value="${sms_send_flag}" />
+        <input type="hidden" name="ori_autopay_acct_no" value="${ori_autopay_acct_no}" />
+
+        <input type="hidden" name="rowid" value="${rowid}" />
+        <input type="hidden" name="MOD_PGM" value="actm0010" />
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}" />
+        <input type="hidden" name="USERID" value="${userId}" />
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+        <input type="hidden" name="pageType" value="detl" />
+        <input type="hidden"  name="kp_acct_type" value="${kp_acct_type}">
+        <input type="hidden"  name="kp_acct_key" value="${kp_acct_key}">
+        <input type="hidden"  name="kp_exec_check_flag" value="${kp_exec_check_flag}">
+    </form>
+</body>
+
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+	   if (top.actionCode=='A' || top.actionCode=='U') {
+    	if (confirm("是否 發送簡訊")==true) {
+        $("#sms_send_flag").val("Y");
+     	}	else	{
+     		$("#sms_send_flag").val("N");
+     	}
+	  }
+
+    return true;
+}
+
+function wfSendSmsMsg() {
+	var ls_rowid = document.forms["dataForm"]["rowid"].value;
+	if(ls_rowid ==''){
+		alert("資料未讀取 or 尚未新增 不可發送簡訊");
+		return ;
+	}
+
+	if(confirm("是否 發送簡訊")==false){
+		return ;
+	}
+
+	top.submitControl('C1');
+
+}
+
+function alertAutopayId(obj) { 
+	var ls_autopay_id = obj.value;
+  var str = ls_autopay_id.toString();
+  if(str.length != 8 && str.length != 10) {
+		alert("扣繳歸屬ID非為 8 or 10 碼！")
+	  obj.focus();
+		return;
+	}
+}
+
+function AcctBankChange(ps1)
+ {
+ 	var  ls_autopay_acct_bank =document.forms["dataForm"]["autopay_acct_bank"].value;
+	idCode = ps1;
+   
+ //20200107 modify AJAX
+   top.actionCode = "AJAX";
+ //if ( idCode === '1' ) { 
+ //	top.methodName = "wfAjaxAcctbank";
+ //}
+
+	resetJSON();
+	addJSON("ax_autopay_acct_bank",ls_autopay_acct_bank);	
+	processAJAX();
+ }
+
+function ajaxResponse() 
+{
+  top.respHtml = "actm0010_detl";
+  top.requHtml = "actm0010_detl";
+
+  //$("input[name=valid_flag]").val(getJSONvalue("valid_flag",0));
+	//if ( idCode === '1' )
+	//{ return false; }
+
+}
+
+
+
+</script>

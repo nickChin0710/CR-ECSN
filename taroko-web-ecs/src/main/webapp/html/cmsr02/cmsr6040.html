@@ -1,0 +1,228 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-11-24  V1.00.01  sunny     配合卡部要求，將「接聽」改為「受理」  -->
+<!-- 111-11-24  V1.00.02  sunny     增加部門代號欄，限制只能查詢自己單位，除信用卡部(A401)的使用者除外可看到全部 -->
+<!-- 111-11-29  V1.00.03  sunny     配合卡部要求，增加【受理單位簽核】、【處理單位簽核】兩項資訊  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>案件移送部每日清單 V2022-11-28</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript">
+$(document).ready(function(){
+ //部門代號add
+  var ls_usr_dept=$("input[name=wk_edit_dept]").val();
+  if (ls_usr_dept =='Y') {
+    $("select[name=ex_dept_no]").removeAttr("disabled");
+  }
+  else {
+    $("select[name=ex_dept_no]").attr("disabled",true);
+  }
+  
+  var selected = $("input[name=ex_ugcall_flag]:checked");
+  var selected = $("input[name=ex_case_conf_flag]:checked");
+  var selected = $("input[name=ex_apr_flag]:checked");
+  
+  if (selected.length == 0) {
+     $("input:radio[name=ex_ugcall_flag]").filter('[value=0]').prop('checked', true);
+     $("input:radio[name=ex_case_conf_flag]").filter('[value=0]').prop('checked', true);     
+     $("input:radio[name=ex_apr_flag]").filter('[value=0]').prop('checked', true);     
+  }
+  
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <!-- 部門代號add -->
+    <td nowrap colspan="1">&nbsp;部門代號:
+      <select size="1" name="ex_dept_no" class="col_ddlb">
+      	<option value="">--</option>   
+         ${d_dddw_deptno}
+      </select>
+   </td>
+     <td nowrap colspan="1">&nbsp;受理日期:
+         <input type="text" class="col_date" name="ex_cms_date_s" value="${ex_cms_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_s'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_cms_date_e" value="${ex_cms_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_cms_date_e'});
+	      </script>
+	</td>
+  </tr>
+  <tr>
+
+	<td nowrap >&nbsp;卡號/身分證字號:
+	   <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18">
+	</td>
+	<td nowrap >&nbsp;處理完成期間:
+         <input type="text" class="col_date" name="ex_ok_date_s" value="${ex_ok_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_ok_date_s'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_ok_date_e" value="${ex_ok_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_ok_date_e'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+</tr>
+<tr> 
+	<td nowrap colspan="1">&nbsp;移送部門:
+	   <select size="1" name="ex_proc_deptno" class="col_ddlb" >
+	      <option value="">--</option>
+         ${dddw_proc_dept}
+      </select>
+   </td>
+   <td nowrap>&nbsp;部門的處理狀況:
+       <select   size="1"  name="ex_case_result" class="col_ddlb">
+         <option value="">--</option>
+         <option value="0" ${ex_case_result-0} >全部&nbsp;</option>
+         <option value="1" ${ex_case_result-1} >未處理&nbsp;</option>
+         <option value="2" ${ex_case_result-2} >處理中&nbsp;</option>
+         <option value="3" ${ex_case_result-3} >完成&nbsp; </option>
+     </select>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="1">&nbsp;案件類別:
+	   <select size="1" name="ex_case_type" class="col_ddlb" >
+	      <option value="">--</option>
+         ${d_dddw_casetype}
+      </select>
+   </td>
+   <td nowrap colspan="2">&nbsp;受理人員:
+      <select size="1" name="ex_user" class="col_ddlb">
+      	<option value="">--</option>
+      	${dddw_case_user}
+      </select>
+      &nbsp;&nbsp;急件:
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_ugcall_flag" ${ex_ugcall_flag-0} />全部
+         <input type="radio" value="Y" name="ex_ugcall_flag" ${ex_ugcall_flag-Y} />是
+         <input type="radio" value="N" name="ex_ugcall_flag" ${ex_ugcall_flag-N} />否
+      </span>                  
+   </td>     
+</tr>
+<tr>
+   <td nowrap colspan="1">&nbsp;受理單位簽核:
+	   <span class="col_radio">
+         <input type="radio" value="0" name="ex_case_conf_flag" ${ex_case_conf_flag-0} />全部
+         <input type="radio" value="Y" name="ex_case_conf_flag" ${ex_case_conf_flag-Y} />已簽核
+         <input type="radio" value="V" name="ex_case_conf_flag" ${ex_case_conf_flag-V} />未簽核
+         <input type="radio" value="N" name="ex_case_conf_flag" ${ex_case_conf_flag-N} />免簽核
+         <input type="radio" value="R" name="ex_case_conf_flag" ${ex_case_conf_flag-R} />退回
+      </span>   
+   </td>
+   <td nowrap colspan="2">&nbsp;處理單位簽核:
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} />全部
+         <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已簽核
+         <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未簽核
+      </span>           
+   </td>     
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >移送部門&nbsp;</th>
+    <th nowrap >受理日期&nbsp;</th>
+    <th nowrap >受理人員&nbsp;</th>  
+    <th nowrap >序號&nbsp;</th>
+    <th nowrap colspan="2" >身分證字號 / 卡號&nbsp;</th>
+    <th nowrap >移送問題&nbsp;</th>    
+    <th nowrap >處理結果&nbsp;</th>
+    <th nowrap >完成日&nbsp;</th>
+    <th nowrap >受理單位簽核&nbsp;</th>
+    <th nowrap >處理單位簽核&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll"> ${wk_proc_dept}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${case_user}_${tt_case_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_idno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${case_type}&nbsp;</td>	
+	<td nowrap class="list_ll"> ${tt_proc_result}&nbsp;</td>
+	<td nowrap class="list_cc"> ${finish_date.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_case_conf_flag}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_apr_flag}&nbsp;</td>
+	</tr>
+	<tr>
+   <td nowrap class="list_no"></td>
+   <td nowrap class="list_ll" colspan="12">問題內容: ${case_desc}<br>&nbsp;&nbsp;　　　　${case_desc2}</td>
+  </tr>
+  <tr>
+   <td nowrap class="list_no"></td>
+   <td nowrap class="list_ll" colspan="12">處理說明: ${proc_desc}<br>&nbsp;&nbsp;　　　　${proc_desc2}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <!--部門代號add-->
+   <input type="hidden" name="wk_edit_dept" value="${wk_edit_dept}">
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="mod_pgm" value="cmsr6040">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="10";
+ 
+ //部門代號add
+ function validateInput()
+ {
+	$("select[name=ex_dept_no]").removeAttr("disabled");  
+	if ( !top.checkFormat() )
+      { return false; }	
+    $("select[name=ex_dept_no]").removeAttr("disabled");   
+   return true;
+ }
+
+</script>

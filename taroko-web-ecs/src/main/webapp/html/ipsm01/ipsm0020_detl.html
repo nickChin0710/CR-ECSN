@@ -1,0 +1,148 @@
+<html>
+<head>
+<title>一卡通人工停用自動加值維護_detl-V.2018-0411-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+
+</head>
+<body background="${water_mark}" > 
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  			<input type="Button"    value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  			<input type="Button"     value=" 停用" ${btnAdd_disable}   onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  			<input type="Button"  value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  			<input type="Button"   value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data================================= -->
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+    	<td nowrap>&nbsp;卡號:
+			<input type="text" class="col_any" zEdit="any" name="card_no" value="${card_no}"
+      		maxlength="19" size="19" zRequire ="Y" onChange="itemChanged(this.value)"/>
+		</td>
+		<td nowrap colspan="2">&nbsp;來源:
+      		<span class="dsp_text">${db_from_mark}</span>
+          <input type="hidden"   name="db_from_mark" value="${db_from_mark}">
+			<input type="hidden"   name="from_mark" value="${from_mark}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap >&nbsp;身分證字號:
+      		<span class="dsp_text">${db_idno}</span>
+			<input type="hidden"   name="db_idno" value="${db_idno}">
+		</td>
+		<td nowrap >&nbsp;姓名:
+      		<span class="dsp_text">${db_idno_name}</span>
+			<input type="hidden"   name="db_idno_name" value="${db_idno_name}">
+		</td>
+		<td nowrap >&nbsp;生日:
+      		<span class="dsp_text">${db_bir_date.YMD}</span>
+			<input type="hidden"   name="db_bir_date" value="${db_bir_date}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap >&nbsp;一卡通卡號:
+      		<span class="dsp_text">${ips_card_no}</span>
+			<input type="hidden"   name="ips_card_no" value="${ips_card_no}">
+		</td>
+		<td nowrap >&nbsp;狀態:
+      		<span class="dsp_text">${tt_db_ips_curr_code}</span>
+			<input type="hidden"   name="db_ips_curr_code" value="${db_ips_curr_code}">
+			<input type="hidden"   name="tt_db_ips_curr_code" value="${tt_db_ips_curr_code}">
+		</td>
+		<td nowrap >&nbsp;效期:
+      		<span class="dsp_text">${db_ips_end_date.YMD}</span>
+			<input type="hidden"   name="db_ips_end_date" value="${db_ips_end_date}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3">&nbsp;一卡通自動加值目前狀態:
+      		<span class="col_radio" id = "autoload_flag" disabled="true">
+         		<input type="radio" value="Y" name="autoload_flag" ${autoload_flag-Y}  />開啟
+         		<input type="radio" value="N" name="autoload_flag" ${autoload_flag-N} ${DEFAULT_CHK} />停用
+      		</span>
+   		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3">&nbsp;停用說明:
+			<input type="text" class="col_any" zEdit="canTW,any" name="risk_remark" value="${risk_remark}"
+      		maxlength="100" size="50"/>
+      		</br>
+      		&nbsp;<span style="color:red">注意:自動加值功能停用一旦生效，則無恢復。</span>
+      		</br>
+      		&nbsp;<span style="color:red">(每日13:00傳送停用自動加值功能名單予一卡通公司，於傳檔前都可恢復自動加值功能)</span>
+		</td>
+	</tr>
+</table>
+<table width="70%" border="0" cellspacing="1" cellpadding="2"  >
+  	<tr>
+    	<td nowrap class="td_text" >停用人員:</td>
+     	<td nowrap class="td_text" >
+      		<span class="dsp_text"> ${crt_user} </span>
+      		<input type="hidden" name="crt_user" value="${crt_user}">   
+   		</td>
+   		<td nowrap class="td_text" >停用日期:</td> 
+    	<td nowrap class="td_data" >
+      		<span class="dsp_date">${crt_date.YMD}</span>
+      		<input type="hidden" name="crt_date" value="${crt_date}">   
+   		</td>
+   		<td nowrap class="td_text" >停用時間:</td> 
+    	<td nowrap class="td_data" >
+      		<span class="dsp_date">${crt_time.TIME}</span>
+      		<input type="hidden" name="crt_time" value="${crt_time}">   
+   		</td>
+   		<td nowrap class="td_text" >傳送時間:</td> 
+    	<td nowrap class="td_data" >
+      		<span class="dsp_date">${send_date.YMD}</span>
+      		<input type="hidden" name="send_date" value="${send_date}">   
+   		</td>
+  	</tr>
+</table>
+</div>
+<br>
+
+<!-- -->
+<input type="hidden"  name="rowid" value="${rowid}">
+<input type="hidden"  name="MOD_PGM" value="ipsm0020">
+<input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+<input type="hidden"  name="HIDE" value="${HIDE_DATA}">
+<input type="hidden"  name="pageType" value="detl">
+<input type="hidden"  name="card_no_kk" value="" >
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.card_no.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode == "A" ) {
+    	 if (confirm("自動加值功能停用一旦生效, 則無法恢復; 確定要停用嗎?") === false) {
+             return false;
+         }
+    }
+    $("#autoload_flag").prop("disabled",false);
+    return true;
+  }
+
+ function itemChanged(val){
+	 document.dataForm.card_no_kk.value = val;
+	 top.submitControl('DATA');
+	 return true;
+ }
+</script>

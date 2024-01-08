@@ -1,0 +1,193 @@
+<html>
+<head>
+<title> 108/09/27 V1.00.01 Allen Ho Initial </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="20">
+   <tr>
+   <td nowrap>&nbsp;DB2 表格代碼
+      <input type="text" class="col_any" 
+          name="ex_db2_table_name" value="${ex_db2_table_name}"
+         zeditType=""any,upper" maxlength=20"  maxlength=20 size=20 />
+   ECS 表格代碼
+      <input type="text" class="col_any" 
+          name="ex_ecs_table_name" value="${ex_ecs_table_name}"
+         zeditType=""any,upper" maxlength=20"  maxlength=20 size=20 />
+   只建不轉:
+      <select  name="ex_no_tran_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_no_tran_flag-Y} >Y.是</option>
+         <option value="N" ${ex_no_tran_flag-N} >N.否</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;分割轉檔:
+      <select  name="ex_condition_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="" ${ex_condition_flag-} ></option>
+         <option value="Y" ${ex_condition_flag-Y} >Y.條件分割執行</option>
+         <option value="N" ${ex_condition_flag-N} >N.標準轉檔</option>
+       </select>
+   新表格:
+      <select  name="ex_new_table_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_new_table_flag-Y} >Y.是</option>
+         <option value="N" ${ex_new_table_flag-N} >N.否</option>
+       </select>
+   事先轉檔:
+      <select  name="ex_pre_tran_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_pre_tran_flag-Y} >Y.是</option>
+         <option value="N" ${ex_pre_tran_flag-N} >N.否</option>
+       </select>
+   檔案庫筆數範圍
+      <select  name="ex_tran_cnt" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="0" ${ex_tran_cnt-0} >0筆資料</option>
+         <option value="1" ${ex_tran_cnt-1} >300萬筆以下</option>
+         <option value="2" ${ex_tran_cnt-2} >300~500萬>筆</option>
+         <option value="3" ${ex_tran_cnt-3} >500~800萬筆</option>
+         <option value="4" ${ex_tran_cnt-4} >800~1200萬筆</option>
+         <option value="5" ${ex_tran_cnt-5} >1200~1600萬筆</option>
+         <option value="6" ${ex_tran_cnt-6} >1600~2000萬筆</option>
+         <option value="7" ${ex_tran_cnt-7} >2000萬筆以上</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;負責SA:
+      <input type="text" class="col_any" 
+          name="ex_table_owner" value="${ex_table_owner}"
+         zeditType="any"  maxlength=10 size=10 />
+   cycle產生:
+      <select  name="ex_cycle_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="" ${ex_cycle_flag-} ></option>
+         <option value="Y" ${ex_cycle_flag-Y} >Y.是</option>
+         <option value="N" ${ex_cycle_flag-N} >N.否</option>
+       </select>
+   轉檔狀況:
+      <select  name="ex_traned_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_traned_flag-Y} >Y.已轉檔</option>
+         <option value="0" ${ex_traned_flag-0} >0.處理中</option>
+         <option value="2" ${ex_traned_flag-2} >2.新檔案</option>
+         <option value="3" ${ex_traned_flag-3} >3.無需轉</option>
+         <option value="5" ${ex_traned_flag-5} >5.分割檔</option>
+         <option value="N" ${ex_traned_flag-N} >N.未轉檔</option>
+         <option value="" ${ex_traned_flag-} >待處理</option>
+         <option value="4" ${ex_traned_flag-4} >4.自行轉</option>
+         <option value="7" ${ex_traned_flag-7} >7.轉失敗</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">DB2表格代碼</th>
+    <th nowrap class="list_th">ECS表格代碼</th>
+    <th nowrap class="list_th">負責SA</th>
+    <th nowrap class="list_th">新檔</th>
+    <th nowrap class="list_th">可先轉</th>
+    <th nowrap class="list_th">公用轉</th>
+    <th nowrap class="list_th">分割轉</th>
+    <th nowrap class="list_th">不轉檔</th>
+    <th nowrap class="list_th">資料庫</th>
+    <th nowrap class="list_th">轉狀況</th>
+    <th nowrap class="list_th">ECS筆數</th>
+    <th nowrap class="list_th">DB2筆數</th>
+    <th nowrap class="list_th">DB2表格中文名稱</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${db2_table_name}</td>
+    <td nowrap class="list_ll"> ${ecs_table_name}</td>
+    <td nowrap class="list_cc"> ${table_owner}</td>
+    <td nowrap class="list_cc"> ${new_table_flag}</td>
+    <td nowrap class="list_cc"> ${pre_tran_flag}</td>
+    <td nowrap class="list_cc"> ${use_compgm_flag}</td>
+    <td nowrap class="list_cc"> ${condition_flag}</td>
+    <td nowrap class="list_cc"> ${no_tran_flag}</td>
+    <td  nowrap class="list_ll"> ${comp_flag}-${comm_comp_flag}</td>
+    <td  nowrap class="list_cc"> ${traned_flag}-${comm_traned_flag}</td>
+    <td nowrap class="list_rr"> ${table_records.(999)}</td>
+    <td nowrap class="list_rr"> ${db2_records.(999)}</td>
+    <td nowrap class="list_ll"> ${db2_table_chi_name}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ecsm0540_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "ecsm0540_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

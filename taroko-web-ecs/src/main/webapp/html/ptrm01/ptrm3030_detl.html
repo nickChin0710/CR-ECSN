@@ -1,0 +1,187 @@
+<html>
+<head>
+<title>M0送逾催系統參數維護-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm" method="post" action="" >
+
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="4"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;帳單週期：
+      <input type="text" class="col_text" name="kk_stmt_cycle" value="${kk_stmt_cycle}" 
+          zEdit="number" maxlength="2" size="4" />
+    </td>
+  </tr>
+</table>
+<hr>
+
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="col_key">帳單週期：
+      <span class="col_text">${stmt_cycle}</span>
+      <input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+    </td>
+    <td nowrap>
+      &nbsp;本月關帳為M0的客戶將依據下列條件決定是否產生資料送逾催系統
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2"><span style="color:#0000EE; font-weight:bold;">排 除 項 目：</span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;1. 繳納方式：&nbsp;</td>
+    <td nowrap>
+      <input type="checkbox" value="Y" name="other_deduct_flag" ${other_deduct_flag-Y}>他行扣款&nbsp;
+      <input type="checkbox" value="Y" name="self_deduct_flag" ${self_deduct_flag-Y}>本行扣款　　&nbsp;
+      <input type="checkbox" value="Y" name="self_pay_flag" ${self_pay_flag-Y}>自行繳款&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">
+      &nbsp;&nbsp;&nbsp;&nbsp;例:若他行扣款打勾, 表示客戶設定他行自動扣款者將不會被送到逾催系統
+    </td>
+  </tr>
+  <tr>
+    <td nowrap rowspan="2">&nbsp;2. 費用類：&nbsp;</td>
+    <td nowrap>
+      <input type="checkbox" value="Y" name="af_flag" ${af_flag-Y}>年費　　&nbsp;
+      <input type="checkbox" value="Y" name="lf_flag" ${lf_flag-Y}>掛失費　　　&nbsp;
+      <input type="checkbox" value="Y" name="pn_flag" ${pn_flag-Y}>逾期手續費&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>
+      <input type="checkbox" value="Y" name="ri_flag" ${ri_flag-Y}>利息　　&nbsp;
+      <input type="checkbox" value="Y" name="pf_flag" ${pf_flag-Y}>雜項手續費　&nbsp;
+      <input type="checkbox" value="Y" name="cf_flag" ${cf_flag-Y}>預借現金手續費&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">
+      &nbsp;&nbsp;&nbsp;&nbsp;客戶&nbsp;&nbsp;<span style="color:#FF0000;">只欠</span>
+      &nbsp;&nbsp;上述打勾費用的任何一項或兩項以上, 則不會送逾催系統
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;3. 最低應繳款餘額小於&nbsp;
+      <input type="text" class="col_num" name="min_mp_amt" value="${min_mp_amt}" 
+          zEdit="number" maxlength="8" size="10" />
+      &nbsp;(含)的帳戶將不會被送到逾催系統&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">
+      <span style="color:#FF0000;">&nbsp;4. 客戶近&nbsp;
+      <input type="text" class="col_num" name="normal_months" value="${normal_months}" 
+          zEdit="number" maxlength="2" size="4" />
+      &nbsp;月(含)內的繳款評等若都不為0A,0B,0C,0E者送逾催系統&nbsp;
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">
+      <span style="color:#FF0000;">
+      &nbsp;&nbsp;&nbsp;&nbsp;(限制: 2 - 12 個月; 0 表示不檢核此條件)&nbsp;
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2"><span style="color:#0000EE; font-weight:bold;">執 行 時 間：</span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;&nbsp;執行時間:&nbsp;超過繳款期限後&nbsp;
+      <input type="text" class="col_num" name="exceed_pay_days" value="${exceed_pay_days}" 
+          zEdit="number" maxlength="4" size="4" />
+      &nbsp;日(含)開始產生檔案送逾催系統&nbsp;
+    </td>
+  </tr>
+</table>
+<hr>
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;增修日期：
+      <input type="text" class="dsp_text" name="crt_date" value="${crt_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="crt_date" value="${crt_date}">
+    </td>
+    <td nowrap >&nbsp;覆核人員：
+      <input type="text" class="dsp_text" name="apr_user" value="${apr_user}" size="10" disabled/>
+      <input type="hidden" name="apr_user" value="${apr_user}">
+    </td>
+    <td nowrap >&nbsp;覆核註記：
+      <input type="text" class="dsp_text" name="apr_flag" value="${apr_flag}" size="10" disabled/>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;增修人員：
+      <input type="text" class="dsp_text" name="crt_user" value="${crt_user}" size="10" disabled/>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+    </td>
+    <td nowrap colspan="2">&nbsp;覆核日期：
+      <input type="text" class="dsp_text" name="apr_date" value="${apr_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+    </td>
+  </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ptrm3030">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ document.dataForm.kk_stmt_cycle.focus();
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    //if ( !checkNormalMonths() )
+    //{ return false; }
+    
+    return true;
+  }
+ 
+ function checkNormalMonths()
+ {
+   var nm = Number(document.dataForm.normal_months.value);
+   
+   if ( nm == 1 || nm > 12)
+   { alert('排除項目 4: 只能輸入 2-12 月 or 0'); return false; }
+   
+   return true;
+ }
+ 
+</script>

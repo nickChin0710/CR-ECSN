@@ -1,0 +1,116 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-05-05  V1.00.00  Ryan               Initial                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>金庫幣活動回饋查詢作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+<div id="condBlock">
+<!--COND -->
+<table width="20%" border="0" cellspacing="0" cellpadding="4">
+	<tr>        
+		<td nowrap colspan = "2">&nbsp;活動代號:
+   			<select size="1" name="ex_active_code" class="col_ddlb" >
+      			 ${dddw_active_code}
+   			</select>
+   		</td>
+   		<td nowrap rowspan="2">&nbsp;
+			<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+			<input type="Button" name="btnAdd" value="產生媒體檔" onClick="return top.submitControl('XLS')" class="btAdd" >&nbsp;&nbsp;
+		    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;身分證號：
+      		<input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}"
+         		zeditType="any,upper"  maxlength=10 size=12 >
+		</td>
+		<td nowrap>&nbsp;活動別：
+			<select  name="ex_active_type" class="col_ddlb"  >
+      			<option value=" ">--</option>
+         		<option value="1" ${ex_active_type-1} >1.新申辦電子帳單</option>
+         		<option value="2" ${ex_active_type-2} >2.全新戶-自動扣繳</option>
+       		</select>
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">活動代號</th>
+    	<th nowrap class="list_th">活動說明</th>
+    	<th nowrap class="list_th">活動別</th>
+    	<th nowrap class="list_th">身分證號</th>
+    	<th nowrap class="list_th">姓名</th>
+    	<th nowrap class="list_th">回饋日期</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+ 	<tr>
+    	<td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+    	<td nowrap class="list_ll">${active_code}&nbsp;</td>
+    	<td nowrap class="list_ll">${active_name}&nbsp;</td>
+    	<td nowrap class="list_ll">${active_type}${active_type_name}&nbsp;</td>
+    	<td nowrap class="list_ll">${id_no}&nbsp;</td>
+    	<td nowrap class="list_ll">${chi_name}&nbsp;</td>
+    	<td nowrap class="list_ll">${feedback_date.YMD}&nbsp;</td>
+    	<input type="hidden" name="SER_NUM" value="${SER_NUM}">
+    	<input type="hidden"  name="active_name"  value="${active_name}">
+    	<input type="hidden"  name="active_code"  value="${active_code}">
+    	<input type="hidden"  name="active_type"  value="${active_type}">
+    	<input type="hidden"  name="active_type_name"  value="${active_type_name}">
+    	<input type="hidden"  name="id_no"  value="${id_no}">
+    	<input type="hidden"  name="chi_name"  value="${chi_name}">
+    	<input type="hidden"  name="feedback_date"  value="${feedback_date}">
+  	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_id_no.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if(top.actionCode === 'XLS'){
+    	if (confirm("是否產生媒體檔?") === false) {
+            return false;
+        } 
+    }
+    return true;
+}
+</script>

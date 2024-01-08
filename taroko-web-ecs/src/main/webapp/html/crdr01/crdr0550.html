@@ -1,0 +1,110 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-04-24  V1.00.00  Ryan      Initial                                   -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>退卡寄快捷掛號編號貼紙列印</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">       
+                <tr>                    
+                    <td nowrap >&nbsp;退卡日期：
+                        <input type="text" class="col_date" name="ex_return_date_1" value="${ex_return_date_1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_return_date_1'
+                        });
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_return_date_2" value="${ex_return_date_2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+                        <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_return_date_2'
+                        });
+                        </script>&nbsp;                       
+                    </td>
+                    <td nowrap >&nbsp;卡片種類:
+      						<select name="ex_type" class="col_ddlb">
+         						<option value="">--</option>
+         						<option value="1" ${ex_type-1} >信用卡</option>
+         						<option value="2" ${ex_type-2} >VD卡</option>
+         						<option value="3" ${ex_type-3} >貴賓卡</option>
+      						</select>
+   						</td>
+                    </td>
+                    <td nowrap >&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" id="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">寄件分行</th>
+                <th nowrap class="list_th">卡片種類</th>
+                <th nowrap class="list_th">退卡編號</th>
+                <th nowrap class="list_th">掛號編號</th>
+                <th nowrap class="list_th">退卡日期</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">ID</th>
+                <th nowrap class="list_th">姓名</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${mail_branch}.${full_chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${tt_type} &nbsp;</td>
+                <td nowrap class="list_ll"> ${return_seqno} &nbsp;</td>
+                <td nowrap class="list_ll"> ${barcode_num} &nbsp;</td>
+                <td nowrap class="list_ll"> ${return_date.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${chi_name}&nbsp; </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_oppost_date_s.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

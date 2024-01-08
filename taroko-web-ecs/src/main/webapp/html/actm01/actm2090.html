@@ -1,0 +1,112 @@
+<html> 
+
+<head>
+    <title>帳戶對帳單不列印旗標維護作業-107-05-09-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <!--<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp; -->
+                    <input type="Button" name="btnQuery" value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <!--  <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;-->
+                    <input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <!-- <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp; -->
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <!-- Detail data================================= -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <th nowrap colspan="2"><span>請先輸入帳號</span></th>
+                <tr>
+                    <td nowrap width="25%">&nbsp;帳戶帳號:&nbsp;
+                        <select name="ex_acct_type" class="col_ddlb" >
+                            ${dddw_actype}
+                        </select>
+                        <input type=text class="col_text" id="ex_acct_key" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" zEdit="alphanum,Upper" zRequire ="k" />
+                    </td>
+                    <td nowrap>中文姓名:&nbsp;
+                        <span class="dsp_text">${iname}</span>
+                        <input type="hidden" name="iname" value="${iname}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">&nbsp;公司名稱:&nbsp;
+                        <span class="dsp_text">${cname}</span>
+                        <input type="hidden" name="cname" value="${cname}">
+                    </td>
+                </tr>
+            </table>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <th nowrap colspan="2"><span>不印列旗標調整</span></th>
+                <tr>
+                    <td nowrap width="25%">&nbsp;對帳單不列印旗標: 
+                        <span class="col_radio" onChange="chang()">
+                            <input type="radio" value="Y" name="stat_unprint_flag" ${stat_unprint_flag-Y} ${DEFAULT_CHK}/>Y
+                            <input type="radio" value="N" name="stat_unprint_flag" ${stat_unprint_flag-N} />N
+                        </span>
+                    </td>
+                </tr>
+                <tr id="process_date">
+                    <td nowrap colspan="2" >&nbsp;生效起迄年月:&nbsp;
+                        <input type="text" class="col_date" name="stat_unprint_s_month" value="${stat_unprint_s_month}" zEdit="date,yyyymm" maxlength="6" size="6" /> --
+                        <input type="text" class="col_date" name="stat_unprint_e_month" value="${stat_unprint_e_month}" zEdit="date,yyyymm" maxlength="6" size="6" />
+                    </td>
+                </tr>
+            </table>
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <th nowrap colspan="2"><span>重要訊息</span></th>
+                <tr>
+                    <td nowrap>&nbsp;帳戶現狀碼:&nbsp;
+                        <span class="dsp_text">${accstatus}</span>
+                        <input type="hidden" name="accstatus" value="${accstatus}">
+                    </td>
+                    <td nowrap>&nbsp;暫存(即未放行):&nbsp;
+                        <span class="dsp_text">${dual_flag}</span>
+                        <input type="hidden" name="wk_dual" value="${wk_dual}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}">
+        <input type="hidden" name="MOD_PGM" value="actm2090">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+
+    </form>
+</body>
+
+</html>
+
+<script language="javascript">
+top.refreshButton2('0');
+chang();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+
+function chang() {
+    var ss = $('input[name*=stat_unprint_flag]:checked').val()
+    if(ss == "Y"){
+        $("#process_date").show();
+    }
+    if(ss == "N"){
+        $("#process_date").hide();
+        $('input[name*=stat_unprint_s_month]').val('');
+        $('input[name*=stat_unprint_e_month]').val('');
+    }
+}
+</script>

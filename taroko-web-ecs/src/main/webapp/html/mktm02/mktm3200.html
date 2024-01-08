@@ -1,0 +1,161 @@
+<html>
+<head>
+<title> 108/12/12 V1.00.01 Allen Ho Initial 高鐵車廂請款明細檔維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="10">
+   <tr>
+   <td nowrap>&nbsp;處理日期:
+      <input type="text" class="col_date" 
+          name="ex_proc_date_s" value="${ex_proc_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_proc_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_proc_date_e" value="${ex_proc_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_proc_date_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;交易流水號:
+      <input type="text" class="col_any" 
+          name="ex_serial_no" value="${ex_serial_no}"
+         zeditType="any"  maxlength=14 size=14 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;交易日期:
+      <input type="text" class="col_date" 
+          name="ex_trans_date_s" value="${ex_trans_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_trans_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" 
+          name="ex_trans_date_e" value="${ex_trans_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_trans_date_e'});
+      </script>
+     </td>
+   <td nowrap>&nbsp;錯誤類別:
+      <select  name="ex_err_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_err_type-1} >授權核身</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >主管覆核:&nbsp;
+       <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} checked  />(全部:不含新增)
+       <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">交易流水號</th>
+    <th nowrap class="list_th">交易日期</th>
+    <th nowrap class="list_th">交易時間</th>
+    <th nowrap class="list_th">交易類別</th>
+    <th nowrap class="list_th">交易金額</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">授權碼</th>
+    <th nowrap class="list_th">持卡人ID</th>
+    <th nowrap class="list_th">團代</th>
+    <th nowrap class="list_th">處理日期</th>
+    <th nowrap class="list_th">處理結果</th>
+    <th nowrap class="list_th">維護日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+       <span class="dsp_flag">${ok_flag}</span> 
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${serial_no}</td>
+    <td nowrap class="list_cc"> ${trans_date}</td>
+    <td nowrap class="list_cc"> ${trans_time}</td>
+    <td  nowrap class="list_cc"> ${trans_type}-${comm_trans_type}</td>
+    <td nowrap class="list_cc"> ${trans_amount}</td>
+    <td nowrap class="list_cc"> ${card_no}</td>
+    <td nowrap class="list_cc"> ${authentication_code}</td>
+    <td nowrap class="list_cc"> ${id_no}</td>
+    <td  nowrap class="list_cc"> ${group_code}-${comm_group_code}</td>
+    <td nowrap class="list_cc"> ${proc_date.YMD}</td>
+    <td  nowrap class="list_cc"> ${proc_flag}-${comm_proc_flag}</td>
+    <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktm3200_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

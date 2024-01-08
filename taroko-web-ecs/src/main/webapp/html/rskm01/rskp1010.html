@@ -1,0 +1,207 @@
+<html>
+<head>
+<title>Debit Card 消費帳單查詢及處理{列問交}-V20191211</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2"  >&nbsp;入帳日:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+      <span class="dsp_text">&nbsp;90.</span>
+      <input type="hidden" name="ex_acct_type" value="90" >
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" >
+   </td>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnPrbl" value="問交" ${btnUpdate_disable} onClick="buttonAction('S1')" class="btOther2" >&nbsp;
+      <input type="Button" name="btnRept" value="調單" ${btnUpdate_disable} onClick="return buttonAction('S2')" class="btOther2" >&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;帳戶名稱:
+      <span class="dsp_text">${ex_name}&nbsp;</span>
+      <input type="hidden" name="ex_name" value="${ex_name}" >
+   </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnChgb" value="扣款" ${btnUpdate_disable} onClick="return buttonAction('S3')" class="btOther2" >&nbsp;
+      <input type="Button" name="btnCompl" value="預備依從" ${btnUpdate_disable} onClick="return buttonAction('S4')" class="btOther2" >&nbsp;
+      <input type="Button" name="btnArbit" value="預備仲裁" ${btnUpdate_disable} onClick="return buttonAction('S5')" class="btOther2" >&nbsp;
+   </td>
+  </tr>
+
+ </table>
+</div>
+<hr>
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap class="td_titl" width="100">&nbsp;</td>
+    <td nowrap class="td_titl">&nbsp;筆數: 
+      <input type="text" readonly class="dsp_number" name="tot_cnt" value="${tot_cnt.(999)}" size="5" />
+    </td>
+    <td nowrap class="td_titl">&nbsp;總金額:
+      <input type="text" readonly class="dsp_number" name="tot_amt" value="${tot_amt.(999)}" size="12" />
+    </td>
+    <td nowrap class="td_titl" width="100">&nbsp;</td>
+  </tr>
+</table>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">處理</th>
+    <th nowrap >入帳日</th>
+    <th nowrap >消費日</th>
+    <th nowrap >消費卡號</th>
+    <th nowrap >原幣金額</th>
+    <th nowrap >台幣金額</th>
+    <th nowrap >特店名稱</th>
+    <th nowrap >城市</th>
+    <th nowrap >授權碼</th>
+    <th nowrap >TC</th>
+    <th nowrap colspan="2" >比對旗標</th>
+    <th nowrap >控制<br>流水號</th>
+    <th nowrap >調<br>單</th>
+    <th nowrap >扣<br>款</th>
+    <th nowrap >問交<br>特交</th>
+    <th nowrap >預備<br>依從</th>
+    <th nowrap >預備<br>仲裁</th>
+    <th nowrap >卡<br>別</th>
+    <th nowrap >帳單<br>參考號碼</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="reference_no" value="${reference_no}" />
+      <input type="hidden" name="rsk_ctrl_seqno" value="${rsk_ctrl_seqno}" />
+      <input type="hidden" name="sign_flag" value="${sign_flag}" />
+      <img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${reference_no}','','');" style="cursor:hand">
+   </td>
+   <td nowrap class="list_cc">${post_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc">${purchase_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc">${card_no}&nbsp;</td>
+   <td nowrap class="list_rr">${source_amt.(999.00)}&nbsp;</td>
+   <td nowrap class="list_rr">${dest_amt.(999)}&nbsp;</td>
+   <td nowrap class="list_ll">${mcht_name}&nbsp;</td>
+   <td nowrap class="list_cc">${mcht_city}&nbsp;</td>
+   <td nowrap class="list_cc">${auth_code}&nbsp;</td>
+   <td nowrap class="list_cc">${txn_code}&nbsp;</td>
+   <td nowrap class="list_cc">${rsk_type}&nbsp;</td>
+   <td nowrap class="list_cc">${rsk_type_special}&nbsp;</td>
+   <td nowrap class="list_cc">${rsk_ctrl_seqno}&nbsp;</td>
+   <td nowrap class="list_cc">${rept_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${chgb_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${prbl_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${compl_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${arbit_mark}&nbsp;</td>
+   <td nowrap class="list_cc">${bin_type}&nbsp;</td>
+   <td nowrap class="list_cc">${reference_no}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" />
+ <input type="hidden"  name="data_k2" value="" />
+ <input type="hidden"  name="data_k3" value="" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+
+ function validateInput()
+ {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+ function buttonAction(action) {
+    if (action==='S1') {
+      top.respLevel = 1;
+      top.respHtml  = "rskp1010_prbl";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S2') {
+      top.respLevel = 1;
+      top.respHtml  = "rskp1010_rept";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S3') {
+      top.respLevel = 1;
+      top.respHtml  = "rskp1010_chgb";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S4') { //預備依從
+      top.respLevel = 1;
+      top.respHtml  = "rskp1010_compl";
+      top.submitControl('S');
+      return true;
+    }
+    else if (action==='S5') { //預備仲裁
+      top.respLevel = 1;
+      top.respHtml  = "rskp1010_arbit_v";
+      top.submitControl('S');
+      return true;
+    }
+    else {
+      alert("action is not Assign Html, action="+action);
+      return false;
+    }
+
+ }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskp1010_bill";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>

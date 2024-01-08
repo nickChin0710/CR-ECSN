@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>問交/特交/不合格作業維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" 
+         maxlength="10" size="12" >
+   </td>
+   <td nowrap>&nbsp;問交類別:
+      <select   size="1"  name="ex_prb_mark" class="col_ddlb">
+         <option value="0" ${ex_prb_mark-0} >全部</option>
+         <option value="Q" ${ex_prb_mark-Q} >問交</option>
+         <option value="S" ${ex_prb_mark-S} >特交</option>
+         <option value="E" ${ex_prb_mark-E} >不合格</option>
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" />
+   </td>
+   <td nowrap>&nbsp;消費年月:
+      <input type="text" class="col_date" name="ex_purch_ym" value="${ex_purch_ym}" maxlength="6" size="8" 
+         zEdit="date,yyyymm">
+   </td>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >控制流水號&nbsp;</th>
+    <th nowrap >卡別&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >Debit卡&nbsp;</th>
+    <th nowrap >關帳年月&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >歸類&nbsp;</th>
+    <th nowrap >特店中文名稱&nbsp;</th>
+    <th nowrap >問交金額&nbsp;</th>
+    <th nowrap >消費金額&nbsp;</th>
+    <th nowrap >原始金額&nbsp;</th>
+    <th nowrap >幣別&nbsp;</th>
+    <th nowrap >結算幣別&nbsp;</th>
+    <th nowrap >結算金額&nbsp;</th>
+    <th nowrap >原因&nbsp;</th>
+    <th nowrap >狀態&nbsp;</th>
+    <th nowrap >參考號碼&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${ctrl_seqno}','${bin_type}','${reference_no}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${bin_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${debit_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_month.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prb_mark}&nbsp;</td>
+	<td nowrap class="list_ll"> ${mcht_name}&nbsp;</td>
+	<td nowrap class="list_rr"> ${prb_amount.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dest_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${source_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${source_curr}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prb_reason_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${prb_status}&nbsp;</td>
+	<td nowrap class="list_cc"> ${reference_no}-${reference_seq}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  name="mod_pgm"  value="rskm0010">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm0010_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

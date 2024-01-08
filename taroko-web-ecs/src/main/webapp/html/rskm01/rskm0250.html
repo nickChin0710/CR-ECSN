@@ -1,0 +1,134 @@
+<html>
+<head>
+<title>預備仲裁/仲裁維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;控制流水號:
+      <input type="text" class="col_text" name="ex_ctrl_seqno" value="${ex_ctrl_seqno}" maxlength="10" size="12" >
+   </td>
+   <td nowrap >&nbsp;卡別:
+      <select   size="1"  name="ex_bin_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="V" ${ex_bin_type-V} >VISA卡</option>
+         <option value="M" ${ex_bin_type-M} >MAST卡</option>
+         <option value="J" ${ex_bin_type-J} >JCB卡 </option>
+      </select>
+   </td>
+   <td nowrap rowspan="2" >&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" >
+   </td>
+   <td nowrap >&nbsp;建檔經辦:
+      <input type="text" class="col_any" name="ex_user_id" value="${ex_user_id}" maxlength="10" size="12" >
+   </td>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >控制流水號</th>
+    <th nowrap >卡號</th>
+    <th nowrap >消費日期</th>
+    <th nowrap >國別</th>
+    <th nowrap >微縮影NO</th>
+    <th nowrap >結算幣別</th>
+    <th nowrap >結算金額</th>
+    <th nowrap>爭議群組</th>
+    <th nowrap>登錄日期</th>
+    <th nowrap>提出日期</th>
+    <th nowrap >預備仲裁<br>執行結果</th>
+    <th nowrap >預備仲裁經辦</th>
+    <th nowrap >仲裁提出日</th>
+    <th nowrap >仲裁<br>執行結果</th>
+    <th nowrap >仲裁經辦</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${ctrl_seqno}','${bin_type}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll">${bin_type}-${ctrl_seqno}-${arbit_times}-${debit_flag}&nbsp;
+	</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mcht_country}&nbsp;</td>
+	<td nowrap class="list_cc"> ${film_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_dest_amt.(999.00)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_alloc_code}</td>
+	<td nowrap class="list_cc"> ${pre_event_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${pre_apply_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${pre_result}&nbsp;${#JAVA:ecsfunc.DeCodeRsk.arbitPreResult(pre_result)}</td>
+	<td nowrap class="list_cc"> ${pre_add_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${arb_apply_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${arb_result}&nbsp;${#JAVA:ecsfunc.DeCodeRsk.arbitCloResult(arb_result)}</td>
+   <td nowrap class="list_cc"> ${arb_add_user}&nbsp;</td>
+   <input type="hidden" name="pre_alloc_code" value="${pre_alloc_code}" />
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm0250_detl_mj";
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    if(parm2=='M' || parm2=='J'){
+      top.respHtml  = "rskm0250_detl_mj";
+   }  else  if(parm2=='V'){
+      top.respHtml  = "rskm0250_detl_visa";
+   }
+
+    top.submitControl('S');
+    return true;
+  }
+
+</script>

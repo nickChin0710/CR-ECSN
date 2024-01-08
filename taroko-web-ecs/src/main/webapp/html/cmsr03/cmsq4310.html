@@ -1,0 +1,246 @@
+<html>
+<head>
+<title>卡友各項權益查詢作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+	<td nowrap colspan="2" >&nbsp;查詢年月
+        <input type="text" class="col_date" name="ex_acct_month_s" value="${ex_acct_month_s}" zEdit="date,yyyymm" MaxLength=6 size=8 zRequire="C" />      
+	    --
+	    <input type="text" class="col_date" name="ex_acct_month_e" value="${ex_acct_month_e}" zEdit="date,yyyymm" MaxLength=6 size=8 />      
+	 </td>	 
+	<td nowrap colspan="2" >&nbsp;賬戶類別:
+         <select   size="1"  name="ex_acct_type" class="col_ddlb">
+            ${dddw_acct_type}       
+         </select>
+      </td>
+      <td nowrap colspan="2" >&nbsp;權益:
+         <select   size="1"  name="ex_item_no" class="col_ddlb">
+            ${dddw_item_no}       
+         </select>
+      </td>
+   <td nowrap>&nbsp;
+      <td nowrap>&nbsp;
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" />&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" />&nbsp;&nbsp;
+   </td>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="1" >&nbsp;持卡人ID:      
+      <input type="text" class="col_text" id="id_no" name="id_no" value="${id_no}" zEdit="any,canTw" zRequire="C" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;卡號:      
+      <input type="text" class="col_text" id="card_no" name="card_no" >
+   </td>
+    <td nowrap>&nbsp;卡片狀態:
+      <span class="col_radio">
+        <input type="radio" value="0" name="curr_code" ${curr_code-0} ${DEFAULT-curr_code}/>有效卡 
+        <input type="radio" value="1" name="curr_code" ${curr_code-1} />全部
+      </span>
+    </td>
+  </tr>
+   <tr>
+     <td nowrap colspan="5" >&nbsp;姓名:      
+      <input type="text" class="dsp_text" id="chi_name" name="chi_name" value="${chi_name}" zEdit="any,canTw" >
+   </td> 
+	</tr>
+	<tr>
+	   <td nowrap colspan="6" >
+	      <span class="col_key">註：近N月累計消費=查詢年月起迻加總資料,以消費月累計(不含系統當月未開賬資料)
+	      </span>
+	   </td>
+	</tr>	     
+ </table>
+</div>
+<hr>
+
+ <div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">累計消費</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">各項權益</td>
+    </tr>
+  </table>
+</div>
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >身份證ID&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >賬戶&nbsp;</th>
+    <th nowrap >卡種&nbsp;</th>
+    <th nowrap >團體代號&nbsp;</th>
+    <th nowrap >正附&nbsp;</th>
+    <th nowrap >卡片狀態&nbsp;</th>
+    <th nowrap >近N月累計消費筆數&nbsp;</th>
+    <th nowrap >近N月累計消費金額&nbsp;</th>
+    <th nowrap >前一年累計消費筆數&nbsp;</th>
+    <th nowrap >前一年累計消費金額&nbsp;</th>
+    <th nowrap >發卡日期&nbsp;</th>
+    <th nowrap >是否繳年費&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->  
+  <tr>
+	  <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;
+      <input type="hidden" name="id_no" value="${id_no}">
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${acct_type}-${chin_name}&nbsp;
+      <input type="hidden" name="acct_type" value="${acct_type}">
+	</td>
+	<td nowrap class="list_cc"> ${card_type}&nbsp;
+      <input type="hidden" name="card_type" value="${card_type}">
+	</td>
+	<td nowrap class="list_cc"> ${group_code}&nbsp;
+      <input type="hidden" name="group_code" value="${group_code}">
+	</td>
+	<td nowrap class="list_cc"> ${sup_flag}&nbsp;
+      <input type="hidden" name="sup_flag" value="${sup_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${current_code}&nbsp;
+      <input type="hidden" name="current_code" value="${current_code}">
+	</td>
+	<td nowrap class="list_cc"> ${sum_curr_month_cnt}&nbsp;
+      <input type="hidden" name="curr_month_cnt" value="${curr_month_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${sum_curr_month_amt}&nbsp;
+      <input type="hidden" name="curr_month_amt" value="${curr_month_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${last_year_cnt}&nbsp;
+      <input type="hidden" name="last_year_cnt" value="${last_year_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${last_year_consume}&nbsp;
+      <input type="hidden" name="last_year_consume" value="${last_year_consume}">
+	</td>
+	<td nowrap class="list_cc"> ${issue_date}&nbsp;
+      <input type="hidden" name="issue_date" value="${issue_date}">
+	</td>
+	<td nowrap class="list_cc"> ${rcv_annual_fee}&nbsp;
+      <input type="hidden" name="rcv_annual_fee" value="${rcv_annual_fee}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<div id="tab-2" class="tabcontent"> 
+   <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="6">
+  <tr>
+    <th nowrap width="10%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >團體代號&nbsp;</th>
+    <th nowrap >權益&nbsp;</th>
+    <th nowrap >方案金額(消費門檻)&nbsp;</th>
+    <th nowrap >本年度累計消費金額&nbsp;</th>
+    <th nowrap >消費滿額(尚缺金額)&nbsp;</th>
+    <th nowrap >本年度免費次數&nbsp;</th>
+    <th nowrap >本年度加贈次數&nbsp;</th>
+    <th nowrap >本年度紅利兌換贈次&nbsp;</th>
+    <th nowrap >本年度已用次數&nbsp;</th>
+    <th nowrap >本年度已預支次數&nbsp;</th>
+    <th nowrap >本年度剩餘次數&nbsp;</th>
+    <th nowrap >登錄車號&nbsp;</th>
+    <th nowrap >方案代號/活動代號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${group_code}&nbsp;
+      <input type="hidden" name="group_code" value="${group_code}">
+	</td>
+	<td nowrap class="list_cc"> ${item_no}_${wf_desc}&nbsp;
+      <input type="hidden" name="item_no" value="${item_no}">
+	</td>
+	<td nowrap class="list_cc"> ${curr_proj_amt}&nbsp;
+      <input type="hidden" name="curr_proj_amt" value="${curr_proj_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${curr_month_amt}&nbsp;
+      <input type="hidden" name="sum_curr_month_amt" value="${sum_curr_month_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${curr_amt}&nbsp;
+      <input type="hidden" name="curr_amt" value="${curr_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${free_cnt}&nbsp;
+      <input type="hidden" name="free_cnt" value="${free_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${gift_cnt}&nbsp;
+      <input type="hidden" name="gift_cnt" value="${gift_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${bonus_cnt}&nbsp;
+      <input type="hidden" name="bonus_cnt" value="${bonus_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${use_cnt}&nbsp;
+      <input type="hidden" name="use_cnt" value="${use_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${used_next_cnt}&nbsp;
+      <input type="hidden" name="use_next_cnt" value="${use_next_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${surplus_cnt}&nbsp;
+      <input type="hidden" name="surplus_cnt" value="${surplus_cnt}">
+	</td>
+	<td nowrap class="list_cc"> ${rm_carno}&nbsp;
+      <input type="hidden" name="rm_carno" value="${rm_carno}">
+	</td>
+	<td nowrap class="list_cc"> ${proj_code}&nbsp;
+      <input type="hidden" name="proj_code" value="${proj_code}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+	   <td nowrap colspan="15" >
+	      <span class="col_key">備註：<br>1.免費總次數=免費次數+贈送次數+紅利兌換次數
+	         <br>2.剩餘次數=免費總次數-已用次數+已預支次數
+	      </span>
+	   </td>
+	</tr>	 
+ </table>
+</div>
+
+ <input type="hidden"  name="id_p_seqno" value="${id_p_seqno}" />
+ <input type="hidden"  name="income_score" value="${income_score}" />
+ <input type="hidden"  name="ex_id_card" value="${ex_id_card}" />
+ <input type="hidden"  name="tab_click" value="${tab_click}">
+ 
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+</script>

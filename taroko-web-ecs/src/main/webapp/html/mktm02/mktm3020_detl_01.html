@@ -1,0 +1,160 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--  110/12/17  V1.00.00   Machao                   initial                 -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>員工招攬信用卡消費回饋獎勵金參數維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td>
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+                <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+                <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+
+    <div id="dataBlock">
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>年度：
+                    <span class="dsp_text">${acct_year}</span>
+                    <input type=hidden name="acct_year" value="${acct_year}" />
+                </td>
+                <td nowrap class="col_key">已覆核：
+                    <span class="dsp_text">${apr_flag}</span>
+                    <input type=hidden name="apr_flag" value="${apr_flag}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >參數類別：
+                    <span class="dsp_date">帳戶類別</span>
+                    <input type=hidden name="data_type" value="01" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap colspan="2">
+                    <input type="Button" value="帳戶類別" class="btAdd_detl" disabled />
+                    <input type="Button" value="團體代號" onclick="go_page('02');" class="btAdd_detl" />
+                    <input type="Button" value="卡種" onclick="go_page('03');" class="btAdd_detl" />
+                    <input type="Button" value="分行" onclick="go_page('04');" class="btAdd_detl" />
+                </td>
+        </table>
+        <table width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap>&nbsp;帳戶類別:
+                    <select size="1" id="sel01_data_code" name="sel01_data_code" class="col_ddlb" >
+                        ${dddw_ptr_acct_type}
+                        ${dddw_dbp_acct_type}
+                    </select>
+                </td>
+                <td>
+                    <input type="Button" name="detl_btnAdd" value="新增明細" ${newDetail_disable}
+                           id="wf_addrow"  class="btAdd_detl" />
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <table id="table1" width="60%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_cc" width="5%">刪除 </th>
+                <th nowrap class="list_cc" style="text-align: left">帳戶類別 </th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no" bgcolor="#EFEFEF">
+                    <span class="dsp_flag">${ok_flag}</span>
+                    <input type="checkbox" name="opt" value="${ser_num}">
+                    ${SER_NUM}
+                    <input type="hidden" name="ser_num" value="${ser_num}">
+                </td>
+                <td nowrap class="list_cc" style="text-align: left">
+                    ${data_code1}
+                    <input type="hidden" name="ex_data_code1" value="${ex_data_code1}" />
+                    <input type="hidden" name="data_code1" value="${data_code1}" />
+                </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+
+    <!-- -->
+    <input type="hidden" name="mod_pgm" value="Mktm3020">
+    <input type="hidden" name="rowid" value="${rowid}">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="01">
+
+</form>
+</body>
+</html>
+<script language="JavaScript">
+    let rowNum = ${row_num};
+</script>
+<script language="javascript">
+    top.refreshButton2('2');
+
+    function validateInput() {
+        return top.checkFormat();
+    }
+
+    $("#wf_addrow").click(function(){
+        const ex_data_code1 = $("#sel01_data_code option:selected").val();
+        const data_code1 = $("#sel01_data_code option:selected").text();
+
+        rowNum ++;
+        let serNum;
+        if ( rowNum < 10 ) {
+            serNum = "0" + rowNum;
+        } else {
+            serNum = "" + rowNum;
+        }
+
+        $("#table1").append(
+            '<tr>' +
+                '<td nowrap class="list_no" bgcolor="#EFEFEF">' +
+                    '<input type="checkbox" name="opt" value="' + serNum + '">' +
+                    '&emsp;' + serNum +
+                    '<input type="hidden" name="ser_num" value="' + serNum + '">' +
+                '</td>' +
+                '<td nowrap class="list_cc" style="text-align: left">' +
+                    data_code1 +
+                    '<input type="hidden" name="ex_data_code1" value="' + ex_data_code1 + '" />' +
+                    '<input type="hidden" name="data_code1" value="' + data_code1 + '" />' +
+                '</td>' +
+            '</tr>'
+        );
+    });
+
+    function go_page(param) {
+        top.respLevel = 2;
+
+        if (param === "01") {
+            top.respHtml = "mktm3020_detl_01";
+        } else if (param === "02") {
+            top.respHtml = "mktm3020_detl_02";
+        } else if (param === "03") {
+            top.respHtml = "mktm3020_detl_03";
+        } else if (param === "04") {
+            top.respHtml = "mktm3020_detl_04";
+        } else {
+            return false;
+        }
+
+        top.submitControl("R2");
+        return true;
+    }
+</script>

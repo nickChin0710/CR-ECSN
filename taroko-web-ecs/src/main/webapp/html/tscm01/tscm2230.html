@@ -1,0 +1,453 @@
+<html>
+<head>
+<title>TSCC悠遊卡黑名單及Auto load參數維護v20191231</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user} 
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>   
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; 
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="3" class="td_titl">
+   	<b>${parm_desc}</b>
+      <input type="hidden" name="parm_desc" value="${parm_desc}">   
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3" >悠遊卡黑名單參數</td>
+</tr>
+<tr>
+   <td nowrap colspan="3" >共同條件(autoload_flag='Y' 且 未鎖卡 且退卡日無值 且 餘額轉置回饋日無值 且 效期未過期)</td>
+</tr>
+<tr>
+   <td nowrap width="5%" >
+      <input type="checkbox" name="card_lost_cond" value="Y" ${card_lost_cond-Y}>
+   </td>
+   <td nowrap colspan="2" >&nbsp;卡片掛失且為非記名卡</td>
+</tr>
+<tr>
+   <td nowrap width="5%" >
+      <input type="checkbox" name="card_oppo_cond" value="Y" ${card_oppo_cond-Y}>      
+   </td>
+   <td nowrap colspan="2" >&nbsp;卡片強停</td>
+</tr>
+<tr>
+   <td nowrap width="5%" >
+      <input type="checkbox" name="mcode_cond" value="Y" ${mcode_cond-Y}>
+   </td>
+   <td nowrap colspan="2" >&nbsp;MCode >= 
+      <input type="text" class="col_number" name="payment_rate" value="${payment_rate}" maxlength="11" size="13" zEdit="number">
+      且欠款本金 >=
+      <input type="text" class="col_number" name="mcode_amt" value="${mcode_amt}" maxlength="11" size="13" zEdit="number">
+   </td>
+</tr>
+<tr>
+   <td nowrap width="5%" >
+      <input type="checkbox" name="bkec_block_cond" value="Y" ${bkec_block_cond-Y}>
+   </td>
+   <td nowrap colspan="2" >&nbsp;
+      <input type="Button" class="btOther" value="應列黑名單凍結碼" ${btnUpdate_disable} onClick="proc_block_reason()" >
+      <input type="text" class="dsp_text"  name="ttbkec_block_reason" value="${ttbkec_block_reason}" maxlength="50" size="52" readonly />
+      <input type="hidden" name="bkec_block_reason" value="${bkec_block_reason}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3" class="td_titl">悠遊卡Auto load 參數</td>
+</tr>
+<tr>
+   <td nowrap colspan="3" class="td_title">　　　　　　　　　　　　　　　　　　　　　　　
+      　Autoload基本條件
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3" class="td_title">
+      (卡號存在 且 效期未過期 且為有效活卡 且信用卡已開卡 且非黑名單 且未鎖卡 且未退卡 且未餘額轉置)
+   </td>
+</tr>
+<tr>
+   <td nowrap width="5%" >
+      <input type="checkbox" name="auto_block_cond" value="Y" ${auto_block_cond-Y}>
+   </td>
+   <td nowrap colspan="2" >&nbsp;
+      <input type="Button" class="btOther" value="可Auto load 凍結碼" ${btnUpdate_disable} onClick="proc_auto_block()" >
+      <input type="text" class="dsp_text"  name="ttauto_block_reason" value="${ttauto_block_reason}" maxlength="50" size="52" readonly />
+      <input type="hidden" name="auto_block_reason" value="${auto_block_reason}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3" >&nbsp;
+      <span class="td_remark">**帳戶凍結碼為空白 or 僅存在 [可Auto load 凍結碼],才允許開啟Auto Load</span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3" >&nbsp;
+      <span class="col_key">註:有凍結碼帳戶，排除有任一「應列黑名單凍結碼」及僅有「可Auto load 凍結碼」帳戶後，剩餘有凍結碼但未列黑名單之帳戶，將每日<br>
+         　比對前1日請款資料，若存在悠遊卡離線加值請款者，則可於(RSKR2260)人工產出報表，供判斷是否登錄黑名單。
+      </span>
+   </td>
+</tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <td nowrap >&nbsp;覆核日期:
+      <span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+   </td>
+   <td nowrap >&nbsp;覆核主管:
+      <span class="dsp_text">${apr_user}&nbsp;</span>
+      <input type="hidden" name="apr_user" value="${apr_user}">
+   </td>
+   <td nowrap >&nbsp;已覆核:
+      <span class="dsp_text">${apr_flag}&nbsp;</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!--dialog 1-->
+<div id="block_dlog"> 
+<table border="0" >
+ <tr><td>&nbsp;凍結碼:
+      <input type=text class="col_text" id="ex_block" value="" 
+         zeditType="alphanum,upper" maxlength="2" size="4" /> 
+     </td>    
+     <td align="right">
+     <input type="Button" id="block_btnAdd" value="新增" class="btAdd_detl" />
+ </td><tr>
+</table>
+<hr>
+ <table id="tbl_block" border="0" >
+  <tr>
+    <th nowrap width="5%">刪除 </th>
+    <th nowrap >凍結碼 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+    </td>
+    <td nowrap class="list_cc">&nbsp;${block_code} 
+      <input type="hidden" name="block_code" value="${block_code}" />
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+</div>
+
+<!--dialog 2-->
+<div id="block2_dlog"> 
+<table border="0" >
+ <tr><td>&nbsp;凍結碼:
+      <input type=text class="col_text" id="ex_block2" value="" 
+         zeditType="alphanum,upper" maxlength="2" size="4" /> 
+     </td>    
+     <td align="right">
+     <input type="Button" id="block2_btnAdd" value="新增" class="btAdd_detl" />
+ </td><tr>
+</table>
+<hr>
+ <table id="tbl_block2" border="0" >
+  <tr>
+    <th nowrap width="5%">刪除 </th>
+    <th nowrap >凍結碼 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+    </td>
+    <td nowrap class="list_cc">&nbsp;${block_code2} 
+      <input type="hidden" name="block_code2" value="${block_code2}" />
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="tscm2230">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+var ind1=${IND_NUM1};
+var rowNum1=${IND_NUM1};
+</script>
+
+<script language="javascript">
+var ind2=${IND_NUM2};
+var rowNum2=${IND_NUM2};
+</script>
+
+<script>
+$(document).ready(function () {
+     $("#block_dlog").dialog({
+         title:'列黑名單凍結碼',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         height: 400, width: 300,
+         buttons: {
+             "確定": function() {
+                wf_set_block(document.all.tbl_block);
+            	 $(this).dialog("close");
+             },
+             "取消": function () {
+            	 $(this).dialog("close");
+             }
+         }
+     });
+   
+  $("#block_btnAdd").click(function(){
+	var ls_data_code =$("#ex_block").val().toUpperCase().trim();
+	if(ls_data_code.length!=2){
+	   alert("凍結碼為 2 碼,請重新輸入");
+	   return;  
+	}
+
+   rowNum1++;
+   ind1++;
+   var serNo ="0";
+   if ( ind1 < 10 )
+      { serNo = "0"+ind1; }
+   else
+   	{ serNo = ""+ind1;  }
+
+   $("#tbl_block").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code
+      +"<input type='hidden' value='"+ls_data_code+"' name='block_code' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_block").val('');
+  
+  });   
+     
+ });
+</script>
+
+<script>
+$(document).ready(function () {
+     $("#block2_dlog").dialog({
+         title:'可Auto load 凍結碼',
+         autoOpen: false,
+         resizable: false,
+         modal: true,
+         height: 400, width: 300,
+         buttons: {
+             "確定": function() {
+                wf_set_block2(document.all.tbl_block2);
+            	 $(this).dialog("close");
+             },
+             "取消": function () {
+            	 $(this).dialog("close");
+             }
+         }
+     });
+   
+  $("#block2_btnAdd").click(function(){
+	var ls_data_code2 =$("#ex_block2").val().toUpperCase().trim();
+	if(ls_data_code2.length!=2){
+	   alert("凍結碼為 2 碼,請重新輸入");
+	   return;  
+	}
+
+   rowNum2++;
+   ind2++;
+   var serNo ="0";
+   if ( ind2 < 10 )
+      { serNo = "0"+ind2; }
+   else
+   	{ serNo = ""+ind2;  }
+
+   $("#tbl_block2").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ls_data_code2
+      +"<input type='hidden' value='"+ls_data_code2+"' name='block_code2' />"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_block2").val('');
+  
+  });   
+     
+ });
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+  function proc_block_reason() {
+   $("#block_dlog").dialog("open");
+ }
+
+ function wf_set_block(elmtTable)
+ {
+	 //debugger;
+	 wf_clear_table(elmtTable, false);
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    //alert("table1-row="+rowCount);
+    var ls_block=""; 
+    var tt_block="";
+     for (var x=1; x<rowCount; x++) {
+       if (tableRows[x].cells.length<2) {
+          continue;
+       }
+       var ss = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+       
+       if (ls_block.indexOf(ss)>=0) {
+         continue;
+       }
+       
+       ls_block +=ss;
+       if(x==1){
+       		tt_block +=ss;
+      	}	else	{
+      		tt_block +=","+ss;
+      	}
+      
+     }
+     $("input[name=bkec_block_reason]").val(ls_block);
+     $("input[name=ttbkec_block_reason]").val(tt_block);
+ }   
+ 
+ function wf_clear_table(elmtTable, bAll)
+ {
+	 //debugger;
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+	 var rowCount = tableRows.length;    
+
+	 for (var x=rowCount-1; x>0; x--) {
+      //alert("x="+x+", cell="+tableRows[x].cells.length);
+      if (tableRows[x].cells.length==0) {
+         elmtTable.deleteRow(x);
+         continue;
+      }
+		 if (bAll)
+		 { elmtTable.deleteRow(x); }
+		 else
+		 {
+			 var flag = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+          //alert("xxx="+flag);
+         if (flag) {
+            elmtTable.deleteRow(x);
+         }
+		 }
+	 }
+ }
+ 
+  function proc_auto_block() {
+   $("#block2_dlog").dialog("open");
+ }
+ 
+ function wf_set_block2(elmtTable)
+ {
+	 //debugger;
+	 wf_clear_table(elmtTable, false);
+	 var tableRows = elmtTable.getElementsByTagName('tr');
+    var rowCount = tableRows.length;
+    //alert("table1-row="+rowCount);
+    var ls_block=""; 
+    var tt_block="";
+     for (var x=1; x<rowCount; x++) {
+       if (tableRows[x].cells.length<2) {
+          continue;
+       }
+       var ss = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+       
+       if (ls_block.indexOf(ss)>=0) {
+         continue;
+       }
+       
+       ls_block +=ss;
+       if(x==1){
+       		tt_block +=ss;
+      	}	else	{
+      		tt_block +=","+ss;
+      	}
+     }
+     $("input[name=auto_block_reason]").val(ls_block);
+     $("input[name=ttauto_block_reason]").val(tt_block);
+ }   
+ 
+</script>

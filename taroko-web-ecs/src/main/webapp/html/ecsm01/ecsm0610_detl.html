@@ -1,0 +1,196 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-09-07  V1.00.01  Justin         Initial                              -->
+<!-- 111-07-27  V1.00.02  Ryan           mod_pgm -> mod_pgm1                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>批次排程及執行結果查詢 110-09-07 V1.00.01</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+ <!--取消覆核  ${#PLUGIN:htmcomm_plugin.apr_user3}   -->
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"   value="讀取"                       onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <!-- <input type="Button"   value="新增"  ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp; -->
+     <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <!-- <input type="Button"   value="刪除"  ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp; -->
+     <input type="Button"   value="清除"                       onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data detl *************************************************** -->
+  <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >批次日期: 
+       <span class="dsp_date">${batch_date.YMD}</span>
+       <input     size="8"  type="hidden" name="batch_date" value="${batch_date.YMD}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >批次時間: 
+       <span class="dsp_text">${batch_time.TIME}</span>
+       <input     size="8"  type="hidden" name="batch_time" value="${batch_time.TIME}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >shell代碼: 
+       <span class="dsp_text">${shell_id}</span>
+       <input type="hidden" name="shell_id" value="${shell_id}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >程式代碼: 
+       <span class="dsp_text">${pgm_id}</span>
+       <input type="hidden" name="pgm_id" value="${pgm_id}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >程式說明: 
+       <span class="dsp_text">${pgm_desc}</span>
+       <input type="hidden" name="pgm_desc" value="${pgm_desc}" />
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>暫停註記:&nbsp; 
+       <input type="text" class="col_any" name="wait_flag" value="${wait_flag}"
+              zEdit="any" maxlength="1" size="2" />
+       <span class="col_key" > 設為Y時, 代表此程式先bypass不執行</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>重新執行註記:&nbsp; 
+       <input type="text" class="col_any" name="rerun_proc" value="${rerun_proc}"
+              zEdit="any" maxlength="1" size="2" />
+       <span class="col_key" > 設為Y時, 代表此程式要重新執行</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數1:&nbsp; 
+       <input type="text" class="col_any" name="key_parm1" value="${key_parm1}"
+              zEdit="any" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數2:&nbsp; 
+       <input type="text" class="col_any" name="key_parm2" value="${key_parm2}"
+              zEdit="any" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數3:&nbsp; 
+       <input type="text" class="col_any" name="key_parm3" value="${key_parm3}"
+              zEdit="any" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數4:&nbsp; 
+       <input type="text" class="col_any" name="key_parm4" value="${key_parm4}"
+              zEdit="any" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>作業參數5:&nbsp; 
+       <input type="text" class="col_any" name="key_parm5" value="${key_parm5}"
+              zEdit="any" />
+     </td>
+   </tr>
+ </table>
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >執行日期時間(起): 
+       <span class="dsp_text">${execute_date_s.YMD} ${execute_time_s.TIME}</span>
+       <input type="hidden" name="execute_date_s" value="${execute_date_s.YMD}" />
+       <input type="hidden" name="execute_time_s" value="${execute_time_s.TIME}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >執行日期時間(迄): 
+       <span class="dsp_text">${execute_date_e.YMD} ${execute_time_e.TIME}</span>
+       <input type="hidden" name="execute_date_e" value="${execute_date_e.YMD}" />
+       <input type="hidden" name="execute_time_e" value="${execute_time_e.TIME}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >執行結果: 
+       <span class="dsp_text">${proc_flag}</span>
+       <input type="hidden" name="proc_flag" value="${proc_flag}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >執行結果說明: 
+       <span class="dsp_text">${proc_desc}</span>
+       <input type="hidden" name="proc_desc" value="${proc_desc}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >正常回應碼: 
+       <span class="dsp_text">${normal_code}</span>
+       <input type="hidden" name="normal_code" value="${normal_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >異常時通知維護人員: 
+       <span class="dsp_text">${call_duty_ind}</span>
+       <input type="hidden" name="call_duty_ind" value="${call_duty_ind}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  colspan="3" >異動時間: 
+       <span class="dsp_text">${mod_time}</span>
+       <input type="hidden" name="mod_time" value="${mod_time.TIME}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >異動程式: 
+       <span class="dsp_date">${mod_pgm1}</span>
+       <input type="hidden" name="mod_pgm1" value="${mod_pgm1}" /> 
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+<input type="hidden" name="data_k1" value="" >
+<input type="hidden" name="data_k2" value="" >
+<input type="hidden" name="data_k3" value="" >
+<input type="hidden" name="data_k4" value="" >
+<input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="rowid" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

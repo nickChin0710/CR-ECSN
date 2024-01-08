@@ -1,0 +1,134 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-09-13  V1.00.01     Ryan       Initial                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>郵資參數資料維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8;">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"  value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+  <tr>
+       <td nowrap>郵寄種類：&nbsp;
+           <select size="1" name="kk_mail_type" class="col_ddlb" zRequire ="K">
+                ${dddw_mail_type}
+           </select>
+       </td>
+       <td nowrap>卡片張數(MIN)：&nbsp;
+     		<input type="text" class="col_number" name="kk_min_card_sheets" value="${kk_min_card_sheets}"
+              zEdit="number" maxlength="10" size="12" zRequire ="K"/>
+       </td>
+       <td nowrap>卡片張數(MAX)：&nbsp;
+       		<input type="text" class="col_number" name="kk_max_card_sheets" value="${kk_max_card_sheets}"
+              zEdit="number" maxlength="10" size="12" zRequire ="K"/>
+       </td>
+  </tr>
+</table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>寄件種類:&nbsp; 
+       	<span class="col_key">${mail_type}[${msg}]</span>
+		<input type="hidden"   name="mail_type" value="${mail_type}">
+		<input type="hidden"   name="msg" value="${msg}">
+     </td>
+     <td nowrap>卡片張數(MIN):&nbsp; 
+	    <span class="col_key">${min_card_sheets}</span>
+		<input type="hidden"   name="min_card_sheets" value="${min_card_sheets}">
+     </td>
+     <td nowrap>卡片張數(MAX):&nbsp; 
+       	<span class="col_key">${max_card_sheets}</span>
+		<input type="hidden"   name="max_card_sheets" value="${max_card_sheets}">
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>北北基地區郵資(元):&nbsp; 
+       <input type="text" class="col_number" name="bigtaipei_area_post" value="${bigtaipei_area_post}"
+              zEdit="number" maxlength="10" size="12" />
+     </td>
+     <td nowrap colspan=2>其他地區郵資(元):&nbsp; 
+       <input type="text" class="col_number" name="other_area_post" value="${other_area_post}"
+              zEdit="number" maxlength="10" size="12" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>信封重量(克):&nbsp; 
+       <input type="text" class="col_number" name="env_weight" value="${env_weight}"
+              zEdit="number" maxlength="10" size="12" />
+     </td>
+     <td nowrap colspan=2>每張卡重量(克):&nbsp; 
+       <input type="text" class="col_number" name="card_weight" value="${card_weight}"
+              zEdit="number" maxlength="10" size="12" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >異動日期: 
+       <span class="dsp_date">${mod_date.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_date" value="${mod_date}" />
+     </td>
+     <td  nowrap  >異動人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+     </td>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

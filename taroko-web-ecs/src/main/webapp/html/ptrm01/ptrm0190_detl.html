@@ -1,0 +1,278 @@
+<html>
+<head>
+<title>團體代碼檔維護-detl-V.2020-0109-Ru-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+ 
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>&nbsp;
+          <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+          <input type="Button"   value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+  <tr>
+       <td nowrap width="50%" colspan="2">團體代號：&nbsp;         
+			   <input type=text class="col_text" name="kk_group_code" value="${kk_group_code}" 
+               zEdit="alphanum"  maxlength="4" size="4" /> 
+       </td>
+  </tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap class="colKey" colspan="2">團體代號：
+          <span class="dsp_text">${group_code}</span>
+          <input type="hidden" name="group_code" value="${group_code}" >
+       </td>
+   </tr>
+   <tr>
+     <td nowrap >網銀可申請註記:&nbsp;
+   		<select  name="ibank_apply_flag" class="col_ddlb" zRequire ="Y"">
+   		   <option value="">--</option>
+           <option value="N" ${ibank_apply_flag-n} >N</option>
+           <option value="Y" ${ibank_apply_flag-Y} >Y</option>
+        </select>
+   	</td>
+   </tr>
+   <tr>
+   	<td nowrap >聯名機構卡註記:&nbsp;
+   		<select id="member_flag" name="member_flag" class="col_ddlb" zRequire ="Y" onChange="memberFlagChange();">
+   		   <option value="">--</option>
+           <option value="N" ${member_flag-N} >N</option>
+           <option value="Y" ${member_flag-Y} >Y</option>
+        </select>
+   	</td>
+   	<td nowrap>聯名機構統一編號:&nbsp;
+      	<select id="member_corp_no" size="1" name="member_corp_no" class="col_ddlb" >
+      		${dddw_mkt_member}
+   		</select>
+    </td>
+   </tr>
+   <tr>
+       <td nowrap >是否收製卡費註記:&nbsp;
+            <select id="crd_makecard_fee_flag" name="crd_makecard_fee_flag" class="col_ddlb" onchange="toggle_crd_makecard_fee_flag()">
+                <option value="N" ${crd_makecard_fee_flag-N} selected>N</option>
+                <option value="Y" ${crd_makecard_fee_flag-Y} >Y</option>
+            </select>
+       </td>
+
+       <td nowrap >製卡費:&nbsp;
+            <input id="crd_makecard_fee" name="crd_makecard_fee" type=text class="col_text" value="${crd_makecard_fee}" 
+               zEdit="dignumber" maxlength="3" size="3" disabled >
+       </td>
+   </tr>
+   <tr>
+ <!--
+       <td nowrap >來源代號前兩碼對應值:&nbsp;
+            <input type=text class="col_text" name="group_abbr_code" value="${group_abbr_code}" 
+               zEdit="alphanum,upper" zRequire ="Y" maxlength="2" size="2" /> 
+       </td>
+--> 
+       <td nowrap >特殊利率註記:&nbsp;
+            <select id="special_card_rate_flag" name="special_card_rate_flag" class="col_ddlb" onchange="toggle_special_card_rate_flag()">
+                <option value="N" ${special_card_rate_flag-N} selected>N</option>
+                <option value="Y" ${special_card_rate_flag-Y} >Y</option>
+            </select>
+       </td>
+       <td nowrap >特殊(年)利率:&nbsp;
+            <input id="revolve_int_rate_year" name="revolve_int_rate_year" type=text class="col_number" value="${revolve_int_rate_year}" 
+               zEdit="dignumber" maxlength="5" size="7" />&nbsp;% 
+              	&nbsp;&nbsp;日利率: 
+            <span class="dsp_text">${rcrate_day}</span>%
+			<input type="hidden"   name="rcrate_day" value="${rcrate_day}">
+       </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="2">中文名稱:&nbsp;
+            <input type=text class="col_any" name="group_name" value="${group_name}" 
+               zEdit="canTW"  maxlength="40" size="30" /> 
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>凸字第四行:&nbsp;
+            <input type=text class="col_any" name="emboss_data" value="${emboss_data}" 
+               zEdit="canTW"  maxlength="20" size="20" /> 
+       </td>
+	   <td nowrap >combo卡旗標：&nbsp;
+            <select name="combo_indicator" class="col_ddlb" zRequire ="Y"  >
+                <option value="">--</option>
+                <option value="N" ${combo_indicator-N} >N:非combo卡</option>
+                <option value="Y" ${combo_indicator-Y} >Y:combo卡</option>
+           </select>	     
+        </td>
+   </tr>
+<!--
+   <tr>
+	   <td nowrap colspan="3">帶出聯名機構會員編號:&nbsp;
+	     <input type="radio" value="Y" name="co_member_flag" ${co_member_flag-Y} onChange="detailMtype(this.value)">是 
+         <input type="radio" value="N" name="co_member_flag" ${co_member_flag-N} ${DEFAULT_CHK} onChange="detailMtype(this.value)">否
+       </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="3">會員編號類型:&nbsp;
+            <select size="1" name="co_member_type" class="col_ddlb" id="mtype" >
+                ${dddw_bill_member}
+            </select>
+        </td>
+   </tr>
+   <tr>
+       <td nowrap colspan="2">團代優先順序:&nbsp;
+            <input type=text class="col_any" name="group_order" value="${group_order}" 
+              zRequire ="Y"  zEdit="any"  maxlength="4" size="4" /> 
+       </td>
+   </tr>
+
+	<tr>
+       <td nowrap  colspan="2" rowspan="1"  >對帳單類型順序:&nbsp;
+            <input type=text class="col_any" name="bill_form_seq" value="${bill_form_seq}" 
+               zEdit="any"  maxlength="2" size="2" />**請輸入01(最先)~99(最後)建議首次設10，以後每次設定累增10，<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;若有新產品需設定為更優先，可插入中間未設定之順序**
+       </td>
+	   
+   </tr >
+-->   
+   <tr>
+	   <td nowrap colspan="2">是否自動分期:&nbsp;
+	     <input type="radio" value="Y" name="auto_installment" ${auto_installment-Y}>是 
+         <input type="radio" value="N" name="auto_installment" ${auto_installment-N} ${DEFAULT_CHK}>否 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**不適用&nbsp;商務卡、採購卡、Visa Debit**
+       </td>
+   </tr>
+   <tr>
+	   <td nowrap colspan="2">是否指定卡片預約分期:&nbsp;
+	     <input type="radio" value="Y" name="assign_installment" ${assign_installment-Y}>是 
+         <input type="radio" value="N" name="assign_installment" ${assign_installment-N} ${DEFAULT_CHK}>否 &nbsp;&nbsp;**不適用&nbsp;商務卡、採購卡、Visa Debit**
+       </td>
+   </tr> 
+   <tr>
+	   <td nowrap colspan="2">採購卡註記:&nbsp;
+       	 <select name="purchase_card_flag" class="col_ddlb" onChange="cardFlagChange()">
+             <option value="N" ${purchase_card_flag-N} >N</option>
+             <option value="Y" ${purchase_card_flag-Y} >Y</option>
+         </select>
+         &nbsp;
+	     <input type="radio" value="M" name="cca_group_mcht_chk" ${cca_group_mcht_chk-M}>指定特店消費/MCC消費
+         <input type="radio" value="C" name="cca_group_mcht_chk" ${cca_group_mcht_chk-C}>指定MCC消費
+       </td>
+   </tr>
+   <input type="hidden" name="h_co_member_flag"  value="${co_member_flag}">
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap>鍵檔日期:
+          <span class="dsp_text">${crt_date.YMD}</span>
+          <input type="hidden" name="crt_date" value="${crt_date}" >
+       </td>
+       <td nowrap>鍵檔人員:&nbsp;
+          <span class="dsp_text">${crt_user}</span>
+          <input type="hidden" name="crt_user" value="${crt_user}" >
+       </td>
+   </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ptrm0190">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ var typem =  document.dataForm.h_co_member_flag.value;
+ 
+ if(typem =='N'){
+     $("#mtype").attr('disabled',true);
+ }
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    return true;
+}
+
+function detailMtype(type){
+	
+	if(type =='Y'){
+        $("#mtype").attr('disabled',false);
+     
+  }
+    if(type =='N'){
+    	  //$("#mtype").text('');
+    	  //document.dataForm.xx.disabled=false;
+    	  $("#mtype").attr('disabled',true);
+    	  
+    }
+}
+
+function toggle_crd_makecard_fee_flag() {
+    var flag = $("#crd_makecard_fee_flag").val();
+    if (flag == "Y") {
+        $("#crd_makecard_fee").attr("disabled", false);
+    } else {
+        $("#crd_makecard_fee").attr("disabled", true);
+        $("#crd_makecard_fee").val("");
+    }
+}
+
+function toggle_special_card_rate_flag() {
+	var flag = $("#special_card_rate_flag").val();
+    if (flag == "Y") {
+        $("#revolve_int_rate_year").attr("disabled", false);
+    } else {
+        $("#revolve_int_rate_year").attr("disabled", true);
+        $("#revolve_int_rate_year").val("");
+    }
+}
+
+function memberFlagChange(){
+	var memberFlag = $("#member_flag").val();
+	if(memberFlag == 'Y'){
+		$("#member_corp_no").attr("disabled",false);	
+	}else{
+		$("#member_corp_no").attr("disabled",true);
+		$("#member_corp_no").val("");
+	}
+}
+
+$(document).ready(function() {
+	cardFlagChange();
+	toggle_crd_makecard_fee_flag();
+	toggle_special_card_rate_flag();
+	memberFlagChange();
+});
+
+function cardFlagChange(){
+
+	var cardFlag = $("select[name = purchase_card_flag]");
+		if (cardFlag.val() == 'Y') {
+			$("input[name=cca_group_mcht_chk]").attr("disabled", false);
+		}
+		if (cardFlag.val() == 'N') {
+			$("input[name=cca_group_mcht_chk]").attr("disabled", true);
+		} 
+	}
+</script>

@@ -1,0 +1,225 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-09-22  V1.00.01  Ryan       Initial                                  -->
+<!-- 112-10-12  V1.00.02  Ryan       調整查詢條件功能                                                                                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+     <td nowrap>&nbsp;類型:
+       <span class="col_radio">
+         <input type="radio" value="0" name="ex_card_flag" ${ex_card_flag-0} ${DEFAULT_CHK}/>全部
+         <input type="radio" value="1" name="ex_card_flag" ${ex_card_flag-1} />個人
+         <input type="radio" value="2" name="ex_card_flag" ${ex_card_flag-2} />公司
+       </span>
+     </td>
+     <td nowrap>&nbsp;身份證字號/統編:
+  	  <input type="text" class="col_any" name="ex_id_corp_no" value="${ex_id_corp_no}"
+         zEdit="any"  maxlength=11 size=13 />
+     </td>
+     <td nowrap rowspan="4">&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>	
+  <tr>
+  	 <td nowrap>&nbsp;債證種類:
+       <span class="col_radio">
+         <input type="radio" value="0" name="ex_cert_type" ${ex_cert_type-0} ${DEFAULT_CHK} />全部
+         <input type="radio" value="1" name="ex_cert_type" ${ex_cert_type-1} />1.執行名義
+         <input type="radio" value="2" name="ex_cert_type" ${ex_cert_type-2} />2.債權憑證
+       </span>
+     </td>
+     <td nowrap>&nbsp;債證狀態:
+       <select name="ex_cert_status" class="col_ddlb">
+			${dddw_cert_status}
+       </select>
+     </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;時效起算日:
+       <input type="text" class="col_date" name="ex_cert_date1" value="${ex_cert_date1}" 
+           zeditType="date,yyyymmdd" size=10 maxlength=8 />
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'ex_cert_date1'});
+       </script>
+       --
+       <input type="text" class="col_date" name="ex_cert_date2" value="${ex_cert_date2}" 
+       zeditType="date,ymd" MaxLength=10 size=8 />
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': '"ex_cert_date2"'});
+       </script>      
+     </td>
+     <td nowrap>&nbsp;時效到期日:
+       <input type="text" class="col_date" name="ex_cert_end_date1" value="${ex_cert_end_date1}" 
+           zeditType="date,yyyymmdd" size=10 maxlength=8 />
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'ex_cert_end_date1'});
+       </script>
+       --
+       <input type="text" class="col_date" name="ex_cert_end_date2" value="${ex_cert_end_date2}" 
+       zeditType="date,ymd" MaxLength=10 size=8 />
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'ex_cert_end_date2'});
+       </script>      
+     </td>
+  </tr>
+  <tr>
+     <td nowrap colspan="2">&nbsp;分行代碼:
+  	  <input type="text" class="col_any" name="ex_branch" value="${ex_branch}"
+         zEdit="any"  maxlength=4 size=6 />
+     </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+      <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >覆核&nbsp;</th>
+    <th nowrap class="list_th">建檔日期</th>
+    <th nowrap class="list_th">類型</th>
+    <th nowrap class="list_th">債證種類</th>
+    <th nowrap class="list_th">身分證字號/統編</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">發給法院</th>
+    <th nowrap class="list_th">年度</th>
+    <th nowrap class="list_th">憑證文號</th>
+    <th nowrap class="list_th">憑證種類註記</th>
+    <th nowrap class="list_th">憑證狀態</th>
+    <th nowrap class="list_th">時效起算日</th>
+    <th nowrap class="list_th">時效完成日</th>
+    <th nowrap class="list_th">異動經辦</th>
+    <th nowrap class="list_th">異動日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+    	<span class="col_key">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled}/>${SER_NUM}&nbsp;
+    </td>
+    <td nowrap class="list_ll"> ${crt_date.YMD}</td>
+    <td nowrap class="list_ll"> ${card_flag}.${comm_card_flag}</td>
+    <td nowrap class="list_ll"> ${cert_type}.${comm_cert_type}</td>
+    <td nowrap class="list_ll"> ${id_corp_no}</td>
+    <td nowrap class="list_ll"> ${chi_name}</td>
+    <td nowrap class="list_ll"> ${court_id}.${comm_court_id}</td>
+    <td nowrap class="list_ll"> ${court_year}</td>
+    <td nowrap class="list_ll"> ${court_desc}</td>
+    <td nowrap class="list_ll"> ${cert_kind}.${comm_cert_kind}</td>
+    <td nowrap class="list_ll"> ${cert_status}.${comm_cert_status}</td>
+    <td nowrap class="list_ll"> ${cert_date.YMD}</td>    
+    <td nowrap class="list_ll"> ${cert_end_date.YMD}</td>
+    <td nowrap class="list_ll"> ${mod_user}</td>
+    <td nowrap class="list_ll"> ${mod_date.YMD}</td>
+    <input type="hidden" name="ser_num" value="${ser_num}">
+    <input type="hidden" name="crt_date" value="${crt_date}">
+    <input type="hidden" name="cert_type" value="${cert_type}">
+    <input type="hidden" name="comm_cert_type" value="${comm_cert_type}">
+    <input type="hidden" name="id_corp_no" value="${id_corp_no}">
+    <input type="hidden" name="chi_name" value="${chi_name}"> 
+    <input type="hidden" name="court_id" value="${court_id}">
+    <input type="hidden" name="comm_court_id" value="${comm_court_id}">
+    <input type="hidden" name="court_year" value="${court_year}">
+    <input type="hidden" name="court_desc" value="${court_desc}">
+    <input type="hidden" name="cert_kind" value="${cert_kind}">
+    <input type="hidden" name="comm_cert_kind" value="${comm_cert_kind}">
+    <input type="hidden" name="cert_status" value="${cert_status}">
+    <input type="hidden" name="comm_cert_status" value="${comm_cert_status}">
+    <input type="hidden" name="cert_date" value="${cert_date}">  
+    <input type="hidden" name="cert_end_date" value="${cert_end_date}">  
+    <input type="hidden" name="mod_user" value="${mod_user}">  
+    <input type="hidden" name="mod_date" value="${mod_date}">
+    <input type="hidden" name="table_type" value="${table_type}">
+    <input type="hidden" name="id_corp_p_seqno" value="${id_corp_p_seqno}">      
+    <input type="hidden" name="opt_disabled" value="${opt_disabled}">     
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="ROWID" value="${rowid}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+ <input type="hidden" name="data_k6" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode == "C") {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+		if (confirm("是否執行覆核處理?!") === false) {
+    		return false;
+    	}
+    }
+    return true;
+  }
+ 
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			if ( aElements[i].name == "opt" ) {
+				if ( aElements[i].disabled == false ) {
+					aElements[i].checked = document.dataForm.ex_selectAll.checked;					
+				}
+			}
+		}
+	}
+ }
+ 
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.getElementsByName("opt");
+	 var ll = agy.length;
+	 for ( var i=0; i < ll; i++ ) {
+		 if(agy[i].checked){
+			 seq++;
+		 }
+	 }
+	 if(seq == 0){
+		alert("請勾選欲覆核資料!");
+		return false;
+ 	 }
+	 return true;
+ }
+
+</script>
+<!-- ******************************************************************** -->

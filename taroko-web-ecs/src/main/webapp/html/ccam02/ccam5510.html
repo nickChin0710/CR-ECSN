@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>手機黑名單維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css"  type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;手機號碼:
+      <input type="text" class="col_text" name="ex_cellar_phone" value="${ex_cellar_phone}" maxlength="10" size="12" zEdit="number" >      
+   </td>
+   <td nowrap >&nbsp;建檔日期:
+   <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+   <script language="JavaScript">    
+	new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+   </script>
+   &nbsp;--&nbsp;
+   <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+   <script language="JavaScript">
+    new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+   </script>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button" value="資料匯入" onClick="return top.submitControl('C')" class="btConfirm" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;匯入媒體檔:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any" />
+      <input type="button" value="..." class="btProcess" onclick="return upload_click()">
+   </td>
+  </tr>  
+  <tr>
+   <td nowrap colspan="3">
+    <span class="col_key">匯入檔案格式:手機號碼(X10),備註(X100)</span>    
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">手機號碼</th>   
+    <th nowrap class="list_th">備註</th>   
+    <th nowrap class="list_th">建檔日期</th>
+    <th nowrap class="list_th">建檔人員</th>       
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${cellar_phone}','','')" style="cursor:hand">
+   <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc">${cellar_phone}&nbsp;</td>
+   <td nowrap class="list_ll">${remark}&nbsp;</td>
+   <td nowrap class="list_cc">${crt_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc">${crt_user}&nbsp;</td>   
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden"  name="upload_file" value="" /> 
+ 
+ 
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";  
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5510_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5510_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+  function upload_click() {    
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);    
+    top.packageName = "ccam02";
+    top.javaName    = "Ccam5510";    
+    top.requHtml    = "ccam5510";
+    top.respHtml    = "ccam5510";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+   return;
+ } 
+ 
+</script>

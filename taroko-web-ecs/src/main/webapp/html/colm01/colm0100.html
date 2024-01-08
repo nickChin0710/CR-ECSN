@@ -1,0 +1,299 @@
+<html>
+<head>
+<title>催收款轉銷呆帳作業-V.2018-1214-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="50%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap >&nbsp;身分證字號:
+			<textarea cols="50" rows="4" class="col_text" name="ex_key_id" >${ex_key_id}</textarea>
+			<br><span style='color:red'>(輸入範例:A123456789,B123456789)</span>
+   		</td>
+   		<td nowrap>&nbsp;結帳週期:
+			<input type="text" class="col_number" zEdit="number" name="ex_stmt_cycle" value="${ex_stmt_cycle}"
+      		maxlength="2" size="4"/>
+      		</p>
+      		&nbsp;分期還款註記:
+   			<span class="col_radio">
+         		<input type="radio" value="0" name="ex_pay_by_stage_flag" ${ex_pay_by_stage_flag-0}/>無
+         		<input type="radio" value="1" name="ex_pay_by_stage_flag" ${ex_pay_by_stage_flag-1}/>有
+   			</span>
+		</td>
+		<td nowrap >&nbsp;覆核別:
+   			<span class="col_radio">
+         		<input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT-ex_apr_flag}/>全部
+         		<input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N}/>待覆核
+   			</span>
+   			</p>
+   			&nbsp;Mcode(current)區間:
+      		<input type="text" class="col_number" name="mcode_s" value="${mcode_s}"
+         	zeditType="number" MaxLength=3 size=5 />
+         	--
+         	<input type="text" class="col_number" name="mcode_e" value="${mcode_e}"
+         	zeditType="number" MaxLength=3 size=5 />
+   		</td>
+	</tr>
+	<tr>
+		<td nowrap>&nbsp;ID歸戶催收款總額區間:
+      		<input type="text" class="col_number" name="ex_id_total_amt_s" value="${ex_id_total_amt_s}"
+         	zeditType="number" MaxLength=9 size=11 />
+         	--
+         	<input type="text" class="col_number" name="ex_id_total_amt_e" value="${ex_id_total_amt_e}"
+         	zeditType="number" MaxLength=9 size=11 />
+   		</td>
+		<td nowrap colspan="2">&nbsp;排序方式:
+			<span class="col_radio">
+         		<input type="radio" value="a" name="ex_orderby" ${ex_orderby-a} ${DEFAULT-ex_orderby} />依「ID歸戶催收款總額」(低→高) +「身份證字號」
+         		<input type="radio" value="b" name="ex_orderby" ${ex_orderby-b} />依「分期還款註記」+「身份證字號」
+      		</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4">&nbsp;  
+			<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+			<input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+			<input type="Button"  ${btnAdd}  value="執行" onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+			<input type="Button" ${btnPDF} value="列印" onClick="return top.submitControl('PDF')" class="btDelete" >&nbsp;&nbsp;
+			<!-- input type="Button"  value="執行批次 " onClick="return top.submitControl('C')" class="btUpdate" >&nbsp;&nbsp;-->
+		</td>
+	</tr>
+</table>
+<hr>
+<table width="50%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>&nbsp;呆帳核准日:
+      		<input type="text" class="col_date" name="ex_alw_bad_date" value="${ex_alw_bad_date}"
+         		zeditType="date,yyyymmmdd" MaxLength=8 size=10 />
+         	<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_alw_bad_date'});
+	    	</script>
+   		</td>
+   		<td nowrap>&nbsp;法律文件確認日期:
+      		<input type="text" class="col_date" name="ex_paper_conf_date" value="${ex_paper_conf_date}"
+         		zeditType="date,yyyymmmdd" MaxLength=8 size=10 />
+         	<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_paper_conf_date'});
+	    	</script>
+   		</td>
+		<td nowrap>&nbsp;憑証名稱：
+            <input type="text" class="col_any" name="ex_paper_name" value="${ex_paper_name}" 
+                zEdit="any,canTW" maxlength="20" size="22" />&nbsp;&nbsp;
+            <select size="1" name="dddw_paper_name" class="col_ddlb" onChange="select()">
+                ${PtrCertificateList}
+            </select>
+   		</td>
+	</tr>
+</table>
+</div>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th nowrap class="list_th" width="5%" style="color:blue"><input type="checkbox" name="ex_selectAll" id="allcheck1" value="Y" onChange="selectAll1();" >轉呆&nbsp;</th>
+		<th nowrap class="list_th" width="5%" style="color:red"><input type="checkbox" name="ex_selectAll" id="allcheck2" value="Y" onChange="selectAll2();" >刪除&nbsp;</th>
+		<th nowrap class="list_th">帳務別</th>
+		<th nowrap class="list_th">身分證字號</th>
+		<th nowrap class="list_th">姓名</th>
+		<th nowrap class="list_th">結帳週期</th>
+		<th nowrap class="list_th">Mcode</th>
+		<th nowrap class="list_th">催收款本金</th>
+		<th nowrap class="list_th">催收款利息</th>
+		<th nowrap class="list_th">催收款費用</th>
+		<th nowrap class="list_th">催收款總額</th>
+		<th nowrap class="list_th">ID歸戶催收款總額</th>
+		<th nowrap class="list_th">最後繳款日</th>
+		<th nowrap class="list_th">風險行</th>
+		<th nowrap class="list_th">分期還款註記</th>
+		<th nowrap class="list_th">狀態</th>
+		<th nowrap class="list_th">執行失敗原因</th>
+	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+	<tr>
+		<td nowrap class="list_no" rowspan="2">
+			<span class="col_key">${ok_flag}</span>
+			${SER_NUM}&nbsp;
+			<input type="checkbox" name="opt_A" class="check"  value="${ser_num}" ${checked_A}/>
+			<input type="hidden" name="rowid" value="${rowid}">
+			<input type="hidden" name="ser_num" value="${ser_num}">
+			<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+			<input type="hidden" name="acct_type" value="${acct_type}">
+			<input type="hidden" name="id_no" value="${id_no}">
+			<input type="hidden" name="chi_name" value="${chi_name}">
+			<input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+			<input type="hidden" name="mcode" value="${mcode}">
+			<input type="hidden" name="end_bal_cb" value="${end_bal_cb}">
+			<input type="hidden" name="end_bal_ci" value="${end_bal_ci}">
+			<input type="hidden" name="end_bal_cc" value="${end_bal_cc}">
+			<input type="hidden" name="total_amt" value="${total_amt}">
+			<input type="hidden" name="id_total_amt" value="${id_total_amt}">
+			<input type="hidden" name="risk_bank_no" value="${risk_bank_no}">
+			<input type="hidden" name="pay_by_stage_flag" value="${pay_by_stage_flag}">
+			<input type="hidden" name="trans_status" value="${trans_status}">
+			<input type="hidden" name="checked_D" value="${checked_D}">
+			<input type="hidden" name="checked_A" value="${checked_A}">
+			<input type="hidden" name="p_seqno" value="${p_seqno}">
+			<input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+			<input type="hidden" name="apr_flag" value="${apr_flag}">
+			<input type="hidden" name="line_of_credit_amt" value="${line_of_credit_amt}">
+			<input type="hidden" name="table_name" value="${table_name}">
+			<input type="hidden" name="org_delinquent_date" value="${org_delinquent_date}">
+			<input type="hidden" name="crd_rela_flag" value="${crd_rela_flag}">
+			<input type="hidden" name="card_sup_flag" value="${card_sup_flag}">
+			<input type="hidden" name="last_pay_date" value="${last_pay_date}">
+			<input type="hidden" name="trans_date" value="${trans_date}">
+			<input type="hidden" name="nego_type" value="${nego_type}">
+			<input type="hidden" name="nego_status" value="${nego_status}">
+			<input type="hidden" name="apply_nego_mcode" value="${apply_nego_mcode}">
+			<input type="hidden" name="card_since" value="${card_since}">
+		</td>
+		<td nowrap class="list_no" rowspan="2">
+			<input type="checkbox" name="opt_D" class="check" value="${ser_num}" ${checked_D}/>
+		</td>
+	</tr>
+	<tr onclick="detailScreen('${SER_NUM}','${p_seqno}','${table_name}','','')" style="cursor:hand">
+		<td nowrap class="list_ll">${acct_type}&nbsp;</td>
+		<td nowrap class="list_ll">${id_no}&nbsp;</td>
+		<td nowrap class="list_ll">${chi_name}&nbsp;
+		<td nowrap class="list_ll">${stmt_cycle}&nbsp;</td>
+		<td nowrap class="list_ll">${mcode}&nbsp;</td>
+		<td nowrap class="list_rr">${end_bal_cb.(999)}&nbsp;</td>
+		<td nowrap class="list_rr">${end_bal_ci.(999)}&nbsp;</td>
+		<td nowrap class="list_rr">${end_bal_cc.(999)}&nbsp;</td>
+		<td nowrap class="list_rr">${total_amt.(999)}&nbsp;</td>
+		<td nowrap class="list_rr">${id_total_amt.(999)}&nbsp;</td>
+		<td nowrap class="list_ll">${last_pay_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${risk_bank_no}&nbsp;</td>
+		<td nowrap class="list_ll">${pay_by_stage_flag}&nbsp;</td>
+		<td nowrap class="list_ll">${trans_status}&nbsp;</td>
+		<td nowrap class="list_ll" style="color:red">${msg}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="colm0100">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="btnAdd"  value="${btnAdd}">
+<input type="hidden"  name="btnPDF"  value="${btnPDF}">
+<input type="hidden"  name="cursor"  value="${cursor}">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+ var opt_A = 0;
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_key_id.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "colm0060_detl"; 
+    }
+
+    if ( top.actionCode == "A" ) {
+    	$("input[name=ex_alw_bad_date]").css("background-color","");
+    	if ( !chkdata() ) { 
+    		return false; 
+    	}else{
+    		if(opt_A>0){
+    			if($("input[name=ex_alw_bad_date]").val()==''){
+    				alert("呆帳核准日必須輸入");
+    				$("input[name=ex_alw_bad_date]").css("background-color","pink");
+    				return false; 
+    			}
+    		}
+    	} 
+    	if (confirm("是否執行?") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "colm0100_detl";
+    top.submitControl('S');
+    return true;
+  }
+ 
+ function chkdata() {
+	 var agy =0;
+	 $("input[name=opt_A]").each(function (){
+		 if($(this).prop("checked")==true){
+			 opt_A++;
+			 agy++; 
+		 }
+	 })
+	 $("input[name=opt_D]").each(function (){
+		 if($(this).prop("checked")==true){
+			 agy++; 
+		 }
+	 })
+	 if(agy == 0){
+		 alert("未選取資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+ function select(){
+	 var dpn = document.dataForm.dddw_paper_name.value;
+	 if (dpn!='')
+		 document.dataForm.ex_paper_name.value = dpn;
+ }
+//轉呆全選
+ function selectAll1() {
+	 $("input[name=opt_A]").each(function (){
+		 if($(this).prop("disabled")==false){
+			 if($("#allcheck1").prop("checked") == true){
+				 $(this).prop("checked","checked");
+			 }else{
+				 $(this).prop("checked","");
+			 }
+		 }
+	 })
+	return;
+ }
+//刪除全選
+ function selectAll2() {
+	 $("input[name=opt_D]").each(function (){
+		 if($(this).prop("disabled")==false){
+			 if($("#allcheck2").prop("checked") == true){
+				 $(this).prop("checked","checked");
+			 }else{
+				 $(this).prop("checked","");
+			 }
+		 }
+	 })
+	return;
+ }
+</script>

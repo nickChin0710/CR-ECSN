@@ -1,0 +1,117 @@
+<html>
+<head>
+<title> 108/08/06 V1.00.01 RAY Ho Initial 影城訂票每週送廠商名單查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="8">
+   <tr>
+   	 <td nowrap>&nbsp;查詢年月:
+      <input type="text" class="col_date" name="ex_use_month" value="${ex_use_month}"
+         zeditType="date,yyyymm"  maxlength=6 size=8 zRequire ="k"/>
+     </td>
+     <td nowrap colspan = '2'>&nbsp;卡號:
+      <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}"
+         zeditType="any"  maxlength=16 size=19 />
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;身分證號：
+      <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}"
+         zeditType="any,upper"  maxlength=10 size=12 />
+     </td>
+     <td nowrap>&nbsp;卡片類別:
+      <select  name="ex_debt_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="N" ${ex_debt_flag-N} >信用卡</option>
+         <option value="Y" ${ex_debt_flag-Y} >DEBIT卡</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="8">
+	<tr>
+	 	<td nowrap>&nbsp;本月名單總筆數:<span class="dsp_text">${tot_cnt.(999)}</span></td>
+	 	<td nowrap>&nbsp;本月名單總消費金額:<span class="dsp_text">${sum_tot_amt.(999)}</span></td>
+	</tr>
+</table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">正卡ID</th>
+    <th nowrap class="list_th">正卡姓名</th>
+    <th nowrap class="list_th">生日</th>
+    <th nowrap class="list_th">消費總額</th>
+    <th nowrap class="list_th">交易別</th>
+    <th nowrap class="list_th">使用年月</th>
+    <th nowrap class="list_th">優惠次數</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">卡片類別</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+    <td nowrap class="list_ll"> ${id_no}</td>
+    <td nowrap class="list_ll"> ${chi_name}</td>
+    <td nowrap class="list_ll"> ${birthday}</td>
+    <td nowrap class="list_rr"> ${tot_amt.(999)}</td>
+    <td nowrap class="list_ll"> ${mod_type}</td>
+    <td nowrap class="list_ll"> ${use_month}</td>
+    <td nowrap class="list_ll"> ${free_tot_cnt}</td>
+    <td nowrap class="list_ll"> ${card_no}</td>
+    <td nowrap class="list_rr"> ${comm_debt_flag}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,269 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡號區間指定作業-detl-V.2017-0524-David-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+     <td width="100">&nbsp;</td>
+     <td colspan="4">
+          <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+          <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+          <input type="Button"  value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+          <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+<!-- 輸入資料讀取條件  -->
+    <tr>
+       <td nowrap>異動流水號:&nbsp;
+            <input type=text class="col_number" name="kk_trans_no" value="${kk_trans_no}" 
+              zeditType="number" maxlength="10" size="10" /> 
+       </td>
+   </tr>
+</table>
+<hr>
+<!-- Detail data================================= -->
+<table  id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap class="colKey">異動流水號：
+          <span class="dsp_text" id="trans_no">${trans_no}</span>
+          <input type="hidden" name="trans_no" value="${trans_no}" >
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>異動日期:&nbsp;
+           <input type="text" class="col_date" name="trans_date" value="${trans_date}" 
+              zRequire ="Y" zeditType="date,yyyymmdd" size=10 maxlength=10  />
+           <script language="JavaScript">
+                 new tcal ({'formname': 'dataForm','controlname': 'trans_date'});
+           </script>         
+       </td>
+   </tr>
+   <tr>
+        <td nowrap>團體代碼:
+            <select size="1" name="group_code" class="col_ddlb" zRequire="Y">
+               ${dddw_group_code}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap>卡種:
+          <select size="1" name="card_type" class="col_ddlb" zRequire="Y" onChange="cardtypeChange(this.value)">
+               ${dddw_card_type}
+          </select>
+        </td>
+   </tr>
+   <tr>
+        <td nowrap>卡號用途註記:&nbsp;
+            <select   size="1"  name="card_flag" class="col_ddlb" >
+                 <option value="1" ${card_flag-1}>一般用</option>
+<!--                   
+                 <option value="2" ${card_flag-2}>緊急替代用</option>
+-->              
+                 <option value="5" ${card_flag-5}>HCE TPAN用</option>
+                 <option value="7" ${card_flag-7}>GOOGLE PAY</option>
+            </select>
+        </td>
+   </tr>
+   <tr>
+      	<td nowrap id="bin">BIN_NO：&nbsp;
+            <select size="1" id = "bin_no" name="bin_no" class="col_ddlb" zRequire="Y" onChange="binChange()">
+               ${dddw_bin_no}
+            </select>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7-12碼起/迄 ：&nbsp;
+             <span id="bin_no_2_fm" class="dsp_text">${bin_no_2_fm}</span>
+             <input type="hidden" name="bin_no_2_fm" value="${bin_no_2_fm}" >--
+             <span id="bin_no_2_to" class="dsp_text">${bin_no_2_to}</span>
+             <input type="hidden" name="bin_no_2_to" value="${bin_no_2_to}" >
+        </td>
+   </tr>
+   <tr>
+       <td nowrap>七碼至十五碼卡號區間(起):&nbsp;
+            <input type=text class="col_number" name="beg_seqno" value="${beg_seqno}" 
+              zRequire="Y" zeditType="number" maxlength="9" size="9" onChange="endSeqno1()"/> 
+            (迄)
+            <input type=text class="col_number" name="end_seqno" value="${end_seqno}" 
+              zRequire="Y" zeditType="number" maxlength="9" size="9" onChange="endSeqno(this.value)"/>
+            <span id="totalCnt" class="dsp_text">${totalCnt}</span>
+            <input type="hidden" name="totalCnt" value="${totalCnt}" >
+       </td>
+   </tr>
+   <tr>
+       <td nowrap class="colKey">已處理註記：
+          <span class="dsp_text">${post_flag}</span>
+          <input type="hidden" name="post_flag" value="${post_flag}" >
+       </td>
+   </tr>
+   <tr>
+   	   <td nowrap>備註說明:
+          <input type="text" class="col_any" zEdit="canTW" name="remark_40" value="${remark_40}"
+      	  maxlength="40" size="40"/>
+      	  <input type="checkbox" value="Y" name="up_flag" ${up_flag-Y}>備註說明修改註記
+	   </td>
+   </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+       <td nowrap>鍵檔日期:
+          <span class="dsp_text">${crt_date.YMD}</span>
+          <input type="hidden" name="crt_date" value="${crt_date}" >
+       </td>
+       <td nowrap>鍵檔人員:&nbsp;
+          <span class="dsp_text">${crt_user}</span>
+          <input type="hidden" name="crt_user" value="${crt_user}" >
+       </td>
+   </tr>
+   <tr>
+       <td nowrap>覆核日期:
+          <span class="dsp_text">${charge_date.YMD}</span>
+          <input type="hidden" name="charge_date" value="${charge_date}" >
+       </td>
+       <td nowrap>覆核人員:&nbsp;
+          <span class="dsp_text">${charge_id}</span>
+          <input type="hidden" name="charge_id" value="${charge_id}" >
+       </td>
+   </tr>
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="crdm0020">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="javascript">
+ top.refreshButton2('1');
+
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    return true;
+}
+function cardtypeChange(date_cardtype) { 
+	 idCode = "1" ;
+	 //top.actionCode = "Q";
+	 //top.methodName = "itemchanged";
+	 top.actionCode = "AJAX";
+	 resetJSON();
+	 addJSON("ajaxName","cardtype");
+     addJSON("date_cardtype",date_cardtype);
+     processAJAX();
+	 return true; 
+}
+
+function binChange() { 
+	var bin = $("#bin_no :selected").text();
+	var ss1 = bin.split("_");
+	var str1 = "";
+	var str2 = "";
+	if(ss1.length>1){
+		var ss2 = ss1[1].split("--");
+		if(ss2.length>1){
+			str1 = ss2[0];
+			str2 = ss2[1];
+		}
+	}
+	
+	$("input[name = bin_no_2_fm]").val(str1);
+	$("#bin_no_2_fm").text(str1);
+	$("input[name = bin_no_2_to]").val(str2);
+	$("#bin_no_2_to").text(str2);
+	
+    return true; 
+}
+
+$(document).ready(function(){ 
+	binChange();
+})
+
+function endSeqno(seq) {
+    idCode = "3" ;
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName","seq");
+    addJSON("ls_bin_no",document.dataForm.bin_no.value);
+    addJSON("ls_beg_seqno",document.dataForm.beg_seqno.value);
+    addJSON("ls_end_seqno",seq);
+    processAJAX();
+    return true; 
+}
+function endSeqno1() {
+    idCode = "3" ;
+    //top.actionCode = "Q";
+    //top.methodName = "itemchanged";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("ajaxName","seq");
+    addJSON("ls_bin_no",document.dataForm.bin_no.value);
+    addJSON("ls_beg_seqno",document.dataForm.beg_seqno.value);
+    addJSON("ls_end_seqno",document.dataForm.end_seqno.value);
+    processAJAX();
+    return true; 
+}
+
+
+function ajaxResponse()
+{
+	top.respHtml ="crdm0020_detl";
+	top.requHtml ="crdm0020_detl";
+	if(idCode=='1'){
+	$("#table1 #bin option").remove();
+	$("#table1 #bin select").append(getJSONvalue("dddw_bin_no2",0));
+
+	 $("#bin_no_2_fm").text(getJSONvalue("a_bin_no_2_fm",0));
+	 $("input[name=bin_no_2_fm]").val(getJSONvalue("a_bin_no_2_fm",0));
+	 $("#bin_no_2_to").text(getJSONvalue("a_bin_no_2_to",0));
+     $("input[name=bin_no_2_to]").val(getJSONvalue("a_bin_no_2_to",0));
+	}
+	
+	if(idCode=='2'){
+
+		     $("#bin_no_2_fm").text(getJSONvalue("a_bin_no_2_fm",0));
+		     $("input[name=bin_no_2_fm]").val(getJSONvalue("a_bin_no_2_fm",0));
+		     $("#bin_no_2_to").text(getJSONvalue("a_bin_no_2_to",0));
+		     $("input[name=bin_no_2_to]").val(getJSONvalue("a_bin_no_2_to",0));
+    }
+	
+	if(idCode=='3'){
+		$("#totalCnt").text(getJSONvalue("a_totalCnt",0));
+        $("input[name=totalCnt]").val(getJSONvalue("a_totalCnt",0));
+	}
+	binChange();
+}
+
+</script>
+

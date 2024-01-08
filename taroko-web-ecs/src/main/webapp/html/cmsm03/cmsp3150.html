@@ -1,0 +1,104 @@
+﻿<html>
+<head>
+<title>新貴通卡請款匯入作業-jh-190614</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsMega.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;卡別:
+       <select   size="1"  name="ex_bin_type" class="col_ddlb">         
+         <option value="V" ${ex_bin_type-V} >VISA</option>
+         <option value="M" ${ex_bin_type-M} >MasterCard</option>  
+         <option value="J" ${ex_bin_type-J} >JCV</option>          
+      </select>
+   </td>
+   <tr>
+ <td nowrap>&nbsp;貴賓卡:
+       <select   size="1"  name="ex_vip_kind" class="col_ddvip">         
+         <option value="1" ${ex_vip_kind-1} >1_新貴通</option>
+         <option value="2" ${ex_vip_kind-2} >2_龍騰卡</option>         
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="資料匯入" onClick="wf_proc()" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;匯入檔名:
+      <input type="text" class="dsp_text"  name="zz_file_name" value="${zz_file_name}" readonly size="50" zEdit="any,canTw" />
+      <input type="button" name="btn_file_upload" value="..." class="btOther2" onclick="return upload_click()">
+      <span class="col_key">&nbsp;(*.TXT)</span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;匯入失敗檔名:
+   <a href="${url_err_file}" style="cursor:hand">${err_file}</a>
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ 
+ <input type="hidden" name="upload_file" value="" /> 
+ <input type="hidden" name="zz_file_name" value="" zEdit="any,canTw" readonly />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+ }
+  
+    function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "cmsm03";
+    top.javaName    = "Cmsp3150";    
+    top.requHtml    = "cmsp3150";
+    top.respHtml    = "cmsp3150";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+ 		return ;
+ }  
+ 
+ function wf_proc() {
+   if (confirm('是否執行匯入資料')==false) {
+      return false;
+   }
+   
+   top.respLevel = 0;
+   top.respHtml = "cmsp3150"; 
+ 	top.submitControl('Q');
+ 	//top.spinner.stop();
+ 	return true;	
+}
+  
+</script>

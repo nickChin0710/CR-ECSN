@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>ccas5180 風險類別-accttype</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+
+function wf_add_newrow()
+{
+//   if ( ind === 1 )
+//      { rowNum++; }
+	var xx=document.getElementById("ex_mcc_code");
+	var idx =xx.selectedIndex;
+	if (idx==0) {
+	   alert("MCC Code: 不可空白");
+	   return false;
+	}
+
+   rowNum++;
+   ind++;
+	var item_data = xx.options[idx].value;
+	var item_text = xx.options[idx].text;
+
+   var myRow = document.all.table1.insertRow(rowNum);
+   myCell = myRow.insertCell(0);
+   myCell.className = "list_no";
+   
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   fi++;
+   myCell.innerHTML = " "+serNo
+         +"&nbsp;<input type='checkbox' value='"+serNo+"' name='opt' />"
+         +" <input type='hidden' value='"+serNo+"' name='ser_num' />"
+         +" <input type='hidden' value='"+item_data+"' name='mcc_code' />"
+         +" <input type='hidden' value='"+item_text+"' name='tt_mcc_code' />"
+         ;
+
+   myCell = myRow.insertCell(1);
+   myCell.className = "list_ll";
+   myCell.innerHTML =item_text;
+}
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U3')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey" colspan=2>原因代碼：
+		<span class="dsp_text">${spec_code}</span>
+      <input type=hidden name="spec_code" value="${spec_code}">
+   </td>
+   <td nowrap class="colKey" colspan=2>作業指示：
+      <span class="dsp_text">${check_level}</span>
+      <input type=hidden name="check_level" value="${check_level}">
+   </td>
+  </tr>
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >MCC 說明：
+     <select size=1 id="ex_mcc_code" class="col_ddlb">
+       <option value="">--</option>  
+       ${dw_spec_mcc_risk}
+     </select>
+     &nbsp;
+      <input type="Button"  value="新增明細" 
+                onclick="wf_add_newrow();" class="btAdd_detl" />
+      &nbsp;IND_NUM=${ind_num}            
+   </td>
+  </tr>
+</table>  
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">MCC 說明 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="mcc_code" value="${mcc_code}">
+      <input type="hidden" name="tt_mcc_code" value="${tt_mcc_code}">
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${tt_mcc_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+
+<!--hidden -->
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="MOD_PGM" value="ccam5180">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('2');
+ 
+ //document.dataForm.ex_acct_type.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+   return true;
+  }
+
+</script>

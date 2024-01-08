@@ -1,0 +1,461 @@
+<html>
+
+<head>
+    <title>市區免費停車參數維護-detl-110-07-05-V1.00.01-cma20-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"   value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button"   value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap>活動代號：&nbsp;
+                        <input type=text class="col_any" name="kk_action_cd" value="${kk_action_cd}" zRequire="k" zedit="any" maxlength="4" size="4" />
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">活動代號：
+                        <span class="dsp_text">${action_cd}</span>
+                        <input type="hidden" name="action_cd" value="${action_cd}">
+                    </td>
+                    <td nowrap>活動名稱：&nbsp;
+                        <input type=text class="col_any" name="document_desc" value="${document_desc}" zedit="canTW,any" maxlength="50" size="35" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>免費停車時數：
+                        <select size="1" name="car_hours" class="col_ddlb" zRequire="Y">
+                            <option value="">--</option>
+                            <option value="1" ${car_hours-1}>1</option>
+                            <option value="2" ${car_hours-2}>2</option>
+                            <option value="3" ${car_hours-3}>3</option>
+                            <option value="4" ${car_hours-4}>4 </option>
+                        </select>
+                    </td>
+                    <td nowrap>每小時停車費：&nbsp;
+                        <input type=text class="col_number" name="charge_amt" value="${charge_amt}" zedit="number" maxlength="4" size="4" />
+                        <font style="color:#880000"> (所有活動每小時停車費均須相同)</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>是否需登錄卡友資料：
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="ivr_flag" ${ivr_flag-0} />需登錄資料
+                            <input type="radio" value="1" name="ivr_flag" ${ivr_flag-1} ${DEFAULT_CHK} />不需登錄資料
+                        </span>
+                    </td>
+                    <td nowrap>IVR登錄代號：&nbsp;
+                        <input type=text class="col_any" name="document" value="${document}" zedit="any" maxlength="4" size="4" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>卡種：&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="card_type_flag" ${card_type_flag-0} ${DEFAULT_CHK} />0.全部
+                            <input type="radio" value="1" name="card_type_flag" ${card_type_flag-1} />1.部份
+                        </span>
+                        <input type="Button" class="btOther"   value="卡種" onClick="return detailDard('${action_cd}','${document_desc}','')">
+                        <font style="color:red"> ※卡種必選 </font>
+                    </td>
+                    <td nowrap>團體代號：&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="group_code_flag" ${group_code_flag-0} ${DEFAULT_CHK} />0.全部
+                            <input type="radio" value="1" name="group_code_flag" ${group_code_flag-1} />1.部份
+                        </span>
+                        <input type="Button" class="btOther"   value="團體代號" onClick="return detailGroup('${action_cd}','${document_desc}','')">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>累積紅利點數：&nbsp;
+                        <input type=text class="col_number" name="total_bonus" value="${total_bonus}" zedit="dignumber,number" maxlength="9" size="9" />
+                    </td>
+                    <td nowrap>特案加檔批號:&nbsp;
+                        <input type=text class="col_any" name="ext_batch_no" value="${ext_batch_no}" zedit="any" maxlength="10" size="10" />
+                    </td>
+                </tr>
+                <th colspan="2">核卡日首年</th>
+                <tr>
+                    <td colspan="2" class="list_cc" border="1" style="border-width:1px 1px 0px 1px;border-color:#000000; color:#0000CC">新增消費門檻</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; ">新增消費計算方式：&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="1" name="consume_method_1" ${consume_method_1-1} ${DEFAULT_CHK} />帳戶
+                            <input type="radio" value="2" name="consume_method_1" ${consume_method_1-2} />卡號          
+                            <input type="radio" value="3" name="consume_method_1" ${consume_method_1-3} />ID
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap style="border-width:0px 0px 0px 1px;border-color:#000000; ">新增消費計算區間：&nbsp;
+                        <input type="radio" value="1" name="consume_period_1" ${consume_period_1-1} ${DEFAULT_CHK} onChange="chang();" />結帳日
+                        <input type="radio" value="2" name="consume_period_1" ${consume_period_1-2} onChange="chang();" />月
+                        <input type="radio" value="3" name="consume_period_1" ${consume_period_1-3} onChange="chang();" />區間
+                    </td>
+                    <td nowrap colspan=2 style="border-width:0px 1px 0px 0px;border-color:#000000; ">區間：&nbsp;
+                        <input type="text" class="col_date" name="date_fm_1" id="date_fm_1" value="${date_fm_1}" zeditType="date,ymd" MaxLength=8 size=8 disabled="disabled" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'date_fm_1'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="date_to_1" id="date_to_1" value="${date_to_1}" zeditType="date,ymd" MaxLength=8 size=8 disabled="disabled" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'date_to_1'});
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-width:0px 0px 1px 1px;border-color:#000000; "></td>
+                    <td nowrap style="border-width:0px 1px 1px 0px;border-color:#000000; ">傳送天數：&nbsp;
+                        <input type=text class="col_number" name="limit_days_1" id="limit_days_1" value="${limit_days_1}" zedit="number" size="4" maxlength="3" disabled="disabled" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>累積消費金額：&nbsp;
+                        <input type=text class="col_number" name="consume_amt_fm_1" value="${consume_amt_fm_1}" zedit="dignumber,number" maxlength="14" size="14" />
+                        (含)~
+                        <input type=text class="col_number" name="consume_amt_to_1" value="${consume_amt_to_1}" zedit="dignumber,number" maxlength="14" size="14" />(含)
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">特店代號：&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="mcht_no_1" ${mcht_no_1-0} ${DEFAULT_CHK} />0.全部
+                            <input type="radio" value="1" name="mcht_no_1" ${mcht_no_1-1} />1.部分
+                            <input type="radio" value="2" name="mcht_no_1" ${mcht_no_1-2} />2.排除
+                        </span>
+                        <input type="Button" class="btOther"   value="特店代號" onClick="return detailMcht('${action_cd}','${document_desc}','')">
+                        <img src="images/uperLoad.gif" id="upload1" onClick="return upload_click('03')" style="cursor:hand" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>累積消費次數：&nbsp;
+                        <input type=text class="col_number" name="consume_cnt_1" value="${consume_cnt_1}" zedit="number" size="4" maxlength="3" /> 次數(含)以上
+                    </td>
+                </tr>
+                <tr>
+                    <td >消費本金科目：&nbsp;
+                        <input type="checkbox" value="Y" name="item_ename_bl_1" ${item_ename_bl_1-Y}>簽帳款(BL)
+                        <input type="checkbox" value="Y" name="item_ename_ca_1" ${item_ename_ca_1-Y}>預借現金(CA)
+                        <input type="checkbox" value="Y" id="item_ename_it_1" name="item_ename_it_1" ${item_ename_it_1-Y}  onChange="checkDisplay()">分期付款(IT)                                   
+	                   <span id="it_1-type">
+                        <input type="radio" value="1" id="it_1_type_1" name="it_1_type" ${it_1_type-1} >每期金額
+                        <input type="radio" value="2" id="it_1_type_2" name="it_1_type" ${it_1_type-2} >總金額
+                    </span>
+                    </td>		        
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="item_ename_id_1" ${item_ename_id_1-Y}>代收款(ID)
+                        <input type="checkbox" value="Y" name="item_ename_ao_1" ${item_ename_ao_1-Y}>餘額代償(AO)
+                        <input type="checkbox" value="Y" name="item_ename_ot_1" ${item_ename_ot_1-Y}>其他應收款(OT)
+                    </td>
+                </tr>
+                <th colspan="2">核卡日次年起</th>
+                <tr>
+                    <td colspan="2" class="list_cc" border="1" style="border-width:1px 1px 0px 1px;border-color:#000000;  color:#0000CC">新增消費門檻</td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 1px;border-color:#000000; ">新增消費計算方式：&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="1" name="consume_method_2" ${consume_method_2-1} ${DEFAULT_CHK} />帳戶
+                            <input type="radio" value="2" name="consume_method_2" ${consume_method_2-2} />卡號
+                            <input type="radio" value="3" name="consume_method_2" ${consume_method_2-3} />ID</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap style="border-width:0px 0px 0px 1px;border-color:#000000; ">新增消費計算區間：&nbsp;
+                        <input type="radio" value="1" name="consume_period_2" ${consume_period_2-1} ${DEFAULT_CHK} onChange="chang1();" />結帳日
+                        <input type="radio" value="2" name="consume_period_2" ${consume_period_2-2} onChange="chang1();" />月
+                        <input type="radio" value="3" name="consume_period_2" ${consume_period_2-3} onChange="chang1();" />區間
+                    </td>
+                    <td nowrap colspan="2" style="border-width:0px 1px 0px 0px;border-color:#000000; ">區間：&nbsp;
+                        <input type="text" class="col_date" name="date_fm_2" id="date_fm_2" value="${date_fm_2}" zeditType="date,ymd" MaxLength=8 size=8 disabled="disabled" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'date_fm_2'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="date_to_2" id="date_to_2" alue="${date_to_2}" zeditType="date,ymd" MaxLength=8 size=8 disabled="disabled" />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'date_to_2'});
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-width:0px 0px 1px 1px;border-color:#000000; "></td>
+                    <td nowrap style="border-width:0px 1px 1px 0px;border-color:#000000; ">傳送天數：&nbsp;
+                        <input type=text class="col_number" name="limit_days_2" id="limit_days_2" value="${limit_days_2}" zedit="number" size="4" maxlength="3" disabled="disabled" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>累積消費金額：&nbsp;
+                        <input type=text class="col_number" name="consume_amt_fm_2" value="${consume_amt_fm_2}" zedit="dignumber,number" maxlength="14" size="14" />
+                        (含)~
+                        <input type=text class="col_number" name="consume_amt_to_2" value="${consume_amt_to_2}" zedit="dignumber,number" maxlength="14" size="14" />(含) <font style="color:red"> ※六大本金科目</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="2">特店代號：&nbsp;
+                        <span class="col_radio">
+                            <input type="radio" value="0" name="mcht_no_2" ${mcht_no_2-0} ${DEFAULT_CHK} />0.全部
+                            <input type="radio" value="1" name="mcht_no_2" ${mcht_no_2-1} />1.部分
+                            <input type="radio" value="2" name="mcht_no_2" ${mcht_no_2-2} />2.排除
+                        </span>
+                        <input type="Button" class="btOther"   value="特店代號" onClick="return detailMcht2('${action_cd}','${document_desc}','')">
+                        <img src="images/uperLoad.gif" id="upload1" onClick="return upload_click('04')" style="cursor:hand" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>累積消費次數：&nbsp;
+                        <input type=text class="col_number" name="consume_cnt_2" value="${consume_cnt_2}" zedit="number" size="4" maxlength="3" /> 次數(含)以上
+                    </td>
+                </tr>
+                <tr>
+                    <td >消費本金科目：&nbsp;
+                        <input type="checkbox" value="Y" name="item_ename_bl_2" ${item_ename_bl_2-Y}>簽帳款(BL)                   
+                        <input type="checkbox" value="Y" name="item_ename_ca_2" ${item_ename_ca_2-Y}>預借現金(CA)
+                        <input type="checkbox" value="Y" id="item_ename_it_2" name="item_ename_it_2" ${item_ename_it_2-Y} onChange="checkDisplay()">分期付款(IT)
+	                    <span id="it_2-type">
+	                        <input type="radio" value="1" id="it_2_type_1" name="it_2_type" ${it_2_type-1} >每期金額 
+	                        <input type="radio" value="2" id="it_2_type_2" name="it_2_type" ${it_2_type-2} >總金額
+	                    </span>
+                    </td>                  
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="item_ename_id_2" ${item_ename_id_2-Y}>代收款(ID)
+                        <input type="checkbox" value="Y" name="item_ename_ao_2" ${item_ename_ao_2-Y}>餘額代償(AO)
+                        <input type="checkbox" value="Y" name="item_ename_ot_2" ${item_ename_ot_2-Y}>其他應收款(OT)
+                    </td>
+                </tr>
+            </table>
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>建檔人員：
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}">
+                    </td>
+                    <td nowrap>主管覆核：&nbsp;
+                        <span class="dsp_text">${apr_user}</span>
+                        <input type="hidden" name="apr_user" value="${apr_user}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>鍵檔日期:
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date}">
+                    </td>
+                    <td nowrap>覆核日期：&nbsp;
+                        <span class="dsp_text">${apr_date.YMD}</span>
+                        <input type="hidden" name="apr_date" value="${apr_date}">
+                    </td>
+                </tr>
+            </table>
+            <table width="70%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td>
+                        <font style="color:#880000"> 備註：1.累積消費金額及次數設為0表不檢核<br>
+                            &nbsp; &nbsp; &nbsp; 2.新增消費門檻於放行後不能修改</font>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="mktm1016">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="text" class="dsp_text" name="zz_file_name" value="" zEdit="any,canTw" readonly />
+        <input type="hidden" name="upload_file" value="" />
+        <input type="hidden" name="upload_parm" value="${upload_parm}" />
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_action_cd.focus();
+chang();
+chang1();
+checkDisplay();
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+function checkDisplay(){
+	document.getElementById("it_1-type").style.display="none";
+	document.getElementById("it_2-type").style.display="none";
+	var it1=document.getElementById('item_ename_it_1').checked;
+	var it2=document.getElementById('item_ename_it_2').checked;
+	var it1type_1=document.getElementById('it_1_type_1').checked;
+	var it1type_2=document.getElementById('it_1_type_2').checked;
+	
+	var it2type_1=document.getElementById('it_2_type_1').checked;
+	var it2type_2=document.getElementById('it_2_type_2').checked;
+		if(it1==true){
+			document.getElementById('it_1-type').style.display="";
+			//若it種類無值，則預設為 2 總金額
+			 if(!it1type_1&&!it1type_2){
+				document.getElementById('it_1_type_2').checked=true;
+			} 
+		}
+		//同上
+		if(it2==true){
+			document.getElementById('it_2-type').style.display="";
+			if(!it2type_1&&!it2type_2){
+				document.getElementById('it_2_type_2').checked=true;
+			} 
+		}
+	}
+function detailDard(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml = "mktm1016_card";
+    top.submitControl("SC");
+    return true;
+}
+
+function detailGroup(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml = "mktm1016_group";
+    top.submitControl("SG");
+    return true;
+}
+
+function detailMcht(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml = "mktm1016_mcht";
+    top.submitControl("SM");
+    return true;
+}
+
+function detailMcht2(parm, parm2) {
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml = "mktm1016_mcht2";
+    top.submitControl("SM2");
+    return true;
+}
+
+function chang() {
+    var ss = $('input[name*=consume_period_1]:checked').val();
+    if (ss == "1") {
+        document.getElementById('date_fm_1').disabled = true;
+        document.getElementById('date_to_1').disabled = true;
+        document.getElementById('limit_days_1').disabled = true;
+        document.getElementById('date_fm_1').style.backgroundColor = "#EDEDED";
+        document.getElementById('date_to_1').style.backgroundColor = "#EDEDED";
+        document.getElementById('limit_days_1').style.backgroundColor = "#EDEDED";
+    }
+    if (ss == "2") {
+        document.getElementById('date_fm_1').disabled = true;
+        document.getElementById('date_to_1').disabled = true;
+        document.getElementById('limit_days_1').disabled = true;
+        document.getElementById('date_fm_1').style.backgroundColor = "#EDEDED";
+        document.getElementById('date_to_1').style.backgroundColor = "#EDEDED";
+        document.getElementById('limit_days_1').style.backgroundColor = "#EDEDED";
+    }
+    if (ss == "3") {
+        document.getElementById('date_fm_1').disabled = false;
+        document.getElementById('date_to_1').disabled = false;
+        document.getElementById('limit_days_1').disabled = false;
+        document.getElementById('date_fm_1').style.backgroundColor = "#FFFFFF";
+        document.getElementById('date_to_1').style.backgroundColor = "#FFFFFF";
+        document.getElementById('limit_days_1').style.backgroundColor = "#FFFFFF";
+    }
+}
+
+function chang1() {
+    var ss = $('input[name*=consume_period_2]:checked').val();
+    if (ss == "1") {
+        document.getElementById('date_fm_2').disabled = true;
+        document.getElementById('date_to_2').disabled = true;
+        document.getElementById('limit_days_2').disabled = true;
+        document.getElementById('date_fm_2').style.backgroundColor = "#EDEDED";
+        document.getElementById('date_to_2').style.backgroundColor = "#EDEDED";
+        document.getElementById('limit_days_2').style.backgroundColor = "#EDEDED";
+    }
+    if (ss == "2") {
+        document.getElementById('date_fm_2').disabled = true;
+        document.getElementById('date_to_2').disabled = true;
+        document.getElementById('limit_days_2').disabled = true;
+        document.getElementById('date_fm_2').style.backgroundColor = "#EDEDED";
+        document.getElementById('date_to_2').style.backgroundColor = "#EDEDED";
+        document.getElementById('limit_days_2').style.backgroundColor = "#EDEDED";
+    }
+    if (ss == "3") {
+        document.getElementById('date_fm_2').disabled = false;
+        document.getElementById('date_to_2').disabled = false;
+        document.getElementById('limit_days_2').disabled = false;
+        document.getElementById('date_fm_2').style.backgroundColor = "#FFFFFF";
+        document.getElementById('date_to_2').style.backgroundColor = "#FFFFFF";
+        document.getElementById('limit_days_2').style.backgroundColor = "#FFFFFF";
+    }
+}
+
+function upload_click(parm1) {
+    if (confirm("特店資料匯入會將原有特店資料清除,請確認執行匯入!!") === false) {
+            return false;
+    } 
+    document.dataForm.zz_file_name.value = "";
+    document.dataForm.data_k1.value = parm1;
+    var parmHtml = "TarokoUpload";
+    var parmName = "upload_file,zz_file_name";
+    var windowSize = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName = "TarokoUpload";
+    top.methodName = "showScreen";
+    top.openWindow("", parmHtml, parmName, windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "mktm02";
+    top.javaName = "Mktm1016";
+    //methodName  = "actionFunction";
+    top.requHtml = "mktm1016_detl";
+    top.respHtml = "mktm1016_detl";
+    return true;
+}
+
+function wf_uploadAfter() {
+    var ss = document.dataForm.zz_file_name.value.trim();
+    if (ss.length > 0) {
+        top.submitControl('UPLOAD');
+    }
+}
+</script>

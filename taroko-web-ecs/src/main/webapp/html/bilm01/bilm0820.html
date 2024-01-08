@@ -1,0 +1,230 @@
+<html>
+<head>
+<title>排除報送財政部特店維護-V.2019-1202-Amber-[Update]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<script language="JavaScript">
+function wf_add_newrow()
+{
+	//debugger;
+	var ind=document.getElementById( 'table1' ).rows.length -1;
+	var rowNum=document.getElementById( 'table1' ).rows.length -1;
+	var colNum=0;
+	var fi=0;
+	var sel_h_data_type = document.getElementById("h_data_type");
+	var sel_h_mcht_no = document.getElementById("h_mcht_no");
+	var sel_h_uniform_no = document.getElementById("h_uniform_no");
+	var val_h_data_type = sel_h_data_type.options[sel_h_data_type.selectedIndex].value;
+	var val_mcht_no = sel_h_mcht_no.options[sel_h_mcht_no.selectedIndex].value;
+	var val_h_uniform_no = sel_h_uniform_no.options[sel_h_uniform_no.selectedIndex].value;
+	//console.log("a:"+ind);
+	var num = '${ser_num}';
+	if(num==''){
+	    ind=document.getElementById( 'table1' ).rows.length-2;
+	}
+	
+	colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+    
+    var con = document.createElement( 'span' );
+    con.textContent = serNo;
+    myCell.appendChild( con );
+    
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    var ip2 = document.createElement( 'input' );
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild( ip2 );
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var dtype = document.createElement( 'span' );
+    dtype.setAttribute('class', 'dsp_text');
+    dtype.textContent = val_h_data_type;
+    myCell.appendChild( dtype );
+    
+    var htype = document.createElement( 'input' );
+    htype.type = 'hidden';
+    htype.name = 'data_type';
+    htype.value = val_h_data_type;
+    myCell.appendChild( htype );
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var mcht = document.createElement( 'span' );
+    mcht.setAttribute('class', 'dsp_text');
+    mcht.textContent = val_mcht_no;
+    myCell.appendChild( mcht );
+    
+    var hmcht = document.createElement( 'input' );
+    hmcht.type = 'hidden';
+    hmcht.name = 'mcht_no';
+    hmcht.value = val_mcht_no;
+    myCell.appendChild( hmcht );
+    
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    var uniform = document.createElement( 'span' );
+    uniform.setAttribute('class', 'dsp_text');
+    uniform.textContent = val_h_uniform_no;
+    myCell.appendChild( uniform );
+
+    var huniform = document.createElement( 'input' );
+    huniform.type = 'hidden';
+    huniform.name = 'uniform_no';
+    huniform.value = val_h_uniform_no;
+    myCell.appendChild( huniform );
+}
+</script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+${#PLUGIN:htmcomm_plugin.apr_user3}  
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap>&nbsp;特店代號:
+            <input type="text" class="col_text" name="ex_mcht_no" value="${ex_mcht_no}" 
+               zEdit="alphanum" maxlength="15" size="15" />  
+        </td>
+        <td nowrap>&nbsp;統一編號:
+            <input type="text" class="col_text" name="ex_uniform_no" value="${ex_uniform_no}" 
+               zEdit="alphanum" maxlength="8" size="8" />  
+        </td>
+        <td nowrap>&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock">
+<table  border="0" width="50%">
+    <tr>
+        <td align="right">
+           <input type="Button"   value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+         </td>
+        <td>&nbsp;類別:
+           <select  class="col_ddlb" id="h_data_type">
+             <option value="M" ${data_type-M} >M:特店代號</option>
+             <option value="U" ${data_type-U} >U:統一編號</option>
+           </select>
+        </td>
+        <td>&nbsp;特店代號:
+             <select   class="col_ddlb"  id="h_mcht_no">
+                    ${dddw_mcht_merc}
+             </select>
+        </td>
+        <td>&nbsp;統一編號:
+             <select   class="col_ddlb" id="h_uniform_no">
+                    ${dddw_mcht_unif}
+             </select>
+        </td>
+    <tr>
+</table>
+</div>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">刪除 </th>
+        <th nowrap class="list_th">類別</th>
+        <th nowrap class="list_th">特店代號</th>
+        <th nowrap class="list_th">統一編號</th>
+
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr>
+       <td nowrap class="list_no">
+		  <span class="dsp_flag">${ok_flag}</span>
+			${SER_NUM}
+		  <input type="checkbox" name="opt" value="${ser_num}">
+		  <input type="hidden" name="ser_num" value="${ser_num}">
+		  <input type="hidden" name="rowid" value="${rowid}" />
+		  <input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+       </td>
+	    <td nowrap class="list_cc">
+	        <span class="dsp_text">${data_type}</span>
+	        <input type="hidden" name="data_type" value="${data_type}" >
+	    </td>
+	    <td nowrap class="list_cc">
+	        <span class="dsp_text">${mcht_no}</span>
+	        <input type="hidden" name="mcht_no" value="${mcht_no}" >
+	    </td>
+	    <td nowrap class="list_cc">
+	        <span class="dsp_text">${uniform_no}</span>
+	        <input type="hidden" name="uniform_no" value="${uniform_no}" >
+	    </td>	  
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="MOD_PGM" value="bilm0820">
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows="9999";
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "bilm0820";
+    }
+    return true;
+}
+
+
+</script>

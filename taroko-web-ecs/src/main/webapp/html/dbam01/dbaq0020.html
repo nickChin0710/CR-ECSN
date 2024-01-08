@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>Debit卡消費授權帳單查詢及解圈處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+      <span class="dsp_text">90</span>
+      <input type="hidden" name="ex_acct_type" value="90" >
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="20" size="22" >
+   </td>
+   <td nowrap >&nbsp;信用卡卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" >
+   </td>   
+   <td nowrap>&nbsp;  
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;金融卡帳號:
+	   <span class="dsp_text">${ex_acct_no}&nbsp;</span>
+	   <input type="hidden" name="ex_acct_no" value="${ex_acct_no}"> 
+	</td>
+	<td nowrap >&nbsp;姓名:
+	   <span class="dsp_text">${ex_cname}&nbsp;</span>
+	   <input type="hidden" name="ex_cname" value="${ex_cname}">
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+ 
+ <div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">總應繳款流水明細</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">D檔(含D檔及回存)</td>
+    </tr>
+  </table>
+</div>
+
+ <div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >交易日期&nbsp;</th>
+    <th nowrap >交易性質&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >科目代號&nbsp;</th>
+    <th nowrap >消費日期&nbsp;</th>
+    <th nowrap >交易參考號&nbsp;</th>
+    <th nowrap >金額&nbsp;</th>
+    <th nowrap >本筆帳單餘額&nbsp;</th>
+    <th nowrap >Item Post Date&nbsp;</th>
+    <th nowrap >前序號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${tran_class}.${tt_tran_class}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_code}.${tt_acct_code}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${reference_no}&nbsp;</td>
+	<td nowrap class="list_rr"> ${transaction_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${item_bal.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${item_post_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${p_seqno_prev}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<div id="tab-2" class="tabcontent" > 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >交易日期&nbsp;</th>
+    <th nowrap >科目代號&nbsp;</th>
+    <th nowrap >借貸別<br>(+/-)</th>
+    <th nowrap >交易金額&nbsp;</th>
+    <th nowrap >本筆帳單餘額&nbsp;</th>
+    <th nowrap >可D數餘額&nbsp;</th>
+    <th nowrap >交易參考號&nbsp;</th>
+    <th nowrap >原始交易<br>入帳日期</th>
+    <th nowrap >借方科目&nbsp;</th>
+    <th nowrap >銷帳鍵值&nbsp;</th>
+    <th nowrap >USER ID&nbsp;</th>
+    <th nowrap >覆核人員&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_acct_date.YMD}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_acct_code}.${A2_tt_acct_code}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_dr_cr}&nbsp;</td>	
+   <td nowrap class="list_rr"> ${A2_transaction_amt.(999)}&nbsp;</td>	
+   <td nowrap class="list_rr"> ${A2_item_bal.(999)}&nbsp;</td>	
+   <td nowrap class="list_rr"> ${A2_item_d_bal.(999)}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_reference_no}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_item_date.YMD}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_debit_item}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_c_debt_key}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_update_user}&nbsp;</td>	
+   <td nowrap class="list_cc"> ${A2_confirm_user}&nbsp;</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

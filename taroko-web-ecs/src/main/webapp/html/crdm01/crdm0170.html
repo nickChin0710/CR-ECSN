@@ -1,0 +1,169 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-07-28  V1.00.00  ryan          Initial                               -->
+<!-- 109-01-15  V1.00.01  Justin Wu     PP卡 -> 貴賓卡                         -->
+<!--**************************************************************************-->
+
+<html>
+<head>
+<title>貴賓卡退卡登錄維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<td nowrap>&nbsp;貴賓卡號:
+      		<input  type="text" size="21" maxlength="19" name="ex_pp_card_no" value="${ex_pp_card_no}" class="col_ddlb" ></input>
+   		</td>
+      <td nowrap>&nbsp;退卡編號:
+          <input  type="text" size="21" maxlength="19" name="ex_return_seqno" value="${ex_return_seqno}" class="col_ddlb" ></input>
+      </td>
+   		<td nowrap rowspan="2">&nbsp;  
+      		<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" id="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+     		<input type="Button" id="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+     		<input type="Button" value="整批匯入掛號條碼" onClick="return top.submitControl('B1')" class="btQuery" >&nbsp;
+     		<input type="Button" id="btnQuery" value="查詢Log" onClick="return top.submitControl('Q2')" class="btQuery" >&nbsp;&nbsp;
+   		</td>   
+  	</tr>
+    <tr>
+<!--       <td nowrap>&nbsp;掛號號碼: -->
+<!--           <input  type="text" size="21" maxlength="19" name="ex_mail_no" value="${ex_mail_no}" class="col_ddlb" ></input> -->
+<!--       </td> -->
+      <td nowrap>&nbsp;身份證字號:
+          <input type="text" class="col_text" name="ex_id_no" value="${ex_id_no}" zEdit ="any,upper" maxlength="10" size="12" />
+      </td>
+      <td nowrap>&nbsp;掛號條碼:
+          <input  type="text" size="23" maxlength="21" name="ex_barcode_num" value="${ex_barcode_num}" class="col_ddlb" ></input>
+      </td>
+    </tr>
+    <tr>
+   		<td nowrap colspan=3>&nbsp;退卡日期：
+      		<input type="text" class="col_date" name="ex_return_date1" value="${ex_return_date1}"
+         	zeditType="date,ymd" MaxLength=8 size=10 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_return_date1'});
+	    	</script>
+      		--   
+      		<input type="text" class="col_date" name="ex_return_date2" value="${ex_return_date2}"
+         	zeditType="date,ymd" MaxLength=8 size=10 />
+       		<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_return_date2'});
+	    	</script>
+   		</td>
+  	</tr> 
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">退卡編號</th>
+        <th nowrap class="list_th">掛號條碼</th>
+    	<th nowrap class="list_th">貴賓卡號</th>
+    	<th nowrap class="list_th">退卡日期</th>   
+    	<th nowrap class="list_th">身份證字號</th>   
+    	<th nowrap class="list_th"></th>  
+    	<th nowrap class="list_th">郵局退回原因</th>   
+    	<th nowrap class="list_th">寄件別</th>
+    	<th nowrap class="list_th">處理結果</th>
+    	<th nowrap class="list_th">異動時間</th>
+    	<th nowrap class="list_th">經辦人員</th>
+    	<th nowrap class="list_th">寄送地址</th>
+    	<th nowrap class="list_th">退件備註</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr onclick="detailScreen('${SER_NUM}','${pp_card_no}','${return_date}','','')" style="cursor:hand">
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; 
+   			<input type="hidden" name="zip_code" value="${zip_code}">
+   			<input type="hidden" name="mail_addr1" value="${mail_addr1}">
+   			<input type="hidden" name="mail_addr2" value="${mail_addr2}">
+   			<input type="hidden" name="mail_addr3" value="${mail_addr3}">
+   			<input type="hidden" name="mail_addr4" value="${mail_addr4}">
+   			<input type="hidden" name="mail_addr5" value="${mail_addr5}">
+   		</td>
+   		<td nowrap class="list_ll"> ${return_seqno} </td>
+        <td nowrap class="list_ll"> ${barcode_num} </td>
+   		<td nowrap class="list_ll"> ${pp_card_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${return_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${id_no_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_reason_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_mail_type}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${tt_proc_status}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${mod_time}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${mod_user}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${wk_addr}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${return_note}&nbsp; </td>
+	</tr>
+ <!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="data_k4" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="MOD_PGM" value="crdm0170">
+</form>
+</body>
+</html>
+
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript" >
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_pp_card_no.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "crdm0170_detl"; 
+    }
+    if ( top.actionCode == "Q2" ) {
+        top.respLevel = 1;
+        top.respHtml = "crdm0170_log"; 
+    }
+    if (top.actionCode == "B1") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0170_batch";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "crdm0170_detl" ;
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>
+

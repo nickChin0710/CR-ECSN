@@ -1,0 +1,161 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-07-21  V1.00.05  jiangyigndong  change table field             			-->
+<!--**************************************************************************-->
+
+<html>
+<head>
+<title>道路救援異動記錄查詢V20191227</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;登錄卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" >
+   </td>
+   <td nowrap >&nbsp;登錄車號:
+      <input type="text" class="col_any" name="ex_car_no" value="${ex_car_no}" maxlength="10" size="12" >
+   </td>
+   <td nowrap rowspan="2" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="檢核免費登錄條件" onClick="return top.submitControl('C')" class="btOther" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;持卡人ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" >
+      <span class="td_remark"> (持卡人ID只針對[登錄卡號])</span>
+   </td>
+   <td nowrap  >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >登錄日期&nbsp;</th>
+    <th nowrap >異動類別&nbsp;</th>
+    <th nowrap >救援類別&nbsp;</th>
+    <th nowrap >登錄卡號&nbsp;</th>
+    <th nowrap >車號&nbsp;</th>
+    <th nowrap >異動狀態&nbsp;</th>
+    <th nowrap >新卡號&nbsp;</th>
+    <th nowrap >新車號&nbsp;</th>
+    <th nowrap >有效年月&nbsp;</th>
+    <th nowrap >停用日期&nbsp;</th>
+    <th nowrap >停用原因&nbsp;</th>
+    <th nowrap >登錄經辦&nbsp;</th>
+<!--     <th nowrap >覆核日期&nbsp;</th>     -->
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >檢核<br>專案代號</th>
+    <th nowrap >今年<br>消費金額</th>
+    <th nowrap >今年<br>消費筆數</th>
+    <th nowrap >去年<br>消費金額</th>
+    <th nowrap >消費<br>計算類別</th>
+    <th nowrap >送全峰日期&nbsp;</th>
+    <th nowrap >送全峰狀態&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+    <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+    <input type="hidden" name="rd_moddate" value="${rd_moddate}">
+    <input type="hidden" name="tt_rd_modtype" value="${tt_rd_modtype}">
+    <input type="hidden" name="tt_rd_type" value="${tt_rd_type}">
+    <input type="hidden" name="card_no" value="${card_no}">
+    <input type="hidden" name="rd_carno" value="${rd_carno}">
+    <input type="hidden" name="tt_rd_status" value="${tt_rd_status}">
+    <input type="hidden" name="new_card_no" value="${new_card_no}">
+    <input type="hidden" name="rd_newcarno" value="${rd_newcarno}">
+    <input type="hidden" name="rd_validdate" value="${rd_validdate}">
+    <input type="hidden" name="rd_stopdate" value="${rd_stopdate}">
+    <input type="hidden" name="tt_rd_stoprsn" value="${tt_rd_stoprsn}">
+    <input type="hidden" name="crt_user" value="${crt_user}">
+    <input type="hidden" name="apr_date" value="${apr_date}">
+    <input type="hidden" name="proj_no" value="${proj_no}">
+    <input type="hidden" name="purch_amt" value="${purch_amt}">
+    <input type="hidden" name="purch_cnt" value="${purch_cnt}">
+    <input type="hidden" name="purch_amt_lyy" value="${purch_amt_lyy}">
+    <input type="hidden" name="cardholder_type" value="${cardholder_type}">
+    <input type="hidden" name="rd_senddate" value="${rd_senddate}">
+    <input type="hidden" name="rd_sendsts" value="${rd_sendsts}">    
+   </td>
+	<td nowrap class="list_cc"> ${rd_moddate.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_rd_modtype}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_rd_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rd_carno}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_rd_status}&nbsp;</td>
+	<td nowrap class="list_cc"> ${new_card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rd_newcarno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rd_validdate.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rd_stopdate.YMD}&nbsp;</td>
+	<td nowrap class="list_ll"> ${tt_rd_stoprsn}&nbsp;</td>
+	<td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${proj_no}&nbsp;</td>
+	<td nowrap class="list_rr"> ${purch_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${purch_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${purch_amt_lyy.(999)}&nbsp;</td>
+	<td nowrap class="list_cc"> ${cardholder_type}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rd_senddate.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rd_sendsts}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+  	
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

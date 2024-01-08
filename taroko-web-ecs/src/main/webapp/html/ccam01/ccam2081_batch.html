@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>預製卡啟用-batch-2022/04/11 Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="批次啟用" onClick="return uploadClick();" class="btQuery" >&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;
+   </td>   
+  </tr>  
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >卡號</th>
+    <th nowrap >申請人身分證號碼</th>
+    <th nowrap >金融帳號</th>
+    <th nowrap >生日</th>
+    <th nowrap >手機</th>
+    <th nowrap >錯誤原因</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"><span class="dsp_flag">${rs_ok_flag}</span> ${rs_SER_NUM}&nbsp;</td>
+    <td nowrap class="list_cc"> ${rs_card_no}&nbsp;</td>
+    <td nowrap class="list_cc"> ${rs_apply_id}&nbsp;</td>
+    <td nowrap class="list_cc"> ${rs_act_no}&nbsp;</td>
+    <td nowrap class="list_cc"> ${rs_birthday}&nbsp;</td>
+    <td nowrap class="list_cc"> ${rs_cellar_phone}&nbsp;</td>
+    <td nowrap class="list_ll"> ${rs_error_reason}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr><td nowrap class="list_ll" colspan="5">${finalResult}</td></tr>
+ </table>
+
+ <input type="hidden"  name="upload_file" value="" /> 
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+  function uploadClick() {
+    document.dataForm.zz_file_name.value = "";    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";    
+    top.openWindow("",parmHtml,parmName,windowSize);
+    top.requHtml    = "ccam2081_batch";
+    top.respHtml    = "ccam2081_batch";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ } 
+  
+</script>

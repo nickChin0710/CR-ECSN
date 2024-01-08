@@ -1,0 +1,141 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-02-26  V1.00.01  phopho            Initial                           -->
+<!-- 110-03-31  V1.00.02  Justin Wu     fix XSS                               -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>逾放催收呆帳年度變動表-110-03-31-V1.00.02-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!-- <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;年月:
+      <input type="text" class="col_date" name="exDateS" value="${exDateS}" 
+        zEdit="date,yyyymm" maxlength="6" size="6" zRequire ="k" />
+      --
+      <input type="text" class="col_date" name="exDateE" value="${exDateE}" 
+        zEdit="date,yyyymm" maxlength="6" size="6" />
+	</td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%" rowspan="2">No&nbsp;</th>
+    <th nowrap class="list_th" rowspan="2">年    月</th>
+    <th nowrap class="list_th" rowspan="2">項    目</th>
+    <th nowrap class="list_th" rowspan="2">現金還款</th>
+    <th nowrap class="list_th" colspan="2">本月減少</th>
+    <th nowrap class="list_th" colspan="2">本月增加</th>
+    <th nowrap class="list_th" colspan="2">各項目小計</th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th">金額</th>
+    <th nowrap class="list_th">筆數</th>
+    <th nowrap class="list_th">金額</th>
+    <th nowrap class="list_th">筆數</th>
+    <th nowrap class="list_th">金額</th>
+    <th nowrap class="list_th">筆數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">&nbsp;${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc">&nbsp;${proc_month.YMD} </td>
+   <td nowrap class="list_ll">&nbsp;${tt_db_type} </td>
+   <td nowrap class="list_rr">&nbsp;${sub_jrnl_bal.(999)} </td>
+   <td nowrap class="list_rr">&nbsp;${sub_acct_amt.(999)} </td>
+   <td nowrap class="list_rr">&nbsp;${sub_acct_cnt.(999)} </td>
+   <td nowrap class="list_rr">&nbsp;${add_acct_amt.(999)} </td>
+   <td nowrap class="list_rr">&nbsp;${add_acct_cnt.(999)} </td>
+   <td nowrap class="list_rr">&nbsp;${acct_jrnl_bal.(999)} </td>
+   <td nowrap class="list_rr">&nbsp;${acct_cnt.(999)} </td>
+  </tr>
+  <!-- ${tr} -->
+  <tr style="${trStyle}">
+    <td nowrap colspan="8" class="list_rr" style="color:#CC0000">&nbsp;合    計：</td>
+    <td nowrap class="list_rr" style="color:blue">${sumAccJrnlBal}</td>
+    <td nowrap class="list_ll">&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+
+  <!-- ${total} -->
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">&nbsp; </td>
+    <td nowrap class="list_cc">&nbsp;${totProcMonth}</td>
+    <td nowrap class="list_ll">&nbsp;${totalTxt}</td>
+    <td nowrap class="list_rr">&nbsp;${totSubJrnlBal}</td>
+    <td nowrap class="list_rr">&nbsp;${totSubAcctAmt}</td>
+    <td nowrap class="list_rr">&nbsp;${totSubAcctCnt}</td>
+    <td nowrap class="list_rr">&nbsp;${totAddAcctAmt}</td>
+    <td nowrap class="list_rr">&nbsp;${totAddAcctCnt}</td>
+    <td nowrap class="list_rr">&nbsp;${totAcctJrnlBal}</td>
+    <td nowrap class="list_rr">&nbsp;${totAcctCnt}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap colspan="8" class="list_rr" style="color:#CC0000">&nbsp;總    計：</td>
+    <td nowrap class="list_rr" style="color:blue">${allAcctJrnlBal}</td>
+    <td nowrap class="list_ll">&nbsp;</td></tr>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="colr0040">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ 
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ document.dataForm.exDateS.focus();
+  
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    return true;
+  }
+
+</script>

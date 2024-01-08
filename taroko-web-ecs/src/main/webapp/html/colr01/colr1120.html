@@ -1,0 +1,183 @@
+<!-- 
+*****************************************************************************
+*                                                                            *
+*                              MODIFICATION LOG                              *
+*                                                                            *
+* DATE       Version   AUTHOR      DESCRIPTION                               *
+* ---------  --------  ---------- ------------------------------------------ *
+* 106-10-18  V1.00.01  phopho       Initial                                  *
+* 110-03-31  V1.00.02  Justin     fix XSS                                    *       
+****************************************************************************** 
+-->
+<html>
+<head>
+<title>前置協商狀態統計表-pond-V.2021-0331-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <!--<img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;統計日期：
+      <input type="text" class="col_date" name="exStatDate" value="${exStatDate}"
+        zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+      <script language="JavaScript">
+        new tcal ({'formname': 'dataForm','controlname': 'exStatDate'});
+      </script>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;前置狀態：
+      <select   size="1"  name="exLiacStatus" class="col_ddlb">
+        <option value="">--</option>
+        <option value="1" ${exLiacStatus-1} >1.受理申請</option>
+        <option value="2" ${exLiacStatus-2} >2.停催通知</option>
+        <option value="3" ${exLiacStatus-3} >3.簽約完成</option>
+        <option value="4" ${exLiacStatus-4} >4.結案/復催</option>
+        <option value="5" ${exLiacStatus-5} >5.結案/結清</option>
+      </select>
+    </td>
+    <td nowrap>&nbsp;帳戶狀態：
+      <select   size="1"  name="exAcctStatus" class="col_ddlb">
+        <option value="">--</option>
+        <option value="1" ${exAcctStatus-1} >正常(含逾催)</option>
+        <option value="4" ${exAcctStatus-4} >呆帳</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;最大債權銀行：
+      <select   size="1"  name="exBankCode" class="col_ddlb">
+        ${ColLiabBankList}
+      </select>
+    </td>
+    <td nowrap>&nbsp;承辦分行：
+      <select   size="1"  name="exRegBankNo" class="col_ddlb">
+        ${PtrBranchNameList}
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;結案原因代碼：
+      <input type="text" class="col_text" name="exEndReason" value="${exEndReason}" 
+        zEdit="alphanum,upper" maxlength="2" size="4" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;簽約完成日：
+      <input type="text" class="col_date" name="exContractDate" value="${exContractDate}"
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+        new tcal ({'formname': 'dataForm','controlname': 'exContractDate'});
+      </script>
+    </td>
+    <td nowrap>&nbsp;首期繳款日：
+      <input type="text" class="col_date" name="exInstallSDate" value="${exInstallSDate}"
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+        new tcal ({'formname': 'dataForm','controlname': 'exInstallSDate'});
+      </script>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th">前置協商狀態</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">協商筆數</th>
+    <th nowrap class="list_th">本行每月可收期付金</th>
+    <th nowrap class="list_th">受理信用卡欠款</th>
+    <th nowrap class="list_th">即時信用卡欠款</th>
+    <th nowrap class="list_th">欠費總金額</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_ll"> ${tt_liac_status}&nbsp; </td>
+    <td nowrap class="list_ll"> ${tt_acct_status}&nbsp; </td>
+    <td nowrap class="list_rr"> ${row_cnt_id.(999)}&nbsp; </td>
+    <td nowrap class="list_rr"> ${sum_per_allocate_amt.(999)}&nbsp; </td>
+    <td nowrap class="list_rr"> ${sum_tot_amt_apply.(999)}&nbsp; </td>
+    <td nowrap class="list_rr"> ${sum_tot_amt_runbatch.(999)}&nbsp; </td>
+    <td nowrap class="list_rr"> ${row_amt.(999)}&nbsp; </td>
+     <!-- ${tr} 2021-03-31 Justin fix XSS -->
+  </tr>
+  <tr style="${trStyle}">
+    <td nowrap colspan="2" class="list_rr">${gp1LiacStatus}&nbsp;小計：</td>
+    <td nowrap class="list_rr" style="color:blue">${gp1CntId}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue">${gp1PerAllocateAmt}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue">${gp1TotAmtApply}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue">${gp1TotAmtRunbatch}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue">${gp1Amt}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap colspan="2" class="list_rr">合 計：</td>
+    <td nowrap class="list_rr" style="color:blue"> ${all_cnt_id.(999)}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue"> ${all_per_allocate_amt.(999)}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue"> ${all_tot_amt_apply.(999)}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue"> ${all_tot_amt_runbatch.(999)}&nbsp;</td>
+    <td nowrap class="list_rr" style="color:blue"> ${all_amt.(999)}&nbsp;</td>
+  </tr>
+ </table>
+ 
+<div id="footerBlock">
+<!--FOOTER -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;  
+      備註：本表統計之帳戶狀態、逾期期數及欠款總金額為受理申請時留存之系統資料&nbsp;
+    </td>
+  </tr>
+</table>
+</div>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="MOD_PGM" value="colr1120">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+  
+</form>
+</body>
+</html>
+ 
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    return true;
+  }
+ 
+</script>

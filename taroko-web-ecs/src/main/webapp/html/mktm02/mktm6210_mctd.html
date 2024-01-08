@@ -1,0 +1,231 @@
+<html>
+<head>
+<title> 112/03/07 V1.00.00 Zuwei Su Initial 通路類別代碼維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"    value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data3 ************************************************************ -->
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  >通路類別代碼： 
+       <span class="dsp_text">${channel_type_id}</span>
+       &nbsp;&nbsp;&nbsp;<span class="dsp_text">${channel_type_desc}</span>
+       <input type="hidden" name="channel_type_id" value="${channel_type_id}"/>
+       <input type="hidden" name="channel_type_desc" value="${channel_type_desc}"/>
+     </td>
+   </tr>
+ </table>
+ <table width="90%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">交易摘要別:&nbsp;
+       <input type="radio" value="1" id="ex_txcode_sel" name="ex_txcode_sel" />指定
+       <input type="radio" value="2" id="ex_txcode_sel" name="ex_txcode_sel" />排除
+     </td>
+     <td nowrap  width="50%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中/英文：
+       <input type="radio" value="A" id="ex_tx_desc_type" name="ex_tx_desc_type" />中文
+       <input type="radio" value="B" id="ex_tx_desc_type" name="ex_tx_desc_type" />英文
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交易摘要說明：
+       <input type="text" class="col_any" id="ex_tx_desc_name" name="ex_tx_desc_name" value=""
+              zEdit="any,canTW" maxlength="20" size="20" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap  width="50%">特店類別:&nbsp;
+       <input type="radio" value="1" id="ex_mccc_sel" name="ex_mccc_sel" />指定
+       <input type="radio" value="2" id="ex_mccc_sel" name="ex_mccc_sel" />排除
+     </td>
+     <td nowrap  width="50%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MCCC CODE：
+       <select size="1" id="ex_mccc_code" name="ex_mccc_code" class="col_ddlb" >
+               ${dddw_mcc_risk}
+       </select>
+       &nbsp;&nbsp;&nbsp;&nbsp;${ex_total_cnt}
+       <input type="Button"  value="新增明細" ${newDetail_disable}
+             id="wf_addrow"  class="btAdd_detl" />
+   </tr>
+ </table>
+<! browsButton ****************************************************************>
+ <table id="table1" width="50%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%" rowspan="2">刪除 </th>
+    <th nowrap class="list_th" colspan="3">交易摘要別</th>
+    <th nowrap class="list_th" colspan="2">特店類別</th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th">指定/排除</th>
+    <th nowrap class="list_th">中/英文</th>
+    <th nowrap class="list_th">交易摘要說明</th>
+    <th nowrap class="list_th">指定/排除</th>
+    <th nowrap class="list_th">MCCC CODE</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : BUTTON2 -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${comm_txcode_sel}</span>
+      <input type="hidden" name="txcode_sel" value="${txcode_sel}" >
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${comm_tx_desc_type}</span>
+      <input type="hidden" name="tx_desc_type" value="${tx_desc_type}" >
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${tx_desc_name}</span>
+      <input type="hidden" name="tx_desc_name" value="${tx_desc_name}" >
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${comm_mccc_sel}</span>
+      <input type="hidden" name="mccc_sel" value="${mccc_sel}" >
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${mccc_code}-${mccc_code_desc}</span>
+      <input type="hidden" name="mccc_code" value="${mccc_code}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm6210">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+ top.refreshButton2('2');
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+</script>
+<!-- ******************************************************************** -->
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#wf_addrow").click(function(){
+   var txcodeSel = $("#ex_txcode_sel:checked").val();
+   var txDescType = $("#ex_tx_desc_type:checked").val();
+   var txDescName = $("#ex_tx_desc_name").val(); 
+   var mcccSel = $("#ex_mccc_sel:checked").val();
+   var mcccCode = $("#ex_mccc_code").val();
+
+   if (txcodeSel == undefined && mcccSel == undefined) {
+       alert("[交易摘要別]或[特店類別]必須輸入一項 !");
+       return false;
+   }
+   if (txDescType == undefined && txcodeSel != undefined) {
+       alert("[中/英文]必須輸入 !");
+       return false;
+   }
+   if (txDescName.length == 0 && txcodeSel != undefined) {
+       alert("[交易摘要說明]必須輸入 !");
+       return false;
+   }
+   if (txDescName.length > 0 && (txcodeSel == undefined || txDescType == undefined)) {
+       alert("[交易摘要說明]與 [交易摘要說明]、[中/英文] 必須同時輸入!");
+       return false;
+   }
+   /* if (mcccSel == undefined) {
+       alert("[特店類別]必須輸入 !");
+       return false;
+   } */
+   if (mcccCode == '' && mcccSel != undefined) {
+       alert("[MCCC CODE]必須輸入 !");
+       return false;
+   }
+   if (mcccCode != '' && mcccSel == undefined) {
+       alert("[特店類別]與[MCCC CODE] 必須同時輸入 !");
+       return false;
+   }
+   var txcodeSelName = txcodeSel == undefined ? "" : (txcodeSel == 1 ? "指定" : "排除");
+   var txDescTypeName = txcodeSel == undefined ? "" : (txDescType == 'A' ? "中文" : "英文");
+   var mcccSelName = mcccSel == undefined ? "" : (mcccSel == 1 ? "指定" : "排除");
+   var mcccCodeName = mcccSel == undefined ? "" : $('#ex_mccc_code option:selected').text();
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+        { serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"<input type='hidden' value='' name='mod_seqno' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+txcodeSelName
+      +"<input type='hidden' value='"+txcodeSel+"' name='txcode_sel'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+txDescTypeName
+      +"<input type='hidden' value='"+txDescType+"' name='tx_desc_type'/>"
+      +"</td>"
+      +"<td nowrap class='list_ll'>"+txDescName
+      +"<input type='hidden' value='"+txDescName+"' name='tx_desc_name'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+mcccSelName
+      +"<input type='hidden' value='"+mcccSel+"' name='mccc_sel'/>"
+      +"</td>"
+      +"<td nowrap class='list_ll'>"+mcccCodeName
+      +"<input type='hidden' value='"+mcccCode+"' name='mccc_code'/>"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_txcode_sel:checked").prop("checked",false); 
+   $("#ex_tx_desc_type:checked").prop("checked",false); 
+   // $("#ex_tx_desc_name").val(''); 
+   $("#ex_mccc_sel:checked").prop("checked",false); 
+   // $("#ex_mccc_code").val('');
+  });
+
+});
+</script>

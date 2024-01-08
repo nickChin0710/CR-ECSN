@@ -1,0 +1,141 @@
+<!--**************************************************************************-->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00  JustinWu       Initial                              -->
+<!-- 111-06-15  V1.00.01  JustinWu       select line_source options from DB   -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>LINEBC推播記錄查詢 V20220615</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  colspan="2">&nbsp;推播日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  zRequire ="K"/>      
+      <script language="JavaScript">
+         new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+      </script>
+      --
+      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire ="K"/>
+      <script language="JavaScript">
+         new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+      </script>
+   </td>
+   <td nowrap rowspan="3" >&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;身分證字號:
+   		<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+   </td>  
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;發送類別:
+  		<select   size="1"  name="ex_line_source" class="col_ddlb">
+         ${d_dddw_line_source}
+         <!-- <option value="">--</option> -->
+         <!-- <option value="ConsumptionNotification" ${ex_line_source-ConsumptionNotification} >LINE-信用卡消費通知</option> -->
+         <!-- <option value="TCB_CARD_BUY" ${ex_line_source-TCB_CARD_BUY} >網銀APP-信用卡/VISA金融卡消費通知</option> -->
+         <!--option value="TCB_CARD_BILL" ${ex_line_source-TCB_CARD_BILL} >網銀APP-信用卡帳單出帳通知 </option-->
+         <!--option value="TCB_CARD_PAY" ${ex_line_source-TCB_CARD_PAY} >網銀APP-信用卡繳費通知</option-->
+         <!--option value="TCB_CARD_ACCOUNT" ${ex_line_source-TCB_CARD_ACCOUNT} >網銀APP-信用卡繳費入帳通知</option-->
+         <!--option value="TCB_CARD_DISCOUNT" ${ex_line_source-TCB_CARD_DISCOUNT} >網銀APP-信用卡優惠通知</option-->
+         <!--option value="PaymentReminder" ${ex_line_source-PaymentReminder} >信用卡繳費提醒</option-->
+         <!--option value="PaymentNotice" ${ex_line_source-PaymentNotice} >信用卡繳費入帳通知</option-->
+         <!--option value="QuotaTransaction" ${ex_line_source-QuotaTransaction} >信用卡額度異動通知</option-->
+         <!--option value="PointsExpire" ${ex_line_source-PointsExpire} >信用卡紅利點數即將到期通知</option-->
+         <!--option value="ApplyCreditcard" ${ex_line_source-ApplyCreditcard} >申請信用卡補件通知</option-->
+         <!--option value="BHU" ${ex_line_source-BHU} >行動帳單</option-->
+      </select>
+	</td>
+	<td nowrap >&nbsp;
+		<span class="col_radio">
+         <input type="radio" value="A" name="ex_result" ${ex_result-A} ${DEFAULT_CHK}  />全部
+         <input type="radio" value="1" name="ex_result" ${ex_result-1} />成功
+         <input type="radio" value="0" name="ex_result" ${ex_result-0} />失敗
+         <input type="radio" value="N" name="ex_result" ${ex_result-N} />未發送
+      </span>
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >推播日期&nbsp;</th>
+    <th nowrap >身分證&nbsp;</th>
+    <th nowrap >卡片名稱&nbsp;</th>
+    <th nowrap >卡號末四碼&nbsp;</th>
+    <th nowrap >消費金額&nbsp;</th>
+    <th nowrap >消費幣別&nbsp;</th>
+    <th nowrap >消費型態&nbsp;</th>
+    <th nowrap >商店名稱/推撥訊息&nbsp;</th>
+    <th nowrap >授權碼&nbsp;</th>
+    <!-- <th nowrap >推播類型&nbsp;</th> -->
+<!--     <th nowrap >推播內容&nbsp;</th> -->
+    <th nowrap >推播結果&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;${crt_time.TIME}</td>
+   <td nowrap class="list_cc"> ${id_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${cardName}&nbsp;</td>
+   <td nowrap class="list_cc"> ${endDigits}&nbsp;</td>
+   <td nowrap class="list_rr"> ${amount.(999.00)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${ccy}&nbsp;</td>
+   <td nowrap class="list_cc"> ${type}&nbsp;</td>
+   <td nowrap class="list_ll"> ${store}&nbsp;</td>
+   <td nowrap class="list_cc"> ${accessCode}&nbsp;</td>
+   <!-- <td nowrap class="list_ll"> ${line_source_name}&nbsp;</td> -->
+   <!-- <td nowrap class="list_ll"> ${line_message}&nbsp;</td>	 -->
+   <input type="hidden"  name="line_message"  value="${line_message}">
+   <td nowrap class="list_cc"> ${tt_line_gw_flag}&nbsp;</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+</script>

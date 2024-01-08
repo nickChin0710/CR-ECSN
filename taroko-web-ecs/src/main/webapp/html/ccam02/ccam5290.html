@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>DEBIT拒絕非面對面刷卡特店主管覆核V20191212</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;收單行代碼:
+      <input type="text" class="col_text" name="ex_acq_id" value="${ex_acq_id}" maxlength="15" size="17" zEdit="number">
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <input type="Button"   value="資料匯入" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btConfirm" >&nbsp;&nbsp;
+   </td>   
+   <td nowrap rowspan="4" class="col_key" >&nbsp;資料匯入格式：收單行代碼,特店代號,特店名稱,上線日期,下線日期
+		<br>
+		Ex:4xxxxx,730240000000039,XX人壽保險股份有限公司,20100218,20991231
+	</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;特店代號:
+      <input type="text" class="col_text" name="ex_mcht_no" value="${ex_mcht_no}" maxlength="15" size="17" zEdit="number">
+   </td>
+   <td nowrap >&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>	
+	</tr>
+	<tr>
+	   <td nowrap colspan="2" >&nbsp;匯入檔名:	   		
+	      <input type="text" class="dsp_text"  name="zz_file_name" value="" readonly size="50" zEdit="any" />
+         <input type="button" name="btn_file_upload" ${btnUpdate_disable} value="..." class="btOther" onclick="return upload_click()">
+     </td>
+  </tr>      
+  <tr>
+  	 <td nowrap colspan="2" class="td_remark" >&nbsp;此程式維護之特店，開放DEBIT卡非面對面之刷卡交易。</td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >覆核&nbsp;</th>
+    <th nowrap >收單行&nbsp;</th>
+    <th nowrap >特店代號&nbsp;</th>
+    <th nowrap >特店名稱&nbsp;</th>
+    <th nowrap >上線日期&nbsp;</th>
+    <th nowrap >下線日期&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${acq_id}','${mcht_no}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${apr_flag}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acq_id}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mcht_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mcht_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${online_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${stop_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;</td>
+	<td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+  
+  <input type="hidden"  name="upload_file" value="" /> 
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "ccam5290_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccam5290_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+  function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "ccam02";
+    top.javaName    = "Ccam5290";
+    //methodName  = "actionFunction";
+    top.requHtml    = "ccam5290";
+    top.respHtml    = "ccam5290";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+   return;
+ }  
+  
+</script>

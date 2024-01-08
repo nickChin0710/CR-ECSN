@@ -1,0 +1,82 @@
+
+<html>
+
+<head>
+    <title>DebitCard預製卡查詢-V.2017-1205-Andy Liu-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+  
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;Visa Debit卡號:
+                        <input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" zEdit="any" maxlength="19" size="19" zRequire ="k" />
+                    </td>
+                    <td nowrap>&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">                        
+                    </td>
+                </tr>                                            
+            </table>
+        </div>
+        <hr>
+        <!-- 合計============================ -->
+        <div id="queryBlock">
+            <table border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap width="100" align="right">合計:&nbsp;</td>
+                    <td nowrap width="200">資料筆數:&nbsp;
+                        <span class="dsp_number">${ft_cnt.(999)}</span>
+                        <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">Visa Debit卡號</th>
+                <th nowrap class="list_th">金融帳號</th>
+                <th nowrap class="list_th">分行名稱</th>
+                <th nowrap class="list_th">金融卡號</th>                
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${act_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${full_chi_name}&nbsp; </td>
+                <td nowrap class="list_ll"> ${bank_actno}&nbsp; </td>
+                <input type="hidden" name="group_ct" value="${group_ct}">         
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sum_amt" value="${sum_amt}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_card_no.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

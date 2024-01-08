@@ -1,0 +1,50 @@
+ select id_no as id,
+        decode(rela_type,'1','實質受益人','2','高階管理人','3','具控制權人','') as rela_type,
+        cntry_code,
+        birthday,  --nvl(birthday,'00000000') as birthday,
+        chi_name,
+        eng_name,
+        '' as sex,
+        pep_flag,
+        hit_lists,
+        hit_reason,
+        hit_time      
+   from crd_corp_rela a
+  where corp_no = '' --:ls_id
+union /*負責人*/
+(
+ select A.charge_id,
+        '公司負責人' as rela_type,
+        A.charge_cntry_code,
+        A.charge_birthday,
+        A.charge_name,
+        A.charge_eng_name,
+        '' as sex,
+        B.charge_pep_flag,
+        B.charge_hit_lists,
+        B.charge_hit_reason,
+        B.charge_hit_time      
+   from crd_corp A left join crd_corp_ext B on A.corp_p_seqno=B.corp_p_seqno
+  where A.corp_no = '' --:ls_id
+--    and corp_no_code = '' --:ls_id_code
+    and (A.charge_name <>'' or A.charge_eng_name <>'')
+)
+union all
+(
+ select B.id_no as acct_id,
+        '設質第三人' as rela_type,
+        B.birthday, --nvl(birthday,'00000000') as birthday,
+        B.chi_name,
+		    decode(B.sex,'1','男','2','女','') as sex,
+        B.eng_name,
+        B.RESIDENT_COUNTRY_CODE as cntry_code,
+        B.pep_flag,
+        C.hit_lists,
+        C.hit_reason,
+        C.hit_time
+   from crd_asset A left join crd_idno B on B.id_p_seqno=A.id_p_seqno
+        left join crd_idno_ext C on C.id_p_seqno=A.id_p_seqno
+  where A.p_seqno = ''--:ls_id||'000'
+    and A.id_p_seqno<>''
+    --and (acct_id='' or substr(UPPER(acct_id),1,1) between 'A' and 'Z') --排除中文 
+)

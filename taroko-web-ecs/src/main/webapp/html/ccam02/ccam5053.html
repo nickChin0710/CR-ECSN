@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>風險別消費參數維護 V20191212</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 	
+  <input type="Button" class="btQuery"     value="讀取" onClick="return top.submitControl('R')" />&nbsp;&nbsp;	
+    <input type="Button"   value="新增通用-P類" onClick="detailScreen4()" class="btAdd" />&nbsp;&nbsp;
+	<input type="Button"   value="修改處理" onClick="detailScreen()" ${btnUpdate_disable} class="btProcess" />&nbsp;&nbsp;
+	<input type="Button"  value="截取新卡人等級" onClick="detailScreen2()" ${btnUpdate_disable} class="btProcess" />&nbsp;&nbsp;
+	<input type="Button"  value="刪除處理" onClick="detailScreen3()" ${btnUpdate_disable} class="btProcess" />&nbsp;&nbsp;	
+ </td>
+ <td nowrap >&nbsp;
+ 	<span class="col_key">1.截取新卡人等級係參照m5051卡戶等級消費限額-卡片等級：通用</span>
+ 	<br>
+ 	&nbsp;
+ 	<span class="col_key">2.「*」待主管覆核</span> 	
+ </td>
+</tr>
+</table>
+ <div id="dataBlock"> 	
+ 	<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+ 		<tr>
+			<td nowrap>&nbsp;卡片等級:
+		      <select size="1" name="ex_card_note" class="col_ddlb"  zRequire="C" >
+		         <option value="">--</option>         
+		         ${dddw_card_note}
+		      </select>
+		   </td>
+		   <td nowrap >&nbsp;風險類別:
+		   		<select size="1" name="ex_risk_type" class="col_ddlb"  zRequire="C" >
+		         <option value="">--</option>         
+		         ${dddw_risk_type}
+		      </select>		      
+		      <input type="Button"   value="新增風險分類" onClick="return top.submitControl('C1')" ${btnUpdate_disable} class="btAdd" >&nbsp;&nbsp;		      
+		   </td> 
+		   <td nowrap ><span class="col_key">1.「新增風險分類」前：先讀取「卡<br>片等級：通用-P類」檢視卡人等級是<br>否齊全，再執行新增風險分類後按讀取。<br>2.「新增風險分類」是以卡片等<br>級：通用-P類參數為基數。</span></td>
+		</tr>
+		
+ 	</table>
+</div>
+ 	<hr>
+ 	
+ <div id="dataBlock"> 	
+ 	<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" > 				
+ 		<tr>
+ 			<td nowrap >&nbsp;卡片等級:
+ 				<span class="dsp_text">${kk_card_note}.${kk_tt_card_note}</span>
+ 				<input type="hidden" name="kk_card_note" value="${kk_card_note}">
+ 				<input type="hidden" name="kk_tt_card_note" value="${kk_tt_card_note}" />
+ 			</td>
+ 			<td nowrap >&nbsp;風險類別:
+ 				<span class="col_key">${kk_risk_type}.${#java2:ecsfunc.CodeDescCcas.riskType(kk_risk_type)}&nbsp;</span>
+ 				<input type="hidden" name="kk_risk_type" value="${kk_risk_type}" />
+ 				<input type="hidden" name="kk_risk_level" value="" />
+ 			</td>
+ 		</tr> 		
+ 		<tr>
+      <td nowrap>&nbsp;截止日期：
+      	<span class="dsp_text">${end_date.YMD}&nbsp;</span>
+      	<input type="hidden" name="end_date" value="${end_date}">
+	   </td>
+	   <td nowrap>&nbsp;國外預借現金總月限%：
+         <span class="dsp_text">${oversea_cash_pct.(999)}&nbsp;</span>
+         <input type="hidden" name="oversea_cash_pct" value="${oversea_cash_pct}">
+      </td>
+      </tr>
+      <tr>
+	   <td nowrap colspan="2" >&nbsp;風險特店檢核
+	      <input type="checkbox" name="mcht_chk" value="1" ${mcht_chk-1} disabled />
+	      &nbsp;
+	      Delinquent檢核
+	      <input type="checkbox" name="delinquent" value="1" ${delinquent-1} disabled />
+	      &nbsp;
+	      開卡檢核
+	      <input type="checkbox" name="open_chk" value="1" ${open_chk-1} disabled />
+	      &nbsp;國外消費檢核
+         <input type="checkbox" name="oversea_chk" value="1" ${oversea_chk-1} disabled />
+         &nbsp;卡戶等級風險類-月限次
+         <input type="checkbox" name="month_risk_chk" value="1" ${month_risk_chk-1} disabled />
+         &nbsp;
+         日限次
+         <input type="checkbox" name="day_risk_chk" value="1" ${day_risk_chk-1} disabled />
+	   </td>
+  </tr>
+ 	</table>
+ </div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>  	
+    <th > 
+	 	<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	修改
+	  </th>
+	  <th >卡人等級&nbsp;</th>
+	  <th >月限額百分比&nbsp;</th>	  	   
+	  <th >回覆碼&nbsp;</th>
+	  <th >月限次&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >次限額百分比&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>
+	  <th >日限次&nbsp;</th>
+	  <th >回覆碼&nbsp;</th>	  
+	  <th >異動經辦&nbsp;</th>	  
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" />
+		 	 ${SER_NUM}&nbsp;
+		 	 <span class="col_key">${star_sign}</span>		 	 	
+			<input type="hidden" name="ser_num" value="${ser_num}" />	
+			<input type="hidden" name="rowid" value="${rowid}" />		
+			<input type="hidden" name="star_sign" value="${star_sign}">
+		</td>
+		<td nowrap class="list_cc">${risk_level}&nbsp;
+			<input type="hidden" name="risk_level" value="${risk_level}" /> </td>
+		<td nowrap class="list_rr">${lmt_amt_month_pct.(999)}&nbsp;
+			<input type="hidden" name="lmt_amt_month_pct" value="${lmt_amt_month_pct}" /> </td>				
+		<td nowrap class="list_cc">${rsp_code_1}&nbsp;
+			<input type="hidden" name="rsp_code_1" value="${rsp_code_1}" /> </td>
+		<td nowrap class="list_rr">${lmt_cnt_month.(999)}&nbsp;
+			<input type="hidden" name="lmt_cnt_month" value="${lmt_cnt_month}" /> </td>
+		<td nowrap class="list_cc">${rsp_code_2}&nbsp;
+			<input type="hidden" name="rsp_code_2" value="${rsp_code_2}" /> </td>
+		<td nowrap class="list_rr">${lmt_amt_time_pct.(999)}&nbsp;
+			<input type="hidden" name="lmt_amt_time_pct" value="${lmt_amt_time_pct}" /> </td>
+		<td nowrap class="list_cc">${rsp_code_3}&nbsp;
+			<input type="hidden" name="rsp_code_3" value="${rsp_code_3}" /> </td>
+		<td nowrap class="list_rr">${lmt_cnt_day.(999)}&nbsp;
+			<input type="hidden" name="lmt_cnt_day" value="${lmt_cnt_day}" /> </td>
+		<td nowrap class="list_cc">${rsp_code_4}&nbsp;
+			<input type="hidden" name="rsp_code_4" value="${rsp_code_4}" /> </td>
+		<td nowrap class="list_cc">${mod_user}
+			<input type="hidden" name="mod_user" value="${mod_user}" /> </td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    
+    return true;
+  }
+  
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElems = document.getElementsByName("opt");
+    for ( var i=0;  i < aElems.length; i++ ) 
+    {
+		if  ( aElems[i].type == "checkbox" && aElems[i].disabled==false) {
+			aElems[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+ 
+ function detailScreen() {
+  top.respLevel = 1;  
+  top.respHtml  = "ccam5053_detl";
+  top.submitControl('S2');
+  return true;
+ }
+ 
+ function detailScreen2() {
+  top.respLevel = 1;  
+  top.respHtml  = "ccam5053_detl";
+  top.submitControl('C');
+  return true;
+ }
+ 
+ function detailScreen3() {
+  top.respLevel = 1;  
+  top.respHtml  = "ccam5053_detl2";
+  top.submitControl('S3');
+  return true;
+ }
+
+ function detailScreen4() {
+  top.respLevel = 1;  
+  top.respHtml  = "ccam5053_detl";
+  top.submitControl('X');
+  return true;
+ } 
+</script>

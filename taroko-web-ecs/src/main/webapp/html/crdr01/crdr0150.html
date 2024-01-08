@@ -1,0 +1,179 @@
+<html>
+
+<head>
+    <title>重製卡/續卡彙總報表-107-08-23-V1.00.01-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>    
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=6>&nbsp;放行前後:                        
+                        <input type="radio" value="0" name="ex_apr" ${ex_apr-0}${DEFAULT-ex_apr} />放行前
+                        <input type="radio" value="1" name="ex_apr" ${ex_apr-1} />放行後
+                    </td>
+                    <td nowrap colspan=6>&nbsp;
+                        <input type="Button" id="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=6>&nbsp;送製卡來源:
+                        <br>
+                        <input type="radio" value="3" name="ex_source" ${ex_source-3} onChange="check();" />整批續卡
+                        <br>
+                        <input type="radio" value="4" name="ex_source" ${ex_source-4} onChange="check();" />線上續卡 &nbsp;&nbsp;提前續卡註記:
+                        <select size="1" id="ex_change_reason" name="ex_change_reason"  value="${ex_change_reason}" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" name="ex_change_reason" ${ex_change_reason-1}>系統續卡</option>
+                            <option value="2" name="ex_change_reason" ${ex_change_reason-2}>提前續卡</option>
+                            <option value="3" name="ex_change_reason" ${ex_change_reason-3}>人工續卡</option>
+                        </select>
+                        <br>
+                        <input type="radio" value="5" name="ex_source" ${ex_source-5}${DEFAULT-ex_source} onChange="check();" />重製卡 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重製卡原因:
+                        <select size="1" id="ex_emboss_reason" name="ex_emboss_reason" class="col_ddlb">
+                            <option value="">--</option>
+                            <option value="1" name="ex_emboss_reason"  ${ex_emboss_reason-1}>掛失</option>
+                            <option value="2" name="ex_emboss_reason"  ${ex_emboss_reason-2}>損毀</option>
+                            <option value="3" name="ex_emboss_reason"  ${ex_emboss_reason-3}>偽卡</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=6>
+                        &nbsp;登錄人員:
+                            <select name="ex_keyin" class="col_ddlb">
+                                ${dddw_keyin}
+                            </select>
+                        <br>
+                        &nbsp;批&nbsp;&nbsp;&nbsp;&nbsp;號:
+                            <input type="text" class="col_any" name="ex_batchno" value="${ex_batchno}" zEdit="alphanum" maxlength=10> 
+                        <br>
+                        &nbsp;列印種類:
+                            <input type="radio" value="0" name="ex_type" ${ex_type-0}${DEFAULT-ex_type} />全部
+                            <input type="radio" value="1" name="ex_type" ${ex_type-1} />其他
+                            <input type="radio" value="2" name="ex_type" ${ex_type-2} />COMBO卡
+                            <input type="radio" value="4" name="ex_type" ${ex_type-4} />行動支付
+                        <br>
+                        &nbsp;排&nbsp;&nbsp;&nbsp;&nbsp;序:
+                            <select size="1" name="ex_order" value = ${ex_order} class="col_ddlb">
+                                <option value="0">--</option>
+                                <option value="1" name="ex_order" ${ex_order-1}>ID</option>
+                                <option value="2" name="ex_order" ${ex_order-2}>卡號</option>
+                                <option value="3" name="ex_order" ${ex_order-3}>製卡說明</option>
+                                <option value="4" name="ex_order" ${ex_order-4}>登錄人員</option>
+                                <option value="5" name="ex_order" ${ex_order-5}>卡種團代</option>
+                            </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">覆核</th>
+                <th nowrap class="list_th">風險行</th>
+                <th nowrap class="list_th">新卡卡號</th>
+                <th nowrap class="list_th">身分證號</th>
+                <th nowrap class="list_th">中文姓名</th>
+                <th nowrap class="list_th">新效期</th>
+                <th nowrap class="list_th">英文姓名</th>
+                <th nowrap class="list_th">來源</th>
+                <th nowrap class="list_th">製卡原因</th>
+                <th nowrap class="list_th">製卡說明</th>
+                <th nowrap class="list_th">凸字第四行</th>
+                <th nowrap class="list_th">登錄人員</th>
+                <th nowrap class="list_th">處理日期</th>
+                <th nowrap class="list_th">手機門號</th>
+                <th nowrap class="list_th">SE類型</th>
+                <th nowrap class="list_th">新安全元件識別碼</th>
+                <th nowrap class="list_th">寄件別</th>
+                <th nowrap class="list_th">取件分行</th>
+                <th nowrap class="list_th">備註</th>
+                <th nowrap class="list_th">卡種</th>
+                <th nowrap class="list_th">團代</th>
+                <th nowrap class="list_th">認同碼</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_ll"> ${wk_batchno} </td>
+                <td nowrap class="list_ll"> ${db_confirm_flag} </td>
+                <td nowrap class="list_ll"> ${risk_bank_no} </td>
+                <td nowrap class="list_ll"> ${card_no} </td>
+                <td nowrap class="list_ll"> ${wk_apply_id} </td>
+                <td nowrap class="list_ll"> ${chi_name} </td>
+                <td nowrap class="list_ll"> ${valid_to} </td>
+                <td nowrap class="list_ll"> ${eng_name} </td>
+                <td nowrap class="list_ll"> ${emboss_source} </td>
+                <td nowrap class="list_ll"> ${db_emboss_reason} </td>
+                <td nowrap class="list_ll"> ${db_reissue_code} </td>
+                <td nowrap class="list_ll"> ${emboss_4th_data} </td>
+                <td nowrap class="list_ll"> ${crt_user} </td>
+                <td nowrap class="list_ll"> ${crt_date} </td>
+                <td nowrap class="list_ll"> ${msisdn} </td>
+                <td nowrap class="list_ll"> ${service_typ} </td>
+                <td nowrap class="list_ll"> ${se_id} </td>
+                <td nowrap class="list_ll"> ${mail_type} </td>
+                <td nowrap class="list_ll"> ${branch} </td>
+                <td nowrap class="list_ll"> ${remark_20} </td>
+                <td nowrap class="list_ll"> ${card_type} </td>
+                <td nowrap class="list_ll"> ${group_code} </td>
+                <td nowrap class="list_ll"> ${unit_code} </td>                
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="user_id" value="${user_id}">
+        <input type="hidden" name="user_id" value="${db_apply_id}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_keyin.focus();
+check();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+function check() {
+    var ss = $('input[name*=ex_source]:checked').val();
+    if (ss == "3") {        
+        $("#ex_change_reason").attr('disabled','disabled');
+        $("#ex_emboss_reason").attr('disabled','disabled');
+        $("#ex_change_reason").css("background-color", "#EDEDED");
+        $("#ex_emboss_reason").css("background-color", "#EDEDED");
+    }
+    if (ss == "4") {
+        $("#ex_change_reason").removeAttr('disabled');
+        $("#ex_emboss_reason").attr('disabled','disabled');
+        $("#ex_change_reason").css("background-color", "#FFFFFF");
+        $("#ex_emboss_reason").css("background-color", "#EDEDED");
+    }
+    if (ss == "5") {
+        $("#ex_change_reason").attr('disabled','disabled');
+        $("#ex_emboss_reason").removeAttr('disabled');
+        $("#ex_change_reason").css("background-color", "#EDEDED");
+        $("#ex_emboss_reason").css("background-color", "#FFFFFF");
+    }
+}
+</script>

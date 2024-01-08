@@ -1,0 +1,506 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--  110/09/17  V1.00.00   Yang Bo                   initial                 -->
+<!--  112/03/20  V1.00.01   Yang Bo           add approval feature            -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>員工招攬信用卡消費回饋獎勵金參數維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+    ${#PLUGIN:htmcomm_plugin.apr_user}
+    <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <!-- Button **************************************************************-->
+        <tr>
+            <td width="100">&nbsp;</td>
+            <td colspan="4">
+                <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;
+                <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+                <input type="Button"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+                <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+                <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+                <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+    <div id="dataBlock">
+        <!-- Key data2 ************************************************************ -->
+        <table width="70%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap  width="50%">獎勵專案代碼：&nbsp;
+                    <input type="text" class="col_any" name="kk_proj_code" value="${kk_proj_code}"
+                           zEdit="any" maxlength="10" size="10" style="background-color: ${kk_proj_code_pink}" />
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <!-- Detail data detl *************************************************** -->
+        <table width="70%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap class="colKey">獎勵專案代碼：
+                    <span class="dsp_text">${proj_code}</span>
+                    <input  type="hidden" name="proj_code" value="${proj_code}" style="background-color: ${proj_code_pink}" />
+                </td>
+                <td nowrap class="col_key">覆核：
+                    <span class="dsp_text">${apr_flag}</span>
+                    <input  type="hidden" name="apr_flag" value="${apr_flag}" />
+                </td>
+            </tr>
+        </table>
+        <table width="70%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap >專案日期:
+                    <input type="text" class="col_date" name="apply_date_s" value="${apply_date_s}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'apply_date_s'});
+                    </script>
+                    ~
+                    <input type="text" class="col_date" name="apply_date_e" value="${apply_date_e}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+                    <script language="JavaScript">
+                        new tcal ({'formname': 'dataForm','controlname': 'apply_date_e'});
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>專案說明:&nbsp;
+                    <input type="text" class="col_any" name="proj_desc" value="${proj_desc}"
+                           zEdit="any,canTW" maxlength="100" size="100" style="background-color: ${proj_desc_pink}" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>獎勵類別:&nbsp;
+                    <input type="checkbox" value="Y" name="reward_bank" ${reward_bank-Y} />
+                    行員
+                    <input type="checkbox" value="Y" name="reward_finance" ${reward_finance-Y} />
+                    金控員工
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>卡友身分:&nbsp;
+                    <input type="checkbox" value="Y" name="exclude_bank" ${exclude_bank-Y} />
+                    排除行員
+                    <input type="checkbox" value="Y" name="exclude_finance" ${exclude_finance-Y} />
+                    排除金控員工
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >帳戶類別:&nbsp;
+                    <input type="radio" value="0" name="acct_type_flag" ${acct_type_flag-0} checked />全部
+                    <input type="radio" value="1" name="acct_type_flag" ${acct_type_flag-1} />指定
+                    <input type="radio" value="2" name="acct_type_flag" ${acct_type_flag-2} />排除
+                    <input type="Button" class="btOther"  id="btnparm"  value="參數明細維護" ${btnparm_disable}
+                           onClick="return buttonScreen('${proj_code}', '${rowid}')" >
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >團體代碼:&nbsp;
+                    <input type="radio" value="0" name="group_code_flag" ${group_code_flag-0} checked />全部
+                    <input type="radio" value="1" name="group_code_flag" ${group_code_flag-1} />指定
+                    <input type="radio" value="2" name="group_code_flag" ${group_code_flag-2} />排除
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >卡片種類:&nbsp;
+                    <input type="radio" value="0" name="card_type_flag" ${card_type_flag-0} checked />全部
+                    <input type="radio" value="1" name="card_type_flag" ${card_type_flag-1} />指定
+                    <input type="radio" value="2" name="card_type_flag" ${card_type_flag-2} />排除
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >首年認定:&nbsp;
+                    <input type="checkbox" value="Y" name="debut_sup_flag_0" ${debut_sup_flag_0-Y} />
+                    正卡
+                    <input type="checkbox" value="Y" name="debut_sup_flag_1" ${debut_sup_flag_1-Y} />
+                    附卡
+
+                    <br>　&nbsp;
+                    <input type="radio" value="1" name="debut_year_flag" ${debut_year_flag-1} checked onchange="columnOnChange(1)" />新申辦卡:核卡日前
+                    <input type="text" class="col_any" id="debut_month1" name="debut_month1" value="${debut_month1}"
+                           zEdit="any,canTW" maxlength="4" size="6" style="background-color: ${debut_month1_pink}" />個月內未持有本行任一信用卡
+
+                    <br>　&nbsp;
+                    <input type="radio" value="2" name="debut_year_flag" ${debut_year_flag-2} onchange="columnOnChange(1)" />全新戶:從未持有本行任一信用卡
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >消費金額累積方式:&nbsp;
+                    <input type="radio" value="1" name="consume_type" ${consume_type-1} checked />1.正卡ID
+                    <input type="radio" value="2" name="consume_type" ${consume_type-2} />2.正附卡合併
+                    <input type="radio" value="3" name="consume_type" ${consume_type-3} />3.正附卡分開
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>消費金額本金類:&nbsp;
+                    <input type="checkbox" value="Y" name="item_ename_bl" ${item_ename_bl-Y} />
+                    簽帳款(BL)
+
+                    <input type="checkbox" value="Y" name="item_ename_ca" ${item_ename_ca-Y} />
+                    預借現金(CA)
+
+                    <input type="checkbox" value="Y" name="item_ename_it" ${item_ename_it-Y} />
+                    分期付款(IT)
+                    <br>　　　　　　　&nbsp;
+                    <input type="checkbox" value="Y" name="item_ename_ao" ${item_ename_ao-Y} />
+                    餘額代償(AO)
+
+                    <input type="checkbox" value="Y" name="item_ename_id" ${item_ename_id-Y} />
+                    代收款(ID)
+
+                    <input type="checkbox" value="Y" name="item_ename_ot" ${item_ename_ot-Y} />
+                    其他應收款(OT)
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >消費門檻:&nbsp;
+                    <input type="radio" value="1" name="consume_flag" ${consume_flag-1} checked onchange="columnOnChange(2)" />核卡後:
+                    <input type="text" id="curr_month" class="col_number" name="curr_month" value="${curr_month}"
+                           zEdit="dignumber" maxlength="4" size="6" style="background-color: ${curr_month_pink}" />個月內刷卡消費
+
+                    <input type="radio" value="2" name="consume_flag" ${consume_flag-2} onchange="columnOnChange(2)" />核卡當年度至下一年度
+                    <select id="next_month" name="next_month" class="col_ddlb">
+                        <option value="1" ${next_month-1} >01</option>
+                        <option value="2" ${next_month-2} >02</option>
+                        <option value="3" ${next_month-3} >03</option>
+                        <option value="4" ${next_month-4} >04</option>
+                        <option value="5" ${next_month-5} >05</option>
+                        <option value="6" ${next_month-6} >06</option>
+                        <option value="7" ${next_month-7} >07</option>
+                        <option value="8" ${next_month-8} >08</option>
+                        <option value="9" ${next_month-9} >09</option>
+                        <option value="10" ${next_month-10} >10</option>
+                        <option value="11" ${next_month-11} >11</option>
+                        <option value="12" ${next_month-12} >12</option>
+                    </select>個月內(含)
+
+                    <br>　　　　　　　&nbsp;
+                    累積消費金額: 達
+                    <input type="text" class="col_number" name="curr_amt" value="${curr_amt}"
+                           zEdit="dignumber" maxlength="10" size="12" style="background-color: ${curr_amt_pink}" />元(含)以上
+
+                    <br>　　　　　　　&nbsp;
+                    <input type="checkbox" value="Y" name="curr_tot_cond" ${curr_tot_cond-Y} onchange="columnOnChange(3)" />
+                    或 累積消費筆數達
+                    <input type="text" id="curr_tot_cnt" class="col_number" name="curr_tot_cnt" value="${curr_tot_cnt}"
+                           zEdit="dignumber" maxlength="10" size="12" style="background-color: ${curr_tot_cnt_pink}" />筆(含)以上
+                </td>
+            </tr>
+            <tr>
+                <td nowrap >回饋方式:&nbsp;
+                    <input type="radio" value="1" name="feedback_type" ${feedback_type-1} checked onchange="columnOnChange(4)" />回饋比例
+                    <input type="text" id="feedback_rate" class="col_number" name="feedback_rate" value="${feedback_rate}"
+                           zEdit="dignumber" maxlength="10" size="12" style="background-color: ${feedback_rate_pink}" />%
+
+                    <input type="radio" value="2" name="feedback_type" ${feedback_type-2} onchange="columnOnChange(4)" />每卡回饋金額
+                    <input type="text" id="feedback_amt" class="col_number" name="feedback_amt" value="${feedback_amt}"
+                           zEdit="dignumber" maxlength="10" size="12" style="background-color: ${feedback_amt_pink}" />元
+
+                    <input type="radio" value="3" name="feedback_type" ${feedback_type-3} onchange="columnOnChange(4)" />每卡得
+                    <input type="text" class="col_number" name="feedback_score" value="${feedback_score}"
+                           style="background-color: ${feedback_score_pink}" id="feedback_score"
+                           zEdit="dignumber" maxlength="10" size="12" />分,每得1分回饋金額
+                    <input type="text" class="col_number" name="feedback_score_amt" value="${feedback_score_amt}"
+                           style="background-color: ${feedback_score_amt_pink}" id="feedback_score_amt"
+                           zEdit="dignumber" maxlength="10" size="12" />元
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>
+                    <input type="checkbox" value="Y" name="sale_cond" ${sale_cond-Y} onchange="columnOnChange(5)" />
+                    員工推卡獎勵:
+                    流通卡數
+                    <input type="text" class="col_number" name="consume_cnt" value="${consume_cnt}"
+                           zEdit="dignumber" maxlength="12" size="12" style="background-color: ${consume_cnt_pink}" />卡(含)以上,
+                    有效卡數
+                    <input type="text" class="col_number" name="current_cnt" value="${current_cnt}"
+                           zEdit="dignumber" maxlength="12" size="12" style="background-color: ${current_cnt_pink}" />卡(含)以上
+
+                    <br>　&nbsp;
+                    <input type="checkbox" value="Y" name="current_cond" ${current_cond-Y} onchange="columnOnChange(6)" />
+                    有效卡每卡得
+                    <input type="text" class="col_number" name="current_score" value="${current_score}"
+                           zEdit="dignumber" maxlength="12" size="12" style="background-color: ${current_score_pink}" />分
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>
+                    <input type="checkbox" value="Y" name="unit_cond" ${unit_cond-Y} onchange="columnOnChange(7)" />
+                    營業單位: 累積消費金額 每
+                    <input type="text" class="col_number" name="unit_curr_amt" value="${unit_curr_amt}"
+                           zEdit="dignumber" maxlength="12" size="12" style="background-color: ${unit_curr_amt_pink}" />元(含),
+                    有效卡得
+                    <input type="text" class="col_number" name="unit_score" value="${unit_score}"
+                           zEdit="dignumber" maxlength="12" size="12" style="background-color: ${unit_score_pink}" />分
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>備註:
+                    <input type="text" class="col_any" name="memo" value="${memo}"
+                           zEdit="any,canTW" maxlength="100" size="100" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap>獎金產生日類型:&nbsp;
+                    <input type="radio" value="1" name="cal_date_type" ${cal_date_type-1} checked />1:每月
+                    <input type="radio" value="2" name="cal_date_type" ${cal_date_type-2} />2:每季(1,4,7,10)
+                    <input type="radio" value="3" name="cal_date_type" ${cal_date_type-3} />3:每半年(1,7)
+                    <input type="radio" value="4" name="cal_date_type" ${cal_date_type-4} />4:每年(2月)
+
+                    <br>獎金產生執行日:
+                    <input type="text" class="col_number" name="cal_date_days" value="${cal_date_days}"
+                           zEdit="dignumber" maxlength="12" size="12" style="background-color: ${cal_date_days_pink}" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- trail ************************************************************** -->
+    <input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+    <input type="hidden" name="rowid" value="${rowid}">
+    <input type="hidden" name="mod_seqno" value="${mod_seqno}">
+    <input type="hidden" name="mod_pgm" value="Mktm3030">
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="action_type" value="${action_type}">
+    <input type="hidden" name="pageType" value="detl">
+
+</form>
+<div id="disDiv" class="disScreen"></div>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+    top.refreshButton2('1');
+
+    function validateInput()
+    {
+        if ( !top.checkFormat() )
+        { return false; }
+        
+        if (top.actionCode=='A' || top.actionCode=='U') {
+        	var calDateDays = $("input[name=cal_date_days]").val();
+        	if (calDateDays > 28) {
+            	alert('獎金產生執行日不可大於28');
+            	return false;
+         	}
+        	if (calDateDays < 1) {
+            	alert('獎金產生執行日不可小於1');
+            	return false;
+         	}
+        }
+
+        return true;
+    }
+
+    function buttonScreen(param1, param2)
+    {
+        top.respLevel = 2;
+        top.respHtml = "mktm3030_detl_01";
+
+        document.dataForm.data_k1.value = param1;
+        document.dataForm.data_k2.value = param2;
+        top.submitControl("R2");
+        return true;
+    }
+
+
+    function columnOnChange(code) {
+        switch (code) {
+            case 1:
+                const debut_year_flag = $("input[name=debut_year_flag]:checked").val()
+                if (debut_year_flag === '1') {
+                    document.dataForm.debut_month1.disabled = false;
+                } else {
+                    document.dataForm.debut_month1.disabled = true;
+                    document.dataForm.debut_month1.value = '0';
+                }
+                break
+            case 2:
+                const consume_flag = $("input[name=consume_flag]:checked").val()
+                if (consume_flag === '1') {
+                    document.dataForm.curr_month.disabled = false;
+                    document.dataForm.next_month.disabled = true;
+                    document.dataForm.next_month.options[0].selected = true;
+                } else {
+                    document.dataForm.next_month.disabled = false;
+                    document.dataForm.curr_month.disabled = true;
+                    document.dataForm.curr_month.value = '0';
+                }
+                break
+            case 3:
+                const curr_tot_cond = $("input[name=curr_tot_cond]").prop('checked')
+                if (curr_tot_cond === true) {
+                    document.dataForm.curr_tot_cnt.disabled = false;
+                } else {
+                    document.dataForm.curr_tot_cnt.disabled = true;
+                    document.dataForm.curr_tot_cnt.value = '0';
+                }
+                break
+            case 4:
+                const feedback_type = $("input[name=feedback_type]:checked").val()
+                if (feedback_type === '1') {
+                    document.dataForm.feedback_rate.disabled = false;
+                    document.dataForm.feedback_amt.disabled = true;
+                    document.dataForm.feedback_score.disabled = true;
+                    document.dataForm.feedback_score_amt.disabled = true;
+                    document.dataForm.feedback_amt.value = '0';
+                    document.dataForm.feedback_score.value = '0.0';
+                    document.dataForm.feedback_score_amt.value = '0';
+                } else if (feedback_type === '2'){
+                    document.dataForm.feedback_amt.disabled = false;
+                    document.dataForm.feedback_rate.disabled = true;
+                    document.dataForm.feedback_score.disabled = true;
+                    document.dataForm.feedback_score_amt.disabled = true;
+                    document.dataForm.feedback_rate.value = '0.0000';
+                    document.dataForm.feedback_score.value = '0.0';
+                    document.dataForm.feedback_score_amt.value = '0';
+                } else {
+                    document.dataForm.feedback_score.disabled = false;
+                    document.dataForm.feedback_score_amt.disabled = false;
+                    document.dataForm.feedback_rate.disabled = true;
+                    document.dataForm.feedback_amt.disabled = true;
+                    document.dataForm.feedback_rate.value = '0.0000';
+                    document.dataForm.feedback_amt.value = '0';
+                }
+                break
+            case 5:
+                const sale_cond = $("input[name=sale_cond]").prop('checked')
+                if (sale_cond === true) {
+                    document.dataForm.consume_cnt.disabled = false;
+                    document.dataForm.current_cnt.disabled = false;
+                } else {
+                    document.dataForm.consume_cnt.disabled = true;
+                    document.dataForm.current_cnt.disabled = true;
+                    document.dataForm.consume_cnt.value = '0';
+                    document.dataForm.current_cnt.value = '0';
+                }
+                break
+            case 6:
+                const current_cond = $("input[name=current_cond]").prop('checked')
+                if (current_cond === true) {
+                    document.dataForm.current_score.disabled = false;
+                } else {
+                    document.dataForm.current_score.disabled = true;
+                    document.dataForm.current_score.value = '0.0';
+                }
+                break
+            case 7:
+                const unit_cond = $("input[name=unit_cond]").prop('checked')
+                if (unit_cond === true) {
+                    document.dataForm.unit_score.disabled = false;
+                    document.dataForm.unit_curr_amt.disabled = false;
+                } else {
+                    document.dataForm.unit_score.disabled = true;
+                    document.dataForm.unit_curr_amt.disabled = true;
+                    document.dataForm.unit_score.value = '0.0';
+                    document.dataForm.unit_curr_amt.value = '0';
+                }
+                break
+        }
+    }
+
+    $(document).ready(function() {
+        const apr_flag = $("input[name=apr_flag]").val();
+        if (apr_flag === 'N' ) {
+            alert('資料待覆核')
+        } else if (apr_flag === 'Y') {
+            $("input[name=approval_user]").attr("disabled", "disabled")
+            $("input[name=approval_passwd]").attr("disabled", "disabled")
+        }
+
+        const debut_year_flag = $("input[name=debut_year_flag]:checked").val()
+        if (debut_year_flag === '1') {
+            document.dataForm.debut_month1.disabled = false;
+        } else {
+            document.dataForm.debut_month1.disabled = true;
+            document.dataForm.debut_month1.value = '0';
+        }
+
+        const consume_flag = $("input[name=consume_flag]:checked").val()
+        if (consume_flag === '1') {
+            document.dataForm.curr_month.disabled = false;
+            document.dataForm.next_month.disabled = true;
+            document.dataForm.next_month.options[0].selected = true;
+        } else {
+            document.dataForm.next_month.disabled = false;
+            document.dataForm.curr_month.disabled = true;
+            document.dataForm.curr_month.value = '0';
+        }
+
+        const curr_tot_cond = $("input[name=curr_tot_cond]").prop('checked')
+        if (curr_tot_cond === true) {
+            document.dataForm.curr_tot_cnt.disabled = false;
+        } else {
+            document.dataForm.curr_tot_cnt.disabled = true;
+            document.dataForm.curr_tot_cnt.value = '0';
+        }
+
+        const feedback_type = $("input[name=feedback_type]:checked").val()
+        if (feedback_type === '1') {
+            document.dataForm.feedback_rate.disabled = false;
+            document.dataForm.feedback_amt.disabled = true;
+            document.dataForm.feedback_score.disabled = true;
+            document.dataForm.feedback_score_amt.disabled = true;
+            document.dataForm.feedback_amt.value = '0';
+            document.dataForm.feedback_score.value = '0.0';
+            document.dataForm.feedback_score_amt.value = '0';
+        } else if (feedback_type === '2'){
+            document.dataForm.feedback_amt.disabled = false;
+            document.dataForm.feedback_rate.disabled = true;
+            document.dataForm.feedback_score.disabled = true;
+            document.dataForm.feedback_score_amt.disabled = true;
+            document.dataForm.feedback_rate.value = '0.0000';
+            document.dataForm.feedback_score.value = '0.0';
+            document.dataForm.feedback_score_amt.value = '0';
+        } else {
+            document.dataForm.feedback_score.disabled = false;
+            document.dataForm.feedback_score_amt.disabled = false;
+            document.dataForm.feedback_rate.disabled = true;
+            document.dataForm.feedback_amt.disabled = true;
+            document.dataForm.feedback_rate.value = '0.0000';
+            document.dataForm.feedback_amt.value = '0';
+        }
+
+        const sale_cond = $("input[name=sale_cond]").prop('checked')
+        if (sale_cond === true) {
+            document.dataForm.consume_cnt.disabled = false;
+            document.dataForm.current_cnt.disabled = false;
+        } else {
+            document.dataForm.consume_cnt.disabled = true;
+            document.dataForm.current_cnt.disabled = true;
+            document.dataForm.consume_cnt.value = '0';
+            document.dataForm.current_cnt.value = '0';
+        }
+
+        const current_cond = $("input[name=current_cond]").prop('checked')
+        if (current_cond === true) {
+            document.dataForm.current_score.disabled = false;
+        } else {
+            document.dataForm.current_score.disabled = true;
+            document.dataForm.current_score.value = '0.0';
+        }
+
+        const unit_cond = $("input[name=unit_cond]").prop('checked')
+        if (unit_cond === true) {
+            document.dataForm.unit_score.disabled = false;
+            document.dataForm.unit_curr_amt.disabled = false;
+        } else {
+            document.dataForm.unit_score.disabled = true;
+            document.dataForm.unit_curr_amt.disabled = true;
+            document.dataForm.unit_score.value = '0.0';
+            document.dataForm.unit_curr_amt.value = '0';
+        }
+    });
+</script>
+<!-- ******************************************************************** -->

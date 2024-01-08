@@ -1,0 +1,193 @@
+<html>
+<head>
+<title> 110/07/07 V1.00.01 Allen Ho Initial 標準費率</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U2')" class="btUpdate" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key button data3 ********************************************************* -->
+ <table width="40%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  >帳戶類別: 
+       <span class="dsp_text">${acct_type}-${comm_acct_type}</span>
+       <input type="hidden" name="acct_type" value="${acct_type}"/>
+     </td>
+     <td nowrap  >掛失原因: 
+       <span class="dsp_text">${lost_code}-${comm_lost_code}</span>
+       <input type="hidden" name="lost_code" value="${lost_code}"/>
+     </td>
+   </tr>
+ </table>
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;卡片等級:
+       <select size="1" id="sel_card_note" name="sel_card_note" class="col_ddlb"  zRequire="K","C">
+               ${dddw_lost_code4}
+       </select>
+     </td>
+     <td nowrap>正附卡別:&nbsp;
+       <select   id="sel_sup_flag"  name="sel_sup_flag class="col_ddlb" zRequire="Y" >
+         <option value="0" ${sel_sup_flag-0} >正卡</option>
+         <option value="1" ${sel_sup_flag-1} >附卡</option>
+       </select>
+     </td>
+     <td nowrap  width="50%">掛失費:&nbsp;
+       <input type="data" class="col_any" id="sel_lostfee_amt" name="sel_lostfee_amt" value="${sel_lostfee_amt}"
+              zEdit="number" maxlength="8" size="8" />
+     </td>
+     <td align="right">${ex_total_cnt}
+       <input type="Button" name="detl_btnAdd" value="新增明細" ${newDetail_disable}
+             id="wf_addrow"  class="btAdd_detl" />
+     </td>
+   </tr>
+  <tr>
+    <td colspan="4" nowrap style="color:#880000" >&nbsp;【備註】&nbsp;
+    	若欲進行掛失費修改，請先刪除明細後再新增明細
+    </td>
+  </tr>
+ </table>
+<! browsButton ****************************************************************>
+ <table id="table1" width="50%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">卡片等級</th>
+    <th nowrap class="list_th">正附卡別</th>
+    <th nowrap class="list_th">掛失費</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : BUTTON2 -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_ll" >&nbsp;
+      <span class="dsp_text">${card_note}-${comm_card_note}</span>
+      <input type="hidden" name="card_note" value="${card_note}" >
+      <input type="hidden" name="comm_card_note" value="${comm_card_note}" >
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+      <span class="dsp_text">${sup_flag}-${comm_sup_flag}</span>
+      <input type="hidden" name="sup_flag" value="${sup_flag}" >
+      <input type="hidden" name="comm_sup_flag" value="${comm_sup_flag}" >
+    </td>
+    <td nowrap class="list_rr" >&nbsp;
+      <span class="dsp_text">${lostfee_amt.(999)}</span>
+      <input type="hidden" name="lostfee_amt" value="${lostfee_amt}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="kk_acct_type" value="${kk_acct_type}">
+ <input type="hidden" name="kk_lost_code" value="${kk_lost_code}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="cycm0110">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('2');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+$("#wf_addrow").click(function(){
+
+   var ex_card_note = $("#sel_card_note").val(); 
+   var ex_sup_flag = $("#sel_sup_flag").val(); 
+   var ex_lostfee_amt = $("#sel_lostfee_amt").val(); 
+
+   if (ex_lostfee_amt.length==0) ex_lostfee_amt ="0";
+   if (isNaN(ex_lostfee_amt))
+      {
+       alert("[掛失費]必須為數值");
+       return false;
+      }
+   ex_lostfee_amt= +ex_lostfee_amt;
+
+   rowNum++;
+   ind++;
+   var serNo ="";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+        { serNo = ""+ind;  }
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +"<input type='hidden' value='' name='rowid' />"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_card_note
+      +"<input type='hidden' value='"+ex_card_note+"' name='card_note'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_sup_flag
+      +"<input type='hidden' value='"+ex_sup_flag+"' name='sup_flag'/>"
+      +"</td>"
+      +"<td nowrap class='list_cc'>"+ex_lostfee_amt
+      +"<input type='hidden' value='"+ex_lostfee_amt+"' name='lostfee_amt'/>"
+      +"</td>"
+      +"</tr>"
+   );
+
+   //-clear-
+   $("#ex_card_note").val('');
+   $("#ex_sup_flag").val('');
+   $("#ex_lostfee_amt").val('');
+  });
+
+});
+</script>

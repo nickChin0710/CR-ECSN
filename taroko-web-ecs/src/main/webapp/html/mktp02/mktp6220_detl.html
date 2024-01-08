@@ -1,0 +1,1854 @@
+<html>
+<head>
+<title> 109/09/22 V1.00.02 Allen Ho Initial 刷卡金參數檔覆核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- review key ********************************************************* -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="td_data"="%">放行狀態</td> 
+     <td nowrap  class="td_data" ">
+       <span class="dsp_text">${aud_type}.${commfunc_aud_type}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">維護經辦</td> 
+     <td nowrap  class="td_data" ">
+       <span class="dsp_text">${crt_user}</span>
+               -${comm_crt_user}
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%">刷卡金代碼</td> 
+     <td nowrap  class="td_data" ">
+       <span class="dsp_text">${fund_code}</span>
+       <input   type="hidden" name="fund_code" value="${fund_code}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="" cellspacing="" cellpadding="">
+    </td>
+   </tr>
+ </table>
+</div>
+<!-- Review data********************************************************* -->
+<div id="condBlock">
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+ </table>
+ <table width="60%" border="" cellspacing="" cellpadding="">
+   <tr>
+    <td nowrap  class="td_data">
+       <span class="dsp_text">註記　欄位說明</span>
+     </td>
+     <td nowrap  class="td_data">
+       <span class="dsp_text">==> 異動前 <==</span>
+     </td>
+     <td nowrap  class="td_data">
+       <span class="dsp_text">==> 異動後 <==</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_name" ${opt_fund_name-Y} >刷卡金名稱</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_name}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_name}</span>
+       <input   type="hidden" name="fund_name" value="${fund_name}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_tran_base" ${opt_tran_base-Y} >產生對象</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_tran_base}</span>
+              (${comm_bef_tran_base})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${tran_base}</span>
+              (${comm_tran_base})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_crt_date_s" ${opt_fund_crt_date_s-Y} >刷卡金產生期間-起</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_crt_date_s.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_crt_date_s.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_crt_date_e" ${opt_fund_crt_date_e-Y} >刷卡金產生期間-迄</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_crt_date_e.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_crt_date_e.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_effect_type" ${opt_effect_type-Y} >刷卡金效期類型</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_effect_type}</span>
+              (${comm_bef_effect_type})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${effect_type}</span>
+              (${comm_effect_type})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_effect_months" ${opt_effect_months-Y} >　1.指定月數-月數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_effect_months}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${effect_months}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_effect_years" ${opt_effect_years-Y} >　2.指定期限-回饋後隔N年</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_effect_years}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${effect_years}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_effect_fix_month" ${opt_effect_fix_month-Y} >　　　　　 　之M月到期</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_effect_fix_month}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${effect_fix_month}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_stop_flag" ${opt_stop_flag-Y} >取消日期旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_stop_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${stop_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_stop_date" ${opt_stop_date-Y} >取消日期</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_stop_date.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${stop_date.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_stop_desc" ${opt_stop_desc-Y} >取消說明</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_stop_desc}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${stop_desc}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_bin_type_sel" ${opt_bin_type_sel-Y} >卡別</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_bin_type_sel}</span>
+              (${comm_bef_bin_type_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${bin_type_sel}</span>
+              (${comm_bin_type_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_bin_type_sel_cnt" ${opt_bin_type_sel_cnt-Y} >　卡別筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_bin_type_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${bin_type_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnbint" id="btnbint"  value="卡　　別" ${btnbint_disable}
+               onClick="return buttonScreen('2','bint','data_type','2')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_acct_type_sel" ${opt_acct_type_sel-Y} >帳戶類別</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_acct_type_sel}</span>
+              (${comm_bef_acct_type_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${acct_type_sel}</span>
+              (${comm_acct_type_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_acct_type_sel_cnt" ${opt_acct_type_sel_cnt-Y} >　帳戶類別筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_acct_type_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${acct_type_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnacty" id="btnacty"  value="帳戶類別" ${btnacty_disable}
+               onClick="return buttonScreen('2','acty','data_type','4')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_group_code_sel" ${opt_group_code_sel-Y} >團體代號</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_group_code_sel}</span>
+              (${comm_bef_group_code_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${group_code_sel}</span>
+              (${comm_group_code_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_group_code_sel_cnt" ${opt_group_code_sel_cnt-Y} >　團體代號筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_group_code_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${group_code_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btngpcd" id="btngpcd"  value="團體代號" ${btngpcd_disable}
+               onClick="return buttonScreen('2','gpcd','data_type','3')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_type_sel" ${opt_card_type_sel-Y} >卡種</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_card_type_sel}</span>
+              (${comm_bef_card_type_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${card_type_sel}</span>
+              (${comm_card_type_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_type_sel_cnt" ${opt_card_type_sel_cnt-Y} >　卡種筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_card_type_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${card_type_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btndype" id="btndype"  value="卡　　種" ${btndype_disable}
+               onClick="return buttonScreen('2','dype','data_type','5')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_foreign_code" ${opt_foreign_code-Y} >國內外消費</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_foreign_code}</span>
+              (${comm_bef_foreign_code})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${foreign_code}</span>
+              (${comm_foreign_code})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_new_hldr_cond" ${opt_new_hldr_cond-Y} >新卡友判斷</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_new_hldr_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${new_hldr_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_new_hldr_sel" ${opt_new_hldr_sel-Y} >判斷方式</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_new_hldr_sel}</span>
+              (${comm_bef_new_hldr_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${new_hldr_sel}</span>
+              (${comm_new_hldr_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_new_hldr_days" ${opt_new_hldr_days-Y} >核卡日期N日未持有</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_new_hldr_days}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${new_hldr_days}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_new_gp_cnt" ${opt_new_gp_cnt-Y} >　　新卡友團代筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_new_gp_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${new_gp_cnt}</span>
+        <input type="Button" class="btOther" name="btngnce" id="btngnce"  value="團代" ${btngnce_disable}
+               onClick="return buttonScreen('2','gnce','data_type','0')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_new_hldr_card" ${opt_new_hldr_card-Y} >　　正卡</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_new_hldr_card}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${new_hldr_card}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_new_hldr_sup" ${opt_new_hldr_sup-Y} >　　附卡</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_new_hldr_sup}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${new_hldr_sup}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_apply_age_cond" ${opt_apply_age_cond-Y} >正卡年齡判斷</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_apply_age_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${apply_age_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_apply_age_s" ${opt_apply_age_s-Y} >　 申請時年齡-起</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_apply_age_s}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${apply_age_s}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_apply_age_e" ${opt_apply_age_e-Y} >　 申請時年齡-迄</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_apply_age_e}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${apply_age_e}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_activate_cond" ${opt_activate_cond-Y} >是否開卡判斷</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_activate_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${activate_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_activate_flag" ${opt_activate_flag-Y} >開卡判斷旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_activate_flag}</span>
+              (${comm_bef_activate_flag})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${activate_flag}</span>
+              (${comm_activate_flag})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_valid_period" ${opt_valid_period-Y} >聯名主刷卡金類型</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_valid_period}</span>
+              (${comm_bef_valid_period})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${valid_period}</span>
+              (${comm_valid_period})
+     </td>
+   </tr>
+<!--    <tr> -->
+<!--      <td nowrap> -->
+<!--        <input type="checkbox" value="Y" name="opt_cobrand_code" ${opt_cobrand_code-Y} >聯名主代碼</td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${bef_cobrand_code}</span> -->
+<!--      </td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${cobrand_code}</span> -->
+<!--      </td> -->
+<!--    </tr> -->
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_source_code_sel" ${opt_source_code_sel-Y} >來源代號</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_source_code_sel}</span>
+              (${comm_bef_source_code_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${source_code_sel}</span>
+              (${comm_source_code_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_source_code_sel_cnt" ${opt_source_code_sel_cnt-Y} >　來源代號筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_source_code_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${source_code_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnsrcd" id="btnsrcd"  value="來源代號" ${btnsrcd_disable}
+               onClick="return buttonScreen('2','srcd','data_type','A')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_merchant_sel" ${opt_merchant_sel-Y} >特店代號</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_merchant_sel}</span>
+              (${comm_bef_merchant_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${merchant_sel}</span>
+              (${comm_merchant_sel})
+     </td>
+   </tr>
+      <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_merchant_sel_cnt" ${opt_merchant_sel_cnt-Y} >　特店代號筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_merchant_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${merchant_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnmrch" id="btnmrch"  value="特店代號" ${btnmrch_disable}
+               onClick="return buttonScreen('3','mrch','data_type','1')" >
+     </td>
+   </tr>
+     <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mcht_cname_sel" ${opt_mcht_cname_sel-Y} >特店中文名稱</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mcht_cname_sel}</span>
+              (${comm_bef_mcht_cname_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mcht_cname_sel}</span>
+              (${comm_mcht_cname_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mcht_cname_sel_cnt" ${opt_mcht_cname_sel_cnt-Y} >　特店中文名稱筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mcht_cname_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mcht_cname_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnnamc" id="btnnamc"  value="特店中文名稱" ${btnnamc_disable}
+               onClick="return buttonScreen('5','namc','data_type','A')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mcht_ename_sel" ${opt_mcht_ename_sel-Y} >特店英文名稱</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mcht_ename_sel}</span>
+              (${comm_bef_mcht_ename_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mcht_ename_sel}</span>
+              (${comm_mcht_ename_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mcht_ename_sel_cnt" ${opt_mcht_ename_sel_cnt-Y} >　特店英文名稱筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mcht_ename_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mcht_ename_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnname" id="btnname"  value="特店英文名稱" ${btnname_disable}
+               onClick="return buttonScreen('5','name','data_type','B')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mcht_group_sel" ${opt_mcht_group_sel-Y} >特店群組</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mcht_group_sel}</span>
+              (${comm_bef_mcht_group_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mcht_group_sel}</span>
+              (${comm_mcht_group_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mcht_group_sel_cnt" ${opt_mcht_group_sel_cnt-Y} >　特店群組筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mcht_group_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mcht_group_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnaaa1" id="btnaaa1"  value="特店群組" ${btnaaa1_disable}
+               onClick="return buttonScreen('2','aaa1','data_type','H')" >
+     </td>
+   </tr>
+   
+    <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_platform_kind_sel" ${opt_platform_kind_sel-Y} >一般消費群組</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_platform_kind_sel}</span>
+              (${comm_bef_platform_kind_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${platform_kind_sel}</span>
+              (${comm_platform_kind_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_platform_kind_sel_cnt" ${opt_platform_kind_sel_cnt-Y} >　一般消費群組筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_platform_kind_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${platform_kind_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnaaa3" id="btnaaa3"  value="一般消費群組" ${btnaaa3_disable}
+               onClick="return buttonScreen('2','aaa3','data_type','P')" >
+     </td>
+   </tr>
+   
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_currency_sel" ${opt_currency_sel-Y} >交易幣別</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_currency_sel}</span>
+              (${comm_bef_currency_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${currency_sel}</span>
+              (${comm_currency_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_currency_sel_cnt" ${opt_currency_sel_cnt-Y} >　交易幣別筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_currency_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${currency_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btncocq" id="btncocq"  value="幣別代碼" ${btncocq_disable}
+               onClick="return buttonScreen('4','cocq','data_type','7')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_ex_currency_sel" ${opt_ex_currency_sel-Y} >排除幣別</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_ex_currency_sel}</span>
+              (${comm_bef_ex_currency_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${ex_currency_sel}</span>
+              (${comm_ex_currency_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_ex_currency_sel_cnt" ${opt_ex_currency_sel_cnt-Y} >　排除幣別筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_ex_currency_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${ex_currency_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btncocd" id="btncocd"  value="排除幣別" ${btncocd_disable}
+               onClick="return buttonScreen('4','cocd','data_type','9')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_pos_entry_sel" ${opt_pos_entry_sel-Y} >POS ENTRY</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_pos_entry_sel}</span>
+              (${comm_bef_pos_entry_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${pos_entry_sel}</span>
+              (${comm_pos_entry_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_pos_entry_sel_cnt" ${opt_pos_entry_sel_cnt-Y} >　POS ENTRY筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_pos_entry_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${pos_entry_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnpose" id="btnpose"  value="POS ENTRY" ${btnpose_disable}
+               onClick="return buttonScreen('4','pose','data_type','B')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_pos_merchant_sel" ${opt_pos_merchant_sel-Y} >　　　特殊特店代號</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_pos_merchant_sel}</span>
+              (${comm_bef_pos_merchant_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${pos_merchant_sel}</span>
+              (${comm_pos_merchant_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_pos_merchant_sel_cnt" ${opt_pos_merchant_sel_cnt-Y} >　　　　特殊特店代號筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_pos_merchant_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${pos_merchant_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnmrck" id="btnmrck"  value="特店代號" ${btnmrck_disable}
+               onClick="return buttonScreen('3','mrck','data_type','C')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_pos_mcht_group_sel" ${opt_pos_mcht_group_sel-Y} >　　　特殊特店群組</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_pos_mcht_group_sel}</span>
+              (${comm_bef_pos_mcht_group_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${pos_mcht_group_sel}</span>
+              (${comm_pos_mcht_group_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_pos_mcht_group_sel_cnt" ${opt_pos_mcht_group_sel_cnt-Y} >　　　　特殊特店群組筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_pos_mcht_group_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${pos_mcht_group_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnaaam" id="btnaaam"  value="特店群組" ${btnaaam_disable}
+               onClick="return buttonScreen('2','aaam','data_type','M')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_bl_cond" ${opt_bl_cond-Y} >消費本金類:簽帳款(BL)　</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_bl_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${bl_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_ca_cond" ${opt_ca_cond-Y} >　　　     預借現金(CA)</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_ca_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${ca_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_id_cond" ${opt_id_cond-Y} >　　　     代收款(ID)</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_id_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${id_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_ao_cond" ${opt_ao_cond-Y} >　　　     餘額代償(AO)</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_ao_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${ao_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_it_cond" ${opt_it_cond-Y} >　　　     分期付款(IT)</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_it_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${it_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_ot_cond" ${opt_ot_cond-Y} >　　　     其他應收款(OT</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_ot_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${ot_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_feed_flag" ${opt_purch_feed_flag-Y} >使用消費門檻回饋旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_feed_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_feed_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_date_s" ${opt_purch_date_s-Y} >消費期間-消費日期-起</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_purch_date_s.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${purch_date_s.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_date_e" ${opt_purch_date_e-Y} >消費期間-消費日期-迄</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_purch_date_e.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${purch_date_e.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_reclow_cond" ${opt_purch_reclow_cond-Y} >消費門檻1:單筆最低金額旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_reclow_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_reclow_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_reclow_amt" ${opt_purch_reclow_amt-Y} >　　　　　單筆最低金額</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_purch_reclow_amt.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${purch_reclow_amt.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_rec_amt_cond" ${opt_purch_rec_amt_cond-Y} >消費門檻2:單筆金額旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_rec_amt_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_rec_amt_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_rec_amt" ${opt_purch_rec_amt-Y} >　　　　　單筆金額</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_purch_rec_amt.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${purch_rec_amt.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_tol_amt_cond" ${opt_purch_tol_amt_cond-Y} >　　　　　累計金額旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_tol_amt_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_tol_amt_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_tol_amt" ${opt_purch_tol_amt-Y} >　　　　　累計金額</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_purch_tol_amt.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${purch_tol_amt.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_tol_time_cond" ${opt_purch_tol_time_cond-Y} >　　　　　累計次數旗標</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_tol_time_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_tol_time_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_tol_time" ${opt_purch_tol_time-Y} >　　　　　累計次數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_tol_time}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_tol_time}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_feed_type" ${opt_purch_feed_type-Y} >符合消費門檻</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_feed_type}</span>
+              (${comm_bef_purch_feed_type})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_feed_type}</span>
+              (${comm_purch_feed_type})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_type" ${opt_purch_type-Y} >回饋類型</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_type}</span>
+              (${comm_bef_purch_type})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_type}</span>
+              (${comm_purch_type})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_feed_amt" ${opt_purch_feed_amt-Y} >　回饋金額</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_purch_feed_amt.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${purch_feed_amt.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_feed_rate" ${opt_purch_feed_rate-Y} >　回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_feed_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_feed_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_feed_flag" ${opt_fund_feed_flag-Y} >使用消費級距回饋</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_feed_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_feed_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_threshold_sel" ${opt_threshold_sel-Y} >計算方式</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_threshold_sel}</span>
+              (${comm_bef_threshold_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${threshold_sel}</span>
+              (${comm_threshold_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purchase_type_sel" ${opt_purchase_type_sel-Y} >門檻項目</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purchase_type_sel}</span>
+              (${comm_bef_purchase_type_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purchase_type_sel}</span>
+              (${comm_purchase_type_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_s_amt_1" ${opt_fund_s_amt_1-Y} >1.刷卡金回饋金額(起)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_s_amt_1.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_s_amt_1.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_e_amt_1" ${opt_fund_e_amt_1-Y} >　刷卡金回饋金額(迄)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_e_amt_1.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_e_amt_1.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_rate_1" ${opt_fund_rate_1-Y} >　回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_rate_1}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_rate_1}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_amt_1" ${opt_fund_amt_1-Y} >　回饋金額</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_amt_1}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_amt_1}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_s_amt_2" ${opt_fund_s_amt_2-Y} >2.刷卡金回饋金額(起)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_s_amt_2.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_s_amt_2.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_e_amt_2" ${opt_fund_e_amt_2-Y} >　刷卡金回饋金額(迄)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_e_amt_2.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_e_amt_2.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_rate_2" ${opt_fund_rate_2-Y} >　回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_rate_2}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_rate_2}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_amt_2" ${opt_fund_amt_2-Y} >　回饋金額</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_amt_2}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_amt_2}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_s_amt_3" ${opt_fund_s_amt_3-Y} >3.刷卡金回饋金額(起)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_s_amt_3.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_s_amt_3.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_e_amt_3" ${opt_fund_e_amt_3-Y} >　刷卡金回饋金額(迄)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_e_amt_3.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_e_amt_3.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_rate_3" ${opt_fund_rate_3-Y} >　回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_rate_3}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_rate_3}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_amt_3" ${opt_fund_amt_3-Y} >　回饋金額</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_amt_3}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_amt_3}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_s_amt_4" ${opt_fund_s_amt_4-Y} >4.刷卡金回饋金額(起)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_s_amt_4.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_s_amt_4.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_e_amt_4" ${opt_fund_e_amt_4-Y} >　刷卡金回饋金額(迄)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_e_amt_4.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_e_amt_4.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_rate_4" ${opt_fund_rate_4-Y} >　回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_rate_4}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_rate_4}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_amt_4" ${opt_fund_amt_4-Y} >　回饋金額</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_amt_4}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_amt_4}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_s_amt_5" ${opt_fund_s_amt_5-Y} >5.刷卡金回饋金額(起)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_s_amt_5.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_s_amt_5.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_e_amt_5" ${opt_fund_e_amt_5-Y} >　刷卡金回饋金額(迄)</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_fund_e_amt_5.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${fund_e_amt_5.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_rate_5" ${opt_fund_rate_5-Y} >　回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_rate_5}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_rate_5}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_fund_amt_5" ${opt_fund_amt_5-Y} >　回饋金額</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_fund_amt_5}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${fund_amt_5}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_onlyaddon_calcond" ${opt_onlyaddon_calcond-Y} >　只計算加碼回饋</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_onlyaddon_calcond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${onlyaddon_calcond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_extratwpay_cond" ${opt_extratwpay_cond-Y} >　額外台灣Pay加碼</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_extratwpay_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${extratwpay_cond}</span>
+     </td>
+   </tr>
+<!--    <tr> -->
+<!--      <td nowrap> -->
+<!--        <input type="checkbox" value="Y" name="opt_extratwpay_rate" ${opt_extratwpay_rate-Y} >　　　加碼回饋比例</td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${bef_extratwpay_rate}</span> -->
+<!--      </td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${extratwpay_rate}</span> -->
+<!--      </td> -->
+<!--    </tr> -->
+<!--    <tr> -->
+<!--      <td nowrap> -->
+<!--        <input type="checkbox" value="Y" name="opt_extratwpay_fblmt" ${opt_extratwpay_fblmt-Y} >　　　加碼回饋上限</td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${bef_extratwpay_fblmt}</span> -->
+<!--      </td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${extratwpay_fblmt}</span> -->
+<!--      </td> -->
+<!--    </tr> -->
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_hapcare_trust_cond" ${opt_hapcare_trust_cond-Y} >　樂活加碼安養信託</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_hapcare_trust_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${hapcare_trust_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_hapcare_trust_rate" ${opt_hapcare_trust_rate-Y} >　　　加碼回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_hapcare_trust_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${hapcare_trust_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_housing_endow_cond" ${opt_housing_endow_cond-Y} >　　　加碼以房養老</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_housing_endow_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${housing_endow_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_housing_endow_rate" ${opt_housing_endow_rate-Y} >　　　加碼回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_housing_endow_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${housing_endow_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_happycare_fblmt" ${opt_happycare_fblmt-Y} >　　　加碼回饋上限</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_happycare_fblmt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${happycare_fblmt}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mortgage_cond" ${opt_mortgage_cond-Y} >　房貸繳息正常加碼</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mortgage_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mortgage_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mortgag_rate" ${opt_mortgag_rate-Y} >　　　加碼回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mortgag_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mortgag_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mortgage_fblmt" ${opt_mortgage_fblmt-Y} >　　　加碼回饋上限</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mortgage_fblmt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mortgage_fblmt}</span>
+     </td>
+   </tr>
+<!--    <tr> -->
+<!--      <td nowrap> -->
+<!--        <input type="checkbox" value="Y" name="opt_util_entrustded_cond" ${opt_util_entrustded_cond-Y} >　公共事業委扣代繳加碼</td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${bef_util_entrustded_cond}</span> -->
+<!--      </td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${util_entrustded_cond}</span> -->
+<!--      </td> -->
+<!--    </tr> -->
+<!--    <tr> -->
+<!--      <td nowrap> -->
+<!--        <input type="checkbox" value="Y" name="opt_util_entrustded_rate" ${opt_util_entrustded_rate-Y} >　　　加碼回饋比例</td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${bef_util_entrustded_rate}</span> -->
+<!--      </td> -->
+<!--      <td nowrap> -->
+<!--        <span class="dsp_text">${util_entrustded_rate}</span> -->
+<!--      </td> -->
+<!--    </tr> -->
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_util_entrustded_fblmt" ${opt_util_entrustded_fblmt-Y} >　　　加碼回饋上限</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_util_entrustded_fblmt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${util_entrustded_fblmt}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_twpay_cond" ${opt_twpay_cond-Y} >　環保加碼台灣Pay</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_twpay_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${twpay_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_twpay_rate" ${opt_twpay_rate-Y} >　　　加碼回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_twpay_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${twpay_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_tcblife_ec_cond" ${opt_tcblife_ec_cond-Y} >　　　加碼合庫人壽</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_tcblife_ec_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${tcblife_ec_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_tcblife_ec_rate" ${opt_tcblife_ec_rate-Y} >　　　加碼回饋比例</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_tcblife_ec_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${tcblife_ec_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_eco_fblmt" ${opt_eco_fblmt-Y} >　　　加碼回饋上限</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_eco_fblmt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${eco_fblmt}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_rc_sub_amt" ${opt_rc_sub_amt-Y} >加贈刷卡金：使用RC>=</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_rc_sub_amt.(999)}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${rc_sub_amt.(999)}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_rc_sub_rate" ${opt_rc_sub_rate-Y} >當月消費＊支比率</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_rc_sub_rate}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${rc_sub_rate}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_program_exe_type" ${opt_program_exe_type-Y} >回饋(產生)期間</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_program_exe_type}</span>
+              (${comm_bef_program_exe_type})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${program_exe_type}</span>
+              (${comm_program_exe_type})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_unlimit_start_month" ${opt_unlimit_start_month-Y} >　　　起始月份</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_unlimit_start_month}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${unlimit_start_month}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cal_s_month" ${opt_cal_s_month-Y} >　　　一段期間-起</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cal_s_month}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cal_s_month}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cal_e_month" ${opt_cal_e_month-Y} >　　　一段期間-迄</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cal_e_month}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cal_e_month}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_feed_date_s" ${opt_card_feed_date_s-Y} >發卡條件-發卡期間-起</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_card_feed_date_s.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${card_feed_date_s.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_feed_date_e" ${opt_card_feed_date_e-Y} >發卡條件-發卡期間-迄</td>
+     <td nowrap>
+       <span class="dsp_date">${bef_card_feed_date_e.YMD}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_date">${card_feed_date_e.YMD}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_feed_flag" ${opt_card_feed_flag-Y} >發卡旗標 　</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_card_feed_flag}</span>
+              (${comm_bef_card_feed_flag})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${card_feed_flag}</span>
+              (${comm_card_feed_flag})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cal_months" ${opt_cal_months-Y} >　　0-發卡後N1月內</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cal_months}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cal_months}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_feed_months2" ${opt_card_feed_months2-Y} >　　1-發卡N2個月後</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_card_feed_months2}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${card_feed_months2}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_feed_days" ${opt_card_feed_days-Y} >　　2-發卡N3個月後</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_card_feed_days}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${card_feed_days}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_feedback_type" ${opt_feedback_type-Y} >回饋方式</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_feedback_type}</span>
+              (${comm_bef_feedback_type})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${feedback_type}</span>
+              (${comm_feedback_type})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_card_feed_run_day" ${opt_card_feed_run_day-Y} >　每月第N日執行</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_card_feed_run_day}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${card_feed_run_day}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_feedback_months" ${opt_feedback_months-Y} >　每N月執行一次</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_feedback_months}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${feedback_months}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_feedback_lmt" ${opt_feedback_lmt-Y} >回饋上限</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_feedback_lmt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${feedback_lmt}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_purch_feed_times" ${opt_purch_feed_times-Y} >最多回饋次數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_purch_feed_times}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${purch_feed_times}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_autopay_flag" ${opt_autopay_flag-Y} >本行自轉戶</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_autopay_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${autopay_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_mp_flag" ${opt_mp_flag-Y} >執行時已繳清MP</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_mp_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${mp_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_valid_card_flag" ${opt_valid_card_flag-Y} >有有效卡</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_valid_card_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${valid_card_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_valid_afi_flag" ${opt_valid_afi_flag-Y} >有聯名卡有效卡</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_valid_afi_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${valid_afi_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_ebill_flag" ${opt_ebill_flag-Y} >申請電子帳單且無紙本帳單</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_ebill_flag}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${ebill_flag}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_autopay_digit_cond" ${opt_autopay_digit_cond-Y} >本行數位帳戶自扣</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_autopay_digit_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${autopay_digit_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_txn_cond" ${opt_d_txn_cond-Y} >上期關帳國內簽帳金額</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_txn_cond}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_txn_cond}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_txn_amt" ${opt_d_txn_amt-Y} >　　　　　　N 元</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_txn_amt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_txn_amt}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cancel_period" ${opt_cancel_period-Y} >抵用期間</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cancel_period}</span>
+              (${comm_bef_cancel_period})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cancel_period}</span>
+              (${comm_cancel_period})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cancel_s_month" ${opt_cancel_s_month-Y} >抵用起始月份</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cancel_s_month}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cancel_s_month}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cancel_scope" ${opt_cancel_scope-Y} >抵用範圍</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cancel_scope}</span>
+              (${comm_bef_cancel_scope})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cancel_scope}</span>
+              (${comm_cancel_scope})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_mcc_code_sel" ${opt_d_mcc_code_sel-Y} >特店類別</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_mcc_code_sel}</span>
+              (${comm_bef_d_mcc_code_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_mcc_code_sel}</span>
+              (${comm_d_mcc_code_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_mcc_code_sel_cnt" ${opt_d_mcc_code_sel_cnt-Y} >　特店類別筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_mcc_code_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_mcc_code_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnmccd" id="btnmccd"  value="特店類別" ${btnmccd_disable}
+               onClick="return buttonScreen('2','mccd','data_type','8')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_merchant_sel" ${opt_d_merchant_sel-Y} >特店代號</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_merchant_sel}</span>
+              (${comm_bef_d_merchant_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_merchant_sel}</span>
+              (${comm_d_merchant_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_merchant_sel_cnt" ${opt_d_merchant_sel_cnt-Y} >　特店代號筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_merchant_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_merchant_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnmrcd" id="btnmrcd"  value="特店代號" ${btnmrcd_disable}
+               onClick="return buttonScreen('3','mrcd','data_type','6')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_mcht_group_sel" ${opt_d_mcht_group_sel-Y} >特店群組</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_mcht_group_sel}</span>
+              (${comm_bef_d_mcht_group_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_mcht_group_sel}</span>
+              (${comm_d_mcht_group_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_mcht_group_sel_cnt" ${opt_d_mcht_group_sel_cnt-Y} >　特店群組筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_mcht_group_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_mcht_group_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnaaa2" id="btnaaa2"  value="特店群組" ${btnaaa2_disable}
+               onClick="return buttonScreen('2','aaa2','data_type','K')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_ucaf_sel" ${opt_d_ucaf_sel-Y} >UCAF</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_ucaf_sel}</span>
+              (${comm_bef_d_ucaf_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_ucaf_sel}</span>
+              (${comm_d_ucaf_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_ucaf_sel_cnt" ${opt_d_ucaf_sel_cnt-Y} >　UCAF筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_ucaf_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_ucaf_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnucaf" id="btnucaf"  value="UCAF" ${btnucaf_disable}
+               onClick="return buttonScreen('2','ucaf','data_type','F')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_eci_sel" ${opt_d_eci_sel-Y} >ECI</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_eci_sel}</span>
+              (${comm_bef_d_eci_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_eci_sel}</span>
+              (${comm_d_eci_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_eci_sel_cnt" ${opt_d_eci_sel_cnt-Y} >　ECI筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_eci_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_eci_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btndeci" id="btndeci"  value="ECI" ${btndeci_disable}
+               onClick="return buttonScreen('2','deci','data_type','G')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_pos_entry_sel" ${opt_d_pos_entry_sel-Y} >POS ENTRY</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_pos_entry_sel}</span>
+              (${comm_bef_d_pos_entry_sel})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_pos_entry_sel}</span>
+              (${comm_d_pos_entry_sel})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_d_pos_entry_sel_cnt" ${opt_d_pos_entry_sel_cnt-Y} >　POS ENTRY筆數</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_d_pos_entry_sel_cnt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${d_pos_entry_sel_cnt}</span>
+        <input type="Button" class="btOther" name="btnposd" id="btnposd"  value="POS ENTRY" ${btnposd_disable}
+               onClick="return buttonScreen('2','posd','data_type','E')" >
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cancel_event" ${opt_cancel_event-Y} >抵用條件</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cancel_event}</span>
+              (${comm_bef_cancel_event})
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cancel_event}</span>
+              (${comm_cancel_event})
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_min_mcode" ${opt_min_mcode-Y} >M code>=N 不抵用</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_min_mcode}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${min_mcode}</span>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+       <input type="checkbox" value="Y" name="opt_cancel_high_amt" ${opt_cancel_high_amt-Y} >每次抵用上限</td>
+     <td nowrap>
+       <span class="dsp_text">${bef_cancel_high_amt}</span>
+     </td>
+     <td nowrap>
+       <span class="dsp_text">${cancel_high_amt}</span>
+    </td>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktp6220">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktp6220_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

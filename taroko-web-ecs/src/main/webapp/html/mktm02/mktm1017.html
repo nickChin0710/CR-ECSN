@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>市區免費停車(贈送)維護</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap colspan="2">&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="新增" onClick="return top.submitControl('A')" class="btUpdate" >&nbsp;&nbsp;
+            <input type="Button"  value="删除" onClick="return top.submitControl('D')" class="btUpdate" >&nbsp;&nbsp;
+            <input type="Button"  value="查ID有效卡" onClick="return top.submitControl('S')" class="btProcess" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+    <tr>
+        <td nowrap >&nbsp;正卡ID: 
+ 		<input type="text" class="col_any" name="major_id" value="${major_id}"
+         zEdit="any" maxlength="10" size="12" zRequire="Y" style="background-color: ${major_id_pink}" />
+ 		</td>
+    </tr>
+    <tr>
+       <td nowrap >&nbsp;異動檔交易別:
+        <select size="1" id="ex_aud_type" name="ex_aud_type" class="col_ddlb">
+            <option value="">--</option>
+            <option value="A" ${ex_aud_type-A} >A.新增</option>
+            <option value="D" ${ex_aud_type-D} >D.刪除</option>
+        </select>
+    </td>
+ 	 <td nowrap>卡號:&nbsp;
+       <input type="text" class="col_any" id="ex_card_no" name="ex_card_no" value="${ex_card_no}"
+              zEdit="any,canTW" maxlength="20" size="20" zRequire="Y"/>
+        
+     </td>
+   </tr> 
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">刪除&nbsp;</th>
+        <th nowrap class="list_th">異動檔交易別</th>
+		<th nowrap class="list_th">正卡身分證ID</th>
+		<th nowrap class="list_th">卡號</th>
+		<th nowrap class="list_th">建檔日期</th>	
+		<th nowrap class="list_th">異動人員</th>		
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+         <td nowrap class="list_no" >
+         <span  class="dsp_flag">${ok_flag}</span>
+      		<input type="checkbox" name="opt" value="${ser_num}" />
+             ${SER_NUM}&nbsp;
+      		<input type=hidden name="ser_num" value="${ser_num}" />
+        </td>
+        <td nowrap class="list_cc"> ${aud_type}.${commfunc_aud_type}
+        <input type=hidden name="aud_type" value="${aud_type}" />
+        </td>
+		<td nowrap class="list_cc"> ${id_no}
+		<input type=hidden name="id_no" value="${id_no}" />
+		</td>
+		<td nowrap class="list_cc"> ${card_no}
+		<input type=hidden name="card_no" value="${card_no}" />
+		</td>
+		<td nowrap class="list_cc"> ${create_date.YMD}
+		<input type=hidden name="create_date" value="${create_date}" />
+		</td>
+		<td nowrap class="list_cc"> ${mod_user}
+		<input type=hidden name="mod_user" value="${mod_user}" />
+		</td>	
+		
+		
+		
+			
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="20";
+
+// document.dataForm.ex_action_cd.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "S" ) {
+    	var major_id = document.forms['dataForm']['major_id'].value.trim();
+    	document.forms['dataForm']['major_id'].value = major_id;
+    	if (major_id == '') {
+    		document.forms['dataForm']['major_id'].style = "background-color: pink";
+    		document.forms['dataForm']['major_id'].focus();
+    		alert("ID必輸入");
+    		return false;
+    	}
+        top.respLevel = 1;
+        top.respHtml = "mktm1017_detl";
+        return true;
+    }
+    return true;
+}
+
+</script>

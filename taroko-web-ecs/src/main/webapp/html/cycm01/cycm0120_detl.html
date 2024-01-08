@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <title>對帳單列印參數維護-detl-V.2017-1225-yash-[Initial]
+    -V.2020-0722-Andy-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        ${#PLUGIN:htmcomm_plugin.apr_user}
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層">&nbsp;
+                    <!-- <input type="Button" name="btnQuery" value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp; -->
+                    <input type="Button" name="btnAdd" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+                    <input type="Button" name="btnUpdate" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">帳戶類別：&nbsp;
+                        <select name="kk_acct_type" class="col_ddlb" value = ${kk_acct_type} ${ddl_set}>
+                            ${dddw_acct_type}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <!-- Detail data================================= -->
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap class="colKey">帳戶類別：
+                        <span class="dsp_text">${acct_type}</span>
+                        <input type="hidden" name="acct_type" value="${acct_type}" >
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="collection_flag" ${collection_flag-Y}>&nbsp;催收戶不列印選擇:act_acno.acct_status=3
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="debit_flag" ${debit_flag-Y}>&nbsp;呆帳戶不列印選擇:act_acno.acct_status=4
+                    </td>
+                </tr>
+<!--
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="network_flag" ${network_flag-Y}>&nbsp;網路銀行帳戶不列印選擇:act_acno.stat_send_fax=Y
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="email_flag" ${email_flag-Y}>&nbsp;網路電郵帳戶不列印選擇:act_acno.stat_send_internet=Y
+                    </td>
+                </tr>
+-->
+                <tr>
+                    <td nowrap>
+                        如無繳款且無調整額且無新增各類交易時
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="ttl_zero_flag" ${ttl_zero_flag-Y}>&nbsp;本期總應繳款等於零且符合下列任一勾選條件者則列印對帳單，否則不列印
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="bonus_flag" ${bonus_flag-Y}>&nbsp;有紅利積點異動
+                    </td>
+                </tr>
+<!--
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="problem_tx" ${problem_tx-Y}>&nbsp;有問交異動
+                    </td>
+                </tr>
+-->
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;&nbsp;若溢繳款大於
+                        <input type="text" class="col_number" name="overpay_amt" value="${overpay_amt}" zEdit="number" maxlength="8" size="6" />
+                        (含), 列印帳單
+                    </td>
+                </tr>
+<!--
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="overpay_one" ${overpay_one-Y}>&nbsp;無效卡戶有溢繳款且無異動只寄送一期帳單
+                    </td>
+                </tr>
+-->
+                <tr>
+                    <td nowrap>&nbsp;&nbsp;
+                        <input type="checkbox" value="Y" name="run_print_cond" ${run_print_cond-Y}>&nbsp;應繳總額小於
+                        <input type="text" class="col_number" name="run_print_end_bal" value="${run_print_end_bal}" zEdit="dignumber" maxlength="10" size="10" />(含) , 且無欠本金類者, 對帳單已連續列印
+                        <input type="text" class="col_number" name="run_print_mm" value="${run_print_mm}" zEdit="number" maxlength="2" size="2" />
+                        月後即不再列印
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="cycm0120">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_acct_type.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+</script>

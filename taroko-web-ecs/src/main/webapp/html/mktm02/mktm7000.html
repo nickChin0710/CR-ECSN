@@ -1,0 +1,225 @@
+<html>
+
+<head>
+    <title>MKT資料上傳下載作業-108-06-06-V1.00.01-Amber-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="12">&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button"  value="上傳檔案" ${btnUpdate_disable} onClick="return upload_click()" class="btDelete">&nbsp;&nbsp;
+                        <input type="Button"  value="檔案下載" ${btnUpdate_disable} onClick="return wf_downfile()" class="btProcess">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <th colspan="10">資料上傳</th>
+                	<td nowrap colspan="2" rowspan="9" style="color:red">
+                        &nbsp;備註：執行BONU紅利積點轉換上傳作業，若為抽獎所得，
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;請檢視『mktm0320紅利轉換參數維護作業』
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;設定之活動批號，須為免稅點數。
+                        <br>
+                    </td>
+                <tr>
+                    <td nowrap colspan=10>&nbsp;上傳作業名稱:
+                        <select size="1" id="ex_put_id" name="ex_put_id" class="col_ddlb" zRequire="Y">
+                            ${dddw_put_id}
+                        </select>
+                        <input type="hidden" name="ex_pgname" value="${ex_pgname}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=10>&nbsp;存放位置:
+                        <span class="dsp_text">${ex_put_svrpath}</span>
+                        <input type="hidden" name="ex_put_svrpath" value="${ex_put_svrpath}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;範例說明:
+                        <span class="dsp_text">${ex_examlp1}</span>
+                        <input type="hidden" name="ex_examlp1" value="${ex_examlp1}">
+
+                    </td>
+                   <!-- <td nowrap colspan=2>&nbsp;範例說明:
+                        <span class="dsp_text">${ex_examlp1}</span>
+                        <input type="hidden" name="ex_examlp1" value="${ex_examlp1}">
+                    </td>-->
+                </tr>
+                <!--
+                <tr>
+                    <td nowrap colspan=12>&nbsp;範例說明:
+                        <span class="dsp_text">${ex_examlp1}</span>
+                        <input type="hidden" name="ex_examlp1" value="${ex_examlp1}">
+                    </td>
+                </tr>
+            
+                <tr>
+                    <td nowrap colspan=12>&nbsp;輸入參數:
+                        <input type="text" class="col_any" name="ex_parm" value="${ex_parm}" zEdit="any" maxlength=80 size=80 />
+                    </td>
+                </tr>
+                -->
+                <th colspan="10">資料下載</th>
+                <tr>
+                    <td nowrap colspan=10>&nbsp;下載作業名稱:
+                        <select size="1" id="ex_get_id" name="ex_get_id" class="col_ddlb" zRequire="Y">
+                            ${dddw_get_id}
+                        </select>
+                        <input type="hidden" name="ex_pgname" value="${ex_pgname}">
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=10>&nbsp;存放位置:
+                        <span class="dsp_text">${ex_get_svrpath}</span>
+                        <input type="hidden" name="wf_value" value="${wf_value}">
+                    </td>
+                </tr>
+                <!--<tr>
+                    <td nowrap colspan=1>&nbsp;下載檔案名稱:
+                        <span class="col_any">${ex_get_svrfile}</span>
+                        <input type="hidden" name="ex_get_svrfile" value="${ex_get_svrfile}">
+                    </td>
+                </tr>-->
+                <tr>
+                    <td nowrap colspan=10>&nbsp;下載檔案名稱:
+                        <input type="text" class="col_any" name="ex_get_svrfile" value="${ex_get_svrfile}" ${set} zEdit="any" maxlength=40 size=40 />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="10" style="color:red">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上傳房貸基金&nbsp;BONU紅利積點轉換上傳作業
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACH扣款檔案上傳作業之參數:MKTPUT0009&nbsp;MKTPUT0012&nbsp;MKTPUT0015&nbsp;不得變動
+                        <br>
+                    </td>
+                </tr>
+            </table>
+            
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="72%">
+                <tr>
+                    <td nowrap colspan=12>Process Message:&nbsp;
+                        <br>
+                        <textarea rows=15 cols=70 name="proc_mesg" style="width:1100px;height:250px;">${proc_mesg}</textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="mktm7000">
+        <!-- upload use -->
+        <input type="hidden" class="dsp_text" name="zz_file_name" value="" zEdit="any,canTw" readonly />
+        <input type="hidden" name="upload_file" value="" />
+        <input type="hidden" name="optname" value="${optname}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+// document.dataForm.ex_get_id.focus();
+
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+/*
+    if (top.actionCode == "C3") {
+        var ss = document.getElementById('ex_put_id').value;
+        if (ss == null || ss == '') {
+            alert("請先選擇執行程式!!");
+            return false;
+        }
+        if (confirm("請再確認!!") === false) {
+            return false;
+        }
+    }
+*/
+    return true;
+}
+
+window.onload = function() {
+    // document.getElementById('myfile').onchange = readFile;
+    document.getElementById('ex_put_id').onchange = readFile1;
+    document.getElementById('ex_get_id').onchange = readFile1;
+};
+
+function readFile1() {
+    top.submitControl('C2');
+}
+function readFile2() {
+    top.submitControl('C3');
+}
+
+function wf_uploadAfter() {
+    var ss = document.dataForm.zz_file_name.value.trim();
+    if (ss.length > 0) {
+        top.submitControl('UPLOAD');
+    }
+}
+
+function upload_click() {
+    var ss = document.getElementById('ex_put_id').value;
+    if (ss == null || ss == '') {
+        alert("請先選擇上傳作業名稱!!");
+        return false;
+    }
+    document.dataForm.zz_file_name.value = "";
+
+    var parmHtml = "TarokoUpload";
+    var parmName = "upload_file,zz_file_name";
+    var windowSize = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName = "TarokoUpload";
+    top.methodName = "showScreen";
+    top.openWindow("", parmHtml, parmName, windowSize);
+
+    top.packageName = "mktm02";
+    top.javaName = "Mktm7000";
+    top.requHtml = "mktm7000";
+    top.respHtml = "mktm7000";
+    return true;
+}
+
+function wf_downfile() {
+   top.submitControl('C');
+   top.spinner.stop();
+   return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "mktm7000_detl";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

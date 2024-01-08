@@ -1,0 +1,251 @@
+<html>
+<head>
+<title>簡訊參數檔 V2022-0110-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;使用程式:
+       <select size="1" name="kk_msg_pgm" class="col_ddlb" >
+            <option value="" >--</option>
+            ${dddw_msg_pgm}
+      </select> 
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2" >&nbsp;使用程式:        
+        <span class="dsp_text">${msg_pgm}</span>
+        <input type="hidden" name="msg_pgm" value="${msg_pgm}" />
+    </td>    
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;使用部門:        
+        <select size="1" name="msg_dept" class="col_ddlb" >
+            <option value="" >--</option>
+            ${dddw_dept_code}
+        </select> 
+    </td>
+    <td nowrap >&nbsp;發送人員代號:
+        <input type="text" class="col_text" name="msg_userid" value="${msg_userid}" maxlength="10" size="12" zEdit="any" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;使用時機:
+        <input type="text" class="col_any" name="msg_serve" value="${msg_serve}" maxlength="20" size="22" zEdit="any,canTw" />
+    </td>
+    <td nowrap >&nbsp;天數:
+        <input type="text" class="col_number" name="msg_run_day" value="${msg_run_day}" maxlength="4" size="6" zEdit="number" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" class="col_key" >&nbsp;說明:M0: 0天，關帳日1/3，繳款截止日1/18，寬限日為1/21，即發送日為1/21，排除自動扣繳戶。M1(M2): 1天，關帳日1/3，即發送日為1/4。</td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" >&nbsp;當日發送時點:
+        <input type="text" class="col_text" name="msg_hour1" value="${msg_hour1}" maxlength="2" size="5" zEdit="number" >
+        --
+        <input type="text" class="col_text" name="msg_hour2" value="${msg_hour2}" maxlength="2" size="5" zEdit="number" >
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" class="col_key" >&nbsp;說明:不指定發送時間請維持空白，若需指定發送時間點請輸入0~24</td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" >&nbsp;簡訊代碼:
+        <select name="msg_id" class="col_ddlb" onChange="msgChange('1')" />
+            <option value="" >--</option>
+            ${dddw_msg_id}
+        </select>           
+     </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" >&nbsp;簡訊內容:
+        <label class="dsp_text" id="msg_desc1" >${msg_desc1}</label>
+        <input type="hidden" name="msg_desc1" value="${msg_desc1}">
+        <br>&nbsp;　　　　&nbsp;
+        <label class="dsp_text" id="msg_desc2" >${msg_desc2}</label>
+        <input type="hidden" name="msg_desc2" value="${msg_desc2}">
+        <br>&nbsp;　　　　&nbsp;
+        <label class="dsp_text" id="msg_desc3" >${msg_desc3}</label>
+        <input type="hidden" name="msg_desc3" value="${msg_desc3}">
+        <br>&nbsp;　　　　&nbsp;
+        <label class="dsp_text" id="msg_desc4" >${msg_desc4}</label>
+        <input type="hidden" name="msg_desc4" value="${msg_desc4}">        
+  </tr>
+  <tr>
+    <td nowrap >發送註記:&nbsp;
+        <input type="radio" value="Y" name="msg_send_flag" ${msg_send_flag-Y} ${Default-msg_send_flag} />Y (發送簡訊)
+        <input type="radio" value="N" name="msg_send_flag" ${msg_send_flag-N} />N (停止發送簡訊)
+        &nbsp;發送起迄日:
+        <input type="text" class="col_date" name="send_eff_date1" value="${send_eff_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+        <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'send_eff_date1'});
+	    </script>
+	    --
+        <input type="text" class="col_date" name="send_eff_date2" value="${send_eff_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+        <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'send_eff_date2'});
+	    </script>
+    </td>
+    <td nowrap >&nbsp;
+      <input type="checkbox" value="Y" name="msg_sel_amt01" ${msg_sel_amt01-Y} >判斷消費:總應繳餘額 >= &nbsp;
+      <input type="text" class="col_number" name="msg_amt01" value="${msg_amt01}" zEdit="dignumber" maxlength="10" size="12" />&nbsp;(已排除僅欠年費者)
+    </td>
+  </tr>  
+  <tr>
+    <td nowrap  colspan="2">&nbsp;帳戶類別:
+      <input type="radio" value="0" name="acct_type_sel" ${acct_type_sel-0} ${Default-acct_type_sel} />全部
+      <input type="radio" value="1" name="acct_type_sel" ${acct_type_sel-1} />指定
+      <input type="radio" value="2" name="acct_type_sel" ${acct_type_sel-2} />排除
+      <input type="Button" class="btOther" id="btnactp"  value="帳戶類別" ${btnactp_disable} onclick="detailScreen('${msg_pgm}')" >
+    </td>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="data_k1" value="" />
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+ function detailScreen(parm){
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;    
+    top.respHtml  = "smsm0010_actp";
+    top.submitControl('S2');
+ }
+ 
+    function msgChange(ps1)
+ {    
+ 	var  msg_id =document.forms["dataForm"]["msg_id"].value;
+	if ( msg_id === '') {
+		return false;
+	}
+	idCode = ps1;
+    top.actionCode = "AJAX";    
+	resetJSON();
+	addJSON("ax_mag_id",msg_id);	
+	addJSON("ax_proc_code","1");
+	processAJAX();
+ }
+ 
+   function ajaxResponse()
+ {
+	top.respHtml ="smsm0010_detl";
+    top.requHtml ="smsm0010_detl";
+
+	if  ( idCode === '1') {
+      var msg_desc1 =getJSONvalue("msg_desc1",0);
+      if (msg_desc1.length>0) { 
+      	// $("#msg_desc1").text(msg_desc1);   
+      	// $("#msg_desc1").val(msg_desc1);   
+        document.getElementById("msg_desc1").innerHTML = msg_desc1;   
+        document.getElementsByName("msg_desc1")[0].value = $("#msg_desc1").text();  
+      }      
+      
+      var msg_desc2 =getJSONvalue("msg_desc2",0);
+      if (msg_desc2.length>0) { 
+      	// $("#msg_desc2").text(msg_desc2);   
+      	// $("#msg_desc2").val(msg_desc2);  
+        document.getElementById("msg_desc2").innerHTML = msg_desc2;   
+        document.getElementsByName("msg_desc2")[0].value = $("#msg_desc2").text(); 
+      }      
+      
+      var msg_desc3 =getJSONvalue("msg_desc3",0);
+      if (msg_desc3.length>0) { 
+      	// $("#msg_desc3").text(msg_desc3);   
+      	// $("#msg_desc3").val(msg_desc3);   
+        document.getElementById("msg_desc3").innerHTML = msg_desc3;   
+        document.getElementsByName("msg_desc3")[0].value = $("#msg_desc3").text();
+      }      
+      
+      var msg_desc4 =getJSONvalue("msg_desc4",0);
+      if (msg_desc4.length>0) { 
+      	// $("#msg_desc4").text(msg_desc4);   
+      	// $("#msg_desc4").val(msg_desc4);   
+        document.getElementById("msg_desc4").innerHTML = msg_desc4;   
+        document.getElementsByName("msg_desc4")[0].value = $("#msg_desc4").text();
+      }      
+      
+	}
+      
+	if ( idCode === '1')
+	{ return false; }
+ }
+ 
+ 
+</script>

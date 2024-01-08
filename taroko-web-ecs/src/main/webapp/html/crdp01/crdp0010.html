@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <title>卡片庫存年結處理-108-12-23-V1.00.02-AndyLiu-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            ${#PLUGIN:htmcomm_plugin.apr_user}
+            <!--COND -->
+            <table width="40%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="2">&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="執行" onClick="return top.submitControl('C')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>結算年度:
+                        <input type=text class="col_number" name="ex_year" value="${ex_year}" zeditType="number" maxlength="4" size="4" zRequire="k" />
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>卡樣代碼:
+                        <select size="1" name="ex_ncccid" class="col_ddlb" zRequire="Y">
+                            <option value="" disabled>卡片種類 團體代號 NCCC認同代碼</option>
+                            ${dddw_group_card}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td nowrap colspan=6>&nbsp;庫&nbsp;&nbsp;&nbsp;&nbsp;位：
+                        <select name="ex_place" class="col_ddlb">                            
+                            ${dddw_place}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="crdp0010">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="ex_aprid" value="${ex_aprid}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_year.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    //if ( top.actionCode == "Q" ) {
+    //	if ( !chkdata() )
+    //	{ return false; } 
+    //}
+    if (top.actionCode == "C") {
+        if (confirm("請確認已完成結算年度12/31之庫存每日異動結算總表(crdr0015)!!") === false) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "crdp0010_detl_notuse";
+    top.submitControl('S');
+    return true;
+}
+
+function selectAll() {
+
+    return;
+}
+</script>

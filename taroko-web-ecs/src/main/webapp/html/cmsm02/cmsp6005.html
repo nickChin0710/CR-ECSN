@@ -1,0 +1,137 @@
+<html>
+<head>
+<title>案件移送問題類別維護-主管覆核V20191204</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+     
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;代碼類別:
+      <select   size="1"  name="ex_case_type" class="col_ddlb">
+         <option value="1" ${ex_case_type-1} >問題案件</option>
+         <option value="2" ${ex_case_type-2} >處理部門</option>
+      </select>
+   </td>
+   <td nowrap>&nbsp;部門代號:
+      <input type="text" class="col_text" name="ex_dept_no" value="${ex_dept_no}" maxlength="10" size="12" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"     value="覆核" onClick="return top.submitControl('C')" class="btProcess" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;異動經辦:
+      <input type="text" class="col_any" name="ex_mod_user" value="${ex_mod_user}" maxlength="10" size="12" zEdit="any,canTw" />
+   </td>
+   <td nowrap colspan="2">&nbsp;異動日期:
+      <input type="text" class="col_date" name="ex_mod_date" value="${ex_mod_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_mod_date'});
+	      </script>
+	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="10%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" ${opt_disabled}>覆核</th>
+    <th nowrap >分類代碼&nbsp;</th>
+    <th nowrap >分類說明&nbsp;</th>
+    <th nowrap >是否移送&nbsp;</th>
+    <th nowrap >部門代號&nbsp;</th>
+    <th nowrap >部門代號&nbsp;</th>
+    <th nowrap >部門代號&nbsp;</th>
+    <th nowrap >是否簽核&nbsp;</th>
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >異動經辦&nbsp;</th>
+    <th nowrap >覆核失敗原因&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled}/>
+ 	 ${SER_NUM}&nbsp;
+ 	<input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="case_type" value="${case_type}">
+	</td>
+	<td nowrap class="list_cc"> ${case_id}&nbsp;
+	   <input type="hidden" name="case_id" value="${case_id}" />   
+	</td>
+	<td nowrap class="list_ll"> ${case_desc}&nbsp;
+	   <input type="hidden" name="case_desc" value="${case_desc}" />   
+	</td>
+	<td nowrap class="list_cc"> ${send_code}&nbsp;
+	   <input type="hidden" name="send_code" value="${send_code}" />   
+	</td>
+	<td nowrap class="list_cc"> ${dept_no}&nbsp;
+	   <input type="hidden" name="dept_no" value="${dept_no}" />   
+	</td>
+	<td nowrap class="list_cc"> ${dept_no2}&nbsp;
+	   <input type="hidden" name="dept_no2" value="${dept_no2}" />   
+	</td>
+	<td nowrap class="list_cc"> ${dept_no3}&nbsp;
+	   <input type="hidden" name="dept_no3" value="${dept_no3}" />   
+	</td>
+	<td nowrap class="list_cc"> ${conf_mark}&nbsp;
+	   <input type="hidden" name="conf_mark" value="${conf_mark}" />   
+	</td>
+	<td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;
+	   <input type="hidden" name="mod_date" value="${mod_date}" />   
+	</td>
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;
+	   <input type="hidden" name="mod_user" value="${mod_user}" />   
+	</td>
+    <td nowrap class="list_cc"> ${error_desc}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+ 
+ function selectAll() {
+	 var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox"  && aElements[i].name=='opt' ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+   return true;
+ }
+
+  
+</script>

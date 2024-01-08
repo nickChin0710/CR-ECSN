@@ -1,0 +1,126 @@
+<html>
+<head>
+<title> 108/05/03 V1.00.01 RAY Ho Initial DM參數資料檔維護作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="6">
+   <tr>
+   <td nowrap>&nbsp;名單批號
+      <input type="text" class="col_any" name="ex_batch_no" value="${ex_batch_no}"
+         zeditType="any"  maxlength=10 size=10 />
+   建檔期間：
+      <input type="text" class="col_date" name="ex_crt_date_s" value="${ex_crt_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+              new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date" name="ex_crt_date_e" value="${ex_crt_date_e}"
+             zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+              new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_e'});
+      </script>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap >主管覆核:&nbsp;
+       <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} checked  />(全部:不含新增)
+       <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd"   value="新增" ${btnupdate_disable} onclick="newAddScreen('${SER_NUM}')"  class="btAdd" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd"   value="刪除" onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+      <th nowrap class="list_th" width="8%">No&nbsp;</th>
+      <th nowrap class="list_th">刪除</th>
+      <th nowrap class="list_th">名單批號</th>
+      <th nowrap class="list_th">名單說明</th>
+      <th nowrap class="list_th">篩選筆數</th>
+      <th nowrap class="list_th">篩選總數</th>
+      <th nowrap class="list_th">產生資料日期</th>
+      <th nowrap class="list_th">建檔人員</th>
+      <th nowrap class="list_th">建檔日期</th>
+      <th nowrap class="list_th">覆核主管</th>
+      <th nowrap class="list_th">覆核日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+ <tr>
+      <td nowrap class="list_no"> &nbsp;${SER_NUM}&nbsp;
+         <img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen('${SER_NUM}','${BATCH_NO}','A')" style="cursor:hand">&nbsp;
+      </td>
+      <td nowrap class="list_cc"><input type="checkbox" name="del_sel" value="${batch_no}" style="cursor:hand" /></td>
+      <td nowrap class="list_ll"> ${batch_no}</td>
+      <td nowrap class="list_ll"> ${batch_desc}</td>
+      <td nowrap class="list_cc"> ${stat_count}</td>
+      <td nowrap class="list_cc"> ${total_count}</td>
+      <td nowrap class="list_cc"> ${proc_date.YMD}</td>
+      <td nowrap class="list_cc"> ${crt_user}</td>
+      <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+      <td nowrap class="list_cc"> ${apr_user}</td>
+      <td nowrap class="list_cc"> ${apr_date.YMD}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+<!-- hidden ************************************************************** -->
+ <input type="hidden"  name="HIDE"    value="${HIDE_DATA}">
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+
+<script language="JavaScript" src="js/tigra_tables.js"></script>
+<script language="JavaScript"> tigra_tables('table1'); </script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+  top.refreshButton2('0');
+  top.pageRows="20";
+
+  function validateInput() {
+     if ( !top.checkFormat() )
+        { return false; }
+     return true;
+  }
+
+ function detailScreen(serNum,parm_key1,parm_key2)
+  {
+    document.dataForm.data_k1.value = parm_key1;
+    document.dataForm.data_k2.value = parm_key2;
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    top.respHtml  = "mktm0110_nadd";
+    top.submitControl('S');
+    return true;
+  }
+
+ function newAddScreen(serNum)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    top.respHtml  = "mktm0110_nadd";
+    top.submitControl('X');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

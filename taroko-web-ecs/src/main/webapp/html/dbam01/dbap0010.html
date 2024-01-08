@@ -1,0 +1,176 @@
+<html>
+<head>
+<title>DeBit帳戶類別資料維護-107-07-18-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+${#PLUGIN:htmcomm_plugin.apr_user}
+  <div id="condBlock">
+    <table width="60%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <td nowrap>&nbsp;帳戶類別：
+          <select size="1" name="exAcctType" class="col_ddlb">${DbpAcctTypeList}</select>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>&nbsp;  
+          <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+          <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+          <input type="Button"  value="新增" ${btnUpdate_disable} ${pho_insert_disable} onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"  value="修改" ${btnUpdate_disable} ${pho_update_disable} onClick="return top.submitControl('C')" class="btUpdate" >&nbsp;&nbsp;
+        </td>
+      </tr>
+    </table>
+  </div>
+  <hr>
+  <div id="queryBlock">
+  <table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td nowrap style="color:red; font-weight:bold;">&nbsp;帳戶類別：</td>
+      <td nowrap>&nbsp;${acct_type}
+        <input type="hidden" name="acct_type" value="${acct_type}">
+      </td>
+      <td nowrap>
+        <input type="radio" value="1" name="card_indicator" ${card_indicator-1} />一般卡型&nbsp;&nbsp;
+        <input type="radio" value="2" name="card_indicator" ${card_indicator-2} />商務卡型
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;中文說明：</td>
+      <td nowrap colspan="2">
+        <input type="text" class="col_any" name="chin_name" value="${chin_name}" 
+          zEdit="any,canTW" zRequire ="Y" maxlength="40" size="40" />
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;幣別：</td>
+      <td nowrap>
+        <select size="1" name="curr_code" class="col_ddlb">${PtrCurrcodeList}</select>
+      </td>
+      <td nowrap>
+        <input type="checkbox" value="Y" name="f_currency_flag" ${f_currency_flag-Y} />&nbsp;&nbsp;是否為外幣卡
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>
+        <input type="checkbox" value="Y" name="u_cycle_flag" ${u_cycle_flag-Y} onChange="ctrlStmtCycle();"/>&nbsp;&nbsp;指定cycle
+      </td>
+      <td nowrap>&nbsp;帳戶對帳單週期：</td>
+      <td nowrap>
+        <select size="1" name="stmt_cycle" class="col_ddlb">${PtrWorkdayCycleList}</select>
+      </td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;分期付款限額：</td>
+      <td nowrap colspan="2">&nbsp;$ 
+        <input type="text" class="col_number" name="inst_crdtamt" value="${inst_crdtamt}" 
+          zEdit="number" maxlength="10" size="10" />
+        + 信用額度 x
+        <input type="text" class="col_number" name="inst_crdtrate" value="${inst_crdtrate}" 
+          zEdit="dignumber" maxlength="10" size="10" /> %
+      </td>
+    </tr>
+  </table>
+  </div>
+  <hr>
+  <table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+      <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >刪除</th>
+    <th nowrap class="list_th">團體代號</th>
+    <th nowrap class="list_th">卡種</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr style="cursor:hand">
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <span name="row_num">${SER_NUM}</span>
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="a-acct_type" value="${a-acct_type}">
+      <input type="hidden" name="a-seqno" value="${a-seqno}">
+      <input type="hidden" name="a-group_code" value="${a-group_code}">
+	  <input type="hidden" name="a-tt_group_code" value="${a-tt_group_code}">
+	  <input type="hidden" name="a-card_type" value="${a-card_type}">
+	  <input type="hidden" name="a-tt_card_type" value="${a-tt_card_type}">
+    </td>
+    <td nowrap class="list_ll" onclick="detailScreen('${SER_NUM}','${a-acct_type}','${a-seqno}','')"> ${a-group_code}&nbsp;&nbsp;${a-tt_group_code}</td>
+    <td nowrap class="list_ll" onclick="detailScreen('${SER_NUM}','${a-acct_type}','${a-seqno}','')"> ${a-card_type}&nbsp;&nbsp;${a-tt_card_type}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ document.dataForm.exAcctType.focus();
+ ctrlStmtCycle();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "dbap0010_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "dbap0010_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			if ( aElements[i].name == "opt" ) {
+				if ( aElements[i].disabled == false ) {
+					aElements[i].checked = document.dataForm.ex_selectAll.checked;
+				}
+			}
+		}
+	}
+	return;
+ }
+ 
+ function ctrlStmtCycle() {
+	if (document.getElementsByName("u_cycle_flag")[0].checked == true){
+		document.dataForm.stmt_cycle.disabled=false;
+	} else {
+		document.dataForm.stmt_cycle.value="";
+		document.dataForm.stmt_cycle.disabled=true;
+	}
+	return;
+ }
+ 
+</script>

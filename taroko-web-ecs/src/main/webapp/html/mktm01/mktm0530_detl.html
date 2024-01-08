@@ -1,0 +1,156 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-01-10  V1.00.01     馬超         新增功能: mktm0530 合庫金控子公司參數維護作業                    -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title> 111/01/13 V1.00.01 machao Initial 合庫金控子公司參數維護作業</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/jquery-ui.min.css" />
+    <script language="JavaScript" src="js/jquery-ui.min.js"></script>
+</head>
+<style>
+font {
+    color: red;
+}
+</style>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+    	${#PLUGIN:htmcomm_plugin.apr_user3}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+ <tr>
+    <td width="100">&nbsp;</td>
+	<td>
+        <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" ; alt="回上層" ;>&nbsp;
+        <input type="Button"  value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+        <input type="Button"  value=" 新增 " ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd">&nbsp;&nbsp;
+        <input type="Button"  value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+        <input type="Button"  value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+        <input type="Button"  value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;            
+     </td>            
+</tr>                       
+</table>
+<div id="dataBlock">
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+<tr>
+    <td nowrap>&nbsp;機構代號:
+       <input type="text" class="col_any" name="ex_office_m_code" 
+              value="${office_m_code}" maxlength="10" size="10" zRequire="k" 
+              style="background-color: ${ex_office_m_code_pink}"/>
+    </td>
+</tr>
+</table>                
+<hr>
+<table border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td nowrap>機構代號:&nbsp;
+     <span >${office_m_code}&nbsp;</span>
+     <input type="hidden"  name="office_m_code" value="${office_m_code}"
+             maxlength="8" size="8"  />
+     </td>
+    </tr>
+    <tr> 
+     <td nowrap>機構名稱:&nbsp;
+         <input type="text" class="col_any" name="office_m_name" value="${office_m_name}"
+             maxlength="30" size="32" zEdit="any,canTw" />              
+     </td>
+    </tr>
+    <tr>
+     <td nowrap>統一編號:&nbsp;
+          <input type="text" class="col_any" name="corp_no" value="${corp_no}"
+              zEdit="any" maxlength="16" size="16" zRequire="k" 
+              style="background-color: ${corp_no_pink}"/>
+     </td>         
+       </tr>
+   <tr>
+     <td nowrap>統計年度起迄:&nbsp;
+     <input type="text" class="col_date" name="effc_date_beg" value="${effc_date_beg}"
+              zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'prog_e_date'});
+      </script>
+      &nbsp; ~ &nbsp;
+      <input type="text" class="col_date" name="effc_date_end" value="${effc_date_end}"
+              zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'prog_e_date'});
+      </script>   
+     </td> 		
+   </tr>
+ </table>
+<hr>
+
+ <table border="0" cellspacing="-" cellpadding="6">
+   <tr>
+   <td  nowrap   width="20%">鍵檔日期: 
+       <span class="dsp_text">${crt_date.YMD}</span>
+       <input     size="10"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+     <td  nowrap  >鍵檔人員: 
+       <span class="dsp_text">${crt_user}</span>
+       <input     size="8"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>    
+   </tr>
+   <tr>
+     <td  nowrap   width="20%">異動日期: 
+       <span class="dsp_text">${mod_time.YMD}</span>
+       <input     size="10"  type="hidden" name="mod_time" value="${mod_time.YMD}" />
+     <td  nowrap   width="20%">異動人員: 
+       <span class="dsp_text">${mod_user}</span>
+       <input     size="8"  type="hidden" name="mod_user" value="${mod_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap   width="20%">覆核日期: 
+       <span class="dsp_text">${apr_date}</span>
+       <input     size="10"  type="hidden" name="apr_date" value="${apr_date}" />
+     <td  nowrap   width="20%">覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input     size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+   </tr>
+ </table>
+<hr>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="mktm0530">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+top.refreshButton2('1');
+
+function validateInput()
+ {
+   if ( !top.checkFormat() )
+      { return false; }
+
+   return true;
+ }
+
+</script>
+<!-- ******************************************************************** -->

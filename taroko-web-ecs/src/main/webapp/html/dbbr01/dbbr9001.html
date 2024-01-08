@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <title>Visa金融卡消費金額統計月報表-107-07-25-V1.00.00-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=3>&nbsp;統計年月：
+                        <input type="text" class="col_date" name="ex_coldate" value="${ex_coldate}" zEdit="date,yyyymm" maxlength="6" size="6" zRequire ="k"/>
+                    </td>
+                    <td nowrap colspan=3>&nbsp;帳戶類別：
+                        <input type="text" class="col_any" name="ex_accttype" value="${ex_accttype}" zEdit="alphanum" maxlength="2" size="2" />
+                    </td>
+                    <td nowrap colspan=3>&nbsp;含預借現金：
+                        <select size="1" name="ex_prelend" class="col_ddlb">
+                            <option value="Y" ${ex_prelend-Y}>Y</option>
+                            <option value="N" ${ex_prelend-N}>N</option>
+                        </select>
+                    </td>
+                    <td nowrap colspan=3>&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!--<img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;-->
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" rowspan="2" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th" rowspan="2">消費金額</th>
+                <th nowrap class="list_th" colspan="2">本月</th>
+                <th nowrap class="list_th" colspan="2">較上月增減</th>
+                <th nowrap class="list_th" colspan="2">較去年同期增減</th>
+            </tr>
+            <tr>
+                <th nowrap class="list_th" >消費戶數</th>
+                <th nowrap class="list_th" >比重(%)</th>
+                <th nowrap class="list_th" >消費戶數</th>
+                <th nowrap class="list_th" >比重(%)</th>
+                <th nowrap class="list_th" >消費戶數</th>
+                <th nowrap class="list_th" >比重(%)</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${rang_desc}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${expn_qty.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_per.(999.00)} </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_1.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_permon.(999.00)} </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_2.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${wk_peryear.(999.00)} </td>
+            </tr>            
+            <!-- END DYNAMIC : DETAIL -->
+            <!--Sum -->
+            <tr>
+                <td nowrap class="list_cc" colspan="2">合計</td>
+                <td nowrap class="list_rr">${sum_expn_qty.(999)}</td>
+                <td nowrap class="list_rr">${wk_per_total}</td>
+                <td nowrap class="list_rr">${sum_eqmon.(999)}</td>
+                <td nowrap class="list_rr">${wk_per_total}</td>
+                <td nowrap class="list_rr">${sum_eqyear.(999)}</td>               
+                <td nowrap class="list_rr">${wk_per_total}</td>
+            </tr>
+        </table>
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="user_id" value="${user_id}">
+    </form>
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+// document.dataForm.ex_card_type.focus();
+function validateInput() {
+
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+</script>

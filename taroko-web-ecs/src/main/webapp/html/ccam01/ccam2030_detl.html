@@ -1,0 +1,219 @@
+<html>
+<head>
+<title>特殊指示戶維護(卡片)(spec_card_acct)[190611-jh]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<!-- 
+<script language="JavaScript">
+$(document).ready(function(){   
+$("#id_new_end_flag").change(function(){
+	 var ls_flag = document.dataForm.wk_new_end_flag.checked;	 
+   var ls_new_end_date =$("input[name=new_end_date_add]").val();
+   var ls_spec_date_o =$("input[name=spec_del_date_o]").val();
+   if (ls_flag ==true){
+   		var ls_spec_date = $("input[name=spec_del_date]").val(ls_new_end_date);
+   }	else if (ls_flag ==false){
+   		var ls_spec_date = $("input[name=spec_del_date]").val(ls_spec_date_o);
+   }
+   
+})
+});
+;
+</script>
+ -->
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />&nbsp;
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+<!--  <input type="Button"    value="發送簡訊" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btUpdate" >&nbsp;&nbsp;-->  
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  </td>
+</tr> 
+</table>
+<div id="queryBlock">
+<!-- <table border="0" cellspacing="0" cellpadding="4" style="margin-left: 30px">
+  <tr>
+   <td nowrap class="td_title">
+      <input type="Button"  value="outgoing 查詢結果" onClick="return top.submitControl('R2')" class="btOther" >
+   </td>
+   <td nowrap class="td_titl">回覆碼</td>
+   <td nowrap class="td_titl">原因碼</td>
+   <td nowrap class="td_titl">傳送信息</td>
+  </tr> 
+  <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>NEG</b></td>
+   <td align="center"><span class="dsp_text">${neg_resp_code}</span>
+            <input type="hidden" name="neg_resp_code" value="${neg_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${neg_reason_code}</span>
+      <input type="hidden" name="neg_reason_code" value="${neg_reason_code}" />
+   </td>
+   <td>
+      <span class="dsp_text">${neg_call_status}</span>
+      <input type="hidden" name="neg_call_status" value="${neg_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>V/M/J</b></td>
+   <td align="center">
+      <span class="dsp_text">${vmj_resp_code}</span>
+      <input type="hidden" name="vmj_resp_code" value="${vmj_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${vmj_reason_code}</span>
+      <input type="hidden" name="vmj_reason_code" value="${vmj_reason_code}" />
+      <input type="hidden" name="vmj_region" value="${vmj_region}" />
+   </td>
+   <td>
+      <span class="dsp_text">${vmj_call_status}</span>
+      <input type="hidden" name="vmj_call_status" value="${vmj_call_status}" />
+   </td>
+   </tr>
+</table> -->
+</div>
+<hr>
+<div id="dataBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">&nbsp;卡號: ${card_no}
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+   <td nowrap>&nbsp;身分證ID:
+      <span class="dsp_text">${id_no}</span>
+      <input type="hidden" name="id_no" value="${id_no}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;刪除日期:
+         <input type="text" class="col_date" name="spec_del_date" value="${spec_del_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'spec_del_date'});
+	      </script>
+	      &nbsp;	      
+<!-- 	      
+<input type="checkbox" name="wk_new_end_flag" id="id_new_end_flag" value="Y" ${wk_new_end_flag-Y}>&nbsp;同卡片效期&nbsp;
+ -->
+	      <input type="checkbox" name="sms_flag" value="Y" ${sms_flag-Y} disabled >發送簡訊
+	      
+   </td>
+   <td nowrap>&nbsp;debit卡:
+      <span class="dsp_text">${debit_flag}</span>
+      <input type="hidden" name="debit_flag" value="${debit_flag}" />
+      &nbsp;團代:
+      <span class="dsp_text">${group_code}.${tt_group_code}</span>
+      <input type="hidden" name="group_code" value="${group_code}">
+      <input type="hidden" name="tt_group_code" value="${tt_group_code}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;卡片效期:<span class="dsp_date">${new_end_date.YMD}</span>
+      <input type="hidden" name="new_end_date" value="${new_end_date}" />
+   </td>
+   <td nowrap>&nbsp;卡種:<span class="dsp_text">${card_type}</span>
+      <input type="hidden" name="card_type" value="${card_type}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;金融帳號:
+      <span class="dsp_text">${acct_no}</span>
+      <input type="hidden" name="acct_no" value="${acct_no}" />
+   </td>
+   <td nowrap>&nbsp;金融卡號:
+      <span class="dsp_text">${bank_actno}</span>
+      <input type="hidden" name="bank_actno" value="${bank_actno}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;指示代碼:
+      <select size="1" name="spec_status" class="col_ddlb">
+         <option value="">--</option>
+         ${ddw_spec_code_list}
+      </select>
+      <input type="hidden" name="hh_spec_status" value="${hh_spec_status}" />
+   </td>
+   <td nowrap>&nbsp;Master VIP US$:
+      <input type="text" class="col_number" name="spec_mst_vip_amt" value="${spec_mst_vip_amt}" maxlength="9" size="11" zEdit="number" />
+   </td>
+ </tr>
+ <tr>
+ 	<td nowrap colspan="2" >&nbsp;檢視部門:
+ 		<select size="1" name="spec_dept_no" class="col_ddlb" >
+ 			<option value="">--</option>
+      ${dddw_spec_dept}
+   </select>
+ 	</td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;備註(50字):
+      <input type="text" class="col_any" name="spec_remark" value="${spec_remark}" maxlength="50" size="100" zEdit="any,canTw" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;指示人員:
+      <span class="dsp_text">${spec_user}</span>
+      <input type="hidden" name="spec_user" value="${spec_user}" />
+   </td>
+   <td nowrap>&nbsp;指示日期:
+      <span class="dsp_text">${spec_date.YMD}</span>
+      <input type="hidden" name="spec_date" value="${spec_date}" />
+   </td>
+ </tr>
+</table>
+
+</div>
+
+<br>
+<input type="hidden" name="acct_type" value="${acct_type}" />   
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />   
+<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />   
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />   
+<input type="hidden" name="cellar_phone" value="${cellar_phone}" />
+<input type="hidden" name="chi_name" value="${chi_name}" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+<input type="hidden" name="bin_type" value="${bin_type}">
+<input type="hidden" name="new_end_date_add" value="${new_end_date_add}">
+<input type="hidden" name="spec_del_date_o" value="${spec_del_date_o}">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.deleteConfirm_show ="";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+       
+   if (top.actionCode=='D') {
+      if (confirm("是否執行 卡片特指取消")==false) {
+         return false;
+      }
+   } 
+
+    return true;
+  } 
+</script>

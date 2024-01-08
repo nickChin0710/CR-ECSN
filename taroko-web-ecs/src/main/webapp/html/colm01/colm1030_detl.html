@@ -1,0 +1,591 @@
+<html>
+<head>
+<title>債協歷史資料查詢維護作業-detl-107-02-01-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript">
+var ind=${IND_NUMA};
+var rowNum=${IND_NUMA};
+
+function wf_add_newrow(pos)
+{
+	debugger;
+	var val_tabname = document.dataForm.tabName.value;
+	var val_currrow = document.dataForm.CurrRow.value;
+    var srow = val_currrow=='' ? 1 : parseInt(val_currrow);
+    srow += 17;		//頁面固定的行數
+    
+    if (val_tabname == 'aopt') {
+    	ind=${IND_NUMA};
+    	rowNum=${IND_NUMA};
+    } else {
+    	ind=${IND_NUMB};
+    	rowNum=${IND_NUMB};
+    	var x = document.getElementById("table1").rows.length;
+    	srow += x;
+    }
+    rowNum++;
+    ind++;
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+
+    if (val_tabname == 'aopt') {
+    	wf_add_newrow_tabA(pos,serNo,srow);
+    } else {
+    	wf_add_newrow_tabB(pos,serNo,srow);
+    }
+}
+
+function wf_add_newrow_tabA(pos,serNo,srow)
+{
+	
+	//JQuery, 插入明細要加上頁面固定的行數
+	var myJQuery = "<tr onclick='getRowNo(this);'>"
+		+"<td nowrap class='list_no'>"
+		+"<span name='a-row_num'>"+serNo+"</span>&nbsp;"
+		+"<input type='checkbox' name='aopt' value='"+serNo+"' />"
+		+"<input type='hidden' name='a-ser_num' value='"+serNo+"' />"
+		+"<input type='hidden' name='a-rowid' value='' />"
+		+"<input type='hidden' name='a-install_e_month' value='' />"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<input type='text' class='col_text' name='a-install_s_month' value='' zEdit='number' maxlength='6' size='8' />"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		//+"<input type='text' class='col_text' name='a-install_e_month' value='' zEdit='number' maxlength='6' size='8' readOnly />"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<input type='text' class='col_number' name='a-install_pay_amt' value='0' zEdit='number' maxlength='10' size='10' />"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<input type='text' class='col_number' name='a-install_cnt' value='0' zEdit='number' maxlength='10' size='10' />"
+		+"</td>"
+		+"</tr>" ;
+		
+	if(pos==0) {
+		$($('table > tbody > tr')[srow]).before(myJQuery);
+	} else {
+		$("#table1").append(myJQuery);
+	}
+
+	setRowNo();
+}
+
+function wf_add_newrow_tabB(pos,serNo,srow)
+{
+	var val1 = $("#insPtrAcctTypeList").val();
+	
+	//JQuery, 插入明細要加上頁面固定的行數
+	var myJQuery = "<tr onclick='getRowNo(this);'>"
+		+"<td nowrap class='list_no'>"
+		+"<span name='b-row_num'>"+serNo+"</span>&nbsp;"
+		+"<input type='checkbox' name='bopt' value='"+serNo+"' />"
+		+"<input type='hidden' name='b-ser_num' value='"+serNo+"' />"
+		+"<input type='hidden' name='b-rowid' value='' />"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<select size='1' name='b-rate_type' class='col_ddlb'>"
+		+val1
+		+"</select>"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<select size='1' name='b-rate_flag' class='col_ddlb'>"
+		+"<option value='1'>1.帳戶</option>"
+        +"<option value='2'>2.分行 </option>"
+		+"</select>"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<input type='text' class='col_number' name='b-debit_amt' value='0' zEdit='number' maxlength='10' size='10' />"
+		+"</td>"
+		+"<td nowrap class='list_cc'>"
+		+"<input type='text' class='col_number' name='b-repay_rate' value='0' zEdit='dignumber' maxlength='10' size='10' />"
+		+"</td>"
+		+"</tr>" ;
+		
+	if(pos==0) {
+		$($('table > tbody > tr')[srow]).before(myJQuery);
+	} else {
+		$("#table2").append(myJQuery);
+	}
+
+	setRowNo();
+}
+
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="2"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" id="btnQuery"  value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D0')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input type="Button" name="btnShf"     value="重排債協狀態" ${btnDelete_disable}    onClick="return top.submitControl('F')" class="btAdd" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;身分證字號：
+      <input type="text" class="col_text" name="kk_id_no" value="${kk_id_no}" 
+         zEdit="alphanum,upper" maxlength="10" size="12"/>
+      <input type="hidden" name="kk_liab_seqno" value="${kk_liab_seqno}">
+      <input type="hidden" name="kk_liab_status" value="${kk_liab_status}">
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap width="33%" class="col_key">&nbsp;身分證字號：
+      <span class="dsp_text" style="color:#FF0000; font-weight:bold;">${id_no}</span>
+      <input type="hidden" name="id_no" value="${id_no}">
+    </td>
+    <td nowrap width="34%" class="col_key">&nbsp;債協狀態：
+      <span style="color:#FF0000; font-weight:bold;">${tt_liab_status}</span>
+      <input type="hidden" name="tt_liab_status" value="${tt_liab_status}">
+      <input type="hidden" name="liab_status" value="${liab_status}">
+      <input type="hidden" name="remark_code" value="${remark_code}">
+    </td>
+    <td nowrap width="33%" class="col_key">&nbsp;債務協商序號：
+      <span style="color:#FF0000; font-weight:bold;">${liab_seqno}</span>
+      <input type="hidden" name="liab_seqno" value="${liab_seqno}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;中文姓名：
+      <input type="text" class="col_text" name="chi_name" value="${chi_name}" 
+        zRequire="Y" zEdit="any,canTW" maxlength="20" size="15" />
+    </td>
+    <td nowrap >&nbsp;JCIC通報日期：
+      <input type="text" class="col_date" name="notify_date" value="${notify_date}" 
+        zRequire="Y" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'notify_date'});
+	  </script>&nbsp;
+	  <input type="hidden" name="chk_notify_date" value="${notify_date}">
+    </td>
+    <td nowrap >&nbsp;收件日期：
+      <input type="text" class="col_date" name="receive_date" value="${receive_date}" 
+        zRequire="Y" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'receive_date'});
+	  </script>&nbsp;
+	  <input type="hidden" name="chk_receive_date" value="${receive_date}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;原停催通知日：
+      <input type="text" class="col_date" name="stop_notify_date" value="${stop_notify_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'stop_notify_date'});
+	  </script>&nbsp;
+	  <input type="hidden" name="chk_stop_notify_date" value="${stop_notify_date}">
+    </td>
+    <td nowrap >&nbsp;復催日期：
+      <input type="text" class="col_date" name="recol_date" value="${recol_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'recol_date'});
+	  </script>&nbsp;
+	  <input type="hidden" name="chk_recol_date" value="${recol_date}">
+    </td>
+    <td nowrap >&nbsp;復催原因：
+      <select size="1" name="recol_reason" class="col_ddlb">
+        ${ColLiabIdtabList}
+      </select>
+      <input type="hidden" name="chk_recol_reason" value="${recol_reason}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;債權銀行：
+      <select size="1" name="bank_code" class="col_ddlb" zRequire="Y" >
+        ${ColLiabBankList}
+      </select>
+    </td>
+    <td nowrap ><span style="color:#880000; font-size:13">
+      &nbsp;如查無債權銀行請先至colm1040新增債權銀行資料</span>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;現金卡旗標：
+      <input type="text" class="col_text" name="cash_card_flag" value="${cash_card_flag}" 
+        zEdit="alphanum,upper" maxlength="1" size="2" />
+    </td>
+    <td nowrap >&nbsp;信用卡旗標：
+      <input type="text" class="col_text" name="credit_card_flag" value="${credit_card_flag}" 
+        zEdit="alphanum,upper" maxlength="1" size="2" />
+    </td>
+    <td nowrap >&nbsp;無擔保信用額度旗標：
+      <input type="text" class="col_text" name="no_credit_flag" value="${no_credit_flag}" 
+        zEdit="alphanum,upper" maxlength="1" size="2" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;債協備註：
+      <input type="text" class="col_text" name="liab_remark" value="${liab_remark}" 
+        zEdit="any,canTW" maxlength="30" size="30" />
+    </td>
+    <td nowrap >&nbsp;是否開戶註記/檢查日期：
+      <span class="dsp_text">&nbsp;${acct_open_flag}</span>
+      <span class="dsp_text">&nbsp;&nbsp;&nbsp;&nbsp;${chk_open_date.YMD}</span>
+      <input type="hidden" name="acct_open_flag" value="${acct_open_flag}">
+      <input type="hidden" name="chk_open_date" value="${chk_open_date}">
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap width="33%">&nbsp;信用卡金額：
+      <input type="text" class="col_number" name="succ_total_amt" value="${succ_total_amt}" 
+          zEdit="number" maxlength="10" size="10"/>
+    </td>
+    <td nowrap width="34%">&nbsp;信貸金額：
+      <input type="text" class="col_number" name="succ_credit_amt" value="${succ_credit_amt}" 
+          zEdit="number" maxlength="10" size="10"/>
+    </td>
+    <td nowrap width="33%">&nbsp;利率：
+      <input type="text" class="col_number" name="succ_year_int_rate" value="${succ_year_int_rate}" 
+          zEdit="dignumber" maxlength="10" size="10"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;協商成功月份：
+      <input type="text" class="col_text" name="succ_month" value="${succ_month}" 
+          zEdit="number" maxlength="6" size="8"/>
+    </td>
+    <td nowrap >&nbsp;冊號：
+      <input type="text" class="col_text" name="volume_no" value="${volume_no}" 
+        zEdit="any" maxlength="12" size="12" />
+    </td>
+    <td nowrap >&nbsp;分期簽檔號：
+      <input type="text" class="col_text" name="install_sign_no" value="${install_sign_no}" 
+        zEdit="any" maxlength="12" size="12" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap width="50%"><span style="color:#888800">&nbsp;建檔人員/日期：</span>
+      <input type="text" class="dsp_text" name="crt_user" value="${crt_user}" size="10" disabled/>
+      <input type="text" class="dsp_text" name="crt_date" value="${crt_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="crt_user" value="${crt_user}">
+      <input type="hidden" name="crt_date" value="${crt_date}">
+    </td>
+    <td nowrap width="50%"><span style="color:#888800">&nbsp;覆核人員/日期：</span>
+      <input type="text" class="dsp_text" name="apr_user" value="${apr_user}" size="10" disabled/>
+      <input type="text" class="dsp_text" name="apr_date" value="${apr_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="apr_user" value="${apr_user}">
+      <input type="hidden" name="apr_date" value="${apr_date}">
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap ><span style="color:#880000">&nbsp;結案日期：</span>
+      <input type="text" class="col_date" name="end_date" value="${end_date}" 
+        zEdit="date,yyyymmdd" maxlength="8" size="8" />
+      <script language="JavaScript">
+		new tcal ({'formname': 'dataForm','controlname': 'end_date'});
+	  </script>&nbsp;
+    </td>
+    <td nowrap colspan="2"><span style="color:#880000">&nbsp;原因：</span>
+      <select size="1" name="end_reason_id" class="col_ddlb">
+        ${ColLiabIdtabList2}
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2"><span style="color:#880000">&nbsp;結案備註：</span>
+      <input type="text" class="col_text" name="end_remark" value="${end_remark}" 
+        zEdit="any,canTW" maxlength="100" size="90" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap width="50%"><span style="color:#880000">&nbsp;結案人員/日期：</span>
+      <input type="text" class="dsp_text" name="end_apr_user" value="${end_apr_user}" size="10" disabled/>
+      <input type="text" class="dsp_text" name="end_apr_date" value="${end_apr_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="end_apr_user" value="${end_apr_user}">
+      <input type="hidden" name="end_apr_date" value="${end_apr_date}">
+    </td>
+    <td nowrap width="50%"><span style="color:#0000FF">&nbsp;資料來源/原債協狀態：</span>
+      <input type="text" class="dsp_text" name="tt_data_from" value="${tt_data_from}" size="10" disabled/>
+      <input type="text" class="dsp_text" name="tt_ori_liab_status" value="${tt_ori_liab_status}" size="10" disabled/>
+      <input type="hidden" name="tt_data_from" value="${tt_data_from}">
+      <input type="hidden" name="tt_ori_liab_status" value="${tt_ori_liab_status}">
+      <input type="hidden" name="data_from" value="${data_from}">
+      <input type="hidden" name="ori_liab_status" value="${ori_liab_status}">
+    </td>
+  </tr>
+</table>
+
+				  
+<hr>
+<table border="0" width="20%">
+  <tr>
+    <td align="right">
+      <input type="Button" value="插入明細" ${idw_detail}
+        onclick="wf_add_newrow(0);" class="btAdd_detl" />&nbsp;
+    </td>
+    <td align="right">
+      <input type="Button" value="新增明細" ${idw_detail}
+        onclick="wf_add_newrow(1);" class="btAdd_detl" />&nbsp;
+    </td>
+  </tr>
+</table>
+
+
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tab_select('aopt'); tabControl(event, 'tab-1')"><span style="color:#00FF00">　協商成功分期資料　</span></td>
+       <td class="tablinks" onclick="tab_select('bopt'); tabControl(event, 'tab-2')"><span style="color:#0000FF">　協商成功欠款比率　</span></td>
+    </tr>
+  </table>
+</div>
+<!-- TAB Start================================= -->
+<div id="tab-1" class="tabcontent">
+
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+        <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll('aopt');">
+            <span style="color:#0000FF">刪除&nbsp;</span></th>
+    <th nowrap class="list_th">分期月份起</th>
+    <th nowrap class="list_th">分期月份迄</th>
+    <th nowrap class="list_th">每期應還金額</th>
+    <th nowrap class="list_th">分期期數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="getRowNo(this);">
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      <span name="a-row_num">${SER_NUM}</span>
+      <input type="checkbox" name="aopt" value="${ser_num}"/>
+      <input type="hidden" name="a-ser_num" value="${ser_num}"/>
+      <input type="hidden" name="a-rowid" value="${a-rowid}" />
+      <input type="hidden" name="a-install_e_month" value="${a-install_e_month}" />
+    </td>
+    <td nowrap class="list_cc">
+      <input type="text" class="col_text" name="a-install_s_month" value="${a-install_s_month}" 
+        zEdit="number" maxlength="6" size="8"/>
+    </td>
+    <!-- <td nowrap class="list_cc">
+      <input type="text" class="col_text" name="a-install_e_month" value="${a-install_e_month}" 
+        zEdit="number" maxlength="6" size="8" readOnly />
+    </td> -->
+    <td nowrap class="list_cc"> ${a-install_e_month}&nbsp;</td>
+    <td nowrap class="list_cc">
+      <input type="text" class="col_number" name="a-install_pay_amt" value="${a-install_pay_amt}" 
+        zEdit="number" maxlength="10" size="10" /> 
+    </td>
+    <td nowrap class="list_cc">
+      <input type="text" class="col_number" name="a-install_cnt" value="${a-install_cnt}" 
+        zEdit="number" maxlength="10" size="10" /> 
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<div id="tab-2" class="tabcontent">
+<table id="table2" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+        <input type="checkbox" name="ex_selectBll" value="Y" onChange="selectAll('bopt');">
+            <span style="color:#0000FF">刪除&nbsp;</span></th>
+    <th nowrap class="list_th">帳戶</th>
+    <th nowrap class="list_th">帳戶別</th>
+    <th nowrap class="list_th">總欠款金額</th>
+    <th nowrap class="list_th">還款分配比率</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="getRowNo(this);">
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      <span name="b-row_num">${SER_NUM}</span>
+      <input type="checkbox" name="bopt" value="${ser_num}"/>
+      <input type="hidden" name="b-ser_num" value="${ser_num}"/>
+      <input type="hidden" name="b-rowid" value="${b-rowid}" />
+      <input type="hidden" name="b-PtrAcctTypeList" value="${b-PtrAcctTypeList}" />
+    </td>
+    <td nowrap class="list_cc">
+      <select size="1" name="b-rate_type" class="col_ddlb">
+         ${b-PtrAcctTypeList}
+      </select>
+    </td>
+    <td nowrap class="list_cc">
+      <select size="1" name="b-rate_flag" class="col_ddlb">
+         <option value="1" ${b-rate_flag-1} >1.帳戶</option>
+         <option value="2" ${b-rate_flag-2} >2.分行 </option>
+      </select>
+    </td>
+    <td nowrap class="list_cc">
+      <input type="text" class="col_number" name="b-debit_amt" value="${b-debit_amt}" 
+        zEdit="number" maxlength="10" size="10" /> 
+    </td>
+    <td nowrap class="list_cc">
+      <input type="text" class="col_number" name="b-repay_rate" value="${b-repay_rate}" 
+        zEdit="dignumber" maxlength="10" size="10" /> 
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+</div>
+
+<!-- 動態視窗控制 -->
+<div id="disDiv" class="disScreen"></div>
+<div id="popDiv" class="popup1">
+  <table id="popup2" style="top:-600px; left:30px; width:600px; height:100px;">
+     <tr><td colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+
+     <!--List -->
+<tr><td colspan="2">
+ <table id="table3" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">身分證字號</th>
+    <th nowrap class="list_th">債協狀態</th>
+    <th nowrap class="list_th">通報日期</th>
+    <th nowrap class="list_th">債權銀行</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen2('${SER_NUM}','${d-liab_seqno}','${d-id_no}','${d-liab_status}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${d-id_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${d-tt_liab_status}&nbsp;</td>
+   <td nowrap class="list_cc"> ${d-notify_date.YMD}&nbsp;</td>
+   <td nowrap class="list_ll"> ${d-bankname}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</td></tr>     
+
+  </table>
+</div>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colm1030">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="CurrRow" value="">
+<input type="hidden" name="tabName" value="">
+<input type="hidden" name="insPtrAcctTypeList" id="insPtrAcctTypeList" value="${insPtrAcctTypeList}">
+<input type="hidden"  name="queryReadCnt"  value="${queryReadCnt}">
+<input type="hidden"  name="idw_detail"  value="${idw_detail}">
+
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ document.dataForm.kk_liab_seqno.focus();
+
+var CC = document.dataForm.queryReadCnt.value;
+if(CC >1){
+	top.popupBlock('popDiv');
+}
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    //調整[刪除]顯示訊息順序//
+    if ( top.actionCode == "D0" ) {
+    	if (confirm("是否執行刪除，確認刪除後本筆資料不會立即刪除，稍後由批次執行!!") === false) {
+    		alert("刪除取消!");
+    		return false;
+        }
+    	top.actionCode = "D";
+    }
+    
+    return true;
+  }
+
+ function tab_select(optname) {
+ 	 document.dataForm.tabName.value = optname;
+ }
+ 
+ function getRowNo(obj) {
+	 document.dataForm.CurrRow.value=obj.rowIndex;
+ }
+ 
+ function setRowNo() {
+	 var optname = document.dataForm.tabName.value;
+	 var tab = optname.substring(0,1)+"-";
+	 var agy = document.getElementsByName(optname);
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 document.getElementsByName(tab+'ser_num').value='01';
+		 document.getElementsByName(tab+'row_num').textContent='01';
+		 agy.value='01';
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			var ind = i+1;
+			var serNo ="";
+			if ( ind < 10 )
+		        { serNo = "0"+ind; }
+		    else
+		        { serNo = ""+ind;  }
+			document.getElementsByName(tab+'ser_num')[i].value=serNo;
+			document.getElementsByName(tab+'row_num')[i].textContent=serNo;
+			agy[i].value=serNo;
+		 }
+	 }
+	 return true;
+ }
+ 
+//全選
+ function selectAll(optname) {
+ 	var optSelect = "ex_select"+optname.substring(0,1).toUpperCase()+"ll";
+     var aElements = document.dataForm.getElementsByTagName("input");
+     for (var i = 0; i < aElements.length; i++) {
+         if (aElements[i].type == "checkbox") {
+         	if ( aElements[i].name == optname ) {
+         		aElements[i].checked = document.getElementsByName(optSelect)[0].checked;
+         	}
+         }
+     }
+     return;
+ }
+ 
+ function detailScreen2(serNum,parm,parm2,parm3) { 
+	 //top.setBlockValue('kk_liab_seqno','data_k1');
+	 document.dataForm.kk_liab_seqno.value = parm;
+	 document.dataForm.kk_id_no.value = parm2;
+	 document.dataForm.kk_liab_status.value = parm3;
+	 
+	 top.hideBlock('popDiv');
+	 top.submitControl('R');
+	 return true;
+ }
+ 
+</script>

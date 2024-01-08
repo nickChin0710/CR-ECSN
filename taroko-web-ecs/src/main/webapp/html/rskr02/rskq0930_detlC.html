@@ -1,0 +1,616 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>信用卡線上額度異動會簽單查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<div id="dataBlock" >	
+</div>
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>	
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="12">&nbsp;流水編號:
+			<span class="dsp_text" >${seq_no}&nbsp;(自動編號)</span>
+			<input type="hidden" name="seq_no" value="${seq_no}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4" >&nbsp;值機人員:
+			<span class="dsp_text">${tel_user}&nbsp;</span>
+			<input type="hidden" name="tel_user" value="${tel_user}">
+		</td>
+		<td nowrap colspan="4" >&nbsp;客戶來電時間			
+        <span class="dsp_text">${tel_date.YMD}&nbsp;${tel_time.TIME}</span>
+        <input type="hidden" name="tel_date" value="${tel_date}">
+	  		<input type="hidden" name="tel_time" value="${tel_time}">
+	  </td>
+	  <td nowrap colspan="4" >&nbsp;
+	  	<input type="checkbox" name="apr_flag" value="Y" ${apr_flag-Y} disabled >檢查人員 &nbsp;
+	  	<span class="dsp_text">${apr_user}</span>
+	  </td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3" >&nbsp;持卡人ID:
+			<span class="dsp_text">${id_no}</span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;卡號:
+			<span class="dsp_text">${card_no}</span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;持卡人姓名:
+			<span class="dsp_text">${chi_name}</span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;
+			<input type="checkbox" id="print_flag_v" name="print_flag" value="Y" ${print_flag-Y} disabled >已列印
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<span class="td_title" >基本資料及持卡狀況</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >
+			<input type="checkbox" name="card_cond_01" value="Y" ${card_cond_01-Y} disabled >&nbsp;
+			1.正卡人公司名稱及職稱 ；已變更為公司名稱:
+			<span class="dsp_text">${comp_name}</span>
+			，職稱:
+			<span class="dsp_text">${comp_title}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >
+			<input type="checkbox" name="card_cond_02" value="Y" ${card_cond_02-Y} disabled >&nbsp;
+			2.非學生卡、非外國人或外僑
+		</td>
+		<td nowrap colspan="6" >
+			<input type="checkbox" name="card_cond_05" value="Y" ${card_cond_05-Y} disabled >&nbsp;
+			5.最近6個月繳款記錄達3次(含)以上(合庫國際銀行行員除外)
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >
+			<input type="checkbox" name="card_cond_03" value="Y" ${card_cond_03-Y} disabled >&nbsp;
+			3.信用卡無保證人及擔保品
+		</td>
+		<td nowrap colspan="6" >
+			<input type="checkbox" name="card_cond_06" value="Y" ${card_cond_06-Y} disabled >&nbsp;
+			6.最近6個月(包含本期)無延滯紀錄(包含多額度客戶)
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >
+			<input type="checkbox" name="card_cond_04" value="Y" ${card_cond_04-Y} disabled >&nbsp;
+			4.持卡時間至少滿6個月以上
+		</td>
+		<td nowrap colspan="6" >
+			<input type="checkbox" id="card_cond_07" name="card_cond_07" value="Y" ${card_cond_07-Y} disabled >&nbsp;
+			7.為洗錢高風險等級之卡戶
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4" >&nbsp;
+			<span class="td_title">臨調異動原因</span>
+		</td>
+		<td nowrap colspan="4" >&nbsp;地區別:
+			<span class="dsp_text">${area_code}</span>
+		</td>
+		<td nowrap colspan="4" >&nbsp;
+			<input type="checkbox" name="self_flag" value="Y" ${self_flag-Y} disabled >主動服務
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;
+			<input type="checkbox" name="per_purch_flag" value="Y" ${per_purch_flag-Y} disabled >1.預約消費
+		</td>
+		<td nowrap colspan="6" >&nbsp;期望可用餘額
+			<span class="dsp_text">${can_use_amt.(999)}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;　　　　消費項目:
+			<span class="dsp_text">${purch_item}</span>
+		</td>
+		<td nowrap colspan="6" >&nbsp;消費金額:
+			<span class="dsp_text">${purch_amt.(999)}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;　　出國消費:</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4" >&nbsp;　　
+			<input type="checkbox" name="team_flag" value="Y" ${team_flag-Y} disabled >團費(機票)
+		</td>
+		<td nowrap colspan="4" >&nbsp;旅行社:
+			<span class="dsp_text">${travel_id}</span>
+		</td>
+		<td nowrap colspan="4" >&nbsp;國別:
+			<span class="dsp_text">${cntry_code}</span>&nbsp;
+			<input type="checkbox" name="travel_issue_flag" value="Y" ${travel_issue_flag-Y} disabled >旅平險
+		</td>		
+	</tr>
+	<tr>		
+		<td nowrap colspan="4" >&nbsp;　　
+			<input type="checkbox" name="fore_flag" value="Y" ${fore_flag-Y} disabled >國外消費
+		</td>
+		<td nowrap colspan="4" >&nbsp;團費/人數
+			<span class="dsp_text">${team_member}</span>
+		</td>
+		<td nowrap colspan="4" >&nbsp;</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="4" >&nbsp;</td>		
+		<td nowrap colspan="8" >&nbsp;期間:			
+			<span class="dsp_text">${abroad_date1.YMD}</span>
+	    --
+	    <span class="dsp_text">${abroad_date2.YMD}</span>
+	    (YYYY/MM/DD)
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<input type="checkbox" name="overpay_adj_flag" value="Y" ${overpay_adj_flag-Y} disabled >2.未銷帳調整
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;　　
+			<input type="checkbox" name="adjlmt_ing_flag" value="Y" ${adjlmt_ing_flag-Y} disabled >目前仍在臨調中&nbsp;&nbsp;
+			（
+			<input type="checkbox" name="fax_flag" value="Y" ${fax_flag-Y} disabled >FAX收據 &nbsp;
+			<input type="checkbox" name="over_ibm_flag" value="Y" ${over_ibm_flag-Y} disabled >IBM溢繳 &nbsp;
+			<span class="dsp_text">${overpay_amt.(999)}</span>
+			）
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;　　
+			<input type="checkbox" name="adjlmt_fax_flag" value="Y" ${adjlmt_fax_flag-Y} disabled >FAX收據 &nbsp;
+			<input type="checkbox" name="unpad_ibm_flag" value="Y" ${unpad_ibm_flag-Y} disabled >IBM溢繳 &nbsp;
+			金額:
+			<span class="dsp_text">${adjlmt_amt}</span>
+			消費項目:
+			<span class="dsp_text">${purchase_item}</span>
+	  </td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<input type="checkbox" name="reserve_flag" value="Y" ${reserve_flag-Y} disabled >3.圈存調整&nbsp;
+			類別:
+			<span class="dsp_text">${reserve_type}</span>&nbsp;
+      <span class="dsp-text">${reserve_bank}</span>
+      分行，帳號:
+      <span class="dsp_text">${reserve_acct}</span>&nbsp;
+      金額:
+      <span class="dsp_text">${reserve_amt}</span>&nbsp;      	
+    </td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="12" >&nbsp;
+  		<input type="checkbox" name="adj2_flag" value="Y" ${adj2_flag-Y} disabled >4.二段臨調&nbsp;
+  		<input type="checkbox" name="adj2_overpay_flag" value="Y" ${adj2_overpay_flag-Y} disabled >未銷(溢繳)已入帳調回原臨調&nbsp;
+  		<input type="checkbox" name="adj2_other_flag" value="Y" ${adj2_other_flag-Y} disabled >其他:
+  		<span class="dsp_text">${adj2_remark}</span>
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="12" >&nbsp;
+  		<input type="checkbox" name="adj_corp_flag" value="Y" ${adj_corp_flag-Y} disabled >5.商務卡參數調整
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="12" >&nbsp;
+  		<input type="checkbox" name="oth_flag" value="Y" ${oth_flag-Y} disabled >6.其他:
+  		<span class="dsp_text">${oth_reason}</span>
+  	</td>
+  </tr>  		
+  <tr>
+  	<td nowrap colspan="4" >&nbsp;　　異動期間:
+  		<span class="dsp_text">${adj_date1.YMD}</span>
+	    --
+	    <span class="dsp_text">${adj_date2.YMD}</span>
+	  </td>
+	  <td nowrap colspan="4" >&nbsp;
+	  	<input type="checkbox" name="fixadj_flag" value="Y" ${fixadj_flag-Y} disabled >是否永調&nbsp;
+	  	<span class="dsp_text">${fixadj_type}</span>
+	  </td>
+	  <td nowrap colspan="4" >&nbsp;
+	  	<input type="checkbox" name="temp_adj_flag" value="Y" ${temp_adj_flag-Y} disabled >暫時永調&nbsp;
+	  	暫永調額度:
+	  	<span class="dsp_text">${temp_adj_amt}</span>
+	  </td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;　　調整前本卡額度:
+			<span class="dsp_text">${card_amt1}</span>
+		</td>
+		<td nowrap colspan="6" >&nbsp;調整前卡戶額度:
+			<span class="dsp_text">${acno_amt1.(999)}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;　　調整後本卡額度:
+			<span class="dsp_text">${card_amt2.(999)}</span>
+		</td>
+		<td nowrap colspan="6" >&nbsp;調整後卡戶額度:
+			<span class="dsp_text">${acno_amt2.(999)}</span>
+			&nbsp;&nbsp&nbsp;卡戶增加額度:
+			<span class="dsp_text">${acno_add_amt}</span>
+		</td>
+	</tr>	
+	<tr>
+		<td nowrap colspan="4" >&nbsp;　						
+				<input type="checkbox" name="two_card_flag" value="Y" ${two_card_flag-Y} disabled >本行雙額度&nbsp;
+				<input type="checkbox" id="corp_card_flag" name="corp_card_flag" value="Y" ${corp_card_flag-Y} disabled >商務卡&nbsp;
+				<input type="checkbox" name="rela_flag" value="Y" ${rela_flag-Y} disabled > 保證人&nbsp;
+		</td>
+		<td nowrap colspan="4" >&nbsp;最近一次臨調日:
+			<span class="dsp_text">${last_adj_date.YMD}</span>
+	  </td>
+	  <td nowrap colspan="4" >&nbsp;最高臨調金額
+	  	<span class="dsp_text">${most_adj_amt.(999)}</span>&nbsp;萬
+	  </td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3" >&nbsp;　違約評等:	
+			<span class="dsp_text">${pd_rating}</span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;最近一次覆審日:
+			<span class="dsp_text">${trial_date}</span>
+		</td>
+		<td nowrap colspan="3" >覆審評分:
+			<span class="dsp_text">${ecs_jcic_score.(999)}</span>
+			<input type="hidden" name="ecs_jcic_score" value="${ecs_jcic_score}">
+		</td>
+		<td nowrap colspan="3" >&nbsp;覆核結果:
+			<span class="dsp_text">${trial_action}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;　　　違約率:
+			<span class="dsp_text">${pd_rate.(999.00)}%&nbsp;
+			近12個月消費金額
+			<span class="dsp_text">${yy_consum_amt.(999)}</span>元&nbsp;
+			&nbsp;風險群組:
+			<span class="dsp_text">${risk_group}</span>
+			前一年度有手收消費金額
+			<span class="dsp_text">${lastyy_consum_amt.(999)}</span>元					
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;　　　　　　
+			<input type="checkbox" name="bank_card_flag" value="Y" ${bank_card_flag-Y} disabled >僅持本行卡&nbsp;
+			<input type="checkbox" name="most_bank_flag" value="Y" ${most_bank_flag-Y} disabled >本行額度最高&nbsp;
+			<input type="checkbox" name="most_oth_flag" value="Y" ${most_oth_flag-Y} disabled >他行額度最高&nbsp;
+			<span class="dsp_text">${most_oth_amt.(999)}萬&nbsp;
+			<input type="checkbox" name="limit_6mm_flag" value="Y" ${limit_6mm_flag-Y} disabled >近半年無永調紀錄&nbsp;
+			<input type="checkbox" name="sup_acct_flag" value="Y" ${sup_acct_flag-Y} disabled >附歸戶&nbsp;			
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;備註:
+			<span class="dsp_text">${conta_remark1}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;&nbsp;　　
+			<span class="dsp_text">${conta_remark2}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;
+			<span class="td_title">審核結果回覆方式</span>&nbsp;&nbsp;&nbsp;
+			<input type="checkbox" name="fast_flag" value="Y" ${fast_flag-Y} disabled >急件&nbsp;&nbsp;&nbsp;
+			<input type="checkbox" name="no_callback_flag" value="Y" ${no_callback_flag-Y} disabled >不須回電&nbsp;&nbsp;&nbsp;
+		</td>
+		<td nowrap colspan="6" >&nbsp;
+			<span class="td_title">放大消費類別參數(惟不超過臨調總額度)</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;
+			<input type="checkbox" name="sms_flag" value="Y" ${sms_flag-Y} disabled >簡訊&nbsp;
+			<input type="checkbox" name="tel_flag" value="Y" ${tel_flag-Y} disabled >回電&nbsp;　　　電話:
+			<span class="dsp_text">${tel_no}</span>
+		</td>
+		<td nowrap colspan="6" >&nbsp;
+			<input type="checkbox" name="db_cons_type_p" value="Y" ${db_cons_type_p-Y} disabled >P&nbsp;			
+			<input type="checkbox" name="db_cons_type_d1" value="Y" ${db_cons_type_d1-Y} disabled >D1&nbsp;
+			<input type="checkbox" name="db_cons_type_t" value="Y" ${db_cons_type_t-Y} disabled >T&nbsp;
+			<input type="checkbox" name="db_cons_type_h" value="Y" ${db_cons_type_h-Y} disabled >H&nbsp;
+			<input type="checkbox" name="db_cons_type_e" value="Y" ${db_cons_type_e-Y} disabled >E&nbsp;&nbsp;
+			<input type="checkbox" name="db_cons_type_m" value="Y" ${db_cons_type_m-Y} disabled >M&nbsp;&nbsp;
+			<input type="checkbox" name="db_cons_type_j" value="Y" ${db_cons_type_j-Y} disabled >J&nbsp;&nbsp;
+			<input type="checkbox" name="db_cons_type_r" value="Y" ${db_cons_type_r-Y} disabled >R&nbsp;
+			<input type="checkbox" name="db_cons_type_p3" value="Y" ${db_cons_type_p3-Y} disabled >P3&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;
+			<input type="checkbox" name="mail_flag" value="Y" ${mail_flag-Y} disabled >Mail&nbsp;
+			<span class="dsp_text">${email_addr}</span>
+		</td>
+		<td nowrap colspan="6" >&nbsp;
+			<input type="checkbox" name="db_cons_type_m1" value="Y" ${db_cons_type_m1-Y} disabled >M1
+			<input type="checkbox" name="db_cons_type_m2" value="Y" ${db_cons_type_m2-Y} disabled >M2&nbsp;
+			<input type="checkbox" name="db_cons_type_l" value="Y" ${db_cons_type_l-Y} disabled >L&nbsp;
+			<input type="checkbox" name="db_cons_type_i" value="Y" ${db_cons_type_i-Y} disabled >I&nbsp
+			<input type="checkbox" name="db_cons_type_x" value="Y" ${db_cons_type_x-Y} disabled >X&nbsp;&nbsp;
+			<input type="checkbox" name="db_cons_type_g" value="Y" ${db_cons_type_g-Y} disabled >G&nbsp;&nbsp;
+			<input type="checkbox" name="db_cons_type_p0" value="Y" ${db_cons_type_p0-Y} disabled >P0&nbsp;			
+			<input type="checkbox" name="db_cons_type_p1" value="Y" ${db_cons_type_p1-Y} disabled >P1&nbsp;						
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;　　預計回覆日期:
+			<span class="dsp_text">${reply_date.YMD}</span>
+	    &nbsp;
+	    時間:
+	    <span class="dsp_text">${reply_time.TIME}</span>
+		</td>		
+		<td nowrap colspan="6" >&nbsp;
+			<span class="dsp_text">${consum_type2}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<span class="td_title">審核人員檢視</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<input type="checkbox" name="db_audit_prog02" value="Y" ${db_audit_prog02-Y} disabled >&nbsp;近半年費內容是否異常(如集中消費)之查核
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<input type="checkbox" name="db_audit_prog04" value="Y" ${db_audit_prog04-Y} disabled >&nbsp;持卡家數逾6家以上或總信用卡額度逾200萬以上，持有信用卡家數(含本行)及總信用卡額度；
+			<span class="dsp_text">${audi_bank_num.(999)}</span>&nbsp;家
+			<span class="dsp_text">${audi_bank_amt.(999)}</span>萬			
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<input type="checkbox" name="sign_flag" value="Y" ${sign_flag-Y} disabled >&nbsp;調閱原簽&nbsp;
+			<span class="dsp_text">${sign_date.YMD}</span>
+	    &nbsp;
+	    <input type="checkbox" name="acss_jcic_flag" value="Y" ${acss_jcic_flag-Y} disabled >調閱JCIC&nbsp;
+	    <input type="checkbox" name="trial_jcic_flag" value="Y" ${trial_jcic_flag-Y} disabled >覆審JCIC&nbsp;
+	  </td>
+	</tr>	    
+	<tr>
+		<td nowrap colspan="12" >&nbsp;　　審核意見:
+			<span class="dsp_text">${audit_remark}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="6" >&nbsp;審核結果:
+			<span class="dsp_text">${audit_result}</span>
+		</td>
+		<td nowrap colspan="6" >&nbsp;拒絕原因:
+			<span class="dsp_text">${rej_reason}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="3" >&nbsp;
+			<span class="col_radio" disabled >
+         <input type="radio" value="1" name="charge_level" ${charge_level-1} />甲級
+         <input type="radio" value="2" name="charge_level" ${charge_level-2} />乙級
+      </span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;主管代號:			
+			<span class="dsp_text">${charge_user}</span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;
+			<input type="checkbox" name="passwd_flag" value="Y" ${passwd_flag-Y} disabled >放行密碼&nbsp;
+			<span class="dsp_text">${appr_passwd}</span>
+		</td>
+		<td nowrap colspan="3" >&nbsp;
+			<input type="checkbox" name="audit_flag" value="Y" ${audit_flag-Y} disabled >經辦&nbsp;
+			<span class="dsp_text">${audit_user}</span>
+		</td>
+	</tr>
+	<tr>
+		<td nowrap colspan="12" >&nbsp;
+			<input type="checkbox" name="impo_cust_flag" value="Y" ${impo_cust_flag-Y} disabled >重要客戶&nbsp;
+			<span class="dsp_text">${branch_no}</span>&nbsp;
+			分行，核決層級:
+			<span class="dsp_text">${decs_level}</span>
+      &nbsp;審核進度:&nbsp;
+      <span class="dsp_text">${db_audit_prog01}</span>
+      <input type="checkbox" name="close_flag" value="Y" ${close_flag-Y} disabled >結案&nbsp;
+    </td>
+  </tr>			
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+<!-- -->
+<input type="hidden" name="user_name" value="${user_name}" />
+<input type="hidden" name="user_no" value="${user_no}" />
+<input type="hidden" name="autopay_acct_no" value="${autopay_acct_no}" />
+<input type="hidden" name="acno_p_seqno" value="${acno_p_seqno}" />
+
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+		
+		if (top.actionCode=='L') {
+			if(confirm("確定要清除 !!")==false){
+				return false;
+			}
+		}
+		
+    return true;
+  }
+
+  function cardChange(ps1)
+ {
+	var  card_no =document.forms["dataForm"]["card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "AJAX"; // 20200102 updated for archit.  change
+
+/*   // 20200102 updated for archit.  change
+   if ( idCode === '1' ) { 
+		top.methodName = "wf_ajax_card_no";
+   }*/
+
+	resetJSON();
+	addJSON("ax_key",card_no);
+	processAJAX();
+ }
+ 
+  function ajaxResponse()
+ {
+	top.respHtml ="rskm0930_detl";
+  top.requHtml ="rskm0930_detl";
+
+	if  ( idCode === '1' ) {
+      var acno_flag =getJSONvalue("acno_flag",0);
+      if (acno_flag.length>0) { 
+        if(acno_flag != '1'){
+        	$("#corp_card_flag").prop("checked",true);
+        }	else	{
+        	$("#corp_card_flag").prop("checked",false);
+        }
+      }       
+      
+      var curr_pd_rating =getJSONvalue("curr_pd_rating",0);
+      if (curr_pd_rating.length>0) { 
+      	$("#pd_rating").val(curr_pd_rating);
+      }
+      
+      var risk_level =getJSONvalue("risk_level",0);
+      if (risk_level.length>0) { 
+        if(risk_level != 'H'){
+        	$("#card_cond_07").prop("checked",true);
+        }	else if(risk_level != 'L'){
+        	$("#card_cond_07").prop("checked",false);
+        }	else if(risk_level != 'M'){
+        	$("#card_cond_07").prop("checked",false);
+        }
+      }       
+           
+	}
+   
+	if ( idCode === '1')
+	{ return false; }
+ }
+ 
+ function wf_pdf(){ 	
+ 	$("#print_flag_v").prop("checked",true);
+ 	top.submitControl('PDF');
+}
+ 
+ function wf_amt_change(){
+ 		var  li_acno_amt1 = Number(document.forms["dataForm"]["acno_amt1"].value);
+ 		var  li_acno_amt2 = Number(document.forms["dataForm"]["acno_amt2"].value);
+ 		var  li_acno_add_amt = li_acno_amt2 - li_acno_amt1 ;
+ 		
+ 		$("#acno_add_amt").val(li_acno_add_amt);
+ 		
+ }
+ 
+ function wf_apr_user() {
+ 		var ls_apr_flag = document.dataForm.apr_flag.checked;
+ 		
+ 		if(ls_apr_flag == false){
+ 			return ;
+ 		}
+ 		
+ 		var ls_user_name = document.forms["dataForm"]["user_name"].value;
+ 		$("#apr_user").val(ls_user_name);
+ }
+ 
+ function wf_user_no() {
+ 		var ls_audit_flag = document.dataForm.audit_flag.checked;
+ 		
+ 		if(ls_audit_flag == false){
+ 			$("#audit_user").val("");
+ 			return ;
+ 		}
+ 		
+ 		var ls_user_no = document.forms["dataForm"]["user_no"].value;
+ 		$("#audit_user").val(ls_user_no);
+ }
+ 
+ function wf_reserve_type(){
+ 		var ls_reserve_type = document.forms["dataForm"]["reserve_type"].value;
+ 		if(ls_reserve_type != '同授扣帳戶'){
+ 			return ;
+ 		}
+ 		
+ 		var ls_autopay_acct_no = document.forms["dataForm"]["autopay_acct_no"].value;
+ 		$("#reserve_acct").val(ls_autopay_acct_no);
+ 		
+}
+ 
+</script>

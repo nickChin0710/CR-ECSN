@@ -1,0 +1,359 @@
+<html>
+<head>
+<title>卡片停用凍結outgoing記錄查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var page_type =$('#pageType').val();
+var bin_type = $("input[name=bin_type]").val();
+
+wf_excep_show();
+
+$("#id_oppo_reason").change(function(){
+   wf_oppo_Change('1',$(this).val());
+});
+
+});
+
+function wf_excep_show() {
+//alert("excep_show");
+
+   var page_type =$('#pageType').val();
+   $('.visa_file').hide();
+   $('.mast_file').hide();
+   $('.jcb_file').hide();
+   if (page_type!=='detl') {
+      return;
+   }
+
+   var ls_bin_type =$('#bin_type').val();
+   //alert("excep_show: "+ls_excep);
+   if (ls_bin_type=='V') {
+      $('.visa_file').show();
+   }
+   else if (ls_bin_type==='M') {
+      $('.mast_file').show();
+   }
+   else if (ls_bin_type==='J') {
+      $('.jcb_file').show();
+   }
+}
+
+</script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <!-- <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp; -->
+  <input type="Button"    value="停掛重送" ${btnUpdate_disable} onClick="return top.submitControl('U1')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="撤掛重送" ${btnDelete_disable} onClick="return top.submitControl('D1')" class="btDelete" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="queryBlock">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="td_title">
+      <input type="Button"  value="outgoing 查詢結果" onClick="return top.submitControl('R2')" class="btOther" >&nbsp;&nbsp;
+   </td>
+   <td nowrap class="td_titl">回覆碼</td>
+   <td nowrap class="td_titl">原因碼</td>
+   <td nowrap class="td_titl">傳送信息</td>
+  </tr> 
+  <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>NEG</b></td>
+   <td align="center"><span class="dsp_text">${neg_resp_code}</span>
+            <input type="hidden" name="neg_resp_code" value="${neg_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${neg_reason_code}</span>
+      <input type="hidden" name="neg_reason_code" value="${neg_reason_code}" />
+   </td>
+   <td>
+      <span class="dsp_text">${neg_call_status}</span>
+      <input type="hidden" name="neg_call_status" value="${neg_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>FISC</b></td>
+   <td align="center"><span class="dsp_text">${fisc_resp_code}</span>
+            <input type="hidden" name="fisc_resp_code" value="${fisc_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${fisc_reason_code}</span>
+      <input type="hidden" name="fisc_reason_code" value="${fisc_reason_code}" />
+   </td>
+   <td>
+      <span class="dsp_text">${fisc_call_status}</span>
+      <input type="hidden" name="fisc_call_status" value="${fisc_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>TWMP</b></td>
+   <td align="center"><span class="dsp_text">${twmp_resp_code}</span>
+            <input type="hidden" name="twmp_resp_code" value="${twmp_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${twmp_reason_code}</span>
+      <input type="hidden" name="twmp_reason_code" value="${twmp_reason_code}" />
+   </td>
+   <td>
+      <span class="dsp_text">${twmp_call_status}</span>
+      <input type="hidden" name="twmp_call_status" value="${twmp_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   	<td nowrap class="td_title" align="center">&nbsp;<b>OEM PAY</b></td>
+    <td align="center"><span class="dsp_text">${oempay_resp_code}</span>
+            <input type="hidden" name="oempay_resp_code" value="${oempay_resp_code}" />
+    </td>
+    <td align="center">
+      <span class="dsp_text">${oempay_reason_code}</span>
+      <input type="hidden" name="oempay_reason_code" value="${oempay_reason_code}" />
+    </td>
+    <td>
+      <span class="dsp_text">${oempay_call_status}</span>
+      <input type="hidden" name="oempay_call_status" value="${oempay_call_status}" />
+    </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>V/M/J</b></td>
+   <td align="center">
+      <span class="dsp_text">${vmj_resp_code}</span>
+      <input type="hidden" name="vmj_resp_code" value="${vmj_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${vmj_reason_code}</span>
+      <input type="hidden" name="vmj_reason_code" value="${vmj_reason_code}" />
+      <input type="hidden" name="vmj_region" value="${vmj_region}" />
+   </td>
+   <td>
+      <span class="dsp_text">${vmj_call_status}</span>
+      <input type="hidden" name="vmj_call_status" value="${vmj_call_status}" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap class="td_title" align="center">&nbsp;<b>票證</b></td>
+   <td align="center">
+      <span class="dsp_text">${tii_resp_code}</span>
+      <input type="hidden" name="tii_resp_code" value="${tii_resp_code}" />
+   </td>
+   <td align="center">
+      <span class="dsp_text">${tii_reason_code}</span>
+      <input type="hidden" name="tii_reason_code" value="${tii_reason_code}" />
+      <input type="hidden" name="tii_region" value="${tii_region}" />
+   </td>
+   <td>
+      <span class="dsp_text">${tii_call_status}</span>
+      <input type="hidden" name="tii_call_status" value="${tii_call_status}" />
+   </td>
+   </tr>
+</table>
+</div>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		
+	</tr>
+	<tr>
+		<td nowrap colspan="6" class="td_title" >&nbsp;<b>卡戶凍結</b>			
+		</td>
+	</tr>
+  <tr>
+		<td nowrap colspan="3" >&nbsp;凍結原因:
+      <span class="dsp_text">${block_reason1},${block_reason2},${block_reason3},${block_reason4},${block_reason5}</span>
+      <input type="hidden" name="block_reason1" value="${block_reason1}">
+      <input type="hidden" name="block_reason2" value="${block_reason2}">
+      <input type="hidden" name="block_reason3" value="${block_reason3}">
+      <input type="hidden" name="block_reason4" value="${block_reason4}">
+      <input type="hidden" name="block_reason5" value="${block_reason5}">
+    </td>
+    <td nowrap colspan="3" >&nbsp;指示人員:
+    	<span class="dsp_text">${spec_user}</span>
+    	<input type="hidden" name="spec_user" value="${spec_user}">
+    	&nbsp;指示日期:
+    	<span class="dsp_text">${spec_date.YMD}</span>
+    	<input type="hidden" name="spec_date" value="${spec_date}">
+    </td>
+  </tr>  
+  <tr>
+   <td nowrap colspan="2" >&nbsp;<b>戶特指:</b>
+      <span class="dsp_text">${spec_status}</span>
+      <input type="hidden" name="spec_status" value="${spec_status}">
+    </td>	
+   <td nowrap colspan="2" >&nbsp;戶特指刪除日期:
+   		<input type="text" class="col_date" name="spec_del_date" value="${spec_del_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+       	<script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'spec_del_date'});
+	      </script>      
+   </td>
+   <td nowrap colspan="2" >&nbsp;Master VIP US$:
+      <span class="dsp_text">${spec_mst_vip_amt.(999)}</span>
+      <input type="hidden" name="spec_mst_vip_amt" value="${spec_mst_vip_amt}">
+   </td>
+ </tr>
+ <tr>
+		<td nowrap colspan="6" class="td_title" >&nbsp;<b>卡號特指</b>
+		</td>
+	</tr>
+ <tr>
+ 	<td nowrap colspan="3" >&nbsp;卡號:
+			<span class="dsp_text">${card_no}&nbsp;</span>
+			<input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap colspan="3" >&nbsp;${tt_electronic_code}電子票證卡號:
+			<span class="dsp_text">${electronic_card_no}&nbsp;</span>
+			<input type="hidden" name="electronic_card_no" value="${electronic_card_no}">
+			<input type="hidden" name="tt_electronic_code" value="${tt_electronic_code}">
+	</td>
+ </tr>
+ <tr>
+ 	  <td nowrap colspan="3" >&nbsp;指示代碼:
+ 	  	<span class="dsp_text">${card_spec_status}</span>
+ 	  	<input type="hidden" name="card_spec_status" value="${card_spec_status}"> 	  	 	  	
+    </td>
+    <td nowrap colspan="3" >&nbsp;指示人員:
+    	<span class="dsp_text">${card_spec_user}</span>
+    	<input type="hidden" name="card_spec_user" value="${card_spec_user}">
+    	&nbsp;指示日期:
+    	<span class="dsp_text">${card_spec_date.YMD}</span>
+    	<input type="hidden" name="card_spec_date" value="${card_spec_date}">
+    </td>
+ </tr>
+ <tr>
+ 		<td nowrap colspan="3" >&nbsp;刪除日期:
+ 			<input type="text" class="col_date" name="card_spec_del_date" value="${card_spec_del_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+       	<script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'card_spec_del_date'});
+	      </script>
+	  </td>
+    <td nowrap colspan="3" >&nbsp;Master VIP US$:
+      <span class="dsp_text">${card_spec_mst_vip_amt.(999)}</span>
+      <input type="hidden" name="card_spec_mst_vip_amt" value="${card_spec_mst_vip_amt}">
+   </td>
+ </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap class="td_title" colspan="3" >&nbsp;<b>卡片停用狀態</b>
+	</tr>
+	  <tr>
+   <td nowrap>&nbsp;卡片狀態：
+      <span class="dsp_text">${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</span>
+      <input type="hidden" name="current_code" value="${current_code}" />
+   </td>
+   <td>&nbsp;附卡張數：
+   <span class="dsp_number">${sup_card_num}</span>
+   <input type="hidden" name="sup_card_num" value="${sup_card_num}">   
+   </td>
+   <td>&nbsp;有效 TPAN：
+   <span class="dsp_number">${tpan_card_num}</span>
+   <input type="hidden" name="tpan_card_num" value="${tpan_card_num}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;停掛日期：
+      <span class="dsp_date">${oppo_date.YMD}</span>
+      <input type="hidden" name="oppo_date" value="${oppo_date}" />
+   </td>    
+   <td nowrap>&nbsp;NEG刪除日期：
+   		<input type="text" class="col_date" name="neg_del_date" value="${neg_del_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+       	<script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'neg_del_date'});
+	      </script>            
+   </td>    
+  	<td nowrap>&nbsp;卡片效期:
+      <span class="dsp_date">${new_end_date.YMD}</span>
+      <input type="hidden" name="new_end_date" value="${new_end_date}" />
+      <input type="hidden" name="renew_flag" value="N"  />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;停掛類別：
+      <span class="dsp_text">${tt_oppo_type}</span>
+      <input type="hidden" name="oppo_type" value="${oppo_type}">
+      <input type="hidden" name="tt_oppo_type" value="${tt_oppo_type}">      
+   </td>    
+   <td nowrap colspan="2">&nbsp;停掛原因：
+   		<span class="dsp_text">${oppo_reason}&nbsp;</span>
+   		<input type="hidden" name="oppo_reason" value="${oppo_reason}">
+   		<input type="text" id="excep_flag" name="excep_flag" value="${excep_flag}" size="2" />
+   </td>    
+  </tr>
+</table>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap class="td_title" colspan="3" >&nbsp;<b>虛擬卡片變更狀態</b>
+	</tr>
+	  <tr>
+   <td nowrap>&nbsp;虛擬卡號：
+      <span class="dsp_text">${v_card_no}</span>
+      <input type="hidden" name="v_card_no" value="${v_card_no}" />
+   </td>
+   <td>&nbsp;卡片狀態：
+   <span class="dsp_number">${tt_status_code}</span>
+   <input type="hidden" name="tt_status_code" value="${tt_status_code}">   
+   </td>
+   <td>&nbsp;虛擬卡類別：
+   <span class="dsp_number">${tt_wallet_identifier}</span>
+   <input type="hidden" name="tt_wallet_identifier" value="${tt_wallet_identifier}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;狀態變更日期：
+      <span class="dsp_date">${change_date.YMD}</span>
+      <input type="hidden" name="change_date" value="${change_date}" />
+   </td>    
+   <td nowrap colspan="2">&nbsp;卡片效期:
+      <span class="dsp_date">${new_end_date2.YMD}</span>
+      <input type="hidden" name="new_end_date2" value="${new_end_date2}" />
+   </td>
+  </tr>
+</table>
+<br>
+${#PLUGIN:ccam01.vmj_except_file}
+</div>
+
+<input type="hidden" id="bin_type" name="bin_type" value="${bin_type}" />
+<input type="hidden" name="debit_flag" value="${debit_flag}" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ccaq2030">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden"  id="pageType"  value="detl">
+<input type="hidden"  name="electronic_code" value="${electronic_code}">
+<input type="hidden"  name="key_value" value="${key_value}">
+<input type="hidden" name="outgoingRowid" value="${outgoingRowid}">
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+ 
+</script>

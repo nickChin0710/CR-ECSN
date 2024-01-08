@@ -1,0 +1,233 @@
+<html>
+<head>
+<title>DS業務點數獎金級距設定參數維護V20191213</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>   
+  <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+  <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;    
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">  
+  <tr>
+  	<td nowrap >&nbsp;業務員報到日:
+  		<input type="text" class="col_number" name="sales_hire_day" value="${sales_hire_day}" maxlength="2" size="5" zEdit="number" >
+  	</td>
+  	<td nowrap >&nbsp;剪卡月數:
+  		<input type="text" class="col_number" name="cut_card_mon" value="${cut_card_mon}" maxlength="3" size="5" zEdit="number" >
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap colspan="2" >&nbsp;業務月獎金上限:
+  		<input type="text" class="col_number" name="sales_amt_max" value="${sales_amt_max}" maxlength="9" size="11" zEdit="number" >  		
+  	</td>  	
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;每季總點數:
+  		<input type="text" class="col_number" name="season_point" value="${season_point}" maxlength="3" size="5" zEdit="number" >
+  	</td>
+  	<td nowrap >&nbsp;季獎金:
+  		<input type="text" class="col_number" name="season_amt" value="${season_amt}" maxlength="9" size="11" zEdit="number" >
+  	</td>
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;動卡比率(%):
+  		<input type="text" class="col_number" name="alive_cond_pct" value="${alive_cond_pct}" maxlength="7" size="9" zEdit="dignumber" >
+  	</td>
+  	<td nowrap >&nbsp;動卡獎金比率(%):
+  		<input type="text" class="col_number" name="alive_amt_pct" value="${alive_amt_pct}" maxlength="7" size="9" zEdit="dignumber" >
+  	</td>
+  <tr>
+  	<td nowrap >&nbsp;覆核時間:
+  		<span class="dsp_text">${apr_date.YMD}&nbsp;</span>
+  		<input type="hidden" name="apr_date" value="${apr_date}">
+  	</td>
+  	<td nowrap >&nbsp;覆核人員:
+  		<span class="dsp_text">${apr_user}&nbsp;</span>
+  		<input type="hidden" name="apr_user" value="${apr_user}">
+  	</td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;異動日期:
+      <span class="dsp_date">${mod_date.YMD}&nbsp;</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">
+    </td>
+    <td nowrap>&nbsp;異動人員:
+      <span class="dsp_text">${mod_user}&nbsp;</span>
+      <input type="hidden" name="mod_user" value="${mod_user}">
+    </td>
+  </tr>
+</table>
+</div>
+ <br>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap class="list_ll" colspan="8" >&nbsp;
+ 			<input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" ${btnUpdate_disable} />
+      &nbsp;IND_NUM=${ind_num} 
+      <input type="hidden" name="ind_num" value="${ind_num}">
+    </td>        
+ 	</tr>
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+	 		<input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    	刪除
+	 	</th>
+    <th nowrap >項目&nbsp;</th>
+    <th nowrap >點數級距&nbsp;</th>
+    <th nowrap >每點獎金&nbsp;</th>    
+    <th nowrap >維護日期&nbsp;</th>       
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+			<span class="dsp_flag">${ok_flag}</span>
+			<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+		 	 ${SER_NUM}&nbsp;
+			<input type="hidden" name="ser_num" value="${ser_num}" />
+			<input type="hidden" name="old_data" value="${old_data}" />						
+			<input type="hidden" name="mod_date" value="${mod_date}" />						
+			<input type="hidden" name="data_code1" value="${data_code1}">
+			<input type="hidden" name="end_remark" value="${end_remark}">
+	 </td>
+	 <td nowrap class="list_cc">&nbsp;${data_code1}	 		
+	 </td>
+	 <td nowrap class="list_ll"> 
+	 		<input type="text" class="col_number"  name="data_remark1" value="${data_remark1}" maxlength="5" size="7" zEdit="dignumber" >	 		
+	 		--
+	 		${end_remark}
+	 </td>
+	 <td nowrap class="list_rr"> 
+	 		<input type="text" class="col_number" name="point_amt" value="${point_amt}" maxlength="7" size="9" zEdit="dignumber" >	 			
+	 </td>	 
+	 <td nowrap class="list_cc">&nbsp;${mod_date.YMD}</td>
+	 
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+<br>
+<!--  <table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>-->
+
+<!-- -->
+<input type="hidden" name="valid_date" value="00000000">
+<input type="hidden" name="param_type" value="3">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="mktm5040">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0,fi=0;
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+	
+	function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+  $("#detl_btnAdd").click(function(){	
+   rowNum++;
+   ind++;
+   var serNo ="0";
+   if ( ind < 10 )
+      { serNo = "0"+ind; }
+   else
+   	{ serNo = ""+ind;  }
+
+   $("#table1").append(
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +"<input type='hidden' value='"+serNo+"' name='ser_num' />" 
+      +"<input type='hidden' value='' name='old_data' />"       
+      +"<input type='hidden' value='' name='mod_date' />"       
+      +"<input type='hidden' value='' name='data_code1' />"       
+      +"</td>"     
+      +"<td nowrap class='list_cc'>"      
+      +"</td>"
+      +"<td nowrap class='list_ll'>"
+      +"<input type='text' class='col_number' name='data_remark1' value='' maxlength='5' size='7' zEdit='dignumber' "
+      +"--"
+      +"</td>"
+      +"<td nowrap class='list_rr'>"
+      +"<input type='text' class='col_number' name='point_amt' value='' maxlength='7' size='9' zEdit='dignumber' "
+      +"</td>"
+      +"<td nowrap class='list_cc'>"
+      +"</td>"      
+      +"</tr>"
+   );
+  });  
+	
+</script>

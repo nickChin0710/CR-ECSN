@@ -1,0 +1,221 @@
+
+<html>
+<head>
+<title>科目明細查詢-V.2018-0314-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<style>
+ .numblue{
+ 	color:blue;
+ }
+ .numpink{
+ 	color:#FF44AA;
+ }
+</style>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+   	<tr>
+   		<td nowrap>&nbsp;帳戶帳號:
+      		<select size="1" name="ex_acct_type" class="col_ddlb" >   		
+      			${dddw_acct_type}
+   			</select>
+   			--
+			<input type="text" class="col_text" zEdit="alphanum,upper" name="ex_acct_key" value="${ex_acct_key}"
+      		maxlength="11" size="13" onChange="pSeqno('ex_acct_key')"/>
+   		</td>
+   		<td nowrap>&nbsp;中文姓名:
+      		<span class="dsp_text">${ex_id_cname}</span>
+			<input type="hidden"   name="ex_id_cname" value="${ex_id_cname}">
+		</td>
+		<td nowrap rowspan="2">&nbsp;  
+      		<input type="Button"   value="查詢" onClick="pSeqno2()" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      		<!--<input type="Button"   value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;  -->
+   		</td>
+ 	</tr>
+ 	<tr>
+ 		<td nowrap>&nbsp;卡號:
+ 			<input type="text" class="col_any" zEdit="any" name="ex_card_no" value="${ex_card_no}"
+      		maxlength="16" size="16" onChange="pSeqno('ex_card_no')"/>
+ 		</td>
+ 		<td nowrap >&nbsp;公司名稱:
+      		<span class="dsp_text">${ex_corp_cname}</span>
+			<input type="hidden"   name="ex_corp_cname" value="${ex_corp_cname}">
+		</td>
+ 	</tr>
+</table>
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>
+      		<span class="col_radio">
+         		<input type="radio" value="N" name="ex_history" ${ex_history-N} ${DEFAULT-ex_history} />當期
+         		<input type="radio" value="Y" name="ex_history" ${ex_history-Y} />歷史
+      		</span>
+   		</td>
+   		<td nowrap>&nbsp;關帳年月:
+   			<input type="text" class="col_date" name="ex_month" value="${ex_month}"
+         	zeditType="date,ym" MaxLength=6 size=6 />
+         	<input type="hidden" class="col_any" name="ex_month2" value="${ex_month2}"/>
+   		</td>
+   		<td nowrap >&nbsp;對帳單週期:
+      		<span class="dsp_text">${ex_cycle}</span>
+			<input type="hidden"   name="ex_cycle" value="${ex_cycle}">
+		</td>
+	</tr>
+	<tr>
+		<td nowrap>
+      		<span class="col_radio">
+         		<input type="radio" value="1" name="ex_dc" ${ex_dc-1} />本金類 
+         		<input type="radio" value="2" name="ex_dc" ${ex_dc-2} />費用類 
+         		<input type="radio" value="0" name="ex_dc" ${ex_dc-0} ${DEFAULT-ex_dc}/>全部
+      		</span>
+   		</td>
+   		<td nowrap colspan="2">&nbsp;雙幣幣別:
+      		<select size="1" name="ex_curr_code" class="col_ddlb" >
+      		<option value="">--</option>
+      			${dddw_curr_code}
+   			</select>
+   		</td>
+	</tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">科目代號</th>
+    	<th nowrap class="list_th">科目名稱</th>   
+    	<th nowrap class="list_th">入帳日期</th>   
+    	<th nowrap class="list_th">關帳年月</th>   
+    	<th nowrap class="list_th">結算幣別<br>(結算幣別)</th>
+    	<th nowrap class="list_th">期初餘額<br>(結算幣別)</th> 
+    	<th nowrap class="list_th">目前餘額<br>(結算幣別)</th> 
+    	<th nowrap class="list_th">可D數餘額<br>(結算幣別)</th>
+    	<th nowrap class="list_th">期初餘額<br>(台幣)</th>
+    	<th nowrap class="list_th">目前餘額<br>(台幣)</th>
+    	<th nowrap class="list_th">可D數餘額<br>(台幣)</th>
+    	<th nowrap class="list_th">起息日</th>
+    	<th nowrap class="list_th">消費日</th>
+    	<th nowrap class="list_th">卡號 </th>
+    	<th nowrap class="list_th">參考序號</th>
+    	<th nowrap class="list_th">利息重新起算日</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr >
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${acct_code}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${chi_long_name}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${post_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${acct_month.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll numpink"> ${curr_code}&nbsp; </td>
+   		<td nowrap class="list_rr numpink"> &nbsp;${dc_beg_bal.(999.00)} </td>
+   		<td nowrap class="list_rr numpink"> &nbsp;${dc_end_bal.(999.00)} </td>
+   		<td nowrap class="list_rr numpink"> &nbsp;${dc_aval_bal.(999.00)} </td>
+   		<td nowrap class="list_rr numblue"> &nbsp;${beg_bal.(999)} </td>
+   		<td nowrap class="list_rr numblue"> &nbsp;${end_bal.(999)} </td>
+   		<td nowrap class="list_rr numblue"> &nbsp;${d_avail_bal.(999)} </td>
+   		<td nowrap class="list_ll"> ${interest_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${purchase_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${card_no}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${REFERENCE_NO}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${interest_rs_date.YMD}&nbsp; </td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+	<tr>
+		<td colspan="6"></td>
+		<td nowrap align="right" class="numpink">&nbsp;目前總餘額<br>(結算幣別):</td>
+		<td align="right">
+			<span class="dsp_number numpink">${tol_dc_end_bal.(999)}</span>
+			<input type="hidden"   name="tol_dc_end_bal" value="${tol_dc_end_bal}">
+		</td>
+		<td></td>
+		<td nowrap align="right" class="numblue">&nbsp;目前總餘額<br>(台幣):</td>
+		<td align="right" >
+      		<span class="dsp_number numblue">${tol_end_bal.(999)}</span>
+			<input type="hidden"   name="tol_end_bal" value="${tol_end_bal}">
+		</td>
+	</tr>
+</table>
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="MOD_PGM" value="actq0090">
+<input type="hidden"  name="ex_p_seqno" id="ex_p_seqno" value="${ex_p_seqno}">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript" >
+
+ top.refreshButton2('0');
+ top.pageRows="9999";
+ 
+ document.dataForm.ex_acct_key.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( top.actionCode == "Q" ) {
+    	
+    	
+    }
+    return true;
+  }
+function pSeqno(no){
+	var acct_key = $("input[name = ex_acct_key]").val();
+	if(acct_key.length==8){
+		acct_key = acct_key+"000";
+	}
+	if(acct_key.length==10){
+		acct_key = acct_key+"0";
+	}
+	$("input[name = ex_acct_key]").val(acct_key);
+	if(no=='ex_acct_key'){
+		top.submitControl('PSEQNO1');
+	}else if(no=='ex_card_no'){
+		top.submitControl('PSEQNO2');
+	}
+}
+function pSeqno2(){
+	var acct_key = $("input[name = ex_acct_key]").val();
+	if(acct_key.length==8){
+		acct_key = acct_key+"000";
+	}
+	if(acct_key.length==10){
+		acct_key = acct_key+"0";
+	}
+	$("input[name = ex_acct_key]").val(acct_key);
+	top.submitControl('Q2');
+	return true;
+}
+
+$(document).ready(function() {
+	var ex_history = $("input[name = ex_history]:checked").val();
+	if(ex_history=='N'){
+		$("input[name=ex_month]").hide();
+	}else{
+		$("input[name=ex_month]").show();
+	}
+	
+	$("input[name = ex_history]").change(function(){
+		ex_history = $("input[name = ex_history]:checked").val();
+		if(ex_history=='N'){
+			$("input[name=ex_month]").hide();
+		}else{
+			$("input[name=ex_month]").show();
+		}
+	})
+})
+  
+</script>

@@ -1,0 +1,508 @@
+<html>
+
+<head>
+    <title>商務卡申請書登打作業-V.2019-1025-Ru-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js">
+window.onload = function() {
+    // your page initialization code here
+    // the DOM will be available here
+    checkControl();
+};
+
+function toggle_ic_flag(element) {
+    checkControl();
+}
+
+function checkControl() {
+   // debugger;
+    if (document.getElementsByName("ic_flag")[0].checked) {
+        document.getElementsByName("check_key_expire")[0].disabled = false;
+        document.getElementsByName("key_id")[0].disabled = false;
+        document.getElementsByName("l_offln_lmt")[0].disabled = false;
+        document.getElementsByName("u_offln_lmt")[0].disabled = false;
+    } else {
+        document.getElementsByName("check_key_expire")[0].checked = false;
+        document.getElementsByName("key_id")[0].selectedIndex = 0;
+        document.getElementsByName("l_offln_lmt")[0].value = "";
+        document.getElementsByName("u_offln_lmt")[0].value = "";
+
+        document.getElementsByName("check_key_expire")[0].disabled = true;
+        document.getElementsByName("key_id")[0].disabled = true;
+        document.getElementsByName("l_offln_lmt")[0].disabled = true;
+        document.getElementsByName("u_offln_lmt")[0].disabled = true;
+    }
+}
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" >&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <!-- Detail data================================= -->
+            <table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>批號:
+                        <span class="dsp_text">${batchno}</span>
+                    </td>
+                    <td nowrap>序號:
+                        <span class="dsp_text">${recno}</span>
+                    </td>
+                    <td nowrap>申請書編號:
+                        <span class="dsp_text">${apply_no}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>團體代號:
+                        <span class="dsp_text">${group_code}</span>
+                    </td>
+                    <td nowrap>卡種:
+                        <span class="dsp_text">${card_type}</span>
+                    </td>
+                    <td nowrap id="tdUnitCode">認同集團碼:
+                        <span class="dsp_text">${unit_code}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>
+                        <input type="checkbox" value="Y" name="online_mark" ${online_mark-Y} disabled>緊急製卡註記
+                    </td>
+                    <td nowrap>電子帳單註記:
+                        <span class="dsp_text">${stat_send_internet}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>法人統一編號:
+                        <span class="dsp_text">${corp_no}</span>
+                    </td>
+                    <td nowrap>總繳/個繳註記:
+                        <span class="dsp_text">${corp_act_flag}</span>
+                    </td>
+                    <td nowrap>帳單期別:
+                        <span class="dsp_text">${stmt_cycle}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>身分證號:
+                        <span class="dsp_text">${apply_id}</span>
+                    </td>
+                    <td nowrap>性別:
+                        <span class="dsp_text">${sex}</span>
+                    </td>
+                    <td nowrap>出生年月日:
+                        <span class="dsp_text">${birthday}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">中文姓名:
+                        <span class="dsp_text">${chi_name}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">英文姓名:
+                        <span class="dsp_text">${eng_name}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>國籍:
+                        <span class="dsp_text">${nation}</span>
+                    </td>
+                    <td nowrap>國籍代碼:
+                        <span class="dsp_text">${other_cntry_code}</span>
+                    </td>
+                    <td nowrap>居留證有效日期:
+                        <span class="dsp_text">${resident_no_expire_date}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>護照號碼:
+                        <span class="dsp_text">${passport_no}</span>
+                    </td>
+                    <td nowrap>護照日期:
+                        <span class="dsp_text">${passport_date}</span>
+                    </td>
+                    <td nowrap>歐盟註記:
+                        <span class="dsp_text">${ur_flag}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>婚姻:
+                        <span class="dsp_text">${marriage}</span>
+                    </td>
+                    <td nowrap>教育程度:
+                        <select name="education" value="${education}" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            ${dddw_education}
+                        </select>
+                    </td>
+                    <td nowrap>畢業國小:
+                        <span class="dsp_text">${graduation_elementarty}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">行業別:
+                        <select name="business_code" value="${business_code}" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            ${dddw_business_code}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>行動電話:
+                        <span class="dsp_text">${cellar_phone}</span>
+                    </td>
+                    <td nowrap colspan="2">EMAIL:
+                        <span class="dsp_text">${e_mail_addr}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>住家電話:
+                        <span class="dsp_text">${home_area_code1}</span>
+                        <span class="dsp_text">${home_tel_no1}</span>
+                        <span class="dsp_text">${home_tel_ext1}</span>
+                    </td>
+                    <td nowrap colspan="2">公司電話:
+                        <span class="dsp_text">${office_area_code1}</span>
+                        <span class="dsp_text">${office_tel_no1}</span>
+                        <span class="dsp_text">${office_tel_ext1}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">戶籍地址:
+                        <span class="dsp_text">${resident_zip}</span>
+                        <span class="dsp_text">${resident_addr1}</span>
+                        <span class="dsp_text">${resident_addr2}</span>
+                        <span class="dsp_text">${resident_addr3}</span>
+                        <span class="dsp_text">${resident_addr4}</span>
+                        <span class="dsp_text">${resident_addr5}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">居住地址:
+                        <span class="dsp_text">${mail_zip}</span>
+                        <span class="dsp_text">${mail_addr1}</span>
+                        <span class="dsp_text">${mail_addr2}</span>
+                        <span class="dsp_text">${mail_addr3}</span>
+                        <span class="dsp_text">${mail_addr4}</span>
+                        <span class="dsp_text">${mail_addr5}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">公司地址:
+                        <span class="dsp_text">${company_zip}</span>
+                        <span class="dsp_text">${company_addr1}</span>
+                        <span class="dsp_text">${company_addr2}</span>
+                        <span class="dsp_text">${company_addr3}</span>
+                        <span class="dsp_text">${company_addr4}</span>
+                        <span class="dsp_text">${company_addr5}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>帳單註記:
+                        <select name="bill_apply_flag" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            <option value="1" ${bill_apply_flag-1}>同戶籍(個人)</option>
+                            <option value="2" ${bill_apply_flag-2}>同居住(個人)</option>
+                            <option value="3" ${bill_apply_flag-3}>同公司(個人)</option>
+                            <option value="4" ${bill_apply_flag-4}>同通訊(法人)</option>
+                            <option value="5" ${bill_apply_flag-5}>同公司(法人)</option>
+                        </select>
+                    </td>
+                    <td nowrap>寄送分行:
+                        <select name="branch" value="${branch}" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            ${dddw_branch}
+                        </select>
+                    </td>
+                    <td nowrap>寄件別:
+                        <select name="mail_type" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            <option value="1" ${mail_type-1}>普掛</option>
+                            <option value="2" ${mail_type-2}>限掛</option>
+                            <option value="3" ${mail_type-3}>卡部親領</option>
+                            <option value="4" ${mail_type-4}>分行</option>
+                            <option value="5" ${mail_type-5}>暫不寄</option>
+                            <option value="6" ${mail_type-6}>快捷</option>
+                            <option value="7" ${mail_type-7}>航空</option>
+                            <option value="8" ${mail_type-8}>快遞</option>
+                            <option value="9" ${mail_type-9}>其他</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">公司名稱:
+                        <span class="dsp_text">${company_name}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">職稱:
+                        <span class="dsp_text">${job_position}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>年資:
+                        <span class="dsp_text">${service_year}</span>年
+                        <span class="dsp_text">${service_month}</span>月
+                    </td>
+                    <td nowrap colspan="2">年收入:
+                        <span class="dsp_text">${salary}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>配偶ID:
+                        <span class="dsp_text">${spouse_id_no}</span>
+                    </td>
+                    <td nowrap colspan="2">配偶出生年月日:
+                        <span class="dsp_text">${spouse_birthday}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan="3">配偶姓名:
+                        <span class="dsp_text">${spouse_name}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>自動扣款帳號:
+                        <span class="dsp_text">${act_no_l}</span>
+                    </td>
+                    <td nowrap>自動扣繳註記:
+                        <select name="act_no_l_ind" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            <option value="1" ${act_no_l_ind-1}>全額</option>
+                            <option value="2" ${act_no_l_ind-2}>最低應繳</option>
+                        </select>
+                    </td>
+                    <td nowrap>ACH委扣銀行:
+                        <span class="dsp_text">${autopay_acct_bank}</span>
+                        <span style="color:red">若為自行扣款則放"0000001"</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>核准額度:
+                        <span class="dsp_text">${credit_lmt}</span>
+                    </td>
+                    <td nowrap>年利率:
+                        <span class="dsp_text">${revolve_int_rate_year}</span>
+                    </td>
+                    <td nowrap>設定消費簡訊金額:
+                        <span class="dsp_text">${sms_amt}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>預借現金註記:
+                        <span class="dsp_text">${send_pwd_flag}</span>
+                    </td>
+                    <td nowrap>是否申請子卡額度:
+                        <span class="dsp_text">${son_card_flag}</span>
+                    </td>
+                    <td nowrap>子卡額度:
+                        <span class="dsp_text">${indiv_crd_lmt}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>年費優惠:
+                        <span class="dsp_text">${fee_code_i}</span>
+                    </td>
+                    <td nowrap>同意分期註記:
+                        <span class="dsp_text">${inst_flag}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>車號拖吊登錄:
+                        <span class="dsp_text">${roadside_assist_apply}</span>
+                    </td>
+                    <td nowrap>拒絕行銷註記:
+                        <span class="dsp_text">${tt_market_agree_base}</span>
+                    </td>
+                    <td nowrap>EDM寄送註記:
+                        <span class="dsp_text">${e_news}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>推廣人員ID:
+                        <span class="dsp_text">${introduce_emp_no}</span>
+                        <input type="hidden" class="col_text" name="introduce_id"/>
+                    </td>
+                    <td nowrap>推廣人員/進件分行:
+                        <select name="reg_bank_no" value="${reg_bank_no}" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            ${dddw_reg_bank_no}
+                        </select>
+                    </td>
+                    <td nowrap>凸字第四行:
+                        <span class="dsp_text">${emboss_4th_data}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>企業員工推廣人員:
+                        <span class="dsp_text">${promote_emp_no}</span>
+                    </td>
+                    <td nowrap colspan="2">企業員工推廣單位:
+                        <span class="dsp_text">${promote_dept}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>信評等級:
+                        <select name="credit_level_new" value="${credit_level_new}" class="col_ddlb" disabled>
+                            <option value="">--</option>
+                            ${dddw_credit_level_new}
+                        </select>
+                    </td>
+                    <td nowrap colspan="2">評分:
+                        <span class="dsp_text">${jcic_score}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>鍵檔日期:
+                        <span class="dsp_text">${crt_date.YMD}</span>
+                        <input type="hidden" name="crt_date" value="${crt_date}" >
+                    </td>
+                    <td nowrap colspan="2">鍵檔人員:
+                        <span class="dsp_text">${crt_user}</span>
+                        <input type="hidden" name="crt_user" value="${crt_user}" >
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>修改日期:
+                        <span class="dsp_text">${mod_time.YMD}</span>
+                        <input type="hidden" name="mod_time" value="${mod_time}" >
+                    </td>
+                    <td nowrap colspan="2">修改人員:
+                        <span class="dsp_text">${mod_user}</span>
+                        <input type="hidden" name="mod_user" value="${mod_user}" >
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>覆核日期:
+                        <span class="dsp_text">${apr_date.YMD}</span>
+                        <input type="hidden" name="apr_date" value="${apr_date}" >
+                    </td>
+                    <td nowrap colspan="2">覆核人員:
+                        <span class="dsp_text">${apr_user}</span>
+                        <input type="hidden" name="apr_user" value="${apr_user}" >
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="ROWID" value="${rowid}">
+        <input type="hidden" name="MOD_PGM" value="crdm0055">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+setIndivCrdLmt();
+
+var typem =  document.dataForm.electronic_code.value;
+
+if(typem =='02'){
+    $("#ipsKind").attr('disabled',false);
+}else{
+    $("#ipsKind").attr('disabled',true);
+}
+
+if(typem =='03'){
+    $("#cardCode").attr('disabled',false);
+}else{
+    $("#cardCode").attr('disabled',true);
+}
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+    return true;
+}
+
+function detailElectronic(type){
+    
+    if(type =='02'){
+        $("#ipsKind").attr('disabled',false);
+     }else{
+         $("#ipsKind").attr('disabled',true);
+    }
+    
+    if(type =='03'){
+          $("#cardCode").attr('disabled',false);
+    }else{
+          $("#cardCode").attr('disabled',true);
+    }
+}
+
+// 左補0
+function padLeft(name, value, length) {
+    value = value + "";
+    
+    if (value=="") {
+        return;
+    }
+    
+    if (value.length < length) {
+        return padLeft(name, "0" + value, length);
+    } else {
+        $("input[name=" + name + "]").val(value);
+    }
+}
+
+function setIndivCrdLmt() {
+    var flag = $("#son_card_flag").val();
+    if (flag=="Y") {
+        $("#indiv_crd_lmt").prop('disabled',false);
+    } else {
+        $("#indiv_crd_lmt").prop('disabled',true);
+        $("#indiv_crd_lmt").val("");
+    }
+}
+
+function getSourceCode() {
+    var groupCode = $("#group_code").val();
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("groupCode",groupCode);
+    addJSON("idCode","1");
+    processAJAX();
+    return true;
+}
+
+function getUnitCode() {
+    var cardType = $("#card_type").val();
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("cardType",cardType);
+    addJSON("idCode","2");
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse(){
+    top.respHtml ="crdm0055";
+    top.requHtml ="crdm0055";
+    if(getJSONvalue("idCode",0)==1){
+        $("#table1 tr #tdSourceCode select option").remove();
+        $("#table1 tr #tdSourceCode select").append(getJSONvalue("dddw_source_code2",0));
+    }
+    if(getJSONvalue("idCode",0)==2){
+        $("#table1 tr #tdUnitCode select option").remove();
+        $("#table1 tr #tdUnitCode select").append(getJSONvalue("dddw_unit_code2",0));
+    }
+    return false;
+}
+</script>

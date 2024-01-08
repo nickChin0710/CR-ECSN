@@ -1,0 +1,123 @@
+<html>
+<head>
+<title>臨時調整額度覆核（依卡戶）[2018-0928.jh]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;身分證ID:
+   		<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" />
+   </td>   
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;卡號:
+   		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" zEdit="number" />
+   </td>
+   <td nowrap >&nbsp;異動經辦:
+   		<input type="text" class="col_any" name="ex_adj_user" value="${ex_adj_user}" maxlength="10" size="12" zEdit="any,canTw" />
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <th nowrap width="5%">No</th>
+	 <th nowrap >帳戶帳號</th>
+     <th nowrap >卡號</th>
+	 <th nowrap >公司統編</th>	 
+	 <th nowrap >類別</th>	 
+	 <th nowrap >帳戶名稱</th>
+	 <th nowrap >凍結</th>	 
+	 <th nowrap >戶特指</th>	 
+	 <th nowrap >臨調</th>	 
+	 <th nowrap >調高原因</th>
+	 <th nowrap >臨調效期</th>
+	 <th nowrap >適用地區</th>
+	 <th nowrap >調整後月限額</th>
+	 <th nowrap >分期月限</th>	 
+	 <th nowrap >目前額度</th>
+	 <th nowrap >調整備註</th>
+	 <th nowrap >異動經辦</th>
+	 <th nowrap >異動日期</th>
+	 <th nowrap >簡訊</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${card_acct_idx}','','')" style="cursor:hand" >  	
+    <td nowrap class="list_no">${SER_NUM}&nbsp;		  
+		  <input type="hidden" name="ser_num" value="${ser_num}" />		
+		  <input type="hidden" name="card_acct_idx" value="${card_acct_idx}" />		  
+	  </td>
+	  <td nowrap class="list_cc">${acct_type}-${acct_key}&nbsp;</td>
+      <td nowrap class="list_cc">${card_no}&nbsp;</td>	  
+	  <td nowrap class="list_cc">${corp_no}&nbsp;</td>	  
+	  <td nowrap class="list_cc">${acno_flag}.${#JAVA:ecsfunc.DeCodeAct.acnoFlag(acno_flag)}&nbsp;${#JAVA:ecsfunc.DeCodePtr.acctType(acct_type)}</td>	  
+	  <td nowrap class="list_cc">${acno_name}&nbsp;</td>
+	  <td nowrap class="list_cc">${wk_block_reason}&nbsp;</td>
+	  <td nowrap class="list_cc">${spec_status}&nbsp;</td>	  
+	  <td nowrap class="list_cc">${adj_quota}&nbsp;</td>	  
+	  <td nowrap class="list_cc">${adj_reason}.${tt_adj_reason}&nbsp;</td>	  
+	  <td nowrap class="list_cc">${adj_eff_start_date.YMD}--${adj_eff_end_date.YMD}</td>
+	  <td nowrap class="list_cc">${adj_area}.${#JAVA:ecsfunc.DeCodeCcas.areaType(adj_area)}&nbsp;</td>
+	  <td nowrap class="list_rr">${tot_amt_month.(999)}&nbsp;</td>
+	  <td nowrap class="list_rr">${adj_inst_pct.(999)}&nbsp;</td>	  
+	  <td nowrap class="list_rr">${line_of_credit_amt.(999)}&nbsp;</td>
+	  <td nowrap class="list_cc">${adj_remark}&nbsp;</td>
+	  <td nowrap class="list_cc">${adj_user}&nbsp;</td>
+	  <td nowrap class="list_cc">${adj_date.YMD}&nbsp;</td>
+	  <td nowrap class="list_cc">${adj_sms_flag}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput() {
+    if ( !top.checkFormat() )
+       { return false; }          
+    return true;
+  }
+
+ 
+  function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "ccap2052_detl";
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

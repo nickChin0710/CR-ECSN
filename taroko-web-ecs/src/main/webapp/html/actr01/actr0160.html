@@ -1,0 +1,159 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111/10/24  V1.00.01  jiangyigndong  updated for project coding standard  -->
+<!--**************************************************************************-->
+<html>
+
+<head>
+    <title>它行自動扣款抽樣檢核表-V.2020-0618-Andy-[Update UI]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <table width="85%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap colspan=12>&nbsp;
+                    <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <!--                        <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                                            <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    -->
+                </td>
+            </tr>
+        </table>
+
+        <table width="85%" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap width="40%">&nbsp;*提出/扣款日期:
+                    <input type="text" class="col_date" name="ex_date" value="${ex_date}" zEdit="date,yyyymmdd" maxlength="8" size="8" zRequire ="k"/>
+                    <script language="JavaScript">
+                        new tcal({
+                            'formname': 'dataForm',
+                            'controlname': 'ex_date'
+                        });
+                    </script>
+                </td>
+
+                <td nowrap width="60%">&nbsp;銀行代號:
+                    <select name="ex_bank_id" class="col_ddlb">
+                        ${dddw_bank_id}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td nowrap>
+                    <input type="checkbox" value="1" name="ex_amt_limit" ${ex_amt_limit-1} $ />&nbsp;帳戶加總扣款金額 ≧ 150 萬元
+                </td>
+
+                <td nowrap>&nbsp;隨機抽取:
+                    <input type="text" class="col_any" name="ex_sample_cnt" value="${ex_sample_cnt}"
+                           onchange="setSort(this.value);" maxlength="5" size="10" />&nbsp;筆
+                </td>
+            </tr>
+
+            <tr height="35">
+                <td nowrap style="font-size:13px; color:blue">
+                    <b>&nbsp;註：扣款銀行 "700" 請依扣款日查詢，ACH 扣款銀行請依提出檔案日查詢</b>
+                </td>
+                <td nowrap>&nbsp;排序選項:
+                    <!--                   <input type="radio" value="1" name="ex_sort" ${ex_sort-1} ${DEFAULT_CHK} />扣繳金額 -->
+                    <input type="radio" value="1" name="ex_sort" ${ex_sort-1} />扣繳金額
+                    <input type="radio" value="2" name="ex_sort" ${ex_sort-2} />正卡ID
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <!-- 合計============================ -->
+    <div id="queryBlock">
+        <table border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <td nowrap width="100" align="right">合計:&nbsp;</td>
+                <td nowrap width="200">資料筆數:&nbsp;
+                    <span class="dsp_number">${ft_cnt.(999)}</span>
+                    <input type=hidden name="ft_cnt" value="${ft_cnt}" />
+                </td>
+                <!--  Add 合計:金額 (Linda, 20180907)-->
+                <td nowrap >&nbsp;扣繳金額:
+                    <span class="dsp_text">${tot_amt.(999)}&nbsp;</span>
+                    <input type="hidden" name="tot_amt" value="${tot_amt}">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- 明細============================ -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+            <th nowrap class="list_th" width="5%">No&nbsp;</th>
+            <th nowrap class="list_th">提出/扣款日</th>
+            <th nowrap class="list_th">扣繳銀行</th>
+            <th nowrap class="list_th">帳戶帳號</th>
+            <th nowrap class="list_th">帳務週期</th>
+            <th nowrap class="list_th">正卡 ID</th>
+            <th nowrap class="list_th">中文姓名</th>
+            <th nowrap class="list_th">扣繳帳號</th>
+            <th nowrap class="list_th">扣繳金額</th>
+            <th nowrap class="list_th">自動扣繳帳號歸屬 ID</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+            <td nowrap class="list_cc"> ${enter_acct_date.YMD} </td>
+            <td nowrap class="list_ll"> ${acct_bank} </td>
+            <td nowrap class="list_cc"> ${acct_type_key} </td>
+            <td nowrap class="list_cc"> ${stmt_cycle} </td>
+            <td nowrap class="list_cc"> ${id_no_code} </td>
+            <td nowrap class="list_ll"> ${chi_name} </td>
+            <td nowrap class="list_ll"> ${autopay_acct_no} </td>
+            <td nowrap class="list_rr"> ${trans_amt.(999)} </td>
+            <td nowrap class="list_cc"> ${autopay_id} </td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+    <input type="hidden" name="row_ct" value="${row_ct}">
+    <input type="hidden" name="sum_post_amt" value="${sum_post_amt}">
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows = "20";
+
+    function validateInput() {
+        if (!top.checkFormat()) {
+            return false;
+        }
+        return true;
+    }
+
+    function setSort() {
+
+        var sample_cnt = 0;
+        sample_cnt = document.dataForm.ex_sample_cnt.value;
+        if (sample_cnt > 0) {
+            //document.dataForm.ex_sort.value = "0";
+            document.getElementByName('ex_sort').checked = false ;
+        } else {
+            document.dataForm.ex_sample_cnt.value = "";
+        }
+
+    }
+
+</script>

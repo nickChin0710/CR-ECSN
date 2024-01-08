@@ -1,0 +1,137 @@
+<html>
+<head>
+<title>期中覆審-查詢名單樣板參數維護-inblock-jh191105</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="wf_return_data()"; alt="回上層";/>&nbsp;&nbsp;  
+  <input type="Button" value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">查詢樣板批號：
+		<span class="dsp_text"> ${batch_no} </span>
+      <input type=hidden name="batch_no" value="${batch_no}">
+      <input type=hidden name="sample_flag" value="Y">
+   </td>
+   <td nowrap class="colKey">明細類別：
+		<span class="dsp_text"> 09.指定凍結碼 </span>
+      <input type=hidden name="data_type" value="09">
+      <input type=hidden name="type_desc" value="指定凍結碼">
+   </td>
+     <td nowrap >
+      <span class="col_key">主管覆核:&nbsp;${apr_flag}</span>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >
+      <input type="Button" value="01.帳戶類別" onclick="wf_detl_2page('01');" class="btAdd_detl" />
+      <input type="Button" value="02.團體代號" onclick="wf_detl_2page('02');" class="btAdd_detl" />
+      <input type="Button" value="03.卡人等級" onclick="wf_detl_2page('03');" class="btAdd_detl" />
+      <input type="Button" value="04.PD Rating違約預測評等" onclick="wf_detl_2page('04');" class="btAdd_detl" />
+      <input type="Button" value="05.商務卡受理行" onclick="wf_detl_2page('05');" class="btAdd_detl" />
+      <br>
+      <input type="Button" value="06.調額代碼" onclick="wf_detl_2page('06');" class="btAdd_detl" />
+      <input type="Button" value="07.風險族群" onclick="wf_detl_2page('07');" class="btAdd_detl" />      
+      <input type="Button" value="08.排除條件--凍結碼" onclick="wf_detl_2page('08');" class="btAdd_detl" />
+      <input type="Button" value="09.指定凍結碼" onclick="wf_detl_2page('09');" disabled />
+      <input type="Button" value="10.排除團體代號 " onclick="wf_detl_2page('10');" class="btAdd_detl" />                                                                                    
+   </td>     
+  </tr>  
+</table>  
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>指定凍結碼：
+      <input type="text" class="col_text" id="ex_data_code" name="ex_data_code" value="" maxlength="2" size="5" />
+      &nbsp;<input type="Button" id="detl_btnAdd" value="新增明細" ${btnUpdate_disable} class="btUpdate" onClick="wf_save()" />
+      &nbsp;<input type="Button" value="刪除明細" ${btnUpdate_disable} onClick="return top.submitControl('D2')" class="btUpdate" >
+      &nbsp;<label id="ex_errmsg" style="color: red"> </label>
+      <input type="hidden" name="ex_data_code2" value="" />
+   </td>
+  </tr>
+</table>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">指定凍結碼 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+    </td>
+    <td nowrap class="list_ll" >&nbsp;${data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${batch_no}" />
+<input type=hidden name="data_k2" value="" />
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="html/rskm02/rskm1010_01.js"></script>
+<script language=JavaScript src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+
+ function wf_save() {
+   $("#ex_errmsg").html("");
+ 		var ls_code =$("#ex_data_code").val().trim();
+
+ 		if(ls_code ==''){
+			alert("指定凍結碼 不可空白");
+			return ;
+		}
+    resetJSON();
+    addJSON("batch_no", $("input[name=batch_no]").val());
+    addJSON("data_type", $("input[name=data_type]").val());
+    addJSON("apr_flag", $("input[name=apr_flag]").val());
+    addJSON("ex_type_desc", $("input[name=type_desc]").val());
+    addJSON("ex_data_code", ls_code.toUpperCase());
+    addJSON("ex_data_code2", $("input[name=ex_data_code2]").val());
+
+    processAJAX();
+ }
+ function ajaxResponse(){
+    top.respHtml ="rskm1010_09_inblock";
+    top.requHtml =top.respHtml;
+
+    var ls_msg =getJson("ax_errmsg");
+    if (ls_msg.trim() == '') {
+      $("#ex_errmsg").html("新增成功");
+      $("#ex_data_code").val("");
+    }
+    else {
+      $("#ex_errmsg").html(ls_msg);
+      alert("新增失敗: "+ls_msg);
+    }
+    return false;
+}
+</script>

@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>悠遊卡檔案傳送紀錄查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_ok_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_ok_flag]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;通知日期:
+      <input type="text" class="col_date" name="ex_notify_date1" value="${ex_notify_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_notify_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_notify_date2" value="${ex_notify_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_notify_date2'});
+	      </script>
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;檔案資料類別:
+      <input type="text" class="col_text" name="ex_file_iden" value="${ex_file_iden}" maxlength="8" size="10" >
+   </td>
+   <td nowrap >&nbsp;傳輸類別:
+      <select   size="1"  name="ex_tran_type" class="col_ddlb">
+         <option value="">--</option>
+         <option value="0" ${ex_tran_type-0} >全部</option>
+         <option value="I" ${ex_tran_type-I} >toTSCC</option>
+         <option value="O" ${ex_tran_type-O} >fromTSCC</option>
+         <option value="S" ${ex_tran_type-S} >toTSCC通知檔</option>
+         <option value="R" ${ex_tran_type-R} >fromTSCC通知檔</option>
+      </select>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_ok_flag" ${ex_ok_flag-0} />全部
+         <input type="radio" value="1" name="ex_ok_flag" ${ex_ok_flag-1} />無錯誤筆數
+         <input type="radio" value="2" name="ex_ok_flag" ${ex_ok_flag-2} />有錯誤筆數
+      </span>
+   </td>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >通知日期&nbsp;</th>
+    <th nowrap >檔案<br>資料類別</th>
+    <th nowrap >資料檔名&nbsp;</th>
+    <th nowrap >傳輸類別&nbsp;</th>
+    <th nowrap >資料筆數&nbsp;</th>
+    <th nowrap >錯誤筆數&nbsp;</th>
+    <th nowrap >回應代碼&nbsp;</th>
+    <th nowrap >系統檢查碼&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${notify_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${file_iden}&nbsp;</td>
+   <td nowrap class="list_cc"> ${file_name}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tran_type}&nbsp;</td>
+   <td nowrap class="list_rr"> ${record_cnt.(999)}&nbsp;</td>
+   <td nowrap class="list_rr"> ${record_fail.(999)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${resp_code}&nbsp;</td>
+   <td nowrap class="list_cc"> ${check_code}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }  
+</script>

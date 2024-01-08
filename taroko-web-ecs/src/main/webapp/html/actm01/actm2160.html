@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>帳外息人工調整維護-V.2018-0124-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="/js/jquery.js"></script>
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+  		<td nowrap>&nbsp;帳戶帳號:
+   			<input type="text" class="col_text" zEdit="alphanum,upper"  name="ex_ackey" value="${ex_ackey}"
+      		maxlength="11" size="13"/>
+   		</td>
+<!--
+   		<td nowrap>&nbsp;結算幣別:
+   			<select size="1" name="ex_curr_code" class="col_ddlb" >
+      			<option value="">--</option>
+      			${dddw_ex_curr_code}
+   			</select>
+   		</td>
+-->
+   		<td nowrap colspan="4">&nbsp;  
+      		<input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      		<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      	  <input type="Button" name="btnAdd" ${btnAdd_disable} value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp; 
+   		</td>
+   	</tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+    	<th nowrap class="list_th">帳戶帳號</th>
+    	<th nowrap class="list_th">姓名(公司名稱)</th>   
+    	<th nowrap class="list_th">調整類別</th>   
+    	<th nowrap class="list_th">結算幣別</th>    
+    	<th nowrap class="list_th">帳外息期初金額</th>
+    	<th nowrap class="list_th">帳外息本期餘額</th>
+    	<th nowrap class="list_th">帳外息可D數餘額</th>
+    	<th nowrap class="list_th">帳外息減少之金額</th>
+    	<th nowrap class="list_th">帳外息增加之金額</th>
+    	<th nowrap class="list_th">建檔日期</th>
+    	<th nowrap class="list_th">建檔時間</th>
+			<th nowrap class="list_th">備    註</th>
+  	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  	<tr onclick="detailScreen('${SER_NUM}','${acct_type}','${acct_key}','','')" style="cursor:hand">
+   		<td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${wk_acctkey}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${db_cname}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${adjust_type}&nbsp; </td>
+    	<td nowrap class="list_ll"> ${tt_curr_code}&nbsp;    
+				<input type="hidden" name="curr_code" value="${curr_code}">
+	    </td>
+<!--	<td nowrap class="list_rr"> &nbsp;${orginal_amt.(999.00)} </td>   -->
+   		<td nowrap class="list_rr"> &nbsp;${bef_amt.(999.00)} </td>
+   		<td nowrap class="list_rr"> &nbsp;${end_amt.(999.00)} </td>
+   		<td nowrap class="list_rr"> &nbsp;${bef_d_amt.(999.00)} </td>
+   		<td nowrap class="list_rr"> &nbsp;${dr_amt.(999.00)} </td>
+   		<td nowrap class="list_rr"> &nbsp;${cr_amt.(999.00)} </td>
+   		<td nowrap class="list_ll"> ${crt_date.YMD}&nbsp; </td>
+   		<td nowrap class="list_ll"> ${crt_time.TIME}&nbsp; </td>
+			<td nowrap class="list_cc"> ${tt_which_table}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="data_k4" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden"  name="MOD_PGM" value="actm2160">
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript" >
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_ackey.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "actm2160_detl"; 
+    }
+    if ( top.actionCode == "Q" ) {
+		var acct_key = $("input[name = ex_ackey]").val();
+		if(acct_key.length==8){
+			acct_key = acct_key+"000";
+		}
+		if(acct_key.length==10){
+			acct_key = acct_key+"0";
+		}
+		$("input[name = ex_ackey]").val(acct_key);
+    }
+    
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "actm2160_detl" ;
+    top.submitControl('S');
+    return true;
+  }
+  
+</script>

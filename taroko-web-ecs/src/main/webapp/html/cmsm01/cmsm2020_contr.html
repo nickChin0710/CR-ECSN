@@ -1,0 +1,153 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 110-10-08  V1.00.01  Justin         add zip2                             -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>法人基本資料維護-聯絡人-211008-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user3}  
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+</table>
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button" id="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" id="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" id="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;統一編號:
+      <span class="dsp_text">${corp_no}&nbsp;</span>
+      <input type="hidden" name="corp_no" value="${corp_no}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap >&nbsp;中文名稱:
+      <span class="dsp_text">${chi_name}&nbsp;</span>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;聯絡人姓名:
+      <input type="text" class="col_any" name="contact_name" value="${contact_name}" maxlength="20" size="22" zEdit="any,canTw">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;聯絡人電話:
+      <input type="text" class="col_text" name="contact_area_code" value="${contact_area_code}" maxlength="4" size="6" zEdit="number">
+      &nbsp;
+      <input type="text" class="col_text" name="contact_tel_no" value="${contact_tel_no}" maxlength="10" size="12" zEdit="number">
+      &nbsp;
+      <input type="Text" class="col_text" name="contact_tel_ext" value="${contact_tel_ext}" maxlength="6" size="8" zEdit="number">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;聯絡人地址:
+      <br><br>&nbsp;
+      <select size="1" name="contact_zip" id="contact_zip" class="col_ddlb" onChange="zipChange('1')">
+         ${d_dddw_zipcode}
+      </select>
+      <input type="text" class="col_any" name="contact_zip2" value="${contact_zip2}" maxlength="3" size="6" zEdit="number">
+      &nbsp;
+      <span class="dsp_text" id="contact_addr1_text">${contact_addr1}</span>
+      <input type="hidden" name="contact_addr1" id="contact_addr1" value="${contact_addr1}" maxlength="10" size="12" zEdit="any,canTw">
+      縣市
+      <span class="dsp_text" id="contact_addr2_text">${contact_addr2}</span>
+      <input type="hidden" name="contact_addr2" id="contact_addr2" value="${contact_addr2}" maxlength="10" size="12" zEdit="any,canTw">
+      鄉鎮市區
+      <input type="text" class="col_any" name="contact_addr3" value="${contact_addr3}" maxlength="12" size="14" zEdit="any,canTw">
+      村里
+      <br><br>&nbsp;
+      <input type="text" class="col_any" name="contact_addr4" value="${contact_addr4}" maxlength="12" size="14" zEdit="any,canTw">
+      鄰
+      <input type="text" class="col_any" name="contact_addr5" value="${contact_addr5}" maxlength="56" size="58" zEdit="any,canTw">
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<input type="hidden" name="corp_p_seqno" value="${corp_p_seqno}" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+  function zipChange(idCode)
+ {
+  var zip_code;
+  if(idCode === '1'){
+    zip_code =document.forms["dataForm"]["contact_zip"].value.toUpperCase();
+    if ( zip_code === '') {
+      $("#contact_addr1_text").text("");   
+      $("#contact_addr1").val("");  
+      $("#contact_addr2_text").text("");   
+      $("#contact_addr2").val("");  
+      return false
+    }
+  }
+ 
+
+  top.actionCode = "AJAX";
+
+  resetJSON();
+  addJSON("idCode",idCode);  
+  addJSON("ax_zip_code",zip_code);  
+  processAJAX();
+ } 
+ 
+    function ajaxResponse()
+ {
+   top.respHtml ="cmsm2020_contr";
+   top.requHtml ="cmsm2020_contr";
+   var addr1 =getJSONvalue("addr1",0);
+   var addr2 =getJSONvalue("addr2",0);
+   var idCode=getJSONvalue("idCode",0);
+   if  ( idCode === '1') {
+      if (addr1.length>0) { 
+         $("#contact_addr1").text(addr1);   
+         $("#contact_addr1").val(addr1);
+         $("#contact_addr1_text").text(addr1);
+      }       
+      if (addr2.length>0) { 
+         $("#contact_addr2").text(addr2);   
+         $("#contact_addr2").val(addr2);
+         $("#contact_addr2_text").text(addr2);   
+      }                
+    }
+}
+</script>

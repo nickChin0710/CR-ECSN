@@ -1,0 +1,416 @@
+<style>
+   /* Style the tab */
+   div.menu_tab {
+       overflow: hidden;
+   }
+
+   /* Style the buttons inside the tab */
+   div.menu_tab td {
+       background: linear-gradient(#d0e1e1, white);
+       float: center;
+       text-align: left;
+       border: 9;
+       box-shadow: 2px 2px 2px #cccccc;
+       outline: none;
+       cursor: pointer;
+       padding: 1px 8px;
+       transition: 0.3s;
+       font-size: 12pt;
+       color: #003300;
+       border-radius: 6px;
+       border:1px outset;
+   }
+
+   /* Change background color of buttons on hover */
+   div.menu_tab td:hover {
+       background-color: #ffffcc;
+   }
+
+   /* Create an active/current tablink class */
+   div.menu_tab td.active {
+       background-color: #ffcc66;
+       background: linear-gradient(#cc9900, white);
+       box-shadow: 3px 3px 3px #800000;
+       border:2px outset;
+   }
+
+  .close {
+       cursor: pointer;
+       position: relative;
+       font-weight: bold;
+       font-size: 14pt;
+       left:5%;
+       color: blue;
+    }
+
+   .close:hover {background: #bbb;}
+
+</style>
+
+<html>
+
+<head>
+<title> 主系統功能選單首頁 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/Taroko.css"  type="text/css" />
+</head>
+
+<script src="./js/spin.js"></script>
+<body  style="margin-top:0px; margin-left:1px; margin-right:1px;" >
+
+<div id="mainPage" > </div>
+
+<script language="javascript">
+  var target  = document.getElementById("mainPage");
+  var spinner = new Spinner(opts).spin(target);
+</script>
+
+${SYS_SCRIPT}
+
+<script language="javascript">
+ var xx =200;
+ preWidth = "200";
+ function tigraFrameWidth()
+  {
+    var wi = 20;
+    xx = (treeWid + wi);
+
+    if ( xx < 200 )
+       { xx = preWidth; }
+    if ( xx > 370 )
+       { xx = 370; }
+    treeTd.setAttribute("width",xx);
+    document.getElementsByName('treeFrame').item(0).width = xx;
+    preWidth = xx;
+    return;
+  }
+
+ function setTreeWidth(xParm)
+  {
+    var xx = parseInt(xParm);
+    if ( xx < 200 )
+       { xx = 200; }
+    if ( xx > 400 )
+       { xx = 400; }
+    document.getElementsByName('treeFrame').item(0).width = xx;
+    treeTd.setAttribute("width",xx);
+    preWidth = xx;
+    return;
+  }
+
+function hideTree()
+ {
+    hideTreeDiv.style.display = "none";
+    showTreeDiv.style.display = "";
+    treeTd.setAttribute("width", "1");
+    document.getElementsByName('treeFrame').item(0).width = 0;
+    return;
+ }
+
+function showTree()
+ {
+    treeTd.setAttribute("width", preWidth);
+    document.getElementsByName('treeFrame').item(0).width = preWidth;
+    hideTreeDiv.style.display = "";
+    showTreeDiv.style.display = "none";
+    return;
+ }
+
+</script>
+
+<div id="buttonDiv" style="display:; height=0px; margin-top:15px;">
+  <form name="buttonForm" method="post" action="" style="margin-bottom:0px;">
+  <table border="0"  height=40px; style="margin-top: 0px; " valign="top"  width="100%">
+    <tr>
+      <td nowrap style="width:15%; color:blue;  font-size:14pt; font-family:'標楷體';" >
+         User: ${userId}&nbsp;${top_user_name}&nbsp;
+         <input type="hidden" id="top_user_deptno" value="${top_user_deptno}" />${site_name}&nbsp;
+      </td>
+      <td id="pgm_id" nowrap style="width:13%; color:blue;  font-size:14pt; font-family:'標楷體';">
+         <input type="hidden" class="EditData" id="ex_pgm_id" value="" size=15 onchange="wf_run_program()" />
+      </td>
+      <td id="showProgram" nowrap style="width:25%; color:#006600; font-size:16pt; font-family:'標楷體';  ">
+         ${SHOW_PROGRAM}&nbsp;
+      </td>
+      <td nowrap style="width:34%;" >
+        <div id="mesgDiv" style="visibility: hidden;" >&nbsp;
+           <input border="0" type="text" name="MESG_DATA" style="border:none; color:red; font-family:標楷體; font-size:14pt;" value="" size=40 readonly>
+        </div>
+      </td>
+      <td nowrap style="width:13%; color:blue; font-size:14pt; font-family:'標楷體';">查詢理由:
+         <select size="1" name="query_reason" class="field_style" onchange="wf_query_reason()" >
+           ${dddw_idno_reason}
+         </select>
+      </td>
+    </tr>
+  </table>
+  <table border="0" height=30px; style="margin-top: 0px; " valign="top" width="100%">
+    <tr >
+     <td nowrap style="width:4%;" >
+       <div id="hideTreeDiv" style="display:" class="tooltip" >
+         <img height="30" src="images/hideTree.gif" style="cursor:hand; margin-top: 6px; margin-left: 22px; " onClick="hideTree();">&nbsp;&nbsp;&nbsp;&nbsp;
+         <span class="tooltiptext" >隱藏選單</span>
+       </div>
+       <div id="showTreeDiv" style="display:none;" class="tooltip" >
+         <img height="30" src="images/showTree.gif" style="cursor:hand; margin-top: 6px; margin-left: 22px; " onClick="showTree();">&nbsp;&nbsp;&nbsp;&nbsp;
+         <span class="tooltiptext" >顯示選單</span>
+       </div>
+     </td>
+     <td nowrap style="width:3%;" >
+        <div class="tooltip">
+          <img height="30" src="images/logout2.png" style="cursor:hand; " onClick="processLogout();">
+          <span class="tooltiptext" >登出</span>
+        </div>
+     </td>
+     <td nowrap style="width:6%; visibility:visible; color:green; font-family:標楷體; font-size:16pt; font-weight:bold;" >
+        <input type="checkbox" value="Y" name="M_TABS">&nbsp;多選單
+     </td>
+     <td nowrap style="width:40%;" >
+      <div id="pageDiv" style="visibility: hidden; color:blue; font-family:標楷體; font-size:16pt;" >
+       <img src="images/page_first.gif" align="absbottom" style="cursor:hand" onClick="pageControl('FP');" title="第一頁" >
+       <img src="images/page_back.gif"  align="absbottom" style="cursor:hand" onClick="pageControl('PP');" title="上一頁" >
+       <img src="images/page_next.gif"  align="absbottom" style="cursor:hand" onClick="pageControl('NP');" title="下一頁" >
+       <img src="images/page_last.gif"  align="absbottom" style="cursor:hand" onClick="pageControl('LP');" title="最後一頁" >
+        每頁<input class="field_style" name="PAGE_ROWS" type="text" value="" size="3" maxlength="3" style="text-align:center;" >筆&nbsp;
+        第<input class="field_style"   name="CURR_PAGE" type="text" value="" size="4" maxlength="4" style="text-align:center;" >頁
+       <img src="images/page_enter.gif" height="30" align="absbottom" style="cursor:hand" onClick="pageControl('CP');" title="執行跳頁" >
+       <input type="text" name="PAGE_STAT" style="border:none; color:blue; font-family:標楷體; font-size:16pt;"  value="" size="0" readonly>
+       </div>
+     </td>
+     <td nowrap style="width:47%; visibility: visible;" >
+        <div class="menu_tab">
+            <table align="absbottom" height=20px; border="0" >
+              <tr height=20px; >
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+                <td name="m_tab" onclick="menuTabs_select(this);" >&nbsp;<span class="close" onclick="clo_env();">&nbsp;&times;&nbsp;</span></td>
+              </tr>
+            </table>
+        </div>
+     </td>
+    </tr>
+   </table>
+  </form>
+</div>
+
+<table cellpadding="0" cellspacing="0" border="1" width="99.5%" >
+  <tr>
+    <td id="treeTd"; name="treeTd"; width="15%" >
+      <div id="treeDiv" style="margin-top:0px;">
+        <iframe name="treeFrame" frameborder="0" width="100%"; height="800"; src="${TREE_LINK}" resize></iframe>
+      </div>
+    </td>
+    <td id="dataTd"; name="dataTd"; width="*">
+      <div id="dataDiv" style="margin-top:0px;" >
+        <iframe name="dataFrame" frameborder="0" width="100%"; height="800"; src="${MAIN_LINK}" resize></iframe>
+      </div>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
+
+<script language="javascript">
+
+  window.onbeforeunload = function(event) {
+      if ( logoutFlag == "Y" )
+         { return; }
+      // autoJSON   = false;
+      // javaName   = "TarokoApplControl";
+      // methodName = "logout";
+      // respHtml   = "TarokoLogout";
+      // logoutFlag = "C";
+      // menuControl("000,000");
+      // alert('您已成功登出');
+
+      // Justin 2021/01/08 insert logout info
+      menuCode = "O";
+      createHideData();
+      var href = location.href + "?HIDE=" + hideData;
+      
+
+      var xhttp = new XMLHttpRequest();
+
+      xhttp.open("POST", href, true);
+      xhttp.send();
+      
+    }
+
+  window.onload = function(){
+    history.replaceState(null, "", "");
+  }
+
+  menuType  = "T";
+  requHtml  = "ecs_tree_main";
+  hideData  = "${HIDE_DATA}";
+  splitHideData();
+  // 2020-10-15 JustinWu comment userId
+  // loginUser = userId;
+  getBrowserType();
+  idno_queryReason =document.forms["buttonForm"]["query_reason"].value;
+
+  function wf_query_reason() {
+    idno_queryReason =document.forms["buttonForm"]["query_reason"].value;
+    return;
+  }
+
+ function wf_run_program() {
+   var ls_pgm =document.forms["buttonForm"]["ex_pgm_id"].value;
+   if (ls_pgm.trim().length>0) {
+      top.menuControl(ls_pgm.trim()+",XXX");
+      top.spinner.stop();
+   }
+   document.forms[0]["ex_pgm_id"].value ="";
+   return;
+ }
+</script>
+
+
+<script language="javascript">
+
+ var closeTrigger = "N";
+ var actName   = "";
+ var comName   = "";
+
+ menuTabs_control();
+
+ function menuTabs_select(elms) {
+
+   if ( closeTrigger == "Y" ) {
+        closeTrigger = "N";
+        menuTabs_close(elms);
+        return;
+      }
+
+   var selectName =  elms.childNodes.item(0).data.trim();
+   tabsInd    =  getTabsIndex(selectName);
+   activePnt  =  tabsInd;
+
+   var tabElems = document.getElementsByName("m_tab");
+   for ( i = 0; i < tabElems.length; i++) {
+         if ( i == tabsInd )
+            { tabElems[i].className = "active";   }
+         else
+            { tabElems[i].className = ""; }
+      }
+
+   var m = menuTabLevel[tabsInd];
+   var parmLevel = ""+m;
+   var n = m + (tabsInd * maxLevel);
+
+   if ( selectName != comName )
+      { refreshButton2(parmLevel);  }
+
+   comName = selectName;
+   return;
+ }
+
+ function clo_env() {
+   closeTrigger="Y";
+   return;
+ }
+
+ function menuTabs_close(elms) {
+
+   var closeName = elms.childNodes.item(0).data.trim();
+   var ind       = getTabsIndex(closeName);
+   activePnt     = tabsInd;
+   if ( ind < activePnt )
+      { activePnt--; }
+
+   removeIframe(closeName);
+
+   tabsName.splice(ind, 1);
+   menuTabLevel.splice(ind, 1);
+   menuTabs_control();
+   tabsCount--;
+
+   if ( tabsCount <= 0 )
+      {
+        tabsCount=0;
+        initIframe();
+        createIframe("I",initHtml,"HOME-");
+      }
+   else
+      {
+         var j =  ind * maxLevel;
+         var k = (maxTabs-1) * maxLevel;
+         for ( var i=ind; i < maxTabs-1; i++ )
+             { tabsiDesc[i] = tabsiDesc[i+1];  }
+         tabsiDesc[maxTabs-1] ="";
+      }
+
+   var m = menuTabLevel[tabsInd];
+   var parmLevel = ""+m;
+   if ( actName != comName && tabsCount > 0 )
+      { refreshButton2(parmLevel);  }
+
+   comName = actName;
+   return;
+ }
+
+ function menuTabs_control() {
+
+   var tabElems = document.getElementsByName("m_tab");
+   var act_flag = "N";
+   var check_first = activePnt;
+
+   for ( i = 0; i < tabElems.length; i++) {
+         tabElems[i].className = "";
+         var txtObject  = tabElems[i].childNodes.item(0);
+         if ( i < tabsName.length ) {
+              tabElems[i].style.display = "";
+              txtObject.data = tabsName[i];
+            }
+         else  {
+              tabElems[i].style.display = "none";
+              txtObject.data = "X";
+            }
+
+        if ( i == activePnt  )
+           {
+             tabsInd = i;
+             tabElems[i].className = "active";
+             actName = tabsName[i];
+             act_flag="Y";
+           }
+
+        if ( i == tabsName.length - 1 && act_flag == "N" )
+           {
+             tabsInd = i;
+             tabElems[i].className = "active";
+             actName = tabsName[i];
+             activePnt = tabsInd;
+           }
+      }
+
+   if ( check_first == -1  )
+      { comName = actName; }
+
+   return;
+ }
+
+ function getTabsIndex(parmTabsName) {
+   var matchFlag ="N";
+   var pnt =0;
+   try {
+         for ( var i=0; i< tabsName.length; i++ )
+             {
+               if ( parmTabsName == tabsName[i] )
+                  { pnt = i; matchFlag = "Y"; break;   }
+             }
+
+         if ( matchFlag == "N" )
+            { alert ('getTabsIndex error');  return -1; }
+       }
+   catch( err )
+       {  alert('getTabsIndex error');  }
+   return pnt;
+ }
+
+</script>

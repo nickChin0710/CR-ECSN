@@ -1,0 +1,192 @@
+
+<html>
+<head>
+<title> 111/07/20  V1.00.02   machao 新增程式mktq3225 高鐵標準車廂每月對帳查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="16">
+   <tr>
+   <td nowrap>&nbsp;匯入日期:
+      <input type="text" class="col_date"  onChange="columnItemChange('2')"
+          name="ex_crt_date_s" value="${ex_crt_date_s}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_s'});
+      </script>
+      --
+      <input type="text" class="col_date"  onChange="columnItemChange('2')"
+          name="ex_crt_date_e" value="${ex_crt_date_e}"
+         zeditType="date,yyyymmdd"  maxlength=8 size=8 />
+      <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date_e'});
+      </script>
+   扣款方式:
+      <select  name="ex_pay_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_pay_type-1} >扣點</option>
+         <option value="2" ${ex_pay_type-2} >扣款</option>
+         <option value="3" ${ex_pay_type-3} >減免</option>
+       </select>
+   團代:
+      <select  name="ex_group_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_group_type-1} >特殊團代</option>
+         <option value="2" ${ex_group_type-2} >一般團代</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;異常狀況:
+      <select  name="ex_error_code" class="col_ddlb"  >
+       <option value="  ">--</option>
+         <option value="Y" ${ex_error_code-Y} >檢核正確</option>
+         <option value="N" ${ex_error_code-N} >異常資料</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;請款資料:
+      <select size="1" name="ex_trans_seqno" class="col_ddlb" id="ajaxh_trans_seqno_test"  >
+         ${dddw_trans_seqno}
+      </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">交易日期</th>
+    <th nowrap class="list_th">交易流水號</th>
+    <th nowrap class="list_th">交易<BR>類別</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">扣款方式</th>
+    <th nowrap class="list_th">扣(退)點</th>
+    <th nowrap class="list_th">扣(退)款</th>
+    <th nowrap class="list_th">錯誤訊息</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${trans_date.YMD}</td>
+    <td nowrap class="list_cc"> ${serial_no}</td>
+    <td  nowrap class="list_cc"> ${trans_type}-${comm_trans_type}</td>
+    <td nowrap class="list_cc"> ${card_no}</td>
+    <td  nowrap class="list_cc"> ${pay_type}-${comm_pay_type}</td>
+    <td nowrap class="list_rr"> ${deduct_bp.(999)}</td>
+    <td nowrap class="list_rr"> ${deduct_amt.(999)}</td>
+    <td nowrap class="list_ll"> ${error_desc}</td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktq3225_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq3225_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function columnItemChange(ps1)
+  {
+   var  win_crt_date_s =document.forms["dataForm"]["ex_crt_date_s"].value;
+   var  win_crt_date_e =document.forms["dataForm"]["ex_crt_date_e"].value;
+
+   idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode == '2' )
+      {
+       clearListObj(document.getElementById("ajaxh_trans_seqno"));
+       top.methodName = "wf_ajax_func_2";
+       resetJSON();
+       addJSON("ax_win_crt_date_s",win_crt_date_s);
+       addJSON("ax_win_crt_date_e",win_crt_date_e);
+      }
+
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktq3225";
+
+  if (idCode == '2' )
+     {
+      var listObj = document.getElementById("ajaxh_trans_seqno");
+      len = getJSONlength("ajaxj_trans_seqno");
+      for ( var ii=0; ii<len; ii++)
+          listObj.options.add(new Option(getJSONvalue("ajaxj_trans_seqno",ii)
+                                        +" "+getJSONvalue("ajaxj_type_name",ii)
+                                        ,getJSONvalue("ajaxj_trans_seqno",ii)));
+      return false;
+     }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+
+
+</script>
+<!-- ******************************************************************** -->

@@ -1,0 +1,126 @@
+<html>
+<head>
+<title>簡訊參數檔 V2020-0327</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";/>&nbsp;&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('S2')" class="btQuery" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="colKey">使用程式:
+      <span class="dsp_text"> ${msg_pgm} </span>
+      <input type="hidden" name="msg_pgm" value="${msg_pgm}" />
+   </td>   
+  </tr>  
+</table>
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap width="90%">帳戶類別：
+     <select size=1 id="ex_data_code" name="ex_data_code" class="col_ddlb">
+      <option value=''>--</option>
+       ${dddw_accttype}
+     </select>
+     &nbsp;
+     <input type="Button" id="detl_btnAdd" value="新增明細" ${btnUpdate_disable} class="btUpdate" onClick="wf_save()" />
+     <input type="Button" value="刪除明細" ${btnUpdate_disable} onClick="return top.submitControl('D2')" class="btUpdate" >
+     &nbsp;<label id="ex_errmsg" style="color: red"> </label>
+   </td>
+  </tr>
+</table>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">刪除 </th>
+    <th nowrap class="list_cc">帳戶類別 </th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+      <input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="data_code" value="${data_code}">
+      <input type="hidden" name="tt_data_code" value="${tt_data_code}">
+    </td>
+    <td nowrap class="list_ll" >${data_code}_${tt_data_code} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+
+<!--hidden -->
+<input type=hidden name="data_k1" value="${msg_pgm}" />
+<input type=hidden name="data_k2" value="" />
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl_accttype">
+<input type="hidden" name="table_name" value="SMS_MSG_ID" />
+<input type="hidden" name="data_type" value="1" />
+
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/AJAXFunction_20.js"></script>
+<script language="javascript">
+ 
+ 
+ top.refreshButton2('2');
+ top.pageRows="999";
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+   return true;
+ }
+ 
+ function wf_save() {
+   $("#ex_errmsg").html("");
+ 		var ls_tt_data_code =$("#ex_data_code option:selected").text();
+ 		var ls_code =$("#ex_data_code").val();
+
+ 		if(ls_code.trim() ==''){
+			alert("帳戶類別 不可空白");
+			return ;
+		}
+    resetJSON();
+    addJSON("msg_pgm", $("input[name=msg_pgm]").val());
+    addJSON("data_type", $("input[name=data_type]").val());    
+    addJSON("table_name", $("input[name=table_name]").val());        
+    addJSON("ex_data_code", ls_code);
+
+    processAJAX();
+ }
+ function ajaxResponse(){
+    top.respHtml ="smsm0010_actp";
+    top.requHtml ="smsm0010_actp";
+
+    var ls_msg =getJson("ax_errmsg");
+    if (ls_msg.trim() == '') {
+      $("#ex_errmsg").html("新增成功");
+    }
+    else {
+      $("#ex_errmsg").html(ls_msg);
+      alert("新增失敗: "+ls_msg);
+    }
+    return false;
+}
+</script>

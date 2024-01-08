@@ -1,0 +1,335 @@
+<!-- 
+***************************************************************************
+*                              MODIFICATION LOG                              *
+*                                                                            *
+*   DATE      Version   AUTHOR      DESCRIPTION                              *
+*  ---------  --------- ----------- ---------------------------------------- *
+*  111-03-28  V1.00.01  Justin      分期期數限制只能輸入數字                 *
+* ************************************************************************** 
+-->
+
+<html>
+<head>
+<title>NCCC特店商品分期付款參數維護-2022-03-28</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>  
+  <input type="Button" name="btnAdd" id="btnAdd" value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" style="display: none;" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="刪除異動檔" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;  
+  <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4" id="ex_table" style="display: none;">
+  <tr>
+    <td nowrap >&nbsp;特店代號:
+      <input type="text" class="col_text" name="kk_mcht_no" value="${kk_mcht_no}" zEdit="any" size="20" maxlength="22" onChange="keyChange('1')" />
+    </td>
+    <td nowrap >&nbsp;分期期數:
+      <input type="text" class="col_text" id="kk_product_no" name="kk_product_no" value="${kk_product_no}" zEdit="any" maxlength="2" size="3" onChange="keyChange('1')" />
+    </td>
+    <td nowrap >&nbsp;序號:
+      <label class="dsp_text" id="kk_seq_no" >${kk_seq_no}</label>
+      <input type="hidden" id="kk_seq_no2" name="kk_seq_no" value="${kk_seq_no}"> 	
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;特店代號:
+        <span class="dsp_text">${mcht_no}</span>
+        <input type="hidden" name="mcht_no" value="${mcht_no}" />
+        &nbsp;&nbsp;
+        <input type="Button" class="btOther" value="參數明細維護" ${btnUpdate_disable} onClick="return detailScreen('${mcht_no}','${product_no}','${seq_no}','${apr_flag}')" >
+    </td>
+    <td nowrap >&nbsp;覆核狀態:
+        <span class="dsp_text">${tt_apr_flag}</span>
+        <input type="hidden" name="tt_apr_flag" value="${tt_apr_flag}" />
+    </td>
+ </tr>
+ <tr>
+    <td nowrap colspan="2" >&nbsp;特店名稱:
+        <span class="dsp_text" id="mcht_name" >${mcht_name}</span>
+        <input type="hidden" name="mcht_name" value="${mcht_name}" />
+    </td>
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;分期期數:
+        <span class="dsp_text">${product_no}</span>
+        <input type="hidden" name="product_no" value="${product_no}" />
+    </td>
+    <td nowrap >&nbsp;序號:
+        <span class="dsp_text">${seq_no}</span>
+        <input type="hidden" name="seq_no" value="${seq_no}" />
+    </td>    
+ </tr>
+ <tr>
+    <td nowrap colspan="2" >&nbsp;分期說明:
+        <input type="text" class="col_any" name="product_name" value="${product_name}" maxlength="40" size="42" zEdit="any,canTw" />
+    </td>    
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;有效日期:        
+        <input type="text" class="col_date" name="start_date" value="${start_date}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+        <script language="JavaScript">        
+            new tcal ({'formname': 'dataForm','controlname': 'start_date'});
+        </script>
+        --   
+        <input type="text" class="col_date" name="end_date" value="${end_date}" zEdit="date,yyyymmdd" maxlength="8" size="10" />
+        <script language="JavaScript">        
+            new tcal ({'formname': 'dataForm','controlname': 'end_date'});
+        </script>
+    </td>
+    <td nowrap >&nbsp;還款利率:
+        <input type="text" class="col_number" name="trans_rate" value="${trans_rate}" maxlength="7" size="9" zEdit="dignumber" />
+    </td>
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;最高消費金額:
+        <input type="text" class="col_number" name="tot_amt" value="${tot_amt}" maxlength="12" size="14" zEdit="number" />
+    </td>
+    <td nowrap >&nbsp;最低消費金額:
+        <input type="text" class="col_number" name="limit_min" value="${limit_min}" maxlength="12" size="14" zEdit="number" />
+    </td>
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;客戶手續費金額:
+        <input type="text" class="col_number" name="clt_fees_fix_amt" value="${clt_fees_fix_amt}" maxlength="13" size="15" zEdit="dignumber" />
+    </td>
+    <td nowrap >&nbsp;客戶手續費費率:
+        <input type="text" class="col_number" name="clt_interest_rate" value="${clt_interest_rate}" maxlength="13" size="15" zEdit="dignumber" /> %        
+    </td>
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;手續費是否可分期付款:
+        <span class="col_radio">                  
+            <input type="radio" value="Y" name="installment_flag" ${installment_flag-Y} />是
+            <input type="radio" value="N" name="installment_flag" ${installment_flag-N} ${DEFAULT-installment_flag} />否
+        </span>
+    </td>
+    <td nowrap >&nbsp;應付費用年百分率:
+        <input type="text" class="col_number" name="year_fees_rate" value="${year_fees_rate}" maxlength="6" size="8" zEdit="dignumber" /> %
+    </td>
+ </tr>
+ <tr>
+    <td nowrap >&nbsp;每筆特店手續費金額:
+        <input type="text" class="col_number" name="fees_fix_amt" value="${fees_fix_amt}" maxlength="9" size="11" zEdit="dignumber" />
+    </td>
+    <td nowrap >&nbsp;特店手續費費率:
+        <input type="text" class="col_number" name="interest_rate" value="${interest_rate}" maxlength="6" size="8" zEdit="dignumber" />
+    </td>
+ </tr>
+     
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+<input type="hidden" name="data_k4" value="">
+
+<!-- -->
+<input type="hidden" id="apr_flag" name="apr_flag" value="${apr_flag}" />
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="mktm4100">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ window.onload = function(){
+    var  apr_flag =document.forms["dataForm"]["apr_flag"].value; 
+
+    if ( apr_flag == '') {
+        document.getElementById("btnAdd").style.display = "";
+        document.getElementById("ex_table").style.display = "";
+    }
+ }
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "A" ) {
+        if (checkAddData() == false) return false;
+    }
+
+    return true;
+  }
+ 
+  function detailScreen(parm,parm2,parm3,parm4) { 
+    var ls_mcht_no =document.forms["dataForm"]["seq_no"];
+    var ls_product_no =document.forms["dataForm"]["apr_flag"].value.toUpperCase();
+    var ls_seq_no =document.forms["dataForm"]["seq_no"].value.toUpperCase();
+    var ls_apr_flag =document.forms["dataForm"]["apr_flag"].value.toUpperCase();
+   
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    top.respHtml  = "mktm4100_acct";
+    top.submitControl("R2");
+  return true;
+ }
+ 
+  function keyChange(ps1) {    
+ 	var  mcht_no =document.forms["dataForm"]["kk_mcht_no"].value;
+	var  product_no =document.forms["dataForm"]["kk_product_no"].value;
+	var  apr_flag =document.forms["dataForm"]["apr_flag"].value; 
+
+	if ( apr_flag != '' || mcht_no.trim() == '' || product_no.trim() =='' ) {
+        $("#btnAdd").attr("disabled",true); 
+		return false;
+	}
+
+    if (top.isDigitNum(product_no) == false){
+        alert("分期期數須為數字");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+    
+    if(product_no == '0') {
+        alert("分期期數不可為 0 !");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+
+    if (product_no.length > 2){
+        alert("分期期數長度不可大於2");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+    
+	idCode = ps1;
+    top.actionCode = "AJAX";
+	resetJSON();
+	addJSON("ax_mcht_no",mcht_no);	
+    addJSON("ax_product_no",product_no);	
+	processAJAX();
+ }
+ 
+  function ajaxResponse() {    
+	top.respHtml ="mktm4100_detl";
+    top.requHtml ="mktm4100_detl";
+
+	if  ( idCode === '1') {        
+        var seq_no =getJSONvalue("seq_no",0);
+        if (seq_no.length>0) {             
+            $("#kk_seq_no").text(seq_no);   
+            $("#kk_seq_no2").val(seq_no);   
+            $("#btnAdd").attr("disabled",false);             
+        } else {
+            $("#btnAdd").attr("disabled",true);   
+        }
+        
+        var mcht_name =getJSONvalue("mcht_name",0);
+        if (mcht_name.length>0) {
+            $("#mcht_name").text(mcht_name);   
+            $("#mcht_name").val(mcht_name);  
+        }
+        
+        var product_no =getJSONvalue("kk_product_no",0);
+        if (product_no.length>0) {
+            $("#kk_product_no").text(product_no);   
+            $("#kk_product_no").val(product_no);  
+        }
+        
+        var mail_buy = getJSONvalue("mail_buy",0);
+        if (mail_buy.length>0) {             
+            if(mail_buy == '1') {
+                alert("ECS郵購特店，不可用線上分期付款");
+                $("#btnAdd").attr("disabled",true);
+            }
+        }
+        
+	}      
+	if ( idCode === '1'){ 
+        return false; 
+    }
+ }
+
+ function checkAddData(){
+    var  mcht_no =document.forms["dataForm"]["kk_mcht_no"].value;
+    var  product_no =document.forms["dataForm"]["kk_product_no"].value;
+
+    if ( mcht_no.trim() == '' || product_no.trim() =='') {
+        alert("特店代號和分期期數為必輸欄位");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+
+    if (top.isDigitNum(product_no) == false){
+        alert("分期期數須為數字");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+    
+    if(product_no == '0') {
+        alert("分期期數不可為 0 !");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+
+    if (product_no.length > 2){
+        alert("分期期數長度不可大於2");
+        $("#btnAdd").attr("disabled",true);  
+        return false;
+    }
+
+    return true;
+ }
+ 
+</script>

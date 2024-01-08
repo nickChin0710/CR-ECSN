@@ -1,0 +1,153 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-09-26  V1.00.01  Ryan       Initial                                  -->
+<!-- 112-05-30  V1.00.02  Ryan       增加貴賓卡選項、ID查詢                                                                      -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>編列製卡後郵寄快捷的掛號號碼</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   	<td nowrap>&nbsp;
+      <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="編列掛號號碼" onClick="return top.submitControl('Q1')" class="btAdd" >&nbsp;&nbsp;
+     </td>
+    <td nowrap>&nbsp;製卡日:
+    		<input type="text" class="col_date" name="ex_to_nccc_date1" value="${ex_to_nccc_date1}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       	<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_to_nccc_date1'});
+	    	</script>
+         --
+        <input type="text" class="col_date" name="ex_to_nccc_date2" value="${ex_to_nccc_date2}"
+         		zeditType="date,ymd" MaxLength=8 size=8 />
+       	<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'ex_to_nccc_date2'});
+	    	</script>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;卡片種類:
+      <select name="ex_card_type" class="col_ddlb">
+         <option value="0" ${ex_card_type-0} >全部</option>
+         <option value="C" ${ex_card_type-C} >信用卡</option>
+         <option value="V" ${ex_card_type-V} >VD卡</option>
+         <option value="P" ${ex_card_type-P} >貴賓卡</option>
+      </select>
+    </td>
+    <td nowrap>&nbsp;寄件分行：
+        <select size="1" name="ex_mail_branch" class="col_ddlb" >
+           ${dddw_mail_branch}
+        </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;卡號:
+      	<input type="text" class="col_any" name="ex_card_no" value="${ex_card_no}" 
+        	zEdit="any" maxlength="19" size="21" />
+    </td>
+    <td nowrap>&nbsp;掛號號碼:
+        <input type="text" class="col_any" name="ex_mail_no" value="${ex_mail_no}" 
+        	zEdit="any" maxlength="15" size="15" />
+    </td>
+  </tr>
+  <tr>
+  	<td nowrap colspan = "2">&nbsp;ID:
+      	<input type="text" class="col_text" name="ex_apply_id" value="${ex_apply_id}" 
+        	zEdit ="any,upper" maxlength="10" size="12" />
+    </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">掛號號碼</th>
+    <th nowrap class="list_th">寄件分行</th>
+    <th nowrap class="list_th">製卡日</th>
+    <th nowrap class="list_th">團代</th>
+    <th nowrap class="list_th">卡號</th>
+    <th nowrap class="list_th">ID</th>
+    <th nowrap class="list_th">中文姓名</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <tr onclick="detailScreen('${SER_NUM}','${batchno}','${recno}','${table_name}','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_ll"> ${mail_no}</td>
+    <td nowrap class="list_ll"> ${mail_branch}.${full_chi_name}</td>
+    <td nowrap class="list_ll"> ${to_nccc_date.YMD}</td>
+    <td nowrap class="list_ll"> ${group_code}</td>
+    <td nowrap class="list_ll"> ${card_no}</td>
+    <td nowrap class="list_ll"> ${apply_id}</td>
+    <td nowrap class="list_ll"> ${chi_name}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "Q1" ) {
+        top.respLevel = 1;
+        top.respHtml = "crdm0150_add";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "crdm0150_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

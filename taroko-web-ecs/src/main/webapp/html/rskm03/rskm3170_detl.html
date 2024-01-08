@@ -1,0 +1,548 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 108-12-26   V1.00.01                                                     -->
+<!-- 109-01-06   V1.00.02  Justin Wu     updated for archit.                  -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>偽冒調查處理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層" />&nbsp;
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  <input type="Button" value="敘實記錄" ${btnUpdate_disable} onclick="call_rskm3180()" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="處理程序" ${btnUpdate_disable} onClick="call_rskm3190()" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="調查結果" ${btnUpdate_disable} onClick="call_rskm3210()" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="預警記錄" ${btnUpdate_disable} onClick="call_rskm3220()" class="btQuery" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;卡號:
+        <input type="text" class="col_text" name="kk_card_no" value="${kk_card_no}" maxlength="16" size="18" zEdit="number" >
+    </td>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap>&nbsp;身分證ID:
+      <label class="dsp_text" id="db_idno" >${db_idno}</label>
+      <input type="hidden" name="db_idno" value="${db_idno}">
+   </td>
+   <td nowrap>&nbsp;姓名:
+      <label class="dsp_text" id="db_chi_name" >${db_chi_name}</label>
+      <input type="hidden" name="db_chi_name" value="${db_chi_name}">
+   </td>
+   <td nowrap>&nbsp;生日:
+      <label class="dsp_text" id="db_bir_date" >${db_bir_date.YMD}</label>
+      <input type="hidden" name="db_bir_date" value="${db_bir_date}">&nbsp;
+      <label class="dsp_text" id="vd_flag" >${vd_flag}</label>
+      <input type="hidden" name="vd_flag" value="${vd_flag}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;住宅電話:
+      <label class="dsp_text" id="tel_no1" >${tel_no1}</label>
+      <input type="hidden" name="tel_no1" value="${tel_no1}">
+   </td>
+   <td nowrap>&nbsp;公司電話:
+      <label class="dsp_text" id="tel_no2" >${tel_no2}</label>
+      <input type="hidden" name="tel_no2" value="${tel_no2}">
+   </td>
+   <td nowrap>&nbsp;行動電話:
+      <label class="dsp_text" id="tel_no3" >${tel_no3}</label>
+      <input type="hidden" name="tel_no3" value="${tel_no3}">
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;帳單地址:
+     <label class="dsp_text" id="bill_addr" >${bill_addr}</label>
+      <input type="hidden" name="bill_addr" value="${bill_addr}">
+   </td>
+ </tr>
+</table>
+</div>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+   <td nowrap>&nbsp;卡號:
+      <span class="dsp_text">${card_no}</span>
+      <input type="hidden" name="card_no" value="${card_no}">
+   </td>
+   <td nowrap>&nbsp;卡片效期:
+      <label class="dsp_text" id="new_end_date">${new_end_date.YMD}</label>
+      <input type="hidden" name="new_end_date" value="${new_end_date}">
+   </td>
+   <td nowrap>&nbsp;團體代號:
+      <label class="dsp_text" id="group_code">${group_code}</label>
+      <input type="hidden" name="group_code" value="${group_code}">&nbsp;
+      <label class="dsp_text" id="vd_flag">${vd_flag}</label>
+      <input type="hidden" name="vd_flag" value="${vd_flag}">&nbsp;
+   </td>
+   <td nowrap>
+   		<input type="Button" value="　工作底稿　" ${btnUpdate_disable} onClick="return top.submitControl('PDF1')" class="btOther" >&nbsp;&nbsp;      
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;立案日期:
+      <span class="dsp_date">${case_date.YMD}</span>
+      <input type="hidden" name="case_date" value="${case_date}">
+   </td>
+   <td nowrap>&nbsp;案件編號:
+      <span class="dsp_text">${case_seqno}</span>
+      <input type="hidden" name="case_seqno" value="${case_seqno}">
+   </td>
+   <td nowrap disabled="disabled">　
+      <input type="checkbox" name="turn_legal_flag" value="Y" ${turn_legal_flag-Y}>
+      <span class="dsp_text">續轉法務</span>
+      <input type="checkbox" name="turn_coll_flag" value="Y" ${turn_coll_flag-Y}>
+      <span class="dsp_text">轉催收部</span>
+   </td>
+   <td nowrap>
+   		<input type="Button" value="　敘實報告　" ${btnUpdate_disable} onClick="return top.submitControl('PDF2')" class="btOther" >&nbsp;&nbsp;            
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;案件類型:
+      <span class="dsp_text">${case_type}</span>
+      <input type="hidden" name="case_type" value="${case_type}">
+   </td>
+   <td nowrap >&nbsp;風險行:
+      <span class="dsp_text">${risk_bank_no}${tt_risk_bank_no}</span>
+      <input type="hidden" name="risk_bank_no" value="${risk_bank_no}">
+      <input type="hidden" name="tt_risk_bank_no" value="${tt_risk_bank_no}">
+   </td>
+   <td nowrap>&nbsp;案件來源:
+      <span class="dsp_text">${case_source}</span>
+      <input type="hidden" name="case_source" value="${case_source}">
+   </td>
+   <td nowrap>
+      <input type="Button" value="　聲明書　" ${btnUpdate_disable} onClick="return top.submitControl('PDF3')" class="btOther" >&nbsp;&nbsp;            
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;盜刷成功筆數:
+      <span class="dsp_text">${fraud_ok_cnt.(999)}</span>
+      <input type="hidden" name="fraud_ok_cnt" value="${fraud_ok_cnt}">
+   </td>
+   <td nowrap>&nbsp;盜刷成功金額:
+      <span class="dsp_text">${fraud_ok_amt.(999)}</span>
+      <input type="hidden" name="fraud_ok_amt" value="${fraud_ok_amt}">
+   </td>
+   <td nowrap>
+   		<input type="Button" value="　結果報告　" ${btnUpdate_disable} onClick="return top.submitControl('PDF4')" class="btOther" >&nbsp;&nbsp;                  
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="3">&nbsp;調查經辦:
+      <input type="text" class="col_any" name="survey_user" value="${survey_user}" maxlength="10" size="12" zEdit="any,canTw" >
+   </td>   
+   <td nowrap>
+   		<input type="Button" value="　冒用明細　" ${btnUpdate_disable} onClick="return top.submitControl('PDF5')" class="btOther" >&nbsp;&nbsp;                        
+   </td>
+</tr>
+<tr>
+	<td nowrap colspan="4" >&nbsp;分機:
+		<input type="text" class="col_text" name="ex_tel_no" value="${ex_tel_no}" maxlength="4" size="6" zEdit="number" >&nbsp;&nbsp;
+		專員
+		<input type="text" class="col_any" name="ex_tel_user" value="${ex_tel_user}" maxlength="10" size="12" zEdit="any,canTw" >		
+	</td>	
+<tr>
+   <td nowrap colspan="4">&nbsp;案件備註:
+      <input type="text" class="col_any" name="case_remark" value="${case_remark}" maxlength="80" size="160" zEdit="any,canTw" >
+   </td>
+</tr>
+<tr>
+	<td nowrap >&nbsp;冒用特店代號查詢:
+		<input type="text" class="col_text" name="kk_mcht_no" value="${kk_mcht_no}" maxlength="15" size="17" >
+    <input type="Button" value="..." onclick="processVendorCode('action')" class="btAdd_detl" />
+  </td>
+  <td nowrap >
+  	<input type="Button" value="帳單資料" ${btnUpdate_disable} onClick="call_Bill('${card_no}')" class="btQuery" >&nbsp;&nbsp;	
+  	<input type="Button" value="授權交易記錄" ${btnUpdate_disable} onClick="call_Txlog('${card_no}')" class="btQuery" >&nbsp;&nbsp;	
+  </td>  
+  <td nowrap ></td>
+  <td nowrap ></td>
+</tr>
+</table>
+
+</div>
+<br>
+
+
+<!--START OF 交易紀錄-[Update] -->
+<th nowrap class="list_th">
+      <input type="Button" class="btOther" value="新增明細" ${btnUpdate_disable} 
+         onClick="return detailScreen('${card_no}')" >
+    </th>
+ <table id="table1" width="80%" class="sortable" border="0" >
+ 
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap>卡號</th>
+    <th nowrap>交易日期</th>
+    <th nowrap>時間</th>
+    <th nowrap>商店代號</th>
+    <th nowrap>Terminal</th>
+    <th nowrap>MCC</th>
+    <th nowrap>POS_EM</th>
+    <th nowrap>交易金額</th>
+    <th nowrap>Resp</th>
+    <th nowrap>城市</th>
+    <th nowrap>國別</th>
+    <th nowrap>收單行</th>
+    <th nowrap>ECI</th>
+    <th nowrap>UCAF</th>
+  </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> &nbsp;
+   	<input type="checkbox" name="opt" value="${ser_num}" />
+   	${SER_NUM}&nbsp;
+   	<img src="images/btnQuery.gif" width="20" height="15" onclick="detailScreen_U('${SER_NUM}','${A-rowid}','','')" style="cursor:hand">
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-card_no}
+    	<input type="hidden" name="A-card_no" value="${A-card_no}" />
+    	<input type="hidden" name="A-rowid" value="${A-rowid}"/>
+    	<input type="hidden" name="SER_NUM" value="${SER_NUM}">    	
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-txn_date.YMD}
+    	<input type="hidden" name="A-txn_date" value="${A-txn_date}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-txn_time.TIME}
+    	<input type="hidden" name="A-txn_time" value="${A-txn_time}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-mcht_no}
+    	<input type="hidden" name="A-mcht_no" value="${A-mcht_no}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-term_id}
+    	<input type="hidden" name="A-term_id" value="${A-term_id}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-mcht_category}
+    	<input type="hidden" name="A-mcht_category" value="${A-mcht_category}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-pos_em}
+    	<input type="hidden" name="A-pos_em" value="${A-pos_em}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-txn_amt.(999)}
+    	<input type="hidden" name="A-txn_amt" value="${A-txn_amt}" />
+   </td> 
+   <td nowrap class="list_cc">&nbsp;${A-resp_code}
+    	<input type="hidden" name="A-resp_code" value="${A-resp_code}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-mcht_city}
+    	<input type="hidden" name="A-mcht_city" value="${A-mcht_city}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-mcht_country}
+    	<input type="hidden" name="A-mcht_country" value="${A-mcht_country}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-arq_bank_no}
+    	<input type="hidden" name="A-arq_bank_no" value="${A-arq_bank_no}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A-eci_data}
+    	<input type="hidden" name="A-eci_data" value="${A-eci_data}" />
+   </td>
+   <td nowrap class="list_cc" colspan="1">&nbsp;${A-ucaf_data}
+    	<input type="hidden" name="A-ucaf_data" value="${A-ucaf_data}" />
+   </td>    
+  </tr>
+  <tr>
+      <td nowrap class="list_ll" colspan="6">&nbsp;特店名稱-中文:
+         <span class="dsp_text">${A-mcht_name}</span>
+         <input type="hidden" name="A-mcht_name" value="${A-mcht_name}">
+      </td>
+      <td nowrap class="list_ll" colspan="5">&nbsp;特店名稱-英文:
+         <span class="dsp_text">${A-mcht_ename}</span>
+         <input type="hidden" name="A-mcht_ename" value="${A-mcht_ename}">
+      </td>
+      <td nowrap class="list_cc" colspan="2">&nbsp;原始金額:
+         <span class="dsp_text">${A-source_amt.(999.00)}</span>
+         <input type="hidden" name="A-source_amt" value="${A-source_amt}">
+      </td>
+      <td nowrap class="list_cc" colspan="3">&nbsp;原始幣別:
+         <span class="dsp_text">${A-source_curr}</span>
+         <input type="hidden" name="A-source_curr" value="${A-source_curr}">
+         <input type="checkbox" name="A-three_d_flag" value="Y" ${A-three_d_flag-Y} disabled="disabled">3D&nbsp;
+         <input type="checkbox" name="A-ic_fallback" value="Y" ${A-ic_fallback-Y} disabled="disabled">IC FALLBACK&nbsp;
+      </td>
+  </tr>
+  <tr>
+      <td nowrap class="list_ll" colspan="11">&nbsp;特店地址:
+         <span class="dsp_text">${A-mcht_addr}</span>
+         <input type="hidden" name="A-mcht_addr" value="${A-mcht_addr}">
+      </td>
+      <td nowrap class="list_cc" colspan="2">&nbsp;Tel No:
+         <span class="dsp_text">${A-mcht_tel_no}</span>
+         <input type="hidden" name="A-mcht_tel_no" value="${A-mcht_tel_no}">
+      </td>
+      <td nowrap class="list_cc" colspan="3">&nbsp;IP:
+         <span class="dsp_text">${A-ip_addr}</span>
+         <input type="hidden" name="A-ip_addr" value="${A-ip_addr}">
+      </td>
+  </tr>
+  <tr>
+      <td nowrap class="list_ll" colspan="16">&nbsp;備註:
+         <span class="dsp_text">${A-txn_remark}</span>
+         <input type="hidden" name="A-txn_remark" value="${A-txn_remark}">
+      </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  </table>　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　  
+
+<!-- END OF 交易紀錄================================= -->
+
+ <!-- 動態 BLOCK 視窗控制 -->
+<div id="disDiv" class="disScreen"></div>
+
+<div id="popDiv" class="popup1" style="top:200px; left:300px; width:1000px; height:500px; overflow-y:auto; margin-top:-1px; " >
+  <table id="popup2" width=600px;  >  	 
+     <tr style="position:fixed;top:200px;" ><td nowrap colspan="2" ><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png"/></td></tr>
+     <tr ><td nowrap colspan="2">&nbsp;</td></tr>
+     <tr>
+     	 <th nowrap >卡號&nbsp;</th>
+       <th nowrap >特店代號&nbsp;</th>
+       <th nowrap >特店名稱&nbsp;</th>
+       <th nowrap >特店電話&nbsp;</th>
+       <th nowrap >特店地址&nbsp;</th>       
+     </tr>     
+     <tr  id="ajax_row" >
+     	 <td nowrap class="list_cc" > ${pop_card_no}&nbsp;</td>
+       <td nowrap class="list_cc" > ${pop_mcht_no}&nbsp;</td>
+     	 <td nowrap class="list_ll" > ${pop_mcht_name}&nbsp;</td>
+     	 <td nowrap class="list_ll" > ${pop_mcht_tel_no}&nbsp;</td>
+     	 <td nowrap class="list_ll" > ${pop_mcht_addr}&nbsp;</td>
+     </tr>
+  </table>
+</div>
+<!-- -->
+<input type="hidden" name="survey_date" value="${survey_date}" />
+<input type="hidden" name="data_k1" value="" />
+<input type="hidden" name="data_k2" value="" />
+<input type="hidden" name="data_k3" value="" />
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables_2.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1',4);
+</script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+function detailScreen(parm) { 
+   
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    top.respHtml  = "rskm3170_txn";
+    top.submitControl("X");
+  return true;
+ }
+
+function detailScreen_A(serNum,parm) {  
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    top.respHtml  = "rskm3170_txn";
+    top.submitControl("X2");
+  return true;
+ }
+
+function detailScreen_U(serNum,parm) { 
+   
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    top.respHtml  = "rskm3170_txn";
+    top.submitControl("R2");
+  return true;
+ }
+
+function call_rskm3180() { 
+    top.respLevel = 2;
+    //document.dataForm.data_k1.value = parm;
+    top.respHtml  = "rskm3180";
+    top.submitControl("R3");
+    //top.submitControl("R3");
+  return true;
+ }
+
+function call_rskm3190() { 
+    top.respLevel = 2;
+    top.respHtml  = "rskm3190";
+    top.submitControl("R4");
+  return true;
+ }
+
+function call_rskm3210() { 
+    top.respLevel = 2;
+    top.respHtml  = "rskm3210";
+    top.submitControl("R5");
+  return true;
+ }
+
+function call_rskm3220() { 
+    top.respLevel = 2;
+    top.respHtml  = "rskm3220";
+    top.submitControl("R6");
+  return true;
+ }
+
+function call_Bill(parm) {		
+	document.dataForm.data_k1.value = parm;
+	top.respLevel = 2;	
+  top.respHtml  = "rskm3170_bill";
+  top.submitControl("R20");
+  return true;
+}
+
+function call_Txlog(parm) {	
+	document.dataForm.data_k1.value = parm;
+	top.respLevel = 2;
+  top.respHtml  = "rskm3170_txlog";
+  top.submitControl("R20");
+  return true;
+}
+
+function detailScreen_C(serNum,parm,parm2,parm3) {
+		top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm3170_txn";
+    top.submitControl("R8");
+}
+/*--
+function winidChange(ps1)
+ {
+	var  win_id =document.forms["dataForm"]["card_no"].value;
+//	alert("--winid="+win_id);
+	
+	if ( win_id === '' ) {
+		return false;
+	}
+	idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode === '1' ) { 
+		//clearListObj(document.getElementById("card_no"));
+		top.methodName = "wf_ajax_winid";
+		//listObjName ="card_no";
+   }
+
+	resetJSON();
+	addJSON("ax_winid",win_id);
+	processAJAX();
+ }
+*/  
+/*--
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+--*/  
+ function ajaxResponse()
+ {
+	top.respHtml ="rskm3170_detl";
+   top.requHtml ="rskm3170_detl";
+
+/*--	
+ 	var len = 0;
+	var listObj = document.getElementById(listObjName);
+	len = getJSONlength("OPTION_TEXT");
+--*/
+	if  ( idCode === '1' ) {
+		document.getElementById("db_idno").innerHTML =getJSONvalue("db_idno",0);
+		document.getElementById("db_chi_name").innerHTML =getJSONvalue("db_chi_name",0);
+		document.getElementById("db_bir_date").innerHTML =getJSONvalue("db_bir_date",0);
+		document.getElementById("vd_flag").innerHTML =getJSONvalue("vd_flag",0);
+		document.getElementById("tel_no1").innerHTML =getJSONvalue("tel_no1",0);
+		document.getElementById("tel_no2").innerHTML =getJSONvalue("tel_no2",0);
+		document.getElementById("tel_no3").innerHTML =getJSONvalue("tel_no3",0);
+		document.getElementById("bill_addr").innerHTML =getJSONvalue("bill_addr",0);
+		document.getElementById("new_end_date").innerHTML =getJSONvalue("new_end_date",0);
+		document.getElementById("group_code").innerHTML =getJSONvalue("group_code",0);
+	}   else    if  ( idCode === '2' ) {
+        var len = getJSONlength("pop_mcht_no");
+
+        var tables = document.getElementById("popup2"); 
+        var curRow = document.getElementById("ajax_row");
+        var RowCount = tables.rows.length; 
+  
+    
+        for( var i = RowCount - 1; i>=3; i--)
+            { tables.deleteRow(i);  }
+  
+            for ( var i=0; i<len; i++)
+            { 
+                var rows = curRow.cloneNode(true);
+                if ( i == 0  ) 
+                    { rows = curRow; }
+                rows.cells[0].innerHTML = getJSONvalue("pop_card_no",i);
+                rows.cells[1].innerHTML = getJSONvalue("pop_mcht_no",i);
+                rows.cells[2].innerHTML = getJSONvalue("pop_mcht_name",i);
+                rows.cells[3].innerHTML = getJSONvalue("pop_mcht_tel_no",i);
+                rows.cells[4].innerHTML = getJSONvalue("pop_mcht_addr",i);          
+                tables.appendChild(rows);
+            }
+        top.popupBlock('popDiv');
+    }
+    
+	if ( idCode === '1' )
+	{ return false; }
+ }
+ 
+ function processVendorCode(type)
+ { 
+	if(type == 'action'){
+	    var vendorNo   = document.dataForm.kk_mcht_no.value;
+	
+	    if ( vendorNo.length < 4 )
+	       { alert("請輸入至少四碼"); return false; }           
+	    resetJSON();	    
+      idCode = '2';
+	    autoJSON = false;
+      addJSON("ajaxId", "1");
+	    addJSON("kk_mcht_no2",vendorNo);	    
+	    top.actionCode = "AJAX";
+	    // top.methodName = "processAjaxOption";  // 20200102 updated for archit.  change 	    
+	    processAJAX();	    
+	    return true;
+	}
+}
+ 
+</script> 

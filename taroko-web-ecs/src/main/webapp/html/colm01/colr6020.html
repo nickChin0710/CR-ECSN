@@ -1,0 +1,269 @@
+<html>
+<head>
+<title>逾期催收明細報表(ICW10) modify 20230926</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4" >
+  <tr>
+    <!-- 部門代號add -->
+    <td nowrap colspan="1">&nbsp;業績分行:
+      <select size="1" name="ex_reg_bank_no" class="col_ddlb">
+      	<option value="">--</option>   
+         ${dddw_reg_bank_no}
+      </select>
+   </td>
+     <td nowrap >&nbsp;資料日期:
+         <input type="text" class="col_date" name="ex_ctreate_date_s" value="${ex_ctreate_date_s}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_ctreate_date_s'});
+	      </script>&nbsp;--
+	      <input type="text" class="col_date" name="ex_ctreate_date_e" value="${ex_ctreate_date_e}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 zRequire="C" />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_ctreate_date_e'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;最新資料日
+                    <span class="dsp_text">${ex_create_date}&nbsp;</span>
+                    <input type="hidden" name="ex_create_date" value="${ex_create_date}">
+                </td>
+   <td nowrap >&nbsp;核卡單位:
+	   <input type="text" class="col_text" name="ex_risk_bank_no" value="${ex_risk_bank_no}" maxlength="4" size="6">
+	</td>
+  </tr>
+  <tr> 
+	<td nowrap >&nbsp;帳務類別:
+	   <select size="1" name="ex_acct_type" class="col_ddlb" >
+	      <option value="">--</option>
+         ${dddw_acct_type}
+      </select>
+   </td>
+   <td nowrap>&nbsp;帳戶狀態:
+       <select   size="1"  name="ex_acct_status" class="col_ddlb">
+         <option value="">--</option>
+         <option value="1" ${ex_acct_status-1} >1.正常&nbsp;</option>
+         <option value="2" ${ex_acct_status-2} >2.逾放&nbsp;</option>
+         <option value="3" ${ex_acct_status-3} >3.催收&nbsp; </option>
+<!--          <option value="4" ${ex_acct_status-4} >4.呆帳&nbsp;</option> -->
+     </select>
+   </td>
+   <td nowrap colspan="2">&nbsp;免列報:
+      <span class="col_radio">
+      	 <input type="radio" value=" " name="ex_collect_flagx" ${ex_collect_flagx- } ${DEFAULT_CHK} />全部
+         <input type="radio" value="Y" name="ex_collect_flagx" ${ex_collect_flagx-Y} />Y
+         <input type="radio" value="N" name="ex_collect_flagx" ${ex_collect_flagx-N} />N
+      </span>
+    </td> 
+</tr>
+  <tr  id = "tr">
+	<td nowrap >&nbsp;正卡人證號:
+	   <input type="text" class="col_text" name="ex_crd_idno" value="${ex_crd_idno}" maxlength="16" size="18">
+	</td>
+	<td nowrap >&nbsp;商務卡統編:
+	   <input type="text" class="col_text" name="ex_corp_no" value="${ex_corp_no}" maxlength="16" size="18">
+	</td>
+	<td nowrap colspan="2">&nbsp;協商狀態:
+      <span class="col_radio">
+      	 <input type="radio" value=" " name="ex_pay_by_stage_flag" ${ex_pay_by_stage_flag- } ${DEFAULT_CHK} />全部
+         <input type="radio" value="Y" name="ex_pay_by_stage_flag" ${ex_pay_by_stage_flag-Y} />Y
+         <input type="radio" value="N" name="ex_pay_by_stage_flag" ${ex_pay_by_stage_flag-N} />N
+      </span>
+    </td>
+</tr>
+
+<tr>
+   <td nowrap >&nbsp;雙幣幣別:
+	   <select size="1" name="ex_curr_code" class="col_ddlb" >
+	      <option value="">--</option>
+         ${dddw_curr_code}
+      </select>
+   </td>
+   <td>&nbsp;Mcode區間:
+      		<input type="text" class="col_number" name="int_rate_mcode_s" value="${int_rate_mcode_s}"
+         	zeditType="number" MaxLength=3 size=5 />
+         	--
+         	<input type="text" class="col_number" name="int_rate_mcode_e" value="${int_rate_mcode_e}"
+         	zeditType="number" MaxLength=3 size=5 />
+	</td>
+	<!--td>&nbsp;協商狀態:
+      		<input type="text" class="col_number" name="pay_by_stage_flax_s" value="${pay_by_stage_flax_s}"
+         	zeditType="number" MaxLength=3 size=5 />
+         	--
+         	<input type="text" class="col_number" name="pay_by_stage_flax_e" value="${pay_by_stage_flax_e}"
+         	zeditType="number" MaxLength=3 size=5 />
+	</td -->
+	<td nowrap colspan="2">協商種類:&nbsp;
+      <select   size="1"  name="ex_pay_by_stage_flag1" class="col_ddlb" id = "ex_pay_by_stage_flag1" onChange = "changeOption()">
+			${pay_by_stage_flag_option1}
+      </select>
+     	 協商狀態:&nbsp;
+      <select   size="1"  name="ex_pay_by_stage_flag2" class="col_ddlb" id = "ex_pay_by_stage_flag2">
+			${pay_by_stage_flag_option2}
+      </select>
+    </td>
+</tr>
+<tr>
+   <td nowrap colspan="4">&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF1');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">
+      <span class="col_key">(產生明細表PDF)</span>&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF2');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">
+   	  <span class="col_key">(產生統計表PDF)</span>&nbsp;&nbsp;
+   </td>  
+</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="3%">No&nbsp;</th>
+    <th nowrap >資料日期&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >正卡人證號&nbsp;</th>
+    <th nowrap >公司統編&nbsp;</th>
+    <th nowrap >公司名稱&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>  
+    <th nowrap >戶況&nbsp;</th>
+    <th nowrap >MCODE&nbsp;</th>
+    <th nowrap >雙幣幣別&nbsp;</th>  
+<!--     <th nowrap >應繳總額&nbsp;</th> -->
+<!--     <th nowrap >最低應繳金額&nbsp;</th> -->
+	<th nowrap >帳單應繳總額&nbsp;</th>
+    <th nowrap >帳單最低應繳金額&nbsp;</th>
+    <th nowrap >帳單應繳餘額&nbsp;</th>
+    <th nowrap >帳單應繳最低餘額&nbsp;</th>
+    <th nowrap >協商狀態&nbsp;</th>
+    <th nowrap >免列報&nbsp;</th>        
+    <th nowrap >代表卡號&nbsp;</th>
+    <th nowrap >核卡單位&nbsp;</th>
+    <th nowrap >業績單位&nbsp;</th>
+    <th nowrap >持卡人信用卡總額度&nbsp;</th>
+    <th nowrap >委託扣繳帳戶帳號&nbsp;</th>
+    <th nowrap >覆審信評等級&nbsp;</th>
+    <th nowrap >新進件信評等級&nbsp;</th>
+    <th nowrap >住家電話&nbsp;</th>
+    <th nowrap >公司電話&nbsp;</th>
+    <th nowrap >手機號碼&nbsp;</th>
+  
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_ll"> ${create_date}&nbsp;</td>
+    <td nowrap class="list_ll"> ${chi_name}&nbsp;</td>
+	<td nowrap class="list_ll"> ${id_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${corp_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${corp_chi_name}&nbsp;</td>
+	<td nowrap class="list_cc"> ${acct_type}&nbsp;</td>
+	<td nowrap class="list_ll"> ${acct_status}&nbsp;</td>
+	<td nowrap class="list_ll"> ${int_rate_mcode}&nbsp;</td>
+	<td nowrap class="list_cc"> ${curr_code}&nbsp;</td>
+	<td nowrap class="list_rr"> ${ttl_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${stmt_over_due_amt.(999.00)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${dc_ttl_amt_bal.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dc_min_pay_bal.(999.00)}&nbsp;</td>
+	<td nowrap class="list_ll"> ${nego_type}.${tt_liab_type}${tt_pay_by_stage_flag}&nbsp;</td>
+    <td nowrap class="list_ll ${css_font}"> ${collect_flagx}&nbsp;</td>		
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<!-- <td nowrap class="list_ll"> ${delay_day}&nbsp;</td>-->
+	<td nowrap class="list_ll"> ${risk_bank_no}.${risk_bank_name}&nbsp;</td>
+	<td nowrap class="list_ll"> ${reg_bank_no}.${reg_bank_name}&nbsp;</td>	
+	<!-- td nowrap class="list_ll"> ${acct_status}&nbsp;</td-->
+	<td nowrap class="list_rr"> ${line_of_credit_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_ll"> ${autopay_acct_no}&nbsp;</td>
+	<td nowrap class="list_ll"> ${credit_level_old}&nbsp;</td>
+	<td nowrap class="list_ll"> ${credit_level_new}&nbsp;</td>
+	<td nowrap class="list_ll"> (${home_area_code1})-${home_tel_no1}#${home_tel_ext1}&nbsp;</td>
+	<td nowrap class="list_ll"> (${office_area_code1})-${office_tel_no1}#${office_tel_ext1}&nbsp;</td>
+	<td nowrap class="list_ll"> ${cellar_phone}&nbsp;</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <tr>
+  	<td nowrap class="list_rr" colspan="10"> 合計 :</td>
+  	<td nowrap class="list_rr"> ${sum_ttl_amt.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${sum_stmt_over_due_amt.(999.00)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${sum_dc_ttl_amt_bal.(999.00)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${sum_dc_min_pay_bal.(999.00)}&nbsp;</td>
+	<td nowrap class="list_ll" colspan="12"></td>
+  </tr>
+ </table>
+ 
+ <!--部門代號add-->
+   <input type="hidden" name="wk_edit_dept" value="${wk_edit_dept}">
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="mod_pgm" value="colr6020">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+ <input type="hidden" name="bank_unitno" value="${bank_unitno}">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<script language="JavaScript">
+  (function () {
+	//若為3144信用卡部或A014客服部則可查詢全部
+    var bankNo = $("input[name=bank_unitno]").val();
+    if(bankNo.length == 0){
+    	$("select[name=ex_reg_bank_no]").attr("disabled",true);
+    }else 
+    if (bankNo != '3144' && bankNo != 'A014') {
+      $("select[name=ex_reg_bank_no]").val(bankNo);
+      $("select[name=ex_reg_bank_no] option:not([value="+bankNo+"])").remove();
+    }
+  })()
+</script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="100";
+ 
+ function validateInput()
+ {
+   if ( !top.checkFormat() )
+      { return false; }
+   return true;
+ }
+ 
+ function changeOption(){
+	  var exPayByStageFlag1 = $("#ex_pay_by_stage_flag1").val();
+	  top.actionCode = "AJAX";
+	  resetJSON();
+	  addJSON("option_json1",exPayByStageFlag1);
+	  processAJAX();
+
+	  return true;
+ }
+ 
+ function ajaxResponse()
+ {
+ 	top.respHtml ="colr6020";
+ 	top.requHtml ="colr6020";
+    var optionJson2 = getJSONvalue("ddd_option2",0);
+   	$("#ex_pay_by_stage_flag2").find("option").remove();
+  	$("#ex_pay_by_stage_flag2").append(optionJson2);
+
+ }
+ 
+ 
+ 
+</script>

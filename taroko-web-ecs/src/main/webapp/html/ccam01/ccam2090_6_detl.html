@@ -1,0 +1,176 @@
+<html>
+<head>
+<title>卡戶/卡片基本資料查詢(查詢臨調內容)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層" />&nbsp;&nbsp;  
+ </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="3" >&nbsp;帳戶帳號:
+      <span class="dsp_text">${acct_type}-${acct_key}&nbsp;</span>      
+   </td>
+   <td nowrap colspan="3" >&nbsp;戶特指:
+      <span class="dsp_text">${spec_status}&nbsp;</span>      
+      凍結:
+      <span class="dsp_text">${block_reason1},${block_reason2},${block_reason3},${block_reason4},${block_reason5}&nbsp;</span>      
+   </td>      
+ </tr>
+ <tr>
+   <td nowrap colspan="6" >&nbsp;姓名:
+      <span class="dsp_text">${chi_name}&nbsp;</span>      
+   </td>
+ </tr> 
+ <tr>
+   <td nowrap colspan="2" >&nbsp;金控利害關係人:
+      <span class="dsp_text">${rela_flag}&nbsp;</span>      
+   </td>
+   <td nowrap colspan="2" >&nbsp;消貸餘額:
+      <span class="dsp_text">${asset_balance.(999)}&nbsp;</span>      
+   </td>
+   <td nowrap colspan="2" >&nbsp;擔保品:
+      <span class="dsp_text">${bond_amt.(999)}&nbsp;</span>      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;調整原因:      
+      <span class="dsp_text">${adj_reason}.${tt_adj_reason}</span>
+   </td>
+   <td nowrap colspan="2" >&nbsp;
+      <input type="checkbox" name="notice_flag" value="Y" ${notice_flag-Y} disabled > 通知附卡
+      附卡張數:
+      <span class="dsp_text">${card_sup_cnt.(999)}&nbsp;</span>      
+   </td>
+   <td nowrap colspan="2" >&nbsp;
+      <input type="checkbox" name="msg_flag" value="Y" ${msg_flag-Y} disabled > 送簡訊
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;有效日期 :
+     <span class="dsp_text">${adj_eff_start_date.YMD}</span>
+	      --
+	   <span class="dsp_text">${adj_eff_end_date.YMD}</span>
+	</td>
+    <td nowrap colspan="3" >&nbsp;適用地區別:
+      <span class="dsp_text">${adj_area}.${#JAVA:ecsfunc.DeCodeCcas.areaType(adj_area)}&nbsp;</span>
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;調整一般月限額至 :
+      <span class="dsp_text">${tot_amt_month.(999)}</span>
+   </td>
+   <td nowrap colspan="3" >&nbsp;目前額度:
+      <span class="dsp_text">${line_credit_amt.(999)}</span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;調整分期月限額至 : 
+      <span class="dsp_text">${adj_inst_pct.(999)}</span>
+   </td>
+   <td nowrap colspan="3" >&nbsp;未銷帳金額:
+      <span class="dsp_text">${db_pay_amt.(999)}</span>  
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="6" >&nbsp;調整原因備註:
+      <span class="dsp_text">${adj_remark}&nbsp;</span>
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="6" >
+      <input type="checkbox" name="adj_risk_flag" value="Y" ${adj_risk_flag-Y} disabled >&nbsp;管制高風險交易
+      卡別:
+			<span class="dsp_text">${card_note}</span>			
+			卡人等級
+			<span class="dsp_text">${risk_level}</span>			
+   </td>
+  </tr>
+</table>
+</div>
+<br>
+<hr>
+ <table width="60%" id="table1" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_cc" width="5%">No</th>
+    <th nowrap width="5%">專款<br>專用</th>
+    <th nowrap class="list_cc">調整MCC風險分類</th>
+    <th nowrap class="list_cc">臨調月限額</th>
+    <th nowrap class="list_cc">臨調日限額</th>    
+    <th nowrap class="list_cc">調整後月限次</th>
+    <th nowrap class="list_cc">調整後日限次</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">      
+    </td>
+    <td nowrap class="list_cc" >${spec_flag}</td>
+    <td nowrap class="list_ll" >&nbsp;${risk_type}.${tt_risk_type} </td>
+    <td nowrap class="list_rr" >${adj_month_amt.(999)}</td>
+    <td nowrap class="list_rr" >${adj_day_amt.(999)}</td>  
+    <td nowrap class="list_rr" >${adj_month_cnt.(999)}</td>
+    <td nowrap class="list_rr" >${adj_day_cnt.(999)}</td>
+  </tr>  
+  <!-- END DYNAMIC : DETAIL -->
+</table>  
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >  
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_PGM" value="ccam2050" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="detl" />
+<input type="hidden" name="conf_flag" value="" />
+
+
+</form>
+</body>
+</html>
+
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+// top.refreshButton2('1'); 
+top.refreshButton2(top.respLevel); 
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }		
+    return true;
+  }   
+   
+</script>

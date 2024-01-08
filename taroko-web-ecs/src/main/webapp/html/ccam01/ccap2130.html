@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>線上繳款還額作業主管覆核</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;建檔日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	</td>
+	<td nowrap >&nbsp;建檔人員:
+	   <input type="text" class="col_any" name="ex_crt_user" value="${ex_crt_user}" zEdit="any,canTw" maxlength="10" size="12" >
+    </td>
+   <td nowrap >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="覆核" onClick="return top.submitControl('C')" class="btProcess" ${btn_On1} >&nbsp;&nbsp;      
+      <input type="Button" value="解覆核" onClick="return top.submitControl('C1')" class="btProcess" ${btn_On2} >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;身分證字號:
+			<input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" zEdit="alphanum,upper" >
+		</td>
+  	<td nowrap >&nbsp;卡號:
+  		<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" >
+  	</td>
+    <td nowrap >&nbsp;
+        <span class="col_radio">            
+            <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+            <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${DEFAULT-ex_apr_flag} />未覆核
+        </span>
+   </td>
+   </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <th nowrap class="list_th">
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" />執行
+	 </th>    
+    <th nowrap >繳款日期&nbsp;</th>
+    <th nowrap >繳款時間&nbsp;</th>
+    <th nowrap >繳款卡號&nbsp;</th>
+    <th nowrap >姓名&nbsp;</th>
+    <th nowrap >繳款類別&nbsp;</th>
+    <th nowrap >繳款金額&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>    
+    <th nowrap >建檔日期&nbsp;</th>
+    <th nowrap >建檔人員&nbsp;</th>    
+    <th nowrap >異動日期&nbsp;</th>
+    <th nowrap >異動人員&nbsp;</th>    
+    <th nowrap >執行錯誤訊息&nbsp;</th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">   	
+   	<span class="dsp_flag">${ok_flag}</span>
+   	<input type="checkbox" name="opt" value="${ser_num}" ${opt_on} />
+    	 ${SER_NUM}&nbsp;
+   	<input type="hidden" name="ser_num" value="${ser_num}" />   
+    <input type="hidden" name="file_no" value="${file_no}" />   
+    <input type="hidden" name="serial_no" value="${serial_no}" />   
+    <input type="hidden" name="data_from" value="${data_from}" />   
+	</td>
+   <td nowrap class="list_cc"> ${pay_date.YMD}&nbsp;
+      <input type="hidden" name="pay_date" value="${pay_date}" />      
+	</td>
+	<td nowrap class="list_cc"> ${pay_time.TIME}&nbsp;
+	   <input type="hidden" name="pay_time" value="${pay_time}">	   
+	</td>
+	<td nowrap class="list_cc"> ${pay_card_no}&nbsp;
+	   <input type="hidden" name="pay_card_no" value="${pay_card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${chi_name}&nbsp;
+	   <input type="hidden" name="chi_name" value="${chi_name}">
+	</td>
+	<td nowrap class="list_cc"> ${tt_payment_type}&nbsp;
+	   <input type="hidden" name="tt_payment_type" value="${tt_payment_type}">
+	</td>
+	<td nowrap class="list_rr"> ${sign}${pay_amt.(999.00)}&nbsp;
+	   <input type="hidden" name="sign" value="${sign}">
+       <input type="hidden" name="pay_amt" value="${pay_amt}">
+	</td>
+	<td nowrap class="list_ll"> ${remark}&nbsp;
+	   <input type="hidden" name="remark" value="${remark}">
+	</td>
+	<td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;${crt_time.TIME}&nbsp;
+	   <input type="hidden" name="crt_date" value="${crt_date}" />
+     <input type="hidden" name="crt_time" value="${crt_time}" />
+	</td>    
+	<td nowrap class="list_cc"> ${crt_user}&nbsp;
+	   <input type="hidden" name="crt_user" value="${crt_user}" />	   
+	</td>	
+    <td nowrap class="list_cc"> ${mod_date.YMD}&nbsp;${mod_time2.TIME}&nbsp;
+	   <input type="hidden" name="mod_date" value="${mod_date}" />
+     <input type="hidden" name="mod_time2" value="${mod_time2}" />
+	</td>    
+	<td nowrap class="list_cc"> ${mod_user}&nbsp;
+	   <input type="hidden" name="mod_user" value="${mod_user}" />	   
+	</td>	
+    <td nowrap class="list_ll"> ${error_desc}&nbsp;
+	   <input type="hidden" name="error_desc" value="${error_desc}" />	   
+	</td>	
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language=JavaScript src="js/select_all.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if (top.actionCode =='C') {
+      if (confirm('是否執行覆核作業')==false) {
+         return false;
+      }
+    }
+    return true;
+  }
+
+</script>

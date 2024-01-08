@@ -1,0 +1,222 @@
+<html>
+<head>
+<title>自動扣繳帳號確認--主管覆核作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_verify]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_verify]").filter('[value=N]').prop('checked', true);
+}
+});
+</script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;帳戶帳號:
+   		<select size="1" name="ex_acct_type" class="col_ddlb" >   			
+      		${dddw_acct_type}
+   		</select>
+			<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" zEdit="alphanum,upper" >
+	 </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnProc"  value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;登錄人員:
+  		<input type="text" class="col_any" name="ex_user" value="${ex_user}" maxlength="10" size="12" zEdit="any,canTw" >
+  	</td>
+  	<td nowrap >&nbsp;
+  		<span class="col_radio">
+         <input type="radio" value="N" name="ex_verify" ${ex_verify-N} />未放行
+         <input type="radio" value="Y" name="ex_verify" ${ex_verify-Y} />已放行
+      </span>
+		</td>
+	</tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="10%"> 
+		 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+	    執行
+	 </th>
+    <th nowrap >放行作業&nbsp;</th>
+    <th nowrap >帳戶類別&nbsp;</th>
+    <th nowrap >帳戶帳號&nbsp;</th>
+    <th nowrap >正卡身分證&nbsp;</th>
+    <th nowrap >中文姓名&nbsp;</th>
+    <th nowrap colspan="2" >自動扣繳帳戶歸屬ID&nbsp;</th>
+    <th nowrap >自動扣繳行庫&nbsp;</th>
+    <th nowrap >自動扣繳帳號&nbsp;</th>
+    <th nowrap >生效旗標&nbsp;</th>
+    <th nowrap >自動扣繳指示碼&nbsp;</th>
+    <th nowrap >驗印完畢旗標&nbsp;</th>
+    <th nowrap >驗印日期&nbsp;</th>
+    <th nowrap >驗印結果&nbsp;</th>
+    <th nowrap >扣繳帳號生效起日&nbsp;</th>
+    <th nowrap >扣繳帳號生效迄日&nbsp;</th>
+    <th nowrap >資料來源&nbsp;</th>
+    <th nowrap >有效戶&nbsp;</th>
+    <th nowrap >檔案建立者&nbsp;</th>
+    <th nowrap >檔案建立時間&nbsp;</th>
+    <th nowrap >異動使用者&nbsp;</th>
+    <th nowrap >異動時間&nbsp;</th>
+    <th nowrap >帳單關帳期別&nbsp;</th>
+    <th nowrap >處理訊息&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+		<span class="dsp_flag">${ok_flag}</span>
+		<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} />
+	 	 ${SER_NUM}&nbsp;
+    <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+		<input type="hidden" name="ser_num" value="${ser_num}" />	
+		<input type="hidden" name="rowid" value="${rowid}" />	
+		<input type="hidden" name="p_seqno" value="${p_seqno}" />
+		<input type="hidden" name="ibm_check_flag" value="${ibm_check_flag}" />
+		<input type="hidden" name="ach_check_flag" value="${ach_check_flag}" />
+	</td>
+	 <td nowrap class="list_cc"> ${tt_exec_check_flag}&nbsp;
+	 		<input type="hidden" name="exec_check_flag" value="${exec_check_flag}">
+	 		<input type="hidden" name="tt_exec_check_flag" value="${tt_exec_check_flag}">
+	 </td>
+	 <td nowrap class="list_cc"> ${acct_type}&nbsp;
+	 		<input type="hidden" name="acct_type" value="${acct_type}">
+	 </td>
+	 <td nowrap class="list_cc"> ${acct_key}&nbsp;
+	 		<input type="hidden" name="acct_key" value="${acct_key}">
+	 </td>
+	 <td nowrap class="list_cc"> ${id_no}&nbsp;
+	 		<input type="hidden" name="id_no" value="${id_no}">
+	 </td>
+	 <td nowrap class="list_cc"> ${chi_name}&nbsp;
+	 		<input type="hidden" name="chi_name" value="${chi_name}">
+	 </td>
+	 <td nowrap class="list_cc"> ${autopay_id}&nbsp;
+	 		<input type="hidden" name="autopay_id" value="${autopay_id}">
+	 </td>
+	 <td nowrap class="list_cc"> ${autopay_id_code}&nbsp;
+	 		<input type="hidden" name="autopay_id_code" value="${autopay_id_code}">
+	 </td>
+	 <td nowrap class="list_ll"> ${autopay_acct_bank}.${tt_autopay_acct_bank}&nbsp;
+	 		<input type="hidden" name="autopay_acct_bank" value="${autopay_acct_bank}">
+	 		<input type="hidden" name="tt_autopay_acct_bank" value="${tt_autopay_acct_bank}">
+	 </td>
+	 <td nowrap class="list_ll"> ${autopay_acct_no}&nbsp;
+	 		<input type="hidden" name="autopay_acct_no" value="${autopay_acct_no}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tt_valid_flag}&nbsp;
+	 		<input type="hidden" name="valid_flag" value="${valid_flag}">
+	 		<input type="hidden" name="tt_valid_flag" value="${tt_valid_flag}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tt_autopay_indicator}&nbsp;
+	 		<input type="hidden" name="autopay_indicator" value="${autopay_indicator}">
+	 		<input type="hidden" name="tt_autopay_indicator" value="${tt_autopay_indicator}">
+	 </td>
+	 <td nowrap class="list_cc"> ${verify_flag}&nbsp;
+	 		<input type="hidden" name="verify_flag" value="${verify_flag}">
+	 </td>
+	 <td nowrap class="list_cc"> ${verify_date.YMD}&nbsp;
+	 		<input type="hidden" name="verify_date" value="${verify_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tt_verify_return_code}&nbsp;
+	 		<input type="hidden" name="verify_return_code" value="${verify_return_code}">
+	 		<input type="hidden" name="tt_verify_return_code" value="${tt_verify_return_code}">
+	 </td>
+	 <td nowrap class="list_cc"> ${autopay_acct_s_date.YMD}&nbsp;
+	 		<input type="hidden" name="autopay_acct_s_date" value="${autopay_acct_s_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${autopay_acct_e_date.YMD}&nbsp;
+	 		<input type="hidden" name="autopay_acct_e_date" value="${autopay_acct_e_date}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tt_from_mark}&nbsp;
+	 		<input type="hidden" name="from_mark" value="${from_mark}">
+	 		<input type="hidden" name="tt_from_mark" value="${tt_from_mark}">
+	 </td>
+	 <td nowrap class="list_cc"> ${effc_flag}&nbsp;
+	 		<input type="hidden" name="effc_flag" value="${effc_flag}">
+	 </td>
+	 <td nowrap class="list_cc"> ${crt_user}&nbsp;
+	 		<input type="hidden" name="crt_user" value="${crt_user}">
+	 </td>
+	 <td nowrap class="list_cc"> ${tt_crt_time}&nbsp;
+	 		<input type="hidden" name="crt_time" value="${crt_time}">
+	 </td>
+	 <td nowrap class="list_cc"> ${mod_user}&nbsp;
+	 		<input type="hidden" name="mod_user" value="${mod_user}">
+	 </td>
+	 <td nowrap class="list_cc"> ${mod_time}&nbsp;
+	 		<input type="hidden" name="mod_time" value="${mod_time}">
+	 </td>
+	 <td nowrap class="list_cc"> ${stmt_cycle}&nbsp;
+	 		<input type="hidden" name="stmt_cycle" value="${stmt_cycle}">
+	 </td>
+	 <td nowrap class="list_ll"> ${err_msg}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if (top.actionCode=='C') {
+    	if (confirm("是否執行 扣繳帳號維護 放行/解放行!!")==false) {
+         return false;
+      }
+    }   
+    return true;
+  }
+  
+ 
+</script>

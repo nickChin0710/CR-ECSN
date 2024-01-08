@@ -1,0 +1,135 @@
+
+<html>
+<head>
+<title>VD卡英文名稱維護-V.2017-1012-yash-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+     <tr>
+        <td nowrap>&nbsp;卡號:	 
+            <input type="text" class="col_text" name="ex_telcode" value="${ex_telcode}" zEdit="number" maxlength=19 size=19 zRequire ="k"/>
+        </td>
+        <td nowrap >&nbsp;
+            <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+            <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+            <input type="Button"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+        </td> 
+    </tr>
+ </table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">No&nbsp;</th>
+        <th nowrap class="list_th">卡號</th>
+        <th nowrap class="list_th">身分證號碼</th>
+        <th nowrap class="list_th">姓名</th>
+        <th nowrap class="list_th">英文姓名</th>
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+     <tr  style="cursor:hand">
+        <td nowrap class="list_no" >
+		  <span class="dsp_flag">${ok_flag}</span>
+			${SER_NUM}
+		  <input type="hidden" name="ser_num" value="${ser_num}"/>
+		  <input type="hidden" name="rowid" value="${rowid}"/>
+		  <input type="hidden" name="mod_seqno" value="${mod_seqno}"/>
+		</td>
+        <td nowrap class="list_ll"> ${card_no} </td>
+        <td nowrap class="list_ll"> ${apply_id} </td>
+        <td nowrap class="list_ll"> ${chi_name} </td>
+        <td nowrap class="list_ll"> 
+           <input type="text" class="col_text" name="eng_name" value="${eng_name}" zEdit="any"  
+            maxlength="25" size="25" />              
+        </td>
+        <input type="hidden" name="h_eng_name" value="${eng_name}"/>
+        <input type="hidden" name="card_no" value="${card_no}"/>
+        <input type="hidden" name="apply_id" value="${apply_id}"/>
+        <input type="hidden" name="chi_name" value="${chi_name}"/>
+      </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+
+
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+<input type="hidden" name="MOD_PGM" value="dbcm0030">
+</form>
+</body>
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+
+top.refreshButton2('0');
+top.pageRows="9999";
+document.dataForm.ex_telcode.focus();
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "dbcm0030_detl";
+    }
+/*
+    if ( top.actionCode == "S2" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行作業?!") === false) {
+            return false;
+        } 
+    }
+*/
+    return true;
+}
+
+function detailScreen(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "dbcm0030_detl";
+    top.submitControl('S');
+    return true;
+}
+
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.dataForm.opt;
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 if (agy.checked){ seq++; }
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			 if(agy[i].checked){
+				 seq++;
+				 
+			 }
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 //alert("請至少勾選一筆資料!");
+		 alert("未選取執行資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+
+
+</script>

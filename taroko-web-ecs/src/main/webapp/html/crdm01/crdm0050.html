@@ -1,0 +1,172 @@
+<html>
+
+<head>
+    <title>人工取號-卡號保留作業-V.2018-0712-yash-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;卡種:
+                        <select name="ex_card_type" class="col_ddlb">
+                            ${dddw_cardtype}
+                        </select>
+                    </td>
+                    <td nowrap>&nbsp;卡號用途註記:
+                        <select name="ex_use" class="col_ddlb" value="${ex_use}">
+                 <option value="1" ${card_flag-1}>一般用</option>
+<!--                   
+                 <option value="2" ${card_flag-2}>緊急替代用</option>
+-->              
+                 <option value="5" ${card_flag-5}>HCE TPAN用</option>
+                 <option value="7" ${card_flag-7}>GOOGLE PAY</option>
+                         </select>&nbsp;
+                    </td>
+                    <td nowrap rowspan="3">&nbsp;
+                        <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+<!--                     <td nowrap>&nbsp;取用狀態:
+	                    <select name="ex_use_type" class="col_ddlb" value="${ex_use_type}">
+	                        <option value="">全部</option>
+	                        <option value="N" ${ex_reserve-N}>未取用</option>
+	                        <option value="Y" ${ex_reserve-Y}>已取用</option>
+	                    </select>
+                    </td> -->
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;團體代號:
+                        <select name="ex_groupcode" class="col_ddlb">
+                            ${dddw_groupcode}
+                        </select>
+                    </td>
+                    <td nowrap>&nbsp;保留原因:
+                        <select name="ex_reason_code" class="col_ddlb" value="${ex_reason_code}">
+                            <option value="">--</option>
+                            <option value="1" ${ex_reason_code-1}>1:首發指定</option>
+                            <option value="2" ${ex_reason_code-2}>2:長官指定</option>
+                            <option value="3" ${ex_reason_code-3}>3:持卡人指定</option>
+                            <option value="4" ${ex_reason_code-4}>4:緊急替代卡</option>
+                        </select>
+                    </td>
+                </tr>
+                <td nowrap>&nbsp;卡號:
+                    <input type="text" class="col_any" name="ex_card_no1" value="${ex_card_no1}" zEdit="any" maxlength="16" size="18" /><!--  --
+                    <input type="text" class="col_any" name="ex_card_no2" value="${ex_card_no2}" zEdit="any" maxlength="16" size="18" zRequire="k" /> -->
+                </td>
+                <td nowrap>&nbsp;取用狀態:
+                    <select name="ex_use_type" class="col_ddlb" value="${ex_use_type}">
+                            <option value="">全部</option>
+                            <option value="N" ${ex_reserve-N}>未取用</option>
+                            <option value="Y" ${ex_reserve-Y}>已取用</option>
+                    </select><!-- &nbsp;保留狀態:
+                    <select name="ex_reserve" class="col_ddlb" value="${ex_reason_code}">
+                        <option value="">全部</option>
+                        <option value="N" ${ex_reserve-N}>未保留</option>
+                        <option value="Y" ${ex_reserve-Y}>已保留</option>
+                    </select> -->
+                </td>
+                <tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">卡號</th>
+                <th nowrap class="list_th">卡種</th>
+                <th nowrap class="list_th">團體代號</th>
+                <!-- <th nowrap class="list_th">保留狀態</th> -->
+                <th nowrap class="list_th">卡號用途註記</th>
+                <th nowrap class="list_th">保留原因</th>
+                <th nowrap class="list_th">保留日期</th>
+                <th nowrap class="list_th">保留人員</th>
+                <th nowrap class="list_th">取用狀態</th>
+                <th nowrap class="list_th">取用日期</th>
+                <th nowrap class="list_th">取用人員</th>
+                <!-- <th nowrap class="list_th">錯誤訊息</th> -->
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${bin_no}','${seqno}','')" style="cursor:hand">
+                <td nowrap class="list_no" bgcolor="#EFEFEF">
+                    <span class="dsp_flag">${ok_flag}</span>
+                    ${SER_NUM}
+                    <!-- <input type="checkbox" name="opt" value="${ser_num}">
+                    <input type="hidden" name="ser_num" value="${ser_num}"> -->
+                </td>
+                <td nowrap class="list_cc"> ${card}</td>
+                <td nowrap class="list_cc"> ${card_type}</td>
+                <td nowrap class="list_cc"> ${group_code}</td>
+                <!-- <td nowrap class="list_cc"> ${reserve_desc}</td> -->
+                <td nowrap class="list_cc"> ${card_flag_desc}</td>
+                <td nowrap class="list_cc"> ${reason_code_desc}</td>
+                <td nowrap class="list_cc"> ${reserve_date}</td>
+                <td nowrap class="list_cc"> ${reserve_id}</td>
+                <td nowrap class="list_cc"> ${use_type}</td>
+                <td nowrap class="list_cc"> ${use_date}</td>
+                <td nowrap class="list_cc"> ${use_id}</td>
+                <!-- <td nowrap class="list_ll"> ${ls_errmsg}&nbsp;</td> -->
+                <input type="hidden" name="card" value="${card}" />
+                <input type="hidden" name="card_type" value="${card_type}" />
+                <input type="hidden" name="group_code" value="${group_code}" />
+                <input type="hidden" name="use_date" value="${use_date}" />
+                <input type="hidden" name="use_id" value="${use_id}" />
+                <input type="hidden" name="bin_no" value="${bin_no}" />
+                <input type="hidden" name="seqno" value="${seqno}" />
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="s_bin_no" value="">
+        <input type="hidden" name="s_seqno" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="crdm0050">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "crdm0050_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.s_bin_no.value = parm;
+    document.dataForm.s_seqno.value = parm2;
+    top.respHtml = "crdm0050_detl";
+    top.submitControl('S');
+    return true;
+}
+
+function selectAll() {
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].type == "checkbox") {
+            aElements[i].checked = document.dataForm.ex_selectAll.checked;
+        }
+    }
+
+    return;
+}
+</script>

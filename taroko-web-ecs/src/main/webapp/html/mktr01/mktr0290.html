@@ -1,0 +1,264 @@
+<html>
+<head>
+<title>109/01/03 V1.00.01 Allen Ho Initial 紅利積點兌換贈品登錄檔維護作業
+	   109/09/11 V1.00.02 Amber Update
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+	<form name="dataForm" method="post" action="">
+		<div id="condBlock">
+			<!-- query key *************************************************************-->
+			<table width="60%" border="0" cellspacing="0" cellpadding="10">
+				<tr>
+					<td nowrap>
+						&nbsp;兌換日期:
+						<input type="text" class="col_date" onChange="columnItemChange('2')" name="ex_tran_date_s"
+							value="${ex_tran_date_s}" zeditType="date,yyyymmdd" zRequire="K,C" maxlength=8 size=8 />
+						<script language="JavaScript">
+							new tcal({ 'formname' : 'dataForm', 'controlname' : 'ex_tran_date_s' });
+						</script>
+						--
+						<input type="text" class="col_date" onChange="columnItemChange('2')" name="ex_tran_date_e"
+							value="${ex_tran_date_e}" zeditType="date,yyyymmdd" zRequire="K,C" maxlength=8 size=8 />
+						<script language="JavaScript">
+							new tcal({ 'formname' : 'dataForm', 'controlname' : 'ex_tran_date_e' });
+						</script>
+					</td>
+					<td nowrap>
+						&nbsp;兌換管道: <select name="ex_from_mark" class="col_ddlb">
+							<option value=" ">--</option>
+							<option value="1"${ex_from_mark-1} >1.人工登錄</option>
+							<option value="2"${ex_from_mark-2} >2.語音</option>
+							<option value="3"${ex_from_mark-3} >3.網路</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>
+						&nbsp;廠商代號: <select size="1" name="ex_vendor_no" class="col_ddlb" id="ajaxh_vendor_no" onChange="columnItemChange('3')">
+							${dddw_vendor_no}
+						</select>
+					</td>
+					<td nowrap>
+						&nbsp;郵寄方式: <select name="ex_post_flag" class="col_ddlb"
+							zRequire="Y">
+							<option value="1"${ex_post_flag-1} >1.普掛</option>
+							<option value="2"${ex_post_flag-2} >2.限掛</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>
+						&nbsp;贈品代碼 <select size="1" name="ex_gift_no" class="col_ddlb"
+							id="ajaxh_gift_no"> ${dddw_gift_no}
+						</select>
+					</td>
+					<td nowrap>
+						&nbsp;
+						<input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnAdd" value="列印地址名條" onClick="return top.submitControl('procMethod_PDFLIST')" class="btAdd">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnAdd" value="列印大宗掛號" onClick="return top.submitControl('procMethod_PDFBATCH')" class="btAdd">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">
+						&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+		<div id="dataBlock">
+			<table width="40%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>
+						&nbsp;總筆數:
+						<span class="dsp_text">${tot_ct.(999)}&nbsp;</span>
+						筆
+						<input type="hidden" name="tot_ct" value="${tot_ct}">
+					</td>
+					<td nowrap>
+						&nbsp;兌換數量小計:
+						<span class="dsp_text">${sum_exchg_cnt.(999)}&nbsp;</span>
+						<input type="hidden" name="sum_exchg_cnt" value="${sum_exchg_cnt}">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- browse ************************************************************** -->
+		<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+			<tr>
+				<th nowrap class="list_th" width="5%">No&nbsp;</th>
+				<th nowrap class="list_th">交易序號</th>
+				<th nowrap class="list_th">兌換日期</th>
+				<th nowrap class="list_th">身份證號</th>
+				<th nowrap class="list_th">姓名</th>
+				<th nowrap class="list_th">商品代號</th>
+				<th nowrap class="list_th">兌換數量</th>
+				<th nowrap class="list_th">贈品類別</th>
+				<th nowrap class="list_th">兌換管道</th>
+			</tr>
+			<!-- BEGIN DYNAMIC : DETAIL -->
+			<tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')"
+				style="cursor: hand">
+				<td nowrap class="list_no"> ${SER_NUM}&nbsp;
+					<input type="hidden" name="ser_num" value="${ser_num}" />
+					<input type="hidden" name="rowid" value="${rowid}" />
+				</td>
+				<td nowrap class="list_cc"> ${tran_seqno}
+					<input type="hidden" name="tran_seqno" value="${tran_seqno}" />
+				</td>
+				<td nowrap class="list_cc"> ${tran_date.YMD}
+					<input type="hidden" name="tran_date" value="${tran_date.YMD}" />
+				</td>
+				<td nowrap class="list_cc"> ${id_no}${comm_id_no}
+					<input type="hidden" name="id_no" value="${id_no}" />
+					<input type="hidden" name="comm_id_no" value="${comm_id_no}" />
+				</td>
+				<td nowrap class="list_ll"> ${chi_name}${comm_chi_name}
+					<input type="hidden" name="chi_name" value="${chi_name}" />
+					<input type="hidden" name="comm_chi_name" value="${comm_chi_name}" />
+				</td>
+				<td nowrap class="list_ll"> ${gift_no}-${comm_gift_no}
+					<input type="hidden" name="gift_no" value="${gift_no}" />
+					<input type="hidden" name="comm_gift_no" value="${comm_gift_no}" />
+				</td>
+				<td nowrap class="list_rr"> ${exchg_cnt}
+					<input type="hidden" name="exchg_cnt" value="${exchg_cnt}" />
+				</td>
+				<td nowrap class="list_cc"> ${gift_type}-${comm_gift_type}
+					<input type="hidden" name="gift_type" value="${gift_type}" />
+					<input type="hidden" name="comm_gift_type"
+						value="${comm_gift_type}" />
+				</td>
+				<td nowrap class="list_ll"> ${from_mark}-${comm_from_mark}
+					<input type="hidden" name="from_mark" value="${from_mark}" />
+					<input type="hidden" name="comm_from_mark"
+						value="${comm_from_mark}" />
+				</td>
+				<td nowrap style="visibility: hidden;"> ${id_p_seqno}
+					<input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+				</td>
+			</tr>
+			<!-- END DYNAMIC : DETAIL -->
+		</table>
+
+		<!-- hidden ************************************************************** -->
+		<input type="hidden" name="WPROWID" value="${wprowid}">
+		<input type="hidden" name="control_tab_name"
+			value="${control_tab_name}">
+		<input type="hidden" name="data_k1" value="">
+		<input type="hidden" name="data_k2" value="">
+		<input type="hidden" name="data_k3" value="">
+		<input type="hidden" name="data_k4" value="">
+		<input type="hidden" name="data_k5" value="">
+
+		<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+		<input type="hidden" name="pageType" value="cond">
+		<input type="hidden" name="post_flag" value="${post_flag}">
+	</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+<!-- script2 ************************************************************* -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+	top.refreshButton2('0');
+	top.pageRows = "20";
+
+	function validateInput() {
+		if (!top.checkFormat()) {
+			return false;
+		}
+
+		if (top.actionCode == "X") {
+			top.respLevel = 1;
+			top.respHtml = "mktr0290_detl";
+		}
+		return true;
+	}
+
+	function detailScreen(serNum, parm, parm2, parm3, parm4, parm5) {
+		top.respLevel = 1;
+		top.currRows = serNum;
+		document.dataForm.data_k1.value = parm;
+		document.dataForm.data_k2.value = parm2;
+		document.dataForm.data_k3.value = parm3;
+		document.dataForm.data_k4.value = parm4;
+		document.dataForm.data_k5.value = parm5;
+		top.respHtml = "mktr0290_detl";
+		top.submitControl('S');
+		return true;
+	}
+
+	function columnItemChange(ps1) {
+		var win_tran_date_s = document.forms["dataForm"]["ex_tran_date_s"].value;
+		var win_tran_date_e = document.forms["dataForm"]["ex_tran_date_e"].value;
+		var win_vendor_no = document.forms["dataForm"]["ex_vendor_no"].value;
+		var win_tran_date_s = document.forms["dataForm"]["ex_tran_date_s"].value;
+		var win_tran_date_e = document.forms["dataForm"]["ex_tran_date_e"].value;
+
+		idCode = ps1;
+		top.actionCode = "AJAX";
+		if (idCode == '2') {
+			clearListObj(document.getElementById("ajaxh_vendor_no"));
+			//top.methodName = "wf_ajax_func_2";
+			resetJSON();
+			addJSON("methodName", "wf_ajax_func_2");
+			addJSON("ax_win_tran_date_s", win_tran_date_s);
+			addJSON("ax_win_tran_date_e", win_tran_date_e);
+		}
+
+		if (idCode == '3') {
+			clearListObj(document.getElementById("ajaxh_gift_no"));
+			//top.methodName = "wf_ajax_func_3";
+			resetJSON();
+			addJSON("methodName", "wf_ajax_func_3");
+			addJSON("ax_win_vendor_no", win_vendor_no);
+			addJSON("ax_win_tran_date_s", win_tran_date_s);
+			addJSON("ax_win_tran_date_e", win_tran_date_e);
+		}
+
+		processAJAX();
+	}
+
+	function ajaxResponse() {
+		top.respHtml = "mktr0290";
+
+		if (idCode == '2') {
+			var listObj = document.getElementById("ajaxh_vendor_no");
+			len = getJSONlength("ajaxj_vendor_no");
+			for (var ii = 0; ii < len; ii++)
+				listObj.options.add(new Option(getJSONvalue("ajaxj_vendor_no",
+						ii)
+						+ " " + getJSONvalue("ajaxj_vendor_name", ii),
+						getJSONvalue("ajaxj_vendor_no", ii)));
+			return false;
+		}
+		if (idCode == '3') {
+			var listObj = document.getElementById("ajaxh_gift_no");
+			len = getJSONlength("ajaxj_gift_no");
+			for (var ii = 0; ii < len; ii++)
+				listObj.options.add(new Option(
+						getJSONvalue("ajaxj_gift_no", ii) + " "
+								+ getJSONvalue("ajaxj_gift_name", ii),
+						getJSONvalue("ajaxj_gift_no", ii)));
+			return false;
+		}
+	}
+
+	function clearListObj(listObj) {
+		for (var i = listObj.length - 1; i >= 0; i--) {
+			listObj.remove(i);
+		}
+	}
+</script>
+<!-- ******************************************************************** -->

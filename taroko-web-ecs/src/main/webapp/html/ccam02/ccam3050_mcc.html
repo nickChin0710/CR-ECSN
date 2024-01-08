@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>特店風險註記維護-管制MCC</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0;fi=0;
+</script>
+<script language="JavaScript">
+$(document).ready(function(){
+	var ex_sysdate = $("#ex_sysdate").val().trim();
+	$("#ex_auth_date1").val(ex_sysdate);
+	
+	
+$("#detl_btnAdd").click(function(){
+      
+	var ex_mcc_code =$("#ex_mcc_code").val().trim();	
+   if (ex_mcc_code.length==0) {
+      alert("MCC CODE: 不可空白");
+      return false;
+   }
+   
+    rowNum++;
+    ind++;
+    var serNo ="";
+    if ( ind < 10 )
+      { serNo = "0"+ind; }
+    else
+   	{ serNo = ""+ind;  }
+    
+    $("#table1").append( 
+      "<tr>"
+      +"<td nowrap class='list_no'>"
+      +"<input type='checkbox' value='"+serNo+"' name='opt' />"
+      +"&nbsp;"+serNo
+      +" <input type='hidden' value='"+serNo+"' name='ser_num' />"
+      +" <input type='hidden' value='"+ex_mcc_code+"' name='mcc_code' />"      
+      +"</td>"  
+      +"<td nowrap class='list_cc'>"+ex_mcc_code+"</td>"      
+      +"</tr>"
+      );
+      
+      //-clear-
+      $("#ex_mcc_code").val('');           
+  });
+});
+
+</script>
+
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U3')" class="btUpdate" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap class="col_key">&nbsp;收單行：
+      <span class="dsp_text">${acq_bank_id}</span>
+      <input type="hidden" name="acq_bank_id" value="${acq_bank_id}" />
+   </td>
+   <td nowrap class="col_key">特店代碼：
+      <span class="dsp_text">${mcht_no}</span>
+      <input type="hidden" name="mcht_no" value="${mcht_no}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >特店名稱：
+      <span class="dsp_text" >${mcht_name}</span>
+      <input type="hidden" name="mcht_name" value="${mcht_name}" />
+   </td>
+   <td nowrap >住址：
+      <span class="dsp_text">${mcht_addr}</span>
+      <input type="hidden" name="mcht_addr" value="${mcht_addr}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap >本行風險代碼：
+      <span class="dsp_text">${mcht_risk_code}</span>
+      <input type="hidden" name="mcht_risk_code" value="${mcht_risk_code}">
+   </td>
+   <td nowrap >管制日期：
+      <span class="dsp_text">${risk_start_date.YMD}</span>
+      <input type="hidden" name="risk_start_date" value="${risk_start_date}">
+      --
+      <span class="dsp_text">${risk_end_date.YMD}</span>
+      <input type="hidden" name="risk_end_date" value="${risk_end_date}">
+   </td>
+  </tr>
+</table>
+<!--新增明細-->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+	 <td nowrap >MCC CODE：
+      <input type="text" class="col_text" id="ex_mcc_code" maxlength="4" size="6" value="" zEdit="alphanum,upper" >
+   </td>
+   <td>
+      <input type="Button" id="detl_btnAdd" value="新增明細" class="btAdd_detl" />&nbsp;IND_NUM=${ind_num}
+   </td>
+   </tr>
+</table>  
+<hr>
+<table id="table1" width="60%" border="0" cellspacing="0" cellpadding="4">
+ <tr>
+    <th nowrap width="5%">刪除 </th>
+    <th nowrap>MCC CODE </th>    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+    	<input type="checkbox" name="opt" value="${ser_num}">
+      ${SER_NUM}
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" >      
+      <input type="hidden" name="mcc_code" value="${mcc_code}">
+    </td>
+    <td nowrap class="list_cc" >&nbsp;${mcc_code}</td>    
+   </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- -->
+<input type="hidden" name="MOD_PGM" value="ccam3050">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="cancel">
+<input type="hidden" id="ex_sysdate" name="ex_sysdate" value="${ex_sysdate}" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+  top.refreshButton2('2');
+ 
+ function validateInput()
+  {
+    top.allow_spec_char = true;
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

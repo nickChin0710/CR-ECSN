@@ -1,0 +1,370 @@
+<html>
+<head>
+<title>一卡通黑名單及拒絕代行參數維護-V.2018-0411-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript" src="js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.min.css" />
+
+</head>
+<body background="${water_mark}" > 
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<!-- <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp; -->
+  			<input type="Button"    value=" 讀取 " onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  			<!-- <input type="Button" name="btnAdd"     value=" 停用" ${btnAdd_disable}   onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp; -->
+  			<input type="Button"   value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  			<!--<input type="Button" name="btnDelete"  value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;-->
+  			<input type="Button"    value=" 清除 " onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+<div id="dataBlock">
+<!-- Detail data================================= -->
+<table width="85%" border="0" cellspacing="0" cellpadding="4">
+	<th>關閉自動加值功能參數</th>
+	<tr>
+		<td>
+			<span style="color:red">固定條件為「未關閉自動加值(關閉自動加值之報送成功日期無值者)且未屆期且非黑名單、<br>
+			無鎖卡日，無退卡日」，並符合以下任一項條件者</span>
+		</td>
+	</tr>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="stop1_cond" ${stop1_cond-Y} >
+   		   	傳送前
+			<input type="text" class="col_number" zEdit="number" name="stop1_days" value="${stop1_days}" size="3"/>
+			日停用之卡片(除掛失、偽冒停用外)(停用後第N+1日傳送黑名單檔，詳黑名單檔參數設定)
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="stop2_cond" ${stop2_cond-Y} >
+   		   	傳送前
+			<input type="text" class="col_number" zEdit="number" name="stop2_days" value="${stop2_days}" size="3"/>
+			日毀損重製之卡片(重製後第N+1日傳送黑名單檔，詳黑名單檔參數設定)
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="block_cond" ${block_cond-Y} >
+   		    <input type="Button" class="btAdd_detl" id="btnCardBlock"  value="凍結碼" onClick="processBlock()" ${btnUpdate_disable}>
+			<input type="hidden" id="block_codes" name="block_codes" value="${block_codes}" >
+			<input type="text" id="block_codes_desc" name="block_codes_desc"  value="${block_codes_desc}" class="dsp_text" size="100" readonly>
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="mcode_cond" ${mcode_cond-Y} >
+   		   	M code >= 
+			<input type="text" class="col_number" zEdit="number" name="payment_rate" value="${payment_rate}" maxlength="2" size="2"/>
+			且欠款金額 >= 
+			<input type="text" class="col_number" zEdit="dignumber,number" name="mcode_amt" value="${mcode_amt}" maxlength="12" size="12"/>
+			(繳款評等)
+   		</td>
+   	</tr>
+   	<th>批次黑名單檔案傳送參數</th>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="stop1_cond_black" ${stop1_cond_black-Y} >
+   		   	1.傳送前
+			<input type="text" class="col_number" zEdit="number" name="stop1_days_black" value="${stop1_days_black}" size="3"/>
+			日停用之卡片(除掛失、偽冒停用外)
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="stop2_cond_black" ${stop2_cond_black-Y} >
+   		   	2.傳送前
+			<input type="text" class="col_number" zEdit="number" name="stop2_days_black" value="${stop2_days_black}" size="3"/>
+			日損毀重製之卡片
+   		</td>
+   	</tr>
+   	<tr>
+   		<td>
+   		   	<input type="checkbox" value="Y" name="stop3_cond_black" ${stop3_cond_black-Y} >
+   		   	3.傳送前
+			<input type="text" class="col_number" zEdit="number" name="stop3_days_black" value="${stop3_days_black}" size="3"/>
+			日效期屆期之卡片
+   		</td>
+   	</tr>
+   	<tr>
+		<td>
+			<span style="color:red">注意:<br>1.批次黑名單檔案傳送日期必須於傳送關閉自動加值功能檔案日期之後，以免遭一卡公司踢退。<br>
+			2.停用之卡片除掛失、偽冒停用(online傳送黑名單)，餘一般申停、強制停用、其他停用、凍結皆列入批送傳送黑名單。</span>
+		</td>
+	</tr>
+</table>
+<table width="85%" border="0" cellspacing="1" cellpadding="2"  >
+  	<tr>
+   		<td nowrap class="td_text" >覆核日期:</td> 
+    	<td nowrap class="td_data" >
+      		<span class="dsp_date">${apr_date.YMD}</span>
+      		<input type="hidden" name="apr_date" value="${apr_date}">   
+   		</td>
+   		<td nowrap class="td_text" >覆核主管:</td>
+     	<td nowrap class="td_text" >
+      		<span class="dsp_text"> ${apr_user} </span>
+      		<input type="hidden" name="apr_user" value="${apr_user}">   
+   		</td>
+  	</tr>
+</table>
+</div>
+<br>
+<div id="carddialog" style="display: none;">
+	<table border="0" width="60%">
+        <tr>
+        	<td>&nbsp;凍結碼:
+                <input type=text class="col_text" id="excl_block_add" value="${excl_block_add}" 
+              	zeditType="any,upper" maxlength="2" size="4" /> 
+            <td align="right">
+            	<input type="Button"  value="新增" onclick="wf_addblock_newrow();" class="btAdd_detl" />
+        	</td>
+        <tr>
+    </table>
+    <table id="table_block" width="80%" border="0" cellspacing="0" cellpadding="4">
+      	<tr>
+        	<th nowrap class="list_th" width="5%">刪除 </th>
+        	<th nowrap class="list_th">凍結碼</th>
+      	</tr>
+    </table>
+</div>
+<!-- -->
+<input type="hidden"  name="rowid" value="${rowid}">
+<input type="hidden"  name="MOD_PGM" value="ipsm0030">
+<input type="hidden"  name="mod_seqno" value="${mod_seqno}">
+<input type="hidden"  name="HIDE" value="${HIDE_DATA}">
+<input type="hidden"  name="pageType" value="detl">
+<input type="hidden"  name="rowid_black" value="${rowid_black}">
+<input type="hidden"  name="mod_seqno_black" value="${mod_seqno_black}">
+<input type="hidden"  name="stop3_cond" value="${stop3_cond}">
+<input type="hidden"  name="stop3_days" value="${stop3_days}">
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ document.dataForm.stop1_cond.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    return true;
+  }
+
+
+ function processBlock() {
+	 
+     init_table(document.all.table_block, document.getElementById("block_codes_desc"));
+   
+     $("#carddialog").dialog("open");
+ }
+ 
+ /**
+  * 出始化table
+  */
+ function init_table(elmtTable, elmtDesc)
+ {
+	 //debugger;
+	 var datas = elmtDesc.value.split(',');
+	 var nLen = 0;
+	 if (elmtDesc.value != "")
+		 nLen = 1;
+	 var nRows = elmtTable.rows.length;
+	 if (nRows == nLen + 1)
+		 return;
+	 clear_table(elmtTable, true);
+	 for(i = 0; i < datas.length; i++){
+		 add_table(elmtTable, datas[i]);
+	 }
+ }
+ 
+ /**
+  * 在table中新增一筆資料
+  */
+  function add_table(elmtTable, dat)
+  {	 
+ 	 //debugger;
+ 	 var ind=elmtTable.rows.length; 
+ 	 //var rowNum=ind;
+      var colNum=0
+   
+      var myRow = elmtTable.insertRow(ind);
+      myCell = myRow.insertCell(colNum);
+      myCell.className = "list_no";
+      myCell.noWrap ="nowrap";
+
+      var serNo ="";
+      if ( ind < 10 )
+          { serNo = "0"+ind; }
+      else
+          { serNo = ""+ind;  }
+
+      var ip = document.createElement( 'input' );
+      ip.className = 'col_ckbox';
+      ip.type = 'checkbox';
+      ip.name = 'opt';
+      ip.value = serNo;
+      myCell.appendChild( ip );
+      
+      var ip1 = document.createElement( 'input' );
+      ip1.type = 'hidden';
+      ip1.name = 'ser_num';
+      ip1.value = serNo;
+      myCell.appendChild( ip1 );
+           
+      //======================================
+      colNum++;
+      myCell = myRow.insertCell(colNum);
+      myCell.className = "list_td";
+      
+      var ipSpan = document.createElement( 'span' );
+      ipSpan.setAttribute('class', 'dsp_text');
+      ipSpan.textContent = dat;
+      myCell.appendChild( ipSpan );
+      
+      var ip3 = document.createElement( 'input' );
+      ip3.type = 'hidden';
+      ip3.name = 'blocks';
+      ip3.value = dat;
+      myCell.appendChild( ip3 );
+      
+  }
+ 
+  /**
+   * block
+   */
+  function wf_addblock_newrow()
+  {
+      //debugger;
+      var str = document.getElementById("block_codes_desc").value;
+      var datas = str.split(',')
+      if (datas.length >= 50)
+      {
+     	 alert("凍結碼已經25個，無法新增");
+          return;
+      }
+      var val_add = trim(document.getElementById("excl_block_add").value);
+      
+      if (val_add.length != 2)
+      {
+     	 alert("凍結碼請輸入兩碼");
+     	 return;
+      }
+      if (duplicate(document.all.table_block, val_add))
+      {
+     	 alert("資料重覆");
+          return;
+      }
+
+      add_table(document.all.table_block, val_add);
+      document.getElementById("excl_block_add").value = "";
+  }
+  
+  /**
+   * 移除刪除被打勾的資料
+   */
+   function clear_table(elmtTable, bAll)
+   {
+  	 //debugger;
+  	 var tableRows = elmtTable.getElementsByTagName('tr');
+  	 var rowCount = tableRows.length;
+
+  	 for (var x=rowCount-1; x>0; x--) {
+  		 if (bAll)
+  		 { elmtTable.deleteRow(x); }
+  		 else
+  		 {
+  			 var flag = tableRows[x].cells[0].getElementsByTagName("input")[0].checked;
+  	         if (flag) 
+  	              elmtTable.deleteRow(x);
+  		 }
+  		 
+  	 }
+   }
+  
+  //小視窗
+  $("#carddialog").dialog({
+      title:'凍結碼',
+      autoOpen: false,
+      resizable: false,
+      modal: true,
+      height: 400,
+      width: 250,
+      buttons: {
+          "確定": function() {
+              fill_desc(document.all.table_block, document.getElementById("block_codes_desc"), document.getElementById("block_codes"));
+              $(this).dialog("close");
+          },
+          "取消": function () {
+              refresh_table(document.all.table_block);
+              $(this).dialog("close");
+          }
+      }
+  });
+  
+  //去空白
+  function trim(value) {
+	    return value.replace(/^\s+|\s+$/g,"");
+	}
+
+  function duplicate(elmtTable, str)
+  {
+      //debugger;
+      var tableRows = elmtTable.getElementsByTagName('tr');
+      var rowCount = tableRows.length;
+      
+      for (var x=1; x<rowCount; x++) {
+          var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+          if (str == dat)
+              return true;
+      }
+      return false;
+  }
+  
+  /**
+   * 將table的資料組成字串，資料間用逗號分隔
+   */
+  function fill_desc(elmtTable, elmtDesc, hElmtDesc)
+  {
+ 	 //debugger;
+ 	 clear_table(elmtTable, false);
+ 	 var tableRows = elmtTable.getElementsByTagName('tr');
+      var rowCount = tableRows.length;
+      elmtDesc.value = "";
+      
+      for (var x=1; x<rowCount; x++) {
+     	 var dat = tableRows[x].cells[1].getElementsByTagName("input")[0].value;
+     	 if (elmtDesc.value == "")
+     		 elmtDesc.value = dat;
+     	 else
+     		 elmtDesc.value = elmtDesc.value + "," + dat;
+      }
+      hElmtDesc.value = elmtDesc.value;
+  }
+  
+  /**
+   * 取消刪除的打勾
+   */
+  function refresh_table(elmtTable)
+  {
+      //debugger;
+      checkbox = elmtTable.getElementsByTagName("input"); 
+
+      for(var i = 1; i<checkbox.length; i++){
+          if(checkbox[i].type == 'checkbox'){
+              //do something
+              checkbox[i].checked = false;
+          }   
+      }
+  }
+</script>

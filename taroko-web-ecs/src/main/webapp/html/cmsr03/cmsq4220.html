@@ -1,0 +1,342 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-01-07  V1.00.02  Ru Chen        modify AJAX                          -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>卡友權益費用D檔查詢-190705</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap colspan="2" >&nbsp;身分證ID:
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}" maxlength="10" size="12" OnChange="IdnoChange('1')" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="19" size="21" OnChange="CardChange('2')" >      
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;姓名:
+      <input type="text" class="dsp_text" id="chi_name" name="chi_name" value="${chi_name}" zEdit="any,canTw" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;VIP:
+      <input type="text" class="dsp_text" id="vip_code" name="vip_code" value="${vip_code}" onfocus="this.blur()" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="3" >&nbsp;貢獻度評等:
+      <input type="text" class="dsp_text" id="wk_score_01" name="wk_score_01" value="${wk_score_01}" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;執行最大年月:
+      <input type="text" class="dsp_text" id="score_yymm" name="score_yymm" value="${score_yymm}" onfocus="this.blur()" >
+   </td>
+  </tr>
+  <tr>
+   <td nowrap colspan="2" >&nbsp;近一年&nbsp;收入:
+      <input type="text" class="dsp_text" id="yy_income_amt" name="yy_income_amt" value="${yy_income_amt}" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;－支出:
+      <input type="text" class="dsp_text" id="yy_cost_amt" name="yy_cost_amt" value="${yy_cost_amt}" onfocus="this.blur()" >
+   </td>
+   <td nowrap colspan="2" >&nbsp;＝近一年貢獻度:
+      <input type="text" class="dsp_text" id="wk_net_amt" name="wk_net_amt" value="${wk_net_amt}" onfocus="this.blur()">
+   </td>
+  </tr>
+ </table>
+ <hr>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap >&nbsp;刪除費用:
+         <select   size="1"  name="ex_acct_code" class="col_ddlb">
+            <option value="0">--</option>
+            <option value="AF" ${ex_acct_code-AF} >年費</option>
+            <option value="RI" ${ex_acct_code-RI} >利息</option>
+            <option value="PN" ${ex_acct_code-PN} >違約金</option>
+            <option value="LF" ${ex_acct_code-LF} >掛失手續費</option>
+            <option value="PF" ${ex_acct_code-PF} >雜項手續費</option>            
+         </select>
+      </td>
+      <td nowrap >&nbsp;查詢時間:
+         <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>
+	      --
+	      <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>
+	   </td>
+   </tr>
+ </table>
+</div>
+<hr>
+
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">消費金額</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">刪除費用資料</td>       
+    </tr>
+  </table>
+</div>
+
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap width="5%" class="list_no" >&nbsp;</td>
+   <td nowrap class="list_rr">總計:&nbsp;</td>
+   <td nowrap class="list_rr">${ft_cnt.(999)}&nbsp;筆
+      <input type="hidden" name="ft_cnt" value="${ft_cnt}">
+   </td>
+   <td nowrap class="list_rr">&nbsp;</td>
+   <td nowrap class="list_rr">${sum_purch_amr.(999)}&nbsp;
+      <input type="hidden" name="sum_purch_amr" value="${sum_purch_amr}">
+   </td>
+   <td nowrap class="list_rr">${sum_incom_amt.(999)}&nbsp;
+      <input type="hidden" name="sum_incom_amt" value="${sum_incom_amt}">
+   </td>
+   <td nowrap class="list_rr">${sum_cost_amt.(999)}&nbsp;
+      <input type="hidden" name="sum_cost_amt" value="${sum_cost_amt}">
+   </td>
+   <td nowrap class="list_rr">${sum_contri_amt.(999)}&nbsp;
+      <input type="hidden" name="sum_contri_amt" value="${sum_contri_amt}">
+   </td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >正附卡&nbsp;</th>
+    <th nowrap >團代名稱&nbsp;</th>
+    <th nowrap >消費金額&nbsp;</th>
+    <th nowrap >收入&nbsp;</th>
+    <th nowrap >支出&nbsp;</th>
+    <th nowrap >貢獻度&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}">
+	</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc"> ${sup_flag}&nbsp;
+      <input type="hidden" name="sup_flag" value="${sup_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${group_name}&nbsp;
+      <input type="hidden" name="group_name" value="${group_name}">
+	</td>
+	<td nowrap class="list_rr"> ${db_purch_amt.(999)}&nbsp;
+      <input type="hidden" name="db_purch_amt" value="${db_purch_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_income_amt.(999)}&nbsp;
+      <input type="hidden" name="db_income_amt" value="${db_income_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${db_cost_amt.(999)}&nbsp;
+      <input type="hidden" name="db_cost_amt" value="${db_cost_amt}">
+	</td>
+	<td nowrap class="list_rr"> ${wk_contri_amt.(999)}&nbsp;
+      <input type="hidden" name="wk_contri_amt" value="${wk_contri_amt}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+<div id="tab-2" class="tabcontent"> 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap width="5%" class="list_no" >&nbsp;</td>
+   <td nowrap class="list_cc" >&nbsp;</td>
+   <td nowrap class="list_rr" >${ft_amt.(999)}&nbsp;
+      <input type="hidden" name="ft_amt" value="${ft_amt}" >
+   </td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >費用科目&nbsp;</th>
+    <th nowrap >刪除日期&nbsp;</th>
+    <th nowrap >刪除金額&nbsp;</th>
+    <th nowrap >已覆核&nbsp;</th>
+    <th nowrap >Ex Table&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="ser_num" value="${ser_num}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_item_ename}&nbsp;
+      <input type="hidden" name="ex_item_ename" value="${ex_item_ename}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_d_date.YMD}&nbsp;
+      <input type="hidden" name="ex_d_date" value="${ex_d_date}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_adj_amt.(999)}&nbsp;
+      <input type="hidden" name="ex_adj_amt" value="${ex_adj_amt}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_apr_flag}&nbsp;
+      <input type="hidden" name="ex_apr_flag" value="${ex_apr_flag}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_table}&nbsp;
+      <input type="hidden" name="ex_table" value="${ex_table}">
+	</td>
+	<td nowrap class="list_cc"> ${ex_card_no}&nbsp;
+      <input type="hidden" name="ex_card_no" value="${ex_card_no}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+</div>
+
+ 
+ <input type="hidden"  name="income_score" value="${income_score}" />
+ <input type="hidden" id="id_p_seqno" name="id_p_seqno" value="${id_p_seqno}" />
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+  function IdnoChange(ps1)
+ {
+	var  idno =document.forms["dataForm"]["ex_idno"].value.toUpperCase();
+	if ( idno === '' ) {
+		return false;
+	}
+	if ( idno.length !=10 ) {
+	   alert("身分證ID 輸入錯誤");  
+	   return false ;
+	}
+	idCode = ps1;
+	//20200107 modify AJAX
+    //top.actionCode = "Q";
+    //if ( idCode === '1' ) { 
+    //  top.methodName = "wf_ajax_idno";
+    //}
+    top.actionCode = "AJAX";
+
+	resetJSON();
+	addJSON("ax_idno",idno);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+ 
+ function CardChange(ps1)
+ {
+	var  card_no =document.forms["dataForm"]["ex_card_no"].value;
+	if ( card_no === '' ) {
+		return false;
+	}
+	
+	if ( card_no.length <14 ){
+	   alert("卡號 輸入錯誤");
+	   return false;  
+	}
+	
+	idCode = ps1;
+	//20200107 modify AJAX
+    //top.actionCode = "Q";
+    //if ( idCode === '2' ) { 
+    //  top.methodName = "wf_ajax_card";
+    //}
+
+	resetJSON();
+	addJSON("ax_card",card_no);
+	addJSON("ID_CODE", idCode);
+	processAJAX();
+ }
+  
+  function ajaxResponse()
+ {
+	top.respHtml ="cmsq4220";
+   top.requHtml ="cmsq4220";
+
+	if  ( idCode === '1' || idCode ==='2' ) {
+      var chi_name =getJSONvalue("chi_name",0);
+      if (chi_name.length>0) {
+         $("#chi_name").val(chi_name); 
+      }
+      
+      var vip_code =getJSONvalue("vip_code",0);
+      if (vip_code.length>0) {
+         $("#vip_code").val(vip_code);  
+      }            
+      
+      
+      var score = getJSONvalue("score",0);
+      if(score.length>0){
+          $("#wk_score_01").val(score);  
+      }
+      
+      var score_yymm = getJSONvalue("score_yymm",0);
+      if(score_yymm.length>0){
+          $("#score_yymm").val(score_yymm);  
+      }
+            
+      var yy_income_amt = getJSONvalue("yy_income_amt",0);
+      if(yy_income_amt.length>0){
+          $("#yy_income_amt").val(yy_income_amt);  
+      }
+      
+      var yy_cost_amt = getJSONvalue("yy_cost_amt",0);
+      if(yy_cost_amt.length>0){
+          $("#yy_cost_amt").val(yy_cost_amt);  
+      }
+      
+      var wk_net_amt = Math.round(yy_income_amt - yy_cost_amt) ;
+       $("#wk_net_amt").val(wk_net_amt);  
+      
+      var id_p_seqno = getJSONvalue("id_p_seqno",0) ;
+       $("#id_p_seqno").val(id_p_seqno);  
+      
+	}
+                  
+	if ( idCode === '1' || idCode === '2'  )
+	{ return false; }
+ } 
+  
+</script>

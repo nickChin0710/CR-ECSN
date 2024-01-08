@@ -1,0 +1,240 @@
+<html>
+<head>
+<title>監控交易作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  <input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;    
+  <input type="Button" value="近半年交易記錄" ${btnUpdate_disable} onClick="return top.submitControl('R2')" class="btQuery" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+<hr>
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="3" class="td_titl" >交易資料</td>    
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;交易日期&nbsp;時間:
+        <span class="dsp_text" >${tx_date.YMD}&nbsp;${tx_time.TIME}</span>
+        <input type="hidden" name="tx_date" value="${tx_date}" />
+        <input type="hidden" name="tx_time" value="${tx_time}" />
+    </td>
+    <td nowrap >&nbsp;風險分數:
+        <span class="dsp_text">${risk_score}</span>
+        <input type="hidden" name="risk_score" value="${risk_score}" />
+    </td>
+    <td nowrap >&nbsp;授權結果:
+        <span class="dsp_text">${tt_iso_resp_code}</span>
+        <input type="hidden" name="auth_status_code" value="${auth_status_code}" />
+        <input type="hidden" name="iso_resp_code" value="${iso_resp_code}" />
+        <input type="hidden" name="tt_iso_resp_code" value="${tt_iso_resp_code}" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;授權碼:
+        <span class="dsp_text">${auth_no}</span>
+        <input type="hidden" name="auth_no" value="${auth_no}" />
+    </td>
+    <td nowrap >&nbsp;追蹤號碼:
+        <span class="dsp_text">${trace_no}</span>
+        <input type="hidden" name="trace_no" value="${trace_no}" />
+    </td>
+    <td nowrap></td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;幣別:
+        <span class="dsp_text">${tx_currency}.${tt_currency}</span>
+        <input type="hidden" name="tx_currency" value="${tx_currency}" />    
+        <input type="hidden" name="tt_currency" value="${tt_currency}" />    
+    </td>
+    <td nowrap >&nbsp;消費金額-原幣:
+        <span class="dsp_text">${ori_amt.(999.00)}</span>
+        <input type="hidden" name="ori_amt" value="${ori_amt}" />
+    </td>
+    <td nowrap >&nbsp;消費金額-台幣:
+        <span class="dsp_text">${nt_amt.(999)}</span>
+        <input type="hidden" name="nt_amt" value="${nt_amt}" />
+    </td>    
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;特店代號:
+        <span class="dsp_text">${mcht_no}</span>
+        <input type="hidden" name="mcht_no" value="${mcht_no}" />
+    </td>
+    <td nowrap >&nbsp;特店國家:
+        <span class="dsp_text">${mcht_country}</span>
+        <input type="hidden" name="mcht_country" value="${mcht_country}" />
+    </td>
+    <td nowrap >&nbsp;特店城市:
+        <span class="dsp_text">${mcht_city_name}</span>
+        <input type="hidden" name="mcht_city" value="${mcht_city}" />
+        <input type="hidden" name="mcht_city_name" value="${mcht_city_name}" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="3" >&nbsp;特店名稱:
+        <span class="dsp_text">${mcht_name}</span>
+        <input type="hidden" name="mcht_name" value="${mcht_name}" />
+    </td>    
+  </tr>
+  <tr>
+    <td nowrap class="td_titl" colspan="3" >基本資料</td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;卡號:
+        <span class="dsp_text">${card_no}</span>
+        <input type="hidden" name="card_no" value="${card_no}" />
+    </td>
+    <td nowrap >&nbsp;身分證字號:
+        <span class="dsp_text">${id_no}</span>
+        <input type="hidden" name="id_no" value="${id_no}" />
+    </td>
+    <td nowrap >&nbsp;卡人姓名:
+        <span class="dsp_text">${chi_name}</span>
+        <input type="hidden" name="chi_name" value="${chi_name}" />
+    </td>    
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;公司電話:
+        <span class="dsp_text" >${office_tel1}</span>
+        <input type="hidden" name="office_tel1" value="${office_tel1}" />
+    </td>
+    <td nowrap >&nbsp;家裡電話:
+        <span class="dsp_text">${home_tel1}</span>
+        <input type="hidden" name="home_tel1" value="${home_tel1}" />
+    </td>
+    <td nowrap >&nbsp;手機:
+        <span class="dsp_text">${cellar_phone}</span>
+        <input type="hidden" name="cellar_phone" value="${cellar_phone}" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;卡片狀態:
+        <span class="dsp_text">${current_code}.${#JAVA:ecsfunc.DeCodeCrd.currentCode(current_code)}</span>
+        <input type="hidden" name="current_code" value="${current_code}" />
+    </td>
+    <td nowrap >&nbsp;卡片效期:
+        <span class="dsp_text">${new_end_date.YMD}</span>
+        <input type="hidden" name="new_end_date" value="${new_end_date}" />
+    </td>
+    <td nowrap ></td>      
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;總應繳款:</td>
+    <td nowrap >&nbsp;帳戶額度:
+        <span class="dsp_text">${line_of_credit_amt.(999)}<span>
+        <input type="hidden" name="line_of_credit_amt" value="${line_of_credit_amt}" />
+    </td>
+    <td nowrap >&nbsp;帳戶OTB:</td>    
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <td nowrap >&nbsp;處理日期:
+            <input type="text" class="col_date" name="proc_date" value="${proc_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+            <script language="JavaScript">
+                new tcal ({'formname': 'dataForm','controlname': 'proc_date'});
+            </script>
+            &nbsp;&nbsp;處理時間:
+            <input type="text" class="col_text" name="proc_time" value="${proc_time}" maxlength="6" size="8" >
+        </td>
+        <td nowrap >&nbsp;聯絡結果:
+            <select   size="1"  name="content_result" class="col_ddlb">         
+             <option value="" >--</option>
+             <option value="00" ${content_result-00} >聯繫成功</option>
+             <option value="01" ${content_result-01} >電話停用</option>
+             <option value="02" ${content_result-02} >傳真機</option>
+             <option value="03" ${content_result-03} >無人接聽</option>         
+             <option value="04" ${content_result-04} >無此人</option>
+             <option value="05" ${content_result-05} >空號</option>
+             <option value="06" ${content_result-06} >語音信箱</option>         
+             <option value="07" ${content_result-07} >關機</option>
+             <option value="08" ${content_result-08} >電話中</option>
+             <option value="09" ${content_result-09} >出國</option>         
+             <option value="10" ${content_result-10} >非本人使用</option>             
+             <option value="12" ${content_result-11} >其他</option>         
+            </select>            
+            &nbsp;&nbsp;處理階段:
+            <span class="col_radio">
+             <input type="radio" value="0" name="status_code" ${status_code-0} ${DEFAULT-status_code} />未處理
+             <input type="radio" value="5" name="status_code" ${status_code-5} />處理中
+             <input type="radio" value="9" name="status_code" ${status_code-9} />處理完成
+            </span>
+            &nbsp;&nbsp;處理結果:
+            <select   size="1"  name="proc_result" class="col_ddlb">         
+             <option value="" >--</option>             
+             <option value="01" ${proc_result-01} >無須後續處理</option>
+             <option value="02" ${proc_result-02} >疑義交易 列問交</option>
+             <option value="03" ${proc_result-03} >偽冒交易 列問交</option>         
+             <option value="04" ${proc_result-04} >CALL BANK</option>         
+             <option value="05" ${proc_result-05} >其他</option>         
+             <option value="99" ${proc_result-99} >處理中</option>
+            </select>
+            &nbsp;&nbsp;
+            <input type="checkbox" name="problem_flag" value="Y" ${problem_flag-Y}>列問交
+        </td>
+    </tr>
+    <tr>
+        <td nowrap colspan="2" >&nbsp;處理內容:
+            <input type="text" class="col_any" name="proc_desc1" value="${proc_desc1}" maxlength="100" size="102" zEdit="any,canTw" />
+            <br>&nbsp;　　　　&nbsp;
+            <input type="text" class="col_any" name="proc_desc2" value="${proc_desc2}" maxlength="100" size="102" zEdit="any,canTw" />
+            <br>&nbsp;　　　　&nbsp;
+            <input type="text" class="col_any" name="proc_desc3" value="${proc_desc3}" maxlength="100" size="102" zEdit="any,canTw" />   
+        </td>
+    </tr>
+    <tr>
+    	<td nowrap colspan="2" >&nbsp;處理人員:
+    		<span class="dsp_text">${mod_user}_${tt_mod_user}</span>
+    		<input type="hidden" name="mod_user" value="${mod_user}" />
+    		<input type="hidden" name="tt_mod_user" value="${tt_mod_user}" />
+    	</td>
+    </tr>
+</table>
+</div>
+
+
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+	
+    if ( top.actionCode == "R2" ) {
+        top.respLevel = 2;
+        top.respHtml = "rskm3330_txlog"; 
+    }
+    
+    return true;
+  }
+ 
+</script>

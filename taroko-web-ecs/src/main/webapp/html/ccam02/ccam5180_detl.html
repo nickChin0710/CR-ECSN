@@ -1,0 +1,210 @@
+<html>
+<head>
+<title>ccam5180-detl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; >&nbsp;
+  <input type="Button"     value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"       value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  <input type="Button"     value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap >&nbsp;原因代碼：
+      <input type="text" class="col_text" name="kk_spec_code" value="${kk_spec_code}" 
+         zEdit="alphanum,upper" size="5" maxlength="2" />
+    </td>
+  </tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+  	<td nowrap colspan="4">代碼：
+      <span class="dsp_date">${spec_code}</span>
+      <input type="hidden" name="spec_code" value="${spec_code}">   
+   </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="4">說明：
+      <input type="text" class="col_any" name="spec_desc" value="${spec_desc}" zRequire="Y" zEdit="any,canTW" maxlength="60" size="62" />
+   </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="2">回覆碼：
+      <select size=1 name="resp_code" class="col_ddlb" zRequire="Y">
+         <option value="">--</option>
+      	${dddw_resp_code}
+      </select>
+   </td>
+   <td nowrap colspan="2">
+   	<input type="checkbox" name="send_ibm" value="Y" ${send_ibm-Y}>VD送主機&nbsp;   	
+     &nbsp;代碼類別:
+      <span class="col_radio">
+         <input type="radio" value="1" name="spec_type" ${spec_type-1} />凍結
+         <input type="radio" value="2" name="spec_type" ${spec_type-2} />特指
+      </span>
+   </td>
+   </tr>
+   <tr>
+   <td nowrap colspan="4" class="td_title">作業指示：
+   		<span class="col_radio">
+         <input type="radio" value="1" name="check_level" ${check_level-1} ${DEFAULT_CHK} />直接回覆  
+         <input type="radio" value="2" name="check_level" ${check_level-2} />額度100%內可用
+         <input type="radio" value="0" name="check_level" ${check_level-0} />拒絕條件
+         <input type="radio" value="3" name="check_level" ${check_level-3} />核准條件
+      </span>   		            
+	  	<input type="Button" class="btOther"   value="新增明細" ${btnUpdate_disable} onClick="return detailScreen('01')" >
+	  	&nbsp;
+	  	筆數:${detail_cnt.(999)}	  	
+	  	<input type="hidden" name="detail_cnt" value="${detail_cnt}">
+   </td>   
+   </tr>
+   <tr>
+   	<td nowrap colspan="4" >&nbsp;
+   		風險類:<span class="dsp_text">${check_flag01}</span>
+   		<input type="hidden" name="check_flag01" value="${check_flag01}">
+   		MCC:<span class="dsp_text">${check_flag02}</span>
+   		<input type="hidden" name="check_flag02" value="${check_flag02}">
+   		ECI:<span class="dsp_text">${check_flag03}</span>
+   		<input type="hidden" name="check_flag03" value="${check_flag03}">
+   		UCAF:<span class="dsp_text">${check_flag04}</span>
+   		<input type="hidden" name="check_flag04" value="${check_flag04}">   		
+   		國家別&Entry:<span class="dsp_text">${check_flag06}</span>   		
+   		<input type="hidden" name="check_flag06" value="${check_flag06}"> 
+   		&nbsp;
+   		<input type="checkbox" name="check_flag05" value="Y" ${check_flag05-Y}>網路交易
+   	</td>
+   </tr>
+   <tr>
+      <td nowrap colspan="4" class="td_title"><b>Outgoing 原因代碼</b></td>
+   </tr>
+   <tr>
+      <td nowrap colspan="4">&nbsp;FISC:   
+      <select size=1 name="neg_reason" class="col_ddlb" >
+         <option value="">--</option>
+      	${dddw_exept_reason_nccc} 
+      </select>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="4">&nbsp;VISA:
+         <select size=1 name="visa_reason" class="col_ddlb" >
+            <option value="">--</option>
+            ${dddw_exept_reason_visa}
+         </select>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="4">&nbsp;MASTER:
+         <select size=1 name="mast_reason" class="col_ddlb" >
+         <option value="">--</option>
+      	${dddw_exept_reason_mast}
+         </select>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap colspan="4">&nbsp;JCB:
+      <select size=1 name="jcb_reason" class="col_ddlb" >
+         <option value="">--</option>
+      	${dddw_exept_reason_jcb}
+      </select>
+   </td>
+   </tr>
+  </tr>
+</table>
+</div>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="2" style="margin-left: 30px" >
+  <tr>
+   <td nowrap class="td_text" width="20%">產生日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${crt_date.YMD}</span>
+      <input type="hidden" name="crt_date" value="${crt_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">產生人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${crt_user} </span>
+      <input type="hidden" name="crt_user" value="${crt_user}">   
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="td_text" width="20%">異動日期：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_date">${mod_date.YMD}</span>
+      <input type="hidden" name="mod_date" value="${mod_date}">   
+   </td>
+   <td nowrap class="td_text" width="20%">異動人員：</td>
+   <td nowrap class="td_data" width="30%">
+      <span class="dsp_text"> ${mod_user} </span>
+      <input type="hidden" name="mod_user" value="${mod_user}">   
+   </td>
+  </tr>
+</table>
+<input type="hidden" name="data_k1" value="${spec_code}">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="ccam5180">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ //document.dataForm.kk_spec_code.focus();
+ 
+ //-OK-to data_detl-
+ if (1==2 ${check_level_page}) { 	
+   detailScreen('01');
+ }
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+       return true;
+  }
+
+function detailScreen(parm) {     
+    var ls_chk_level = $('input[name*=check_level]:checked').val();    
+    var ls_spec_code =document.forms["dataForm"]["spec_code"].value.toUpperCase();    
+	 if (ls_chk_level=='1' || ls_chk_level =='2') {
+		alert("不可輸入明細");
+		return false;
+	 }
+	 top.respHtml  = "ccam5180_risk";    
+   top.respLevel = 2;	 
+	 document.dataForm.data_k1.value = ls_spec_code;
+	 document.dataForm.data_k2.value = parm;
+	 document.dataForm.data_k3.value = ls_chk_level;
+   top.submitControl("S2");
+   return true;
+ }  
+
+
+
+</script>

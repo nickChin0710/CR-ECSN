@@ -1,0 +1,207 @@
+<html> 
+<head>
+<title>帳戶特殊MP百分比維護作業-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+          		<tr>
+	                <td nowrap>&nbsp;帳戶帳號:</td>
+	                <td nowrap>
+	                    <select size="1" name="ex_acct_type" class="col_ddlb">${dddw_acct_type}</select>--
+	                    <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" zRequire ="k"/>
+	                </td>
+	        <td nowrap>&nbsp;中文姓名：</td>
+					<td nowrap>&nbsp;${ex_cname}
+             <input type="hidden" name="ex_cname" value="${ex_cname}">
+					</td>
+				</tr>
+        <tr>
+          <td nowrap>&nbsp;公司名稱：</td>
+					<td nowrap colspan="3">&nbsp;${ex_corp_cname}
+             <input type="hidden" name="ex_corp_cname" value="${ex_corp_cname}">
+					</td>
+				</tr>
+                <tr>
+                    <td nowrap colspan="4">
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="存檔" onClick="saveCheck()" class="btUpdate">&nbsp;&nbsp;
+          				<input type="Button" name="btnDelete" ${btnDelete_disable} value="刪除" onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div id="queryBlock">
+  <table width="80%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td nowrap colspan="2" style="color:darkblue; font-weight:bold;">MP百分比訊息</td>
+      <td nowrap colspan="2" style="color:darkblue; font-weight:bold;">特殊MP調整</td>
+    </tr>
+    <tr>
+      <td nowrap colspan="2" style="font-size:16px;">
+        &nbsp;&nbsp;標準MP百分比<br>
+        1.當期消費金額百分比：<span style="color:blue;">&nbsp;${ex_min_percent_payment}</span>&nbsp;%<br>
+        &nbsp;&nbsp;最低應繳金額之本金額
+        <input type="checkbox" value="Y" name="mp1_bl" ${mp1_bl-Y} disabled>BL&nbsp;
+        <input type="checkbox" value="Y" name="mp1_ca" ${mp1_ca-Y} disabled>CA&nbsp;
+        <input type="checkbox" value="Y" name="mp1_ao" ${mp1_ao-Y} disabled>AO&nbsp;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;　　　　　　　　　
+        <input type="checkbox" value="Y" name="mp1_id" ${mp1_id-Y} disabled>ID&nbsp;
+        <input type="checkbox" value="Y" name="mp1_ot" ${mp1_ot-Y} disabled>OT&nbsp;<br>
+        2.當期分期款納入最低應繳金額比例，<br>&nbsp;&nbsp;以分期特店參數設定，加計<br>
+        3.當期消費（非屬前述1.2.類項目）及以前各期<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;於信用卡額度內之累計金額<span style="color:blue;">&nbsp;${ex_min_percent_payment2}</span>&nbsp;%<br>
+      </td>
+      <td nowrap colspan="2" style="font-size:16px;">
+        &nbsp;&nbsp;<span style="color:darkred;">（如持卡人繳款記錄（Mcode）>=&nbsp;${ex_mp_mcode}&nbsp;或生效起年月>迄年月時，<br>&nbsp;&nbsp;本特殊MP停止適用）</span><br>
+        <span class="col_radio">
+        <input type="radio" value="0" name="ex_mpflag" ${ex_mpflag-0} onClick="field_init();"/>帳戶特殊MP百分比調整
+        <input type="radio" value="1" name="ex_mpflag" ${ex_mpflag-1} onClick="field_init();"/>特殊固定MP
+        </span><br>
+        <span style="color:darkblue; font-weight:bold;">帳戶特殊MP百分比調整：</span><br>
+        &nbsp;&nbsp;當期消費（非屬前述1.2.類項目）及以前各期於信用卡額度內<br>
+        &nbsp;&nbsp;之累計金額<input type="text" class="col_number" name="ex_mp0_rate" value="${ex_mp0_rate}" zEdit="number" maxlength="3" size="5" />%
+        &nbsp;&nbsp;生效起迄年月：<input type="text" class="col_date" name="ex_mp0_s_month" value="${ex_mp0_s_month}" zEdit="date,yyyymm" maxlength="6" size="8" />--
+        <input type="text" class="col_date" name="ex_mp0_e_month" value="${ex_mp0_e_month}" zEdit="date,yyyymm" maxlength="6" size="8" /><br>
+        <span style="color:darkblue; font-weight:bold;">特殊固定MP：</span><span style="color:red;">（當特殊MP>當期欠款總額時，當期MP=TTL）</span><br>
+        &nbsp;&nbsp;金額<input type="text" class="col_number" name="ex_mp1_rate" value="${ex_mp1_rate}" zEdit="number" maxlength="8" size="10" />元
+        &nbsp;&nbsp;生效起迄年月：<input type="text" class="col_date" name="ex_mp1_s_month" value="${ex_mp1_s_month}" zEdit="date,yyyymm" maxlength="6" size="8" />--
+        <input type="text" class="col_date" name="ex_mp1_e_month" value="${ex_mp1_e_month}" zEdit="date,yyyymm" maxlength="6" size="8" />
+      </td>
+    </tr>
+    <tr>
+      <td nowrap colspan="4" style="color:#CC0000; font-weight:bold;">重要訊息</td>
+    </tr>
+    <tr>
+      <td nowrap>&nbsp;帳戶現狀碼：</td>
+      <td nowrap>&nbsp;${tt_acct_status}
+        <input type="hidden" name="ex_acct_status" value="${ex_acct_status}">
+        <input type="hidden" name="tt_acct_status" value="${tt_acct_status}">
+      </td>
+      <td nowrap>&nbsp;暫存(即未放行)：</td>
+      <td nowrap style="color:red; font-weight:bold;">&nbsp;${ex_dual_flag}
+        <input type="hidden" name="ex_dual_flag" value="${ex_dual_flag}">
+      </td>
+    </tr>
+  </table>
+        </div>
+        <hr>
+    <!--List -->
+    <div id="dsp1">
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+            	<th nowrap class="list_th" width="5%">No&nbsp;</th>
+				<th nowrap class="list_th">幣別</th>
+				<th nowrap class="list_th">特殊MP<br>固定金額</th>
+				<th nowrap class="list_th">有效期間(年月)</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr style="cursor:hand">
+			    <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+					<input type="hidden" name="SER_NUM" value="${SER_NUM}" />
+					<input type="hidden" name="curr_code" value="${curr_code}" /></td>
+			    <td nowrap class="list_cc"><span style="color:blue; font-weight:bold;">${curr_code}&nbsp;</span></td>
+			    <td nowrap class="list_cc">
+			      <input type="text" class="col_number" name="mp_1_amt" value="${mp_1_amt}" zEdit="dignumber" maxlength="13" size="15" />
+			    </td>
+			    <td nowrap class="list_cc">
+			      <input type="text" class="col_date" name="mp_1_s_month" value="${mp_1_s_month}" zEdit="date,yyyymm" maxlength="6" size="8" /> -- 
+			      <input type="text" class="col_date" name="mp_1_e_month" value="${mp_1_e_month}" zEdit="date,yyyymm" maxlength="6" size="8" />
+			    </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+    </div>
+        
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" name="acct_type" value="${acct_type}">
+        <input type="hidden" name="acct_key" value="${acct_key}">
+        <input type="hidden" name="ex_min_percent_payment" value="${ex_min_percent_payment}">
+        <input type="hidden" name="ex_min_percent_payment2" value="${ex_min_percent_payment2}">
+        <input type="hidden" name="ex_mp_mcode" value="${ex_mp_mcode}">
+        <input type="hidden" name="ex_rc_use_indicator" value="${ex_rc_use_indicator}">
+        <input type="hidden" name="mp_1data" value="${mp_1data}">
+        <input type="hidden" name="queryReadCnt"  value="${queryReadCnt}">
+        <input type="hidden" name="chk_ex_mpflag" value="${ex_mpflag}">
+        <input type="hidden" name="chk_ex_mp0_rate" value="${ex_mp0_rate}">
+        <input type="hidden" name="chk_ex_mp0_s_month" value="${ex_mp0_s_month}">
+        <input type="hidden" name="chk_ex_mp0_e_month" value="${ex_mp0_e_month}">
+        <input type="hidden" name="chk_ex_mp1_rate" value="${ex_mp1_rate}">
+        <input type="hidden" name="chk_ex_mp1_s_month" value="${ex_mp1_s_month}">
+        <input type="hidden" name="chk_ex_mp1_e_month" value="${ex_mp1_e_month}">
+        <input type="hidden" name="mp1_bl-Y" value="${mp1_bl-Y}">
+        <input type="hidden" name="mp1_ca-Y" value="${mp1_ca-Y}">
+        <input type="hidden" name="mp1_ao-Y" value="${mp1_ao-Y}">
+        <input type="hidden" name="mp1_id-Y" value="${mp1_id-Y}">
+        <input type="hidden" name="mp1_ot-Y" value="${mp1_ot-Y}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+document.dataForm.ex_acct_key.focus();
+
+document.getElementById("dsp1").style.display = "none";
+if (document.dataForm.queryReadCnt.value >0) document.getElementById("dsp1").style.display = "";
+field_init();
+
+function field_init(){
+	if (document.getElementsByName("ex_mpflag")[0].checked == true){
+		document.dataForm.ex_mp0_rate.disabled=false;
+		document.dataForm.ex_mp0_s_month.disabled=false;
+		document.dataForm.ex_mp0_e_month.disabled=false;
+		document.dataForm.ex_mp1_rate.disabled=true;
+		document.dataForm.ex_mp1_s_month.disabled=true;
+		document.dataForm.ex_mp1_e_month.disabled=true;
+	}else{
+		document.dataForm.ex_mp0_rate.disabled=true;
+		document.dataForm.ex_mp0_s_month.disabled=true;
+		document.dataForm.ex_mp0_e_month.disabled=true;
+		document.dataForm.ex_mp1_rate.disabled=false;
+		document.dataForm.ex_mp1_s_month.disabled=false;
+		document.dataForm.ex_mp1_e_month.disabled=false;
+	}
+}
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    
+    return true;
+}
+
+function saveCheck(){
+	var ex_min_percent_payment = $("input[name=ex_min_percent_payment]").val();
+	var ex_min_percent_payment2 = $("input[name=ex_min_percent_payment2]").val();
+	var ex_mp0_rate = $("input[name=ex_mp0_rate]").val();
+	if($("input[name=ex_mpflag]:checked").val()=='0'){
+		if(Number(ex_min_percent_payment)>=Number(ex_mp0_rate)||
+				Number(ex_min_percent_payment2)>=Number(ex_mp0_rate)){
+	    	if (confirm("帳戶特殊MP: 標準MP百分比>=累計金額百分比??") === false) {
+	            return false;
+	        } 
+		}
+	}
+	return top.submitControl('U');
+}
+
+</script>

@@ -1,0 +1,232 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-06-26  V1.00.00  andy          Initial                               -->
+<!-- 109-01-03  V1.00.01  Justin Wu     updated for archit.  change           -->
+<!-- 111-08-17  V1.00.02  Zuwei Su      ”科子細目”欄位放大至X(9) ”R6”字樣, 請修訂為”會計” ”R6分錄代碼說明” 欄位請放大, 可顯示較多說明內容           -->
+<!-- 112-01-05  V1.00.03  Grace Huang   暫remark 待沖銷傳票相關欄位              -->
+<!-- 112-08-21  V1.00.04  Grace Huang   memo1/2/3 欄位輸入限制10個字                                              -->
+<!--**************************************************************************-->
+<html>
+<head>
+  <title>會計標準分錄維護</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+  <form  name="dataForm" method="post" action="" >
+   ${#PLUGIN:htmcomm_plugin.apr_user}
+    <div id="condBlock">
+      <!--COND -->
+      <table width="50%" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+         <td nowrap>&nbsp;會計分錄代碼:
+             <input type="text" class="col_text" name="ex_std_vouch_cd"  value="${ex_std_vouch_cd}" zEdit="alphanum,upper"size="4" maxlength="4" />&nbsp;&nbsp;
+             <input type="Button" value="..." onclick="processVendorCode()" class="btAdd_detl" />
+         </td>
+         <td nowrap>&nbsp;會計分錄代碼說明:
+             <input class="field_style" type="text" name="std_vouch_desc" value="${std_vouch_desc}" zEdit="canTW" size="50" maxlength="30" />&nbsp;&nbsp;
+         </td>
+
+         <td nowrap>&nbsp;&nbsp;
+           <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+           <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;       
+           <input type="Button"  value="存檔" ${btnSelect_disable} onClick="return top.submitControl('S2')" class="btAdd" >&nbsp;&nbsp;
+         </td>   
+       </tr>
+      </table>
+       <!-- 動態 BLOCK 視窗控制 -->
+            <div id="disDiv" class="disScreen"></div>
+            <div id="popDiv" class="popup1">
+                <table id="popup2" style="top:-40px; left:350px; width:300px; height:100px;">
+                    <tr>
+                        <td colspan="2"><img onClick="top.hideBlock('popDiv')" src="./images/close_div2.png" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th nowrap style="width:40%;">會計分錄代碼:</th>
+                        <td nowrap style="width:60%;">
+                            <select size="1" name="std_vouch_cd_2" id="std_vouch_cd_2">
+                                ${OPTION_LIST_2}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="Button" value=" ok " onClick="top.setBlockValue('ex_std_vouch_cd','std_vouch_cd_2'); top.hideBlock('popDiv');" class="btConfirm">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+  </div>
+<hr>
+<!--新增插入明細-->
+<table border="0" width="5%">
+  <tr>
+    <td align="right">
+      <input type="Button"  value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd" />&nbsp;
+    </td>
+  </tr>
+</table>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+  <tr>
+    <th nowrap class="list_th">
+      <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >刪除</th>
+    <th nowrap class="list_th">借/貸</th>
+    <th nowrap class="list_th">序號</th>
+    <th nowrap class="list_th">科目代號</th>
+    <th nowrap class="list_th">科目簡稱</th>
+    <!-- <th nowrap class="list_th">待沖傳票銷帳鍵值種類</th> -->
+    <th nowrap class="list_th">摘要一</th>
+    <th nowrap class="list_th">摘要二</th>
+    <th nowrap class="list_th">摘要三</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <!--<tr onclick="getRowNo(this); style="cursor:hand">  -->
+  <tr id="ajax_row" >
+    <td nowrap class="list_no" >${SER_NUM}
+      <span class="col_key">${ok_flag}</span>
+        <input type="checkbox" name="opt" value="${ser_num}" />
+        <input type="hidden" name="ser_num" value="${ser_num}" />
+        <input type="hidden" name="rowid" value="${rowid}">
+    </td>
+    <td nowrap class="list_ll">
+      <select size="1" name="dbcr" class="col_ddlb">
+       <option value="D" ${dbcr-D} >借</option>
+       <option value="C" ${dbcr-C} >貸</option>
+     </select>
+   </td>
+   <td nowrap class="list_cc">${dbcr_seq}</td>
+   <td nowrap class="list_td">
+      <input type="text" class="col_text" name="ac_no" id="ac_no" value="${ac_no}" zEdit="number" maxlength="9" size="9" />
+   </td>
+   <td nowrap class="list_ll">${db_brief}</td>
+   <!-- <td nowrap class="list_ll"> ${memo3_kind}</td> -->    
+   <td nowrap class="list_ll">
+      <!-- <input type="text" class="col_any" name="memo1" id="memo1" value="${memo1}" zEdit="canTW" maxlength=20 size=20 /> -->
+      <input type="text" class="col_any" name="memo1" id="memo1" value="${memo1}" zEdit="canTW" maxlength=10 size=20 />
+   </td>
+   <td nowrap class="list_ll">
+      <!-- <input type="text" class="col_any" name="memo2" id="memo2" value="${memo2}" zEdit="canTW" maxlength=20 size=20 /> -->
+      <input type="text" class="col_any" name="memo2" id="memo2" value="${memo2}" zEdit="canTW" maxlength=10 size=20 />
+   </td>
+   <td nowrap class="list_ll">
+      <!-- <input type="text" class="col_any" name="memo3" id="memo3" value="${memo3}" zEdit="canTW" maxlength=20 size=20 /> -->
+      <input type="text" class="col_any" name="memo3" id="memo3" value="${memo3}" zEdit="canTW" maxlength=10 size=20 />
+   </td>
+   <input type="hidden"  name="dbcr_seq"   value="${dbcr_seq}" >
+   <input type="hidden"  name="db_brief"   value="${db_brief}"  >
+   <input type="hidden"  name="memo3_kind" value="${memo3_kind}" >
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+<!--保留功能-->
+
+<input type="hidden"  name="HIDE"    value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+  tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows="9999";
+
+function validateInput()
+{
+    if ( !top.checkFormat() )
+        { return false; }
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "genm0120_detl";
+    }
+    return true;
+}
+
+/* 處理　PUPOP BLOCK */
+function processVendorCode() {
+    var vendorNo = document.dataForm.ex_std_vouch_cd.value;
+
+    resetJSON();
+    autoJSON = false;
+    addJSON("ex_std_vouch_cd", vendorNo);
+    top.actionCode = "AJAX";
+    // top.methodName = "actionFunction"; // 20200102 updated for archit.  change
+    processAJAX();
+    return true;
+}
+
+function ajaxResponse() {
+    var vendorNo = document.dataForm.ex_std_vouch_cd.value;
+    var vendorList = document.getElementById("std_vouch_cd_2");
+
+    for (var i = vendorList.length - 1; i >= 0; i--) { vendorList.remove(i); }
+
+    var len = getJSONlength("OPTION_TEXT");
+    for (var i = 0; i < len; i++) {
+        vendorList.options.add(new Option(getJSONvalue("OPTION_TEXT", i), getJSONvalue("OPTION_VALUE", i)));
+        if (vendorList.options[i].value == vendorNo && vendorNo.length > 0) { vendorList.options[i].selected = true; }
+    }
+    top.popupBlock('popDiv');
+ }
+</script>
+
+<script language="JavaScript">
+	
+ var init='${INIT_FLAG}';
+ if ( init == 'Y' )
+    { document.getElementById("ajax_row").style.display = 'none';  } 
+
+function wf_add_newrow()
+{ 
+  document.getElementById("ajax_row").style.display = '';
+  var tables = document.getElementById("table1"); 
+
+  if ( init == 'Y' )
+     { tables.rows[1].cells[2].innerHTML='1'; init = 'N'; return; }
+
+  var obj3   = document.getElementById("ac_no");
+  var obj6   = document.getElementById("memo1");
+  var obj7   = document.getElementById("memo2");
+  var obj8   = document.getElementById("memo3");
+  var val3   = obj3.value;  
+  var val6   = obj6.value;  
+  var val7   = obj7.value;  
+  var val8   = obj8.value;
+  obj3.value = "";  
+  obj6.value = "";  
+  obj7.value = "";
+  obj8.value = "";
+  var rowCount="";
+  rowCount  = tables.rows.length;
+  var trows = tables.rows[1].cloneNode(true);
+
+  if ( rowCount < 10 )
+     { trows.cells[0].firstChild.nodeValue='0'+rowCount; }
+  else
+  	 { trows.cells[0].firstChild.nodeValue=rowCount;  }
+  trows.cells[2].innerHTML=rowCount;
+  trows.cells[4].innerHTML="";
+  trows.cells[5].innerHTML="";
+  tables.appendChild(trows);
+  obj3.value = val3;  
+  obj6.value = val6;  
+  obj7.value = val7;
+  obj8.value = val8;
+}
+
+</script>

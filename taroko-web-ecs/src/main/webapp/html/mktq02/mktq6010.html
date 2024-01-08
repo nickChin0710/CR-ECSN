@@ -1,0 +1,111 @@
+<html>
+
+<head>
+    <title>聯名主紅利回饋查詢-V.2018-0921-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan=4>&nbsp;帳務年月：
+                        <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymm" maxlength="6" size="6" />         
+                        --
+                        <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymm" maxlength="6" size="6" />         
+                    </td>&nbsp;
+                    <td nowrap colspan="4">&nbsp;聯名主:
+                        <select size="1" name="ex_giftno" class="col_ddlb">
+                            <option value="02" ${ex_giftno-02}>歐付寶</option>
+                            <option value="08" ${ex_giftno-08}>美福</option>                            
+                        </select>
+                    </td>
+                    <td nowrap colspan=4>&nbsp;
+                        <input type="Button"  ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;
+                    </td>                 
+                </tr>               
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->         
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="2"  width="60%">
+            <tr>
+                <th nowrap class="list_th" width="10">No&nbsp;</th>
+                <th nowrap class="list_th" width="150">回饋月份</th>
+                <th nowrap class="list_th" width="150">基金代碼</th>
+                <th nowrap class="list_th" width="150">基金名稱</th>
+                <th nowrap class="list_th" width="150">回饋戶數</th>
+                <th nowrap class="list_th" width="150">消費金額/筆數</th>
+                <th nowrap class="list_th" width="150">發送紅利/回饋金額</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no">${SER_NUM}&nbsp;</td>
+                <td nowrap class="list_cc"> ${acct_month}&nbsp; </td>
+                <td nowrap class="list_cc"> ${program_code}&nbsp; </td>
+                <td nowrap class="list_ll"> ${fund_name} </td>
+                <td nowrap class="list_rr"> &nbsp;${feeback_cnt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${destination_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${feedback_amt.(999)}</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_rr" colspan="5"style="color: blue">合計:</td>
+                <td nowrap class="list_rr" style="color: blue">&nbsp;${sum_dest_amt.(999)} </td>
+                <td nowrap class="list_rr" style="color: blue">&nbsp;${sum_feedback_amt.(999)} </td>
+            </tr>
+            <tr>
+                <td nowrap class="list_rr" colspan="5"style="color: blue">實際請款金額:</td>
+                <td nowrap class="list_rr" style="color: red">95%</td>
+                <td nowrap class="list_rr" style="color: blue">&nbsp;${sum_feedback_amt1.(999)} </td>
+            </tr>
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="row_ct" value="${row_ct}">
+        <input type="hidden" name="sql_select" value="${sql_select}">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "60";
+
+document.dataForm.ex_date1.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "mktr4060_detl";
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "mktr4060_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

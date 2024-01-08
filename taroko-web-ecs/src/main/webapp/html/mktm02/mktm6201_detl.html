@@ -1,0 +1,284 @@
+<!**************************************************************************>
+<!                                                                          >
+<!                              MODIFICATION LOG                            >
+<!                                                                          >
+<!    DATE    VERSION     AUTHOR                 DESCRIPTION                >
+<! ---------  --------  -----------    ------------------------------------ >
+<! 106/12/13  V1.00.01   RAY Ho        Initial                              >
+<!                                                                          >
+<!**************************************************************************>
+<html>
+<head>
+<title>特店群組代碼維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user3}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="light_img(this);"; onmouseover="dark_img(this);">&nbsp;
+     <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button"   value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button"   value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button"    value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data************************************************************ -->
+ <table width="60%" border="" cellspacing="" cellpadding="">
+   <tr>
+     <td nowrap  width="50%">特店群組代碼&nbsp;
+       <input type="text" class="col_any" name="kk_mcht_group_id" value="${kk_mcht_group_id}"
+              zEdit="alphanum"10 maxlength="10" size="10" />
+    </td>
+   </tr>
+ </table>
+<!-- Detail data********************************************************* -->
+ <table width="60%" border="" cellspacing="" cellpadding="">
+   <tr>
+     <td nowrap class="colKey">特店群組代碼
+       <span class="dsp_text">${mcht_group_id}</span>
+       <input type="hidden" name="mcht_group_id" value="${mcht_group_id}" />
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="" cellspacing="" cellpadding="">
+   <tr>
+     <td nowrap>特店群組說明&nbsp; 
+       <input type="text" class="col_text" name="mcht_group_desc" value="${mcht_group_desc}"
+              zEdit="any,canTW" zRequire="Y" maxlength="60" size="60" />
+     </td>
+   </tr>
+   <tr>
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="" cellspacing="" cellpadding="">
+   <tr>
+     <td nowrap  >鍵檔日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input size="8"  type="hidden" name="crt_date" value="${crt_date.YMD}" />
+     </td>
+     <td nowrap  >鍵檔人員: 
+       <span class="dsp_text">${crt_user}</span>
+       <input size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap  >覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input size="8"  type="hidden" name="apr_date" value="${apr_date.YMD}" />
+     </td>
+     <td nowrap  >覆核人員: 
+       <span class="dsp_text">${apr_user}</span>
+       <input size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+   </tr>
+   <tr>
+   </tr>
+ </table>
+ <table  class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　　　明細資料　　　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr>
+ </table>
+ <table width="60%" border="" cellspacing="" cellpadding="">
+   </tr>
+ </table>
+</div>
+<div id="dataBlock">
+<!-- Key data************************************************************ -->
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   </tr>
+ </table>
+ <table width="50%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap  width="50%">特店代號:&nbsp;
+       <input type="text" class="col_any" id="sel_data_code" name="sel_data_code" value="${sel_data_code}"
+              zEdit="" maxlength="20" size="20" />
+     </td>
+     <td nowrap  width="50%">收單行：　&nbsp;
+       <input type="text" class="col_any" id="sel_data_code2" name="sel_data_code2" value="${sel_data_code2}"
+              zEdit="" maxlength="20" size="20" />
+     </td>
+     <td align="right">${ex_total_cnt}
+       <input type="Button"  value="新增明細" ${newDetail_disable}
+              onclick="wf_addrow();" class="btAdd_detl" />
+     <img src="images/uperLoad.gif" onclick="return upload_click('','')" style="cursor:hand" />
+   </tr>
+ </table>
+<! browse ******************************************************************>
+ <table id="table1" width="50%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">刪除 </th>
+    <th nowrap class="list_th">特店代號</th>
+    <th nowrap class="list_th">收單行</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : BUTTON2 -->
+  <tr>
+    <td nowrap class="list_no" bgcolor="#EFEFEF">
+      <span class="dsp_flag">${ok_flag}</span>
+      ${SER_NUM}
+      <input type="checkbox" name="opt" value="${ser_num}">
+      <input type="hidden" name="ser_num" value="${ser_num}">
+      <input type="hidden" name="rowid" value="${rowid}" />
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+      <span class="dsp_text">${data_code}</span>
+      <input type="hidden" name="data_code" value="${data_code}" >
+    </td>
+    <td nowrap class="list_td" >&nbsp;
+      <span class="dsp_text">${data_code2}</span>
+      <input type="hidden" name="data_code2" value="${data_code2}" >
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ </div>
+<script language="JavaScript">
+var ind=${IND_NUM};
+var rowNum=${IND_NUM},colNum=0;
+var fi=0;
+
+  function wf_addrow()
+   {
+   var sel_data_code_element = document.getElementById("sel_data_code"); 
+   var sel_data_code2_element = document.getElementById("sel_data_code2"); 
+
+
+   var val_data_code = sel_data_code_element.value;
+   var val_data_code2 = sel_data_code2_element.value;
+
+   colNum=0
+
+   rowNum++;
+   ind++;
+   var myRow = document.all.table1.insertRow(rowNum);
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_no";
+   myCell.noWrap ="nowrap";
+
+   var serNo ="";
+   if ( ind < 10 )
+       { serNo = "0"+ind; }
+   else
+       { serNo = ""+ind;  }
+
+   fi++;
+   myCell.innerHTML = ""+serNo
+        + "<input type='checkbox' class='col_ckbox' name='opt' value='" + serNo + "' />"
+        + "<input type='hidden' name='ser_num' value='" + serNo + "' />"
+        + "<input type='hidden' name='rowid' value='' />"
+        ; 
+
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "data_code";
+   myCell.innerHTML = "<span class='dsp_text'>" + val_data_code+  "</span>" 
+                    + "<input type='hidden' name='" + forName + "' value='" + val_data_code + "' >";
+   colNum++;
+   myCell = myRow.insertCell(colNum);
+   myCell.className = "list_td";
+   forName = "data_code2";
+   myCell.innerHTML = "<span class='dsp_text'>" + val_data_code2+  "</span>" 
+                    + "<input type='hidden' name='" + forName + "' value='" + val_data_code2 + "' >";
+
+}//-btnAdd-click-
+</script>
+<!-- trail ************************************************************** -->
+ <input type="hidden"  name="sys_upload_type" value="" />
+ <input type="hidden"  name="sys_upload_alias" value="" />
+ <input type="hidden"  name="upload_file" value="" />
+ <input type="text" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" />
+<input type="hidden" name="aud_type" value="${aud_type}">
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="mktm6201">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+<div id="disDiv" class="disScreen"></div>
+</body>
+</html>
+<!-- script 2 *********************************************************** -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ document.dataForm.kk_mcht_group_id.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "mktm6201_"+parm2;
+    top.submitControl("R"+parm1);
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    return true;
+   }
+
+ function button2Screen(parm1)
+   {
+    top.submitControl("T"+parm1);
+
+    return true;
+   }
+
+
+function upload_click(parm1,parm2)
+ {
+  document.dataForm.zz_file_name.value = "";
+
+  document.dataForm.sys_upload_type.value = parm1;
+  document.dataForm.sys_upload_alias.value = parm2;
+  var parmHtml    = "TarokoUpload";
+  var parmName    = "upload_file,zz_file_name";
+  var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+  top.packageName = "taroko.com";
+  top.javaName    = "TarokoUpload";
+  top.methodName  = "showScreen";
+  top.openWindow("",parmHtml,parmName,windowSize);
+
+  top.packageName = "mktm02";
+  top.javaName    = "Mktm6201";
+  top.requHtml    = "mktm6201_detl";
+  top.respHtml    = "mktm6201_detl";
+  return true;
+ }
+
+function wf_uploadAfter()
+ {
+  var ss=document.dataForm.zz_file_name.value.trim();
+  if (ss.length>0)  top.submitControl('UPLOAD1');
+ }
+
+</script>
+<!-- ******************************************************************** -->

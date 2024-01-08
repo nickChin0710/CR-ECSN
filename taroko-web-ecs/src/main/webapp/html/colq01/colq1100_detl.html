@@ -1,0 +1,858 @@
+<!-- 
+*****************************************************************************
+*                                                                            *
+*                              MODIFICATION LOG                              *
+*                                                                            *
+* DATE       Version   AUTHOR      DESCRIPTION                               *
+* ---------  --------  ---------- ------------------------------------------ *
+* 107-02-13  V1.00.01  phopho     Initial                                    *
+* 110-03-31  V1.00.02  Justin     fix XSS                                    *       
+****************************************************************************** 
+-->
+<html>
+<head>
+<title>前置協商歷史資料查詢-detl-110-03-31-V1.00.01-Justin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+<style type="text/css">
+input:disabled {
+  background: #FFFAEC;
+}
+</style>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td colspan="2"> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+ </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap width="33%">&nbsp;身分證號：
+      <input type="text" class="dsp_text" name="id_no" value="${id_no}" size="10" disabled/>
+      <input type="hidden" name="id_no" value="${id_no}">
+      <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+    </td>
+    <td nowrap width="34%">&nbsp;中文姓名：
+      <input type="text" class="dsp_text" name="chi_name" value="${chi_name}" size="15" disabled/>
+      <input type="hidden" name="chi_name" value="${chi_name}">
+    </td>
+    <td nowrap width="33%">&nbsp;有擔保貸款：
+      <input type="text" class="dsp_text" name="credit_flag" value="${credit_flag}" size="2" disabled/>
+      <input type="hidden" name="credit_flag" value="${credit_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;前置協商狀態：
+      <input type="text" class="dsp_text" name="tt_liac_status" value="${tt_liac_status}" size="15" disabled/>
+      <input type="hidden" name="tt_liac_status" value="${tt_liac_status}">
+      <input type="hidden" name="liac_status" value="${liac_status}">
+    </td>
+    <td nowrap >&nbsp;前置協商序號：
+      <input type="text" class="dsp_text" name="liac_seqno" value="${liac_seqno}" size="10" disabled/>
+      <input type="hidden" name="liac_seqno" value="${liac_seqno}">
+    </td>
+    <td nowrap >&nbsp;無擔保貸款：
+      <input type="text" class="dsp_text" name="no_credit_flag" value="${no_credit_flag}" size="2" disabled/>
+      <input type="hidden" name="no_credit_flag" value="${no_credit_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;資料轉入日期：
+      <input type="text" class="dsp_date" name="file_date" value="${file_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="file_date" value="${file_date}">
+    </td>
+    <td nowrap >&nbsp;聯徵通知日期：
+      <input type="text" class="dsp_date" name="notify_date" value="${notify_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="notify_date" value="${notify_date}">
+    </td>
+    <td nowrap >&nbsp;現金卡：
+      <input type="text" class="dsp_text" name="cash_card_flag" value="${cash_card_flag}" size="2" disabled/>
+      <input type="hidden" name="cash_card_flag" value="${cash_card_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;協商申請日期：
+      <input type="text" class="dsp_date" name="apply_date" value="${apply_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="apply_date" value="${apply_date}">
+    </td>
+    <td nowrap >&nbsp;最大債權金融機構：
+      <input type="text" class="dsp_text" name="wk_bank_code_name" value="${wk_bank_code_name}" size="15" disabled/>
+      <input type="hidden" name="wk_bank_code_name" value="${wk_bank_code_name}">
+      <input type="hidden" name="bank_code" value="${bank_code}">
+      <input type="hidden" name="bank_name" value="${bank_name}">
+    </td>
+    <td nowrap >&nbsp;信用卡：
+      <input type="text" class="dsp_text" name="credit_card_flag" value="${credit_card_flag}" size="2" disabled/>
+      <input type="hidden" name="credit_card_flag" value="${credit_card_flag}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;　　停催日期：
+      <input type="text" class="dsp_date" name="stop_notify_date" value="${stop_notify_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="stop_notify_date" value="${stop_notify_date}">
+    </td>
+    <td nowrap >&nbsp;協商開始日期：
+      <input type="text" class="dsp_date" name="nego_s_date" value="${nego_s_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="nego_s_date" value="${nego_s_date}">
+    </td>
+    <td nowrap >&nbsp;回報債權對內金額：
+      <input type="text" class="dsp_num" name="db_in_bal" value="${db_in_bal.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_in_bal" value="${db_in_bal}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;簽約完成日期：
+      <input type="text" class="dsp_date" name="contract_date" value="${contract_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="contract_date" value="${contract_date}">
+    </td>
+    <td nowrap >&nbsp;止息基準日期：
+      <input type="text" class="dsp_date" name="interest_base_date" value="${interest_base_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="interest_base_date" value="${interest_base_date}">
+    </td>
+    <td nowrap >&nbsp;回報債權對外金額：
+      <input type="text" class="dsp_num" name="db_out_bal" value="${db_out_bal.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_out_bal" value="${db_out_bal}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;　申請時戶況：
+      <input type="text" class="dsp_text" name="acct_status_apply" value="${acct_status_apply}" size="2" disabled/>
+      <input type="hidden" name="acct_status_apply" value="${acct_status_apply}">
+    </td>
+    <td nowrap colspan="2">&nbsp;申請時Mcode：
+      <input type="text" class="dsp_text" name="m_code_apply" value="${m_code_apply}" size="2" disabled/>
+      <input type="hidden" name="m_code_apply" value="${m_code_apply}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;結案復催原因代碼：
+      <input type="text" class="dsp_text" name="tt_recol_reason" value="${tt_recol_reason}" size="30" disabled/>
+      <input type="hidden" name="tt_recol_reason" value="${tt_recol_reason}">
+      <input type="hidden" name="recol_reason" value="${recol_reason}">
+    </td>
+    <td nowrap >&nbsp;科目對外債權本金：
+      <input type="text" class="dsp_num" name="db_out_capital" value="${db_out_capital.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_out_capital" value="${db_out_capital}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;債務人基本資料日：
+      <input type="text" class="dsp_date" name="id_data_date" value="${id_data_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="id_data_date" value="${id_data_date}">
+    </td>
+    <td nowrap >&nbsp;承辦分行：
+      <input type="text" class="dsp_text" name="tt_reg_bank_no" value="${tt_reg_bank_no}" size="15" disabled/>
+      <input type="hidden" name="tt_reg_bank_no" value="${tt_reg_bank_no}">
+      <input type="hidden" name="reg_bank_no" value="${reg_bank_no}">
+    </td>
+    <td nowrap >&nbsp;　　　　　　利息：
+      <input type="text" class="dsp_num" name="db_out_int" value="${db_out_int.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_out_int" value="${db_out_int}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;法院認可資料日期：
+      <input type="text" class="dsp_date" name="court_agree_date" value="${court_agree_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="court_agree_date" value="${court_agree_date}">
+    </td>
+    <td nowrap >&nbsp;案件進度：
+      <input type="text" class="dsp_text" name="tt_case_status" value="${tt_case_status}" size="15" disabled/>
+      <input type="hidden" name="tt_case_status" value="${tt_case_status}">
+      <input type="hidden" name="case_status" value="${case_status}">
+    </td>
+    <td nowrap >&nbsp;　　　　　違約金：
+      <input type="text" class="dsp_num" name="db_out_pn" value="${db_out_pn.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_out_pn" value="${db_out_pn}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;備註：
+      <input type="text" class="dsp_text" name="liac_remark" value="${liac_remark}" size="20" disabled/>
+      <input type="hidden" name="liac_remark" value="${liac_remark}">
+    </td>
+    <td nowrap >&nbsp;異動別代碼：
+      <input type="text" class="dsp_text" name="tt_liac_txn_code" value="${tt_liac_txn_code}" size="10" disabled/>
+      <input type="hidden" name="tt_liac_txn_code" value="${tt_liac_txn_code}">
+      <input type="hidden" name="liac_txn_code" value="${liac_txn_code}">
+    </td>
+    <td nowrap >&nbsp;　　　　　　費用：
+      <input type="text" class="dsp_num" name="db_out_fee" value="${db_out_fee.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_out_fee" value="${db_out_fee}">
+    </td>
+  </tr>
+</table>
+<hr>
+
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')"><span style="color:#0000FF">帳戶繳評</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-9')"><span style="color:#0000FF">回報債權</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-2')"><span style="color:#0000FF">協議方案(Z96)</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-3')"><span style="color:#0000FF">簽約方案(Z98)</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-10')"><span style="color:#0000FF">簽約暨變更方案歷史查詢</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-4')"><span style="color:#0000FF">法院公文</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-5')"><span style="color:#0000FF">繳款</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-6')"><span style="color:#0000FF">延繳</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-7')"><span style="color:#0000FF">單獨受償</span></td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-8')"><span style="color:#0000FF">結案/結清</span></td>
+    </tr>
+  </table>
+</div>
+<!-- TAB Start================================= -->
+<!-- 帳戶繳評================================== -->
+<div id="tab-1" class="tabcontent">
+<table id="table1" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">協商申請日期</th>
+    <th nowrap class="list_th">帳戶帳號</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">帳務月份</th>
+    <th nowrap class="list_th">逾期期數</th>
+    <th nowrap class="list_th">欠款總金額</th>
+    <th nowrap class="list_th">符合道德風險</th>
+    <th nowrap class="list_th" colspan="6">近半年繳款評等</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="a-rowid" value="${a-rowid}">
+      <input type="hidden" name="a-ser_num" value="${ser_num}">
+      <input type="hidden" name="a-liac_seqno" value="${a-liac_seqno}">
+      
+      <input type="hidden" name="a-apply_date" value="${a-apply_date}">
+      <input type="hidden" name="a-wk_acct_key" value="${a-wk_acct_key}">
+      <input type="hidden" name="a-acct_status" value="${a-acct_status}">
+      <input type="hidden" name="a-acct_month" value="${a-acct_month}">
+      <input type="hidden" name="a-mcode" value="${a-mcode}">
+      <input type="hidden" name="a-tot_amt" value="${a-tot_amt}">
+      <input type="hidden" name="a-ethic_risk_mark" value="${a-ethic_risk_mark}">
+      <input type="hidden" name="a-payment_rate1" value="${a-payment_rate1}">
+      <input type="hidden" name="a-payment_rate2" value="${a-payment_rate2}">
+      <input type="hidden" name="a-payment_rate3" value="${a-payment_rate3}">
+      <input type="hidden" name="a-payment_rate4" value="${a-payment_rate4}">
+      <input type="hidden" name="a-payment_rate5" value="${a-payment_rate5}">
+      <input type="hidden" name="a-payment_rate6" value="${a-payment_rate6}">
+    </td>
+    <td nowrap class="list_cc"> ${a-apply_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-wk_acct_key}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-acct_status}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-acct_month.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-mcode}&nbsp;</td>
+    <td nowrap class="list_rr"> ${a-tot_amt.(999)}&nbsp;</td>
+    <td nowrap class="list_ll"> ${a-ethic_risk_mark}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-payment_rate1}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-payment_rate2}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-payment_rate3}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-payment_rate4}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-payment_rate5}&nbsp;</td>
+    <td nowrap class="list_cc"> ${a-payment_rate6}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  <!-- ${a-static_text} 2021-03-31 Justin fix XSS -->
+  <tr style="${a-static_text_style}">
+    <td nowrap class='list_ll' colspan='14'><span style='color:#A23400'> 
+    ***備註：道德風險評估說明：  <br>&nbsp;&nbsp;&nbsp;　　 1:近半年繳評不足6個月 <br>
+    &nbsp;&nbsp;&nbsp;　　 2:近半年繳評1~2月為0A.0B.0C.0D.0E任2個，3~6月為0A.0B. 0E任4個，且current總欠 > 0 <br>
+    &nbsp;&nbsp;&nbsp;　　 3: ( current總欠 – 最近關帳欠款金額 ) > 信用額度 * 30% <br>
+    &nbsp;&nbsp;&nbsp;　　 Y:人工評估有道德風險之歷史案件 <br>
+    &nbsp;&nbsp;&nbsp;　　 4:近半年單筆消費金額超過10,000(含)以上
+    &nbsp;</span></td>
+  </tr>
+</table>
+</div>
+
+<!-- 協議方案(Z96)================================== -->
+<div id="tab-2" class="tabcontent">
+<table id="table2" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" rowspan="9"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="b-rowid" value="${b-rowid}">
+      <input type="hidden" name="b-ser_num" value="${ser_num}">
+      <input type="hidden" name="b-liac_seqno" value="${b-liac_seqno}">
+    
+      <input type="hidden" name="b-file_date" value="${b-file_date}">
+      <input type="hidden" name="b-tt_proc_flag" value="${b-tt_proc_flag}">
+      <input type="hidden" name="b-notify_date" value="${b-notify_date}">
+      <input type="hidden" name="b-apply_date" value="${b-apply_date}">
+      <input type="hidden" name="b-bank_code" value="${b-bank_code}">
+      <input type="hidden" name="b-bank_name" value="${b-bank_name}">
+      <input type="hidden" name="b-resp_agree_e_date" value="${b-resp_agree_e_date}">
+      <input type="hidden" name="b-tt_reg_bank_no" value="${b-tt_reg_bank_no}">
+      <input type="hidden" name="b-liac_credit_amt" value="${b-liac_credit_amt}">
+      <input type="hidden" name="b-tt_debt_reason" value="${b-tt_debt_reason}">
+      <input type="hidden" name="b-liac_install_cnt" value="${b-liac_install_cnt}">
+      <input type="hidden" name="b-liac_int_rate" value="${b-liac_int_rate}">
+      <input type="hidden" name="b-est_allocate_amt" value="${b-est_allocate_amt}">
+      <input type="hidden" name="b-lastest_pay_amt" value="${b-lastest_pay_amt}">
+      <input type="hidden" name="b-wk_est_allocate_amt" value="${b-wk_est_allocate_amt}">
+      <input type="hidden" name="b-phase2_pay_flag" value="${b-phase2_pay_flag}">
+      <input type="hidden" name="b-in_end_bal" value="${b-in_end_bal}">
+      <input type="hidden" name="b-out_end_bal" value="${b-out_end_bal}">
+      <input type="hidden" name="b-month_pay_amt" value="${b-month_pay_amt}">
+      <input type="hidden" name="b-ethic_risk_mark" value="${b-ethic_risk_mark}">
+      <input type="hidden" name="b-agree_flag" value="${b-agree_flag}">
+      <input type="hidden" name="b-tt_liac_remark" value="${b-tt_liac_remark}">
+    </td>
+    <th nowrap class="list_th"><span style="color:#0000FF"> 資料轉入日期</span></th>
+    <td nowrap class="list_cc"> ${b-file_date.YMD}&nbsp;</td>
+    <th nowrap class="list_th"> 前置協商序號</th>
+    <td nowrap class="list_cc"> ${b-liac_seqno}&nbsp;</td>
+    <th nowrap class="list_th"> 報送狀態</th>
+    <td nowrap class="list_cc"> ${b-tt_proc_flag}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 請求同意通知日期</th>
+    <td nowrap class="list_cc"> ${b-notify_date.YMD}&nbsp;</td>
+    <th nowrap class="list_th"> 申請日期</th>
+    <td nowrap class="list_cc" colspan="3"> ${b-apply_date.YMD}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 最大債權金融機構</th>
+    <td nowrap class="list_ll" colspan="5"> ${b-bank_code} ${b-bank_name}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 回報同意截止日</th>
+    <td nowrap class="list_cc"> ${b-resp_agree_e_date.YMD}&nbsp;</td>
+    <th nowrap class="list_th"> 承辦分行</th>
+    <td nowrap class="list_cc" colspan="3"> ${b-tt_reg_bank_no}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 無擔保協商總金額</th>
+    <td nowrap class="list_rr"> ${b-liac_credit_amt.(999)}&nbsp;</td>
+    <th nowrap class="list_th"> 負債主因</th>
+    <td nowrap class="list_cc" colspan="3"> ${b-tt_debt_reason}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 期數</th>
+    <td nowrap class="list_rr"> ${b-liac_install_cnt}&nbsp;</td>
+    <th nowrap class="list_th"> 利率[%]</th>
+    <td nowrap class="list_rr"> ${b-liac_int_rate}&nbsp;</td>
+    <th nowrap class="list_th"> 每月可回收金額</th>
+    <td nowrap class="list_rr"> ${b-est_allocate_amt.(999)}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 最後一期還款金額</th>
+    <td nowrap class="list_rr"> ${b-lastest_pay_amt.(999)}&nbsp;</td>
+    <th nowrap class="list_th"> 預估可回收金額</th>
+    <td nowrap class="list_rr"> ${b-wk_est_allocate_amt.(999)}&nbsp;</td>
+    <th nowrap class="list_th"> 二階段還款註記</th>
+    <td nowrap class="list_cc"> ${b-phase2_pay_flag}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 信用卡本息餘額:對內</th>
+    <td nowrap class="list_rr"> ${b-in_end_bal.(999)}&nbsp;</td>
+    <th nowrap class="list_th"> 對外</th>
+    <td nowrap class="list_rr"> ${b-out_end_bal.(999)}&nbsp;</td>
+    <th nowrap class="list_th"> 估計月付金額</th>
+    <td nowrap class="list_rr"> ${b-month_pay_amt.(999)}&nbsp;</td>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"> 符合道德風險條件註記</th>
+    <td nowrap class="list_cc"> ${b-ethic_risk_mark}&nbsp;</td>
+    <th nowrap class="list_th"> 清償方案是否同意</th>
+    <td nowrap class="list_cc"> ${b-agree_flag}&nbsp;</td>
+    <th nowrap class="list_th"> 備註</th>
+    <td nowrap class="list_cc"> ${b-tt_liac_remark}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 簽約方案(Z98)================================== -->
+<div id="tab-3" class="tabcontent">
+<table id="table3" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%" rowspan="3">No&nbsp;</th>
+    <th nowrap class="list_th">轉入日期</th>
+    <th nowrap class="list_th" colspan="2">最大債權金融機構</th>
+    <th nowrap class="list_th">協商<br>申請日期</th>
+    <th nowrap class="list_th">協商<br>完成日期</th>
+    <th nowrap class="list_th">簽約<br>完成日期</th>
+    <th nowrap class="list_th">期數</th>
+    <th nowrap class="list_th">利率％</th>
+    <th nowrap class="list_th">首期<br>應繳款日期</th>
+    <th nowrap class="list_th">月付金額</th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th" colspan="4"><span style="color:#00FF00">總簽約金額</span></th>
+    <th nowrap class="list_th" colspan="5"><span style="color:#0000FF">本行債權金額</span></th>
+    <th nowrap class="list_th"></th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"><span style="color:#00FF00">信用貸款</span></th>
+    <th nowrap class="list_th"><span style="color:#00FF00">現金卡</span></th>
+    <th nowrap class="list_th"><span style="color:#00FF00">信用卡</span></th>
+    <th nowrap class="list_th"><span style="color:#00FF00">合計金額</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">信用貸款</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">現金卡</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">信用卡</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">本行每期<br>可分配金額</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">本行無擔保<br>債權比例％</span></th>
+    <th nowrap class="list_th">繳款帳號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="c-rowid" value="${c-rowid}">
+      <input type="hidden" name="c-ser_num" value="${ser_num}">
+      <input type="hidden" name="c-liac_seqno" value="${c-liac_seqno}">
+      
+      <input type="hidden" name="c-file_date" value="${c-file_date}">
+      <input type="hidden" name="c-bank_code" value="${c-bank_code}">
+      <input type="hidden" name="c-bank_name" value="${c-bank_name}">
+      <input type="hidden" name="c-apply_date" value="${c-apply_date}">
+      <input type="hidden" name="c-nego_e_date" value="${c-nego_e_date}">
+      <input type="hidden" name="c-contract_e_date" value="${c-contract_e_date}">
+      <input type="hidden" name="c-liac_install_cnt" value="${c-liac_install_cnt}">
+      <input type="hidden" name="c-liac_int_rate" value="${c-liac_int_rate}">
+      <input type="hidden" name="c-install_s_date" value="${c-install_s_date}">
+      <input type="hidden" name="c-month_pay_amt" value="${c-month_pay_amt}">
+      <input type="hidden" name="c-credit_cont_amt" value="${c-credit_cont_amt}">
+      <input type="hidden" name="c-cash_card_cont_amt" value="${c-cash_card_cont_amt}">
+      <input type="hidden" name="c-credit_card_cont_amt" value="${c-credit_card_cont_amt}">
+      <input type="hidden" name="c-total_cont_amt" value="${c-total_cont_amt}">
+      <input type="hidden" name="c-m_credit_cont_amt" value="${c-m_credit_cont_amt}">
+      <input type="hidden" name="c-m_cash_card_cont_amt" value="${c-m_cash_card_cont_amt}">
+      <input type="hidden" name="c-m_credit_card_cont_amt" value="${c-m_credit_card_cont_amt}">
+      <input type="hidden" name="c-per_allocate_amt" value="${c-per_allocate_amt}">
+      <input type="hidden" name="c-m_no_credit_rate" value="${c-m_no_credit_rate}">
+      <input type="hidden" name="c-pay_acct_no" value="${c-pay_acct_no}">
+    </td>
+    <td nowrap class="list_cc"> ${c-file_date.YMD}&nbsp;</td>
+    <td nowrap class="list_ll" colspan="2"> ${c-bank_code}_${c-bank_name}&nbsp;</td>
+    <td nowrap class="list_cc"> ${c-apply_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${c-nego_e_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${c-contract_e_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"> ${c-liac_install_cnt}&nbsp;</td>
+    <td nowrap class="list_rr"> ${c-liac_int_rate}&nbsp;</td>
+    <td nowrap class="list_cc"> ${c-install_s_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"> ${c-month_pay_amt.(999)}&nbsp;</td>
+  </tr>
+  <tr>
+    <td nowrap class="list_rr"><span style="color:#00FF00"> ${c-credit_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#00FF00"> ${c-cash_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#00FF00"> ${c-credit_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#00FF00"> ${c-total_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${c-m_credit_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${c-m_cash_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${c-m_credit_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${c-per_allocate_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${c-m_no_credit_rate}&nbsp;</span></td>
+    <td nowrap class="list_cc"> ${c-pay_acct_no}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+
+<!-- 20190319增加此頁籤================================== -->
+<!-- 簽約暨變更方案歷史查詢=============================== -->
+<div id="tab-10" class="tabcontent">
+<table id="table10" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%" rowspan="3">No&nbsp;</th>
+    <th nowrap class="list_th">轉入日期</th>
+    <th nowrap class="list_th" colspan="2">最大債權金融機構</th>
+    <th nowrap class="list_th">協商<br>申請日期</th>
+    <th nowrap class="list_th">協商<br>完成日期</th>
+    <th nowrap class="list_th">簽約<br>完成日期</th>
+    <th nowrap class="list_th">期數</th>
+    <th nowrap class="list_th">利率％</th>
+    <th nowrap class="list_th">首期<br>應繳款日期</th>
+    <th nowrap class="list_th">月付金額</th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th" colspan="4"><span style="color:#00FF00">總簽約金額</span></th>
+    <th nowrap class="list_th" colspan="5"><span style="color:#0000FF">本行債權金額</span></th>
+    <th nowrap class="list_th"></th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th"><span style="color:#00FF00">信用貸款</span></th>
+    <th nowrap class="list_th"><span style="color:#00FF00">現金卡</span></th>
+    <th nowrap class="list_th"><span style="color:#00FF00">信用卡</span></th>
+    <th nowrap class="list_th"><span style="color:#00FF00">合計金額</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">信用貸款</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">現金卡</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">信用卡</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">本行每期<br>可分配金額</span></th>
+    <th nowrap class="list_th"><span style="color:#0000FF">本行無擔保<br>債權比例％</span></th>
+    <th nowrap class="list_th">繳款帳號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" rowspan="2"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="j-rowid" value="${j-rowid}">
+      <input type="hidden" name="j-ser_num" value="${ser_num}">
+      <input type="hidden" name="j-liac_seqno" value="${j-liac_seqno}">
+      
+      <input type="hidden" name="j-file_date" value="${j-file_date}">
+      <input type="hidden" name="j-bank_code" value="${j-bank_code}">
+      <input type="hidden" name="j-bank_name" value="${j-bank_name}">
+      <input type="hidden" name="j-apply_date" value="${j-apply_date}">
+      <input type="hidden" name="j-nego_e_date" value="${j-nego_e_date}">
+      <input type="hidden" name="j-contract_e_date" value="${j-contract_e_date}">
+      <input type="hidden" name="j-m_credit_cont_amt" value="${j-m_credit_cont_amt}">
+      <input type="hidden" name="j-m_cash_card_cont_amt" value="${j-m_cash_card_cont_amt}">
+      <input type="hidden" name="j-m_credit_card_cont_amt" value="${j-m_credit_card_cont_amt}">
+    </td>
+    <td nowrap class="list_cc"> ${j-file_date.YMD}&nbsp;</td>
+    <td nowrap class="list_ll" colspan="2"> ${j-bank_code}_${j-bank_name}&nbsp;</td>
+    <td nowrap class="list_cc"> ${j-apply_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${j-nego_e_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${j-contract_e_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"> ${j-liac_install_cnt}&nbsp;</td>
+    <td nowrap class="list_rr"> ${j-liac_int_rate}&nbsp;</td>
+    <td nowrap class="list_cc"> ${j-install_s_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"> ${j-month_pay_amt.(999)}&nbsp;</td>
+  </tr>
+  <tr>
+    <td nowrap class="list_rr"><span style="color:#00DD00"> ${j-credit_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#00DD00"> ${j-cash_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#00DD00"> ${j-credit_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#00DD00"> ${j-total_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${j-m_credit_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${j-m_cash_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${j-m_credit_card_cont_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${j-per_allocate_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${j-m_no_credit_rate}&nbsp;</span></td>
+    <td nowrap class="list_ll"> ${j-pay_acct_no}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+
+<!-- 法院公文================================== -->
+<div id="tab-4" class="tabcontent">
+<table id="table4" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">收件日期</th>
+    <th nowrap class="list_th">文件編號</th>
+    <th nowrap class="list_th" width="30%">法院名稱</th>
+    <th nowrap class="list_th" width="40%">字號</th>
+  </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" rowspan="4"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="d-rowid" value="${d-rowid}">
+      <input type="hidden" name="d-ser_num" value="${ser_num}">
+      <input type="hidden" name="d-mod_seqno" value="${d-mod_seqno}">
+      <input type="hidden" name="d-liac_seqno" value="${d-liac_seqno}">
+      
+      <input type="hidden" name="d-recv_date" value="${d-recv_date}">
+      <input type="hidden" name="d-liac_doc_no" value="${d-liac_doc_no}">
+      <input type="hidden" name="d-court_name" value="${d-court_name}">
+      <input type="hidden" name="d-case_no" value="${d-case_no}">
+      <input type="hidden" name="d-tt_apr_flag" value="${d-tt_apr_flag}">
+      <input type="hidden" name="d-tt_is_allow" value="${d-tt_is_allow}">
+      <input type="hidden" name="d-user_remark" value="${d-user_remark}">
+    </td>
+    <td nowrap class="list_cc" rowspan="2">${d-recv_date.YMD}&nbsp;</td>
+    <td nowrap class="list_no" rowspan="2">${d-liac_doc_no}&nbsp;</td>
+    <td nowrap class="list_ll" rowspan="2">${d-court_name}&nbsp;</td>
+    <td nowrap class="list_ll" rowspan="2">${d-case_no}&nbsp;</td>
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+    <td nowrap class="list_cc" rowspan="2"><span style="color:#FF0000">${d-tt_apr_flag}&nbsp;</span></td>
+    <td nowrap class="list_cc" rowspan="2"><span style="color:#0000FF">${d-tt_is_allow}&nbsp;</span></td>
+    <td nowrap class="list_ll" rowspan="2" colspan="2">備註:&nbsp; ${d-user_remark}&nbsp;</td>
+  </tr>
+  <tr>
+  </tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+<!-- 繳款================================== -->
+<div id="tab-5" class="tabcontent">
+<table id="table5" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">繳款序號</th>
+    <th nowrap class="list_th">轉入日期</th>
+    <th nowrap class="list_th">繳款來源</th>
+    <th nowrap class="list_th">最大債權<br>金融機構</th>
+    <th nowrap class="list_th">協商<br>申請日期</th>
+    <th nowrap class="list_th">還款<br>分配日期</th>
+    <th nowrap class="list_th">還款<br>分配金額</th>
+    <th nowrap class="list_th">清算解繳分行</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="e-rowid" value="${e-rowid}">
+      <input type="hidden" name="e-ser_num" value="${ser_num}">
+      <input type="hidden" name="e-liac_seqno" value="${e-liac_seqno}">
+      
+      <input type="hidden" name="e-pay_seqno" value="${e-pay_seqno}">
+      <input type="hidden" name="e-file_date" value="${e-file_date}">
+      <input type="hidden" name="e-tt_file_type" value="${e-tt_file_type}">
+      <input type="hidden" name="e-bank_code" value="${e-bank_code}">
+      <input type="hidden" name="e-apply_date" value="${e-apply_date}">
+      <input type="hidden" name="e-allocate_date" value="${e-allocate_date}">
+      <input type="hidden" name="e-allocate_amt" value="${e-allocate_amt}">
+      <input type="hidden" name="e-reg_bank_no" value="${e-reg_bank_no}">
+    </td>
+    <td nowrap class="list_ll"> ${e-pay_seqno}&nbsp;</td>
+    <td nowrap class="list_cc"> ${e-file_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${e-tt_file_type}&nbsp;</td>
+    <td nowrap class="list_cc"> ${e-bank_code}&nbsp;</td>
+    <td nowrap class="list_cc"> ${e-apply_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${e-allocate_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"> ${e-allocate_amt.(999)}&nbsp;</td>
+    <td nowrap class="list_ll"> ${e-reg_bank_no}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  ${e-ft_tolcnt}
+</table>
+</div>
+
+<!-- 延繳================================== -->
+<div id="tab-6" class="tabcontent">
+<table id="table6" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">通知日期</th>
+    <th nowrap class="list_th">最大債權金融機構</th>
+    <th nowrap class="list_th">申請日期</th>
+    <th nowrap class="list_th">延繳年月</th>
+    <th nowrap class="list_th">延期繳款原因</th>
+    <th nowrap class="list_th">承辦分行</th>
+    <th nowrap class="list_th">備註</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="f-rowid" value="${f-rowid}">
+      <input type="hidden" name="f-ser_num" value="${ser_num}">
+      <input type="hidden" name="f-liac_seqno" value="${f-liac_seqno}">
+      
+      <input type="hidden" name="f-notify_date" value="${f-notify_date}">
+      <input type="hidden" name="f-bank_code" value="${f-bank_code}">
+      <input type="hidden" name="f-bank_name" value="${f-bank_name}">
+      <input type="hidden" name="f-apply_date" value="${f-apply_date}">
+      <input type="hidden" name="f-delay_month" value="${f-delay_month}">
+      <input type="hidden" name="f-wk_delay_desc" value="${f-wk_delay_desc}">
+      <input type="hidden" name="f-reg_bank_no" value="${f-reg_bank_no}">
+      <input type="hidden" name="f-tt_liac_remark" value="${f-tt_liac_remark}">
+    </td>
+    <td nowrap class="list_cc"> ${f-notify_date.YMD}&nbsp;</td>
+    <td nowrap class="list_ll"> ${f-bank_code}_${f-bank_name}&nbsp;</td>
+    <td nowrap class="list_cc"> ${f-apply_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${f-delay_month.YMD}&nbsp;</td>
+    <td nowrap class="list_ll"> ${f-wk_delay_desc}&nbsp;</td>
+    <td nowrap class="list_ll"> ${f-reg_bank_no}&nbsp;</td>
+    <td nowrap class="list_cc"> ${f-tt_liac_remark}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  ${f-wk_tolcnt}
+</table>
+</div>
+
+<!-- 單獨受償================================== -->
+<div id="tab-7" class="tabcontent">
+<table id="table7" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">通知日期</th>
+    <th nowrap class="list_th">異動類別</th>
+    <th nowrap class="list_th">本行每期<br>可分配金</th>
+    <th nowrap class="list_th">本行無擔保<br>債權比例％</th>
+    <th nowrap class="list_th">適用<br>起始月份</th>
+    <th nowrap class="list_th">單獨<br>受償日期</th>
+    <th nowrap class="list_th">預估<br>剩餘期數</th>
+    <th nowrap class="list_th">備註</th>
+    <th nowrap class="list_th">經辦代號</th>
+    <th nowrap class="list_th">維護日期</th>
+    <th nowrap class="list_th">異動原因</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="g-rowid" value="${g-rowid}">
+      <input type="hidden" name="g-ser_num" value="${ser_num}">
+      <input type="hidden" name="g-liac_seqno" value="${g-liac_seqno}">
+    
+      <input type="hidden" name="g-notify_date" value="${g-notify_date}">
+      <input type="hidden" name="g-receipt_type" value="${g-receipt_type}">
+      <input type="hidden" name="g-per_allocate_amt" value="${g-per_allocate_amt}">
+      <input type="hidden" name="g-m_no_credit_rate" value="${g-m_no_credit_rate}">
+      <input type="hidden" name="g-receipt_date" value="${g-receipt_date}">
+      <input type="hidden" name="g-liac_install_cnt" value="${g-liac_install_cnt}">
+      <input type="hidden" name="g-liac_txn_code" value="${g-liac_txn_code}">
+      <input type="hidden" name="g-tt_crt_user" value="${g-tt_crt_user}">
+      <input type="hidden" name="g-crt_date" value="${g-crt_date}">
+      <input type="hidden" name="g-tt_receipt_code" value="${g-tt_receipt_code}">
+      <input type="hidden" name="g-col_inst_readonly" value="${g-col_inst_readonly}">
+    </td>
+    <td nowrap class="list_cc"> ${g-notify_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${g-receipt_type}&nbsp;</td>
+    <td nowrap class="list_rr"> ${g-per_allocate_amt.(999)}&nbsp;</td>
+    <td nowrap class="list_rr"> ${g-m_no_credit_rate}&nbsp;</td>
+    <td nowrap class="list_cc"> ${g-db_inst_s_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${g-receipt_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"> ${g-liac_install_cnt}&nbsp;</td>
+    <td nowrap class="list_ll"> ${g-liac_txn_code}&nbsp;</td>
+    <td nowrap class="list_cc"> ${g-tt_crt_user}&nbsp;</td>
+    <td nowrap class="list_cc"> ${g-crt_date.YMD}&nbsp;</td>
+    <td nowrap class="list_ll"> ${g-tt_receipt_code}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+  ${g-wk_tolcnt}
+</table>
+</div>
+
+<!-- 結案/結清================================== -->
+<div id="tab-8" class="tabcontent">
+<table id="table8" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;結案原因：
+      <input type="text" class="dsp_text" name="tt_end_reason" value="${tt_end_reason}" size="40" disabled/>
+      <input type="hidden" name="tt_end_reason" value="${tt_end_reason}">
+      <input type="hidden" name="end_reason" value="${end_reason}">
+    </td>
+    <td nowrap >&nbsp;欠款金額：
+      <input type="text" class="dsp_num" name="db_tol_amt" value="${db_tol_amt.(999)}" size="8" disabled/>
+      <input type="hidden" name="db_tol_amt" value="${db_tol_amt}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="3">&nbsp;結案備註：
+      <input type="text" class="dsp_text" name="end_remark" value="${end_remark}" size="80" disabled/>
+      <input type="hidden" name="end_remark" value="${end_remark}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;結案日期：
+      <input type="text" class="dsp_date" name="end_date" value="${end_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="end_date" value="${end_date}">
+    </td>
+    <td nowrap colspan="2">&nbsp;結案經辦：
+      <input type="text" class="dsp_text" name="end_user" value="${end_user}" size="10" disabled/>
+      <input type="hidden" name="end_user" value="${end_user}">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;覆核日期：
+      <input type="text" class="dsp_date" name="apr_date" value="${apr_date.YMD}" size="10" disabled/>
+      <input type="hidden" name="apr_date" value="${apr_date}">
+    </td>
+    <td nowrap >&nbsp;覆核主管：
+      <input type="text" class="dsp_text" name="apr_user" value="${apr_user}" size="10" disabled/>
+      <input type="hidden" name="apr_user" value="${apr_user}">
+    </td>
+    <td nowrap >&nbsp;已覆核：
+      <input type="text" class="dsp_text" name="apr_flag" value="${apr_flag}" size="2" disabled/>
+      <input type="hidden" name="apr_flag" value="${apr_flag}">
+    </td>
+  </tr>
+</table>
+</div>
+
+<!-- 回報債權================================== -->
+<div id="tab-9" class="tabcontent">
+<table id="table9" width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%" rowspan="2">No&nbsp;</th>
+    <th nowrap class="list_th" rowspan="2">協商申請日</th>
+    <th nowrap class="list_th" rowspan="2">對內<br>債權餘額</th>
+    <th nowrap class="list_th" rowspan="2">對外<br>債權餘額</th>
+    <th nowrap class="list_th" rowspan="2">最近一期<br>繳款金額</th>
+    <th nowrap class="list_th" rowspan="2">道德<br>風險</th>
+    <th nowrap class="list_th">保人</th>
+    <th nowrap class="list_th">附卡</th>
+    <th nowrap class="list_th">回報日期</th>
+    <th nowrap class="list_th">主管覆核</th>
+  </tr>
+  <tr>
+    <th nowrap class="list_th" colspan="2">維護經辦</th>
+    <th nowrap class="list_th">維護日期</th>
+    <th nowrap class="list_th">覆核主管</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+    <td nowrap class="list_no" rowspan="3"> ${SER_NUM}&nbsp;
+      <input type="hidden" name="SER_NUM" value="${SER_NUM}">
+      <input type="hidden" name="i-rowid" value="${i-rowid}">
+      <input type="hidden" name="i-ser_num" value="${ser_num}">
+      <input type="hidden" name="i-liac_seqno" value="${i-liac_seqno}">
+      
+    </td>
+    <td nowrap class="list_cc"> ${i-apply_date.YMD}&nbsp;</td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${i-in_end_bal.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${i-out_end_bal.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#0000FF"> ${i-lastest_pay_amt.(999)}&nbsp;</span></td>
+    <td nowrap class="list_cc"> ${i-ethic_risk_mark}&nbsp;</td>
+    <td nowrap class="list_cc"> ${i-has_rela_flag}&nbsp;</td>
+    <td nowrap class="list_cc"> ${i-has_sup_flag}&nbsp;</td>
+    <td nowrap class="list_cc"> ${i-report_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${i-apr_flag}&nbsp;</td>
+  </tr>
+  <tr>
+    <td nowrap class="col_radio">修正後金額：</td>
+    <td nowrap class="list_rr"><span style="color:#FF0000"> ${i-in_end_bal_new.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"><span style="color:#FF0000"> ${i-out_end_bal_new.(999)}&nbsp;</span></td>
+    <td nowrap class="list_rr"> ${i-lastest_pay_amt_new.(999)}&nbsp;</td>
+    <td nowrap class="list_rr"> &nbsp;</td>
+    <td nowrap class="list_cc" colspan="2"> ${i-crt_user}&nbsp;</td>
+    <td nowrap class="list_cc"> ${i-crt_date.YMD}&nbsp;</td>
+    <td nowrap class="list_cc"> ${i-tt_apr_user}&nbsp;</td>
+  </tr>
+  <tr>
+    <td nowrap class="list_rr">備註：</td>
+    <td nowrap class="list_ll" colspan="8"> ${i-debt_remark}&nbsp;</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+</table>
+</div>
+
+</div>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="colq1100">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ //document.dataForm.kk_liac_seqno.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    return true;
+  }
+ 
+</script>

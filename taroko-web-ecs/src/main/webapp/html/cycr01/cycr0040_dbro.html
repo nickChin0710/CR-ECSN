@@ -1,0 +1,138 @@
+<html>
+<head>
+<title> 108/12/25 V1.00.01 Allen Ho Initial </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data1 ************************************************************ -->
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+   <tr>
+     <td nowrap class="td_data"="%">卡號 
+       <span class="dsp_text">${card_no}</span>
+       <input type="hidden" name="card_no" value="${card_no}"/>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="td_data"="%"> 
+       <span class="dsp_text">${bb_passstr_msg}</span>
+       <input type="hidden" name="bb_passstr_msg" value="${bb_passstr_msg}"/>
+   </tr>
+ </table>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">查詢年月</th>
+    <th nowrap class="list_th">BL金額/<BR>次數</th>
+    <th nowrap class="list_th">CA金額/<BR>次數</th>
+    <th nowrap class="list_th">IT金額/<BR>次數</th>
+    <th nowrap class="list_th">AO金額/<BR>次數</th>
+    <th nowrap class="list_th">ID金額/<BR>次數</th>
+    <th nowrap class="list_th">OT金額/<BR>次數</th>
+    <th nowrap class="list_th">有收益消費<BR>總金額/次數</th>
+    <th nowrap class="list_th">無收益消費<BR>總金額/次數</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','${card_no}','${passstr}','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${acct_month}</td>
+    <td nowrap class="list_rr"> ${consume_bl_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_ca_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_it_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_ao_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_id_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_ot_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${good_amt.(999)}</td>
+    <td nowrap class="list_rr"> ${none_amt.(999)}</td>
+  </tr>
+  <tr>
+    <td></td> 
+    <td></td> 
+    <td nowrap class="list_rr"> ${consume_bl_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_ca_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_it_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_ao_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_id_cnt.(999)}</td>
+    <td nowrap class="list_rr"> ${consume_ot_cnt.(999)}</td>
+    <td nowrap class="list_rr">
+      <span class="col_key"> ${good_cnt.(999)}</span>
+    </td>
+    <td nowrap class="list_rr"> ${none_cnt.(999)}</td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="ROWID" value="${rowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 2;
+        top.respHtml = "cycr0040_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 2;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "cycr0040_detl";
+    top.submitControl('T');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

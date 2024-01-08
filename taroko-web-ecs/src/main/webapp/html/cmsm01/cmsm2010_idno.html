@@ -1,0 +1,993 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 109-06-24  V1.00.01    tanwei              隱藏字段                       -->
+<!-- 109-07-30  V1.00.02    JustinWu       remove db_web_card_member          -->
+<!-- 109-08-21  V1.00.03    JustinWu       調整畫面                            -->
+<!-- 109-08-20  V1.00.03    Sunny          調整radio/checkbox呈現鎖定方式及顯示 -->
+<!-- 109-08-26  V1.00.05    Sunny          staff_flag統一為行員                -->
+<!-- 109-08-27  V1.00.06    JustinWu       拒絕行銷註記為N時，預設全部勾選且提交時檢查至少有勾選一個行銷選項   -->
+<!-- 109-09-11  V1.00.07    JustinWu       修改拒絕行銷bugs                    -->
+<!-- 109-09-14  V1.00.08    JustinWu       補上缺少的<括號                     -->
+<!-- 109-09-17  V1.00.09    JustinWu       remove hardcoding education options -->
+<!-- 109-10-27  V1.00.10    JustinWu       modify the logic of market_agree_base and fee_code_i <-> inst_flag  -->
+<!-- 109-10-27  V1.00.11    JustinWu       修改國籍                            -->
+<!-- 109-10-28  V1.00.12    JustinWu       國籍 -> 國籍代碼                    -->
+<!-- 109-10-29  V1.00.13    JustinWu       add checkOtherCntryCode and adjust the layout           -->
+<!-- 109-11-02  V1.00.14    JustinWu       fix the error of holdin_crt_date   -->
+<!-- 109-11-10  V1.00.15    JustinWu       chceck addr                        -->
+<!-- 109-11-11  V1.00.16    JustinWu       add addr ids                       -->
+<!-- 110-08-19  V1.00.17    Sunny Ts       修改姓名欄位的size maxlength:50 size:92-->
+<!-- 110-08-19  V1.00.18    Sunny Ts       修改地址maxlength:5-5-6-6-28，共計50個中文字-->
+<!-- 110-08-19  V1.00.19    Sunny Ts       修改電話區碼-電話-分機均僅能輸入數字 -->
+<!-- 110-08-20  V1.00.20    JustinWu       chi_name, indigenous_name: half width -> full width -->
+<!-- 110-10-05  V1.00.21    JustinWu       add zip2                           -->
+<!-- 110-11-29  V1.00.21    Sunny Ts       add 發簡訊消費金額說明文字           -->
+<!-- 110-12-01  V1.00.22    JustinWu       發簡訊消費金額長度調整               -->
+<!-- 111-01-21  V1.00.23    Sunny Ts       取消msg_flag-1面對面交易選項                           -->
+<!-- 111-01-24  V1.00.24    Justin         增加msg_flag and msg_purchase_amt判斷 -->
+<!-- 111-02-24  V1.00.25    Justin         修改手機修改日期及時間格式           -->
+<!-- 111-03-02  V1.00.26    Justin         手機號碼異動->手機號碼最後放行              -->
+<!-- 111-06-01  V1.00.27    Sunny Ts       調整外籍護照/居留證號碼及起迄日期                          -->
+<!-- 112-01-07  V1.00.28    Sunny Ts       把檢核地址必須的選項打開                                          -->
+<!-- 112-01-07  V1.00.28    Sunny Ts       卡部需求，調整拒絕行銷註記註記定義 -->
+<!-- 112-05-09  V1.00.29    Yang Bo        [拒絕行銷註記]一欄調整為唯讀不可修改 -->
+<!-- 112-08-13  V1.00.30    Sunny Ts       [行員註記及所屬單位]兩欄調整為唯讀不可修改 -->
+<!-- 112-10-19  V1.00.31    Ryan           同意分期註記未顯示修正    -->
+<!-- 112-11-29  v1.00.32    Sunny Ts       拒絕行銷註記(market_agree_base)取消檢核是否為空白 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>持卡人相關資料維護-IDNO-V20220601</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td> 
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+  <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"    value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button"    value="修改取消" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;  
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap class="td_titl" colspan="6"><b>異動需覆核資料</b></td>
+   </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;身分證號碼:
+      <span class="dsp_text">${id_no}</span>
+      <input type="hidden" name="id_no" value="${id_no}">
+      <input type="hidden" name="id_p_seqno" value="${id_p_seqno}">
+   </td>
+   <td nowrap colspan="2">&nbsp;出生日期:
+         <input type="text" class="col_date" name="birthday" value="${birthday}" style="${mod_birthday}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'birthday'});
+        </script>
+  </td>
+     <td nowrap colspan="2">&nbsp;&nbsp;最早往來日:
+      <span class="dsp_text">${card_since.YMD}</span>
+      <input type="hidden" name="card_since" value="${card_since}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;中文姓名:
+      <input type="text" class="col_any" name="chi_name" value="${chi_name}" zEdit="any,canTw" maxlength="50" size="92" style="${mod_chi_name}" onchange="top.convertInputToFullWidth(this)">
+   </td>
+ </tr>
+  <tr>
+   <td nowrap colspan="6">&nbsp;原住民姓名羅馬拼音:
+      <input type="text" class="col_any" name="indigenous_name" value="${indigenous_name}" zEdit="any,canTw" maxlength="50" size="92" style="${mod_indigenous_name}" onchange="top.convertInputToFullWidth(this)">
+   </td>
+ </tr>
+   <tr>
+   <td nowrap colspan="3">&nbsp;畢業國小:
+      <input type="text" class="col_any" name="graduation_elementarty" value="${graduation_elementarty}" zEdit="any,canTw" maxlength="20" size="22" style="${mod_graduation_elementarty}">
+   </td>
+   <td nowrap colspan="3">&nbsp;   
+      <span style="${mod_sms_prim_ch_flag}">是否接受附卡人交易簡訊:</span>
+      <span class="col_radio">
+                  <input type="radio" value="Y" name="sms_prim_ch_flag" ${sms_prim_ch_flag-Y} ${DEFAULT-sms_prim_ch_flag}/>是
+         <input type="radio" value="N" name="sms_prim_ch_flag" ${sms_prim_ch_flag-N} />否
+      </span>
+   </td>   
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;公司名稱:
+      <input type="text" class="col_any" name="company_name" value="${company_name}" zEdit="any,canTw" maxlength="24" size="26" style="${mod_company_name}" >
+   </td>
+   <td nowrap colspan="3" >&nbsp;   
+   <span style="${mod_spec_busi_code}">客戶是否為其他特殊行業別:</span>
+        <select name="spec_busi_code" class="col_ddlb" >
+            <option value="">--</option>
+            <option value="01" ${spec_busi_code-01} >軍火業</option>
+            <option value="02" ${spec_busi_code-02} >虛擬貨幣業務</option>
+            <option value="03" ${spec_busi_code-03} >空殼公司</option>
+            <option value="99" ${spec_busi_code-99} >非以上特殊行業別</option>
+        </select>   
+   </td>
+ </tr> 
+ <!--tr>
+   <td nowrap colspan="3">&nbsp;居留證號碼/日期:
+      <input type="text" class="col_text" name="resident_no" value="${resident_no}" maxlength="14" size="16" style="${mod_resident_no}">
+         <input type="text" class="col_date" name="resident_no_expire_date" value="${resident_no_expire_date}" style="${mod_resident_no_expire_date}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'resident_no_expire_date'});
+
+        </script>
+        -->
+<!--       <input type="text" class="col_any" ${disa_cntry_code} id="other_cntry_code" name="other_cntry_code" value="${other_cntry_code}" maxlength="5" size="7" style="${mod_other_cntry_code}"> -->
+   </td>
+   <td nowrap colspan="6">&nbsp;外籍護照/居留證號碼:
+      <input type="text" class="col_text" name="passport_no" value="${passport_no}" maxlength="20" size="22" style="${mod_passport_no}">
+      ;&nbsp;外籍護照/居留證日期:(起)
+      <input type="text" class="col_text" name="passport_date" value="${passport_date}" maxlength="8" size="10" zEdit="date,yyyymmdd" style="${mod_passport_date}">
+      <script language="JavaScript">
+      new tcal({ 'formname': 'dataForm', 'controlname': 'passport_date' });
+      </script>&nbsp;-(迄)
+        <input type="text" class="col_date" name="resident_no_expire_date" value="${resident_no_expire_date}" style="${mod_resident_no_expire_date}" zEdit="date,yyyymmdd" MaxLength="8" size="10"  />
+           <script language="JavaScript">
+          new tcal ({'formname': 'dataForm','controlname': 'resident_no_expire_date'});
+        </script>
+   </td>   
+ </tr>
+ <tr>
+    <td nowrap colspan="6">&nbsp;國籍:
+      <span class="col_radio">
+         <input type="radio" value="1" name="nation" ${nation-1} onClick="wf_nation_change1()" />本國
+         <input type="radio" value="2" name="nation" ${nation-2} onClick="wf_nation_change2()" />外國
+      </span>
+      &nbsp;國籍代碼:
+       <select size="1" id="other_cntry_code" name="other_cntry_code" class="col_ddlb" ${disa_cntry_code} style="${mod_other_cntry_code}">
+         ${d_dddw_other_cntry_code}
+       </select>
+    </td>
+ </tr>
+ <tr>
+   <!-- <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="staff_flag" value="Y" ${staff_flag-Y}  >
+      <span style="${mod_staff_flag}" >行員 </span>
+      &nbsp;
+      <span style="${mod_staff_br_no}"> 所屬單位代碼:</span>
+      <select size="1" name="staff_br_no" class="col_ddlb" >
+         ${d_dddw_branch}
+      </select>
+   </td>-->
+     <td nowrap colspan="3">&nbsp;     
+      <input type="checkbox" name="staff_flag" value="Y" ${staff_flag-Y} onclick="return false;" >
+      <span class="dsp_text">行員</span>
+      &nbsp;所屬單位代碼:
+      <span class="dsp_text">${staff_br_no}.${tt_staff_br_no}</span>
+      <input type="hidden" name="staff_br_no" value="${staff_br_no}">  
+      <input type="hidden" name="tt_staff_br_no" value="${tt_staff_br_no}" />
+   </td>
+   <td nowrap colspan="3">&nbsp;&nbsp;外籍國民ID:
+      <input type="text" class="col_text" name="other_id" value="${other_id}" maxlength="20" size="22" style="${mod_other_id}">
+      &nbsp;
+      
+      <span  style="display:none" style="${mod_crimea_area}">來自烏克蘭克里米亞:</span>
+      <span class="col_radio" style="display:none">
+         <input type="hidden" value="Y" name="crimea_area" ${crimea_area-Y} />Y
+         <input type="hidden" value="N" name="crimea_area" ${crimea_area-N} />N
+      </span>
+   </td>
+</tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;
+      <input type="checkbox" name="credit_flag" value="Y" ${credit_flag-Y}>
+      <span style="${mod_credit_flag}">授信戶</span>
+<!--       <input type="hidden" name="credit_flag" value="${credit_flag}"> -->
+      <input type="checkbox" name="salary_code" value="Y" ${salary_code-Y}>
+      <span style="${mod_salary_code}">薪資轉帳戶</span>
+<!--       <input type="hidden" name="salary_code" value="${salary_code}"> -->
+      <input type="checkbox" name="comm_flag" value="Y" ${comm_flag-Y}>
+      <span style="${mod_comm_flag}"> 代償戶</span>
+<!--       <input type="hidden" name="comm_flag" value="${comm_flag}"> -->
+   </td>
+   <td nowrap colspan="3">&nbsp;   
+      <span style="${mod_publ_comp_senior_manager}">是否為公開發行公司之高階主管:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="publ_comp_senior_manager" ${publ_comp_senior_manager-Y} />Y
+         <input type="radio" value="N" name="publ_comp_senior_manager" ${publ_comp_senior_manager-N} />N
+      </span>
+   </td>   
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;公司電話: 1.
+      <input type="text" class="col_text" name="office_area_code1" value="${office_area_code1}" maxlength="4" size="6" zEdit="number" style="${mod_office_area_code1}">
+      <input type="text" class="col_text" name="office_tel_no1" value="${office_tel_no1}" maxlength="10" size="12" zEdit="number" style="${mod_office_tel_no1}">
+      <input type="text" class="col_text" name="office_tel_ext1" value="${office_tel_ext1}" maxlength="6" size="8" zEdit="number" style="${mod_office_tel_ext1}">
+   </td>
+   <td nowrap colspan="3">&nbsp;2.
+      <input type="text" class="col_text" name="office_area_code2" value="${office_area_code2}" maxlength="4" size="6" zEdit="number" style="${mod_office_area_code2}">
+      <input type="text" class="col_text" name="office_tel_no2" value="${office_tel_no2}" maxlength="10" size="12" zEdit="number" style="${mod_office_tel_no2}">
+      <input type="text" class="col_text" name="office_tel_ext2" value="${office_tel_ext2}" maxlength="6" size="8" zEdit="number" style="${mod_office_tel_ext2}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;住家電話: 1.
+      <input type="text" class="col_text" name="home_area_code1" value="${home_area_code1}" maxlength="4" size="6" zEdit="number" style="${mod_home_area_code1}" >
+      <input type="text" class="col_text" name="home_tel_no1" value="${home_tel_no1}" maxlength="10" size="12" zEdit="number" style="${mod_home_tel_no1}" >
+      <input type="text" class="col_text" name="home_tel_ext1" value="${home_tel_ext1}" maxlength="6" size="8" zEdit="number" style="${mod_home_tel_ext1}" >
+   </td>
+   <td nowrap colspan="3">&nbsp;2.
+      <input type="text" class="col_text" name="home_area_code2" value="${home_area_code2}" maxlength="4" size="6" zEdit="number" style="${mod_home_area_code2}" >
+      <input type="text" class="col_text" name="home_tel_no2" value="${home_tel_no2}" maxlength="10" size="12" zEdit="number" style="${mod_home_tel_no2}" >
+      <input type="text" class="col_text" name="home_tel_ext2" value="${home_tel_ext2}" maxlength="6" size="8" zEdit="number" style="${mod_home_tel_ext2}" >
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;手機號碼:
+      <input type="text" class="col_number" name="cellar_phone" value="${cellar_phone}" maxlength="15" size="17" zEdit="number" style="${mod_cellar_phone}">
+      <span class="col_key" > 電話號碼請勿加上 + - # 等非數字字元</span>
+   </td>
+ </tr>
+ <tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;手機號碼最後放行日期:
+       <span class="dsp_text">${c_phone_chg_date.YMD}</span>
+       <input type="hidden" name="c_phone_chg_date" value="${c_phone_chg_date}">
+   </td>
+   <td nowrap colspan="3">&nbsp;手機號碼最後放行時間:
+       <span class="dsp_text">${c_phone_chg_time.TIME}</span>
+        <input type="hidden" name="c_phone_chg_time" value="${c_phone_chg_time}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6" style="display:none">&nbsp;戶籍地國籍:
+      <input type="text" class="col_text" name="resident_country_code" value="${resident_country_code}" maxlength="2" size="5" zEdit="alphaunm,upper" style="${mod_resident_country_code}" >
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;戶籍地址:
+      <select size="1" id="resident_zip" name="resident_zip" class="col_ddlb" style="${mod_resident_zip}" onChange="zipChange('resident')" >
+         ${d_dddw_zipcode}
+      </select>
+      <input type="text" class="col_any" name="resident_zip2" value="${resident_zip2}" maxlength="3" size="6" zEdit="Number" style="${mod_resident_zip2}" >
+      <span class="dsp_text" id="resident_addr1_text" style="${mod_resident_addr1}">${resident_addr1}</span>
+      <input type="hidden" class="col_any" name="resident_addr1" id="resident_addr1" value="${resident_addr1}" maxlength="5" size="12" zEdit="any,canTw" ${mod_resident_addr1} >
+      縣市 
+      <span class="dsp_text" id="resident_addr2_text" style="${mod_resident_addr2}">${resident_addr2}</span>
+      <input type="hidden" class="col_any" name="resident_addr2" id="resident_addr2" value="${resident_addr2}" maxlength="5" size="12" zEdit="any,canTw" ${mod_resident_addr2} >
+      鄉鎮市區
+      <input type="text" class="col_any" name="resident_addr3" value="${resident_addr3}" maxlength="6" size="12" zEdit="any,canTw" style="${mod_resident_addr3}" >
+      村里
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;
+      <input type="text" class="col_any" name="resident_addr4" value="${resident_addr4}" maxlength="6" size="14" zEdit="any,canTw" style="${mod_resident_addr4}" >
+      鄰
+      <input type="text" class="col_any" id="resident_addr5" name="resident_addr5" value="${resident_addr5}" maxlength="28" size="58" zEdit="any,canTW" style="${mod_resident_addr5}" >
+   </td>
+ </tr>
+  <tr>
+   <td nowrap colspan="6">&nbsp;住家地址:
+      <select size="1" id="mail_zip" name="mail_zip" class="col_ddlb" style="${mod_mail_zip}" onChange="zipChange('mail')" >
+         ${d_dddw_zipcode2}
+      </select>
+      <input type="text" class="col_any" name="mail_zip2" value="${mail_zip2}" maxlength="3" size="6" zEdit="Number" style="${mod_mail_zip2}" >
+      <span class="dsp_text" id="mail_addr1_text" style="${mod_mail_addr1}">${mail_addr1}</span>
+      <input type="hidden" class="col_any" name="mail_addr1" id="mail_addr1" value="${mail_addr1}" maxlength="5" size="12" zEdit="any,canTw" ${mod_mail_addr1} >
+      縣市 
+      <span class="dsp_text" id="mail_addr2_text" style="${mod_mail_addr2}">${mail_addr2}</span>
+      <input type="hidden" class="col_any" name="mail_addr2" id="mail_addr2" value="${mail_addr2}" maxlength="5" size="12" zEdit="any,canTw" ${mod_mail_addr2} >
+      鄉鎮市區
+      <input type="text" class="col_any" name="mail_addr3" value="${mail_addr3}" maxlength="6" size="12" zEdit="any,canTw" style="${mod_mail_addr3}" >
+      村里
+   </td>
+ </tr>
+  <tr>
+   <td nowrap colspan="6">&nbsp;
+      <input type="text" class="col_any" name="mail_addr4" value="${mail_addr4}" maxlength="6" size="14" zEdit="any,canTw" style="${mod_mail_addr4}" >
+      鄰
+      <input type="text" class="col_any" id="mail_addr5" name="mail_addr5" value="${mail_addr5}" maxlength="28" size="58" zEdit="any,canTW" style="${mod_mail_addr5}" >
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;公司地址:
+      <select size="1" name="company_zip" class="col_ddlb" style="${mod_company_zip}" onChange="zipChange('company')"  >
+         ${d_dddw_zipcode1}
+      </select>
+      <input type="text" class="col_any" name="company_zip2" value="${company_zip2}" maxlength="3" size="6" zEdit="Number" style="${mod_company_zip2}" >
+      <span class="dsp_text" id="company_addr1_text" style="${mod_company_addr1}">${company_addr1}</span>
+      <input type="hidden" class="col_any" name="company_addr1" id="company_addr1" value="${company_addr1}" maxlength="5" size="12" zEdit="any,canTw" ${mod_company_addr1} >
+      縣市 
+      <span class="dsp_text" id="company_addr2_text" style="${mod_company_addr2}">${company_addr2}</span>
+      <input type="hidden" class="col_any" name="company_addr2" id="company_addr2" value="${company_addr2}" maxlength="5" size="12" zEdit="any,canTw" ${mod_company_addr2} >
+      鄉鎮市區
+      <input type="text" class="col_any" name="company_addr3" value="${company_addr3}" maxlength="6" size="12" zEdit="any,canTw" style="${mod_company_addr3}" >
+      村里
+   </td>
+ </tr>
+  <tr>
+   <td nowrap colspan="6">&nbsp;
+      <input type="text" class="col_any" name="company_addr4" value="${company_addr4}" maxlength="6" size="14" zEdit="any,canTw" style="${mod_company_addr4}" >
+      鄰
+      <input type="text" class="col_any" name="company_addr5" value="${company_addr5}" maxlength="28" size="58" zEdit="any,canTW" style="${mod_company_addr5}" >
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;E_Mail:
+      <input type="text" class="col_any" name="e_mail_addr" value="${e_mail_addr}" maxlength="50" size="52" zEdit="mail" style="${mod_e_mail_addr}" >
+      <input type="hidden" name="e_mail_addr_old" value="${e_mail_addr}" >
+   </td> 
+ </tr>
+ <tr>
+   <td nowrap colspan="6">&nbsp;
+      <input type="checkbox" name="special_code" value="Y" ${special_code-Y}>
+      <span style="${mod_special_code}">特殊人物&nbsp;</span>
+      <input type="hidden" name="special_code" value="${special_code}">
+      年收入:
+      <input type="text" class="col_number" name="annual_income" value="${annual_income}" maxlength="11" size="12" zEdit="number" style="${mod_annual_income}" >元
+      日期:
+      <span class="dsp_text">${annual_date.YMD}&nbsp;</span>
+      <input type="hidden" name="annual_date" value="${annual_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;
+      <span style="${mod_ur_flag}">歐盟註記:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="ur_flag" ${ur_flag-Y} />是
+         <input type="radio" value="N" name="ur_flag" ${ur_flag-N} ${DEFAULT-ur_flag}/>否
+      </span>
+   </td>
+   <td nowrap colspan="2">&nbsp;
+      <span style="${mod_fee_code_i}">年費優惠:</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="fee_code_i" ${fee_code_i-Y} />是
+         <input type="radio" value="N" name="fee_code_i" ${fee_code_i-N} ${DEFAULT-fee_code_i} />否
+      </span>
+   </td>
+   <td nowrap colspan="2">&nbsp;
+      <span style="${mod_inst_flag}">同意分期註記</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="inst_flag" ${inst_flag-Y} />是
+         <input type="radio" value="N" name="inst_flag" ${inst_flag-N} ${DEFAULT-inst_flag} />否
+      </span>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2" >&nbsp;金控子公司拒絕行銷註記:
+      <!-- <span class="col_radio" onchange="marketAgreeBaseOnChange();" > -->
+<!--       <select name="market_agree_base" id="market_agree_base" class="col_ddlb" style="${mod_market_agree_base}">-->
+<!--           <option value="">&#45;&#45;</option>-->
+<!--           <option value="0" ${market_agree_base-0} >0.不同意</option>-->
+<!--           <option value="1" ${market_agree_base-1} >1.同意共銷</option>-->
+<!--           <option value="2" ${market_agree_base-2} >2.同意共享</option>-->
+<!--       </select>-->
+       <span class="dsp_text">${market_agree_base}.${comm_market_agree_base}</span>
+       <input type="hidden" id="market_agree_base" name="market_agree_base" value="${market_agree_base}">
+   </td>
+   <td nowrap colspan="2">&nbsp;
+      <input type="checkbox" name="tsc_market_flag" value="Y" ${tsc_market_flag-Y}>
+      <span style="${mod_tsc_market_flag}">接受悠遊卡行銷</span>
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動日期:
+      <span class="dsp_text">${tsc_market_date.YMD}</span>
+      <input type="hidden" name="tsc_market_date" value="${tsc_market_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2"  >&nbsp;
+      <input type="checkbox" name="e_news" value="Y" ${e_news-Y}>
+      <span style="${mod_e_news}">接受行銷活動--電子郵件(EDM)</span>
+   </td>
+   <td nowrap colspan="2" >&nbsp;&nbsp;最後異動管道:
+      <span class="dsp_text">${e_news_from_mark}.${#JAVA:ecsfunc.DeCodeCrd.idnoFromMark(e_news_from_mark)}</span>
+      <input type="hidden" name="e_news_from_mark" value="${e_news_from_mark}">
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動時間:
+      <span class="dsp_text">${e_news_chg_date.YMD}</span>
+      <input type="hidden" name="e_news_chg_date" value="${e_news_chg_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2"  >&nbsp;
+      <input type="checkbox" name="accept_mbullet" value="Y" ${accept_mbullet-Y}>
+      <span style="${mod_accept_mbullet}">接受月訊及重要公告訊息</span>
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動管道:
+      <span class="dsp_text">${mbullet_from_mark}.${#JAVA:ecsfunc.DeCodeCrd.idnoFromMark(mbullet_from_mark)}</span>
+      <input type="hidden" name="mbullet_from_mark" value="${mbullet_from_mark}">
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動時間:
+      <span class="dsp_text">${mbullet_chg_date.YMD}</span>
+      <input type="hidden" name="mbullet_chg_date" value="${mbullet_chg_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2" >&nbsp;
+      <input type="checkbox" id="accept_dm" name="accept_dm" value="Y" ${accept_dm-Y}>
+      <span style="${mod_accept_dm}">接受行銷活動--實體郵件(DM)</span>
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動管道:
+      <span class="dsp_text">${dm_from_mark}.${#JAVA:ecsfunc.DeCodeCrd.idnoFromMark(dm_from_mark)}</span>
+      <input type="hidden" name="dm_from_mark" value="${dm_from_mark}">
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動時間:
+      <span class="dsp_text">${dm_chg_date.YMD}</span>
+      <input type="hidden" name="dm_chg_date" value="${dm_chg_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2" >&nbsp;
+            <input type="checkbox" id="accept_sms" name="accept_sms" value="Y" ${accept_sms-Y}>
+      <span style="${mod_accept_sms}">接受行銷活動--簡訊訊息</span>
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動管道:
+      <span class="dsp_text">${sms_from_mark}.${#JAVA:ecsfunc.DeCodeCrd.idnoFromMark(sms_from_mark)}</span>
+      <input type="hidden" name="sms_from_mark" value="${sms_from_mark}">
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動時間:
+      <span class="dsp_text">${sms_chg_date.YMD}</span>
+      <input type="hidden" name="sms_chg_date" value="${sms_chg_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2" >&nbsp;
+      <input type="checkbox" id="accept_call_sell" name="accept_call_sell" value="Y" ${accept_call_sell-Y}>
+      <span style="${mod_accept_call_sell}">接受電話行銷</span>
+      <!-- <input type="hidden" name="accept_call_sell" value="${accept_call_sell-Y}"> -->
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動管道:
+      <span class="dsp_text">${call_sell_from_mark}.${#JAVA:ecsfunc.DeCodeCrd.idnoFromMark(call_sell_from_mark)}</span>
+      <input type="hidden" name="call_sell_from_mark" value="${call_sell_from_mark}">
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;最後異動時間:
+      <span class="dsp_text">${call_sell_chg_date.YMD}</span>
+      <input type="hidden" name="call_sell_chg_date" value="${call_sell_chg_date}">
+   </td>
+ </tr>      
+ <tr>
+   <td nowrap colspan="2"  >&nbsp;
+      <input type="checkbox" name="salary_holdin_flag" value="Y" ${salary_holdin_flag-Y}>
+      <span style="${mod_salary_holdin_flag}">分期還款戶扣薪註記</span>
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;扣薪註記建立日期:
+      <span class="dsp_text" style="${mod_holdin_crt_date}">${holdin_crt_date}.${holdin_crt_date.YMD}</span>
+      <input type="hidden" name="holdin_crt_date" value="${holdin_crt_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;&nbsp;扣薪註記取消日期:
+      <span class="dsp_text" style="${mod_holdin_cancel_date}" >${holdin_cancel_date.YMD}</span>
+      <input type="hidden" name="holdin_cancel_date" value="${holdin_cancel_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6" style="display:none">&nbsp;
+      <span style="${mod_market_agree_act}">子公司間同意共同行銷(帳務資料):</span>
+      <span class="col_radio">
+         <input type="radio" value="Y" name="market_agree_act" ${market_agree_act-Y} />是
+         <input type="radio" value="N" name="market_agree_act" ${market_agree_act-N} />否
+      </span>
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="6" style="display:none">&nbsp;
+      <input type="checkbox" name="bank_securit_flag" value="Y" ${bank_securit_flag-Y}>
+      <span style="${mod_bank_securit_flag}">銀行證券旗標</span>
+      <input type="hidden" name="bank_securit_flag" value="${bank_securit_flag}">      
+      <input type="checkbox" name="bank_prod_insur_flag" value="Y" ${bank_prod_insur_flag-Y}>
+      <span style="${mod_bank_prod_insur_flag}">銀行產物保險旗標 </span>
+      <input type="hidden" name="bank_prod_insur_flag" value="${bank_prod_insur_flag}">
+      <input type="checkbox" name="bank_bills_flag" value="Y" ${bank_bills_flag-Y}>
+      <span style="${mod_bank_bills_flag}">銀行票券金融旗標 </span>
+      <input type="hidden" name="bank_bills_flag" value="${bank_bills_flag}">
+      <input type="checkbox" name="bank_life_insur_flag" value="Y" ${bank_life_insur_flag-Y}>
+      <span style="${mod_bank_life_insur_flag}">銀行保險代理人旗標</span>
+      <input type="hidden" name="bank_life_insur_flag" value="${bank_life_insur_flag}">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="6" style="display:none">&nbsp;
+      <input type="checkbox" name="bank_invest_flag" value="Y" ${bank_invest_flag-Y}>
+      <span style="${mod_bank_invest_flag}">銀行國際證券投資旗標   </span>
+      <input type="hidden" name="bank_invest_flag" value="${bank_invest_flag}">
+      <input type="checkbox" name="bank_asset_flag" value="Y" ${bank_asset_flag-Y}>
+      <span style="${mod_bank_asset_flag}">銀行資產管理旗標</span>
+      <input type="hidden" name="bank_asset_flag" value="${bank_asset_flag}">
+      <input type="checkbox" name="bank_venture_flag" value="Y" ${bank_venture_flag-Y}>
+      <span style="${mod_bank_venture_flag}">銀行創業投資旗標</span>
+      <input type="hidden" name="bank_venture_flag" value="${bank_venture_flag}">
+   </td>
+</tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;
+        <span style="${mod_risk_level}">洗錢防制風險等級:</span>
+        <select name="risk_level" class="col_ddlb" >
+            <option value="">--</option>
+            <option value="H" ${risk_level-H} >高</option>
+            <option value="M" ${risk_level-M} >中</option>            
+            <option value="L" ${risk_level-L} >低</option>            
+        </select>
+        &nbsp;&nbsp;&nbsp;
+        <span style="${mod_risk_level_date}">評估日期:</span>        
+        <input type="text" class="col_date" name="risk_level_date" value="${risk_level_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10 style="${mod_ex_date1}"  />
+        <script language="JavaScript">
+         new tcal ({'formname': 'dataForm','controlname': 'risk_level_date'});
+      </script>
+    </td>
+</tr>
+</table>
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+      <td nowrap class="td_titl" colspan="6"><b>異動不需覆核資料</b></td>
+   </tr>
+<tr>
+    <td nowrap colspan="6" >&nbsp;父親姓名:
+        <input type="text" class="col_any" name="father_name" value="${father_name}" maxlength="50" size="92" zEdit="any,canTw" style="${mod_father_name}" >
+    </td>
+</tr>
+<tr>
+   <td nowrap colspan="6" >&nbsp;母親姓名:
+        <input type="text" class="col_any" name="mother_name" value="${mother_name}" maxlength="50" size="92" zEdit="any,canTw" style="${mod_mother_name}" >
+   </td>
+</tr>
+<tr>
+ <td nowrap colspan="6" >&nbsp;配偶姓名:
+     <input type="text" class="col_any" name="spouse_name" value="${spouse_name}" maxlength="50" size="92" zEdit="any,canTw" style="${mod_spouse_name}" >
+ </td>
+ </tr>
+<tr>   
+     <td nowrap colspan="3" >&nbsp;配偶身份證號:
+        <input type="text" class="col_any" name="spouse_id_no" value="${spouse_id_no}" maxlength="10" size="12" zEdit="any,canTw" style="${mod_spouse_id_no" >
+    </td>
+    <td nowrap colspan="3">&nbsp;配偶生日:      
+        <input type="text" class="col_date" name="spouse_birthday" value="${spouse_birthday}" zEdit="date,yyyymmdd" MaxLength=8 size=10 style="${mod_spouse_birthday}"  />
+        <script language="JavaScript">
+         new tcal ({'formname': 'dataForm','controlname': 'spouse_birthday'});
+      </script>
+  </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;婚姻:
+      <span class="col_radio">
+         <input type="radio" value="1" name="marriage" ${marriage-1} />已婚
+         <input type="radio" value="2" name="marriage" ${marriage-2} />未婚
+      </span>
+   </td>
+   <td nowrap colspan="4">&nbsp;性別:
+      <span class="col_radio">
+         <input type="radio" value="1" name="sex" ${sex-1} />男
+         <input type="radio" value="2" name="sex" ${sex-2} />女
+      </span>
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;學歷等級:
+      <select   size="1"  name="education" class="col_ddlb">
+         ${d_dddw_education}
+      </select>
+   </td>
+   <td nowrap colspan="2">&nbsp;學生身分:
+      <span class="col_radio">
+         <input type="radio" value="Y" name="student" ${student-Y} />Y
+         <input type="radio" value="N" name="student" ${student-N} />N
+      </span>
+   </td>
+   <td nowrap colspan="2">&nbsp;預計畢業年月:
+      <input type="text" class="col_text" name="est_graduate_month" value="${est_graduate_month}" maxlength="6" size="8" zEdit="date,yyyymm">
+   </td>
+</tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;職稱:
+      <input type="text" class="col_any" name="job_position" value="${job_position}" maxlength="24" size="26" zEdit="any,canTw" style="${mod_job_position}" >
+   </td>
+   <td nowrap colspan="2">&nbsp;職業別:
+      <input type="text" class="col_text" name="vacation_code" value="${vacation_code}" maxlength="3" size="5" >
+   </td>
+   <td nowrap colspan="2">&nbsp;服務年資:
+      <!-- name = service_year -->
+      <input type="text" class="col_text" id="service_year_YY" name="service_year_YY" value="${service_year_YY}" maxlength="2" size="3"  zEdit="Number" >年
+      <input type="text" class="col_text" id="service_year_MM" name="service_year_MM" value="${service_year_MM}" maxlength="2" size="3"  zEdit="Number" >月
+   </td>
+</tr>
+<tr>
+  <td nowrap colspan="6">&nbsp;行業別:
+      <select size="1" name="business_code" class="col_ddlb" style="${mod_business_code}" >
+         ${d_dddw_bussmsg}
+      </select>
+   </td>
+ </tr>
+<tr>
+   <td nowrap colspan="2">&nbsp;消費簡訊
+      <span class="col_radio">
+         <input type="radio" value="Y" name="msg_flag" id="msg_flag_Y" ${DEFAULT-msg_flag} ${msg_flag-Y}/>發
+         <input type="radio" value="N" name="msg_flag" id="msg_flag_N" ${msg_flag-N} />不發        
+      </span>
+   </td>
+   <td nowrap colspan="4" >&nbsp;發簡訊消費金額:
+      <input type="text" class="col_number" name="msg_purchase_amt" id="msg_purchase_amt" value="${msg_purchase_amt}" maxlength="10" size="12" zEdit="number" onchange="onChangeMsgPurchaseAmt();">
+      <span class="col_key" > (當金額大於0，表示一律發送)  </span>
+   </td>
+</tr>
+<tr>
+  <td nowrap colspan="6" style="display:none" >&nbsp;以電子郵件方式寄送OTP密碼:
+  <span class="col_radio">
+         <input type="radio" value="Y" name="acs_email_flag" ${acs_email_flag-Y} />開啟
+         <input type="radio" value="N" name="acs_email_flag" ${acs_email_flag-N} />關閉         
+      </span>
+  </td>
+</tr>
+<tr>
+   <td nowrap style="display:none" >&nbsp;授權第三人查詢一姓名:
+      <input type="text" class="col_any" name="asig_inq1_cname" value="${asig_inq1_cname}" maxlength="20" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap style="display:none">&nbsp;身分證ID:
+      <input type="text" class="col_text" name="asig_inq1_idno" value="${asig_inq1_idno}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+   <td nowrap style="display:none">&nbsp;電話:
+      <input type="text" class="col_any" name="asig_inq1_telno" value="${asig_inq1_telno}" maxlength="20" size="15" >
+   </td>
+   <td nowrap style="display:none">&nbsp;核身密碼:
+      <input type="text" class="col_text" name="asig_inq1_chk_data" value="${asig_inq1_chk_data}" maxlength="10" size="12">
+   </td>
+   <td nowrap style="display:none">&nbsp;查詢範圍:</td>
+   <td nowrap style="display:none">
+      <input type="checkbox" name="asig_inq1_acct" value="Y" ${asig_inq1_acct-Y}>帳務
+      <input type="checkbox" name="asig_inq1_card" value="Y" ${asig_inq1_card-Y}>卡片
+      <input type="checkbox" name="asig_inq1_limit" value="Y" ${asig_inq1_limit-Y}>額度
+   </td>   
+</tr>
+<tr>
+   <td nowrap style="display:none">&nbsp;授權第三人查詢二姓名:
+      <input type="text" class="col_any" name="asig_inq2_cname" value="${asig_inq2_cname}" maxlength="20" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap style="display:none">&nbsp;身分證ID:
+      <input type="text" class="col_text" name="asig_inq2_idno" value="${asig_inq2_idno}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+   <td nowrap style="display:none">&nbsp;電話:
+      <input type="text" class="col_any" name="asig_inq2_telno" value="${asig_inq2_telno}" maxlength="20" size="15" >
+   </td>
+   <td nowrap style="display:none">&nbsp;核身密碼:
+      <input type="text" class="col_text" name="asig_inq2_chk_data" value="${asig_inq2_chk_data}" maxlength="10" size="12">
+   </td>
+   <td nowrap style="display:none">&nbsp;查詢範圍:</td>
+   <td nowrap style="display:none">
+      <input type="checkbox" name="asig_inq2_acct" value="Y" ${asig_inq2_acct-Y}>帳務
+      <input type="checkbox" name="asig_inq2_card" value="Y" ${asig_inq2_card-Y}>卡片
+      <input type="checkbox" name="asig_inq2_limit" value="Y" ${asig_inq2_limit-Y}>額度
+   </td>
+</tr>
+<tr>
+   <td nowrap style="display:none">&nbsp;授權第三人查詢三姓名:
+      <input type="text" class="col_any" name="asig_inq3_cname" value="${asig_inq3_cname}" maxlength="20" size="12" zEdit="any,canTw">
+   </td>
+   <td nowrap style="display:none">&nbsp;身分證ID:
+      <input type="text" class="col_text" name="asig_inq3_idno" value="${asig_inq3_idno}" maxlength="10" size="12" zEdit="alphanum,upper">
+   </td>
+   <td nowrap style="display:none">&nbsp;電話:
+      <input type="text" class="col_any" name="asig_inq3_telno" value="${asig_inq3_telno}" maxlength="20" size="15" >
+   </td>
+   <td style="display:none">&nbsp;核身密碼:
+      <input type="text" class="col_text" name="asig_inq3_chk_data" value="${asig_inq3_chk_data}" maxlength="10" size="12">
+   </td>
+   <td nowrap style="display:none">&nbsp;查詢範圍:</td>
+   <td nowrap style="display:none">
+      <input type="checkbox" name="asig_inq3_acct" value="Y" ${asig_inq3_acct-Y}>帳務
+      <input type="checkbox" name="asig_inq3_card" value="Y" ${asig_inq3_card-Y}>卡片
+      <input type="checkbox" name="asig_inq3_limit" value="Y" ${asig_inq3_limit-Y}>額度
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="debit_flag" value="N">
+
+</form>
+</body>
+</html>
+
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('1');
+ onChangeMsgPurchaseAmt();
+
+ // 2020-10-27 JustinWu :  modify the logic of market_agree_base
+ window.onload = function(){
+
+   // if (document.getElementById("market_agree_base_Y").checked == true) {
+   //    marketAgreeBaseOnChange();
+   // }
+
+   var nationArr = document.getElementsByName("nation");
+   if (nationArr[0].checked == true) {
+      wf_nation_change1();
+   }
+
+ }
+
+
+ // function marketAgreeBaseOnChange(){
+ //   var nodes = document.getElementsByName("market_agree_base");
+ //   for (var i = 0; i < nodes.length; i++) {
+ //      if (nodes[i].checked == true) {
+
+ //         var chgNodeArr = ["accept_dm", "accept_sms", "accept_call_sell"];
+
+ //         if (nodes[i].value == "Y") {
+ //            for (var i = 0; i < chgNodeArr.length; i++) {
+ //               var chgNode = document.getElementById(chgNodeArr[i]);
+ //               chgNode.checked = false;
+ //               chgNode.disabled = true;
+ //            }
+ //         }else{
+ //            for (var i = 0; i < chgNodeArr.length; i++) {
+ //               var chgNode = document.getElementById(chgNodeArr[i]);
+ //               chgNode.disabled = false;
+ //               chgNode.checked = true;
+ //            }
+ //         }
+ //         return true;
+ //      }
+ //   }
+ // }
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    if ( !checkMonth()) 
+       { return false; }
+
+    if (top.actionCode == 'U') {
+      if (! checkOtherCntryCode() ) {
+         return false;
+      }
+
+    //  if (! checkMarketAgreeBase() ) {
+    //    return false;
+    //  }
+
+      checkMsgFlagAndMsgPurchaseAmt();
+
+      // phase3
+       if (! checkAddr()) {
+         return false;
+       }
+      
+      // email
+       if (!checkEmail()) {
+         return false;
+       }
+    }
+
+    // 2020-10-27 JustinWu : modify the logic of market_agree_base
+    // if ( !checkMarketAgreeBase()) 
+    //    { return false; }
+
+    document.getElementById("msg_flag_Y").disabled = false;
+    document.getElementById("msg_flag_N").disabled = false;
+ 
+    return true;
+  }
+ 
+ function checkEmail(){
+	 var email = document.forms["dataForm"]["e_mail_addr"].value.toUpperCase();
+	 var oldEmail = document.forms["dataForm"]["e_mail_addr_old"].value.toUpperCase();
+	 if (email != oldEmail && !isEmail(email)) {
+		alert("電子郵件格式錯誤 ,請重新修正!");
+		return false;
+	 }
+	 return true;
+ }
+ 
+ function isEmail(str) {
+	 var reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/;
+	 reg = /@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/;
+     return  reg.test(str);
+ }
+
+  function checkMsgFlagAndMsgPurchaseAmt(){
+   if (Number(document.getElementById("msg_purchase_amt").value) > 0 ) {
+      document.getElementById("msg_flag_Y").checked = true;
+   }
+   return true;
+  }
+
+  function onChangeMsgPurchaseAmt(){
+   if (Number(document.getElementById("msg_purchase_amt").value) > 0 ) {
+      document.getElementById("msg_flag_Y").checked = true;
+      document.getElementById("msg_flag_Y").disabled = true;
+      document.getElementById("msg_flag_N").disabled = true;
+   }else{
+      document.getElementById("msg_flag_Y").disabled = false;
+      document.getElementById("msg_flag_N").disabled = false;
+   }
+  }
+
+  function checkAddr(){
+    var residentArr = ["resident_zip", "resident_addr5"];
+    var ele;
+
+    for (var i = 0; i < residentArr.length; i++) {
+      ele = document.getElementById(residentArr[i]);
+      if (ele.value.trim().length == 0) {
+        ele.style.background = "pink";
+        alert("戶籍地址不可空白");
+        return false;
+      }else{
+        ele.style.background = "white";
+      }
+    }
+
+    var mailArr = ["mail_zip", "mail_addr5"];
+
+    for (var i = 0; i < mailArr.length; i++) {
+      ele = document.getElementById(mailArr[i]);
+      if (ele.value.trim().length == 0) {
+        ele.style.background = "pink";
+        alert("住家地址不可空白");
+        return false;
+      }else{
+        ele.style.background = "white";
+      }
+    }
+
+    return true;
+  }
+
+  // 2020-10-27 JustinWu : modify the logic of market_agree_base
+  // function checkMarketAgreeBase(){
+  //  var nodes = document.getElementsByName("market_agree_base");
+  //  var chgNodeArr = ["accept_dm", "accept_sms", "accept_call_sell"];
+  //  for (var i = 0; i < nodes.length; i++) {
+  //     if (nodes[i].checked == true ){
+  //        if (nodes[i].value == "N"){
+  //           // 拒絕行銷註記為否
+  //           for (var i = 0; i < chgNodeArr.length; i++) {
+  //             if (document.getElementById(chgNodeArr[i]).checked == true) {
+  //                return true;
+  //             }
+  //           }
+  //        }else{
+  //           return true;
+  //        }
+  //     } 
+  //  }
+
+  //  alert("因拒絕行銷選擇為否，請至少勾選一項接受行銷的方式。");
+  //  return false;
+
+  // }
+
+  function checkMonth(){
+   ele = document.getElementById("service_year_MM");
+   // 若為空或1位數，則檢查通過
+   // 若為2位數，則要檢查是否為00~11
+   if (ele.value.length == 2) {
+      month1 = ele.value.charAt(0); // 月份的十位數
+      month2 = ele.value.charAt(1); // 月份的個位數
+
+      if (month1 == "1") {
+         if (month2 != "0" && month2 != "1") {
+            alert("服務年資的月份不符合格式");
+            return false;
+         }
+      }else if (month1 != "0"){
+         alert("服務年資的月份不符合格式");
+         return false;
+      }
+   }else if (ele.value.length > 2 ) {
+      alert("服務年資的月份不超過兩位數");
+      return false;
+   }
+   return true;
+  }
+ 
+ function wf_nation_change1()
+  {
+   var other_cntry_code_ele = document.getElementById('other_cntry_code');
+    other_cntry_code_ele.disabled=true;
+   other_cntry_code_ele.value="TW";
+  }
+ 
+ function wf_nation_change2()
+  {
+    document.getElementById('other_cntry_code').disabled=false;
+  }
+  
+  function zipChange(changeTarget)
+ {
+  var  zip_code =document.forms["dataForm"][changeTarget + "_zip"].value.toUpperCase(); 
+
+  if ( zip_code === '') {
+      document.getElementById(changeTarget + "_addr1_text").innerHTML = "";
+      document.getElementById(changeTarget + "_addr2_text").innerHTML = "";
+      document.getElementById(changeTarget + "_addr1").value = "";
+      document.getElementById(changeTarget + "_addr2").value = ""; 
+     return false;
+  }
+
+   top.actionCode = "AJAX";
+  top.methodName = "wfAjaxKey"; // "wf_ajax_key";
+
+  resetJSON();
+   addJSON("changeTarget",changeTarget);
+  addJSON("ax_zip_code",zip_code);  
+  processAJAX();
+ } 
+ 
+    function ajaxResponse()
+ {
+   top.respHtml ="cmsm2010_idno";
+    top.requHtml ="cmsm2010_idno";
+
+   var changeTarget = getJSONvalue("changeTarget",0);
+
+   var ajax_addr1 = getJSONvalue("ajax_addr1",0);
+   if (ajax_addr1.length > 0) { 
+      document.getElementById(changeTarget + "_addr1_text").innerHTML = ajax_addr1;
+      document.getElementById(changeTarget + "_addr1").value = ajax_addr1;   
+   }      
+      
+   var ajax_addr2 = getJSONvalue("ajax_addr2",0);
+   if (ajax_addr2.length > 0) { 
+      document.getElementById(changeTarget + "_addr2_text").innerHTML = ajax_addr2;
+      document.getElementById(changeTarget + "_addr2").value = ajax_addr2;
+   }                
+
+ }
+
+ function checkOtherCntryCode(){
+   var nationArr = document.getElementsByName("nation");
+   var otherCntryCodeELe = document.getElementById("other_cntry_code");
+   if (nationArr[1].checked == true) {
+      if ( otherCntryCodeELe.value.trim().length == 0 ) {
+         alert("國籍為外國，國籍代碼不可為空白");
+         return false
+      }else{
+         if (otherCntryCodeELe.value == "TW") {
+            alert("國籍為外國，國籍代碼不可為TW(台灣)");
+            return false
+         }
+      }
+   }else{
+      wf_nation_change2();
+   }
+
+   return true;
+ }
+
+// 20231129 因拒絕行銷註記畫面無法維護，取消此檢核
+// function checkMarketAgreeBase(){
+//   ele = document.getElementById("market_agree_base");
+//   if (ele.value.trim().length == 0) {
+//     ele.style.background = "pink";
+//     alert("金控子公司拒絕行銷註記不可空白");
+//     return false;
+//   }
+//   return true;
+
+  
+</script>

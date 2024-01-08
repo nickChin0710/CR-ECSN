@@ -1,0 +1,217 @@
+<html>
+<head>
+<title>問交/特交/不合格作業維護-jh-190618</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>
+  <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; />&nbsp;
+  <input type="Button" name="btnUpdate"  value="新增" ${btnAdd_disable} onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  <input type="Button" name="btnUpdate"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+ </td>
+</tr>
+</table>
+<hr>
+
+<!--TAB Process---------------------------- -->
+<div class="tab">
+  <table cellspacing="5">
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="tabControl(event, 'tab-1')">問交維護</td>
+       <td class="tablinks" onclick="tabControl(event, 'tab-2')">帳單資料</td>
+    </tr>
+  </table>
+</div>
+
+<!--rskm0010-->
+<div id="tab-1" class="tabcontent">
+<div id="dataBlock">
+ <table id="table1" width="80%" class="sortable" border="0" >
+  <tr>
+   <td nowrap colspan="1" class="col_key">&nbsp;控制流水號:
+      <span class="dsp_text">${ctrl_seqno}</span>&nbsp;
+      <input type="hidden" name="ctrl_seqno" value="${ctrl_seqno}" />
+   </td>
+   <td nowrap colspan="3">&nbsp;卡別:
+      <span class="dsp_text">${bin_type}</span>&nbsp;
+      <input type="hidden" name="bin_type" value="${bin_type}">
+      &nbsp;Debit卡:
+      <span class="dsp_text">${debit_flag}</span>&nbsp;
+      <input type="hidden" name="debit_flag" value="${debit_flag}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="1">&nbsp;狀態碼:
+      <span class="dsp_text">${prb_status}.${#JAVA:ecsfunc.DeCodeRsk.prbStatus(prb_status)}</span>
+      <input type="hidden" name="prb_status" value="${prb_status}">
+   </td>
+   <td nowrap colspan="3">
+      <span class="dsp_text">${prb_mark}.${#JAVA:ecsfunc.DeCodeRsk.prbMark(prb_mark)}</span>
+      <input type="hidden" name="prb_mark" value="${prb_mark}">
+      &nbsp;來源碼:
+      <span class="dsp_text">${prb_src_code}</span>&nbsp;
+      <input type="hidden" name="prb_src_code" value="${prb_src_code}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="1">&nbsp;消費卡號:
+      <span class="dsp_text">${card_no}</span>&nbsp;
+      <input type="hidden" name="card_no" value="${card_no}" />
+   </td>
+  <td nowrap colspan="3">&nbsp;微縮影NO:
+   <span class="dsp_text">${BL_film_no}&nbsp;</span>
+   <input type="hidden" name="BL_film_no" value="${BL_film_no}" />
+  </td>
+ </tr>
+ <tr>
+  <td nowrap>&nbsp;消費金額:
+   <span class="dsp_text">${BL_dest_amt.(999)}&nbsp;</span>
+   <input type="hidden" name="BL_dest_amt" value="${BL_dest_amt}">
+  </td>
+  <td nowrap>&nbsp;消費日期:
+   <span class="dsp_text">${BL_purchase_date.YMD}&nbsp;</span>
+   <input type="hidden" name="BL_purchase_date" value="${BL_purchase_date}">
+  </td>
+  <td nowrap colspan="2">&nbsp;交易類別:
+   <span class="dsp_text">${BL_txn_code}&nbsp;</span>
+   <input type="hidden" name="BL_txn_code" value="${BL_txn_code}">
+  </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="1">&nbsp;結算問題金額:
+      <input type="text" class="col_number" name="dc_prb_amount" value="${dc_prb_amount}"
+         maxlength="12" size="12" zEdit="dignumber" zRequire="Y" />
+   </td>
+  <td nowrap>&nbsp;結算幣別:
+   <span class="dsp_text">${curr_code}&nbsp;</span>
+   <input type="hidden" name="curr_code" value="${curr_code}">
+  </td>
+   <td nowrap colspan="2">&nbsp;問題金額:
+      <span class="dsp_number">${prb_amount.(999)}</span>&nbsp;
+      <input type="hidden" name="prb_amount" value="${prb_amount}" />
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="3">&nbsp;原因碼:
+      <select size="1" name="prb_reason_code" class="col_ddlb">
+       ${dddw_prb_reason_code}
+      </select>
+   </td>
+   <td nowrap colspan="1">&nbsp;提詐欺通報否:
+      <input type="radio" name="prb_fraud_rpt" value="1" ${prb_fraud_rpt-1}>是
+      <input type="radio" name="prb_fraud_rpt" value="0" ${prb_fraud_rpt-0}>否
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="4">&nbsp;說明:
+      <input type="text" class="col_any" name="prb_comment" value="${prb_comment}"
+         maxlength="60" size="62" zEdit="any,canTw" >&nbsp;
+   </td>
+ </tr>
+ <tr>
+   <td nowrap>&nbsp;
+      <input type="checkbox" name="letter_flag" value="Y" ${letter_flag-Y}>列印問交信函
+   </td>
+   <td nowrap>&nbsp;列印信函日期
+      <span class="dsp_text">${letter_print_date.YMD}</span>
+      <input type="hidden" name="letter_print_date" value="${letter_print_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;列印信函經辦:
+      <span class="dsp_text">${letter_print_user}</span>
+      <input type="hidden" name="letter_print_user" value="${letter_print_user}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;新增登錄:
+      <span class="dsp_text">${add_user}</span>&nbsp;
+      <input type="hidden" name="add_user" value="${add_user}">
+      <span class="dsp_text">${add_date.YMD}</span>
+      <input type="hidden" name="add_date" value="${add_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;結案登錄:
+      <span class="dsp_text">${close_add_id}</span>&nbsp;
+      <input type="hidden" name="close_add_id" value="${close_add_id}">
+      <span class="dsp_text">${close_add_date.YMD}</span>
+      <input type="hidden" name="close_add_date" value="${close_add_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;新增覆核:
+      <span class="dsp_text">${add_apr_user}</span>&nbsp;
+      <input type="hidden" name="add_apr_user" value="${add_apr_user}">
+      <span class="dsp_text">${add_apr_date.YMD}</span>
+      <input type="hidden" name="add_apr_date" value="${add_apr_date}">
+   </td>
+   <td nowrap colspan="2">&nbsp;結案覆核:
+      <span class="dsp_text">${close_apr_user}</span>&nbsp;
+      <input type="hidden" name="close_apr_user" value="${close_apr_user}">
+      <span class="dsp_text">${close_apr_date.YMD}</span>
+      <input type="hidden" name="close_apr_date" value="${close_apr_date}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="2">&nbsp;結案處理結果:
+      <span class="dsp_text">${clo_result}</span>
+      <input type="hidden" name="clo_result" value="${clo_result}">
+   </td>
+   <td nowrap colspan="2">&nbsp;正確卡號:
+      <span class="dsp_text">${org_card_no}</span>
+      <input type="hidden" name="org_card_no" value="${org_card_no}">
+   </td>
+ </tr>
+ <tr>
+   <td nowrap colspan="4">&nbsp;特店退款金額:
+      <span class="dsp_text">${mcht_repay.(999)}</span>
+      <input type="hidden" name="mcht_repay" value="${mcht_repay}" />
+   </td>
+ </tr>
+</table>
+<hr>
+refer-no=${reference_no}
+<br>refer-no_ori=${reference_no_ori}
+</div>
+</div>
+
+<!--rskp0010-->
+<div id="tab-2" class="tabcontent">
+<div id="queryBlock">
+ ${#PLUGIN:rskm01.bil_bill_data}
+</div>
+</div>
+
+<input type="hidden" name="reference_no" value="${reference_no}" />
+<input type="hidden" name="reference_seq" value="${reference_seq}" />
+
+<!-- -->
+<input type="hidden" name="mod_pgm" value="rskm0010" />
+<input type="hidden" name="ROWID" value="${rowid}" />
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}" />
+<input type="hidden" name="HIDE" value="${HIDE_DATA}" />
+<input type="hidden" name="pageType" value="prbl" />
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+</script>

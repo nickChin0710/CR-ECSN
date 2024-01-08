@@ -1,0 +1,228 @@
+<html>
+<head>
+<title>卡片交易聯繫紀錄-jh-190620</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+${#PLUGIN:htmcomm_plugin.ecs-tabs}
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>  
+   <td nowrap>&nbsp;卡號：
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}"
+       maxlength=20 size=22  />
+   </td>
+   <td nowrap>&nbsp;處理日期：
+      <input type="text" class="col_date" name="ex_proc_date1" value="${ex_proc_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_proc_date1'});
+	    </script>
+	</td>
+	<td nowrap rowspan="2" >&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="新增" onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;身分證ID：
+      <input type="text" class="col_text" name="ex_idno" value="${ex_idno}"
+       maxlength=10 size=12 />
+   </td>
+   <td nowrap>&nbsp;處理經辦：
+      <input type="text" class="col_any" name="ex_proc_user" value="${ex_proc_user}" zEdit="any,canTw"
+       maxlength=10 size=12 />
+   </td>   
+  </tr>
+ </table>
+</div>
+<hr>
+<div class="tab">
+  <table>
+    <tr>
+       <td class="tablinks" id="tab_active" onclick="return tabControl(event, 'tab-1')">聯繫紀錄</td>
+       <td class="tablinks" onclick="return tabControl(event, 'tab-2')">管制紀錄</td>
+    </tr>
+  </table>
+</div>
+<!--START OF 處理紀錄-[Update] -->
+<div id="tab-1" class="tabcontent"> 
+ <table id="table1" width="80%" class="sortable" border="0" >
+  <tr>
+    <th nowrap class="list_no" width="5%">No</th>
+    <th nowrap >卡號</th>
+    <th nowrap >處理日期_時間</th>
+    <th nowrap >處理方式</th>
+    <th nowrap >去電/來電</th>
+    <th nowrap >電話號碼</th>
+    <th nowrap >聯絡結果</th>
+    <th nowrap >處理經辦</th>
+    <th nowrap >郵寄日期</th>
+  </tr>
+  <tr>
+   <th nowrap class="list_th" colspan="2">管制序號</th>
+   <th nowrap class="list_th">控管方式</th>
+   <th nowrap class="list_th" colspan="6">處　理　備　註　</th> 
+  </tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen_U('${SER_NUM}','${A_rowid}','','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;
+      <input type=hidden name="A_rowid" value="${A_rowid}" />
+      </td>
+   <td nowrap class="list_cc">&nbsp;${A_card_no}
+    	<input type=hidden name="A_card_no" value="${A_card_no}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A_proc_date.YMD} ${A_proc_time.TIME}
+    	<input type=hidden name="A_proc_date" value="${A_proc_date}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A_proc_type}
+    	<input type=hidden name="A_proc_type" value="${A_proc_type}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A_tel_type}
+    	<input type=hidden name="A_tel_type" value="${A_tel_type}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A_tel_no}
+    	<input type=hidden name="A_tel_no" value="${A_tel_no}" />
+   </td>
+   <td nowrap class="list_cc" ${wk_color} >&nbsp;${A_contr_result}
+    	<input type=hidden name="A_contr_result" value="${A_contr_result}" />
+   </td>   
+   <td nowrap class="list_cc">&nbsp;${A_proc_user}
+    	<input type=hidden name="A_proc_user" value="${A_proc_user}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${A_mail_date}
+    	<input type=hidden name="A_mail_date" value="${A_mail_date}" />
+   </td>
+  </tr>
+  <tr>
+   <td nowrap class="list_cc" colspan="2">&nbsp;${A_ctfg_seqno}
+    	<input type=hidden name="A_ctfg_seqno" value="${A_ctfg_seqno}" />
+   </td>
+   <td nowrap class="list_cc" >&nbsp;${A_cntl_way}
+    	<input type=hidden name="A_cntl_way" value="${A_cntl_way}" />
+   </td>
+   <td nowrap class="list_ll" colspan="6" >&nbsp;${A_proc_remark}
+    	<input type=hidden name="A_proc_remark" value="${A_proc_remark}" />
+   </td>
+  <!-- END DYNAMIC : DETAIL -->
+  </table>    
+</div>
+<!-- END OF 處理紀錄================================= -->
+ <!-- START OF 管制紀錄-[Insert] -->
+<div id="tab-2" class="tabcontent"> 
+ <table id="table2" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap  width="5%">No </th>
+    <th nowrap >卡號 </th>
+    <th nowrap >管理序號 </th>
+    <th nowrap >管制時間 </th>
+    <th nowrap >發現來源</th>
+    <th nowrap >管制經辦</th>
+    <th nowrap >繳款日期</th>
+    <th nowrap >解控處理</th>    
+    <th nowrap >解控時間</th>
+    <th nowrap >解控經辦</th>
+    
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen_A('${SER_NUM}','${B_card_no}','${B_ctfg_seqno}','')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc">&nbsp;${B_card_no}
+    	<input type=hidden name="B_card_no" value="${B_card_no}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_ctfg_seqno}
+    	<input type=hidden name="B_ctfg_seqno" value="${B_ctfg_seqno}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_warn_date.YMD} ${B_warn_time.TIME}
+    	<input type=hidden name="B_warn_date" value="${B_warn_date}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_find_type}
+    	<input type=hidden name="B_find_type" value="${B_find_type}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_warn_user}
+    	<input type=hidden name="B_warn_user" value="${B_warn_user}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_pay_date.YMD}
+    	<input type=hidden name="B_pay_date" value="${B_pay_date}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_rels_code}
+    	<input type=hidden name="B_rels_code" value="${B_rels_code}" />
+   </td>
+   <td nowrap class="list_cc">&nbsp;${B_rels_date.YMD} ${B_rels_time.Time}
+    	<input type=hidden name="B_wk_rels_date" value="${B_wk_rels_date}" />
+   </td> 
+   <td nowrap class="list_cc">&nbsp;${B_rels_user}
+    	<input type=hidden name="B_rels_user" value="${B_rels_user}" />
+   </td>    
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>    
+</div>
+<!-- END OF 管制紀錄============================= -->
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+	tigra_tables('table2');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "rskm3120_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen_U(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm3120_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function detailScreen_A(serNum,parm,parm2,parm3) { 
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "rskm3120_detl";
+    top.submitControl('X1');
+    return true;
+  }
+  
+</script>

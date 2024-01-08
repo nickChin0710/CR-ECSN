@@ -1,0 +1,117 @@
+<html> 
+<head>
+<title>外幣自動扣繳帳號維護-detl-109-02-18-V1.00.02-Alex</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <table width="80%" border="0" cellspacing="0" cellpadding="4">
+            	<tr>
+					<td nowrap>&nbsp;帳戶帳號:
+	                    <input type="hidden" name="ex_acct_type" id="ex_acct_type" value="${ex_acct_type}" />
+	                    <input type="text" class="col_text" name="ex_acct_key" id="ex_acct_key" value="${ex_acct_key}" zEdit="alphanum,upper" maxlength=11 size=20 />
+	                </td>
+					<td nowrap>&nbsp;扣繳帳號歸屬ID:
+	                    <input type="text" class="col_text" name="ex_autopay_id" value="${ex_autopay_id}" zEdit="alphanum,upper" maxlength=10 size=12 />
+	                </td>
+                </tr>
+                <tr>
+                    <td nowrap colspan=2>&nbsp;
+                        <input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="新增" ${btnAdd_disable} onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!-- 明細============================ -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+				<th nowrap class="list_th" width="5%">No&nbsp;</th>
+				<th nowrap class="list_th">帳戶帳號</th> 
+				<th nowrap class="list_th">姓名/公司名稱</th>
+				<th nowrap class="list_th">正卡ID</th>
+				<th nowrap class="list_th">扣繳帳號歸屬ID</th>
+				<th nowrap class="list_th">扣繳行庫</th>
+				<th nowrap class="list_th">扣繳帳號</th>
+				<th nowrap class="list_th">雙幣<br>幣別</th>
+				<th nowrap class="list_th">生效旗標</th>
+				<th nowrap class="list_th">自動扣繳<br>指示碼</th>
+				<!-- <th nowrap class="list_th">自動扣繳<br>固定金額</th> -->
+				<!-- <th nowrap class="list_th">自動扣繳<br>固定比率</th> -->
+				<th nowrap class="list_th">外幣存款不足<br>轉扣台幣</th>
+				<th nowrap class="list_th">外幣存款不足<br>轉扣台幣指示碼</th>
+				<th nowrap class="list_th">備    註</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${ser_num}','${acct_type}','${acct_key}','${curr_code}')" style="cursor:hand">
+				<td nowrap class="list_no"> ${SER_NUM}&nbsp;
+					<input type="hidden" name="ser_num" value="${ser_num}" />
+					<input type="hidden" name="acct_type" value="${acct_type}" />
+					<input type="hidden" name="acct_key" value="${acct_key}" />
+					<input type="hidden" name="curr_code" value="${curr_code}" />
+				</td>
+				<td nowrap class="list_ll">${wk_acct_key}&nbsp;</td>
+				<td nowrap class="list_ll">${db_chi_name}&nbsp;</td> 
+				<td nowrap class="list_ll">${wk_idcode}&nbsp;</td>
+				<td nowrap class="list_ll">${wk_apayid}&nbsp;</td>
+				<td nowrap class="list_ll">${autopay_acct_bank}&nbsp;</td>
+				<td nowrap class="list_ll">${autopay_acct_no}&nbsp;</td>
+				<td nowrap class="list_cc">${tt_curr_code}&nbsp;</td>
+				<td nowrap class="list_cc">${tt_valid_flag}&nbsp;</td>
+				<td nowrap class="list_cc">${tt_autopay_indicator}&nbsp;</td>
+				<!-- <td nowrap class="list_rr">${autopay_fix_amt.(999.00)}&nbsp;</td> -->
+				<!-- <td nowrap class="list_rr">${autopay_rate.(999)}&nbsp;</td> -->
+				<td nowrap class="list_cc">${autopay_dc_flag}&nbsp;</td>
+				<td nowrap class="list_cc">${tt_autopay_dc_indicator}&nbsp;</td>
+				<td nowrap class="list_cc">${tt_which_table}&nbsp;</td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <!--保留功能-->
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_acct_key.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "actm0012_detl";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm1, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm1;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "actm0012_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

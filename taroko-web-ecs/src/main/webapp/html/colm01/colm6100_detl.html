@@ -1,0 +1,231 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 112-09-22  V1.00.01     Ryan       Initial                               -->
+<!-- 112-09-22  V1.00.02     Sunny      調整版面位置                                                                                   -->
+<!-- 112-10-12  V1.00.02  Ryan       新增刪除、修改功能，調整查詢條件功能，  調整時效完成日計算功能，時效完成日改為只顯示 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <!-- <input type="Button"    value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+      -->
+          <input type="Button"  value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+          <input type="Button"  value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+          <input type="Button"  value="修改取消" ${display_btn1} ${btnDelete_disable} onClick="return top.submitControl('D1')" class="btDelete" >
+          <input type="Button"  value="刪除" ${display_btn2} ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >
+<!--           <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp; -->
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<table width="90%" border="0" cellspacing="0" cellpadding="4">
+     <td nowrap>&nbsp;類型:
+       <span class="col_radio" >
+         <input type="radio" value="1" name="kk_card_flag" ${kk_card_flag-1} ${DEFAULT_CHK} ${btnAdd_disable}/>個人
+         <input type="radio" value="2" name="kk_card_flag" ${kk_card_flag-2} ${btnAdd_disable}/>公司
+       </span>
+     </td>
+     <td nowrap>&nbsp;身份證字號/統編:
+  	  	 <input type="text" class="col_any" name="kk_id_corp_no" value="${kk_id_corp_no}"
+         zEdit="any"  maxlength=11 size=13  onChange="return top.submitControl('S1')" ${btnAdd_disable}/>
+     </td>
+</table>
+<hr>
+<!-- Detail data detl *************************************************** -->
+ <table width="90%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;身份證字號/統編:
+         <span class="dsp_text">${id_corp_no}</span>
+        <input type="hidden" name="id_corp_no" value="${id_corp_no}" />
+        <input type="hidden" name="id_corp_p_seqno" value="${id_corp_p_seqno}">
+		<input type="hidden" name="card_flag" value="${card_flag}">
+     </td>
+     <td nowrap>&nbsp;客戶姓名:
+         <span class="dsp_text">${chi_name}</span>
+        <input type="hidden" name="chi_name" value="${chi_name}" />
+     </td>
+     <td nowrap>&nbsp;帳戶狀態:
+        <span class="dsp_text">${acct_status}.${#JAVA:ecsfunc.DeCodeCol.cpbdueAcctStatus(acct_status)}</span>
+        <input type="hidden" name="acct_status" value="${acct_status}" />
+     </td>
+     
+   </tr>
+   <tr>
+      <td nowrap>&nbsp;分行代碼: 
+         <input type="text" class="col_any" zEdit="any" name="brunch" value="${brunch}"
+      		maxlength="4" size="6" zRequire ="Y"/>
+     </td>
+     <td nowrap>&nbsp;戶籍地-縣市:
+        <span class="dsp_text">${resident_addr1}</span>
+        <input type="hidden" name="resident_addr1" value="${resident_addr1}">
+     </td>
+     <td nowrap>&nbsp;戶籍地-鄉鎮市區:
+        <span class="dsp_text">${resident_addr2}</span>
+        <input type="hidden" name="resident_addr2" value="${resident_addr2}">
+     </td>
+   </tr>
+    <tr>       
+      <td nowrap>&nbsp;債證種類: 
+       <span class="col_radio">
+         <input type="radio" value="1" name="cert_type" ${cert_type-1} ${DEFAULT_CHK} />1.執行名義
+         <input type="radio" value="2" name="cert_type" ${cert_type-2} />2.債權憑證
+       </span>
+        <td nowrap>&nbsp;執行名義種類:
+       <select name="cert_kind" class="col_ddlb" zRequire ="N">
+         <option value="">--</option>
+         	${dddw_cert_kind}
+       </select>	
+     </td>
+     </td>       
+       <td nowrap>&nbsp;案號: 
+         <input type="text" class="col_any" zEdit="any" name="cert_no" value="${cert_no}"
+      		maxlength="10" size="12" zRequire ="N"/>
+     </td>
+       </tr>
+      <tr>     
+       <td nowrap>&nbsp;年度:
+        <input type="text" class="col_date" name="court_year" value="${court_year}" 
+           zeditType="date,yyyy" size=3 maxlength=5 zRequire ="Y"/>
+     </td>     
+      <td nowrap>&nbsp;發給法院:	
+       <select name="court_id" class="col_ddlb" zRequire ="Y">
+         <option value="">--</option>
+         	${dddw_court_id}
+       </select>	
+       <input type="hidden" name="court_name" value="${court_name}">
+     </td>
+     <td nowrap></td>     
+</tr>
+   <tr>   
+     <td nowrap colspan="3">&nbsp;債權憑證文號: 
+      		<textarea cols="100" rows="1" maxlength="110" class="col_text" name="court_desc"
+      		zEdit="canTW" zRequire ="Y" style="white-space:pre-wrap;">${court_desc}</textarea>
+     </td>
+  
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;時效起算日:
+       <input type="text" class="col_date" name="cert_date" value="${cert_date}" 
+           zeditType="date,yyyymmdd" size=10 maxlength=8 zRequire ="Y"/>
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'cert_date'});
+       </script>
+     </td>
+     <td nowrap>&nbsp;時效完成日:
+<!--        <input type="text" class="col_date" name="cert_end_date" value="${cert_end_date}"  -->
+<!--            zeditType="date,yyyymmdd" size=10 maxlength=8 /> -->
+<!--        <script language="JavaScript"> -->
+<!--             new tcal ({'formname': 'dataForm','controlname': 'cert_end_date'}); -->
+<!--        </script> -->
+        <span class="dsp_date">${cert_end_date.YMD}</span>
+        <input  size="10"  type="hidden" name="cert_end_date" value="${cert_end_date}" />
+              (時效起算日+5年之減一日，存檔時計算)
+     </td>
+     <td nowrap></td>     
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;債權憑證狀態:
+       <select name="cert_status" class="col_ddlb" >
+         	${dddw_cert_status}
+       </select>	
+     </td>
+     <td nowrap>&nbsp;債權憑證狀態日期:
+       <input type="text" class="col_date" name="cert_status_date" value="${cert_status_date}" 
+           zeditType="date,yyyymmdd" size=10 maxlength=8 zRequire ="Y"/>
+       <script language="JavaScript">
+           new tcal ({'formname': 'dataForm','controlname': 'cert_status_date'});
+       </script>
+   	 <td nowrap>&nbsp;債權金額:
+		<input type="text" class="col_number" zEdit="number" name="cert_src_amt" value="${cert_src_amt}"
+      		maxlength="10" size="12" zRequire ="N"/>
+	 </td>
+   </tr>
+    <tr>
+    <td nowrap colspan="3">&nbsp;備註:
+        <textarea cols="100" rows="5" maxlength="200" class="col_text" name="cert_memo"
+      		  zEdit="canTW" zRequire ="N" style="white-space:pre-wrap;">${cert_memo}</textarea>
+	 </td>
+	    </tr>
+ </table>
+ <table width="90%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >&nbsp;建檔日期: 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="10"  type="hidden" name="crt_date" value="${crt_date}" />
+     </td>
+     <td  nowrap  >&nbsp;建檔經辦: 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >&nbsp;異動日期: 
+       <span class="dsp_date">${mod_date.YMD}</span>
+       <input      size="10"  type="hidden" name="mod_date" value="${mod_date}" />
+     </td>
+     <td  nowrap  >&nbsp;異動經辦: 
+       <span class="dsp_text">${mod_user}</span>
+       <input      size="10"  type="hidden" name="mod_user" value="${mod_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >&nbsp;覆核日期: 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="10"  type="hidden" name="apr_date" value="${apr_date}" />
+     </td>
+     <td  nowrap  >&nbsp;覆核主管: 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+     </td>
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="table_type" value="${table_type}">
+<input type="hidden" name="display_btn1" value="${display_btn1}">
+<input type="hidden" name="display_btn2" value="${display_btn2}">
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+</script>
+<!-- ******************************************************************** -->

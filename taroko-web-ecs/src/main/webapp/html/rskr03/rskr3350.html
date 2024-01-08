@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>偽冒調查敘實記錄明細表-cond</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function(){
+var selected = $("input[name=ex_close_flag]:checked");
+
+if (selected.length == 0) {
+   $("input:radio[name=ex_close_flag]").filter('[value=0]').prop('checked', true);
+}
+});
+</script>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;立案日期：
+     <input type="text" class="col_date" name="ex_case_date1" value="${ex_case_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date1'});
+	    </script>
+	--
+	   <input type="text" class="col_date" name="ex_case_date2" value="${ex_case_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_case_date2'});
+	    </script>
+	</td>
+   <td nowrap colspan="2">&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;帳卡登錄日期：
+     <input type="text" class="col_date" name="ex_debit_date1" value="${ex_debit_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_debit_date1'});
+	    </script>
+	--
+	   <input type="text" class="col_date" name="ex_debit_date2" value="${ex_debit_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_debit_date2'});
+	    </script>
+	</td>
+	<td nowrap colspan="2">&nbsp;統計類別：
+	   <select   size="1"  name="ex_report" class="col_ddlb">
+         <option value="1" ${ex_report-1} >1.交易國別</option>
+         <option value="2" ${ex_report-2} >2.MCC</option>
+         <option value="3" ${ex_report-3} >3.卡種</option>
+         <option value="4" ${ex_report-4} >4.團代</option>
+      </select>
+   </td> 
+  </tr>
+  <tr>
+   <td nowrap colspan="2">&nbsp;結案：
+      <span class="col_radio">
+         <input type="radio" value="0" name="ex_close_flag" ${ex_close_flag-0} />0.全部
+         <input type="radio" value="1" name="ex_close_flag" ${ex_close_flag-1} />1.已結案
+         <input type="radio" value="2" name="ex_close_flag" ${ex_close_flag-2} />2.未結案
+      </span>
+   </td>
+   <td nowrap>&nbsp;
+      <input type="checkbox" name="ex_case_source_99" value="Y" ${ex_case_source_99-Y}>&nbsp;排除 99.法院起訴或判決
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+      <td nowrap colspan="2" class="list_rr">總計:</td>
+      <td nowrap class="list_rr">${sum_cnt_card.(999)}
+         <input type="hidden" name="sum_cnt_card" value="${sum_cnt_card}">
+      </td>
+      <td nowrap class="list_rr">${sum_txn_cnt.(999)}
+         <input type="hidden" name="sum_txn_cnt" value="${sum_txn_cnt}">
+      </td>
+      <td nowrap class="list_rr">${sum_txn_amt.(999)}
+         <input type="hidden" name="sum_txn_amt" value="${sum_txn_amt}">
+      </td>
+      <td nowrap class="list_rr">${sum_ok_cnt.(999)}
+         <input type="hidden" name="sum_ok_cnt" value="${sum_ok_cnt}">
+      </td>
+      <td nowrap class="list_rr">${sum_ok_amt.(999)}
+         <input type="hidden" name="sum_ok_amt" value="${sum_ok_amt}">
+      </td>
+	</tr>
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap>${db_report_type} </th>
+    <th nowrap>冒用卡數 </th>
+    <th nowrap>冒用交易筆數 </th>
+    <th nowrap>冒用交易金額 </th>
+    <th nowrap>盜刷成功筆數 </th>
+    <th nowrap>盜刷成功金額 </th>
+  </tr>
+  <tr>
+    <th nowrap colspan="3">實際發生金額</th>
+    <th nowrap colspan="2">轉列雜支金額 </th>
+    <th nowrap colspan="2">無損金額(實際發生金額-轉列雜支金額) </th>
+    
+    </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc"> ${db_report_value}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_cnt_card.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_txn_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_ok_cnt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${db_ok_amt.(999)}&nbsp;</td>
+  </tr> 
+  <tr>
+   <td nowrap class="list_rr" colspan="3"> ${db_actual_amt.(999)}</td>
+	<td nowrap class="list_rr" colspan="2"> ${db_miscell_unpay_amt.(999)}&nbsp;</td>
+	<td nowrap class="list_rr" colspan="2"> ${db_amt1.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden" name="MOD_PGM" value="rskr3320" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="10";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ 
+</script>

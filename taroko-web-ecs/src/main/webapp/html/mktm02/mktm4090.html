@@ -1,0 +1,152 @@
+<html>
+
+<head>
+    <title>NCCC紅利抵用參數維護(指定特店)-V.2018-0302-ryan-[Initial]
+    -V.2020-0911-Andy-[Update]
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="/js/jquery.js"></script>
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+    <script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap>&nbsp;特店代號:
+                        <input zEdit="any" class="col_any" type="text" size="15" MaxLength="15" name="ex_mchtno1" value="${ex_mchtno1}"></input>
+                        --
+                        <input zEdit="any" class="col_any" type="text" size="15" MaxLength="15" name="ex_mchtno2" value="${ex_mchtno2}"></input>
+                    </td>
+                    <td nowrap>&nbsp;
+                        <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <input type="Button" name="btnAdd" value="新增" onClick="return top.submitControl('X')" class="btAdd">&nbsp;&nbsp;
+                        <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;活動期間(起)：
+                        <input type="text" class="col_date" name="ex_strdate1" value="${ex_strdate1}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_strdate1'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_strdate2" value="${ex_strdate2}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_strdate2'});
+                        </script>
+                    </td>
+                    <td nowrap rowspan="3">&nbsp;覆核碼:
+                        <span class="col_radio">
+                            <!-- <input type="radio" value="0" name="ex_apprflag" ${ex_apprflag-0} ${DEFAULT_CHK} />全部 -->
+                            <input type="radio" value="Y" name="ex_apprflag" ${ex_apprflag-Y} />(全部:不含新增)
+                            <input type="radio" value="N" name="ex_apprflag" ${ex_apprflag-N} ${DEFAULT_CHK} />未覆核
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;活動期間(迄)：
+                        <input type="text" class="col_date" name="ex_enddate1" value="${ex_enddate1}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_enddate1'});
+                        </script>
+                        --
+                        <input type="text" class="col_date" name="ex_enddate2" value="${ex_enddate2}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_enddate2'});
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>&nbsp;建檔人:
+                        <input zEdit="any" class="col_any" type="text" size="10" MaxLength="10" name="ex_crt_user" value="${ex_crt_user}"></input>
+                        &nbsp;建檔日:
+                        <input type="text" class="col_date" name="ex_crt_date" value="${ex_crt_date}" zeditType="date,ymd" MaxLength=8 size=8 />
+                        <script language="JavaScript">
+                            new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date'});
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">特店代號</th>
+                <th nowrap class="list_th">序號</th>
+                <th nowrap class="list_th">活動期間</th>
+                <th nowrap class="list_th">覆核</th>
+                <th nowrap class="list_th">特店名稱</th>
+                <th nowrap class="list_th">最低交易金額</th>
+                <th nowrap class="list_th"></th>
+                <th nowrap class="list_th">最高扣抵比例</th>
+                <th nowrap class="list_th">最高扣抵金額</th>
+                <th nowrap class="list_th">單位兌換點數</th>
+                <th nowrap class="list_th">單位兌換金額</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr onclick="detailScreen('${SER_NUM}','${rdm_mchtno}','${rdm_seqno}','','')" style="cursor:hand">
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+                <td nowrap class="list_ll"> ${rdm_mchtno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${rdm_seqno}&nbsp; </td>
+                <td nowrap class="list_ll"> ${rdm_strdate.YMD}--${rdm_enddate.YMD}&nbsp; </td>
+                <td nowrap class="list_ll"> ${tt_db_temp}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_mchtname}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp; ${rdm_destamt.(999)}</td>
+                <td nowrap class="list_cc"> ${rdm_discratefg}&nbsp; </td>
+                <td nowrap class="list_rr"> ${rdm_discrate.(999.00)}%&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${rdm_discamt.(999)} </td>
+                <td nowrap class="list_ll"> ${rdm_unitpoint}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${rdm_unitamt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" name="MOD_PGM" value="mktm4090">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+
+document.dataForm.ex_mchtno1.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "mktm4090_add";
+    }
+
+    return true;
+}
+
+function detailScreen(serNum, parm, parm2, parm3) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml = "mktm4090_detl";
+    top.submitControl('S');
+    return true;
+}
+</script>

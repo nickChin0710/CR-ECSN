@@ -1,0 +1,287 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!--            V1.00.00                 Initial                              -->
+<!-- 109-05-29  V1.00.01  JustinWu       移除線上覆核欄位                      -->
+<!-- 109-07-16  V1.00.02  Sunny          修改文字-最近一年最差繳評              -->
+<!-- 109-07-17  V1.00.03  JustinWu       備註為必填欄位、備註的下拉式選單改從資料庫中取得 -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>客服經辦D檔調整作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+	<!-- ${#PLUGIN:htmcomm_plugin.apr_user} -->
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         ${d_dddw_accttype}
+      </select>
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="19" size="21"  zRequire="C" >
+   </td>
+   <td nowrap>&nbsp;幣別:
+      <select size="1" name="ex_curr_code" class="col_ddlb" zRequire="C" >
+         ${dddw_dc_curr_code_tw}
+      </select>
+   </td>
+   <td nowrap rowspan="4">&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return saveTheValues();" class="btUpdate" >&nbsp;&nbsp;
+      <br>&nbsp;
+      最近一期繳評:&nbsp;
+      <span class="col_key">${ex_adj_check1}</span>
+      <br>&nbsp;
+      最近一年最差繳評:&nbsp;
+      <span class="col_key">${ex_adj_check2}</span>
+      <br>&nbsp;
+      最近一年刪除ＰＮ次數:&nbsp;
+      <span class="col_key">${ex_adj_check3}</span>
+      <br>&nbsp;
+      最近一年刪除ＲＩ次數:&nbsp;
+      <span class="col_key">${ex_adj_check4}</span>
+      <br>&nbsp;
+      <span class="col_key"></span>
+      <input type="hidden" name="ex_adj_check1" value="${ex_adj_check1}">
+      <input type="hidden" name="ex_adj_check2" value="${ex_adj_check2}">
+      <input type="hidden" name="ex_adj_check3" value="${ex_adj_check3}">
+      <input type="hidden" name="ex_adj_check4" value="${ex_adj_check4}">
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;姓名:
+      <span class="dsp_text">${ex_acno_nam}</span>
+      <input type="hidden" name="ex_acno_nam" value="${ex_acno_nam}">
+   </td>
+   <td nowrap >&nbsp; 最近一次D違約金日期:
+      <span class="dsp_text">${ex_pn_dd.YMD}&nbsp;</span>
+      <input type="hidden" name="ex_pn_dd" value="${ex_pn_dd}">
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;關帳年月:
+      <input type="text" class="col_text" name="ex_yymm1" value="${ex_yymm1}" maxlength="6" size="8" zEdit="date,'yyyymm'">
+      --
+      <input type="text" class="col_text" name="ex_yymm2" value="${ex_yymm2}" maxlength="6" size="8" zEdit="date,'yyyymm'">
+   </td>
+   <td nowrap >&nbsp;D檔部門:
+      <select size="1" name="ex_adj_dept" class="col_ddlb" >
+         <option value="">--</option>
+       ${dddw_proc_dept}
+     </select>
+   </td>
+</tr>
+<tr>
+   <td nowrap >&nbsp;科目分類:
+      <input type="checkbox" name="ex_acitem01" value="1" ${ex_acitem01-1} ${acitem01_checked} > 費用類
+      <input type="checkbox" name="ex_acitem02" value="1" ${ex_acitem02-1} ${acitem02_checked}> 利息類      
+   </td>
+   <td nowrap >&nbsp;費用細項:
+      <input type="checkbox" name="ex_acitem03" value="1" ${ex_acitem03-1} ${acitem03_checked} > 違約金
+      <input type="checkbox" name="ex_acitem04" value="1" ${ex_acitem04-1} ${acitem04_checked} > 年費
+   </td>
+</tr>
+ </table>
+</div>
+<hr>
+ 
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">  
+  <tr>
+    <th nowrap width="5%">D檔&nbsp;</th>
+    <th nowrap width="5%">取消&nbsp;</th>
+    <th nowrap >入帳日&nbsp;</th>
+    <th nowrap >交易參考號&nbsp;</th>
+    <th nowrap >卡號&nbsp;</th>
+    <th nowrap >結算<br>幣別&nbsp;</th>
+    <th nowrap >期末餘額&nbsp;</th>
+    <th nowrap >可D數餘額&nbsp;</th>
+    <th nowrap >D檔金額&nbsp;</th>
+    <th nowrap >科目名稱&nbsp;</th>
+    <th nowrap >備註&nbsp;</th>
+    <th nowrap >檢核條件&nbsp;</th>
+    <th nowrap >來源&nbsp;</th>
+    <th nowrap >台幣<br>期初餘額&nbsp;</th>
+    <th nowrap >台幣<br>期末餘額&nbsp;</th>
+    <th nowrap >台幣<br>可D金額&nbsp;</th>
+    <th nowrap >台幣<br>D檔金額&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+      <span class="dsp_flag">${ok_flag}</span>
+	   <input type="checkbox" name="opt" value="${ser_num}" ${show_opt} ${opt_on} onchange="wf_opt_select(${ser_num});" />
+ 	   ${SER_NUM}&nbsp;
+	   <input type="hidden" name="ser_num" value="${ser_num}" />
+	   <input type="hidden" name="beg_bal" value="${beg_bal}" />
+	   <input type="hidden" name="show_opt" value="${show_opt}" />
+	   <input type="hidden" name="rowid" value="${rowid}" />
+	</td>
+	<td nowrap class="list_no">
+	   <input type="checkbox" name="opt_del" value="${ser_num}" ${show_optD} ${opt_on2} /> 	
+	   <input type="hidden" name="show_optD" value="${show_optD}" />
+	   <input type="hidden" name="sign" value="${sign}" /> 	
+	</td>
+	<td nowrap class="list_cc">${post_date.YMD}&nbsp;
+	   <input type="hidden" name="post_date" value="${post_date}">
+	</td>
+	<td nowrap class="list_cc">${reference_no}&nbsp;
+	   <input type="hidden" name="reference_no" value="${reference_no}">
+	</td>
+	<td nowrap class="list_cc">${card_no}&nbsp;
+	   <input type="hidden" name="card_no" value="${card_no}">
+	</td>
+	<td nowrap class="list_cc">${#JAVA:ecsfunc.DeCodePtr.currCode(curr_code)}&nbsp;
+	   <input type="hidden" name="curr_code" value="${curr_code}">
+	</td>
+	<td nowrap class="list_rr">${end_bal.(999.00)}&nbsp;
+	   <input type="hidden" name="end_bal" value="${end_bal}">
+	</td>
+	<td nowrap class="list_rr">${d_avail_bal.(999.00)}&nbsp;
+	   <input type="hidden" name="d_avail_bal" value="${d_avail_bal}">
+	</td>
+	<td nowrap class="list_rr">
+	   <input type="text" class="col_number" name="db_d_amt" value="${db_d_amt}" maxlength="11" size="13" zEdit="dignumber" >
+	</td>
+	<td nowrap class="list_ll">${acct_code}_${tt_acct_code}&nbsp;
+	   <input type="hidden" name="acct_code" value="${acct_code}">
+	   <input type="hidden" name="tt_acct_code" value="${tt_acct_code}">	   
+	</td>
+	<td nowrap class="list_cc">
+	   <select   size="1"  name="adj_comment" class="col_ddlb">
+         <option value="">--</option>
+         ${dddw_adj_comment}
+      </select>	   
+	</td>
+	<td nowrap class="list_cc">${adj_check_memo}&nbsp;
+	   <input type="hidden" name="adj_check_memo" value="${adj_check_memo}">
+	</td>
+	<td nowrap class="list_cc">${db_table}&nbsp;
+	   <input type="hidden" name="db_table" value="${db_table}">
+	</td>
+	<td nowrap class="list_rr">${tw_beg_bal.(999)}&nbsp;
+	   <input type="hidden" name="tw_beg_bal" value="${tw_beg_bal}">
+	</td>
+	<td nowrap class="list_rr">${tw_end_bal.(999)}&nbsp;
+	   <input type="hidden" name="tw_end_bal" value="${tw_end_bal}">
+	</td>
+	<td nowrap class="list_rr">${tw_d_avail_bal.(999)}&nbsp;
+	   <input type="hidden" name="tw_d_avail_bal" value="${tw_d_avail_bal}">
+	</td>
+	<td nowrap class="list_rr">${tw_d_amt.(999)}&nbsp;
+	   <input type="hidden" name="tw_d_amt" value="${tw_d_amt}">
+	</td>
+  </tr>  
+  <!-- END DYNAMIC : DETAIL -->
+  <tr style="display: none;">
+    <td nowrap class="list_rr" colspan="6" >幣別：${tl_curr_code}
+        <input type="hidden" name="tl_curr_code" value="${tl_curr_code}" />
+    </td>
+    <td nowrap class="list_cc" colspan="2" >D檔金額：</td>
+    <td nowrap class="list_rr" >
+        <input type="text" class="dsp_number" id="tl_db_d_amt" name="tl_db_d_amt" value="${tl_db_d_amt}" onfocus="this.blur()" size="8" >        
+    </td>    
+    <td nowrap class="list_ll" colspan="8" > 
+  </tr>  
+ </table>
+ 
+ <input type="hidden"  name="ex_p_seqno" value="${ex_p_seqno}" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }   
+    return true;
+  }
+  
+  function wf_opt_select(parm1) {
+   var ii =parseInt(parm1) - 1;
+   var ls_bb1 =document.getElementsByName("opt")[ii].checked;   
+   var ls_bb2 =document.getElementsByName("d_avail_bal")[ii].value;   
+   var ls_bb3 = Number(document.getElementsByName("d_avail_bal")[ii].value);      
+   ls_bb3 = Math.round(ls_bb3 * 100) /100 ;   
+   var ls_temp_amt = 0 ;
+   var li_tl_amt = 0 ;
+   
+   if(ls_bb1==true){
+   	document.getElementsByName("db_d_amt")[ii].value = ls_bb2;                
+    ls_temp_amt = Number(document.dataForm.tl_db_d_amt.value);     
+    li_tl_amt = ls_temp_amt + ls_bb3 ;
+    li_tl_amt = Math.round(li_tl_amt * 100) /100 ;
+    $("#tl_db_d_amt").text(li_tl_amt);   
+    $("#tl_db_d_amt").val(li_tl_amt);          
+   }	else	{
+   	document.getElementsByName("db_d_amt")[ii].value = 0; 
+    ls_temp_amt = Number(document.dataForm.tl_db_d_amt.value);     
+    li_tl_amt = ls_temp_amt - ls_bb3 ;
+    li_tl_amt = Math.round(li_tl_amt * 100) /100 ;
+    $("#tl_db_d_amt").text(li_tl_amt);   
+    $("#tl_db_d_amt").val(li_tl_amt);                          
+    
+   }
+   
+ } 
+
+ function saveTheValues(){
+  if (checkAdjComment() == false)
+    return false;
+
+  top.submitControl('C')
+ }
+
+ function checkAdjComment(){
+  var optArr = document.getElementsByName("opt");
+  var adhCommentArr = document.getElementsByName("adj_comment");
+
+  isAnyError = false;
+
+  for (var i = 0; i < optArr.length; i++) {
+    rowIndex = optArr[i].value - 1;
+    adjCommentEle = adhCommentArr[rowIndex];
+    if (optArr[i].checked == true) {
+      if (adjCommentEle.value.length == 0) {
+        adjCommentEle.style.backgroundColor = 'pink';
+        isAnyError = true;
+      }
+    }else{
+      adjCommentEle.style.backgroundColor = 'white';
+    }
+  }
+
+  if (isAnyError) {
+    alert("請輸入備註");
+    return false;
+  }
+  else
+    return true;
+
+ }
+  
+</script>

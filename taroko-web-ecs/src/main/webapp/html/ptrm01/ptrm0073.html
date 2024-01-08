@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>卡人等級參數檔維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<tr>
+ <td width="100">&nbsp;</td>
+ <td>   
+  <input type="Button"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  <input type="Button"   value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;  
+  <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  </td>
+</tr>
+</table>
+
+<div id="dataBlock">
+<hr>
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+		<td nowrap colspan="2" >&nbsp;卡人等級:
+			<input type="text" class="col_text" name="ex_class_code" value="${ex_class_code}" maxlength="1" size="3" zEdit="alphanum,upper" >
+		</td>
+	</tr>
+	<tr>
+		<td nowrap >&nbsp;起點額度:
+			<input type="text" class="col_number" name="ex_beg_credit_lmt" value="${ex_beg_credit_lmt}" maxlength="12" size="14" zEdit="number" />
+		</td>
+        <td nowrap >&nbsp;迄點額度:
+            <input type="text" class="col_number" name="ex_end_credit_lmt" value="${ex_end_credit_lmt}" maxlength="12" size="14" zEdit="number" />			
+		</td>
+	</tr>	
+    <tr>
+        <td nowrap colspan="2" >&nbsp;
+            <input type="Button" value="新增明細" class="btAdd_detl" onClick="wf_insert_function()" />
+        </td>
+    </tr>
+</table>
+</div>
+<hr>
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+        <th nowrap class="list_th" width="5%">刪除&nbsp;</th>
+        <th nowrap class="list_th">卡人等級</th>
+		<th nowrap class="list_th">起點額度</th>
+		<th nowrap class="list_th">迄點額度</th>
+		<th nowrap class="list_th">預借現金比率</th>		
+    </tr>
+    <!-- BEGIN DYNAMIC : DETAIL -->
+    <tr >
+        <td nowrap class="list_no"> 
+            <span class="dsp_flag">${ok_flag}</span>
+            <input type="checkbox" name="opt" value="${ser_num}" />
+            ${SER_NUM}&nbsp;
+            <input type="hidden" name="ser_num" value="${ser_num}" />
+            <input type="hidden" name="class_code" value="${class_code}" />
+            <input type="hidden" name="beg_credit_lmt" value="${beg_credit_lmt}" />
+            <input type="hidden" name="end_credit_lmt" value="${end_credit_lmt}" />
+            <input type="hidden" name="atm_rate" value="${atm_rate}" />
+            <input type="hidden" name="rowid" value="${rowid}" />
+        </td>
+        <td nowrap class="list_cc"> ${class_code}</td>
+		<td nowrap class="list_rr"> ${beg_credit_lmt.(999)}</td>
+		<td nowrap class="list_rr"> ${end_credit_lmt.(999)}</td>
+		<td nowrap class="list_rr"> ${atm_rate.(999.00)}</td>		
+    </tr>
+    <!-- END DYNAMIC : DETAIL -->
+</table>
+<br>
+
+<!-- -->
+
+<input type="hidden" name="MOD_PGM" value="ptrm0073">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+    
+  function wf_insert_function() {        
+    top.submitControl('A2')    
+ } 
+</script>

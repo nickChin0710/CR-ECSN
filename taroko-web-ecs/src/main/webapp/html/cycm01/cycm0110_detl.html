@@ -1,0 +1,209 @@
+<html>
+<head>
+<title> 110/07/07 V1.00.01 Allen Ho Initial 掛失費率參數資料維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/jquery.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+<!-- Button **************************************************************-->
+ <tr>
+   <td width="100">&nbsp;</td>
+   <td colspan="4">
+     <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+     <input type="Button" name="btnQuery"   value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+     <input type="Button" name="btnAdd"     value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+     <input type="Button" name="btnUpdate"  value="修改"  ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+     <input type="Button" name="btnDelete"  value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+     <input type="Button" name="btnClear"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+ </tr>
+</table>
+<div id="dataBlock">
+<!-- Key data2 ************************************************************ -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap>&nbsp;帳戶類別:
+       <select size="1" id="kk_acct_type" name="kk_acct_type" class="col_ddlb"  zRequire="K,C">
+               ${dddw_acct_type2}
+       </select>
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>&nbsp;掛失原因:
+       <select size="1" id="kk_lost_code" name="kk_lost_code" class="col_ddlb"  zRequire="K,C">
+               ${dddw_lost_code3}
+       </select>
+    </td>
+   </tr>
+ </table>
+<hr>
+<!-- Detail data detl *111*********************************************** -->
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td nowrap class="colKey">帳戶類別:
+       <span class="dsp_text">${acct_type}</span>
+       <input   type="hidden" name="acct_type" value="${acct_type}" />
+              -${comm_acct_type}
+     <input    type="hidden" name="comm_acct_type" value="${comm_acct_type}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap class="colKey">掛失原因:
+       <span class="dsp_text">${lost_code}</span>
+       <input   type="hidden" name="lost_code" value="${lost_code}" />
+              -${comm_lost_code}
+     <input    type="hidden" name="comm_lost_code" value="${comm_lost_code}" />
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>掛失費收取標準匯率:&nbsp; 
+        <input type="Button" class="btOther" name="btnnote" id="btnnote"  value="標準匯率設定" ${btnnote_disable}
+               onClick="return buttonScreen('2','note','','')" >
+          
+       <span class="dsp_text">${lost_fee_cnt}</span>
+       <input       type="hidden" name="lost_fee_cnt" value="${lost_fee_cnt}" />
+     </td>
+   </tr>
+   <tr>
+   </tr>
+ </table>
+ <table  class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap>　　　　　　　　　　　　　　　　　　免收掛失費次數條件　　　　　　　　　　　　　　　　　　&nbsp;</th>
+  </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="onus_bank" ${onus_bank-Y} >1.行員&nbsp;
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="onus_auto_pay" ${onus_auto_pay-Y} >2.本行自轉戶&nbsp;
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="other_auto_pay" ${other_auto_pay-Y} >3.他行自轉戶&nbsp;
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="salary_acct" ${salary_acct-Y} >4.薪~轉戶&nbsp;
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="credit_acct" ${credit_acct-Y} >5.授信戶&nbsp;
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="credit_limit" ${credit_limit-Y} >6.信用額度滿&nbsp;
+          
+       <input type="text" class="col_number" name="credit_amt" value="${credit_amt}"
+              zEdit="dignumber" maxlength="6" size="6" />
+              萬元以上
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>
+      <input type="checkbox" value="Y" name="bonus_sel" ${bonus_sel-Y} >7.最近一年~度累積紅利積點發生數滿&nbsp;
+          
+       <input type="text" class="col_number" name="bonus" value="${bonus}"
+              zEdit="number" maxlength="6" size="6" />
+              點以上
+     </td>
+   </tr>
+   <tr>
+     <td nowrap>　8.每年 1~12 月份免收掛失費次數限制 (帳戶類別+掛失原因) : 每人免收掛失費&nbsp; 
+          
+       <input type="text" class="col_number" name="lost_limit" value="${lost_limit}"
+              zEdit="number" maxlength="4" size="4" />
+              次
+     </td>
+   </tr>
+ </table>
+ <table width="60%" border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td  nowrap  >維護日期： 
+       <span class="dsp_date">${crt_date.YMD}</span>
+       <input      size="8"  type="hidden" name="crt_date" value="${crt_date}" />
+     </td>
+     <td  nowrap  >維護經辦： 
+       <span class="dsp_text">${crt_user}</span>
+       <input      size="10"  type="hidden" name="crt_user" value="${crt_user}" />
+               - ${comm_crt_user}
+     <input4   type="hidden" name="comm_crt_user" value="${comm_crt_user}" />
+     </td>
+   </tr>
+   <tr>
+     <td  nowrap  >覆核日期： 
+       <span class="dsp_date">${apr_date.YMD}</span>
+       <input      size="8"  type="hidden" name="apr_date" value="${apr_date}" />
+     </td>
+     <td  nowrap  >覆核人員： 
+       <span class="dsp_text">${apr_user}</span>
+       <input      size="10"  type="hidden" name="apr_user" value="${apr_user}" />
+               - ${comm_apr_user}
+     <input4   type="hidden" name="comm_apr_user" value="${comm_apr_user}" />
+   </tr>
+ </table>
+</div>
+<!-- trail ************************************************************** -->
+ <input type="hidden" name="aud_type" value="${aud_type}">
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+<input type="hidden" name="fst_apr_flag" value="${fst_apr_flag}">
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="CONTROL_TAB_NAME" value="${control_tab_name}">
+<input type="hidden" name="MOD_PGM" value="cycm0110">
+<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+
+</form>
+</body>
+</html>
+<!-- script d2 *********************************************************** -->
+<script language="javascript">
+
+ top.refreshButton2('1');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    return true;
+  }
+
+ function buttonScreen(parm1,parm2,parm3,parm4)
+   {
+    top.respLevel = 2;
+    top.respHtml  = "cycm0110_"+parm2;
+
+    document.dataForm.data_k1.value = parm3;
+    document.dataForm.data_k2.value = parm4;
+    var acct_type = document.getElementById("kk_acct_type").value;
+    document.dataForm.data_k3.value = acct_type;
+    var lost_code = document.getElementById("kk_lost_code").value;
+    document.dataForm.data_k4.value = lost_code;
+    top.submitControl("R"+parm1);
+
+    return true;
+   }
+
+</script>
+<!-- ******************************************************************** -->

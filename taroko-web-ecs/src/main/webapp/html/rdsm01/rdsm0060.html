@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>道路救援請款匯入作業-jh20230417</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap >&nbsp;匯入日期:
+   		<input type="text" class="col_date" name="ex_crt_date1" value="${ex_crt_date1}" zrequire="C" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date1'});
+	    </script>
+	    --
+	    <input type="text" class="col_date" name="ex_crt_date2" value="${ex_crt_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_crt_date2'});
+	    </script>
+   </td>
+   <td nowrap>&nbsp;檢核結果:
+    <select   size="1"  name="ex_proc_result" class="col_ddlb">
+      <option value="">--</option>
+      <option value="1" ${ex_proc_result-1}>成功</option>
+      <option value="2" ${ex_proc_result-2}>失敗</option>
+    </select>
+ </td>
+ <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;      
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  </td>
+  <td nowrap colspan=2>&nbsp;查詢檔名:
+   <input type="text" class="col_any" name="ex_file_name" value="${ex_file_name}" maxlength="50" size="60" zEdit="any,canTW" >      
+</td>
+<td>&nbsp;</td>
+ </tr>
+  <tr>
+    <td nowrap colspan="3">&nbsp;匯入檔名:
+      <input type="text" readonly class="dsp_text" name="zz_file_name" value="${zz_file_name}" size="50"  >      
+      <img src="images/uperLoad.gif" onclick="return upload_click()" style="cursor:hand" />
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap width="5%">No&nbsp;</th>
+    <th nowrap >匯入日期</th>    
+    <th nowrap >序號</th>
+    <th nowrap >優惠別</th>
+    <th nowrap >身份證ID(7)</th>
+    <th nowrap >身份證ID</th>
+    <th nowrap >卡號(3)</th>
+    <th nowrap >卡號</th>
+    <th nowrap >登錄日期</th>
+    <th nowrap >年度到期日</th>
+    <th nowrap >車號(6)</th>
+    <th nowrap >車號</th>
+    <th nowrap >姓名</th>
+    <th nowrap >檢核結果</th>
+    <th nowrap >匯入檔名</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}</td>
+	 <td nowrap class="list_cc"> ${crt_date.YMD}</td>
+	 <td nowrap class="list_cc"> ${data_seqno}</td>
+	 <td nowrap class="list_ll"> ${service_code}&nbsp;${service_name}</td>
+	 <td nowrap class="list_cc"> ${id_no7}</td>
+	 <td nowrap class="list_cc"> ${id_no}</td>
+	 <td nowrap class="list_cc"> ${card_no3}</td>
+	 <td nowrap class="list_cc"> ${card_no}</td>
+	 <td nowrap class="list_cc"> ${purchase_date.YMD}</td>
+	 <td nowrap class="list_cc"> ${purchase_date_e.YMD}</td>
+	 <td nowrap class="list_cc"> ${car_no6}</td>
+	 <td nowrap class="list_cc"> ${car_no}</td>
+   <td nowrap class="list_cc"> ${chi_name}</td>
+   <td nowrap class="list_ll"> ${free_proc_result}</td>
+   <td nowrap class="list_ll"> ${file_name}</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+ 
+ <input type="hidden"  name="upload_file" value="" /> 
+ <!-- <input type="hidden"  name="zz_file_name" value="" /> -->
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }    
+    return true;
+  }
+
+ function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "rdsm01";
+    top.javaName    = "Rdsm0060";
+    //methodName  = "actionFunction";
+    top.requHtml    = "rdsm0060";
+    top.respHtml    = "rdsm0060";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+    top.spinner.stop();
+ }   
+  
+</script>

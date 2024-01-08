@@ -1,0 +1,110 @@
+<html>
+
+<head>
+    <title>月訊名條分析報表-明細-107-0327-V1.00.01-Andy-[Initial]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <div id="condBlock">
+            <!--COND -->
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td nowrap colspan="4">&nbsp;批號：
+                        <input type="text" class="col_text" name="ex_batchno" value="${ex_batchno}" zEdit="alphanum" maxlength="10" size="10" zRequire ="k"/>
+                    </td>                   
+                    <td nowrap colspan="4">&nbsp;
+                        <input type="Button"  value="查詢" onClick="return top.submitControl('Q')" class="btQuery">&nbsp;&nbsp;
+                        <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                        <!-- <img height="25" src="images/Excel.jpg" ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                        <!-- <img height="25" src="images/Pdf.jpg" ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp; -->
+                    </td>
+                </tr>                
+            </table>
+        </div>
+        <hr>
+        <!--Sum -->
+        <!--List -->
+        <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+            <tr>
+                <th nowrap class="list_th" width="5%">No&nbsp;</th>
+                <th nowrap class="list_th">批號</th>
+                <th nowrap class="list_th">寄送月份</th>
+                <th nowrap class="list_th">身分證</th>
+                <th nowrap class="list_th">姓名</th>
+                <th nowrap class="list_th">卡數</th>
+                <th nowrap class="list_th">消費卡數</th>
+                <th nowrap class="list_th">當月有手收消費金額</th>
+                <th nowrap class="list_th">當月無手收消費金額</th>
+                <th nowrap class="list_th">消費總金額</th>
+                <th nowrap class="list_th">消費總筆數</th>
+            </tr>
+            <!-- BEGIN DYNAMIC : DETAIL -->
+            <tr>
+                <td nowrap class="list_no"> ${SER_NUM}&nbsp; </td>
+                <td nowrap class="list_ll"> ${batch_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${db_file_date}&nbsp; </td>
+                <td nowrap class="list_ll"> ${id_no}&nbsp; </td>
+                <td nowrap class="list_ll"> ${name}&nbsp; </td>
+                <td nowrap class="list_rr"> &nbsp;${db_crd_cnt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${db_consume_cnt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${db_pay_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${db_sub_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${db_total_amt.(999)} </td>
+                <td nowrap class="list_rr"> &nbsp;${db_total_cnt.(999)} </td>
+            </tr>
+            <!-- END DYNAMIC : DETAIL -->
+        </table>
+        <input type="hidden" name="data_k1" value="">
+        <input type="hidden" name="data_k2" value="">
+        <input type="hidden" name="data_k3" value="">
+        <input type="hidden" name="MOD_PGM" value="mktr0025">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="cond">
+        <input type="hidden" id="TTTS" name="TTTS" value="">
+        <input type="hidden" name="user_id" value="user_id">
+        <input type="hidden" name="wk_id_p_seqno" value="wk_id_p_seqno">
+    </form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "20";
+document.dataForm.ex_batchno.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+
+    return true;
+}
+ 
+
+function validateInput() {
+    if (!top.checkFormat()) {
+        return false;
+    }
+
+    if (top.actionCode == "X") {
+        top.respLevel = 1;
+        top.respHtml = "mktr0025";
+    }
+    return true;
+}
+
+function detailScreen(serNum, parm1) {
+    top.respLevel = 1;
+    top.currRows = serNum;
+    document.dataForm.data_k1.value = parm1;
+    top.respHtml = "mktr0025";
+    top.submitControl('S');
+    return true;
+}
+
+</script>

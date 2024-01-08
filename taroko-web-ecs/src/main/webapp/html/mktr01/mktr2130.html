@@ -1,0 +1,111 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 111-02-27  V1.00.01     jiangyingdong                 Initial            -->
+<!--                                                                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+    <title>聯名機構每月推卡統計表明細</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+<form name="dataForm" method="post" action="">
+    <div id="condBlock">
+        <table width="70%" border="0" cellspacing="0" cellpadding="4" style="margin-bottom:10px;">
+            <tr>
+                <td nowrap colspan=2>&nbsp;發卡年月:
+                    <input type="text" class="col_number" name="ex_issue_date" value="${ex_issue_date}" zEdit="date,yyyymm" zRequire ="k" maxlength=6 size=6 />
+                </td>
+                <td nowrap colspan=3>&nbsp;聯名機構:
+                    <select size="1" name="ex_mkt_member" class="col_ddlb" >${dddw_mkt_member}</select>
+                </td>
+                <td nowrap colspan=2>&nbsp;推廣員工ID:
+                    <input type="text" class="col_any" name="ex_promote_dept" value="${ex_promote_dept}" zEdit="alphanum" maxlength=20 size=20 />
+                </td>
+                <td nowrap colspan=3>&nbsp;
+                    <input type="Button" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q'); Show()" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <img height="25" src="images/Excel.jpg"  ${btnExcel_disable} style="cursor:hand;" onClick="top.submitControl('XLS');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);" />&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr />
+    <!-- browse ============================ -->
+    <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+        <tr>
+            <th nowrap class="list_th" width="5%">No</th>
+            <th nowrap class="list_th">聯名機構</th>
+            <th nowrap class="list_th">推廣員工ID</th>
+            <th nowrap class="list_th">卡號</th>
+            <th nowrap class="list_th">持卡人ID</th>
+            <th nowrap class="list_th">持卡人姓名</th>
+            <th nowrap class="list_th">開戶日</th>
+            <th nowrap class="list_th">住家電話</th>
+            <th nowrap class="list_th">手機</th>
+            <th nowrap class="list_th">開卡注記</th>
+            <th nowrap class="list_th">卡片狀態</th>
+            <th nowrap class="list_th">回饋金額</th>
+            <th nowrap class="list_th">當月消費金額</th>
+            <th nowrap class="list_th">當年度消費金額</th>
+        </tr>
+        <!-- BEGIN DYNAMIC : DETAIL -->
+        <tr>
+            <td nowrap class="list_no"> &nbsp;${SER_NUM} </td>
+            <td nowrap class="list_ll"> &nbsp;${staff_branch_no}_${member_name} </td>
+            <td nowrap class="list_rr"> &nbsp;${member_id}</td>
+            <td nowrap class="list_rr"> &nbsp;${card_no}</td>
+            <td nowrap class="list_rr"> &nbsp;${id_no}</td>
+            <td nowrap class="list_rr"> &nbsp;${chi_name}</td>
+            <td nowrap class="list_rr"> &nbsp;${issue_date}</td>
+            <td nowrap class="list_rr"> &nbsp;${home_area_code1}_${home_tel_no1}</td>
+            <td nowrap class="list_rr"> &nbsp;${cellar_phone}</td>
+            <td nowrap class="list_rr"> &nbsp;${activate_flag}</td>
+            <td nowrap class="list_rr"> &nbsp;${current_code}</td>
+            <td nowrap class="list_rr"> &nbsp;${feedback_amt}</td>
+            <td nowrap class="list_rr"> &nbsp;${dest_amt}</td>
+            <td nowrap class="list_rr"> &nbsp;${year_dest_amt}</td>
+        </tr>
+        <!-- END DYNAMIC : DETAIL -->
+    </table>
+    <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+    <input type="hidden" name="pageType" value="cond">
+    <input type="hidden" name="data_k1" value="" >
+    <input type="hidden" name="data_k2" value="" >
+    <input type="hidden" name="data_k3" value="" >
+</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+    tigra_tables('table1');
+</script>
+<script language="javascript">
+    top.refreshButton2('0');
+    top.pageRows="10";
+
+    function validateInput()
+    {
+        return top.checkFormat();
+    }
+
+    function detailScreen(serNum,parm,parm2,parm3) {
+        top.respLevel = 1;
+        top.currRows  = serNum;
+        document.dataForm.data_k1.value = parm;
+        document.dataForm.data_k2.value = parm2;
+        document.dataForm.data_k3.value = parm3;
+        top.respHtml  = "mktr2130_detl";
+        top.submitControl('S');
+        return true;
+    }
+</script>

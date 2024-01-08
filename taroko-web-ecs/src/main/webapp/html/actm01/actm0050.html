@@ -1,0 +1,480 @@
+<html>  
+<head>
+<title>帳戶帳齡MP調整-106-11-06-V1.00.00-OrisChang-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<script language="JavaScript" src="js/jquery.js"></script>
+<script language="JavaScript">
+var ind=0;
+var rowNum=0,colNum=0;
+function wf_add_newrow(pos)
+{
+    debugger;
+    var val_currrow = document.dataForm.CurrRow.value;
+    var a = val_currrow=='' ? 1 : parseInt(val_currrow);
+    a += 5;		//頁面固定的行數
+    
+    colNum=0;
+    rowNum++;
+    ind++;
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+
+	//JQuery, 插入明細要加上頁面固定的行數
+	var myinnerHtml = ""
+		+"<tr style='cursor:hand' onclick='getRowNo(this);'>" 
+		+"	<td nowrap class='list_no'>"
+		+"		<span name='row_num'>"+serNo+"</span>"
+		+"		<input type='checkbox' name='opt' value='"+serNo+"' />"
+		+"		<input type='hidden' name='ser_num' value='"+serNo+"' />"
+		+"	</td>"
+		+"  <td nowrap class='list_cc' >"
+		+"    <input type='text' class='col_date' name='acct_month' zEdit='number' maxlength='6' size='8' onchange='chkAcctmonth(this);' />"
+		+"  </td>"
+		+"  <td id='td1' nowrap class='list_cc'>"
+		+"    <select size='1' class='col_ddlb' name='ex_curr_code' onchange='chkActcurr(this,this.value);'></select>"
+    +"    <input type='hidden' name='dddw_curr_code' id='dddw_curr_code'  >"
+		+"  </td>"
+		+"  <td nowrap class='list_rr'>"
+		+"    <input type='text' class='col_number' id='dc_pay_amt' name='dc_pay_amt' zEdit='dignumber' maxlength='12' size='14' "
+		+"     onchange='amtExChange(this)'/>"
+		+"	  <input type='hidden' name='dc_pay_amt2' value='0' />"
+		+"  </td>"
+		+"	<td id='td2' nowrap class='list_rr'>"
+		+"		  <span id='td21' >0</span>"
+		+"      <input type='hidden' name='pay_amt' value='0'/>"
+		+"  </td>"
+		+"	<td nowrap class='list_rr'>0<input type='hidden' name='pay_amt2' value='0'/></td>"
+		+"	<td nowrap class='list_cc'>Y<input type='hidden' name='appr_yn' value='Y'/></td>"
+		+"	<td nowrap class='list_cc'>A<input type='hidden' name='status_ua' value='A'/></td>"
+		+"</tr>"
+
+//	+"		<input type='hidden' name='rowid' value='' />"
+//  +"    <input type='hidden' name='dddw_curr_code' id='dddw_curr_code' value='${dddw_curr_code}' >"
+//	+"    <select size='1' class='col_ddlb' id='ex_curr_code' name='ex_curr_code' zRequire='k' >${pre_dddw_curr_code}</select>"
+		
+	if(pos==0) {
+		$($('table > tbody > tr')[a]).before(myinnerHtml);
+	} else {
+		$("#table1").append(myinnerHtml);
+	}
+
+	setRowNo();
+}
+</script>
+
+<!--
+		+"  <td nowrap class='list_cc'>"
+		+"    <input type='text' class='col_number' name='pay_amt' zEdit='number' maxlength='12' size='14' />"
+		+"  </td>"
+-->
+
+<body background="${water_mark}">
+	<form name="dataForm" method="post" action="">
+		<div id="condBlock">
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>&nbsp;帳戶帳號: 
+						<select size="1" name="ex_acct_type" class="col_ddlb">
+							${dddw_acct_type}
+						</select>-- 
+						<input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength=11 size=13 onblur="initinfo()" />
+						<input type="hidden" name="h_acct_type" value="${h_acct_type}" />
+						<input type="hidden" name="h_acct_key" value="${h_acct_key}" />
+						<input type="hidden" name="p_seqno" value="${p_seqno}" />
+					</td>
+					<td nowrap>&nbsp;中文姓名:${q_id_cname}</td>
+				</tr>
+				<tr>
+					<td nowrap>&nbsp;卡號: 
+						<input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" zEdit="number" maxlength=16 size=16 onblur="initinfo()" />
+					</td>
+					<td>&nbsp;公司名稱:${q_corp_cname}</td>
+				</tr>
+				<tr>
+					<td nowrap colspan=2>&nbsp;
+						<input type="Button" name="btnClear" ${btnClear_disable} value="清除" onClick="return top.submitControl('L')" class="btClear">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnQuery" ${btnQuery_disable} value="查詢" onClick="return top.submitControl('Q')" class="btQuery">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnUpdate" ${btnUpdate_disable} value="存檔" onClick="return top.submitControl('U')" class="btUpdate">
+						&nbsp;&nbsp;
+						<input type="Button" name="btnDelete"  value="取消調整" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+						&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+		<!-- 合計============================ -->
+		<div id="queryBlock">
+			<table border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap class="td_text" width="150">帳戶現狀碼：</td>
+					<td nowrap class="td_data" width="100">
+					<span class="dsp_text"> ${q_acct_status} </span> 
+					<input type="hidden" name="q_acct_status" value="${q_acct_status}"></td>
+					<td nowrap class="td_text" width="200">帳戶對帳單週期：</td>
+					<td nowrap class="td_data" width="500">
+					<span class="dsp_text"> ${q_stmt_cycle} </span>
+					<input type="hidden" name="q_stmt_cycle" value="${q_stmt_cycle}">
+					<span class="dsp_text"> ${q_this_acct_month} </span>
+					<input type="hidden" name="this_acct_month" value="${this_acct_month}">
+					<input type="hidden" name="q_this_acct_month" value="${q_this_acct_month}">
+					<span class="dsp_text"> ${q_p_seqno} </span>
+					<input type="hidden" name="q_p_seqno" value="${q_p_seqno}"></td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+		<table border="0" width="5%">
+			<tr>
+				<td align="right"><input type="Button" name="detl_btnAdd"
+					value="新增一筆" ${btnSelect_disable} onclick="wf_add_newrow(1)"
+					class="btAdd_detl" />&nbsp;</td>
+<!--
+				<td align="right"><input type="Button" name="detl_btnAdd"
+					value="插入一筆" ${btnSelect_disable} onclick="wf_add_newrow(0)"
+					class="btAdd_detl" />&nbsp;</td>
+-->
+			</tr>
+		</table>
+		<!-- 明細============================ -->
+		<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<th nowrap class="list_th" width="5%">新增<br>刪除</th>
+				<th nowrap class="list_th">關帳年月</th>
+				<th nowrap class="list_th">雙幣幣別</th>
+				<th nowrap class="list_th">當期MP餘額<br>(結算幣別)</th>
+				<th nowrap class="list_th">當期MP餘額<br>(台幣)-調後</th>
+				<th nowrap class="list_th">當期MP餘額<br>(台幣)-調前</th>
+				<th nowrap class="list_th">待覆核</th>
+				<th nowrap class="list_th">&nbsp;</th>
+			</tr>
+<!--
+				<td nowrap class="list_cc">${acct_month}
+				  <input type="hidden" name="acct_month" value="${acct_month}" /></td>
+		    </td>
+			  <td id='td1' nowrap class="list_cc">${ex_curr_code}
+			  	<input type="hidden" name="ex_curr_code" value="${ex_curr_code}" />
+		    </td>
+-->
+			<!-- BEGIN DYNAMIC : DETAIL -->
+			<tr style="cursor: hand" onclick="getRowNo(this);">
+				<td nowrap class="list_no">
+					<span class="dsp_flag">${ok_flag}</span>
+					<span name="row_num">${SER_NUM}</span>					
+					<input type="checkbox" name="opt" value="${ser_num}" ${opt_disabled} />
+          <input type="hidden" name="opt_disabled" value="${opt_disabled}" />
+					<input type="hidden" name="ser_num" value="${ser_num}" />
+					<input type="hidden" name="rowid" value="${rowid}" /></td>
+		    <td nowrap class="list_cc" >
+		      <input type="text" class="col_date" name="acct_month" zEdit="number" maxlength="6" size="8" value="${acct_month}" 
+		       ${acct_month_disabled} onchange="chkAcctmonth(this);" />
+          <input type="hidden" name="acct_month_disabled" value="${acct_month_disabled}" />
+			  	<input type="hidden" name="sv_acct_month" value="${sv_acct_month}" />
+		    </td>
+		    <td id="td1" nowrap class="list_cc">
+		      <select size="1" class="col_ddlb" name="ex_curr_code" ${curr_code_disabled} 
+		       onchange="chkActcurr(this,this.value);" >${dddw_curr_code}</select>
+          <input type="hidden" name="curr_code_disabled" value="${curr_code_disabled}" />
+          <input type="hidden" name="dddw_curr_code" id="dddw_curr_code" value="${dddw_curr_code}" />
+			  	<input type="hidden" name="sv_curr_code" value="${sv_curr_code}" />
+		    </td>
+				<td nowrap class="list_rr">						
+						<input type="text" class="col_number" id='dc_pay_amt' name="dc_pay_amt" value="${dc_pay_amt}" 
+				    zEdit="dignumber" maxlength="12" size="14" onchange="amtExChange(this);"/>
+				    <input type="hidden" name="sv_dc_pay_amt" value="${sv_dc_pay_amt}" />
+				    <input type="hidden" name="dc_pay_amt2" value="${dc_pay_amt2}" />
+				</td>
+				<td id='td2' nowrap class="list_rr">
+		  		  <span id='td21' >${pay_amt.(999)}</span>
+				    <input type="hidden" name="pay_amt" value="${pay_amt}"> </td>
+				<td nowrap class="list_rr">${pay_amt2.(999)}<input type="hidden" name="pay_amt2" value="${pay_amt2}" /></td>
+				<td nowrap class="list_cc">${appr_yn}<input type="hidden" name="appr_yn" value="${appr_yn}" /></td>
+				<td nowrap class="list_cc">${status_ua}<input type="hidden" name="status_ua" value="${status_ua}" /></td>
+			</tr>
+			<!-- END DYNAMIC : DETAIL -->
+		</table>
+		<hr>
+		<!-- 合計============================ -->
+		<div id="queryBlock2">
+			<table border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap class="td_text" width="100">MP=</td>
+					<td nowrap class="td_data" width="100"><span class="dsp_text">
+							${q_mp} </span> <input type="hidden" name="q_mp" value="${q_mp}">
+					</td>
+					<td nowrap class="td_text" width="130">Mcode=</td>
+					<td nowrap class="td_data" width="500"><span class="dsp_text">
+							${q_mcode} </span> <input type="hidden" name="q_mcode"
+						value="${q_mcode}"></td>
+				</tr>
+			</table>
+		</div>
+		<!--保留功能-->
+			<input type="hidden" name="data_k1" value="" >
+			<input type="hidden" name="data_k2" value="" >
+			<input type="hidden" name="data_k3" value="" >
+			<input type="hidden" name="MOD_PGM" value="actm0050">
+			<input type="hidden" name="MOD_USER" value="${MOD_USER}">
+			<input type="hidden" name="USERID" value="${userId}">
+			<input type="hidden" name="HIDE"  value="${HIDE_DATA}">
+			<input type="hidden" name="pageType" value="cond">
+			<input type="hidden" name="CurrRow" value="">
+			<input type="hidden" name="readrow" value="${readrow}">
+			<input type="hidden" name="qry_table" value="${qry_table}">
+
+	</form>
+</body>
+
+</html>
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<!--
+<script language="JavaScript" src="js/AJAXFunction_tt.js"></script>
+-->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="JavaScript">
+tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+<script language="javascript">
+top.refreshButton2('0');
+top.pageRows = "999";
+
+//document.dataForm.ex_risk_type.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) {return false;}
+    
+    return true;
+}
+
+function getRowNo(obj) {
+	 document.dataForm.CurrRow.value=obj.rowIndex;
+ //alert("obj.rowIndex :"+obj.rowIndex);
+}
+
+function setRowNo() {
+	 var agy = document.getElementsByName('opt');
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 document.getElementsByName('ser_num').value='01';
+		 document.getElementsByName('row_num').textContent='01';
+		 agy.value='01';
+		 ll = 1;
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			var ind = i+1;
+			var serNo ="";
+			if ( ind < 10 )
+		        { serNo = "0"+ind; }
+		    else
+		        { serNo = ""+ind;  }
+			document.getElementsByName('ser_num')[i].value=serNo;
+			document.getElementsByName('row_num')[i].textContent=serNo;
+			agy[i].value=serNo;
+		 }
+	 }
+ //alert("ll :"+ll);
+	 setCurrddw(ll);
+	 return true;
+}
+
+function chkAcctmonth(obj){
+  var row = obj.parentNode.parentNode.rowIndex - 1; //index row 減掉 th 行
+//alert("obj.p.p.rowIndex - 1 :"+row);
+	if (document.dataForm.opt[row].checked == true)
+	{   return; }
+	
+	var ls_acctmonth = obj.value;
+	var ls_this_acct_month = document.dataForm.this_acct_month.value;
+
+	var yyyy = ls_acctmonth.substr(0,4);
+	var mm = ls_acctmonth.substr(4,2);
+	//var this_acct_month = Number(ls_this_acct_month);
+	//var acctmonth = Number(ls_acctmonth);
+
+  /***
+	if(mm > 12 || mm < 1){
+		alert("輸入關帳年月錯誤！")
+		obj.focus();
+	}
+  ***/
+
+	if((yyyy > 2120 || yyyy < 2000) || (mm > 12 || mm < 1) ) {
+		alert("輸入關帳年月錯誤！")
+	  obj.focus();
+		return;
+	}
+	if(ls_acctmonth > ls_this_acct_month ) {
+		alert("輸入關帳年月錯誤！")
+	  obj.focus();
+		return;
+	}
+}
+
+function initinfo(acctkey) { 
+	
+	//var accttyp = document.getElementsByName('ex_acct_type').value;
+	//var cardno = document.getElementsByName('ex_card_no').value;
+	//top.actionCode = "Q";
+	//top.methodName = "forinitinfo";
+	//resetJSON();
+	//addJSON("accttyp",accttyp);
+	//addJSON("acctkey",acctkey);
+	//addJSON("cardno",cardno);
+	//processAJAX();
+  
+	//return true;
+}
+
+function setCurrddw(ll) {
+
+	  idCode = '1';
+  //var rr = ll; number 進入processAJAX() 的 createJSON()處理會失敗
+    var rr = "" + ll;
+  //top.actionCode = "Q";
+  //top.methodName = "ajax_setCurrddw";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("aj_idCode", idCode);
+    addJSON("add_ser_num", rr);
+    //alert("1-idCode :"+idCode);
+    processAJAX();
+    //alert("2-idCode :"+idCode);
+    document.dataForm.acct_month[rr-1].focus();
+
+  //return true;
+
+}
+				    
+function amtExChange(obj) {
+
+    var row = obj.parentNode.parentNode.rowIndex - 1; //index row 減掉 th 行
+  //alert("obj.rowIndex :"+row);
+
+    //alert("row :"+row);
+    //alert("document.dataForm.ex_curr_code[row].value :"+document.dataForm.ex_curr_code[row].value);
+    //alert("document.dataForm.dc_pay_amt[row].value :"+document.dataForm.dc_pay_amt[row].value);
+		var	ls_curr_code = document.dataForm.ex_curr_code[row].value;
+		var	ls_dc_amt = document.dataForm.dc_pay_amt[row].value;
+    
+  //var rr = row; numeric 進入processAJAX() 的 createJSON()處理會失敗
+    var rr = "" + row;
+    
+	  idCode = '2';
+  //top.actionCode = "Q";
+  //top.methodName = "ajax_amtExChange";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("aj_idCode", idCode);
+    addJSON("aj_ser_num", rr);
+    addJSON("aj_curr_code", ls_curr_code);
+    addJSON("aj_dc_amt", ls_dc_amt);
+    processAJAX();
+  //alert("5-idCode :"+idCode);
+
+  //return true;
+
+}
+
+function chkActcurr(obj,curr_code) {
+
+    var row = obj.parentNode.parentNode.rowIndex - 1; //index row 減掉 th 行
+  //alert("obj.rowIndex :"+row);
+  
+  //var rr = row; numeric 進入processAJAX() 的 createJSON()處理會失敗
+    var rr = "" + row;
+    var ls_p_seqno = document.dataForm.q_p_seqno.value;
+		var	ls_dc_amt = document.dataForm.dc_pay_amt[row].value;
+    
+	  idCode = '3';
+  //top.actionCode = "Q";
+  //top.methodName = "ajax_chkActcurr";
+    top.actionCode = "AJAX";
+    resetJSON();
+    addJSON("aj_idCode", idCode);
+    addJSON("aj_ser_num", rr);
+    addJSON("aj_p_seqno", ls_p_seqno);
+    addJSON("aj_curr_code", curr_code);
+    addJSON("aj_dc_amt", ls_dc_amt);
+    processAJAX();
+  //alert("5-idCode :"+idCode);
+
+  //amtExChange(obj);
+  //return true;
+
+}
+
+function ajaxResponse() {
+    top.respHtml = "actm0050";
+    top.requHtml = "actm0050";
+      
+	  if  ( idCode === '1') {
+      var ii = getJSONvalue("add_ser_num2",0) - 1;
+      //alert("ii :"+ii);
+      var js_dddw_curr_code = getJSONvalue("dddw_curr_code2",0);
+      /***
+   	  var agy = document.getElementsByName('rowid');
+	    var r_cnt = agy.length;
+	    var aa = ii - r_cnt;
+      ***/
+      $("#table1 tr #td1 select").eq(ii).empty();
+      $("#table1 tr #td1 select").eq(ii).append(js_dddw_curr_code);
+      $("#dddw_curr_code").eq(ii).val(js_dddw_curr_code);
+    }      
+
+	  if  ( idCode === '2') {
+    //alert("4.5-idCode :"+idCode);
+      var ii         = getJSONvalue("ax_ser_num",0);
+      var amt_dc_src = getJSONvalue("ax_dc_amt",0);
+      var exchange_rate = getJSONvalue("ax_exchange_rate",0);
+      var amt_dc2tw = Number(amt_dc_src) * Number(exchange_rate);
+      amt_dc2tw = Math.round(amt_dc2tw);
+      //alert("ii :"+ii);
+      //alert("exchange_rate :"+exchange_rate);
+      //alert("amt_dc2tw :"+amt_dc2tw);
+      $("input[name=pay_amt]").eq(ii).val(amt_dc2tw); 
+      $("#table1 tr #td2 span").eq(ii).empty();
+      $("#table1 tr #td2 span").eq(ii).append(amt_dc2tw);
+      //var mycel = document.getElementById("td2")[ii];
+      //alert("1.1-mycel : "+mycel);
+      //alert("1.2-mycel : "+mycel.innerHTML);
+      //var myceltext = mycel.childNodes.item(0);
+      //myceltext.data = "" + amt_dc2tw;
+      //alert("$('2-#table1 tr #td2').eq(ii).html() :"+$("#table1 tr #td2").eq(ii).html());
+
+    }      
+
+	  if  ( idCode === '3') {
+      //alert("getJSONvalue('ax_ser_num',0) :"+getJSONvalue("ax_ser_num",0));
+      //alert("getJSONvalue('ax_actcurr_flag',0) :"+getJSONvalue("ax_actcurr_flag",0));
+      var ii         = getJSONvalue("ax_ser_num",0);
+      var actcurr_flag  = getJSONvalue("ax_actcurr_flag",0);
+      var amt_dc_src = getJSONvalue("ax_dc_amt",0);
+      var exchange_rate = getJSONvalue("ax_exchange_rate",0);
+      var amt_dc2tw = Number(amt_dc_src) * Number(exchange_rate);
+      amt_dc2tw = Math.round(amt_dc2tw);
+      $("input[name=pay_amt]").eq(ii).val(amt_dc2tw); 
+      $("#table1 tr #td2 span").eq(ii).empty();
+      $("#table1 tr #td2 span").eq(ii).append(amt_dc2tw);
+
+    	if( actcurr_flag != "Y" ){
+		    alert("雙幣幣別輸入錯誤！")
+        document.dataForm.ex_curr_code[ii].focus();
+	    }
+    }      
+
+  //return true;
+	  if ( idCode === '1' || idCode === '2' || idCode === '3' )
+	  { return false; }
+}
+
+
+</script>

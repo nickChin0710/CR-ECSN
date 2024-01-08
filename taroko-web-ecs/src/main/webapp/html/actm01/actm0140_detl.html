@@ -1,0 +1,359 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 106-12-20  V1.00.01  Oris Chang     Initial                              -->
+<!-- 107-08-21  V1.00.02  Alex           bug fixed                            -->
+<!-- 112-07-22  V1.00.03  Simon          取消銷帳鍵值                         -->
+<!-- 112-08-16  V1.00.04  Simon          調整AJAX codes                       -->
+<!--**************************************************************************-->
+<html> 
+
+<head>
+    <title>繳款資料查核錯誤維護作業-detl</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.css" />
+    <script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+    <script language="JavaScript" src="js/jquery-ui.js"></script>    
+    <link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+    	${#PLUGIN:htmcomm_plugin.apr_user}
+      <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <tr>
+          <td width="100">&nbsp;</td>
+          <td nowrap class="td_text" style="color:FE0303">備註:actp0060僅覆核修改功能，未經修改資料如欲刪除須線上覆核</td>
+        </tr>
+      </table>
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        	
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td>
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層"; onmouseout="top.light_img(this);"; onmouseover="top.dark_img(this);">&nbsp;
+                    <input type="Button" name="btnUpdate" value=" 修改 " ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate">&nbsp;&nbsp;
+                    <input type="Button" name="btnDelete" value=" 刪除 " ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete">&nbsp;&nbsp;
+                    <input type="Button" name="btnClear" value=" 清除 " onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <div id="dataBlock">
+            <!-- Detail data================================= -->
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>批次號碼</td><td nowrap>
+					<input type="text" class="col_any" name="Batch_no" value="${Batch_no}" maxlength=20 size=20 readonly/></td>
+					<td nowrap>傳票流水號</td><td nowrap>
+					<input type="text" class="col_any" name="Serial_no" value="${Serial_no}" maxlength=20 size=20 readonly/></td>
+				</tr>
+				<tr>
+					<td nowrap>帳戶帳號</td>
+					<td nowrap>
+					<input type="text" class="col_text" id ="acct_type" name="Acct_type" value="${Acct_type}" maxlength=2 size=5 zEdit="alphanum,upper" />--
+					<input type="text" class="col_text" id ="acct_key" name="acct_key" value="${acct_key}" maxlength="11" size="13" zEdit="alphanum,upper" onChange="keyChange('1')" /></td>        
+					<td nowrap>繳款編號</td>
+					<td nowrap>
+						<input type="text" class="col_any" id ="db_payment_no" name="db_payment_no" value="${db_payment_no}" maxlength=20 size=20 onChange="paymentnoChange('3')" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap>繳款卡號</td>
+					<td nowrap>
+						<input type="text" class="col_text" id="pay_card_no" name="pay_card_no" value="${pay_card_no}" maxlength="19" size="21" zEdit="alphanum" onChange="cardChange('2')" /></td>        
+					<td nowrap>帳戶姓名/名稱</td>
+					<td nowrap >						
+						<label class="dsp_text" id="cname" >${cname}</label>
+						<input type="hidden" id="cname" name="cname" value="${cname}">
+				  </td>
+				</tr>
+				<tr>
+					<td nowrap>繳款金額</td>
+					<td nowrap><input type="hidden" name="Pay_amt" value="${Pay_amt}"><span class="dsp_text">${Pay_amt}</span></td>
+					<td nowrap>公司名稱</td>
+					<td nowrap>
+						<label class="dsp_text" id="corp_chi_name" >${corp_chi_name}</label>
+						<input type="hidden" id="corp_chi_name" name="corp_chi_name" value="${corp_chi_name}">
+					</td>
+				</tr>
+				<tr>	
+					<td nowrap>繳款日期</td><td nowrap>											
+						<input type="text" class="col_date" name="Pay_date" value="${Pay_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />      
+         		<script language="JavaScript">
+	        		new tcal ({'formname': 'dataForm','controlname': 'Pay_date'});
+	       		</script>	
+					</td>
+					<td nowrap>繳款類別</td><td nowrap><input type="text" class="col_any" name="payment_type" value="${payment_type}" maxlength=4 size=6 /></td>
+				</tr>
+				<tr>
+					<td nowrap>分行別</td><td nowrap><select size="1" name="branch" class="col_ddlb" value="${branch}">${dddw_branch}</select></td>
+<!--
+					<td nowrap>銷帳鍵值</td><td nowrap><span class="dsp_text">${vouch_memo3}</span></td>
+-->
+					<td nowrap colspan="2"></td>
+				</tr>
+				<tr>
+					<td nowrap>身分證號</td>
+					<td nowrap colspan="3">
+					<input type="hidden" name="Id_no" value="${Id_no}">
+					<span class="dsp_text">${Id_no}</span></td>
+				</tr>
+				<tr>
+					<td nowrap>強迫重覆補入</td><td nowrap><input type="checkbox" name="duplicate_mark" value="Y" ${duplicate_mark-Y}/></td>
+					<td nowrap>暫存(即未放行)</td>
+					<td nowrap>
+					<input type="hidden" name="confirm_flag" value="${confirm_flag}">
+					<span class="dsp_text">${confirm_flag}</span></td>
+				</tr>
+				<tr>
+					<td nowrap>錯誤原因</td>
+					<td nowrap><input type="hidden" name="Error_reason" value="${Error_reason}"><span class="dsp_text">${Error_reason}</span></td>
+					<td nowrap>錯誤原因說明</td>
+					<td nowrap><input type="hidden" name="Error_remark" value="${Error_remark}"><span class="dsp_text">${Error_remark}</span></td>
+			</table>
+			<table width="80%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+					<td nowrap>更改人員</td>
+					<td nowrap><input type="hidden" name="Update_user" value="${Update_user}"><span class="dsp_text">${Update_user}</span></td>
+					<td nowrap>更改日期</td>
+					<td nowrap><input type="hidden" name="Update_date" value="${Update_date}"><span class="dsp_text">${Update_date}</span></td>
+					<td nowrap>更改時間</td>
+					<td nowrap><input type="hidden" name="Update_time" value="${Update_time}"><span class="dsp_text">${Update_time}</span></td>
+				</tr>
+			</table>
+		</div>
+        <!-- -->
+        <input type="hidden" name="MOD_PGM" value="Actm0140">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="USERID" value="${userId}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" id="p_seqno" name="p_seqno" value="${p_seqno}">
+        <input type="hidden" id="acno_p_seqno" name="acno_p_seqno" value="${acno_p_seqno}">
+        <input type="hidden" id="corp_p_seqno" name="corp_p_seqno" value="${corp_p_seqno}">
+        <input type="hidden" name="conf_flag" value="">
+        
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="rowid" value="${rowid}">
+        <input type="hidden" name="pageType" value="detl">
+        <input type="hidden" name="haccttype">
+        <input type="hidden" name="hacctkey">
+        <input type="hidden" name="hcurrcode">        
+    </form>
+</body>
+
+</html>
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+top.refreshButton2('1');
+
+if (1==2 ${conf_mesg}) { 
+   var resp  = confirm("卡片之帳戶號碼與帳戶資料不符, 是否存檔?");
+   if ( resp == true ) { 
+      document.dataForm.conf_flag.value="Y";
+      top.submitControl('U');
+   }
+   else { 
+      document.dataForm.conf_flag.value="N";
+      alert("no run.....");   
+   }
+} 
+
+function validateInput() {
+	
+    if (!top.checkFormat()) {
+        return false;
+    }
+					
+    return true;
+}
+
+//----1
+  function keyChange(ps1)
+ {
+ 	var  acct_key =document.forms["dataForm"]["acct_key"].value.toUpperCase();
+ 	var  acct_type =document.forms["dataForm"]["acct_type"].value;
+	
+	if ( acct_key === '' || acct_type ==='' ) {
+		alert("帳戶類別 or 帳戶帳號 不可空白");
+		return false;
+	}
+	idCode = ps1;
+//top.actionCode = "Q";
+  top.actionCode = "AJAX";
+//if ( idCode === '1' ) { 
+//top.methodName = "wf_ajax_key";
+//}
+
+	resetJSON();
+	addJSON("ax_idCode",idCode);	
+	addJSON("ax_key",acct_key);	
+	addJSON("ax_type",acct_type);	
+	processAJAX();
+ }
+
+//----2
+  function cardChange(ps1)
+ { 	
+  var  pay_card_no =document.forms["dataForm"]["pay_card_no"].value;
+
+	if ( pay_card_no === '') {		
+		return false;
+	}
+	idCode = ps1;
+  //top.actionCode = "Q";
+  top.actionCode = "AJAX";
+  //if ( idCode === '2' ) { 
+	//top.methodName = "wf_ajax_card";
+  //}
+
+	resetJSON();
+	addJSON("ax_idCode",idCode);	
+	addJSON("ax_card",pay_card_no);		
+	processAJAX();
+ }
+//----3
+  function paymentnoChange(ps1)
+ { 	
+  var  payment_no =document.forms["dataForm"]["db_payment_no"].value;
+
+	if ( payment_no === '') {		
+		return false;
+	}
+	idCode = ps1;
+  //top.actionCode = "Q";
+  top.actionCode = "AJAX";
+  //if ( idCode === '3' ) { 
+	//top.methodName = "wf_ajax_payment_no";
+  //}
+
+	resetJSON();
+	addJSON("ax_idCode",idCode);	
+	addJSON("ax_payment_no",payment_no);		
+	processAJAX();
+ }
+
+//-------  
+ function ajaxResponse()
+ {
+	 top.respHtml ="actm0140_detl";
+   top.requHtml ="actm0140_detl";
+
+	if  ( idCode === '1') {
+      var p_seqno =getJSONvalue("p_seqno",0);
+      if (p_seqno.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#p_seqno").val(p_seqno);   
+      }      
+      
+      var corp_p_seqno =getJSONvalue("corp_p_seqno",0);
+      if (corp_p_seqno.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#corp_p_seqno").val(corp_p_seqno);   
+      }      
+      
+      var cname =getJSONvalue("cname",0);
+      if (cname.length>0) { 
+      	$("#cname").text(cname);   
+      	$("#cname").val(cname);   
+      }      
+      
+      var corp_chi_name =getJSONvalue("corp_chi_name",0);
+      if (corp_chi_name.length>0) { 
+      	$("#corp_chi_name").text(corp_chi_name);   
+      	$("#corp_chi_name").val(corp_chi_name);   
+      }     
+      
+      var payment_no =getJSONvalue("payment_no",0);
+      if (payment_no.length>0) { 
+      	$("#db_payment_no").text(payment_no);   
+      	$("#db_payment_no").val(payment_no);   
+      }                       
+	}
+  
+  if  ( idCode === '2') {
+      var p_seqno =getJSONvalue("p_seqno",0);
+      if (p_seqno.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#p_seqno").val(p_seqno);   
+      }      
+      
+      var corp_p_seqno =getJSONvalue("corp_p_seqno",0);
+      if (corp_p_seqno.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#corp_p_seqno").val(corp_p_seqno);   
+      }      
+      
+      var acct_type =getJSONvalue("acct_type",0);
+      if (acct_type.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#acct_type").val(acct_type);   
+      }      
+      
+      var acct_key =getJSONvalue("acct_key",0);
+      if (acct_key.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#acct_key").val(acct_key);   
+      }      
+      
+      var cname =getJSONvalue("cname",0);
+      if (cname.length>0) { 
+      	$("#cname").text(cname);   
+      	$("#cname").val(cname);   
+      }      
+      
+      var corp_chi_name =getJSONvalue("corp_chi_name",0);
+      if (corp_chi_name.length>0) { 
+      	$("#corp_chi_name").text(corp_chi_name);   
+      	$("#corp_chi_name").val(corp_chi_name);   
+      }                       
+	}
+  
+  if  ( idCode === '3') {
+      var p_seqno =getJSONvalue("p_seqno",0);
+      if (p_seqno.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#p_seqno").val(p_seqno);   
+      }      
+      
+      var corp_p_seqno =getJSONvalue("corp_p_seqno",0);
+      if (corp_p_seqno.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#corp_p_seqno").val(corp_p_seqno);   
+      }      
+      
+      var acct_type =getJSONvalue("acct_type",0);
+      if (acct_type.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#acct_type").val(acct_type);   
+      }      
+      
+      var acct_key =getJSONvalue("acct_key",0);
+      if (acct_key.length>0) { 
+      	//$("#chi_name").text(chi_name);   
+      	$("#acct_key").val(acct_key);   
+      }      
+      
+      var cname =getJSONvalue("cname",0);
+      if (cname.length>0) { 
+      	$("#cname").text(cname);   
+      	$("#cname").val(cname);   
+      }      
+      
+      var corp_chi_name =getJSONvalue("corp_chi_name",0);
+      if (corp_chi_name.length>0) { 
+      	$("#corp_chi_name").text(corp_chi_name);   
+      	$("#corp_chi_name").val(corp_chi_name);   
+      }                       
+	}
+      
+	if ( idCode === '1' || idCode === '2' || idCode === '3')
+	{ return false; }
+ }
+
+</script>

@@ -1,0 +1,524 @@
+<!--**************************************************************************-->
+<!--                                                                          -->
+<!--                              MODIFICATION LOG                            -->
+<!--                                                                          -->
+<!--    DATE    VERSION     AUTHOR                 DESCRIPTION                -->
+<!-- ---------  --------  -----------    ------------------------------------ -->
+<!-- 110-01-12  V1.00.01  tanwei        bug修改，新增outstanding_cond字段                          -->
+<!--**************************************************************************-->
+<html>
+<head>
+<title>免費使用道路救援參數維護_detl-V.2018-0416-ryan[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<script language="JavaScript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form name="dataForm"  method="post" action="">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+	<tr>
+ 		<td width="100">&nbsp;</td>
+ 		<td> 
+  			<img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()"; alt="回上層";>
+  			<input type="Button" value="讀取" onClick="return top.submitControl('R')" class="btQuery" >&nbsp;&nbsp;
+  			<input type="Button" value="新增" ${btnAdd_disable}    onClick="return top.submitControl('A')" class="btAdd" >&nbsp;&nbsp;
+  			<input type="Button" value="修改" ${btnUpdate_disable} onClick="return top.submitControl('U')" class="btUpdate" >&nbsp;&nbsp;
+  			<input type="Button" value="刪除" ${btnDelete_disable} onClick="return top.submitControl('D')" class="btDelete" >&nbsp;&nbsp;
+  			<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  		</td>
+	</tr>
+</table>
+
+<div id="dataBlock">
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+    	<td nowrap>&nbsp;專案代號:
+      		<input type="text" class="col_text" name="kk_proj_no" value="${kk_proj_no}" maxlength="10" size="12" >
+    	</td>
+  	</tr>
+</table>
+<hr>
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<td nowrap >&nbsp;專案代號:
+      		<span class="dsp_text">${proj_no}&nbsp;</span>
+      		<input type="hidden" name="proj_no" value="${proj_no}">
+   		</td>
+   		<td nowrap >&nbsp;有效截止日期:
+      		<input type="text" class="col_date" name="valid_end_date" value="${valid_end_date}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         	<script language="JavaScript">
+	        	new tcal ({'formname': 'dataForm','controlname': 'valid_end_date'});
+	      	</script>
+		</td>
+ 	</tr>
+ 	<tr>
+   		<td nowrap colspan="2" >&nbsp;專案說明:
+      		<input type="text" class="col_any" name="proj_desc" value="${proj_desc}" maxlength="100" size="60" zEdit="any,canTw">
+   		</td>
+ 	</tr>
+ 	<tr>
+   		<td nowrap colspan="2" >&nbsp;消費金額累積方式:
+      		<span class="col_radio" onChange="btnCard()">
+         	<input type="radio" value="1" name="amt_sum_flag" ${amt_sum_flag-1} ${DEFAULT_CHK}/>1.帳戶
+         	<input type="radio" value="2" name="amt_sum_flag" ${amt_sum_flag-2} />2.卡片(正附卡合併計算)
+         	<input type="radio" value="3" name="amt_sum_flag" ${amt_sum_flag-3} />3.正附卡分開計算
+      		</span>
+   		</td>
+ 	</tr>
+ 	<tr>
+   		<td nowrap colspan="2" >&nbsp;適用免費道路救援卡片類別:
+      		<input type="Button" class="btOther" id="btnCardType" value="卡片條件設定" ${btnUpdate_disable} onClick="return detailScreen('${proj_no}')" >
+   		</td>
+ 	</tr>
+ 	<tr>
+   		<td nowrap colspan="2" >&nbsp;
+   		    <input type="checkbox" name="outstanding_cond" value="Y" ${outstanding_cond-Y}>未繳最低應繳金額不適用
+   		</td>
+ 	</tr>
+</table>
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+    <th colspan="3">A. 首年核卡(全新卡友: 帳戶下之流通卡最早發卡日為本年度, 且前12個月無停卡記錄)</th>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;
+      		<input type="checkbox" name="fst_cond" value="Y" ${fst_cond-Y}>
+      		近
+      		<input type="text" class="col_number" name="fst_mm" value="${fst_mm}" maxlength="2" size="5" zEdit="number">
+      		月刷卡消費
+   		</td>  
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="fst_acct_code_bl" value="Y" ${fst_acct_code_bl-Y}>簽帳款BL
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="fst_acct_code_ca" value="Y" ${fst_acct_code_ca-Y}>預借現金CA
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="fst_acct_code_it" value="Y" ${fst_acct_code_it-Y}>分期付款IT
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="fst_acct_code_id" value="Y" ${fst_acct_code_id-Y}>代收款ID
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="fst_acct_code_ao" value="Y" ${fst_acct_code_ao-Y}>餘額代償AO
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="fst_acct_code_ot" value="Y" ${fst_acct_code_ot-Y}>其他應收款OT
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;&nbsp;單筆最低金額
+      		<input type="text" class="col_number" name="fst_one_low_amt" value="${fst_one_low_amt}" maxlength="9" size="11" zEdit="number" >
+     		 以上　特店代號 :
+      		<span class="col_radio">
+         		<input type="radio" value="0" name="fst_mcht" ${fst_mcht-0} ${DEFAULT_CHK}/>0.全部
+         		<input type="radio" value="1" name="fst_mcht" ${fst_mcht-1} />1.部分
+         		<input type="radio" value="2" name="fst_mcht" ${fst_mcht-2} />2.排除
+      		</span>
+      		<input type="Button" class="btOther" value="特店代號" ${btnUpdate_disable} onClick="return detailScreenMcht('${proj_no}','01')" >
+      		<input type="button" value="..." ${btnUpdate_disable} class="btOther" onclick="return upload_click('01')">
+   			<br>
+   			<span Style="padding-left:18.25em">特店群組 : </span>
+   			<span class="col_radio">
+         		<input type="radio" value="0" name="fst_mcht_gp" ${fst_mcht_gp-0} ${DEFAULT_CHK}/>0.全部
+         		<input type="radio" value="1" name="fst_mcht_gp" ${fst_mcht_gp-1} />1.部分
+         		<input type="radio" value="2" name="fst_mcht_gp" ${fst_mcht_gp-2} />2.排除
+      		</span>
+      		<input type="Button" class="btOther" value="特店群組" ${btnUpdate_disable} onClick="return detailScreenMchtgp('${proj_no}','01')" >
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;
+      		<input type="checkbox" name="fst_amt_cond" value="Y" ${fst_amt_cond-Y}>
+      		累積消費金額達
+      		<input type="text" class="col_number" name="fst_purch_amt" value="${fst_purch_amt}" maxlength="9" size="11" zEdit="number" >
+      		(含) 以上
+      		&nbsp;或 &nbsp;
+      		<input type="checkbox" name="fst_row_cond" value="Y" ${fst_row_cond-Y}>
+      		消費筆數達
+      		<input type="text" class="col_number" name="fst_purch_row" value="${fst_purch_row}" maxlength="9" size="11" zEdit="number" >
+      		(含) 以上
+   		</td>
+  	</tr>
+    <th colspan="3">B. 非首年核卡(帳戶之流通卡最早發卡日不為今年度)</th>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;
+      		<input type="checkbox" name="lst_cond" value="Y" ${lst_cond-Y}>
+      		前一年度累積消費達
+      		<input type="text" class="col_number" name="lst_tol_amt" value="${lst_tol_amt}" maxlength="9" size="11" zEdit="number" >
+     		 元 (含) 以上
+      		<span class="td_remark" >(依消費月份計算)</span>
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;　　　近
+      		<input type="text" class="col_number" name="lst_mm" value="${lst_mm}" maxlength="2" size="4" zEdit="number" >
+      		月刷卡消費&nbsp;　　　　　　　　　　　　
+      		<span class="td_remark" > (IT以消費入帳日判斷，以總額計算一筆)</span>
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="lst_acct_code_bl" value="Y" ${lst_acct_code_bl-Y}> 簽帳款BL
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="lst_acct_code_ca" value="Y" ${lst_acct_code_ca-Y}> 預借現金CA
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="lst_acct_code_it" value="Y" ${lst_acct_code_it-Y}> 分期付款IT
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="lst_acct_code_id" value="Y" ${lst_acct_code_id-Y}> 代收款ID
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="lst_acct_code_ao" value="Y" ${lst_acct_code_ao-Y}> 餘額代償AO
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="lst_acct_code_ot" value="Y" ${lst_acct_code_ot-Y}> 其他應收款OT
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;&nbsp;單筆最低金額
+      		<input type="text" class="col_number" name="lst_one_low_amt" value="${lst_one_low_amt}" maxlength="9" size="11" zEdit="number" >
+      		以上　特店代號:
+      		<span class="col_radio">
+         		<input type="radio" value="0" name="lst_mcht" ${lst_mcht-0} ${DEFAULT_CHK}/>0.全部
+         		<input type="radio" value="1" name="lst_mcht" ${lst_mcht-1} />1.部分
+         		<input type="radio" value="2" name="lst_mcht" ${lst_mcht-2} />2.排除
+      		</span>
+      		<input type="Button" class="btOther" value="特店代號" ${btnUpdate_disable} onClick="return detailScreenMcht('${proj_no}','02')" >
+      		<input type="button" value="..." ${btnUpdate_disable} class="btOther" onclick="return upload_click('02')">
+   			<br>
+   			<span Style="padding-left:18.25em">特店群組 : </span>
+   			<span class="col_radio">
+         		<input type="radio" value="0" name="lst_mcht_gp" ${lst_mcht_gp-0} ${DEFAULT_CHK}/>0.全部
+         		<input type="radio" value="1" name="lst_mcht_gp" ${lst_mcht_gp-1} />1.部分
+         		<input type="radio" value="2" name="lst_mcht_gp" ${lst_mcht_gp-2} />2.排除
+      		</span>
+      		<input type="Button" class="btOther" value="特店群組" ${btnUpdate_disable} onClick="return detailScreenMchtgp('${proj_no}','02')" >
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;
+      		<input type="checkbox" name="lst_amt_cond" value="Y" ${lst_amt_cond-Y}>
+     		 累積消費金額達
+      		<input type="text" class="col_number" name="lst_purch_amt" value="${lst_purch_amt}" maxlength="9" size="11" zEdit="number" >
+      		(含) 以上
+      		&nbsp;或 &nbsp;
+      		<input type="checkbox" name="lst_row_cond" value="Y" ${lst_row_cond-Y}>
+      		消費筆數達
+      		<input type="text" class="col_number" name="lst_purch_row" value="${lst_purch_row}" maxlength="9" size="11" zEdit="number" >
+      		(含) 以上
+   		</td>
+  	</tr>
+    <th colspan="3">C. 首年核卡(非全新卡友: 帳戶下之流通卡最早發卡日在今年度)</th>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;
+      		<input type="checkbox" name="cur_cond" value="Y" ${cur_cond-Y}>
+       		當年度最近
+      		<input type="text" class="col_number" name="cur_mm" value="${cur_mm}" maxlength="2" size="5" zEdit="number" >
+      		月刷卡消費
+      		<span class="td_remark" >(依消費月份計算)</span>
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="cur_acct_code_bl" value="Y" ${cur_acct_code_bl-Y}> 簽帳款BL
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="cur_acct_code_ca" value="Y" ${cur_acct_code_ca-Y}> 預借現金CA
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="cur_acct_code_it" value="Y" ${cur_acct_code_it-Y}> 分期付款IT
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="cur_acct_code_id" value="Y" ${cur_acct_code_id-Y}> 代收款ID
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="cur_acct_code_ao" value="Y" ${cur_acct_code_ao-Y}> 餘額代償AO
+   		</td>
+   		<td nowrap >&nbsp;
+      		<input type="checkbox" name="cur_acct_code_ot" value="Y" ${cur_acct_code_ot-Y}> 其他應收款OT
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;&nbsp;單筆最低金額
+      		<input type="text" class="col_number" name="cur_one_low_amt" value="${cur_one_low_amt}" maxlength="9" size="11" zEdit="number" >
+      		以上　特店代號:
+      		<span class="col_radio">
+         		<input type="radio" value="0" name="cur_mcht" ${cur_mcht-0} ${DEFAULT_CHK}/>0.全部
+         		<input type="radio" value="1" name="cur_mcht" ${cur_mcht-1} />1.部分
+         		<input type="radio" value="2" name="cur_mcht" ${cur_mcht-2} />2.排除
+      		</span>
+      		<input type="Button" class="btOther" value="特店代號" ${btnUpdate_disable} onClick="return detailScreenMcht('${proj_no}','03')" >
+      		<input type="button" value="..." ${btnUpdate_disable} class="btOther" onclick="return upload_click('03')">
+   			<br>
+   			<span Style="padding-left:18.25em">特店群組 : </span>
+   			<span class="col_radio">
+         		<input type="radio" value="0" name="cur_mcht_gp" ${cur_mcht_gp-0} ${DEFAULT_CHK}/>0.全部
+         		<input type="radio" value="1" name="cur_mcht_gp" ${cur_mcht_gp-1} />1.部分
+         		<input type="radio" value="2" name="cur_mcht_gp" ${cur_mcht_gp-2} />2.排除
+      		</span>
+      		<input type="Button" class="btOther" value="特店群組" ${btnUpdate_disable} onClick="return detailScreenMchtgp('${proj_no}','03')" >
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap colspan="3" >&nbsp;
+      		<input type="checkbox" name="cur_amt_cond" value="Y" ${cur_amt_cond-Y}>
+      		累積消費金額達
+      		<input type="text" class="col_number" name="cur_purch_amt" value="${cur_purch_amt}" maxlength="9" size="11" zEdit="number" >
+      		(含) 以上
+      		&nbsp;或 &nbsp;
+      		<input type="checkbox" name="cur_row_cond" value="Y" ${cur_row_cond-Y}>
+      		消費筆數達
+      		<input type="text" class="col_number" name="cur_purch_row" value="${cur_purch_row}" maxlength="9" size="11" zEdit="number" >
+      		(含) 以上
+   		</td>
+  	</tr>
+</table>
+<br>
+<table width="70%" border="0" cellspacing="0" cellpadding="4">
+  	<tr>
+   		<td nowrap class="td_text" width="20%">經辦代號:</td>
+   		<td nowrap class="td_data" width="30%">
+      		<span class="dsp_text"> ${crt_user} </span>
+      		<input type="hidden" name="crt_user" value="${crt_user}">   
+   		</td>
+   		<td nowrap class="td_text" width="20%">建檔日期:</td>
+   		<td nowrap class="td_data" width="30%">
+      		<span class="dsp_date">${crt_date.YMD}</span>
+      		<input type="hidden" name="crt_date" value="${crt_date}">         
+   		</td>
+  	</tr>
+  	<tr>
+   		<td nowrap class="td_text" width="20%">覆核主管:</td>
+   		<td nowrap class="td_data" width="30%">
+      		<span class="dsp_date">${apr_user}</span>
+      		<input type="hidden" name="apr_user" value="${apr_user}">   
+   		</td>
+   		<td nowrap class="td_text" width="20%">覆核日期:</td>
+   		<td nowrap class="td_data" width="30%">
+      		<span class="dsp_text"> ${apr_date.YMD} </span>
+      		<input type="hidden" name="apr_date" value="${apr_date}">   
+   		</td>
+  	</tr>
+</table>
+</div>
+<!-- -->
+<input type="hidden" name="ROWID" value="${rowid}">
+<input type="hidden" name="MOD_PGM" value="rdsm0050">
+<input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+<input type="hidden" name="HIDE" value="${HIDE_DATA}">
+<input type="hidden" name="pageType" value="detl">
+<input type="hidden" name="upload_file" value="" /> 
+<input type="hidden" class="dsp_text"  name="zz_file_name" value="" zEdit="any,canTw" readonly />
+<input type="hidden" name="data_k1" value="">
+<input type="hidden" name="data_k2" value="">
+<input type="hidden" name="data_k3" value="">
+
+</form>
+</body>
+</html>
+
+<script language="javascript">
+
+ top.refreshButton2('1');
+ 
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    
+    if(top.actionCode==='A' || top.actionCode==='U') {
+      var ls_fst_cond = document.dataForm.fst_cond.checked;    
+      var ls_lst_cond = document.dataForm.lst_cond.checked;    
+      var ls_cur_cond = document.dataForm.cur_cond.checked;    
+      
+      if(ls_fst_cond ==true){
+         var ls_fst_one_low_amt = Number(document.forms["dataForm"]["fst_one_low_amt"].value);
+         var ls_fst_purch_amt = Number(document.forms["dataForm"]["fst_purch_amt"].value);
+         var ls_fst_purch_row = Number(document.forms["dataForm"]["fst_purch_row"].value);
+         var ls_fst_amt_cond = document.dataForm.fst_amt_cond.checked;    
+         var ls_fst_row_cond = document.dataForm.fst_row_cond.checked;
+         
+         if(ls_fst_one_low_amt <= 0){
+            if (confirm("A.單筆最低金額 小於等於 0 是否確定?")==false) {
+               return false;
+            }   
+         }
+         
+         if(ls_fst_amt_cond ==true){
+            if(ls_fst_purch_amt <=0) {
+               if (confirm("A.累積消費金額 小於等於 0 是否確定?")==false) {
+                  return false;
+               }   
+            }
+         }
+         
+         if(ls_fst_row_cond ==true){
+            if(ls_fst_purch_row <=0) {
+               if (confirm("A.累積消費筆數 小於等於 0 是否確定?")==false) {
+                  return false;
+               }   
+            }
+         }  
+         
+      } 
+      
+      if (ls_lst_cond ==true) {
+         var ls_lst_tol_amt = Number(document.forms["dataForm"]["lst_tol_amt"].value);
+         if(ls_lst_tol_amt <=0 ) {
+            if (confirm("B.前一年~度累積消費 小於等於 0 是否確定?")==false) {
+                  return false;
+            }
+         }
+         
+         var ls_lst_one_low_amt = Number(document.forms["dataForm"]["lst_one_low_amt"].value);
+         var ls_lst_purch_amt = Number(document.forms["dataForm"]["lst_purch_amt"].value);
+         var ls_lst_purch_row = Number(document.forms["dataForm"]["lst_purch_row"].value);
+         var ls_lst_amt_cond = document.dataForm.lst_amt_cond.checked;    
+         var ls_lst_row_cond = document.dataForm.lst_row_cond.checked;
+         
+         if(ls_lst_one_low_amt <=0 ){
+            if (confirm("B.單筆最低金額 小於等於 0 是否確定?")==false) {
+               return false;
+            }   
+         }
+         
+         if(ls_lst_amt_cond ==true){
+            if(ls_lst_purch_amt <=0) {
+               if (confirm("B.累積消費金額 小於等於 0 是否確定?")==false) {
+                  return false;
+               }   
+            }
+         }
+         
+         if(ls_lst_row_cond ==true){
+            if(ls_lst_purch_row <=0) {
+               if (confirm("B.累積消費筆數 小於等於 0 是否確定?")==false) {
+                  return false;
+               }   
+            }
+         }  
+         
+      } 
+      
+      if (ls_cur_cond ==true) {
+         var ls_cur_one_low_amt = Number(document.forms["dataForm"]["cur_one_low_amt"].value);
+         var ls_cur_purch_amt = Number(document.forms["dataForm"]["cur_purch_amt"].value);
+         var ls_cur_purch_row = Number(document.forms["dataForm"]["cur_purch_row"].value);
+         var ls_cur_amt_cond = document.dataForm.cur_amt_cond.checked;    
+         var ls_cur_row_cond = document.dataForm.cur_row_cond.checked;
+         
+         if(ls_cur_one_low_amt <=0 ){
+            if (confirm("C.單筆最低金額 小於等於 0 是否確定?")==false) {
+               return false;
+            }   
+         }
+         
+         if(ls_cur_amt_cond ==true){
+            if(ls_cur_purch_amt <=0) {
+               if (confirm("C.累積消費金額 小於等於 0 是否確定?")==false) {
+                  return false;
+               }   
+            }
+         }
+         
+         if(ls_cur_row_cond ==true){
+            if(ls_cur_purch_row <=0) {
+               if (confirm("C.累積消費筆數 小於等於 0 是否確定?")==false) {
+                  return false;
+               }   
+            }
+         }  
+         
+      }            
+    }
+    
+    return true;
+  }
+   
+  function detailScreen(parm) {        
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    top.respHtml  = "rdsm0050_card";
+    top.submitControl("R2");
+    return true;
+  }
+   
+  function detailScreenMcht(parm,parm2) {        
+    top.respLevel = 2;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    top.respHtml  = "rdsm0050_mcht";
+    top.submitControl("R3");
+    return true;
+  }
+  
+  function detailScreenMchtgp(parm,parm2) {        
+	    top.respLevel = 2;
+	    document.dataForm.data_k1.value = parm;
+	    document.dataForm.data_k2.value = parm2;
+	    top.respHtml  = "rdsm0050_mcht_gp";
+	    top.submitControl("R4");
+	    return true;
+  }
+   
+  function upload_click(parm) {
+    if (confirm("以上傳特店取代現有特店 , 是否確定 ?")==false) {
+        return false;
+    }    
+    document.dataForm.zz_file_name.value = "";
+    document.dataForm.data_k1.value = parm;
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    top.packageName = "rdsm01";
+    top.javaName    = "Rdsm0050";
+    top.requHtml    = "rdsm0050_detl";
+    top.respHtml    = "rdsm0050_detl";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+      top.submitControl('UPLOAD');
+    }
+ }  
+
+ //問題單號 0001911 USER反應 2.為何點選「1帳戶」，下方的「卡片條件設定」就反灰(不能點)，舊系統是可以點的耶 
+ function btnCard(){
+	/* var amt_sum_flag = $("input[name=amt_sum_flag][value='1']").prop("checked");
+	 var proj_no = $("input[name=proj_no]").val();
+	 if(proj_no.length>0){
+		 if(amt_sum_flag==true){
+			 $("#btnCardType").prop("disabled",true);
+			 $("#btnCardType").css("background-color","#DDDDDD");
+		 }else{
+			 $("#btnCardType").prop("disabled",false);
+			 $("#btnCardType").css("background-color","");
+		 }
+	 }*/
+ }
+ 
+ $(document).ready(function() {
+	// btnCard();
+ })
+</script>

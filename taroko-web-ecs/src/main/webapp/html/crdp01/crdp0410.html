@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>報送JCIC信用卡基本資料覆核作業-V.2017-0911-ryan-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+<script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!--COND -->
+<table width="40%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<td nowrap>經辦人員:
+			<input type=text class="col_any" name="ex_crt_user" value="${ex_crt_user}" zeditType="any" maxlength="10" size="10" />     
+	</td>  
+		<td nowrap colspan="2">&nbsp;起迄日期:
+			<input type="text" class="col_date" name="ex_crt_dat1" value="${ex_crt_dat1}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+			<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_crt_dat1'});
+			</script>
+      		--
+			<input type="text" class="col_date" name="ex_crt_dat2" value="${ex_crt_dat2}" zEdit="date,yyyymmdd" maxlength="8" size="8" />
+			<script language="JavaScript">
+				new tcal ({'formname': 'dataForm','controlname': 'ex_crt_dat2'});
+			</script>&nbsp;
+		</td>
+		<td nowrap >&nbsp;  
+			<input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+			<input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+			<input type="Button" value="執行" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+		</td>
+	</tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+<table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+		<th nowrap class="list_th" width="5%">
+			<input type="checkbox" name="ex_selectAll" id="allcheck" value="Y" onChange="selectAll();" >覆核&nbsp;</th>
+		<th nowrap class="list_th">建檔日期</th>
+		<th nowrap class="list_th">修改日期</th>
+		<th nowrap class="list_th">卡號</th>
+		<th nowrap class="list_th">交易碼</th>
+		<th nowrap class="list_th">身分證號</th>
+		<th nowrap class="list_th">中文姓名</th>
+		<th nowrap class="list_th">建檔人員</th>
+	</tr>
+<!-- BEGIN DYNAMIC : DETAIL -->
+	<tr>
+		<td nowrap class="list_no" rowspan="2">
+			<span class="col_key">${ok_flag}</span>
+			<input type="checkbox" name="opt" class="check"  value="${ser_num}" />
+			${SER_NUM}&nbsp;
+			<input type="hidden" name="rowid" value="${rowid}">
+			<input type="hidden" name="ser_num" value="${ser_num}">
+			<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+			<input type="hidden" name="crt_date" value="${crt_date}">
+			<input type="hidden" name="card_no" value="${card_no}">
+			<input type="hidden" name="update_date" value="${update_date}">
+			<input type="hidden" name="tt_trans_type" value="${tt_trans_type}">
+			<input type="hidden" name="wk_id" value="${wk_id}">
+			<input type="hidden" name="chi_name" value="${chi_name}">
+			<input type="hidden" name="crt_user" value="${crt_user}">
+		</td>
+	</tr>
+	<tr onclick="detailScreen('${SER_NUM}','${card_no}','${crt_date}','')" style="cursor:hand">
+		<td nowrap class="list_ll">${crt_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${update_date.YMD}&nbsp;</td>
+		<td nowrap class="list_ll">${card_no}&nbsp;</td>
+		<td nowrap class="list_ll">${tt_trans_type}&nbsp;</td>
+		<td nowrap class="list_ll">${wk_id}&nbsp;</td>
+		<td nowrap class="list_ll">${chi_name}&nbsp;</td>
+		<td nowrap class="list_ll">${crt_user}&nbsp;</td>
+	</tr>
+<!-- END DYNAMIC : DETAIL -->
+</table>   
+<input type="hidden"  name="data_k1" value="" >
+<input type="hidden"  name="data_k2" value="" >
+<input type="hidden"  name="data_k3" value="" >
+<input type="hidden"  name="MOD_PGM" value="crdp0410">
+<input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+<input type="hidden"  name="pageType"  value="cond">
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.ex_crt_user.focus();
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行 覆核作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3) { 
+	
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    top.respHtml  = "crdp0410_detl";
+    top.submitControl('S');
+    return true;
+  }
+//全選
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = document.dataForm.ex_selectAll.checked;
+		}
+	}
+	
+	return;
+ }
+ 
+ function chkdata() {
+	 var seq = 0;
+	 var agy = $("input[name=opt]");
+	 var ll = agy.length;
+	 if (typeof ll === 'undefined') {
+		 if (agy.checked){ seq++; }
+	 }else{
+		 for ( var i=0; i < ll; i++ ) {
+			 if(agy[i].checked){
+				 seq++;
+				 
+			 }
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("未選取覆核資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+</script>

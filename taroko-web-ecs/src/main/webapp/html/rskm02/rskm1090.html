@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>期中覆審評分類別設定 V20191206</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+   ${#PLUGIN:htmcomm_plugin.apr_user} 
+<table width="80%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;評分類別:
+      <input type="text" class="col_text" name="ex_score_type" value="${ex_score_type}" maxlength="3" size="5" zEdit="alphanum,upper" >   
+   </td>
+   <td nowrap>&nbsp;設定覆審類別:
+      <select size="1" name="ex_trial_type" class="col_ddlb" >
+         <option value="">--</option>
+         ${dddw_trial_type}
+      </select>
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;      
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap colspan="3">&nbsp;評分類別說明:
+      <input type="text" class="col_any" name="ex_score_desc" value="${ex_score_desc}" 
+         maxlength="60" size="62" zEdit="any,canTw">
+   </td>
+  </tr>
+ </table>
+</div>
+<hr>
+<div id="dataBlock">	
+ <table width="80%" border="0" cellspacing="0" cellpadding="4">
+ 	<tr>
+ 		<td nowrap >&nbsp;項目總數:${tl_cnt.(999)}
+ 			<input type="hidden" name="tl_cnt" value="${tl_cnt}">
+ 		</td>
+ 		<td nowrap >&nbsp;計入項目總數:${tl_ck_cnt.(999)}
+ 			<input type="hidden" name="tl_ck_cnt" value="${tl_ck_cnt}">	
+ 		</td>
+ 	</tr>
+ </table>
+</div>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="20%"> 
+	 <input type="checkbox" name="ex_selectAll" value="Y" onClick="selectAll();" >
+    計入總分
+	 </th>
+    <th nowrap >設定覆審類別&nbsp;</th>
+    <th nowrap >評分項目&nbsp;</th>
+    <th nowrap >評分項目說明&nbsp;</th>
+    <th nowrap >資料來源&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no">
+	<span class="dsp_flag">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${score_flag} />
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	</td>
+   <td nowrap class="list_cc"> ${trial_desc}&nbsp;
+      <input type="hidden" name="trial_type" value="${trial_type}">
+      <input type="hidden" name="trial_desc" value="${trial_desc}">
+	</td>
+   <td nowrap class="list_cc"> ${cond_code}&nbsp;
+      <input type="hidden" name="cond_code" value="${cond_code}">
+	</td>
+	<td nowrap class="list_ll"> ${cond_desc}&nbsp;
+      <input type="hidden" name="cond_desc" value="${cond_desc}">
+	</td>
+	<td nowrap class="list_cc"> ${data_from}.${tt_data_from}&nbsp;
+      <input type="hidden" name="data_from" value="${data_from}">
+      <input type="hidden" name="tt_data_from" value="${tt_data_from}">
+	</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="999";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+
+  
+  function selectAll() {
+	 var opt_select =document.dataForm.ex_selectAll.checked;
+    var aElements = document.dataForm.getElementsByTagName("input");
+    for ( var i=0;  i < aElements.length; i++ ) 
+    {
+		if  ( aElements[i].type == "checkbox" ) {
+			aElements[i].checked = opt_select;
+		}
+    }
+
+    return;
+ }
+  
+</script>

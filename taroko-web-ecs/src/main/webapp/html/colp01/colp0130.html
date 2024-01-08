@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>帳務科目明細轉催呆覆核-112-10-24-V1.00.00-phopho-[Initial]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<!--COND -->
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="2">&nbsp;  
+      <input type="Button" id="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"  value="覆核" onClick="return top.submitControl('C')" class="btAdd" >&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2">&nbsp;覆核狀態：
+      <span class="col_radio">
+         <input type="radio" value="0" name="exApr" ${exApr-0} ${DEFAULT-exApr} />全部
+         <input type="radio" value="Y" name="exApr" ${exApr-Y} />已覆核
+         <input type="radio" value="N" name="exApr" ${exApr-N} />未覆核
+      </span>
+      &nbsp;累計金額：
+      <span class="col_text">${exAmt.(999)}</span>
+    </td>
+  </tr>  
+  <tr>
+    <td nowrap>&nbsp;建檔人員：
+      <input type="text" class="col_text" name="exUser" value="${exUser}" 
+        zEdit="alphanum,upper" maxlength="19" size="19" />
+      &nbsp;戶數：
+      <span class="col_text">${exAcctCnt}</span>
+      &nbsp;筆數：
+      <span class="col_text">${exCnt}</span>
+    </td>
+  </tr>
+</table>
+</div>
+<hr>
+
+<!--List -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" width="5%">
+      <input type="checkbox" name="ex_selectAll" value="Y" onChange="selectAll();" >覆核&nbsp;</th>
+    <th nowrap class="list_th">帳戶帳號</th>
+    <th nowrap class="list_th">客戶名稱</th>
+    <th nowrap class="list_th">帳戶狀態</th>
+    <th nowrap class="list_th">入帳日期</th>
+    <th nowrap class="list_th">期初餘額</th>
+    <th nowrap class="list_th">期末餘額</th>
+    <th nowrap class="list_th">可D數餘額</th>
+    <th nowrap class="list_th">科目</th>
+    <th nowrap class="list_th">科目名稱</th>
+    <th nowrap class="list_th">交易代碼</th>
+    <th nowrap class="list_th">建檔日期</th>
+    <th nowrap class="list_th">建檔人員</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr >
+   <td nowrap class="list_no">
+	<span class="col_key">${ok_flag}</span>
+	<input type="checkbox" name="opt" value="${ser_num}" ${tt_aud_code} ${opt_disabled}/>
+ 	 ${SER_NUM}&nbsp;
+	<input type="hidden" name="ser_num" value="${ser_num}" />
+	<input type="hidden" name="mod_seqno" value="${mod_seqno}">
+	<input type="hidden" name="reference_no" value="${reference_no}">
+	<input type="hidden" name="aud_code" value="${aud_code}">
+	<input type="hidden" name="acct_type" value="${acct_type}">
+	<input type="hidden" name="acct_key" value="${acct_key}">
+	<input type="hidden" name="chi_name" value="${chi_name}">
+	<input type="hidden" name="acct_status" value="${acct_status}">
+	<input type="hidden" name="tt_acct_status" value="${tt_acct_status}">
+	<input type="hidden" name="post_date" value="${post_date}">
+	<input type="hidden" name="beg_bal" value="${beg_bal}">
+	<input type="hidden" name="end_bal" value="${end_bal}">
+	<input type="hidden" name="d_avail_bal" value="${d_avail_bal}">
+	<input type="hidden" name="acct_code" value="${acct_code}">
+	<input type="hidden" name="chi_short_name" value="${chi_short_name}">
+	<input type="hidden" name="txn_code" value="${txn_code}">
+	<input type="hidden" name="crt_date" value="${crt_date}">
+	<input type="hidden" name="crt_user" value="${crt_user}">
+	<input type="hidden" name="opt_disabled" value="${opt_disabled}"> 
+   </td>
+   <td nowrap class="list_cc"> ${acct_type}-${acct_key} </td>
+   <td nowrap class="list_cc"> ${chi_name} </td>
+   <td nowrap class="list_cc"> ${tt_acct_status} </td>
+   <td nowrap class="list_cc"> ${post_date.YMD} </td>
+   <td nowrap class="list_rr"> ${beg_bal.(999)} </td>
+   <td nowrap class="list_rr"> ${end_bal.(999)} </td>
+   <td nowrap class="list_rr"> ${d_avail_bal.(999)} </td>
+   <td nowrap class="list_cc"> ${acct_code}</td>
+   <td nowrap class="list_ll"> ${chi_short_name} </td>
+   <td nowrap class="list_cc"> ${txn_code} </td>
+   <td nowrap class="list_cc"> ${crt_date.YMD} </td>
+   <td nowrap class="list_cc"> ${crt_user} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+
+ <input type="hidden"  name="MOD_PGM" value="colp0130">
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+//	tigra_tables('table1', 1, 0, '#F9FCB8', '#FFFFCC', '#ffcc66', '#cccccc');
+	tigra_tables('table1', 1, 0, '', '', '#ffcc66', '#cccccc');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+ document.dataForm.exUser.focus();
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "C" ) {
+    	if ( !chkdata() ) { 
+    		return false; 
+    	} 
+    	if (confirm("是否執行 主管覆核作業?!") === false) {
+            return false;
+        } 
+    }
+    return true;
+  }
+
+ function selectAll() {
+	var aElements = document.dataForm.getElementsByTagName("input");
+	for ( var i=0;  i < aElements.length; i++ ) {
+		if ( aElements[i].type == "checkbox" ) {
+			if ( aElements[i].name == "opt" ) {
+				if ( aElements[i].disabled == false ) {
+					aElements[i].checked = document.dataForm.ex_selectAll.checked;
+				}
+			}
+		}
+	}
+ }
+ 
+ function chkdata() {
+	 var seq = 0;
+	 var agy = document.getElementsByName('opt');
+	 var ll = agy.length;
+	 for ( var i=0; i < ll; i++ ) {
+		 if(agy[i].checked){
+			 seq++;
+		 }
+	 }
+	 
+	 if(seq == 0){
+		 alert("請至少勾選一筆資料!");
+		 return false;
+ 	 }
+	 return true;
+ }
+ 
+</script>

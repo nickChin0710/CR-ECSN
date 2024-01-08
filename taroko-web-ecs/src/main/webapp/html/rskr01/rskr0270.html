@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>再提示新增登錄待覆核清單-jh201116</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+${#PLUGIN:htmcomm_plugin.apr_user}
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap  >&nbsp;再提示登錄日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	      </script>&nbsp;
+	      --
+	   <input type="text" class="col_date" name="ex_date2" value="${ex_date2}"
+         zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	      </script>&nbsp;   
+	</td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+  <input type="image" height="27" width="30" src="images/Pdf.jpg" ${btnPDF_disable} onClick="top.submitControl('PDF');" style="cursor:hand; vertical-align: middle;" />&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap>&nbsp;再提示登錄者:
+      <input type="text" class="col_any" name="ex_id1" value="${ex_id1}" maxlength="10" size="12" zEdit="any,canTw">
+    </td>
+  <td nowrap>&nbsp;
+   &nbsp;結算幣別:
+    <select size="1" name="ex_curr_code" class="col_ddlb">
+      <option value="">--</option>
+      ${dddw_curr_code}
+    </select>
+  </td>
+  </tr>
+  <tr>
+    <td nowrap>&nbsp;Debit卡:
+      <span class="col_radio">
+        <input type="radio" value="0" name="ex_dbcard_flag" ${ex_dbcard_flag-0} ${default-ex_dbcard_flag} />全部
+        <input type="radio" value="Y" name="ex_dbcard_flag" ${ex_dbcard_flag-Y} />VD卡
+        <input type="radio" value="N" name="ex_dbcard_flag" ${ex_dbcard_flag-N} />信用卡
+      </span>
+    </td>
+  <td nowrap>&nbsp; 
+      <span class="col_radio">
+        <input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} ${default-ex_apr_flag} />未覆核
+        <input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />覆核
+      </span>
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td nowrap colspan="3" class="td_text">&nbsp;合計:</td>
+    <td nowrap class="td_text" >&nbsp;
+      <input type="text" readonly class="dsp_number" name="sum_count" value="${sum_count}" size="5" >筆
+   </td>
+    <td nowrap class="td_text">&nbsp;
+      <input type="text" readonly class="dsp_number" name="sum_dest_amt" value="${sum_dest_amt.(999)}" size="12">
+   </td>
+   <td nowrap colspan="4" class="td_text">&nbsp;</td>
+   <td nowrap class="td_text" >&nbsp;
+      <input type="text" readonly class="dsp_number" name="sum_rep_amt" value="${sum_rep_amt}" size="12">
+   </td>
+   <td nowrap class="td_text" >&nbsp;
+      <input type="text" readonly class="dsp_number" name="sum_source_amt" value="${sum_source_amt.(999.00)}" size="12">
+   </td>
+  </tr>
+  <tr>
+    <th nowrap width="5%">No</th>
+    <th nowrap >帳戶帳號</th>
+    <th nowrap >卡號</th>
+    <th nowrap >消費日</th>    
+    <th nowrap >消費金額</th>
+    <th nowrap>結算幣別</th>
+    <th nowrap >控制流水號</th>
+    <th nowrap >發生日</th>
+    <th nowrap >DOC</th>
+    <th nowrap >再提示金額</th>
+    <th nowrap >原幣金額</th>
+    <th nowrap >原幣幣別</th>
+    <th nowrap >訊息</th>
+    <th nowrap >登錄日</th>
+    <th nowrap >登錄者</th>
+    <th nowrap>借方科目</th>
+    <th nowrap>銷帳鍵值</th>
+    <th nowrap>微縮影編號</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+	<td nowrap class="list_cc">${acct_type}-${acct_key}&nbsp;</td>
+	<td nowrap class="list_cc"> ${card_no}&nbsp;</td>
+	<td nowrap class="list_cc"> ${purchase_date.YMD}&nbsp;</td>
+	<td nowrap class="list_rr"> ${dest_amt.(999)}&nbsp;</td>
+  <td nowrap class="list_cc"> ${dest_curr}&nbsp;</td>
+	<td nowrap class="list_cc"> ${ctrl_seqno}&nbsp;</td>
+	<td nowrap class="list_cc"> ${repsent_date.YMD}&nbsp;</td>
+	<td nowrap class="list_cc"> ${rep_doc_mark}&nbsp;</td>
+	<td nowrap class="list_rr"> ${rep_amt_twd.(999)}&nbsp;</td>
+	<td nowrap class="list_rr"> ${source_amt.(999.00)}&nbsp;</td>
+   <td nowrap class="list_cc"> ${source_curr}&nbsp;</td>
+   <td nowrap class="list_cc"> ${rep_msg}&nbsp;</td>
+   <td nowrap class="list_cc"> ${rep_add_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${rep_add_user}&nbsp;</td>
+  <td nowrap class="list_cc"> ${rep_ac_no}&nbsp;</td>
+  <td nowrap class="list_cc"> ${rep_glmemo3}&nbsp;</td>
+  <td nowrap class="list_cc"> ${film_no}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables_2.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1',1,2,0);
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+    return true;
+  }
+  
+</script>

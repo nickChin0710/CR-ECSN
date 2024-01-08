@@ -1,0 +1,210 @@
+<html>
+<head>
+<title> 111/01/04 V1.00.01 Allen Ho Initial 通路活動卡人回饋查詢作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+<!-- Approve *************************************************************-->
+ ${#PLUGIN:htmcomm_plugin.apr_user}
+</table>
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="10">
+   <tr>
+   <td nowrap>&nbsp;活動代號:
+      <select size="1" name="ex_active_code" class="col_ddlb" >
+         ${dddw_active_code}
+      </select>
+     </td>
+   <td nowrap>&nbsp;回饋失敗註記：
+      <select  name="ex_proc_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="X" ${ex_proc_flag-X} >X.無有效卡</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;身分證號：
+      <input type="text" class="col_text" 
+          name="ex_id_no" value="${ex_id_no}"
+         zeditType="any,upper"  maxlength=10 size=10 />
+   回饋類別：
+      <select  name="ex_feedback_type" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_feedback_type-1} >紅利點數</option>
+         <option value="2" ${ex_feedback_type-2} >現金回饋</option>
+         <option value="3" ${ex_feedback_type-3} >一般贈品</option>
+         <option value="4" ${ex_feedback_type-4} >電子禮券</option>
+       </select>
+   簡訊註記：
+      <select  name="ex_sms_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="Y" ${ex_sms_flag-Y} >Y.正常發送</option>
+         <option value="D" ${ex_sms_flag-D} >D.電話錯誤</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd"   value="產生媒體檔" onClick="return top.submitControl('MEDIAFILE')" class="btAdd" >&nbsp;&nbsp;
+      <a ${zz_full_media_file} style="cursor:hand;" >
+      <img ${img_display} />
+      </a>
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+<!-- 20231018: 增持卡人資料*************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">活動代號</th>
+    <th nowrap class="list_th">活動說明</th>
+    <th nowrap class="list_th">主卡人身分證號</th>
+    <th nowrap class="list_th">姓名</th>
+    <th nowrap class="list_th">持卡人卡號</th>
+    <th nowrap class="list_th">持卡人ID</th>
+    <th nowrap class="list_th">持卡人姓名</th>
+    <th nowrap class="list_th">紅利點數</th>
+    <th nowrap class="list_th">紅利<BR>回饋日期</th>
+    <th nowrap class="list_th">現金<BR>回饋金額</th>
+    <th nowrap class="list_th">現金<BR>回饋日期</th>
+    <th nowrap class="list_th">贈品件數</th>
+    <th nowrap class="list_th">名單筆數</th>
+    <th nowrap class="list_th">名單類型</th>
+    <th nowrap class="list_th">贈品/名單<BR>回饋日期</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr style="cursor:default">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="ser_num" value="${ser_num}"/>
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td nowrap class="list_cc"> ${active_code}
+        <input type="hidden" name="active_code" value="${active_code}" />
+    </td>
+     <td nowrap class="list_cc"> ${active_name}
+        <input type="hidden" name="active_name" value="${active_name}" />
+    </td>
+    <td nowrap class="list_cc"> ${id_no}
+        <input type="hidden" name="id_no" value="${id_no}" />
+    </td>
+    <td nowrap class="list_cc"> ${chi_name}
+        <input type="hidden" name="chi_name" value="${chi_name}" />
+    </td>
+    <td nowrap class="list_cc"> ${crd_card_no}
+        <input type="hidden" name="crd_card_no" value="${crd_card_no}" />
+    </td>
+    <td nowrap class="list_cc"> ${crd_id_no}
+        <input type="hidden" name="crd_id_no" value="${crd_id_no}" />
+    </td>
+    <td nowrap class="list_cc"> ${crd_chi_name}
+        <input type="hidden" name="crd_chi_name" value="${crd_chi_name}" />
+    </td>
+    <td nowrap class="list_rr"> ${bonus_pnt.(999)}
+        <input type="hidden" name="bonus_pnt" value="${bonus_pnt}" />
+    </td>
+    <td nowrap class="list_cc"> ${bonus_date.YMD}
+        <input type="hidden" name="bonus_date" value="${bonus_date}" />
+    </td>
+    <td nowrap class="list_rr"> ${fund_amt.(999)}
+        <input type="hidden" name="fund_amt" value="${fund_amt}" />
+    </td>
+    <td nowrap class="list_cc"> ${fund_date.YMD}
+        <input type="hidden" name="fund_date" value="${fund_date}" />
+    </td>
+    <td nowrap class="list_rr"> ${gift_int.(999)}
+        <input type="hidden" name="gift_int" value="${gift_int}" />
+    </td>
+    <td nowrap class="list_rr"> ${lottery_int.(999)}
+        <input type="hidden" name="lottery_int" value="${lottery_int}" />
+    </td>
+    <td nowrap class="list_cc"> ${lottery_type}-${comm_lottery_type}
+        <input type="hidden" name="lottery_type" value="${lottery_type}" />
+        <input type="hidden" name="comm_lottery_type" value="${comm_lottery_type}" />
+    </td>
+    <td nowrap class="list_cc"> ${proc_date.YMD}
+        <input type="hidden" name="proc_date" value="${proc_date}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${acct_type}
+        <input type="hidden" name="acct_type" value="${acct_type}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${vd_flag}
+        <input type="hidden" name="vd_flag" value="${vd_flag}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno}
+        <input type="hidden" name="id_p_seqno" value="${id_p_seqno}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${vd_id_p_seqno}
+        <input type="hidden" name="vd_id_p_seqno" value="${vd_id_p_seqno}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${ex_vd_id_p_seqno}
+        <input type="hidden" name="ex_vd_id_p_seqno" value="${ex_vd_id_p_seqno}" />
+    </td>
+    <td nowrap style="visibility:hidden;"> ${bb_down_file_name}
+        <input type="hidden" name="bb_down_file_name" value="${bb_down_file_name}" />
+    </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="bb_down_file_name" value="${bb_down_file_name}" >
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktq0860_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq0860_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+</script>
+<!-- ******************************************************************** -->

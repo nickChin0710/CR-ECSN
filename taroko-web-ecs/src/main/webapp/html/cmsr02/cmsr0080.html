@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>案件補寄資料郵寄標籤列印-jh-0614</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;產生日期:
+      <input type="text" class="col_date" name="ex_sdate" value="${ex_sdate}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />      
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_sdate'});
+	       </script>
+	      --
+	    <input type="text" class="col_date" name="ex_edate" value="${ex_edate}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+         <script language="JavaScript">
+	        new tcal ({'formname': 'dataForm','controlname': 'ex_edate'});
+	       </script>
+   </td>
+   <td nowrap >&nbsp;寄送類別:
+   		<span class="col_radio">
+         <input type="radio" value="0" name="ex_sendtype" ${ex_sendtype-0} ${DEFAULT-ex_sendtype} />全部
+         <input type="radio" value="1" name="ex_sendtype" ${ex_sendtype-1} />平信
+         <input type="radio" value="2" name="ex_sendtype" ${ex_sendtype-2} />限專
+         <input type="radio" value="3" name="ex_sendtype" ${ex_sendtype-3} />普掛
+         <input type="radio" value="4" name="ex_sendtype" ${ex_sendtype-4} />限掛
+      </span>
+	 </td>
+   <td nowrap>&nbsp;  
+      <input type="Button"   value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button"   value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button"   value="匯入名條資料" onclick="return upload_click()" class="btProcess" >&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+  	<td nowrap >&nbsp;匯入批號:
+  		<input type="text" class="col_text" name="ex_batch_no" value="${ex_batch_no}" maxlength="12" size="14' zEdit="alphanum,upper" >
+  	</td>
+  	<td nowrap colspan="2" >&nbsp;匯入說明:
+  		<input type="text" class="col_any" name="ex_remark" value="${ex_remark}" maxlength="60" size="62" zEdit="any,canTw" >
+  	</td>
+  </tr>
+ </table>
+</div>
+<hr>
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th width="5%">No&nbsp;</th>
+    <th >產生日期&nbsp;</th>
+    <th >產生經辦&nbsp;</th>
+    <th >匯入批號&nbsp;</th>
+    <th >匯入說明&nbsp;</th>
+    <th >筆數&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr>
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${crt_user}&nbsp;</td>
+   <td nowrap class="list_cc"> ${batch_no}&nbsp;</td>
+   <td nowrap class="list_ll"> ${crt_desc}&nbsp;</td>
+   <td nowrap class="list_rr"> ${db_cnt.(999)}&nbsp;</td>
+	</tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+
+ <input type="hidden" class="dsp_text"  name="zz_file_name" value="" />   
+ <input type="hidden"  name="upload_file" value="" /> 
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}" />
+ <input type="hidden"  name="pageType"  value="cond" />
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }           
+       
+    return true;
+  }
+ 
+ function upload_click() {
+    document.dataForm.zz_file_name.value = "";
+    
+    var parmHtml    = "TarokoUpload";
+    var parmName    = "upload_file,zz_file_name";
+    var windowSize  = "width=700, height=250, top=100, left=200, resizable=yes";
+    top.packageName = "taroko.com";
+    top.javaName    = "TarokoUpload";
+    top.methodName  = "showScreen";
+    top.openWindow("",parmHtml,parmName,windowSize);
+
+    //alert("rskm1070-aaaa");
+    top.packageName = "cmsr02";
+    top.javaName    = "Cmsr0080";
+    //methodName  = "actionFunction";
+    top.requHtml    = "cmsr0080";
+    top.respHtml    = "cmsr0080";
+    return true;
+  }
+  
+ function wf_uploadAfter() {
+    var ss=document.dataForm.zz_file_name.value.trim();
+    if (ss.length>0) {
+    	top.respLevel = 1;
+    	top.respHtml  = "cmsr0080_proc";
+      top.submitControl('UPLOAD');      
+    }
+ } 
+  
+</script>

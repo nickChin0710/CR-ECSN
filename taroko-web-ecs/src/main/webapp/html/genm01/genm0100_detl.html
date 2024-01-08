@@ -1,0 +1,302 @@
+<html>
+
+<head>
+    <title>人工標準分錄維護-detl-V.2019-1202-Amber-[Update]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+    <script language="JavaScript" src="js/jquery.js"></script>
+</head>
+<script language="JavaScript">
+    function wf_add_newrow()
+{
+var rowNum=0;
+var row_num = $('input[name=row_num]').val(); 
+if(row_num!=''){
+  rowNum = row_num;
+}else{
+  rowNum=document.getElementById( 'table1' ).rows.length -1;
+}
+var ind=document.getElementById( 'table1' ).rows.length -1;
+var num = '${ser_num}';
+if(num==''){
+    ind=document.getElementById( 'table1' ).rows.length-2;
+}
+if(row_num>ind){ 
+  alert("輸入不可大於筆數");
+  $('input[name=row_num]').css("background-color","pink");
+  return false;
+}
+$('input[name=row_num]').css("background-color","");
+var colNum=0;
+var fi=0;
+//console.log("a:"+ind);
+var num = '${ser_num}';
+if(num==''){
+    ind=document.getElementById( 'table1' ).rows.length-2;
+}
+    colNum=0 
+    rowNum++;
+    ind++;
+    var myRow = document.all.table1.insertRow(rowNum);
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_no";
+    myCell.noWrap ="nowrap";
+
+    var serNo ="";
+    if ( ind < 10 )
+        { serNo = "0"+ind; }
+    else
+        { serNo = ""+ind;  }
+    fi++;
+  
+  var con = document.createElement( 'span' );
+  con.setAttribute('class', 'dsp_num');
+    con.textContent = '00';
+    myCell.appendChild( con );
+   
+    
+    var ip = document.createElement( 'input' );
+    ip.className = 'col_ckbox';
+    ip.type = 'checkbox';
+    ip.name = 'opt';
+    ip.value = serNo;
+    myCell.appendChild( ip );
+    
+    var ip1 = document.createElement( 'input' );
+    ip1.type = 'hidden';
+    ip1.name = 'ser_num';
+    ip1.value = serNo;
+    myCell.appendChild( ip1 );
+    
+    var ip2 = document.createElement( 'input' );
+    ip2.type = 'hidden';
+    ip2.name = 'rowid';
+    ip2.value = '';
+    myCell.appendChild( ip2 );
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    var dbcrarray = ["C","D"];
+    
+    
+    var idbcr = document.createElement( 'select' );
+    idbcr.setAttribute('class', 'col_ddlb');
+    idbcr.name = 'dbcr';
+    idbcr.value = '';
+    for (var i = 0; i < dbcrarray.length; i++) {
+      var option = document.createElement("option");
+      option.value = dbcrarray[i];
+      if(dbcrarray[i]=="C")
+        { option.text ="貸";}
+      else if(dbcrarray[i]=="D")
+          {option.text = "借";}
+    
+        idbcr.appendChild(option);
+    }
+    myCell.appendChild( idbcr );
+  
+
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    
+    var acno = document.createElement( 'input' );
+    acno.setAttribute('class', 'col_any');
+    acno.setAttribute('zEdit', 'number');
+    acno.type = 'text';
+    acno.name = 'ac_no';
+    acno.maxLength=9;
+    acno.size=9;
+    acno.value = '';
+    myCell.appendChild(acno);
+
+  
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+  
+    //======================================
+    /* colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td"; */
+    
+    //======================================
+
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    
+    var mo1 = document.createElement( 'input' );
+    mo1.setAttribute('class', 'col_any');
+    mo1.setAttribute('zEdit', 'canTW');
+    mo1.type = 'text';
+    mo1.name = 'memo1';
+    //mo1.maxLength=20;
+    //mo1.size=20;
+    mo1.maxLength=10;
+    mo1.size=20;
+    mo1.value = '';
+    myCell.appendChild(mo1);
+  
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    
+    var mo2 = document.createElement( 'input' );
+    mo2.setAttribute('class', 'col_any');
+    mo2.setAttribute('zEdit', 'canTW');
+    mo2.type = 'text';
+    mo2.name = 'memo2';
+    //mo2.maxLength=20;
+    //mo2.size=20;
+    mo2.maxLength=10;
+    mo2.size=20;
+    mo2.value = '';
+    myCell.appendChild(mo2);  
+  
+    //======================================
+    colNum++;
+    myCell = myRow.insertCell(colNum);
+    myCell.className = "list_td";
+    
+    
+    var mo3 = document.createElement( 'input' );
+    mo3.setAttribute('class', 'col_any');
+    mo3.setAttribute('zEdit', 'canTW');
+    mo3.type = 'text';
+    mo3.name = 'memo3';
+    //mo3.maxLength=20;
+    //mo3.size=20;
+    mo3.maxLength=10;
+    mo3.size=20;
+    mo3.value = '';
+    myCell.appendChild(mo3);
+
+    var ii = document.getElementById( 'table1' ).rows.length -1;
+    for(var i=0;i<ii;i++){
+        var aa =i+1;
+        if ( aa < 10 )
+            { aa = "0"+aa; }
+        else
+            { aa = ""+aa;  }
+    $("#table1 tr td .dsp_num").eq(i).text(aa);
+    $("input[name=opt]").eq(i).val(aa);
+    }
+} 
+</script>
+
+<body background="${water_mark}">
+    <form name="dataForm" method="post" action="">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td width="100">&nbsp;</td>
+                <td colspan="4">
+                    <img height="30" src="images/upperLevel.gif" style="cursor:hand;" onClick="top.upperLevel()" alt="回上層" ;>&nbsp;
+                    <input type="Button"  value="讀取" onClick="return top.submitControl('R')" class="btQuery">&nbsp;&nbsp;
+                    <input type="Button"  value="清除" onClick="return top.submitControl('L')" class="btClear">&nbsp;&nbsp;
+                    <input type="Button"  value="存檔" ${btnUpdate_disable} onClick="return top.submitControl('S2')" class="btUpdate">&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <div id="dataBlock">
+            <table width="60%" border="0" cellspacing="0" cellpadding="4">
+                <!-- 輸入資料讀取條件  -->
+                <tr>
+                    <td nowrap width="50%">分錄代碼：&nbsp;
+                        <input type="text" class="col_any" name="kk_std_vouch_cd" value="${std_vouch_cd}" zEdit="canTW" maxlength="4" size="8" zRequire="k" ,"C" />
+                    </td>
+                    <td nowrap width="50%">標準分錄說明：&nbsp;
+                        <input type="text" class="col_any" name="kk_std_vouch_desc" value="${std_vouch_desc}" zEdit="canTW" maxlength="30" size="30" zRequire="Y" />
+                    </td>
+                    <td nowrap colspan="2">&nbsp;幣別：
+                        <select name="kk_curr" class="col_ddlb" zRequire="Y">
+                            ${dddw_curr}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <table border="0" width="5%">
+                <tr>
+                    <td nowrap>
+                        <input type="Button"  value="新增明細" ${btnSelect_disable} onclick="wf_add_newrow()" class="btAdd_detl" />&nbsp;
+                        <input type="text" class="col_number" name="row_num" value="" zEdit="number" size="3" />
+                    </td>
+                </tr>
+            </table>
+            <!--List -->
+            <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4" width="80%">
+                <tr>
+                    <th nowrap class="list_th" width="5%">刪除 </th>
+                    <th nowrap class="list_th">借/貸</th>
+                    <th nowrap class="list_th">科目代號</th>
+                    <th nowrap class="list_th">科子目簡稱</th>
+                    <!-- <th nowrap class="list_th">待沖傳票銷帳鍵值種類</th> -->
+                    <th nowrap class="list_th">摘要一</th>
+                    <th nowrap class="list_th">摘要二</th>
+                    <th nowrap class="list_th">摘要三</th>
+                </tr>
+                <!-- BEGIN DYNAMIC : DETAIL -->
+                <tr>
+                    <td nowrap class="list_no">
+                        <span class="dsp_flag">${ok_flag}</span>
+                        <span class="dsp_num">${SER_NUM}</span>
+                        <input type="checkbox" name="opt" value="${ser_num}">
+                        <input type="hidden" name="ser_num" value="${ser_num}">
+                        <input type="hidden" name="rowid" value="${rowid}" />
+                    </td>
+                    <td nowrap class="list_ll">
+                        <select size="1" name="dbcr" class="col_ddlb">
+                            <option value="C" ${dbcr-C}>貸</option>
+                            <option value="D" ${dbcr-D}>借</option>
+                        </select>
+                    </td>
+                    <td nowrap class="list_ll">
+                        <input type="text" class="col_any" name="ac_no" zEdit="number" value="${ac_no}" maxlength=9 size=9 />
+                    </td>
+                    <td nowrap class="list_ll"> ${db_brief} </td>
+                    <!-- <td nowrap class="list_ll"> ${memo3_kind}</td> -->
+                    <td nowrap class="list_ll">
+                        <!-- <input type="text" class="col_text" name="memo1" value="${memo1}" zEdit="any,canTW" maxlength=20 size=20 /> -->
+                        <input type="text" class="col_text" name="memo1" value="${memo1}" zEdit="any,canTW" maxlength=10 size=20 />
+                    </td>
+                    <td nowrap class="list_ll">
+                        <!-- <input type="text" class="col_text" name="memo2" value="${memo2}" zEdit="any,canTW" maxlength=20 size=20 /> -->
+                        <input type="text" class="col_text" name="memo2" value="${memo2}" zEdit="any,canTW" maxlength=10 size=20 />
+                    </td>
+                    <td nowrap class="list_ll">
+                        <!-- <input type="text" class="col_text" name="memo3" value="${memo3}" zEdit="any,canTW" maxlength=20 size=20 /> -->
+						<input type="text" class="col_text" name="memo3" value="${memo3}" zEdit="any,canTW" maxlength=10 size=20 />                        
+                    </td>
+                </tr>
+                <!-- END DYNAMIC : DETAIL -->
+            </table>
+        </div>
+        <!-- -->
+        <input type="hidden" name="MOD_PGM" value="genm0100">
+        <input type="hidden" name="MOD_USER" value="${MOD_USER}">
+        <input type="hidden" name="MOD_SEQNO" value="${mod_seqno}">
+        <input type="hidden" name="HIDE" value="${HIDE_DATA}">
+        <input type="hidden" name="pageType" value="detl">
+    </form>
+</body>
+
+</html>
+<script language="javascript">
+top.refreshButton2('1');
+
+document.dataForm.kk_std_vouch_cd.focus();
+
+function validateInput() {
+    if (!top.checkFormat()) { return false; }
+    return true;
+}
+</script>

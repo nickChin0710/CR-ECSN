@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>通路活動匯入名單查詢作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+<div id="condBlock">
+<!-- query key *************************************************************-->
+ <table width="60%" border="0" cellspacing="0" cellpadding="8">
+   <tr>
+   <td nowrap>&nbsp;刷卡金代碼:
+      <select size="1" name="ex_fund_code" class="col_ddlb" id="ajaxh_fund_code"  >
+         ${dddw_fund_code}
+      </select>
+     </td>
+   <td nowrap>&nbsp;資料類別:
+      <select  name="ex_query_table" class="col_ddlb"  zRequire="Y" onChange="columnItemChange('2')" >
+         <option value="1" ${ex_query_table-1} >已覆核資料</option>
+         <option value="2" ${ex_query_table-2} >未覆核資料</option>
+       </select>
+     </td>
+   </tr>
+   <tr>
+   <td nowrap>&nbsp;資料內容:
+      <input type="text" class="col_text" 
+          name="ex_list_data" value="${ex_list_data}"
+         zeditType="any,upper"  maxlength=20 size=20 />
+   資料代碼:
+      <select  name="ex_list_flag" class="col_ddlb"  >
+       <option value=" ">--</option>
+         <option value="1" ${ex_list_flag-1} >1.身份證號</option>
+         <option value="2" ${ex_list_flag-2} >2.卡號(TPAN,SIR)</option>
+         <option value="3" ${ex_list_flag-3} >3.一卡通卡號</option>
+         <option value="4" ${ex_list_flag-4} >4.悠遊卡號</option>
+         <option value="5" ${ex_list_flag-5} >5.愛金卡號</option>
+		 <option value="6" ${ex_list_flag-5} >6.TCB_ID(生日禮)</option>
+       </select>
+     </td>
+   <td nowrap>&nbsp;
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+   </td>
+  </tr>
+ </table>
+</div>
+<!-- browse ************************************************************** -->
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="8">
+  <tr>
+    <th nowrap class="list_th" width="5%">No&nbsp;</th>
+    <th nowrap class="list_th">刷卡金代碼</th>
+    <th nowrap class="list_th">資料代碼</th>
+    <th nowrap class="list_th">資料內容</th>
+    <th nowrap class="list_th">回饋金額</th>
+    <th nowrap class="list_th">回饋日期</th>
+    <th nowrap class="list_th">結果說明</th>
+    <th nowrap class="list_th">異動時間</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${rowid}','','','','')" style="cursor:hand">
+    <td nowrap class="list_no">
+        ${SER_NUM}&nbsp;
+        <input type="hidden" name="rowid" value="${rowid}"/>
+    </td>
+    <td  nowrap class="list_cc"> ${fund_code}-${comm_fund_code}</td>
+    <td  nowrap class="list_cc"> ${list_flag}-${comm_list_flag}</td>
+    <td nowrap class="list_cc"> ${list_data}</td>
+    <td nowrap class="list_rr"> ${feedback_amt.(999)}</td>
+    <td nowrap class="list_cc"> ${proc_date.YMD}</td>
+    <td  nowrap class="list_cc"> ${proc_flag}-${comm_proc_flag}</td>
+    <td nowrap class="list_cc"> ${mod_time}</td>
+    <td nowrap style="visibility:hidden;"> ${id_p_seqno} </td>
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+<!-- hidden ************************************************************** -->
+ <input type="hidden" name="WPROWID" value="${wprowid}">
+ <input type="hidden" name="control_tab_name" value="${control_tab_name}" >
+ <input type="hidden" name="data_k1" value="" >
+ <input type="hidden" name="data_k2" value="" >
+ <input type="hidden" name="data_k3" value="" >
+ <input type="hidden" name="data_k4" value="" >
+ <input type="hidden" name="data_k5" value="" >
+
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+<!-- script1 ************************************************************* -->
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+        tigra_tables('table1');
+</script>
+<!00 script2 ************************************************************* -->
+<script language="JavaScript" src="js/AJAXFunction_11.js"></script>
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+        top.respLevel = 1;
+        top.respHtml = "mktq4080_detl";
+    }
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5)
+  {
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;
+    document.dataForm.data_k4.value = parm4;
+    document.dataForm.data_k5.value = parm5;
+    top.respHtml  = "mktq4080_detl";
+    top.submitControl('S');
+    return true;
+  }
+
+ function columnItemChange(ps1)
+  {
+   var  win_query_table =document.forms["dataForm"]["ex_query_table"].value;
+
+   idCode = ps1;
+   top.actionCode = "Q";
+   if ( idCode == '2' )
+      {
+       clearListObj(document.getElementById("ajaxh_fund_code"));
+       top.methodName = "wf_ajax_func_2";
+       resetJSON();
+       addJSON("ax_win_query_table",win_query_table);
+      }
+
+   processAJAX();
+ }
+
+ function ajaxResponse()
+ {
+  top.respHtml ="mktq4080";
+
+  if (idCode == '2' )
+     {
+      var listObj = document.getElementById("ajaxh_fund_code");
+      len = getJSONlength("ajaxj_fund_code");
+      for ( var ii=0; ii<len; ii++)
+          listObj.options.add(new Option(getJSONvalue("ajaxj_fund_code",ii)
+                                        +" "+getJSONvalue("ajaxj_fund_name",ii)
+                                        ,getJSONvalue("ajaxj_fund_code",ii)));
+      return false;
+     }
+ }
+
+ function clearListObj(listObj)
+  {
+    for( var i = listObj.length - 1; i>=0; i--)
+       { listObj.remove(i);  }
+  }
+
+
+</script>
+<!-- ******************************************************************** -->

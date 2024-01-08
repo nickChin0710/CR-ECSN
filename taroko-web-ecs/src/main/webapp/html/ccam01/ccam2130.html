@@ -1,0 +1,204 @@
+<html>
+<head>
+<title>線上繳款還額作業</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/ecsBank.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script language="JavaScript" src="js/jquery-2.2.2.min.js"></script>
+<script language="JavaScript" src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/Calendar/calendar.css">
+</head>
+<script language="JavaScript" src="js/Calendar/calendar_db.js"></script>
+
+<body background="${water_mark}" >
+<form  name="dataForm" method="post" action="" >
+
+<div id="condBlock">
+<table width="60%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+   <td nowrap>&nbsp;帳戶帳號:
+      <select size="1" name="ex_acct_type" class="col_ddlb" >
+         ${d_dddw_accttype}
+      </select>
+      <input type="text" class="col_text" name="ex_acct_key" value="${ex_acct_key}" maxlength="11" size="13" >
+   </td>
+   <td nowrap>&nbsp;  
+      <input type="Button" name="btnQuery" value="查詢" onClick="return top.submitControl('Q')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnClear" value="清除" onClick="return top.submitControl('L')" class="btClear" >&nbsp;&nbsp;
+      <input type="Button" name="btnQuery2" value="查詢客戶資料" onClick="return top.submitControl('Q2')" class="btQuery" >&nbsp;&nbsp;
+      <input type="Button" name="btnAdd" value="新增" ${btnAdd_disable}  onClick="return top.submitControl('X')" class="btAdd" >&nbsp;&nbsp;
+      <img height="25" src="images/Pdf.jpg"  ${btnPDF_disable} style="cursor:hand;" onClick="top.submitControl('PDF');" onmouseout="top.light_img(this);" onmouseover="top.dark_img(this);">&nbsp;&nbsp;
+   </td>   
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;卡號:
+      <input type="text" class="col_text" name="ex_card_no" value="${ex_card_no}" maxlength="16" size="18" zEdit="number" >
+   </td>
+   <td nowrap  >&nbsp;繳款日期:
+      <input type="text" class="col_date" name="ex_date1" value="${ex_date1}" zEdit="date,yyyymmdd" MaxLength=8 size=10  />
+      <script language="JavaScript">
+	     new tcal ({'formname': 'dataForm','controlname': 'ex_date1'});
+	  </script>
+	  --
+	  <input type="text" class="col_date" name="ex_date2" value="${ex_date2}" zEdit="date,yyyymmdd" MaxLength=8 size=10 />
+      <script language="JavaScript">
+	     new tcal ({'formname': 'dataForm','controlname': 'ex_date2'});
+	  </script>      
+	</td>
+  </tr>
+  <tr>
+   <td nowrap >&nbsp;繳款來源:   		
+   	<span class="col_radio">
+		<input type="radio" value="0" name="ex_data_from" ${ex_data_from-0} ${DEFAULT-ex_data_from} />全部
+    	<input type="radio" value="O" name="ex_data_from" ${ex_data_from-O} />線上
+    	<input type="radio" value="B" name="ex_data_from" ${ex_data_from-B} />批次
+    </span>
+   </td>
+   <td nowrap >&nbsp;
+    <span class="col_radio">
+		<input type="radio" value="0" name="ex_apr_flag" ${ex_apr_flag-0} ${DEFAULT-ex_apr_flag} />全部
+    	<input type="radio" value="Y" name="ex_apr_flag" ${ex_apr_flag-Y} />已覆核
+    	<input type="radio" value="N" name="ex_apr_flag" ${ex_apr_flag-N} />未覆核
+    </span>
+   </td>
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;身份證字號:
+    	<span class="dsp_text" >${ex_idno}</span>
+    	<input type="hidden" name="ex_idno" value="${ex_idno}" />
+    	&nbsp;&nbsp;
+    	中文姓名:
+        <span class="dsp_text" >${ex_chi_name}</span>
+        <input type="hidden" name="ex_chi_name" value="${ex_chi_name}" />
+    </td>
+    <td nowrap >&nbsp;出生日期:
+        <span class="dsp_text" >${ex_birth_day}</span>
+        <input type="hidden" name="ex_birth_day" value="${ex_birth_day}" />
+    </td>    
+  </tr>
+  <tr>
+    <td nowrap >&nbsp;帳戶現狀碼:
+        <span class="dsp_text" >${ex_acct_status}</span>
+        <input type="hidden" name="ex_acct_status" value="${ex_acct_status}" />
+    </td>
+    <td nowrap >&nbsp;關帳週期:
+        <span class="dsp_text" >${ex_stmt_cycle}</span>
+        <input type="hidden" name="ex_stmt_cycle" value="${ex_stmt_cycle}" />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" >&nbsp;公司名稱:
+        <span class="dsp_text" >${ex_corp_name}</span>
+        <input type="hidden" name="ex_corp_name" value="${ex_corp_name}" />
+    </td>
+  </tr>
+ </table>
+</div>
+<hr>
+
+ <table id="table1" class="sortable" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <th nowrap class="list_th" >No&nbsp;</th>
+    <th nowrap class="list_cc" >覆核&nbsp;</th>
+    <th nowrap class="list_cc" >繳款來源&nbsp;</th>
+    <th nowrap class="list_cc" >繳款日期&nbsp;</th>
+    <th nowrap class="list_cc" >繳款時間&nbsp;</th>
+    <th nowrap class="list_cc" >繳款卡號&nbsp;</th>
+    <th nowrap class="list_cc" >姓名&nbsp;</th>    
+    <th nowrap class="list_cc" >繳款類別&nbsp;</th>    
+    <th nowrap class="list_cc" >繳款金額&nbsp;</th>
+    <th nowrap class="list_cc" >人工還額已逾時效&nbsp;</th>
+    <th nowrap class="list_cc" >備註&nbsp;</th>
+    <th nowrap class="list_cc" >批次號碼&nbsp;</th>
+    <th nowrap class="list_cc" >流水號&nbsp;</th>
+  </tr>
+  <!-- BEGIN DYNAMIC : DETAIL -->
+  <tr onclick="detailScreen('${SER_NUM}','${data_from}','${file_no}','${serial_no}','${is_repay}','${apr_flag}')" style="cursor:hand">
+   <td nowrap class="list_no"> ${SER_NUM}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_apr_flag}&nbsp;</td>
+   <td nowrap class="list_cc"> ${tt_data_from}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pay_date.YMD}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pay_time.TIME}&nbsp;</td>
+   <td nowrap class="list_cc"> ${pay_card_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${chi_name}&nbsp;</td>
+   <td nowrap class="list_ll"> ${tt_payment_type}&nbsp;</td>
+   <td nowrap class="list_rr"> ${sign}${pay_amt.(999.00)}</td>
+   <td nowrap class="list_cc"> ${is_repay}&nbsp;</td>
+   <td nowrap class="list_ll"> ${remark}&nbsp;</td>
+   <td nowrap class="list_cc"> ${file_no}&nbsp;</td>
+   <td nowrap class="list_cc"> ${serial_no}&nbsp;</td>   
+  </tr>
+  <!-- END DYNAMIC : DETAIL -->
+ </table>
+    
+ <input type="hidden"  name="data_k1" value="" >
+ <input type="hidden"  name="data_k2" value="" >
+ <input type="hidden"  name="data_k3" value="" >
+ <input type="hidden"  name="data_k4" value="" >
+ <input type="hidden"  name="data_k5" value="" >
+ <input type="hidden"  id="ex_p_seqno" name="ex_p_seqno" value="${ex_p_seqno}" />
+ <input type="hidden"  id="hi_acct_type" id="hi_acct_type" name="hi_acct_type" value="${hi_acct_type}" />
+ <input type="hidden"  name="HIDE"  value="${HIDE_DATA}">
+ <input type="hidden"  name="pageType"  value="cond">
+
+</form>
+</body>
+</html>
+
+<script language=JavaScript src="js/tigra_tables.js"></script>
+<script language="JavaScript">
+	tigra_tables('table1');
+</script>
+
+<script language="javascript">
+
+ top.refreshButton2('0');
+ top.pageRows="20";
+ 
+
+ function validateInput()
+  {
+    if ( !top.checkFormat() )
+       { return false; }
+
+    if ( top.actionCode == "X" ) {
+    	var p_seqno = document.forms["dataForm"]["ex_p_seqno"].value;
+    	if(p_seqno ==''){
+    		alert("請先查詢客戶資料再進行新增");
+    		return false;
+    	}
+        top.respLevel = 1;
+        top.respHtml = "ccam2130_detl"; 
+    }
+
+    return true;
+  }
+
+ function detailScreen(serNum,parm,parm2,parm3,parm4,parm5) { 
+    if(parm =='B'){
+        alert('只可以維護來源為線上的資料 !');
+        return false;
+    }
+    
+    if(parm4 =='Y'){
+        alert('此筆已還額 不可進行維護 !');
+        return false;
+    }
+    
+    if(parm5 =='Y'){
+        alert('已覆核 不可維護');
+        return false;
+    }
+    
+    top.respLevel = 1;
+    top.currRows  = serNum;
+    document.dataForm.data_k1.value = parm;
+    document.dataForm.data_k2.value = parm2;
+    document.dataForm.data_k3.value = parm3;    
+    document.dataForm.data_k5.value = parm5;    
+    top.respHtml  = "ccam2130_detl";
+    top.submitControl('S');
+    return true;
+  }   
+  
+</script>
